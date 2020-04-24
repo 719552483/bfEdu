@@ -56,7 +56,7 @@ import com.beifen.edu.administration.service.AdministrationPageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 
 /*
- * 业务处理Controller
+ * 业务处理Controller测试
  * */
 @Controller
 public class AdministrationController {
