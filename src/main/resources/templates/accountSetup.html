@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>账号设置</title>
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<link href="css/toastr.min.css" rel="stylesheet" type="text/css" />
+		<link href='css/animate.min.css' media='all' rel='stylesheet' type='text/css' />
+		<script type="text/javascript" src="sripts/jquery.min.js"></script>
+		<script type="text/javascript" src="js/accountSetup.js"></script>
+		<script type="text/javascript" src="js/implement.js"></script>
+		<script src="sripts/toastr.min.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+
+		<div class="place">
+			<span>位置：</span>
+			<ul class="placeul">
+				<li><a href="index.html">首页</a></li>
+				<li><a>账号设置</a></li>
+			</ul>
+		</div>
+
+		<div class="formbody">
+			<div class="formtitle"><span>可设置项</span></div>
+			<div class="formtext">用户&nbsp;admin，您上一次登录时间&nbsp;<b class="loginTimeStamp"></b>！</div>
+			<ul class="forminfo">
+				<li><label>用户名</label><input id="setup_username" type="text" class="dfinput" /><i>用户名为不包含特殊字符&nbsp;长度不超过15的字符</i></li>
+				<li><label>密码</label><input id="setup_pwd" type="password" class="dfinput" /><i>密码为不包含特殊字符&nbsp;长度不超过10的字符</i></li>
+				<li><label>确认新密码</label><input id="setup_confirmPwd" type="password" class="dfinput" /><i>确认新密码</i></li>
+				<li><label>&nbsp;</label><input type="button" class="btn saveNewAccountSetUp" value="保存新设置"/></li>
+			</ul>
+		</div>
+		
+		<div class="modal-backdrop fade loadingMasking noneStart">
+				<div class="spinner-box">
+					<div class="pulse-container">
+						<div class="pulse-bubble pulse-bubble-1"></div>
+						<div class="pulse-bubble pulse-bubble-2"></div>
+						<div class="pulse-bubble pulse-bubble-3"></div>
+					</div>
+					<div class="loadingtxt">数据加载中，请稍后...</div>
+				</div>
+		</div>
+	</body>
+</html>

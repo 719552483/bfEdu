@@ -1,0 +1,1224 @@
+input::-webkit-input-placeholder {
+	color: black;
+}
+
+input::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: black;
+}
+
+input:-moz-placeholder {
+	/* Mozilla Firefox 4 to 18 */
+	color: black;
+}
+
+input:-ms-input-placeholder {
+	/* Internet Explorer 10-11 */
+	color: black;
+}
+
+input::-ms-input-placeholder {
+	text-align: center;
+	text-indent: -10em
+}
+
+input::-webkit-input-placeholder {
+	text-align: center;
+	text-indent: -10em
+}
+
+.giveBottom .multi-select-container{
+    margin-left: 17px;
+    margin-top: 0px;
+}
+
+.giveBottom .multi-select-menu{
+    margin: 2.2em 0em !important;
+    min-width: 100% !important;
+}
+
+.giveBottom .multi-select-menuitem{
+padding:1.6em 0em 0.6em 31px !important
+}
+
+
+.giveBottom .multi-select-button {
+	padding: 12px 0.6em;
+	max-width: 100% !important
+}
+
+.giveBottom .multi-select-menuitems label:last-child input{
+	display:block!important;
+}
+
+
+.serachFocus {
+	animation: serachAnimation 2.5s infinite;
+	color: #72afd2 !important;
+}
+
+.infoCenter {
+	margin-bottom: 8px;
+}
+
+.noFloat {
+	float: none;
+}
+
+.versionInfo {
+	text-align: center;
+	margin-top: 1%;
+}
+
+.minH {
+	min-height: 730px;
+}
+
+.UserNameInTable,
+.currentId,
+.noneStart,
+.tableArea,
+.removeChoosedNews {
+	display: none;
+}
+
+.allShortcuts {
+	overflow: hidden;
+}
+
+.bacimg {
+	width: 104px;
+	height: 89px;
+	position: relative;
+	float: left;
+	margin-right: 2%;
+	margin-bottom: 4%;
+	margin-top: 1%;
+	margin-left: 2%;
+	text-align: center;
+}
+
+.bacimg img {
+	width: 104px;
+	height: 89px;
+}
+
+.cover {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: rgba(80, 79, 79, 0.72);
+	color: #fdfdfd;
+	opacity: 0.6;
+	bottom: 0;
+	font-size: 15pt;
+	text-align: center;
+	line-height: 88px;
+	font-weight: 600;
+}
+
+.bacimg p {
+	margin-top: 4%;
+	background: url(../images/line1.png) center center no-repeat;
+}
+
+.bacimg h2 {
+	margin-top: 4%;
+}
+
+.bacimg p a {
+	color: #1f7cb6;
+	line-height: 17px;
+	text-align: center;
+}
+
+.bacimg p a:hover {
+	color: #F60;
+}
+
+.imgSha {
+	box-shadow: 1px 2px 20px 0px rgba(72, 74, 74, 0.7215686274509804);
+}
+
+.choosedShortcutsIcon {
+	width: 46px;
+}
+
+.choosendShortcuts li {
+	min-width: 112px;
+	padding: 5px;
+}
+
+/* .choosendShortcuts li:hover {
+	border: 1px rgba(5, 85, 103, 0.16862745098039217) dashed;
+} */
+
+.myTableStyle .th-inner {
+	line-height: inherit !important;
+}
+
+/*.fixed-table-container tbody .selected td {
+  background-color: red !important;
+}*/
+
+.myTableStyle td {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 100px;
+}
+
+.tablelist>thead>tr>th {
+	border-bottom: solid 1px #b6cad2 !important;
+	text-align: left !important;
+	text-indent: 19px !important;
+}
+
+
+.tablelist thead th {
+	border-left: none !important
+}
+
+.fixed-table-container {
+	border: none !important;
+}
+
+.tablelist>tbody>tr>td {
+	border-top: none !important;
+	border-bottom: none !important;
+	border-left: none !important;
+	border-right: dotted 1px #c7c7c7 !important;
+}
+
+
+.table-striped>tbody>tr:nth-child(odd)>td {
+	background-color: #f5f8fa !important;
+}
+
+.tablelist>tbody>tr>td {
+	line-height: 3.5 !important;
+}
+
+.culturePlanVerifyTableArea  .fixed-table-toolbar {
+	margin-top: -3% !important;
+}
+
+.tablelist tbody td:first-child,
+.th-inner {
+	/* padding-top: 1.3% !important;
+	padding-right: 1% !important;
+	padding-left: 0.5% !important; */
+	/* padding-top: 0px !important; */
+	padding-right: 22px !important;
+	padding-left: 13px !important;
+}
+
+/*表格单个操作*/
+#courseLibraryTable td:last-child,
+#generatCourseTable td:last-child,
+#culturePlanVerifyTable td:last-child {
+	min-width: 100px;
+}
+
+/*表格多个操作*/
+#administrationClassTable td:last-child,
+#studentBaseInfoTable td:last-child,
+#majorTrainingTable td:last-child,
+#allRoleTable td:last-child,
+#releaseNewsTable td:last-child,
+#allUserTable td:last-child {
+	min-width: 234px;
+}
+
+/*表格2个操作 按钮字数不超过2个*/
+#relationTable td:last-child,
+#teachingClassTable td:last-child,
+#allMajorTable td:last-child,
+#allGradeTable td:last-child,
+#allDepartmentTable td:last-child,
+#allLevlTable td:last-child {
+	width: 165px;
+}
+
+
+
+@media screen and (max-width:1458px) {
+	#teachingClassTable td:last-child {
+		min-width: 137px;
+	}
+}
+
+/*表格2个操作 按钮字数超过2个*/
+#classManagementTable td:last-child {
+	min-width: 160px;
+}
+
+@media screen and (max-width:1458px) {
+	#classManagementTable td:last-child {
+		min-width: 281px;
+	}
+}
+
+
+.blue {
+	color: #056dae;
+	font-style: normal;
+}
+
+.searchIcon {
+	float: left;
+	margin-left: -17%;
+	margin-top: 3%;
+}
+
+.tabletoolbar li span {
+	float: left;
+	margin-left: -8px;
+	margin-right: -7px;
+	margin-top: 5px;
+}
+
+.tabletoolbar li {
+	margin-top: 3px;
+}
+
+.mycheckbox {
+	padding-left: 0px !important;
+}
+
+.newsInfoArea .select-mania-arrow,
+.newsDetailsArea .select-mania-arrow {
+	color: rgb(5, 112, 123) !important;
+}
+
+.newsInfoArea .select-mania-item-text,
+.newsDetailsArea .select-mania-item-text {
+	text-align: center !important;
+}
+
+.newsInfoArea .select-mania-values,
+.newsDetailsArea .select-mania-values {
+	text-align: center !important;
+	text-indent: 18px;
+}
+
+.newsInfoArea .select-mania,
+.newsDetailsArea .select-mania {
+	width: 50% !important;
+}
+
+.selectArea {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.selectName,
+.newsInfoArea .select-mania,
+.newsDetailsArea .select-mania {
+	float: left !important;
+}
+
+.newsInfoArea .selectName,
+.newsDetailsArea .selectName {
+	line-height: 40px;
+	padding-right: 15px;
+	font-weight: bold;
+}
+
+.newsInfoArea .select-mania,
+.newsDetailsArea .select-mania {
+	margin-bottom: 20px !important;
+}
+
+.formtext {
+	text-align: left;
+	padding-left: 0px;
+	margin-top: 2%;
+}
+
+.tip b,
+.searchArea b,
+.newsInfoArea b,
+.newsDetailsArea b {
+	color: red;
+}
+
+.myInput {
+	width: 58% !important;
+	margin-left: -33.5% !important;
+	min-height: 44px;
+	background-color: rgba(183, 215, 232, 0.050980392156862744);
+	border: 1px solid rgba(211, 234, 241, 0.07058823529411765);
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
+}
+
+.tableInput {
+	width: 88% !important;
+	background-color: rgba(183, 215, 232, 0.050980392156862744);
+	border: 1px solid rgba(211, 234, 241, 0.07058823529411765);
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
+}
+
+.searchInput {
+	width: 70% !important;
+	margin-left: 2.5% !important;
+	text-indent: 13px;
+}
+
+.manyInfoInput {
+	width: 67% !important;
+	margin-left: -1% !important;
+	text-indent: 13px;
+	color: #636363;
+    font-weight: 600;
+}
+
+
+/*拆班表的多选select*/
+.multi-select-container {
+	position: absolute !important;
+}
+
+.multi-select-container {
+	margin-left: -3.5%;
+	margin-top: -5px;
+}
+
+.multi-select-button {
+	max-width: 103px !important;
+}
+
+.multi-select-menu {
+	margin: 3.2em 1em !important;
+	min-width: 88% !important;
+}
+
+.multi-select-menuitem input {
+	margin-left: -20px !important;
+}
+
+.fixed-table-container input[type="checkbox"] {
+	margin: 15px -18px auto !important;
+}
+
+.multi-select-menuitems label:last-child input {
+	display: none;
+}
+
+.multi-select-menuitem {
+	padding: 0.6em 1em 0.6em 20px !important;
+}
+
+/*拆班表的多选select end*/
+.colInput::-webkit-input-placeholder,
+.combinedClassTipInput::-webkit-input-placeholder,
+.allWidthInput::-webkit-input-placeholder,
+.searchInput::-webkit-input-placeholder,
+.manyInfoInput::-webkit-input-placeholder {
+	/* placeholder颜色  */
+	color: #aab2bd;
+	/* placeholder字体大小  */
+	font-size: 12px;
+	/* placeholder位置  */
+	text-align: left;
+	text-indent: 10px;
+}
+
+.submitBtn {
+	float: left;
+	margin-top: 25px;
+}
+
+.submitBtn:hover {
+	color: white !important;
+	letter-spacing: 6px;
+}
+
+.tipTxt {
+	float: left;
+	width: 100%;
+	margin-top: 0.5%;
+	margin-bottom: -5%;
+	color: rgba(128, 128, 128, 0.7098039215686275);
+}
+
+.newsDetailsTip {
+	width: 65% !important;
+	height: 0px;
+	min-height: 260px !important;
+	top: 10% !important;
+	left: 15% !important;
+}
+
+.newsDetailsbtn {
+	margin-top: 5%;
+	margin-bottom: 5%;
+}
+
+.newsDetailsInfo {
+	padding-left: 2%;
+}
+
+.singleTipBtn {
+	margin-left: 59%;
+}
+
+.tipCite {
+	float: left;
+	padding-left: 17px;
+	font-size: 10px;
+	font-weight: bold;
+	color: #fff;
+}
+
+.allClassMangersTableArea .search{
+    margin-top: 2px;
+    margin-left: 72%;
+}
+
+.relationTableArea .search{
+   relationNameHave
+ }
+
+.allLevlTableArea .search {
+	    margin-top: 0px !important;
+    margin-bottom: 0px;
+}
+
+.allUserTableArea .search,
+.allRoleTableArea .search {
+	margin-top: 38px !important;
+}
+
+.majorTrainingTableArea .search {
+	    margin-top: 2px !important;
+}
+
+.majorTrainingTableArea .columns{
+    margin-left: 9px;
+    margin-top: 1px;}
+
+.culturePlanVerifyTableArea .search {
+	     margin-top: 160px !important;
+}
+
+.classManagementTableArea .search {
+	margin-top: 11px !important;
+}
+
+.breakClassTableArea .search {
+	margin-top: 15px !important;
+	margin-left: 25%;
+	margin-bottom: 0px;
+	float: none !important;
+}
+
+.allClassTableArea .search {
+	margin-top: -50px !important;
+	margin-left: 68%;
+}
+
+.generatCourseArea .search {
+	margin-top: 10px !important;
+    margin-bottom: 0px;
+}
+
+.studentTableArea .search {
+	margin-top: 87px !important;
+}
+
+.teacher_studentInfoTableArea .search {
+    margin-top: 2px !important;
+    left: 2%;
+}
+
+.majorTrainingTableArea .columns {
+    margin-top: 1px!important;
+}
+
+.myTableSelect {
+	width: 95%;
+	min-height: 30px;
+	border-radius: 7px;
+	margin-top: 6px;
+	padding: 10px;
+	display: none;
+}
+
+.myTableSelect:focus {
+	outline: white;
+}
+
+.removeUsersArea {
+	width: 20%;
+	margin-top: 36px;
+	float: left;
+}
+
+.haveTextBg {
+	background-image: url(../images/ulist.png);
+	background-repeat: no-repeat;
+	background-position-x: right;
+	transform: rotate(0deg);
+	-webkit-transform: rotate(0deg);
+}
+
+.haveTextBg span {
+	transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+	color: rgba(3, 70, 128, 0.8588235294117647);
+}
+
+
+.newUserAuthority .select-mania {
+	margin-left: 20px !important;
+	margin-top: 1px !important;
+	margin-bottom: 1% !important;
+	width: 350px !important;
+}
+
+.authorityGroupArea .select-mania{
+	margin-left: 32px !important;
+	margin-top: 1px !important;
+	margin-bottom: 1% !important;
+	width: 350px !important;
+}
+
+.Index_authorityGroupArea .select-mania {
+	margin-left: 0px !important;
+	margin-top: -5px !important;
+	margin-bottom: -2% !important;
+	width: 175px !important;
+}
+
+.searchAreaWitheSelect .select-mania {
+	margin-left: 11px !important;
+	margin-top: 1px !important;
+	margin-bottom: 1% !important;
+	width: 70% !important;
+}
+
+.moreInfoSelectStyle .select-mania {
+	margin-left: -4px !important;
+	margin-top: 1px !important;
+	margin-bottom: 1% !important;
+	width: 68% !important;
+	color: #636363;
+    font-weight: 600;
+}
+
+.myformtext {
+	text-align: center;
+	margin-top: -45px;
+}
+
+.col4 {
+	width: 25%;
+	float: left;
+}
+
+.myTabson {
+	margin-top: 7px !important;
+}
+
+.giveBottom {
+	margin-top: 3px;
+	margin-bottom: 9px;
+}
+
+.manyInfoShow {
+	width: 984px;
+	height: auto;
+	position: absolute;
+	left: 17%;
+	padding-bottom: 15px;
+	margin-top: -5%;
+}
+
+.tipAUTOheight {
+	height: auto;
+}
+
+.manyInfoShow2 {
+	margin: 0 auto;
+	left: 0px;
+	margin-top: 12px;
+	position: relative;
+}
+
+.manyInfoShow .tipbtn {
+	margin-top: 2% !important;
+	margin-left: 39% !important;
+	float: left;
+}
+
+.manyInfoShow .tiptop {
+	margin-bottom: 9px;
+}
+
+
+.manyInfoShow .col4 {
+	min-width: 240px !important;
+	margin-bottom: 5px;
+}
+
+.manyInfoShow .selectName {
+	padding-right: 7px;
+	margin-top: 6px;
+	width: 29%;
+	color: #3c3b3b;
+    font-weight: 500;
+    font-family: fantasy;
+}
+
+.selectName {
+	width: 20%;
+}
+
+
+.MyspinnerStyle .input-group input {
+	width: 55% !important;
+	    color: #5f5d5d;
+    font-weight: 500;
+}
+
+.manyInfoShowIntipInput {
+	margin-left: 0.5% !important;
+	width: 66% !important;
+}
+
+.MyspinnerStyle {
+	margin-bottom: 10px;
+}
+
+.MyspinnerStyle .input-group-prepend,
+.MyspinnerStyle .input-group-append,
+.MyspinnerStyle span {
+	float: left;
+}
+
+.MyspinnerStyle .btn {
+	width: 10px;
+}
+
+.MyspinnerStyle input {
+	float: left;
+	width: 146px;
+	text-align: center;
+}
+
+.TipXline {
+	margin-bottom: 5px;
+	border-bottom: solid 4px #dfe9ee;
+	width: 78%;
+	margin-left: 10%;
+	margin-top: 5px;
+}
+
+.myformtext {
+	text-align: left;
+	padding-left: 0px;
+	margin-top: 0px;
+	padding-top: 11px;
+}
+
+.showHideInfoAreaBtn {
+	padding-top: 5px;
+}
+
+.inputChangLink {
+	color: rgb(36, 118, 189);
+	width: 95%;
+	background: rgba(249, 248, 247, 0);
+	text-align: left;
+	outline: none;
+}
+
+.inputChangLink:hover {
+	color: darkgoldenrod;
+}
+
+.col1 {
+	width: 100%;
+	margin-bottom: 9px;
+}
+
+.combinedClassTipinfo {
+	height: auto;
+}
+
+.allWidthInput {
+	width: 70% !important;
+	margin-left: -18.5% !important;
+	text-indent: 13px;
+	    color: #636363;
+    font-weight: 600;
+}
+
+.colInput {
+	width: 79.5%!important;
+	margin-left: 0px !important;
+	text-indent: 13px;
+	color: #636363;
+    font-weight: 600;
+}
+
+.allCheckAction {
+	padding: 10px;
+}
+
+.allCheckAction .icheck-material-blue {
+	float: left;
+	margin-left: 14px;
+}
+
+
+.stuffCheckArea label {
+	font-size: 16px;
+	font-weight: 400;
+}
+
+.stuffCheckArea {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.stuffCheckArea .col4 {
+	height: 80px;
+	max-height: 80px;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.greenTxt {
+	color: green;
+}
+
+.normalTxt {
+	color: rgba(49, 47, 47, 0.8705882352941177);
+}
+
+.redTxt {
+	color: #d70101;
+}
+
+
+
+.searchGivePaddingR .fixed-table-toolbar {
+	padding-right: 1.8%;
+}
+
+.combinedClassTipInput {
+	width: 70% !important;
+	margin-left: -3.5% !important;
+	text-indent: 13px
+}
+
+.breakClassTip .combinedClassTipInput {
+	margin-left: -0.5% !important;
+}
+
+.breakClassTableArea,
+.teacher_studentInfoTableArea {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.breakClassTip .tipbtn {
+	margin-bottom: 15px;
+}
+
+
+.breakClassTableArea .search input {
+	    width: 83%;
+    margin-left: -7px;
+}
+
+.breakClassTip .tipinfo,
+.combinedClassTip .tipinfo {
+	padding-top: 8px;
+}
+
+.labelToBtn {
+	float: right;
+	margin-top: -32px;
+	margin-right: 64px;
+	padding: 7px;
+	font-weight: 800;
+	background: rgba(87, 149, 202, 0.9803921568627451);
+	color: white;
+	border-radius: 4px;
+	letter-spacing: 10px;
+	text-indent: 10px;
+}
+
+.labelToBtn:hover {
+	color: red;
+	background: rgba(31, 105, 158, 0.1803921568627451);
+}
+
+.breakClassTip .myformtext {
+	padding-right: 37px;
+	padding-bottom: 51px;
+}
+
+.emptyChoosedStudentCheckArea {
+	padding-top: 1px;
+	float: left;
+}
+
+.appointClassStudenInfoTip .tools,
+.allClassMangersTip .tools{
+	padding-left: 2%;
+}
+
+.studentTableArea,
+.allClassMangersTableArea {
+	padding-left: 2%;
+	padding-right: 2%;
+}
+
+.modal-backdrop.fade {
+	opacity: 0.5 !important;
+	    z-index: 9999;
+}
+
+.maskingElement {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1030;
+	background-color: #000;
+	opacity: 0.5;
+}
+
+.spinner-box {
+	margin: 0 auto;
+}
+
+.loadingtxt {
+	position: relative;
+    top: 17%;
+    left: -42%;
+    color: #c6e6f5;
+    font-size: 15px;
+    font-family: initial;
+}
+
+.myTooltip {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.myTooltip:focus {
+	outline: none;
+}
+
+.scheduleTableStyle thead th:first-child .th-inner {
+	display: none;
+}
+
+.scheduleTableStyle .myTooltip,
+.scheduleTableStyle .myTableStyle td {
+	overflow: initial !important;
+	text-overflow: unset !important;
+	white-space: normal !important;
+}
+
+.scheduleTableStyle td {
+	text-indent: 0px;
+}
+
+.teaName_teaRoom {
+	margin: 0;
+	padding: 0;
+	display: block;
+	margin-top: -13px;
+}
+
+.singleSchedule {
+	border-bottom: 1px #bdb3b3 dotted;
+	padding-left: 15px;
+	min-height: 97px;
+}
+
+.singleSchedule:last-child {
+	border-bottom: none;
+}
+
+.singleScheduleHover:hover {
+	border: 1px rgba(124, 179, 226, 0.86) dotted;
+	color: white;
+	font-weight: 600;
+	box-shadow: 10px;
+	box-shadow: -1px 2px 20px 3px rgba(42, 84, 109, 0.48);
+	margin-top: 5px;
+	margin-bottom: 12px;
+	/* 	border-radius: 30px 30px 10px 10px; */
+	margin-bottom: 5px;
+	border-bottom: 1px rgba(99, 91, 91, 0.7215686274509804) dotted;
+	border-top: 1px rgba(99, 91, 91, 0.7215686274509804) dotted;
+}
+
+@media screen and (max-width:1230px) {
+	.manytools {
+		clear: both;
+		margin-top: 2%;
+		float: left;
+		width: 100%;
+		margin-bottom: 5px;
+		margin-left: -4px;
+	}
+}
+
+.fileErrorTxTArea .myformtext,
+.tipBody .tools,
+.L_R_P {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+.PEC_corlor {
+	background-color: rgba(68, 176, 228, 0.27);
+}
+
+
+.PE_corlor {
+	background-color: rgba(29, 167, 12, 0.47058823529411764);
+}
+
+.MC_corlor {
+	background-color: rgba(180, 191, 7, 0.5);
+}
+
+.C_Appropriates_corlor {
+	background-color: rgba(243, 174, 186, 0.7490196078431373);
+}
+
+.columnsStyle .columns .btn {
+	width: 75px;
+}
+
+.columnsStyle .columns .keep-open li:first-child,
+.columnsStyle .columns .keep-open li:last-child {
+	display: none;
+}
+
+.dateOfBrithArea .dt {
+	top: 40%;
+	left: 26%;
+	z-index: 100;
+}
+
+.dateOfBrithArea .dt {
+	top: 23%;
+	left: 26%;
+	z-index: 100;
+}
+
+.enterSchoolDateArea .dt {
+	top: 56%;
+	left: 26%;
+	z-index: 100;
+}
+
+.addStudentTip .col1 {
+	margin-left: 64px;
+}
+
+.file {
+	position: absolute;
+	display: inline-block;
+	background: #D0EEFF;
+	/* border: 1px solid #99D3F5; */
+	border-radius: 4px;
+	padding: 2px 12px;
+	overflow: hidden;
+	color: #1E88C7;
+	text-decoration: none;
+	text-indent: 0;
+	line-height: 38px;
+	float: right;
+	margin-left: 59%;
+}
+
+.file input {
+	position: absolute;
+	font-size: 100px;
+	right: 0;
+	top: 0;
+	opacity: 0;
+}
+
+.file:hover {
+	background: #AADFFD;
+	border-color: #78C3F3;
+	color: #004974;
+	text-decoration: none;
+}
+
+.fileContainer {
+	width: 100%;
+	margin-left: 16%;
+	margin-top: 3%;
+}
+
+.msgErrorbg {
+	margin-right: 10px;
+	width: 10px;
+	margin-top: -5px;
+}
+
+.msgSuccessbg {
+	margin-right: 10px;
+	width: 11px;
+	margin-top: -2px;
+	height: 9px;
+}
+
+.fileSuccessTxTArea b {
+	color: green;
+}
+
+.fileSuccessTxTArea .myformtext,
+.fileErrorTxTArea .myformtext {
+	text-align: center;
+}
+
+.culturePlanVerifyTableArea .columns{
+   margin-left: 5px;
+    margin-right: -77px;
+    margin-top: 159px;
+}
+
+.publicCodeModelArea{
+	    position: fixed;
+         right:0;
+         top:30px;
+           width:10%;
+}
+
+.spinnerInTools{
+	    background: none!important;
+    border: none!important;
+        margin-left: 15px;
+}
+
+
+.publicCodeModelArea label{
+    float: left;
+    padding-top: 21px;
+    color: #0e6baf;
+    width: 35px;
+}
+
+@media screen and (max-width:1174px) {
+.publicCodeModelArea{
+   display:none;
+}
+}
+
+.publicCodeModelArea .select-mania{
+margin-left: 4px !important;
+    margin-top: 16px !important;
+    width: 67% !important;
+}
+
+.publicCodeCHildren{
+            width:90%;
+            margin:10px 0;
+            cursor: pointer;
+}
+
+.content-minWidth{
+	    min-width: 500px;
+}
+
+.only_col_SelectTipInfo{
+	margin-left: 65px; 
+    padding-top: 15px;
+}
+
+.only_col_SelectTipInfo .selectName{
+	    width: 9%;
+}
+
+.only_col_SelectTipInfo .select-mania{
+	width: 80% !important;
+}
+
+
+.fixed-table-container input[type="radio"]{
+	margin: 14px auto !important;
+}
+
+.canNotModifythings{
+    color: #d40101;
+        float: left;
+    margin-top: 13px;
+    margin-left: -82px;
+    }
+
+@keyframes serachAnimation {
+	10% {
+		transform: translateX(-3px) rotate(-2deg);
+		-ms-transform: translateX(-3px) rotate(-2deg);
+		/* IE 9 */
+		-webkit-transform: translateX(-3px) rotate(-2deg);
+		/* Safari and Chrome */
+		-o-transform: translateX(-3px) rotate(-2deg);
+		/* Opera */
+		-moz-transform: translateX(-3px) rotate(-2deg);
+		/* Firefox */
+	}
+
+	30% {
+		transform: translateX(3px) rotate(0deg);
+		-ms-transform: translateX(3px) rotate(0deg);
+		-webkit-transform: translateX(3px) rotate(0deg);
+		-o-transform: translateX(3px) rotate(0deg);
+		-moz-transform: translateX(3px) rotate(0deg);
+	}
+
+	50% {
+		transform: translateX(-3px) rotate(1deg);
+		-ms-transform: translateX(-3px) rotate(1deg);
+		-webkit-transform: translateX(-3px) rotate(1deg);
+		-o-transform: translateX(-3px) rotate(1deg);
+		-moz-transform: translateX(-3px) rotate(1deg);
+	}
+
+	70% {
+		transform: translateX(-3px) rotate(-1deg);
+		-ms-transform: translateX(-3px) rotate(-1deg);
+		-webkit-transform: translateX(-3px) rotate(-1deg);
+		-o-transform: translateX(-3px) rotate(-1deg);
+		-moz-transform: translateX(-3px) rotate(-1deg);
+	}
+
+	90% {
+		transform: translateX(-2px) rotate(0deg);
+		-ms-transform: translateX(-2px) rotate(0deg);
+		-webkit-transform: translateX(-2px) rotate(0deg);
+		-o-transform: translateX(-2px) rotate(0deg);
+		-moz-transform: translateX(-2px) rotate(0deg);
+	}
+
+	100% {
+		transform: translateX(0px) rotate(1deg);
+		-ms-transform: translateX(0px) rotate(1deg);
+		-webkit-transform: translateX(0px) rotate(1deg);
+		-o-transform: translateX(0px) rotate(1deg);
+		-moz-transform: translateX(0px) rotate(1deg);
+	}
+}

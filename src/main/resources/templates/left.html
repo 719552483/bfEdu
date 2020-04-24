@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>无标题文档</title>
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<link href="css/icon.css" rel="stylesheet" type="text/css" />
+		<link href="css/useful2.css" rel="stylesheet" type="text/css" />
+		<script language="JavaScript" src="sripts/jquery.min.js"></script>
+
+		<script type="text/javascript">
+			$(function() {
+				//导航切换
+				$(".menuson li").click(function() {
+					$(".menuson li.active").removeClass("active")
+					$(this).addClass("active");
+					$(parent.frames["topFrame"].document).find(".nav").find("a").removeClass("selected");
+				});
+
+				$('.title').click(function() {
+					var $ul = $(this).next('ul');
+					$('dd').find('ul').slideUp();
+					if ($ul.is(':visible')) {
+						$(this).next('ul').slideUp();
+					} else {
+						$(this).next('ul').slideDown();
+					}
+				});
+			})
+		</script>
+
+
+	</head>
+
+	<body style="background:#f0f9fd;">
+		<div class="lefttop"><span></span>菜单栏</div>
+
+		<dl class="leftmenu">
+			<dd>
+				<a href="index.html" target="rightFrame">
+					<div class="title clickToIndex">
+						<i class="iconfont icon-shouye menuIcon"></i><span></span>首页
+					</div>
+				</a>
+			</dd>
+
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-xuesheng menuIcon"></i><span></span>学生管理
+				</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="studentInfo.html" target="rightFrame" id="studentInfo">学生档案管理</a><i></i></li>
+					<!-- <li><cite></cite><a href="right.html" target="rightFrame" id="studentFiles">学生档案管理</a><i></i></li> -->
+					<li><cite></cite><a href="right.html" target="rightFrame" id="studentBreak">学生日常行为/违纪</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="studentClass">学生课程管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="appraisals">学生评价管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="studentNews">学生通知公告管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="questionnaire">调查问卷</a><i></i></li>
+				</ul>
+			</dd>
+
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-jiaoshi menuIcon"></i><span></span>教师管理
+				</div>
+				<ul class="menuson">
+				<!--<li><cite></cite><a href="right.html" target="rightFrame" id="teacherTeaching">教师授课任务</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherPlan">教师授课计划</a><i></i></li> --> 
+					<li><cite></cite><a href="teacherSemestersSchedule.html" target="rightFrame" id="classSchedule">教师授课任务</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="techerStudentList">授课班级学生名单</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="performance">学生课堂表现</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherClassChange">调/停/串课</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="ackExam">申请结课/考试</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="gradeEntry">成绩录入</a><i></i></li>
+				</ul>
+			</dd>
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-jiaowuxitong menuIcon"></i><span></span>教务管理
+				</div>
+				<ul class="menuson">
+				    <li><cite></cite><a href="courseLibrary.html" target="rightFrame" id="courseLibrary">课程库管理</a><i></i></li>
+				    <li><cite></cite><a href="classManger.html" target="rightFrame" id="classManger">班级管理</a><i></i></li>
+					<li><cite></cite><a href="culturePlan.html" target="rightFrame" id="culturePlan">培养计划</a><i></i></li>
+					<li><cite></cite><a href="" target="rightFrame" id="">发布教学任何书</a><i></i></li>
+					<li><cite></cite><a href="scheduleClasses.html" target="rightFrame" id="officeClassesSchedule">排课管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="officeTeaching">上课管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="conutQuery">统计查询</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="FileFiling">材料归档</a><i></i></li>
+					<li><cite></cite><a href="publiCode.html" target="rightFrame" id="publiCode">公共代码维护</a><i></i></li>
+				</ul>
+			</dd>
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-banzhuren menuIcon"></i><span></span>辅导员/班主任管理
+				</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="leaderInfo">辅导员/班主任基本信息</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="leaderCheck">辅导员/班主任考勤</a><i></i></li>
+					<!-- <li><cite></cite><a href="right.html" target="rightFrame" id="leaderSchedule">辅导员/班主任课表</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="leaderStudentGrade">辅导员/班主任学生成绩</a><i></i></li> -->
+					<li><cite></cite><a href="right.html" target="rightFrame" id="leaderLog">辅导员/班主任日志</a><i></i></li>
+				</ul>
+			</dd>
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-xuexiaogaikuang menuIcon"></i><span></span>教学点管理
+				</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="localInfo">教学点基本信息</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="localUseFrequency">教学点使用率</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="localAssets">固定资产管理</a><i></i></li>
+				</ul>
+			</dd>
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-shenpi menuIcon"></i><span></span>审批平台
+				</div>
+				<ul class="menuson">
+				    <li><cite></cite><a href="culturePlanapproval.html" target="rightFrame" id="culturePlanapproval">培养计划审批</a><i></i></li>
+				    <li><cite></cite><a href="courseLibraryapproval.html" target="rightFrame" id="courseLibraryapproval">课程库审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="studentAskStopClass">学生休学管理审批申请</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="studentStopClassApproval">学生休学/退学管理审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="businessAsk">出差信息申请录入</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="businessApproval">出差信息申请审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="techerHire">教师聘任审批流程</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="othterTeacherHire">外聘教师聘任审批</a><i></i></li>
+				</ul>
+			</dd>
+
+
+			<dd>
+				<div class="title"><i class="iconfont icon-dashuju menuIcon"></i><span></span>大数据分析平台</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachDatasConfiguration">教学数据驾驶舱配置</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="surveillanceConfiguration">远程监控接口配置</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="facerecognitionConfiguration">人脸识别接口配置</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="dataAnalysis">专项数据分析算法设定</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="dataExcavating">专项数据挖掘</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="dataPrediction">专项数据预测分析</a><i></i></li>
+				</ul>
+
+			</dd>
+			
+			
+			<dd>
+				<div class="title"><i class="iconfont icon-dashuju menuIcon"></i><span></span>系统管理</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="addUser.html" target="rightFrame" id="addAccount">账号管理</a><i></i></li>
+					<li><cite></cite><a href="roleManger.html" target="rightFrame" id="authoritysConfiguration">权限管理</a><i></i></li>
+				</ul>
+			</dd>
+			
+
+		
+
+			<!-- <dd>
+				<div class="title">
+					<i class="iconfont icon-jiaoshiguanli menuIcon"></i><span></span>教师管理
+				</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachersInfo">教师基本信息管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachersAndClass">教师-班级管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachersClassSchedule">教师课表明细管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="gradeEntr">成绩录入</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="scheduleManger">课程管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="businessApplication">出差信息申请录入</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherHire">教师聘任审批流程</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherChangeClass">教师调课管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherStopClass">教师停课管理</a><i></i></li>
+				</ul>
+			</dd>
+
+
+			<dd>
+				<div class="title">
+					<i class="iconfont icon-jiaoshi menuIcon"></i><span></span>辅导员管理
+				</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsInfo">辅导员基本信息管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsAttendanceforstudent">辅导员-学生考勤管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsConclusion">辅导员学期总结</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsLog">辅导员日志</a><i></i></li>
+				</ul>
+			</dd>
+
+
+			<dd>
+				<div class="title"><i class="iconfont icon-jiaoxue menuIcon"></i><span></span>教学点管理</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachLocationsInfo">教学点基本信息管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachAssets">教学点固定资产管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachLeasing">教学点租赁审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="culturingPlan">人才定向培养方案</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="policys">政策文件下发/查询</a><i></i></li>
+				</ul>
+			</dd>
+
+
+			<dd>
+				<div class="title"><i class="iconfont icon-shenpi menuIcon"></i><span></span>审批管理平台</div>
+				<ul class="menuson">
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachProgress">教学进度查询</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="budget">预算管理</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="studentSuspension">学生休学管理审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="businessApproval">出差信息申请审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherHireApproval">教师聘任审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="teachLeasingApproval">教学点租赁审批</a><i></i></li>
+					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsHireApproval">辅导员聘任审批</a><i></i></li>
+				</ul>
+
+			</dd>
+
+
+
+
+
+
+ -->
+		</dl>
+		<div class="modal-backdrop fade maskingElement noneStart"></div>
+	</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>首页</title>
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<link href="css/useful2.css" rel="stylesheet" type="text/css" />
+		<link href='css/animate.min.css' media='all' rel='stylesheet' type='text/css' />
+		<link href="css/toastr.min.css" rel="stylesheet" type="text/css" />
+		<link href="css/select-mania.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="sripts/jquery.min.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/implement.js"></script>
+		<script src="sripts/select-mania.js" type="text/javascript"></script>
+		<script src="sripts/toastr.min.js" type="text/javascript"></script>
+</head>
+	<body>
+
+		<div class="place">
+			<span>位置：</span>
+			<ul class="placeul">
+				<li class="backIndex"><a>首页</a></li>
+			</ul>
+		</div>
+
+		<div class="mainindex">
+
+			<div class="configIndexPage">
+				<div class="welinfo">
+					<span><img src="images/sun.png" alt="天气" /></span>
+					<b>您好admin，欢迎使用 倍奋教育信息化综合管理平台</b>
+					<a href="accountSetup.html">帐号设置</a>
+				</div>
+
+				<div class="welinfo">
+					<span><img src="images/time.png" alt="时间" /></span>
+					<i>您上次登录的时间：2020-01-05 15:22</i> （不是您登录的？<a href="accountSetup.html">请点这里</a>）
+				</div>
+
+				<div class="xline"></div>
+
+				<ul class="iconlist choosendShortcuts">
+				</ul>
+
+				<div class="ibox"><a class="ibtn" onclick="showAllShortcuts()"><img src="images/iadd.png" />添加常用快捷功能</a></div>
+
+				<div class="xline"></div>
+
+				<div class="leftinfos infoCenter">
+					<div class="infoleft noFloat">
+						<div class="listtitle"><a href="#" class="more1">更多</a>重要通知</div>
+						<ul class="newlist">
+							<li id="id1"><a href="#">上海自贸区今日正式挂牌成立</a><b>10-09</b></li>
+							<li><a href="#">习近平将访东南亚两国 首次出席APEC峰会</a><b>10-08</b></li>
+							<li><a href="#">最高法:谎称炸弹致航班备降者从重追刑责</a><b>10-09</b></li>
+							<li><a href="#">华北大部遭遇雾霾天 北京全城陷重污染</a><b>10-06</b></li>
+							<li><a href="#">"环保专家"董良杰涉嫌寻衅滋事被刑拘</a><b>10-05</b></li>
+							<li><a href="#">中央巡视组：重庆对一把手监督不到位</a><b>10-04</b></li>
+							<li><a href="#">囧!悍马没改好成华丽马车(图)</a><b>10-03</b></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="xline"></div>
+
+				<div class="leftinfos infoCenter">
+					<div class="infoleft noFloat">
+						<div class="listtitle">课程安排总览</div>
+
+					</div>
+				</div>
+			</div>
+
+
+			<div class="allShortcuts minH noneStart">
+				<div class="tools">
+					<ul class="toolbar">
+						<li class="click" id="shortcutsAllChose"><span><img src="img/right.png" style="width: 24px;"/></span>全选快捷键</li>
+						<li id="shortcutsRefresh"><span><img src="img/reback.png" style="width: 24px;"/></span>重置快捷键</li>
+					</ul>
+
+					<div class="Index_authorityGroupArea">
+						<select class="isSowIndex" id="authorityGroup"></select>
+					</div>
+					
+					<ul class="toolbar1">
+						<li class="click" id="addShortcuts"><span><img src="images/t01.png" style="width: 24px;"/></span>确认操作</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="xline"></div>
+			<div class="versionInfo">
+				CopyRight ©2019倍奋软件科技 (上海) 有限公司
+			</div>
+
+			<div class="tip">
+				<div class="tiptop"><span>提示信息</span><a class="shortcutsCancelBtn"></a></div>
+
+				<div class="tipinfo">
+					<span><img src="images/ticon.png"/></span>
+					<div class="tipright">
+						<p>是否确认对<a class="tipTitle"></a>的修改 ？</p>
+						<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+					</div>
+				</div>
+
+				<div class="tipbtn">
+					<input name="" type="button" class="sure shortcutsConfirm" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel shortcutsCancelBtn" value="取消"/>
+				</div>
+
+			</div>
+		</div>
+		<div class="modal-backdrop fade maskingElement noneStart"></div>
+				<div class="modal-backdrop fade loadingMasking noneStart">
+				<div class="spinner-box">
+					<div class="pulse-container">
+						<div class="pulse-bubble pulse-bubble-1"></div>
+						<div class="pulse-bubble pulse-bubble-2"></div>
+						<div class="pulse-bubble pulse-bubble-3"></div>
+					</div>
+					<div class="loadingtxt">数据加载中，请稍后...</div>
+				</div>
+		</div>
+	</body>
+</html>

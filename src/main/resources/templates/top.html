@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>顶部</title>
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<link href="css/icon.css" rel="stylesheet" type="text/css" />
+		<link href="css/useful2.css" rel="stylesheet" type="text/css" />
+		<script language="JavaScript" src="sripts/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				//顶部导航切换
+				$(".nav li a").click(function() {
+					$(".nav li a.selected").removeClass("selected")
+					$(this).addClass("selected");
+					$(parent.frames["leftFrame"].document).find(".leftmenu").find("li").removeClass("active");
+				})
+			})
+		</script>
+
+
+	</head>
+
+	<body style="background:url(img/topbg.gif) repeat-x;">
+
+		<div class="topleft">
+			<a href="main.html" target="_parent"><img src="img/logo.png" title="系统首页" /></a>
+		</div>
+
+		<ul class="nav">
+			<li><a href="LargeScreen.html" target="-_blank"><img src="images/icon02.png" title="大数据展示" />
+					<h2>大数据展示</h2>
+				</a></li>
+			<!-- <li><a href="right.html"target="rightFrame" class=" "><img src="images/icon01.png" title="通讯录"/><h2>通讯录</h2></a></li> -->
+			<li><a href="releaseNews.html" target="rightFrame" class=" "><img src="images/i09.png" title="发布通知" style="width: 67px;height: 69px;margin-top: -3%;margin-bottom: -13%;"/>
+					<h2>发布通知</h2>
+				</a></li>
+			<li><a href="accountSetup.html" target="rightFrame"><img src="images/icon06.png" title="账号设置" />
+					<h2>账号设置</h2>
+				</a></li>
+		</ul>
+
+		<div class="topright">
+			<ul>
+				<li><a href="login.html" target="_parent"><i class="iconfont icon-tuichu endIcon"></i>退出</a></li>
+			</ul>
+
+			<div class="user">
+				<span userId="012321">admin</span>
+				<i>消息</i>
+				<b>5</b>
+			</div>
+
+		</div>
+		<div class="modal-backdrop fade maskingElement noneStart"></div>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>倍奋教育信息化综合展示平台-登录</title>
+<link href="img/titleLogo.ico" rel="shortcut icon" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="css/Vidage.css" />
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link rel="stylesheet" type="text/css" href="css/toastr.min.css" />
+</head>
+<body>
+
+	<div id="logo">
+		<h1 class="hogo">
+			<i class="titleCenter">辽宁职业学院<br>扩招信息化平台
+			</i>
+		</h1>
+	</div>
+	<section class="stark-login putCenter">
+		<div class="loginArea">
+			<div id="fade-box">
+				<input type="text" name="username" id="username" placeholder="用户名"
+					required> <input type="password" placeholder="密码"
+					name="password" id="password" required>
+				<button id="confrimLogin">登录</button>
+			</div>
+		</div>
+	</section>
+
+	<div id="circle1" class="circlePutCenter">
+		<div id="inner-cirlce1">
+			<h2></h2>
+		</div>
+	</div>
+
+
+	<div class="Vidage">
+		<video id="VidageVideo" class="Vidage__video" preload="metadata" loop
+			autoplay muted>
+			<source src="videos/bg.webm" type="video/webm">
+			<source src="videos/bg.mp4" type="video/mp4">
+		</video>
+	</div>
+	<script src='sripts/jquery.min.js' type='text/javascript'></script>
+	<script src="sripts/Vidage.min.js"></script>
+	<script src="sripts/jquerySession.js"></script>
+	<script src="sripts/toastr.min.js" type="text/javascript"></script>
+	<script src="js/login.js"></script>
+	<script>
+		new Vidage('#VidageVideo');
+	</script>
+</body>
+</html>

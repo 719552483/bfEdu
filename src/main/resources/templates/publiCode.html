@@ -1,0 +1,691 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>公共代码维护</title>
+<link href="css/loading.css" rel="stylesheet" type="text/css" />
+<link href="css/icon.css" rel="stylesheet" type="text/css" />
+<link href='css/bootstrap.min.css' media='all' rel='stylesheet'
+	type='text/css' />
+<link href='css/bootstrap-table.css' media='all' rel='stylesheet'
+	type='text/css' />
+<link href="css/example-styles.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/useful2.css" rel="stylesheet" type="text/css" />
+<link href="css/toastr.min.css" rel="stylesheet" type="text/css" />
+<link href='css/animate.min.css' media='all' rel='stylesheet'
+	type='text/css' />
+<link href="css/select-mania.css" rel="stylesheet" type="text/css" />
+<link href="css/tooltipify.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="sripts/jquery.min.js"></script>
+<script src='sripts/bootstrap.min.js' type='text/javascript'></script>
+<script src='sripts/bootstrap-table.js' type='text/javascript'></script>
+<script src='sripts/bootstrap-table-zh-CN.min.js' type='text/javascript'></script>
+<script src="sripts/toastr.min.js" type="text/javascript"></script>
+<script src="sripts/select-mania.js" type="text/javascript"></script>
+<script src="sripts/jquery.idTabs.min.js" type="text/javascript"></script>
+<script src="sripts/bootstrap-input-spinner.js" type="text/javascript"></script>
+<script src="sripts/jquery.multi-select.min.js" type="text/javascript"></script>
+<script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
+<script type="text/javascript" src="js/implement.js"></script>
+<script type="text/javascript" src="js/publiCode.js"></script>
+</head>
+
+<body>
+
+	<div class="place" id="all">
+		<span>位置：</span>
+		<ul class="placeul">
+			<li><a href="index.html">首页</a></li>
+			<li><a>公共代码维护</a></li>
+		</ul>
+	</div>
+
+	<div class="formbody">
+		<div id="usual1" class="usual">
+			<div class="itab">
+				<ul>
+					<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">教务公共代码库</a></li>
+					<li><a href="#tab2" onclick="drawBreadPilot(this)">教学公共代码库</a></li>
+					<li><a href="#tab3" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab3()">培养计划管理</a></li>
+				</ul>
+			</div>
+		</div>
+
+
+		<div id="tab1" class="tabson myTabson">
+			<div class="forminfo">
+				<div class="publicCodeModelArea">
+					<label>模块导航</label> <select class="isSowIndex" id="publicCodeModel_jw">
+						<option value="all">全部</option>
+						<option value="levelManger">培养层次管理</option>
+						<option value="departmentManger">系部管理</option>
+						<option value="gradeManger">年级管理</option>
+						<option value="majorManger">专业管理</option>
+					</select>
+				</div>
+			</div>
+
+			<div id="levelManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>培养层次管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addNewLevel"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+							<li class="click" id="reomoveLevels"><span><img src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
+						</ul>
+					</div>
+					<div class="allLevlTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="allLevlTable" data-unique-id="edu103_ID" style="margin-top: 10px;"></table>
+				    </div>
+				</div>
+			</div>
+
+			<div id="departmentManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>系部管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addNewDepartment"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+							<li class="click" id="reomoveDepartments"><span><img src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
+						</ul>
+					</div>
+					<div class="allDepartmentTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="allDepartmentTable" data-unique-id="edu104_ID" style="margin-top: 10px;"></table>
+				    </div>
+				</div>
+			</div>
+
+			<div id="gradeManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>年级管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addNewGrade"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+							<li class="click" id="reomoveGrades"><span><img src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
+						</ul>
+					</div>
+					<div class="allGradeTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="allGradeTable" data-unique-id="edu105_ID" style="margin-top: 10px;"></table>
+				    </div>
+				</div>
+			</div>
+
+			<div id="majorManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>专业管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addNewMajor"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+							<li class="click" id="reomoveMajors"><span><img src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
+						</ul>
+					</div>
+					<div class="allMajorTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="allMajorTable" data-unique-id="edu106_ID" style="margin-top: 10px;"></table>
+				    </div>
+				</div>
+			</div>
+		</div>
+
+		<div id="tab2" class="tabson myTabson">
+			<div class="forminfo">
+				<div class="publicCodeModelArea">
+					<label>模块导航</label> <select class="isSowIndex" id="publicCodeModel">
+						<option value="all">全部</option>
+						<option value="termManger">学期管理</option>
+						<option value="classTimePartManger">课节时间段管理</option>
+						<option value="otherTimePartManger">额外时间段管理</option>
+						<option value="setUpDepartment">开课部门</option>
+						<option value="scheduleClassesDepartment">排课部门</option>
+						<option value="tecchTaskIn">教学任务书输入</option>
+						<option value="tecchScheduleIn">教学排课输入</option>
+						<option value="parcelClassroom">分配部门排课课室</option>
+						<option value="teacherScheduleClassesLimit">教师排课限制条件</option>
+						<option value="schoolTeacher_cannotScheduleClasses">校内老师禁止排课星期和课节</option>
+						<option value="cannotScheduleClasses_week">禁止排课星期</option>
+						<option value="cannotUseClassroom">禁止使用排课教室</option>
+						<option value="class_yjkjsxz">一节课节数限制</option>
+						<option value="calssScheduleReleaseTime">学年学期课表发布时间</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div id="termManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>学期管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+							<li class="click" id=""><span><img
+									src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+							<li class="MyspinnerStyle spinnerInTools"><label
+								class="selectName">年份</label><input type="number" min="1949"
+								step="1" /></li>
+						</ul>
+						<ul class="toolbar1 manytools">
+							<li class="click" id=""><span><img
+									src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+						</ul>
+					</div>
+				</div>
+
+
+
+			</div>
+
+			<div id="classTimePartManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>课节时间段管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="otherTimePartManger" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>额外时间段管理</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="setUpDepartment" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>开课部门</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="scheduleClassesDepartment" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>排课部门</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="tecchTaskIn" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>教学任务书输入</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="tecchScheduleIn" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>教学排课输入</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="parcelClassroom" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>分配部门排课课室</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="teacherScheduleClassesLimit" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>教师排课限制条件</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="schoolTeacher_cannotScheduleClasses"
+				class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>校内老师禁止排课星期和课节</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="cannotScheduleClasses_week" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>禁止排课星期</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="cannotUseClassroom" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>禁止使用排课教室</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="class_yjkjsxz" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>一节课节数限制</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="calssScheduleReleaseTime" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>学年学期课表发布时间</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id=""><span><img
+									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+        <div id="tab3" class="tabson myTabson">
+        <span class="isFirstShowTab3 noneStart">T</span>
+	        <div class="tools">
+					<ul class="toolbar">
+						 <li class="click" id="addRelation"><span><img src="images/t01.png" style="width: 24px;"/></span>新增培养计划</li>
+						 <li class="click" id="removeRelations"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除</li>
+						 <li class="click" id="startSearch_relation"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+					
+					</ul>
+					
+					<ul class="toolbar1">
+						<li class="click" id="reReloadSearchs_relation"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+					</ul>
+			</div>
+			
+			<div class="searchArea searchAreaWitheSelect">
+			
+			
+                <div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">培养层次名称</label>
+								<input name="" type="text" class="myInput searchInput" id="relation_seaechLvel" placeholder="请输入培养层次名称..."/>
+						</div>
+					</ul>
+				</div>
+				
+				 <div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">系部名称</label>
+								<input name="" type="text" class="myInput searchInput" id="relation_seaechDeaparment" placeholder="请输入系部名称..."/>
+						</div>
+					</ul>
+				</div>
+				
+			    <div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">年级名称</label>
+								<input name="" type="text" class="myInput searchInput" id="relation_seaechGrade" placeholder="请输入年级名称..."/>
+						</div>
+					</ul>
+				</div>
+				
+			   <div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">专业名称</label>
+								<input name="" type="text" class="myInput searchInput" id="relation_seaechMajor" placeholder="请输入专业名称..."/>
+						</div>
+					</ul>
+				</div>
+            </div>
+            
+           <div class="relationTableArea searchGivePaddingR">
+				<table class="tablelist myTableStyle" id="relationTable" data-unique-id="edu107_ID" style="margin-top: 10px;"></table>
+		  </div>
+        
+        </div>
+
+	</div>
+
+	<script type="text/javascript">
+		$("#usual1 ul").idTabs();
+	</script>
+	
+	
+	<div class="tip manyInfoShow addNewRelationTip">
+		<div class="tiptop">
+			<span>新增培养计划</span><a class="cancel"></a>
+		</div>
+		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+		   <div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">培养计划名称</label>
+						<input name="" type="text" class="myInput colInput" id="addNewRelation_RelationName" placeholder="请输入培养计划名称..."/>
+					</div>
+				</ul>
+			</div>
+		
+			<div class="col1 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">培养层次</label>
+							<select class="isSowIndex" id="addNewRelation_level">
+								<option value="seleceConfigTip">请选择</option>
+							</select>
+						</div>
+					</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">系部</label>
+							<select class="isSowIndex" id="addNewRelation_department">
+								<option value="seleceConfigTip">请选择</option>
+							</select>
+						</div>
+					</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">年级</label>
+							<select class="isSowIndex" id="addNewRelation_garde">
+								<option value="seleceConfigTip">请选择</option>
+							</select>
+						</div>
+					</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">专业</label>
+							<select class="isSowIndex" id="addNewRelation_major">
+								<option value="seleceConfigTip">请选择</option>
+							</select>
+						</div>
+					</ul>
+			</div>
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure addNewRelationTip_confimBtn" value="确定" />&nbsp;
+			<input name="" type="button" class="cancel" value="取消" />
+		</div>
+	</div>
+
+	<div class="tip manyInfoShow addNewLevelTip">
+		<div class="tiptop">
+			<span>新增层次</span><a class="cancel"></a>
+		</div>
+		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+		  <div class="col1 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">校区</label>
+							<select class="isSowIndex" id="addNewLevel_schoolLocation">
+								<option value="seleceConfigTip">请选择</option>
+							</select>
+						</div>
+					</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">名称</label>
+						<input name="" type="text" class="myInput colInput" id="addNewLevel_levelName" placeholder="请输入培养层次名称..."/>
+					</div>
+				</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">编码</label>
+						<input name="" type="text" class="myInput colInput" id="addNewLevel_levelCode" placeholder="请输入培养层次编码..."/>
+					</div>
+				</ul>
+			</div>
+		
+			<div class="col1 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">入学季节</label>
+							<select class="isSowIndex" id="addNewLevel_enterSeason">
+								<option value="seleceConfigTip">请选择</option>
+							</select>
+						</div>
+					</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">学制</label>
+						<input name="" type="text" class="myInput colInput" id="addNewLevel_academicStructure" placeholder="请输入学制..."/>
+					</div>
+				</ul>
+			</div>
+		
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure confimAddNewLevel" value="确定" />&nbsp;
+			<input name="" type="button" class="cancel" value="取消" />
+		</div>
+	</div>
+
+	<div class="tip manyInfoShow addNewDeaparmentTip">
+		<div class="tiptop">
+			<span>新增系部</span><a class="cancel"></a>
+		</div>
+		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">系部名称</label>
+						<input name="" type="text" class="myInput colInput" id="addNewDeaparment_deaparmentName" placeholder="请输入系部名称..."/>
+					</div>
+				</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">系部编码</label>
+						<input name="" type="text" class="myInput colInput" id="addNewDeaparment_deaparmentCode" placeholder="请输入系部编码..."/>
+					</div>
+				</ul>
+			</div>
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure confimaddNewDeaparment" value="确定" />&nbsp;
+			<input name="" type="button" class="cancel" value="取消" />
+		</div>
+	</div>
+
+	<div class="tip manyInfoShow addNewGradeTip">
+		<div class="tiptop">
+			<span>新增年级</span><a class="cancel"></a>
+		</div>
+		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">年级名称</label>
+						<input name="" type="text" class="myInput colInput" id="addNewGrade_gradeName" placeholder="请输入年级名称..."/>
+					</div>
+				</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">年级编码</label>
+						<input name="" type="text" class="myInput colInput" id="addNewGrade_gradeCode" placeholder="请输入年级编码..."/>
+					</div>
+				</ul>
+			</div>
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure confimaddNewGrade" value="确定" />&nbsp;
+			<input name="" type="button" class="cancel" value="取消" />
+		</div>
+	</div>
+
+    <div class="tip manyInfoShow addNewMajorTip">
+		<div class="tiptop">
+			<span>新增专业</span><a class="cancel"></a>
+		</div>
+		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">专业名称</label>
+						<input name="" type="text" class="myInput colInput" id="addNewMajor_mjorName" placeholder="请输入专业名称..."/>
+					</div>
+				</ul>
+			</div>
+			
+			<div class="col1 giveBottom">
+				<ul class="forminfo">
+					<div class="">
+						<label class="selectName" style="margin-top: 14px;">专业编码</label>
+						<input name="" type="text" class="myInput colInput" id="addNewMajor_majorCode" placeholder="请输入专业编码..."/>
+					</div>
+				</ul>
+			</div>
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure confimaddNewMajor" value="确定" />&nbsp;
+			<input name="" type="button" class="cancel" value="取消" />
+		</div>
+	</div>
+
+	<div class="tip remindTip">
+		<div class="tiptop">
+			<span>提示信息</span><a class="cancel"></a>
+		</div>
+		<div class="tipinfo">
+			<span><img src="images/ticon.png" /></span>
+			<div class="tipright">
+				<p>
+					是否确认对<a class="remindType"></a>的<a class="remindActionType"></a> ？
+				</p>
+				<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+			</div>
+		</div>
+
+		<div class="tipbtn">
+			<input name="" type="button" class="sure confirmRemind" value="确定" />&nbsp;
+			<input name="" type="button" class="cancel" value="取消" />
+		</div>
+	</div>
+
+	<div class="modal-backdrop fade maskingElement noneStart"></div>
+		<div class="modal-backdrop fade loadingMasking noneStart">
+				<div class="spinner-box">
+					<div class="pulse-container">
+						<div class="pulse-bubble pulse-bubble-1"></div>
+						<div class="pulse-bubble pulse-bubble-2"></div>
+						<div class="pulse-bubble pulse-bubble-3"></div>
+					</div>
+					<div class="loadingtxt">数据加载中，请稍后...</div>
+				</div>
+		</div>
+
+</body>
+</html>
