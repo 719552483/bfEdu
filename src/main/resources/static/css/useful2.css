@@ -386,7 +386,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .multi-select-container {
-	margin-left: -3.5%;
+	margin-left: -4.5%;
 	margin-top: -5px;
 }
 
@@ -513,10 +513,10 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .breakClassTableArea .search {
-	margin-top: 15px !important;
-	margin-left: 25%;
-	margin-bottom: 0px;
-	float: none !important;
+    margin-top: 0px !important;
+    margin-left: 25%;
+    margin-bottom: 3px;
+    float: none !important;
 }
 
 .allClassTableArea .search {
@@ -530,7 +530,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .studentTableArea .search {
-	margin-top: 87px !important;
+	margin-top: 5px !important;
 }
 
 .teacher_studentInfoTableArea .search {

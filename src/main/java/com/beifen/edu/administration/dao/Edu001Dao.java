@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.beifen.edu.administration.domian.Edu001;
 
-public interface Edu001Dao extends JpaRepository<Edu001, Long>,JpaSpecificationExecutor<Edu001> {
+public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecificationExecutor<Edu001> {
 
 	// 查询所有学生编码
 	@Query(value = "select * from  edu001", nativeQuery = true)
@@ -22,7 +22,12 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>,JpaSpecificationE
 	@Query(value = "delete from edu001 where edu001_id =?1", nativeQuery = true)
 	void deleteDiseaseCodeing(String bf003_id);
 
-	// 按条件搜索学生
+	// 按学号搜索学生
 	@Query(value = "select * from edu001 b where b.xh like ?1%", nativeQuery = true)
-	public List<Edu001> queryAllDiseasesByCodeing(String SearchCriteria);
+	public List<Edu001> queryAllDiseasesByCodeing(String xh);
+
+	// 按行政班搜索学生
+	@Query(value = "select * from edu001 b where b.xzbcode=?1", nativeQuery = true)
+	public List<Edu001> queryStudentInfoByAdministrationClass(String xzbCode);
+
 }

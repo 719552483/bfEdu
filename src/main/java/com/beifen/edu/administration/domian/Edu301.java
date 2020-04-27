@@ -30,7 +30,7 @@ public class Edu301 {
 	private String bhxsxm;  //包含的学生姓名
 	private String bhxsCode;  //包含的学生编码   包含的行政班和学生二选一
 	private int jxbrs;  //教学班人数
-	private int jxbrl;  //教学班容量
+//	private int jxbrl;  //教学班容量
 	private String sffbjxrws;  //是否发布教学任务书
 	private String yxbz;//有效标志
 	
@@ -159,12 +159,12 @@ public class Edu301 {
 	public void setBhxsCode(String bhxsCode) {
 		this.bhxsCode = bhxsCode;
 	}
-	public int getJxbrl() {
-		return jxbrl;
-	}
-	public void setJxbrl(int jxbrl) {
-		this.jxbrl = jxbrl;
-	}
+//	public int getJxbrl() {
+//		return jxbrl;
+//	}
+//	public void setJxbrl(int jxbrl) {
+//		this.jxbrl = jxbrl;
+//	}
 	
 	
 }

@@ -36,7 +36,6 @@ import org.thymeleaf.util.ArrayUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.domian.Edu990;
@@ -1671,6 +1670,7 @@ public class AdministrationController {
 			for (int p = 0; p < palnInfos.size(); p++) {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
+				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
 				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
 				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
@@ -1720,7 +1720,6 @@ public class AdministrationController {
 			Edu301 verifyEdu301=new Edu301();
 			verifyEdu301.setEdu108_ID(jsonObject.getLong("edu108_ID"));
 			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
-			verifyEdu301.setJxbrl(jsonObject.getInt("jxbrl"));
 			verifyEdu301.setPyccmc(jsonObject.getString("pyccmc"));
 			verifyEdu301.setPyccbm(jsonObject.getString("pyccbm"));
 			verifyEdu301.setXbmc(jsonObject.getString("xbmc"));
@@ -1742,11 +1741,10 @@ public class AdministrationController {
 		 for (int i = 0; i < verifyList.size(); i++) {
 			 Edu301 thisClassInfo=verifyList.get(i);
 			 for (int a = 0; a < allTeachingClasses.size(); a++) {
-					if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())&&allTeachingClasses.get(a).getBhxzbCode().equals(thisClassInfo.getBhxzbCode())){
-						isHaveTeachingClass=true;
-						break;
-			         }
-					
+//					if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())&&allTeachingClasses.get(a).getBhxzbCode().equals(thisClassInfo.getBhxzbCode())){
+//						isHaveTeachingClass=true;
+//						break;
+//			         }
 					if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
 					String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
 					String[] edu301BhxzbCode=thisClassInfo.getBhxzbCode().split(",");
@@ -1785,7 +1783,6 @@ public class AdministrationController {
 			Edu301 verifyEdu301=new Edu301();
 			verifyEdu301.setEdu108_ID(jsonObject.getLong("edu108_ID"));
 			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
-			verifyEdu301.setJxbrl(jsonObject.getInt("jxbrl"));
 			verifyEdu301.setPyccmc(jsonObject.getString("pyccmc"));
 			verifyEdu301.setPyccbm(jsonObject.getString("pyccbm"));
 			verifyEdu301.setXbmc(jsonObject.getString("xbmc"));
@@ -1816,6 +1813,8 @@ public class AdministrationController {
 					if(addClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
 						administrationPageService.removeTeachingClassByID(allTeachingClasses.get(a).getEdu301_ID().toString());
 						administrationPageService.addTeachingClass(addClassInfo);
+					}else{
+						administrationPageService.addTeachingClass(addClassInfo);
 					}
 				}
 			}
@@ -1827,7 +1826,27 @@ public class AdministrationController {
 
 	
 	
-	
+	/**
+	 * 根据行政班查询学生信息
+	 */
+	@RequestMapping("/queryStudentInfoByAdministrationClass")
+	@ResponseBody
+	public Object queryStudentInfoByAdministrationClass(@RequestParam("xzbCode") String xzbCode) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONArray array = JSONArray.fromObject(xzbCode); //解析json字符
+		List<Edu001> studentInfos = new ArrayList<Edu001>();
+		for (int i = 0; i < array.size(); i++) {
+			List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(array.get(i).toString());
+			for (int a = 0; a < administrationClassStudents.size(); a++) {
+				Edu001 edu001=administrationClassStudents.get(a);
+				studentInfos.add(edu001);
+			}
+		}
+		
+		returnMap.put("studentInfo", studentInfos);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	

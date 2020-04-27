@@ -260,23 +260,11 @@ public class AdministrationPageService {
 	public void removeAdministrationClass(String edu108ID) {
 		edu300DAO.removeAdministrationClass(edu108ID);
 	}
-//	
-//	//根据108ID查询培养计划
-//	public Edu108 queryPlanByEdu108ID(String edu108ID) {
-//		return edu108DAO.queryPlanByEdu108ID(edu108ID);
-//	}
 	
     //生成开课计划时修改行政班的开课计划属性
 	public void generatAdministrationCoursePlan(String edu300Id, String isGeneratCoursePlan) {
 		edu300DAO.generatAdministrationCoursePlan(edu300Id,isGeneratCoursePlan);
 	}
-
-//	//查询所有教学班
-//	public List<Edu301> queryAllTeachingClasses(String levelCode, String departmentCode, String gradeCode,String majorCode) {
-//		return edu301DAO.queryAllTeachingClasses(levelCode,departmentCode,gradeCode,majorCode);
-//	}
-	
-	
 	
 	//判断行政班是否包含在培养计划中
 	public List<Edu108> queryAdministrationClassesCrouse(String edu300ID) {
@@ -298,8 +286,10 @@ public class AdministrationPageService {
 		edu301DAO.removeTeachingClassByID(edu301ID);
 	}
 	
-	
-	
+	//根据行政班查询学生信息
+	public List<Edu001> queryStudentInfoByAdministrationClass(String xzbCode) {
+		return edu001DAO.queryStudentInfoByAdministrationClass(xzbCode);
+	}
 	
 	
 	
@@ -566,6 +556,8 @@ public class AdministrationPageService {
 		List<Edu108> crouseEntities = edu108DAO.findAll(specification);
 		return crouseEntities;
 	}
+
+
 
 
 

@@ -710,7 +710,7 @@ function stuffClassManagementTable(tableInfo) {
 			field : 'edu300_ID',
 			title : 'edu300_ID',
 			align : 'center',
-			visible : false
+			visible : true
 		}, {
 			field : 'check',
 			checkbox : true
@@ -911,7 +911,6 @@ function saveTeachingClass() {
 			var choosedTeaching = new Object();
 			choosedTeaching.edu108_ID = allClass[i].edu108_ID;
 			choosedTeaching.jxbmc = allClass[i].jxbmc;
-			choosedTeaching.jxbrl =parseInt(allClass[i].rnrs);
 			choosedTeaching.pyccmc = planInfo.levelTxt;
 			choosedTeaching.pyccbm = planInfo.level;
 			choosedTeaching.xbmc = planInfo.departmentTxt;
@@ -957,7 +956,7 @@ function combinedClass() {
 			toastr.warning('请选择相同课程');
 			return;
 		} else {
-			combinedClassName += choosedTeachingClass[i].kcmc+ '+';
+			combinedClassName +=  choosedTeachingClass[i].kcmc+choosedTeachingClass[i].xzbmc+ '+';
 			combinedClassStudentNum += choosedTeachingClass[i].zdrs;
 			combinedMajorName+=choosedTeachingClass[i].zymc+ ',';
 			combinedMajorCodes+=choosedTeachingClass[i].zybm+ ',';
@@ -987,7 +986,7 @@ function combinedClass() {
 	choosedTeaching.bhxzbmc =combinedAdministrationClassesName;
 	choosedTeaching.sffbjxrws ="F";
 	choosedTeaching.jxbrs =combinedClassStudentNum;
-	choosedTeaching.yxbz =1;
+	choosedTeaching.yxbz ="1";
 	choosedTeachingArray.push(choosedTeaching);
 
 	$("#combinedClassName").val(dealCombinedClassName);
@@ -1010,23 +1009,16 @@ function breakClass() {
 		return;
 	}
 
-	var removeIds = new Array();
+	var planInfo=teachingClassTetNotNullSearchs();
 	var allStudentNum = 0;
 	var choosedTeachingAraay = new Array();
 	for (var i = 0; i < choosedTeachingClass.length; i++) {
-		if (choosedTeachingClass[0].coursesName !== choosedTeachingClass[i].coursesName) {
+		if (choosedTeachingClass[0].edu108_ID !== choosedTeachingClass[i].edu108_ID) {
 			toastr.warning('请选择相同课程');
 			return;
 		} else {
 			allStudentNum += choosedTeachingClass[i].zdrs;
-			var choosedTeaching = new Object();
-			choosedTeaching.onlineNum = choosedTeachingClass[i].onlineNum;
-			choosedTeaching.administrationClass = choosedTeachingClass[i].administrationClass;
-			choosedTeaching.id = choosedTeachingClass[i].id;
-			choosedTeaching.major = choosedTeachingClass[i].major;
-			choosedTeaching.coursesName = choosedTeachingClass[0].coursesName;
-			choosedTeachingAraay.push(choosedTeaching);
-			removeIds.push(choosedTeachingClass[i].id);
+			choosedTeachingAraay.push(choosedTeachingClass[i]);
 		}
 	}
 
@@ -1038,28 +1030,29 @@ function breakClass() {
 	// 拆分按钮
 	$('#startBreak').unbind('click');
 	$('#startBreak').bind('click', function(e) {
-		startBreak(choosedTeachingAraay, removeIds);
+		startBreak(choosedTeachingAraay,allStudentNum);
 		e.stopPropagation();
 	});
 }
 
 // 开始拆分
-function startBreak(choosedTeachingAraay, removeIds) {
+function startBreak(choosedTeachingAraay,allStudentNum) {
 	$("#breakClassTable").bootstrapTable("removeAll");
 	var breakNum = parseInt($("#breakClassNum").val());
 	var breakPrefixesName = "";
 	for (var i = 0; i < choosedTeachingAraay.length; i++) {
-		breakPrefixesName += choosedTeachingAraay[i].administrationClass + '+';
+		breakPrefixesName += choosedTeachingAraay[i].kcmc+choosedTeachingAraay[i].xzbmc + '+';
 	}
 
 	var appendArray = new Array();
 	for (var i = 0; i < breakNum; i++) {
 		var appendObject = new Object();
-		appendObject.teachingClassName = '(拆' + (i + 1) + '班)'
-				+ breakPrefixesName.slice(0, -1);
-		appendObject.teachingClassNum = 0;
-		appendObject.appointAdministrationClass = '';
-		appendObject.studentMenu = '';
+		appendObject.jxbmc = '(拆' + (i + 1) + '班)'+ breakPrefixesName.slice(0, -1);
+		appendObject.jxbrs = 0;
+		appendObject.bhxzbmc = '';
+		appendObject.bhxsxm = '';
+		appendObject.bhxzbCode = '';
+		appendObject.bhxsCode = '';
 		appendObject.choosedTeachingAraay = choosedTeachingAraay;
 		appendArray.push(appendObject);
 	}
@@ -1069,7 +1062,7 @@ function startBreak(choosedTeachingAraay, removeIds) {
 	// 确定按钮
 	$('#confirmBreakClass').unbind('click');
 	$('#confirmBreakClass').bind('click', function(e) {
-		confirmBreakClass(removeIds, appendArray);
+		confirmBreakClass(allStudentNum);
 		e.stopPropagation();
 	});
 	toolTipUp(".myTooltip");
@@ -1100,8 +1093,7 @@ function stuffBreakClassTableInfo(tableInfo) {
 					drawPagination(".breakClassTableArea", "拆班信息");
 				},
 				onDblClickRow : function(row, $element, field) {
-					breakClassTableOnDblClick(field,
-							parseInt($element[0].dataset.index), row);
+					breakClassTableOnDblClick(field,parseInt($element[0].dataset.index), row);
 				},
 				columns : [ {
 					field : 'id',
@@ -1112,22 +1104,22 @@ function stuffBreakClassTableInfo(tableInfo) {
 					align : 'center',
 					visible : false
 				}, {
-					field : 'teachingClassName',
+					field : 'jxbmc',
 					title : '教学班名称',
 					align : 'left',
 					formatter : teachingClassNameFormatter
 				}, {
-					field : 'teachingClassNum',
+					field : 'jxbrs',
 					title : '教学班人数',
 					align : 'left',
 					formatter : paramsMatter
 				}, {
-					field : 'appointAdministrationClass',
+					field : 'bhxzbmc',
 					title : '指定行政班',
 					align : 'left',
 					formatter : appointAdministrationClassFormatter,
 				}, {
-					field : 'studentMenu',
+					field : 'bhxsxm',
 					title : '学生名单',
 					align : 'left',
 					formatter : studentMenuFormatter,
@@ -1139,39 +1131,21 @@ function stuffBreakClassTableInfo(tableInfo) {
 				+ index
 				+ '">'
 				+ '<span title="'
-				+ row.teachingClassName
+				+ row.jxbmc
 				+ '" class="myTooltip showteachingClassName showteachingClassName'
-				+ index + '">' + row.teachingClassName + '</span>' ].join('');
+				+ index + '">' + row.jxbmc + '</span>' ].join('');
 	}
 
 	function appointAdministrationClassFormatter(value, row, index) {
-		var parentTble = $("#classManagementTable").bootstrapTable("getData");
-		var showTxt = ""
-		for (var i = 0; i < value.length; i++) {
-			for (var k = 0; k < parentTble.length; k++) {
-				if (value[i] === parentTble[k].id) {
-					showTxt += parentTble[k].administrationClass + ',';
-					break;
-				}
-			}
-		}
-
-		return [ '<select class="noneStart tableSelect" name="appointClassSelect'
-				+ index
-				+ '" id="appointClassSelect'
-				+ index
-				+ '" multiple>'
+		return [ '<select class="noneStart tableSelect" name="appointClassSelect'+ index+ '" id="appointClassSelect'+ index+ '" multiple>'
 				+ '</select>'
-				+ '<span title="'
-				+ showTxt.slice(0, -1)
-				+ '" class="myTooltip appointClassName appointClassName'
-				+ index + '">' + showTxt.slice(0, -1) + '</span>' ].join('');
+				+ '<span title="'+ value.slice(0, -1)+ '" class="myTooltip appointClassName appointClassName'+ index + '">' + value.slice(0, -1) + '</span>' ].join('');
 	}
 
 	function studentMenuFormatter(value, row, index) {
 		var studentNameTxt = "";
 		for (var i = 0; i < value.length; i++) {
-			studentNameTxt += value[i].studentName + ",";
+			studentNameTxt += value[i].bhxsxm + ",";
 		}
 
 		return [ '<span class="myTooltip" title="'
@@ -1187,11 +1161,11 @@ function stuffBreakClassTableInfo(tableInfo) {
 
 // 拆班表双击事件
 function breakClassTableOnDblClick(field, index, row) {
-	if (field === "teachingClassName") {
+	if (field === "jxbmc") {
 		onDblClickforTeachingClassName(field, index, row);
-	} else if (field === "appointAdministrationClass") {
+	} else if (field === "bhxzbmc") {
 		onDblClickforAppointClass(field, index, row);
-	} else if (field === "studentMenu") {
+	} else if (field === "bhxsxm") {
 		onDblClickforStudentMenu(field, index, row);
 	}
 }
@@ -1241,86 +1215,127 @@ function onDblClickforTeachingClassName(field, index, row) {
 
 // 拆班表指定学生点击事件
 function onDblClickforStudentMenu(field, index, row) {
-	// 发送查询所有用户请求
-	// $.ajax({
-	// method : 'get',
-	// cache : false,
-	// url : "/queryDrgGroupIntoInfo",
-	// dataType : 'json',
-	// success : function(backjson) {
-	// if (backjson.result) {
-	// stuffDrgGroupMangerTable(backjson);
-	// } else {
-	// jGrowlStyleClose('操作失败，请重试');
-	// }
-	// }
-	// });
-	var tableInfo = {
-		"newsInfo" : [ {
-			"id" : "id1",
-			"administrationClassIn" : "行政班名称",
-			"studentName" : "张三",
-			"studentNumber" : "99987",
-			"studentSex" : "M",
-			"status" : "reading",
-		}, {
-			"id" : "id2",
-			"administrationClassIn" : "行政班名称",
-			"studentName" : "刘晶",
-			"studentNumber" : "74987",
-			"studentSex" : "F",
-			"status" : "suspension",
-		} ]
+	var choosedTeachingClass = $("#classManagementTable").bootstrapTable("getSelections");
+	var xzbCode =new Array();
+	for (var i = 0; i < choosedTeachingClass.length; i++) {
+		xzbCode.push(choosedTeachingClass[i].xzbbm);
 	}
-	// 获取行政班名称option
-	var administrationClassOppoinHtml = "";
-	for (var i = 0; i < row.choosedTeachingAraay.length; i++) {
-		administrationClassOppoinHtml += '<option value="'
-				+ row.choosedTeachingAraay[i].id + '">'
-				+ row.choosedTeachingAraay[i].administrationClass + '</option>';
-	}
-	stuffEmptyChoosedStudentSelect(administrationClassOppoinHtml)
-	stuffEmptyChoosedStudentCheckbox();
-	stuffStudentTable(tableInfo);
-	studenBtnBind();
-	// 确定按钮事件绑定
-	$('#confirmChoosedStudent').unbind('click');
-	$('#confirmChoosedStudent').bind('click', function(e) {
-		confirmChoosedStudent(index);
-		e.stopPropagation();
+	
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryStudentInfoByAdministrationClass",
+		data: {
+             "xzbCode":JSON.stringify(xzbCode) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				var administrationClassOppoinHtml = '<option value="seleceConfigTip">全部</option>';
+				for (var i = 0; i < choosedTeachingClass.length; i++) {
+					administrationClassOppoinHtml += '<option value="'+ choosedTeachingClass[i].xzbbm + '">'+ choosedTeachingClass[i].xzbmc + '</option>';
+				}
+				stuffEmptyChoosedStudentSelect(administrationClassOppoinHtml)
+				stuffEmptyChoosedStudentCheckbox();
+				stuffStudentTable(backjson.studentInfo);
+				
+				// 提示框
+				$(".breakClassTip").hide();
+				$(".appointClassStudenInfoTip").show();
+				//按钮事件绑定
+				studenBtnBind();
+				// 确定按钮事件绑定
+				$('#confirmChoosedStudent').unbind('click');
+				$('#confirmChoosedStudent').bind('click', function(e) {
+					confirmChoosedStudent(index);
+					e.stopPropagation();
+				});
+			} else {
+				hideloding();
+				toastr.warning('操作失败，请重试');
+			}
+		}
 	});
-	// 提示框
-	$(".breakClassTip").hide();
-	$(".appointClassStudenInfoTip").show();
 }
 
 // 拆班表指定行政班点击事件
 function onDblClickforAppointClass(field, index, row) {
 	var optionHtml = "";
 	for (var i = 0; i < row.choosedTeachingAraay.length; i++) {
-		optionHtml += '<option value="' + row.choosedTeachingAraay[i].id + '">'
-				+ row.choosedTeachingAraay[i].administrationClass + '</option>';
+		optionHtml += '<option value="' + row.choosedTeachingAraay[i].xzbbm + '">'
+				+ row.choosedTeachingAraay[i].xzbmc + '</option>';
 	}
 	optionHtml += '<option class="confirmMultiSelect" value=" ">确定</option>'
 	$(".appointClassName" + index).hide();
-	stuffMultiSelect("#appointClassSelect" + index, optionHtml, index);
+	stuffBreakTableMultiSelect("#appointClassSelect" + index, optionHtml, index);
+}
+
+//填充多选
+function stuffBreakTableMultiSelect(id, optionHtml, index) {
+	if ($(id)[0].nextSibling.classList[0] !== "appointClassName") {
+		$(id)[0].nextSibling.style.display = "inline-block";
+	}
+
+	if ($(id)[0].childNodes.length === 0) {
+		$(id).append(optionHtml);
+
+	}
+	$(id).multiSelect();
+
+	$('.multi-select-menu').find(".multi-select-menuitem:last").unbind('click');
+	$('.multi-select-menu').find(".multi-select-menuitem:last").bind('click',function(e) {
+						if ($(id).val() == null) {
+							return;
+						}
+
+						$(id)[0].nextSibling.style.display = "none";
+
+						$("#breakClassTable").bootstrapTable('updateCell', {
+							index : index,
+							field : 'bhxzbCode',
+							value : $(id).val()
+						});
+						
+						var updateIds = $("#breakClassTable").bootstrapTable("getData")[index].bhxzbCode;
+						updateTeachingClassNum(updateIds, index);
+						e.stopPropagation();
+	});
 }
 
 // 拆班表指定行政班更新教学班人数
 function updateTeachingClassNum(choosedAdministrationClassIds, index) {
-	var allAdministrationClass = $("#classManagementTable").bootstrapTable(
-			"getData");
+	var allAdministrationClass = $("#classManagementTable").bootstrapTable("getData");
 	var teachingClassNum = 0;
+	var teachingClassName = "";
 	for (var i = 0; i < choosedAdministrationClassIds.length; i++) {
 		for (var k = 0; k < allAdministrationClass.length; k++) {
-			if (choosedAdministrationClassIds[i] == allAdministrationClass[k].id) {
-				teachingClassNum += allAdministrationClass[i].onlineNum;
+			if (choosedAdministrationClassIds[i] == allAdministrationClass[k].xzbbm&&allAdministrationClass[k].check) {
+				teachingClassNum += allAdministrationClass[k].zdrs;
+				teachingClassName += allAdministrationClass[k].xzbmc+",";
 			}
 		}
 	}
+	
+	
 	$("#breakClassTable").bootstrapTable('updateCell', {
 		index : index,
-		field : 'teachingClassNum',
+		field : 'bhxzbmc',
+		value :teachingClassName
+	});
+	
+	$("#breakClassTable").bootstrapTable('updateCell', {
+		index : index,
+		field : 'jxbrs',
 		value : teachingClassNum
 	});
 
@@ -1335,7 +1350,7 @@ function updateTeachingClassNum(choosedAdministrationClassIds, index) {
 // 填充学生表
 function stuffStudentTable(tableInfo) {
 	$('#studentTable').bootstrapTable('destroy').bootstrapTable({
-		data : tableInfo.newsInfo,
+		data : tableInfo,
 		pagination : true,
 		pageNumber : 1,
 		pageSize : 10,
@@ -1352,35 +1367,35 @@ function stuffStudentTable(tableInfo) {
 			drawPagination(".studentTableArea", "学生信息");
 		},
 		columns : [ {
-			field : 'id',
-			title : 'id',
+			field : 'edu001_ID',
+			title : 'edu001_ID',
 			align : 'center',
-			visible : false
+			visible : true
 		}, {
 			field : 'check',
 			checkbox : true
 		}, {
-			field : 'administrationClassIn',
+			field : 'xzbmc',
 			title : '所在行政班',
 			align : 'left',
 			formatter : paramsMatter
 		}, {
-			field : 'studentName',
+			field : 'xm',
 			title : '学生姓名',
 			align : 'left',
 			formatter : paramsMatter
 		}, {
-			field : 'studentNumber',
+			field : 'xh',
 			title : '学生学号',
 			align : 'left',
 			formatter : paramsMatter
 		}, {
-			field : 'studentSex',
+			field : 'xb',
 			title : '学生性别',
 			align : 'left',
 			formatter : sexFormatter,
 		}, {
-			field : 'status',
+			field : 'zt',
 			title : '状态',
 			align : 'left',
 			formatter : statusFormatter,
@@ -1403,8 +1418,7 @@ function stuffStudentTable(tableInfo) {
 }
 
 // 学生信息select change事件
-function appointClassStudenSelectChange(administrationClassId, studentSexId,
-		studenStatusId) {
+function appointClassStudenSelectChange(administrationClassId, studentSexId,SstudenStatusId) {
 	var administrationClass = getNormalSelectValue(administrationClassId);
 	var studentSex = getNormalSelectValue(studentSexId);
 	var studenStatus = getNormalSelectValue(studenStatusId);
@@ -1456,10 +1470,7 @@ function appointClassStudenSelectChange(administrationClassId, studentSexId,
 
 // 学生信息开始检索
 function studentStartSearch() {
-	appointClassStudenSelectChange(
-			"appointClassStudenInfo_administrationClass",
-			"appointClassStudenInfo_studentSex",
-			"appointClassStudenInfo_studenStatus");
+	appointClassStudenSelectChange("appointClassStudenInfo_administrationClass","appointClassStudenInfo_studentSex","appointClassStudenInfo_studenStatus");
 }
 
 // 学生信息重置检索
@@ -1579,15 +1590,9 @@ function stuffEmptyChoosedStudentCheckbox() {
 function stuffEmptyChoosedStudentSelect(eleText) {
 	stuffManiaSelect("#appointClassStudenInfo_administrationClass", eleText);
 	// select绑定change事件
-	$(
-			"#appointClassStudenInfo_administrationClass,#appointClassStudenInfo_studentSex,#appointClassStudenInfo_studenStatus")
-			.change(
-					function() {
-						appointClassStudenSelectChange(
-								"appointClassStudenInfo_administrationClass",
-								"appointClassStudenInfo_studentSex",
-								"appointClassStudenInfo_studenStatus");
-					});
+	$("#appointClassStudenInfo_administrationClass,#appointClassStudenInfo_studentSex,#appointClassStudenInfo_studenStatus").change(function() {
+		appointClassStudenSelectChange("appointClassStudenInfo_administrationClass","appointClassStudenInfo_studentSex","appointClassStudenInfo_studenStatus");
+	});
 }
 
 // 学生信息区域按钮事件绑定
@@ -1623,7 +1628,7 @@ function studenBtnBind() {
 }
 
 // 确认拆班
-function confirmBreakClass(removeIds, breakClassInfo) {
+function confirmBreakClass(allStudentNumRules) {
 	var breakClassInfo = $("#breakClassTable").bootstrapTable("getData");
 	if (breakClassInfo.length === 0) {
 		toastr.warning('暂未拆班');
@@ -1631,67 +1636,55 @@ function confirmBreakClass(removeIds, breakClassInfo) {
 	}
 
 	for (var i = 0; i < breakClassInfo.length; i++) {
-		if (breakClassInfo[i].appointAdministrationClass === ""
-				&& breakClassInfo[i].studentMenu.length === 0) {
+		if (breakClassInfo[i].jxbrs === 0) {
 			toastr.warning('有班级未设置');
 			return;
+			
 		}
 	}
-	// 发送查询所有用户请求
-	// $.ajax({
-	// method : 'get',
-	// cache : false,
-	// url : "/queryDrgGroupIntoInfo",
-	// dataType : 'json',
-	// success : function(backjson) {
-	// if (backjson.result) {
-	// stuffDrgGroupMangerTable(backjson);
-	// } else {
-	// jGrowlStyleClose('操作失败，请重试');
-	// }
-	// }
-	// });
+
 	var sendData = new Array();
+	var planInfo=teachingClassTetNotNullSearchs();
 	for (var i = 0; i < breakClassInfo.length; i++) {
 		var breakClass = new Object();
-		var majorTxt = "";
+		breakClass.edu108_ID = breakClassInfo[i].choosedTeachingAraay[0].edu108_ID;
+		breakClass.jxbmc = breakClassInfo[i].jxbmc;
+		breakClass.pyccmc = planInfo.levelTxt;
+		breakClass.pyccbm = planInfo.level;
+		breakClass.xbmc =planInfo.departmentTxt;
+		breakClass.xbbm = planInfo.department;
+		breakClass.njbm = planInfo.grade;
+		breakClass.njmc = planInfo.gradeTxt;
+		breakClass.zybm =planInfo.grade;
+		breakClass.zymc = planInfo.gradeTxt;
+		breakClass.bhxzbmc =breakClassInfo[i].bhxzbmc;
+		breakClass.sffbjxrws ="F";
+		breakClass.jxbrs =breakClassInfo[i].jxbrs;
+		breakClass.yxbz ="1";
+		var bhzyCode="";
+		var bhzymc="";
+		
 		for (var k = 0; k < breakClassInfo[i].choosedTeachingAraay.length; k++) {
-			breakClass.classSemesters = breakClassInfo[i].choosedTeachingAraay[k].classSemesters;
-			breakClass.coursesName = breakClassInfo[i].choosedTeachingAraay[k].coursesName;
-			majorTxt += breakClassInfo[i].choosedTeachingAraay[k].major + ',';
+			bhzyCode +=breakClassInfo[i].choosedTeachingAraay[k].zybm+",";
+			bhzymc +=breakClassInfo[i].choosedTeachingAraay[k].zymc+"," ;
+			bhxzbCode +=breakClassInfo[i].choosedTeachingAraay[k].xzbbm+",";
 		}
-
-		if (breakClassInfo[i].appointAdministrationClass.length !== 0) {
-			breakClass.includeClasses = breakClassInfo[i].appointAdministrationClass;
-		} else {
-			breakClass.includeClasses = [];
+		
+		var bhxzbCode="";
+		for (var g = 0; g < breakClassInfo[i].bhxzbCode.length;g++) {
+			bhxzbCode +=breakClassInfo[i].bhxzbCode[g]+",";
 		}
-
-		breakClass.teachingClassName = breakClassInfo[i].teachingClassName;
-		breakClass.teachingClassNum = breakClassInfo[i].teachingClassNum;
-
-		breakClass.major = majorTxt.slice(0, -1).split(",");
-		breakClass.missionIsPass = false;
-		// $('#teachingClassTable').bootstrapTable('prepend', breakClass);
+		breakClass.bhzyCode =bhzyCode;
+		breakClass.bhzymc =bhzymc;
+		breakClass.bhxzbCode =bhxzbCode;
 		sendData.push(breakClass);
 	}
-
-	for (var i = 0; i < removeIds.length; i++) {
-		$('#classManagementTable').bootstrapTable('removeByUniqueId',
-				removeIds[i]);
-		toolTipUp(".myTooltip");
-	}
-	toastr.success('拆班成功');
-	$(".breakClassTip").hide();
-	showMaskingElement();
-	drawPagination(".classManagementTableArea", "行政班信息");
-	drawPagination(".teachingClassTableArea", "教学班信息");
-
+	breakverifySaveClass(sendData);
 }
 
 //保存教学班验证
 function verifySaveClass(choosedTeaching) {
-	verifyClassInfo("保存教学班",choosedTeaching,false,"有教学班已存在");
+	verifyClassInfo("保存教学班",choosedTeaching,false);
 }
 
 // 合班验证
@@ -1720,9 +1713,12 @@ function verifyCombinedClass(choosedTeaching) {
 	}
 	
 	choosedTeaching[0].jxbmc = $("#combinedClassName").val();
-	choosedTeaching[0].jxbrl =parseInt(combinedClassHoldStudentNum);
-	verifyClassInfo("合班",choosedTeaching,true,"教学班已存在");
+	verifyClassInfo("合班",choosedTeaching,true);
+}
 
+//拆班验证
+function breakverifySaveClass(choosedTeaching) {
+	verifyClassInfo("保存教学班",choosedTeaching,false);
 }
 
 // 验证行政班信息
@@ -1746,16 +1742,16 @@ function verifyClassInfo(type,choosedTeaching,isShowMaskingElement,warningTxt){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
-				if (backjson.isHaveTeachingClass) {
-					if(!isShowMaskingElement){
-						hideloding();
-					}
-					toastr.warning(warningTxt);
-					return;
-				}
+//				if (backjson.isHaveTeachingClass) {
+//					if(!isShowMaskingElement){
+//						hideloding();
+//					}
+//					toastr.warning(warningTxt);
+//					return;
+//				}
 				
 				if (backjson.willDropFirsthand) {
-					$(".combinedClassTip").hide();
+					$(".combinedClassTip,.breakClassTip").hide();
                     $(".actionTip").show();
                     $(".actionTxt").html("本次操作将删除原始教学班,是否确认继续？");
                 	$('.confirmAction').unbind('click');
@@ -1812,7 +1808,6 @@ function confirmClassAction(type,choosedTeaching,isShowMaskingElement) {
 		}
 	});
 }
-
 
 // 教学班管理检索
 function generatTeachingClassStartSearch(tableInfo) {

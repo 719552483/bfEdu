@@ -667,43 +667,6 @@ function tableIsChecked(id, type) {
 	}
 }
 
-// 填充多选
-function stuffMultiSelect(id, optionHtml, index) {
-	if ($(id)[0].nextSibling.classList[0] !== "appointClassName") {
-		$(id)[0].nextSibling.style.display = "inline-block";
-
-	}
-
-	if ($(id)[0].childNodes.length === 0) {
-		$(id).append(optionHtml);
-
-	}
-	$(id).multiSelect();
-
-	$('.multi-select-menu').find(".multi-select-menuitem:last").unbind('click');
-	$('.multi-select-menu').find(".multi-select-menuitem:last")
-			.bind(
-					'click',
-					function(e) {
-						if ($(id).val() == null) {
-							return;
-						}
-
-						$(id)[0].nextSibling.style.display = "none";
-
-						$("#breakClassTable").bootstrapTable('updateCell', {
-							index : index,
-							field : 'appointAdministrationClass',
-							value : $(id).val()
-						});
-
-						var updateIds = $("#breakClassTable").bootstrapTable(
-								"getData")[index].appointAdministrationClass;
-						updateTeachingClassNum(updateIds, index);
-						e.stopPropagation();
-					});
-}
-
 //刷新多选下拉框
 function refreshMultiSselect(id){
 	$("input:checkbox").removeAttr("checked");

@@ -15,25 +15,26 @@ import javax.persistence.Table;
 @Table(name = "Edu001")
 public class Edu001 {
  //学生基本信息表
-	
-	
 	private  Long Edu001_ID; 	
 	private  String xh; //学号
 	private  String xm; //学生姓名
 	private  String nl; //学生年龄
 	private  String xb;//性别  1男2女
 	private  String zy; //学生职业
-	private  String xzbmc; //行政班名称
+	private  String edu300_ID; //行政班名称
+	private  String edu300_name; //行政班编码
+	private  String edu301_ID;//教学班名称
+	private  String edu301_name;//教学班编码
 	private  String nj; //年级  如2010级 2011级
 	private  String lxfs;//联系方式
 	private  String csrq;//出生日期
 	private  String hf;//婚否  1已婚 0未婚
-	private  String zt;//状态 //在读、离校等
+	private  String zt;//状态
+	private  String ztCode;//状态编码//在读、离校等
 	private  String xq;//校区
 	private  String pycc;//培养层次
 	private  String szxb;//所在系部
 	private  String zymc;//专业名称
-	private  String bj;//班级
 	private  String sfzh;//身份证号 
 	private  String mz;//民族
 	private  String zzmm;//政治面貌
@@ -57,7 +58,6 @@ public class Edu001 {
 	public String getXh() {
 		return xh;
 	}
-	
 	public void setXh(String xh) {
 		this.xh = xh;
 	}
@@ -73,26 +73,30 @@ public class Edu001 {
 	public void setNl(String nl) {
 		this.nl = nl;
 	}
+	public String getXb() {
+		return xb;
+	}
+	public void setXb(String xb) {
+		this.xb = xb;
+	}
 	public String getZy() {
 		return zy;
 	}
 	public void setZy(String zy) {
 		this.zy = zy;
 	}
-	public String getXzbmc() {
-		return xzbmc;
+	public String getNj() {
+		return nj;
 	}
-	public void setXzbmc(String xzbmc) {
-		this.xzbmc = xzbmc;
+	public void setNj(String nj) {
+		this.nj = nj;
 	}
-	
-	public String getYxbz() {
-		return yxbz;
+	public String getLxfs() {
+		return lxfs;
 	}
-	public void setYxbz(String yxbz) {
-		this.yxbz = yxbz;
+	public void setLxfs(String lxfs) {
+		this.lxfs = lxfs;
 	}
-	
 	public String getCsrq() {
 		return csrq;
 	}
@@ -105,29 +109,17 @@ public class Edu001 {
 	public void setHf(String hf) {
 		this.hf = hf;
 	}
-	public String getXb() {
-		return xb;
-	}
-	public void setXb(String xb) {
-		this.xb = xb;
-	}
-	public String getLxfs() {
-		return lxfs;
-	}
-	public void setLxfs(String lxfs) {
-		this.lxfs = lxfs;
-	}
-	public String getNj() {
-		return nj;
-	}
-	public void setNj(String nj) {
-		this.nj = nj;
-	}
 	public String getZt() {
 		return zt;
 	}
 	public void setZt(String zt) {
 		this.zt = zt;
+	}
+	public String getZtCode() {
+		return ztCode;
+	}
+	public void setZtCode(String ztCode) {
+		this.ztCode = ztCode;
 	}
 	public String getXq() {
 		return xq;
@@ -152,12 +144,6 @@ public class Edu001 {
 	}
 	public void setZymc(String zymc) {
 		this.zymc = zymc;
-	}
-	public String getBj() {
-		return bj;
-	}
-	public void setBj(String bj) {
-		this.bj = bj;
 	}
 	public String getSfzh() {
 		return sfzh;
@@ -189,6 +175,12 @@ public class Edu001 {
 	public void setWhcd(String whcd) {
 		this.whcd = whcd;
 	}
+	public String getYxbz() {
+		return yxbz;
+	}
+	public void setYxbz(String yxbz) {
+		this.yxbz = yxbz;
+	}
 	public String getRxsj() {
 		return rxsj;
 	}
@@ -213,6 +205,31 @@ public class Edu001 {
 	public void setBz2(String bz2) {
 		this.bz2 = bz2;
 	}
+	public String getEdu300_ID() {
+		return edu300_ID;
+	}
+	public void setEdu300_ID(String edu300_ID) {
+		this.edu300_ID = edu300_ID;
+	}
+	public String getEdu300_name() {
+		return edu300_name;
+	}
+	public void setEdu300_name(String edu300_name) {
+		this.edu300_name = edu300_name;
+	}
+	public String getEdu301_ID() {
+		return edu301_ID;
+	}
+	public void setEdu301_ID(String edu301_ID) {
+		this.edu301_ID = edu301_ID;
+	}
+	public String getEdu301_name() {
+		return edu301_name;
+	}
+	public void setEdu301_name(String edu301_name) {
+		this.edu301_name = edu301_name;
+	}
+
 	
 	
 	
