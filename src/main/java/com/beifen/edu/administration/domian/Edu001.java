@@ -19,12 +19,13 @@ public class Edu001 {
 	private  String xh; //学号
 	private  String xm; //学生姓名
 	private  String nl; //学生年龄
-	private  String xb;//性别  1男2女
+	private  String xb;//性别
 	private  String zy; //学生职业
-	private  String edu300_ID; //行政班名称
-	private  String edu300_name; //行政班编码
-	private  String edu301_ID;//教学班名称
-	private  String edu301_name;//教学班编码
+	private  String Edu300_ID; //行政班ID
+	private  String xzbcode; //行政班编码
+	private  String xzbname; //行政班名称
+	private  String Edu301_ID;//教学班ID
+	private  String jxbname;//教学班名称
 	private  String nj; //年级  如2010级 2011级
 	private  String lxfs;//联系方式
 	private  String csrq;//出生日期
@@ -205,32 +206,35 @@ public class Edu001 {
 	public void setBz2(String bz2) {
 		this.bz2 = bz2;
 	}
+
 	public String getEdu300_ID() {
-		return edu300_ID;
+		return Edu300_ID;
 	}
 	public void setEdu300_ID(String edu300_ID) {
-		this.edu300_ID = edu300_ID;
-	}
-	public String getEdu300_name() {
-		return edu300_name;
-	}
-	public void setEdu300_name(String edu300_name) {
-		this.edu300_name = edu300_name;
+		Edu300_ID = edu300_ID;
 	}
 	public String getEdu301_ID() {
-		return edu301_ID;
+		return Edu301_ID;
 	}
 	public void setEdu301_ID(String edu301_ID) {
-		this.edu301_ID = edu301_ID;
+		Edu301_ID = edu301_ID;
 	}
-	public String getEdu301_name() {
-		return edu301_name;
+	public String getXzbcode() {
+		return xzbcode;
 	}
-	public void setEdu301_name(String edu301_name) {
-		this.edu301_name = edu301_name;
+	public void setXzbcode(String xzbcode) {
+		this.xzbcode = xzbcode;
 	}
-
-	
-	
-	
+	public String getXzbname() {
+		return xzbname;
+	}
+	public void setXzbname(String xzbname) {
+		this.xzbname = xzbname;
+	}
+	public String getJxbname() {
+		return jxbname;
+	}
+	public void setJxbname(String jxbname) {
+		this.jxbname = jxbname;
+	}
 }

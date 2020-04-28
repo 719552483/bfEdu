@@ -311,27 +311,26 @@ function drawPagination(tableAreaClass, paginationTxt) {
 }
 
 // 渲染表格搜索框
-function drawSearchInput() {
-	$(".fixed-table-toolbar")
-			.find(".search")
-			.prepend(
-					'<img class="searchIcon" src="images/ico06.png" style="width: 24px;" />');
+function drawSearchInput(area) {
+	if (typeof(area) !== "undefined") {
+		$(area).find(".fixed-table-toolbar").find(".search").prepend('<img class="searchIcon" src="images/ico06.png" style="width: 24px;" />');
+	}else{
+		$(".fixed-table-toolbar").find(".search").prepend('<img class="searchIcon" src="images/ico06.png" style="width: 24px;" />');
+	}
+	
 
-	$(".fixed-table-toolbar").find(".search").find("input").attr("spellcheck",
-			false);
+	$(".fixed-table-toolbar").find(".search").find("input").attr("spellcheck",false);
 	// 聚焦
 	$(".fixed-table-toolbar").find(".search").find("input").focus(function(e) {
 		e.currentTarget.previousSibling.className="searchIcon serachFocus";
-//		$(".fixed-table-toolbar").find(".searchIcon").addClass("serachFocus");
 		toolTipUp(".myTooltip");
 	});
 
 	// 失焦
 	$(".fixed-table-toolbar").find(".search").find("input").blur(function(e) {
 		e.currentTarget.previousSibling.className="searchIcon";
-//		$(".fixed-table-toolbar").find(".searchIcon").removeClass("serachFocus");
 		toolTipUp(".myTooltip");
-			});
+	});
 }
 
 // 改变初始化table无内容样式

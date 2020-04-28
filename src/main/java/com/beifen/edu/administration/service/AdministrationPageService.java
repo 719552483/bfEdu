@@ -286,9 +286,26 @@ public class AdministrationPageService {
 		edu301DAO.removeTeachingClassByID(edu301ID);
 	}
 	
+	//添加教学班的同时更新学生教学班信息
+	public void stuffStudentTeachingClassInfo(String jxbname,Long edu301_ID,String xzbcode) {
+		edu001DAO.stuffStudentTeachingClassInfo(jxbname,edu301_ID,xzbcode);
+	}
+	
+	
 	//根据行政班查询学生信息
 	public List<Edu001> queryStudentInfoByAdministrationClass(String xzbCode) {
 		return edu001DAO.queryStudentInfoByAdministrationClass(xzbCode);
+	}
+	
+	
+	// 查询所有学生信息
+	public List<Edu001> queryAllStudent() {
+		return edu001DAO.findAll();
+	}
+
+	//查询学生所在行政班
+	public String queryStudentXzbCode(String edu001Id) {
+		return edu001DAO.queryStudentXzbCode(edu001Id);
 	}
 	
 	
@@ -307,12 +324,7 @@ public class AdministrationPageService {
 	
 	
 	
-	
-	
-	
-	
 
-	// 查询学生信息
 	public List<Edu001> queryAllInformation() {
 
 		return edu001DAO.queryAllDiseases();
@@ -556,6 +568,34 @@ public class AdministrationPageService {
 		List<Edu108> crouseEntities = edu108DAO.findAll(specification);
 		return crouseEntities;
 	}
+
+	//拆班搜索学生
+	public List<Edu001> breakClassSearchStudent(Edu001 edu001) {
+		Specification<Edu001> specification = new Specification<Edu001>() {
+			public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
+					predicates.add(cb.like(root.<String> get("xm"), '%' + edu001.getXm() + '%'));
+				}
+				if (edu001.getXzbcode()!= null && !"".equals(edu001.getXzbcode())) {
+					predicates.add(cb.equal(root.<String> get("xzbcode"), edu001.getXzbcode()));
+				}
+				if (edu001.getXb()!= null && !"".equals(edu001.getXb())) {
+					predicates.add(cb.equal(root.<String> get("xb"), edu001.getXb()));
+				}
+				if (edu001.getZtCode()!= null && !"".equals(edu001.getZtCode())) {
+					predicates.add(cb.equal(root.<String> get("ztCode"), edu001.getZtCode()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu001> studentEntities = edu001DAO.findAll(specification);
+		return studentEntities;
+	}
+
+
+
+
 
 
 

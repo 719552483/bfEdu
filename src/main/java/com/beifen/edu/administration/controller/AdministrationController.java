@@ -1712,7 +1712,6 @@ public class AdministrationController {
 		JSONArray array = JSONArray.fromObject(verifyInfo); //解析json字符
 		List<Edu301> allTeachingClasses = administrationPageService.queryAllTeachingClass();
 		List<Edu301> verifyList = new ArrayList<Edu301>();
-		boolean isHaveTeachingClass=false;  //合成教学班是否已存在
 		boolean willDropFirsthand=false;   //是否提示用户将删除原始教学班
 		 
 		for (int i = 0; i < array.size(); i++) {
@@ -1732,32 +1731,54 @@ public class AdministrationController {
 			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
 			verifyEdu301.setBhxzbCode(jsonObject.getString("bhxzbCode"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
+			verifyEdu301.setBhxsxm(jsonObject.getString("bhxsxm"));
+			verifyEdu301.setBhxsCode(jsonObject.getString("bhxsCode"));
 			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
 			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
 			verifyList.add(verifyEdu301);
 		}
 		
+		
+		allforOver:
 		 for (int i = 0; i < verifyList.size(); i++) {
 			 Edu301 thisClassInfo=verifyList.get(i);
-			 for (int a = 0; a < allTeachingClasses.size(); a++) {
-//					if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())&&allTeachingClasses.get(a).getBhxzbCode().equals(thisClassInfo.getBhxzbCode())){
-//						isHaveTeachingClass=true;
-//						break;
-//			         }
-					if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
-					String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
-					String[] edu301BhxzbCode=thisClassInfo.getBhxzbCode().split(",");
-					for (int e = 0; e < edu301BhxzbCode.length; e++) {
-						if(currentTeachingClassesBhxzbCode.indexOf(edu301BhxzbCode[e])!=-1){
-							willDropFirsthand=true;
+			 
+			 if(thisClassInfo.getBhxsCode()!=null&&!thisClassInfo.getBhxsCode().equals("")){
+				 //按学生拆班的情况
+				 for (int a = 0; a < allTeachingClasses.size(); a++) {
+					 if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
+						   //查询学生所在行政班
+						   String[] students=thisClassInfo.getBhxsCode().split(",");
+						   String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
+						   for (int s = 0; s < students.length; s++) {
+							String xzbCode=administrationPageService.queryStudentXzbCode(students[s]);
+							 //如果所在行政班有教学班则提示用户将删除原始教学班
+							if(xzbCode!=null){
+								if(currentTeachingClassesBhxzbCode!=null&&currentTeachingClassesBhxzbCode.indexOf(xzbCode)!=-1){
+									willDropFirsthand=true;
+									break allforOver;
+								}
+							}
+						   }
+					}
+				 }
+			 }else{
+				 for (int a = 0; a < allTeachingClasses.size(); a++) {
+						if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
+						String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
+						String[] edu301BhxzbCode=thisClassInfo.getBhxzbCode().split(",");
+						for (int e = 0; e < edu301BhxzbCode.length; e++) {
+							if(currentTeachingClassesBhxzbCode.indexOf(edu301BhxzbCode[e])!=-1){
+								willDropFirsthand=true;
+								break allforOver;
+							}
 						}
 					}
-				}
+				 }
 			 }
 		 }
 
-		returnMap.put("isHaveTeachingClass", isHaveTeachingClass);
 		returnMap.put("willDropFirsthand", willDropFirsthand);
 		returnMap.put("result", true);
 		return returnMap;
@@ -1776,6 +1797,7 @@ public class AdministrationController {
 	public Object confirmClassAction(@RequestParam("classInfo") String classInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu301> allTeachingClasses = administrationPageService.queryAllTeachingClass();
+		List<Edu001> allStudent = administrationPageService.queryAllStudent();	
 		JSONArray array = JSONArray.fromObject(classInfo); //解析json字符
 		List<Edu301> verifyList = new ArrayList<Edu301>();
 		for (int i = 0; i < array.size(); i++) {
@@ -1795,6 +1817,8 @@ public class AdministrationController {
 			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
 			verifyEdu301.setBhxzbCode(jsonObject.getString("bhxzbCode"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
+			verifyEdu301.setBhxsxm(jsonObject.getString("bhxsxm"));
+			verifyEdu301.setBhxsCode(jsonObject.getString("bhxsCode"));
 			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
 			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
@@ -1805,6 +1829,13 @@ public class AdministrationController {
 			for (int v = 0; v < verifyList.size();v++) {
 				Edu301 addClassInfo=verifyList.get(v);
 				administrationPageService.addTeachingClass(addClassInfo);
+				//更新学生教学班信息
+				if(allStudent.size()!=0){
+					String[] bhxzbCode = addClassInfo.getBhxzbCode().split(","); //获取教学班的行政班编码
+					for (int b = 0; b < bhxzbCode.length;b++) {
+						administrationPageService.stuffStudentTeachingClassInfo(addClassInfo.getJxbmc(),addClassInfo.getEdu301_ID(),bhxzbCode[b].toString());
+					}
+				}
 			}
 		}else{
 			for (int a = 0; a < allTeachingClasses.size(); a++) {
@@ -1813,8 +1844,22 @@ public class AdministrationController {
 					if(addClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
 						administrationPageService.removeTeachingClassByID(allTeachingClasses.get(a).getEdu301_ID().toString());
 						administrationPageService.addTeachingClass(addClassInfo);
+						//更新学生教学班信息
+						if(allStudent.size()!=0){
+							String[] bhxzbCode = addClassInfo.getBhxzbCode().split(","); //获取教学班的行政班编码
+							for (int b = 0; b < bhxzbCode.length;b++) {
+								administrationPageService.stuffStudentTeachingClassInfo(addClassInfo.getJxbmc(),addClassInfo.getEdu301_ID(),bhxzbCode[b].toString());
+							}
+						}
 					}else{
 						administrationPageService.addTeachingClass(addClassInfo);
+						//更新学生教学班信息
+						if(allStudent.size()!=0){
+							String[] bhxzbCode = addClassInfo.getBhxzbCode().split(","); //获取教学班的行政班编码
+							for (int b = 0; b < bhxzbCode.length;b++) {
+								administrationPageService.stuffStudentTeachingClassInfo(addClassInfo.getJxbmc(),addClassInfo.getEdu301_ID(),bhxzbCode[b].toString());
+							}
+						}
 					}
 				}
 			}
@@ -1844,6 +1889,37 @@ public class AdministrationController {
 		}
 		
 		returnMap.put("studentInfo", studentInfos);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 拆班搜索学生
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("breakClassSearchStudent")
+	@ResponseBody
+	public Object breakClassSearchStudent(@RequestParam String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		//根据层次等信息查出培养计划id
+		String xzbcode=searchObject.getString("xzbcode");
+		String xb=searchObject.getString("xb");
+		String ztCode=searchObject.getString("zt");
+		String xm=searchObject.getString("xm");
+		
+		//填充搜索对象
+		Edu001 edu001 = new Edu001();
+		edu001.setXzbcode(xzbcode);
+		edu001.setXb(xb);
+		edu001.setZtCode(ztCode);
+		edu001.setXm(xm);
+		List<Edu001> calssInfo = administrationPageService.breakClassSearchStudent(edu001);
+		returnMap.put("calssInfo", calssInfo);
 		returnMap.put("result", true);
 		return returnMap;
 	}
