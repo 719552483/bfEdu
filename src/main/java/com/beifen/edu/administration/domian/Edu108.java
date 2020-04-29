@@ -15,7 +15,7 @@ public class Edu108 {
 	private  Long Edu108_ID;  //ID
 	private  Long Edu107_ID; //(层次 系部 年级 专业关系)培养计划ID
 	private  Long Edu200_ID; //课程ID
-	private String xzbCode;  //行政班ID(非编码)
+	private String xzbCode;  //行政班ID(非编码-Edu300_ID)
 	private String xzbmc;  //行政班名称
 	private String kcmc;  //课程名称
 	private String kcdm;  //课程代码

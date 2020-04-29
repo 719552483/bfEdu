@@ -1753,7 +1753,7 @@ public class AdministrationController {
 						   String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
 						   for (int s = 0; s < students.length; s++) {
 							String xzbCode=administrationPageService.queryStudentXzbCode(students[s]);
-							 //如果所在行政班有教学班则提示用户将删除原始教学班
+							 //如果学生所在行政班有教学班则提示用户将删除原始教学班
 							if(xzbCode!=null){
 								if(currentTeachingClassesBhxzbCode!=null&&currentTeachingClassesBhxzbCode.indexOf(xzbCode)!=-1){
 									willDropFirsthand=true;
@@ -1769,7 +1769,7 @@ public class AdministrationController {
 						String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
 						String[] edu301BhxzbCode=thisClassInfo.getBhxzbCode().split(",");
 						for (int e = 0; e < edu301BhxzbCode.length; e++) {
-							if(currentTeachingClassesBhxzbCode.indexOf(edu301BhxzbCode[e])!=-1){
+							if(currentTeachingClassesBhxzbCode!=null&&currentTeachingClassesBhxzbCode.indexOf(edu301BhxzbCode[e])!=-1){
 								willDropFirsthand=true;
 								break allforOver;
 							}
@@ -2034,7 +2034,82 @@ public class AdministrationController {
 	}
 	
 	
-	
+	/**
+	 * 教学班班管理检索
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("searchTeachingClassQueryAdministrationClassesLibrary")
+	@ResponseBody
+	public Object searchTeachingClassQueryAdministrationClassesLibrary(@RequestParam String SearchCriteria,@RequestParam String culturePlanInfo) {
+		
+		Map<String, Object> returnMap = new HashMap();
+		List<Map> classesInfo=new ArrayList(); //组装返回信息
+		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
+		String levelCode=culturePlan.getString("level");
+		String departmentCode=culturePlan.getString("department");
+		String gradeCode=culturePlan.getString("grade");
+		String majorCode=culturePlan.getString("major");
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		String xzbmc=searchObject.getString("xzbmc");
+		String kcmc=searchObject.getString("kcmc");
+		
+		List<Edu300> allAdministrationClasses=new ArrayList<Edu300>();
+		if(!xzbmc.equals("")){
+			Edu300 edu300=new Edu300();
+			edu300.setPyccbm(levelCode);
+			edu300.setXbbm(departmentCode);
+			edu300.setNjbm(gradeCode);
+			edu300.setZybm(majorCode);
+			edu300.setXzbmc(xzbmc);
+		    allAdministrationClasses = administrationPageService.queryCulturePlanAdministrationClassesWithXZBMC(edu300);
+		}else{
+		    allAdministrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode,departmentCode,gradeCode,majorCode);
+		}
+		
+		
+		//组装行政班的培养计划信息
+		for (int i = 0; i < allAdministrationClasses.size(); i++) {
+			List<Edu108> palnInfos=new ArrayList<Edu108>();
+			if(!kcmc.equals("")){
+				Edu108 edu108=new Edu108();
+				edu108.setXzbCode(allAdministrationClasses.get(i).getEdu300_ID().toString());
+				edu108.setKcmc(kcmc);
+				palnInfos = administrationPageService.queryAdministrationClassesCrouseWithKCMC(edu108);
+			}else{
+				palnInfos = administrationPageService.queryAdministrationClassesCrouse(allAdministrationClasses.get(i).getEdu300_ID().toString());
+			}
+			
+			for (int p = 0; p < palnInfos.size(); p++) {
+				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
+				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
+				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
+				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
+				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
+				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
+				administrationClassesWithcrouseInfo.put("xzbbm", allAdministrationClasses.get(i).getXzbbm());
+				administrationClassesWithcrouseInfo.put("kcmc", palnInfos.get(p).getKcmc());
+				administrationClassesWithcrouseInfo.put("ksdm", palnInfos.get(p).getKcdm());
+				administrationClassesWithcrouseInfo.put("kcxz", palnInfos.get(p).getKcxz());
+				administrationClassesWithcrouseInfo.put("kcxzCode", palnInfos.get(p).getKcxzCode());
+				administrationClassesWithcrouseInfo.put("xf", palnInfos.get(p).getXf());
+				administrationClassesWithcrouseInfo.put("skxq", palnInfos.get(p).getSkxq());
+				administrationClassesWithcrouseInfo.put("zdrs", allAdministrationClasses.get(i).getZxrs());
+				administrationClassesWithcrouseInfo.put("rnrs", allAdministrationClasses.get(i).getRnrs());
+				administrationClassesWithcrouseInfo.put("jxbrs",0);
+				administrationClassesWithcrouseInfo.put("jxbmc", "");
+				classesInfo.add(administrationClassesWithcrouseInfo);
+			}
+		}
+		
+		returnMap.put("classesInfo", classesInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 
 	// @RequestMapping("/newImgUpload")
