@@ -622,6 +622,53 @@ public class AdministrationPageService {
 		return teachingClassEntities;
 	}
 
+	//根据行政班名称过滤行政班 
+	public List<Edu300> queryCulturePlanAdministrationClassesWithXZBMC(Edu300 edu300) {
+		Specification<Edu300> specification = new Specification<Edu300>() {
+			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu300.getPyccbm()!= null && !"".equals(edu300.getPyccbm())) {
+					predicates.add(cb.equal(root.<String> get("pyccbm"), edu300.getPyccbm()));
+				}
+				if (edu300.getXbbm()!= null && !"".equals(edu300.getXbbm())) {
+					predicates.add(cb.equal(root.<String> get("xbbm"), edu300.getXbbm()));
+				}
+				if (edu300.getNjbm()!= null && !"".equals(edu300.getNjbm())) {
+					predicates.add(cb.equal(root.<String> get("njbm"), edu300.getNjbm()));
+				}
+				if (edu300.getZybm()!= null && !"".equals(edu300.getZybm())) {
+					predicates.add(cb.equal(root.<String> get("zybm"), edu300.getZybm()));
+				}
+				
+				if (edu300.getXzbmc()!= null && !"".equals(edu300.getXzbmc())) {
+					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu300> classesEntities = edu300DAO.findAll(specification);
+		return classesEntities;
+	}
+
+	//根据行政班编码和课程名称过滤培养计划
+	public List<Edu108> queryAdministrationClassesCrouseWithKCMC(Edu108 edu108) {
+		Specification<Edu108> specification = new Specification<Edu108>() {
+			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu108.getXzbmc()!= null && !"".equals(edu108.getXzbmc())) {
+					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu108.getXzbmc() + '%'));
+				}
+				
+				if (edu108.getKcmc()!= null && !"".equals(edu108.getKcmc())) {
+					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu108.getKcmc() + '%'));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu108> entities = edu108DAO.findAll(specification);
+		return entities;
+	}
+
 	
 	
 

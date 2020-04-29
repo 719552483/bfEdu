@@ -687,6 +687,9 @@ function stuffClassManagementTable(tableInfo) {
 		},
 		'click #editorClassName' : function(e, value, row, index) {
 			editorClassName(row,index);
+		},
+		'click #cancelGenerateClassName' : function(e, value, row, index) {
+			cancelGenerateClassName(row,index);
 		}
 	};
 
@@ -779,6 +782,7 @@ function stuffClassManagementTable(tableInfo) {
 		return [ '<ul class="toolbar tabletoolbar">'
 				+ '<li id="generateClassName"><span><img src="img/info.png" style="width:24px"></span>生成教学班名称</li>'
 				+ '<li id="editorClassName"><span><img src="images/t02.png" style="width:24px"></span>编辑教学班名称</li>'
+				+ '<li id="cancelGenerateClassName" class="noneStart cancelGenerateClassName'+index+'"><span><img src="images/t02.png" style="width:24px"></span>取消生成教学班</li>'
 				+ '</ul>' ].join('');
 	}
 
@@ -809,6 +813,10 @@ function stuffClassManagementTable(tableInfo) {
 
 //生成教学班名称
 function generateClassName(row,index){
+	if(row.zdrs>row.rnrs){
+		toastr.warning('行政班在读人数大于容纳人数');
+		return;
+	}
 	$("#classManagementTable").bootstrapTable('updateCell', {
 		index : index,
 		field : 'jxbmc',
@@ -819,6 +827,23 @@ function generateClassName(row,index){
 		field : 'jxbrs',
 		value : row.zdrs
 	});
+	$(".cancelGenerateClassName"+index).show();
+    toolTipUp(".myTooltip");
+}
+
+//取消生成教学班名称
+function cancelGenerateClassName(row,index){
+	$("#classManagementTable").bootstrapTable('updateCell', {
+		index : index,
+		field : 'jxbmc',
+		value : ""
+	});
+	$("#classManagementTable").bootstrapTable('updateCell', {
+		index : index,
+		field : 'jxbrs',
+		value : 0
+	});
+	$(".cancelGenerateClassName"+index).hide();
     toolTipUp(".myTooltip");
 }
 
@@ -831,20 +856,6 @@ function editorClassName(row,index){
 	//绑定input失焦更新值事件
 	$("#teachingClassHoldName" + index).blur(function() {
 		if (row.TeachingClassHoldName !== $("#teachingClassHoldName" + index).val()) {
-			// 发送查询所有用户请求
-			// $.ajax({
-			//  method : 'get',
-			//  cache : false,
-			//  url : "/queryDrgGroupIntoInfo",
-			//  dataType : 'json',
-			//  success : function(backjson) {
-			// 	 if (backjson.result) {
-			// 		 stuffDrgGroupMangerTable(backjson);
-			// 	 } else {
-			// 		 jGrowlStyleClose('操作失败，请重试');
-			// 	 }
-			//  }
-			// });
 			$("#classManagementTable").bootstrapTable('updateCell', {
 				index: index,
 				field: 'TeachingClassHoldName',
@@ -963,6 +974,7 @@ function combinedClass() {
 			combinedClassName +=  choosedTeachingClass[i].kcmc+choosedTeachingClass[i].xzbmc+ '+';
 			combinedClassStudentNum += choosedTeachingClass[i].zdrs;
 			combinedMajorName+=choosedTeachingClass[i].zymc+ ',';
+			
 			combinedMajorCodes+=choosedTeachingClass[i].zybm+ ',';
 			combinedAdministrationClassesName+=choosedTeachingClass[i].xzbmc+ ',';
 			combinedAdministrationClassesCodes+=choosedTeachingClass[i].xzbbm+ ',';
@@ -1027,6 +1039,11 @@ function breakClass() {
 			allStudentNum += choosedTeachingClass[i].zdrs;
 			choosedTeachingAraay.push(choosedTeachingClass[i]);
 		}
+	}
+	
+	if (allStudentNum===0) {
+		toastr.warning('行政班暂无学生');
+		return;
 	}
 
 	$("#allStudentNum").val(allStudentNum);
@@ -1794,38 +1811,42 @@ function confirmClassAction(type,choosedTeaching,isShowMaskingElement) {
 
 // 教学班管理检索
 function generatTeachingClassStartSearch(tableInfo) {
-//	var notNullSearchs=teachingClassTetNotNullSearchs();
-//	if(typeof notNullSearchs ==='undefined'){
-//		return;
-//	}
-//	
-//	// 发送查询所有用户请求
-//	$.ajax({
-//		method : 'get',
-//		cache : false,
-//		url : "/addCrouseSeacch",
-//		data: {
-//             "SearchCriteria":JSON.stringify(notNullSearchs) 
-//        },
-//		dataType : 'json',
-//		beforeSend: function(xhr) {
-//			requestErrorbeforeSend();
-//		},
-//		error: function(textStatus) {
-//			requestError();
-//		},
-//		complete: function(xhr, status) {
-//			requestComplete();
-//		},
-//		success : function(backjson) {
-//			if (backjson.result) {
-//				hideloding();
-//				stuffClassManagementTable(backjson.tableInfo);
-//			} else {
-//				toastr.warning('操作失败，请重试');
-//			}
-//		}
-//	});
+	var notNullSearchs=teachingClassTetNotNullSearchs();
+	if(typeof notNullSearchs ==='undefined'){
+		return;
+	}
+	var searchObject = new Object();
+	searchObject.xzbmc=$("#classManagement_className").val();
+	searchObject.kcmc=$("#classManagement_coursesName").val();
+	
+	// 发送查询所有用户请求
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeachingClassQueryAdministrationClassesLibrary",
+		data: {
+             "culturePlanInfo":JSON.stringify(notNullSearchs),
+             "SearchCriteria":JSON.stringify(searchObject) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				stuffClassManagementTable(backjson.classesInfo);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 	
 }
 
@@ -1873,8 +1894,8 @@ function refreshStudentNum() {
 function generatTeachingClassReSearch() {
 	var reObject = new Object();
 	reObject.fristSelectId = "#classManagement_level";
-	reObject.InputIds = "#classManagement_className,#classManagement_className";
-	reObject.normalSelectIds = "#appointClassStudenInfo_administrationClass,#appointClassStudenInfo_studentSex,#appointClassStudenInfo_studenStatus";
+	reObject.InputIds = "#classManagement_className,#classManagement_coursesName";
+	reObject.actionSelectIds = "#classManagement_department,#classManagement_grade,#classManagement_major";
 	reReloadSearchsWithSelect(reObject);
 	drawClassManagementEmptyTable();
 }
