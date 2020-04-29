@@ -2384,5 +2384,5 @@ function teachingClassTetNotNullSearchs(){
 	returnObject.gradeTxt = gradeText;
 	returnObject.majorTxt = majorText;
 	return returnObject;
-	//test
+	//test1
 }
