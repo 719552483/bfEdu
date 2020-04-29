@@ -687,6 +687,9 @@ function stuffClassManagementTable(tableInfo) {
 		},
 		'click #editorClassName' : function(e, value, row, index) {
 			editorClassName(row,index);
+		},
+		'click #cancelGenerateClassName' : function(e, value, row, index) {
+			cancelGenerateClassName(row,index);
 		}
 	};
 
@@ -779,6 +782,7 @@ function stuffClassManagementTable(tableInfo) {
 		return [ '<ul class="toolbar tabletoolbar">'
 				+ '<li id="generateClassName"><span><img src="img/info.png" style="width:24px"></span>生成教学班名称</li>'
 				+ '<li id="editorClassName"><span><img src="images/t02.png" style="width:24px"></span>编辑教学班名称</li>'
+				+ '<li id="cancelGenerateClassName" class="noneStart cancelGenerateClassName'+index+'"><span><img src="images/t02.png" style="width:24px"></span>取消生成教学班</li>'
 				+ '</ul>' ].join('');
 	}
 
@@ -813,8 +817,6 @@ function generateClassName(row,index){
 		toastr.warning('行政班在读人数大于容纳人数');
 		return;
 	}
-	
-	
 	$("#classManagementTable").bootstrapTable('updateCell', {
 		index : index,
 		field : 'jxbmc',
@@ -825,6 +827,23 @@ function generateClassName(row,index){
 		field : 'jxbrs',
 		value : row.zdrs
 	});
+	$(".cancelGenerateClassName"+index).show();
+    toolTipUp(".myTooltip");
+}
+
+//取消生成教学班名称
+function cancelGenerateClassName(row,index){
+	$("#classManagementTable").bootstrapTable('updateCell', {
+		index : index,
+		field : 'jxbmc',
+		value : ""
+	});
+	$("#classManagementTable").bootstrapTable('updateCell', {
+		index : index,
+		field : 'jxbrs',
+		value : 0
+	});
+	$(".cancelGenerateClassName"+index).hide();
     toolTipUp(".myTooltip");
 }
 
@@ -837,20 +856,6 @@ function editorClassName(row,index){
 	//绑定input失焦更新值事件
 	$("#teachingClassHoldName" + index).blur(function() {
 		if (row.TeachingClassHoldName !== $("#teachingClassHoldName" + index).val()) {
-			// 发送查询所有用户请求
-			// $.ajax({
-			//  method : 'get',
-			//  cache : false,
-			//  url : "/queryDrgGroupIntoInfo",
-			//  dataType : 'json',
-			//  success : function(backjson) {
-			// 	 if (backjson.result) {
-			// 		 stuffDrgGroupMangerTable(backjson);
-			// 	 } else {
-			// 		 jGrowlStyleClose('操作失败，请重试');
-			// 	 }
-			//  }
-			// });
 			$("#classManagementTable").bootstrapTable('updateCell', {
 				index: index,
 				field: 'TeachingClassHoldName',
@@ -1034,6 +1039,11 @@ function breakClass() {
 			allStudentNum += choosedTeachingClass[i].zdrs;
 			choosedTeachingAraay.push(choosedTeachingClass[i]);
 		}
+	}
+	
+	if (allStudentNum===0) {
+		toastr.warning('行政班暂无学生');
+		return;
 	}
 
 	$("#allStudentNum").val(allStudentNum);
