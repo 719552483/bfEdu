@@ -779,11 +779,19 @@ function stuffClassManagementTable(tableInfo) {
 	});
 
 	function classManagementFormatter(value, row, index) {
-		return [ '<ul class="toolbar tabletoolbar">'
-				+ '<li id="generateClassName"><span><img src="img/info.png" style="width:24px"></span>生成教学班名称</li>'
-				+ '<li id="editorClassName"><span><img src="images/t02.png" style="width:24px"></span>编辑教学班名称</li>'
-				+ '<li id="cancelGenerateClassName" class="noneStart cancelGenerateClassName'+index+'"><span><img src="images/t02.png" style="width:24px"></span>取消生成教学班</li>'
-				+ '</ul>' ].join('');
+		if(row.zdrs!==0&&row.jxbmc!==""){
+			return [ '<ul class="toolbar tabletoolbar">'
+						+ '<li id="generateClassName"><span><img src="img/info.png" style="width:24px"></span>生成教学班名称</li>'
+						+ '<li id="editorClassName"><span><img src="images/t02.png" style="width:24px"></span>编辑教学班名称</li>'
+						+ '<li id="cancelGenerateClassName" class="cancelGenerateClassName'+index+'"><span><img src="images/t02.png" style="width:24px"></span>取消生成教学班</li>'
+						+ '</ul>' ].join('');
+		}else{
+			return [ '<ul class="toolbar tabletoolbar">'
+						+ '<li id="generateClassName"><span><img src="img/info.png" style="width:24px"></span>生成教学班名称</li>'
+						+ '<li id="editorClassName"><span><img src="images/t02.png" style="width:24px"></span>编辑教学班名称</li>'
+						+ '</ul>' ].join('');
+		}
+	
 	}
 
 	function TeachingClassHoldNumFormatter(value, row, index) {
@@ -817,6 +825,12 @@ function generateClassName(row,index){
 		toastr.warning('行政班在读人数大于容纳人数');
 		return;
 	}
+	
+	if( row.zdrs===0){
+		toastr.warning('行政班暂无学生');
+		return;
+	}
+	
 	$("#classManagementTable").bootstrapTable('updateCell', {
 		index : index,
 		field : 'jxbmc',
@@ -827,7 +841,6 @@ function generateClassName(row,index){
 		field : 'jxbrs',
 		value : row.zdrs
 	});
-	$(".cancelGenerateClassName"+index).show();
     toolTipUp(".myTooltip");
 }
 
@@ -843,7 +856,6 @@ function cancelGenerateClassName(row,index){
 		field : 'jxbrs',
 		value : 0
 	});
-	$(".cancelGenerateClassName"+index).hide();
     toolTipUp(".myTooltip");
 }
 
