@@ -309,13 +309,22 @@ public class AdministrationPageService {
 	}
 	
 	
+	//查询培养计划下所有教学班
+	public List<Edu301> getCulturePlanAllTeachingClasses(String levelCode, String departmentCode, String gradeCode,String majorCode) {
+		return edu301DAO.getCulturePlanAllTeachingClasses(levelCode,departmentCode,gradeCode,majorCode);
+	}
 	
+	//查询所有教学班
+	public List<Edu301> getAllTeachingClasses() {
+		return edu301DAO.findAll();
+	}
 	
+	//修改教学班名称
+	public void modifyTeachingClassName(String teachingClassID, String newName) {
+		edu301DAO.modifyTeachingClassName(teachingClassID,newName);
+	}
 	
-	
-	
-	
-	
+
 	
 	
 	
@@ -592,6 +601,36 @@ public class AdministrationPageService {
 		List<Edu001> studentEntities = edu001DAO.findAll(specification);
 		return studentEntities;
 	}
+
+	
+	
+	//搜索教学班
+	public List<Edu301> searchTeachingClass(Edu301 edu301) {
+		Specification<Edu301> specification = new Specification<Edu301>() {
+			public Predicate toPredicate(Root<Edu301> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu301.getJxbmc() != null && !"".equals(edu301.getJxbmc())) {
+					predicates.add(cb.like(root.<String> get("jxbmc"), '%' + edu301.getJxbmc() + '%'));
+				}
+				if (edu301.getKcmc() != null && !"".equals(edu301.getKcmc())) {
+					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu301.getKcmc() + '%'));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu301> teachingClassEntities = edu301DAO.findAll(specification);
+		return teachingClassEntities;
+	}
+
+	
+	
+
+
+	
+
+
+
+
 
 
 

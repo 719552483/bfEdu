@@ -1804,6 +1804,7 @@ public class AdministrationController {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			Edu301 verifyEdu301=new Edu301();
 			verifyEdu301.setEdu108_ID(jsonObject.getLong("edu108_ID"));
+			verifyEdu301.setKcmc(jsonObject.getString("kcmc"));
 			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
 			verifyEdu301.setPyccmc(jsonObject.getString("pyccmc"));
 			verifyEdu301.setPyccbm(jsonObject.getString("pyccbm"));
@@ -1925,14 +1926,112 @@ public class AdministrationController {
 	}
 	
 	
+	/**
+	 * 查询所有教学班
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("getAllTeachingClasses")
+	@ResponseBody
+	public Object getAllTeachingClasses(@RequestParam String culturePlanInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
+		String levelCode=culturePlan.getString("level");
+		String departmentCode=culturePlan.getString("department");
+		String gradeCode=culturePlan.getString("grade");
+		String majorCode=culturePlan.getString("major");
+		
+		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode,departmentCode,gradeCode,majorCode);
+		returnMap.put("calssInfo", calssInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	
+	/**
+	 * 修改教学班名称
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("modifyTeachingClassName")
+	@ResponseBody
+	public Object modifyTeachingClassName(@RequestParam String modifyObject) {
+		Map<String, Object> returnMap = new HashMap();
+		boolean namehave = false;
+		JSONObject modifyInfo = JSONObject.fromObject(modifyObject);
+		String teachingClassID=modifyInfo.getString("teachingClassID");
+		String newName=modifyInfo.getString("newName");
+		
+		List<Edu301> calssInfo = administrationPageService.getAllTeachingClasses();
+		for (int a = 0; a < calssInfo.size(); a++) {
+			if(newName.equals(calssInfo.get(a).getJxbmc())){
+				namehave = true;
+				break;
+			}
+		}
+		
+		if(!namehave){
+			administrationPageService.modifyTeachingClassName(teachingClassID,newName);
+		}
+		
+		returnMap.put("result", true);
+		returnMap.put("namehave", namehave);
+		return returnMap;
+	}
+	
+	
+
+	/**
+	 * 删除教学班
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("removeTeachingClass")
+	@ResponseBody
+	public Object removeTeachingClass(@RequestParam String deleteIds) {
+		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		for (int i = 0; i < deleteArray.size(); i++) {
+			administrationPageService.removeTeachingClassByID(deleteArray.get(i).toString());
+		}
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	
-	
-	
+	/**
+	 * 搜索教学班
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("searchTeachingClass")
+	@ResponseBody
+	public Object searchTeachingClass(@RequestParam String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		//根据层次等信息查出培养计划id
+		String className=searchObject.getString("className");
+		String coursesName=searchObject.getString("coursesName");
+		
+		//填充搜索对象
+		Edu301 edu301 = new Edu301();
+		edu301.setJxbmc(className);
+		edu301.setKcmc(coursesName);
+		List<Edu301> tableInfo = administrationPageService.searchTeachingClass(edu301);
+		returnMap.put("tableInfo", tableInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	

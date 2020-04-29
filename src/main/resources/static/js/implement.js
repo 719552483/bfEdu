@@ -993,6 +993,10 @@ function getCrrruentDate() {
 //数组去重
 jQuery.extend({  
     uniqueArray:function(a) {  
+    	var bool = $.isArray(a)
+    	if(!bool){
+    		a=a.slice(0, -1).split(",")
+    	}
         var r=[];  
         for (var i=0,l=a.length; i<l; ++i)jQuery.inArray(a[i],r)<0&&r.push(a[i]);  
         return r;  

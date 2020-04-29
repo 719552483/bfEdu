@@ -22,7 +22,8 @@ public class Edu301 {
 	private  String njmc;//年级名称
 	private  String zybm;//专业编码
 	private  String zymc;//专业名称
-	private String jxbmc;  //教学班名称
+	private  String jxbmc;  //教学班名称
+	private  String kcmc;//培养层次名称 
 	private String bhzyCode;  //包含的专业编码
 	private String bhzymc;  //包含的专业名称
 	private String bhxzbCode;  //包含的行政班编码
@@ -158,12 +159,12 @@ public class Edu301 {
 	public void setBhxsCode(String bhxsCode) {
 		this.bhxsCode = bhxsCode;
 	}
-//	public int getJxbrl() {
-//		return jxbrl;
-//	}
-//	public void setJxbrl(int jxbrl) {
-//		this.jxbrl = jxbrl;
-//	}
-	
+	public String getKcmc() {
+		return kcmc;
+	}
+	public void setKcmc(String kcmc) {
+		this.kcmc = kcmc;
+	}
+
 	
 }
