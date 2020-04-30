@@ -758,7 +758,7 @@ padding:1.6em 0em 0.6em 31px !important
 	width: 70% !important;
 	margin-left: -18.5% !important;
 	text-indent: 13px;
-	    color: #636363;
+	color: #636363;
     font-weight: 600;
 }
 
@@ -1032,7 +1032,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .enterSchoolDateArea .dt {
-	top: 56%;
+	top: 53%;
 	left: 26%;
 	z-index: 100;
 }

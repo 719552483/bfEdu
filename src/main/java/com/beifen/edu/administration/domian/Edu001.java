@@ -16,36 +16,59 @@ import javax.persistence.Table;
 public class Edu001 {
  //学生基本信息表
 	private  Long Edu001_ID; 	
-	private  String xh; //学号
-	private  String xm; //学生姓名
-	private  String nl; //学生年龄
-	private  String xb;//性别
-	private  String zy; //学生职业
-	private  String Edu300_ID; //行政班ID
+	private  String pycc;//培养层次编码
+	private  String pyccmc;//培养层次名称
+	private  String szxb;//所在系部编码
+	private  String szxbmc;//所在系部名称
+	private  String nj; //年级编码
+	private  String njmc; //年级名称
+	private  String zybm; //专业编码
+	private  String zymc;//专业名称
+//	private  String Edu300_ID; //行政班ID
 	private  String xzbcode; //行政班编码
 	private  String xzbname; //行政班名称
 	private  String Edu301_ID;//教学班ID
 	private  String jxbname;//教学班名称
-	private  String nj; //年级  如2010级 2011级
-	private  String lxfs;//联系方式
-	private  String csrq;//出生日期
-	private  String hf;//婚否  1已婚 0未婚
+	private  String xh; //学号
+	private  String xm; //学生姓名
+	private  String zym; //曾用名
+	private  String xb;//性别
 	private  String zt;//状态
-	private  String ztCode;//状态编码//在读、离校等
-	private  String xq;//校区
-	private  String pycc;//培养层次
-	private  String szxb;//所在系部
-	private  String zymc;//专业名称
+	private  String ztCode;//状态编码
+	private  String csrq;//出生日期
+	private  String nl; //年龄
 	private  String sfzh;//身份证号 
 	private  String mz;//民族
+	private  String mzbm;//民族编码
+	private  String sfyxj;//是否有学籍
+	private  String xjh;//学籍号
 	private  String zzmm;//政治面貌
+	private  String zzmmbm;//政治面貌编码
 	private  String syd;//生源地
 	private  String whcd;//文化程度
-	private  String yxbz;//有效标志
+	private  String whcdbm;//文化程度编码
+	private  String ksh;//考生号
+	private  String rxzf;//入学总分
 	private  String rxsj;//入学时间
-	private  String xsmm;//学生密码
-	private  String bz1;//备注1
-	private  String bz2;//备注2
+	private  String byzh;//毕业证号
+	private  String zkzh;//准考证号
+	private  String sjhm;//手机号码
+	private  String email;//email
+	private  String jg;//籍贯
+	private  String sg;//身高
+	private  String tz;//体重
+	private  String hf;//婚否
+	private  String lzjd;//来自军队
+	private  String zsfs;//招生方式
+	private  String dxpy;//定向培养
+	private  String pkjt;//贫困家庭
+	private  String jtzz;//家庭住址
+	private  String zjxy;//宗教信仰
+	private  String zy; //职业
+	private  String bz;//备注
+	private  String yxbz;//有效标志
+//	private  String xsmm;//学生密码
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -92,12 +115,6 @@ public class Edu001 {
 	public void setNj(String nj) {
 		this.nj = nj;
 	}
-	public String getLxfs() {
-		return lxfs;
-	}
-	public void setLxfs(String lxfs) {
-		this.lxfs = lxfs;
-	}
 	public String getCsrq() {
 		return csrq;
 	}
@@ -122,12 +139,7 @@ public class Edu001 {
 	public void setZtCode(String ztCode) {
 		this.ztCode = ztCode;
 	}
-	public String getXq() {
-		return xq;
-	}
-	public void setXq(String xq) {
-		this.xq = xq;
-	}
+
 	public String getPycc() {
 		return pycc;
 	}
@@ -188,31 +200,12 @@ public class Edu001 {
 	public void setRxsj(String rxsj) {
 		this.rxsj = rxsj;
 	}
-	public String getXsmm() {
-		return xsmm;
-	}
-	public void setXsmm(String xsmm) {
-		this.xsmm = xsmm;
-	}
-	public String getBz1() {
-		return bz1;
-	}
-	public void setBz1(String bz1) {
-		this.bz1 = bz1;
-	}
-	public String getBz2() {
-		return bz2;
-	}
-	public void setBz2(String bz2) {
-		this.bz2 = bz2;
-	}
-
-	public String getEdu300_ID() {
-		return Edu300_ID;
-	}
-	public void setEdu300_ID(String edu300_ID) {
-		Edu300_ID = edu300_ID;
-	}
+//	public String getEdu300_ID() {
+//		return Edu300_ID;
+//	}
+//	public void setEdu300_ID(String edu300_ID) {
+//		Edu300_ID = edu300_ID;
+//	}
 	public String getEdu301_ID() {
 		return Edu301_ID;
 	}
@@ -237,4 +230,162 @@ public class Edu001 {
 	public void setJxbname(String jxbname) {
 		this.jxbname = jxbname;
 	}
+	public String getPyccmc() {
+		return pyccmc;
+	}
+	public void setPyccmc(String pyccmc) {
+		this.pyccmc = pyccmc;
+	}
+	public String getSzxbmc() {
+		return szxbmc;
+	}
+	public void setSzxbmc(String szxbmc) {
+		this.szxbmc = szxbmc;
+	}
+	public String getNjmc() {
+		return njmc;
+	}
+	public void setNjmc(String njmc) {
+		this.njmc = njmc;
+	}
+	public String getZybm() {
+		return zybm;
+	}
+	public void setZybm(String zybm) {
+		this.zybm = zybm;
+	}
+	public String getMzbm() {
+		return mzbm;
+	}
+	public void setMzbm(String mzbm) {
+		this.mzbm = mzbm;
+	}
+	public String getZzmmbm() {
+		return zzmmbm;
+	}
+	public void setZzmmbm(String zzmmbm) {
+		this.zzmmbm = zzmmbm;
+	}
+	public String getWhcdbm() {
+		return whcdbm;
+	}
+	public void setWhcdbm(String whcdbm) {
+		this.whcdbm = whcdbm;
+	}
+	public String getZym() {
+		return zym;
+	}
+	public void setZym(String zym) {
+		this.zym = zym;
+	}
+	public String getSfyxj() {
+		return sfyxj;
+	}
+	public void setSfyxj(String sfyxj) {
+		this.sfyxj = sfyxj;
+	}
+	public String getXjh() {
+		return xjh;
+	}
+	public void setXjh(String xjh) {
+		this.xjh = xjh;
+	}
+	public String getKsh() {
+		return ksh;
+	}
+	public void setKsh(String ksh) {
+		this.ksh = ksh;
+	}
+	public String getRxzf() {
+		return rxzf;
+	}
+	public void setRxzf(String rxzf) {
+		this.rxzf = rxzf;
+	}
+	public String getByzh() {
+		return byzh;
+	}
+	public void setByzh(String byzh) {
+		this.byzh = byzh;
+	}
+	public String getZkzh() {
+		return zkzh;
+	}
+	public void setZkzh(String zkzh) {
+		this.zkzh = zkzh;
+	}
+	public String getSjhm() {
+		return sjhm;
+	}
+	public void setSjhm(String sjhm) {
+		this.sjhm = sjhm;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getJg() {
+		return jg;
+	}
+	public void setJg(String jg) {
+		this.jg = jg;
+	}
+	public String getSg() {
+		return sg;
+	}
+	public void setSg(String sg) {
+		this.sg = sg;
+	}
+	public String getTz() {
+		return tz;
+	}
+	public void setTz(String tz) {
+		this.tz = tz;
+	}
+	public String getLzjd() {
+		return lzjd;
+	}
+	public void setLzjd(String lzjd) {
+		this.lzjd = lzjd;
+	}
+	public String getZsfs() {
+		return zsfs;
+	}
+	public void setZsfs(String zsfs) {
+		this.zsfs = zsfs;
+	}
+	public String getDxpy() {
+		return dxpy;
+	}
+	public void setDxpy(String dxpy) {
+		this.dxpy = dxpy;
+	}
+	public String getPkjt() {
+		return pkjt;
+	}
+	public void setPkjt(String pkjt) {
+		this.pkjt = pkjt;
+	}
+	public String getJtzz() {
+		return jtzz;
+	}
+	public void setJtzz(String jtzz) {
+		this.jtzz = jtzz;
+	}
+	public String getZjxy() {
+		return zjxy;
+	}
+	public void setZjxy(String zjxy) {
+		this.zjxy = zjxy;
+	}
+	public String getBz() {
+		return bz;
+	}
+	public void setBz(String bz) {
+		this.bz = bz;
+	}
+	
+	
 }

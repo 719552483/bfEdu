@@ -267,8 +267,8 @@ public class AdministrationPageService {
 	}
 	
 	//判断行政班是否包含在培养计划中
-	public List<Edu108> queryAdministrationClassesCrouse(String edu300ID) {
-		return edu108DAO.queryAdministrationClassesCrouse(edu300ID);
+	public List<Edu108> queryAdministrationClassesCrouse(String xzbCode) {
+		return edu108DAO.queryAdministrationClassesCrouse(xzbCode);
 	}
 	
 	//行政班合班
@@ -325,20 +325,50 @@ public class AdministrationPageService {
 	}
 	
 
-	
-	
-	
-	
-	
-	
-	
-	
-
-	public List<Edu001> queryAllInformation() {
-
-		return edu001DAO.queryAllDiseases();
-
+	//查询培养计划下所有学生
+	public List<Edu001> queryCulturePlanStudent(String levelCode, String departmentCode, String gradeCode,String majorCode) {
+		return edu001DAO.queryCulturePlanStudent(levelCode,departmentCode,gradeCode,majorCode);
 	}
+
+	
+	//新增学生
+	public void addStudent(Edu001 edu001) {
+		edu001DAO.save(edu001);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+//	public List<Edu001> queryAllInformation() {
+//
+//		return edu001DAO.queryAllDiseases();
+//
+//	}
 
 	// 查询用户是否存在
 	public String checkIsHaveUser(String userName) {
@@ -668,6 +698,10 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
 
 	
 	

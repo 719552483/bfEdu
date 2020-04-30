@@ -51,7 +51,7 @@ public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecification
 	
 	//判断行政班是否包含在培养计划中
 	@Query(value = "select * from edu108 e where e.xzb_code like %?1%", nativeQuery = true)
-	public List<Edu108> queryAdministrationClassesCrouse(String edu300id);
+	public List<Edu108> queryAdministrationClassesCrouse(String xzbCode);
 
 
 }

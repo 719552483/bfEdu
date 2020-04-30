@@ -357,6 +357,10 @@ function getAdministrationClassDetails(){
 		toastr.warning('专业不能为空');
 		return;
 	}
+	if($("#addAdministrationClass_classCode").val() === ""){
+		toastr.warning('班级代码不能为空');
+		return;
+	}
 	if($("#addAdministrationClass_className").val() === ""){
 		toastr.warning('班级名称不能为空');
 		return;

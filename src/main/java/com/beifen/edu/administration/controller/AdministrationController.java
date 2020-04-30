@@ -2112,6 +2112,73 @@ public class AdministrationController {
 	}
 	
 
+	
+	
+	/**
+	 * 查询培养计划下所有学生
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("queryCulturePlanStudent")
+	@ResponseBody
+	public Object queryCulturePlanStudent(@RequestParam String culturePlanInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
+		String levelCode=culturePlan.getString("level");
+		String departmentCode=culturePlan.getString("department");
+		String gradeCode=culturePlan.getString("grade");
+		String majorCode=culturePlan.getString("major");
+		
+		List<Edu001> studentInfo = administrationPageService.queryCulturePlanStudent(levelCode,departmentCode,gradeCode,majorCode);
+		List<Edu300> classInfo = administrationPageService.queryCulturePlanAdministrationClasses(levelCode,departmentCode,gradeCode,majorCode);
+		returnMap.put("studentInfo", studentInfo);
+		returnMap.put("classInfo", classInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 新增学生
+	 * 
+	 * @param addInfo新增信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("addStudent")
+	@ResponseBody
+	public Object addStudent(@RequestParam("addInfo") String addInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(addInfo);
+		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
+		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
+		// 判断层次是否已存在
+		boolean xhhave = false;
+		for (int i = 0; i < currentAllStudent.size(); i++) {
+				if(currentAllStudent.get(i).getXh().equals(edu001.getXh())){
+					xhhave=true;
+					break;
+				}
+		}
+		
+		if(!xhhave){
+			String yxbz = "1";
+			edu001.setYxbz(yxbz);
+			administrationPageService.addStudent(edu001);
+			Long id = edu001.getEdu001_ID();
+			returnMap.put("id", id);
+			returnMap.put("yxbz", yxbz);
+		}
+		
+		returnMap.put("xhhave", xhhave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	
 	// @RequestMapping("/newImgUpload")
 	// @ResponseBody
 	// protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -2258,30 +2325,30 @@ public class AdministrationController {
 	 * 
 	 * @return returnMap
 	 */
-
-	@RequestMapping("/sad")
-	@ResponseBody
-	public Object searchDiseaseCodeing(@RequestParam String ejdmGlzd) {
-		Map<String, Object> returnMap = new HashMap();
-		ReflectUtils reflectUtils = new ReflectUtils();
-		List<Map> diseaseList = new ArrayList<>();
-		List<Edu000> edu000 = new ArrayList<>();
-		List<Edu001> allDiseases = administrationPageService.queryAllInformation();
-
-		List<String> list = new ArrayList<String>();
-		list = queryEdu000(ejdmGlzd);
-
-		Map<String, Object> std = new HashMap<>();
-		try {
-			std = reflectUtils.simpleReflectBeanToMap(allDiseases);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-
-	}
+//
+//	@RequestMapping("/sad")
+//	@ResponseBody
+//	public Object searchDiseaseCodeing(@RequestParam String ejdmGlzd) {
+//		Map<String, Object> returnMap = new HashMap();
+//		ReflectUtils reflectUtils = new ReflectUtils();
+//		List<Map> diseaseList = new ArrayList<>();
+//		List<Edu000> edu000 = new ArrayList<>();
+//		List<Edu001> allDiseases = administrationPageService.queryAllInformation();
+//
+//		List<String> list = new ArrayList<String>();
+//		list = queryEdu000(ejdmGlzd);
+//
+//		Map<String, Object> std = new HashMap<>();
+//		try {
+//			std = reflectUtils.simpleReflectBeanToMap(allDiseases);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		return list;
+//
+//	}
 
 	/*
 	 * 根据传入的二级代码参数 获取二级代码将二级代码装入LIST中返回前台
