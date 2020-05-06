@@ -667,7 +667,7 @@ function getAddStudentInfo(){
 		return;
 	}
 	
-	if(!phoneRex(sjhm)){
+	if(!phoneRex(sjhm)&&sjhm!==""){
 		toastr.warning('手机号码格式不正确');
 		return;
 	}
