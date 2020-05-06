@@ -67,7 +67,7 @@
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
-								<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
+								<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次<b>*</b></label>
 								<select id="level" class="isSowIndex">
 									<option value="seleceConfigTip">请选择</option>
 								</select>
@@ -78,9 +78,9 @@
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
-								<label class="selectName" style="margin-top: 14px;">系&#12288;&#8197;部</label>
+								<label class="selectName" style="margin-top: 14px;">系&#12288;&#8197;部<b>*</b></label>
 								<select id="department" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
+									<option value="seleceConfigTip">暂不可选</option>
 								</select>
 							</div>
 						</ul>
@@ -89,9 +89,9 @@
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
-								<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+								<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级<b>*</b></label>
 								<select id="grade" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
+									<option value="seleceConfigTip">暂不可选</option>
 								</select>
 							</div>
 						</ul>
@@ -100,9 +100,9 @@
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
-								<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+								<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业<b>*</b></label>
 								<select id="major" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
+									<option value="seleceConfigTip">暂不可选</option>
 								</select>
 							</div>
 						</ul>
@@ -113,7 +113,7 @@
 							<div class="">
 								<label class="selectName" style="margin-top: 14px;">行政班</label>
 								<select id="administrationClass" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
+									<option value="seleceConfigTip">暂不可选</option>
 								</select>
 							</div>
 						</ul>
@@ -172,13 +172,15 @@
 				</div>
 
 				<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">
-					<table class="tablelist myTableStyle" id="studentBaseInfoTable" data-unique-id="id" style="margin-top: 10px;"></table>
+					<table class="tablelist myTableStyle" id="studentBaseInfoTable" data-unique-id="edu001_ID" style="margin-top: 10px;"></table>
 				</div>
 
 			</div>
 
 </div>
-			<div class="tip manyInfoShow addStudentTip">
+			
+			
+		<div class="tip manyInfoShow addStudentTip">
 				<div class="tiptop"><span>新增学生</span><a class="cancel"></a></div>
 				<div class="tipBody">
 					<div class="L_R_P searchArea moreInfoSelectStyle">
@@ -186,8 +188,8 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学号</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写学号..."/>
+									<label class="selectName" style="margin-top: 14px;">学号<b>*</b></label>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentNum" placeholder="请填写学号..."/>
 								</div>
 							</ul>
 						</div>
@@ -195,8 +197,8 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">姓名</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写姓名..."/>
+									<label class="selectName" style="margin-top: 14px;">姓名<b>*</b></label>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentName" placeholder="请填写姓名..."/>
 								</div>
 							</ul>
 						</div>
@@ -205,7 +207,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">曾用名</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写曾用名..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentUsedName" placeholder="请填写曾用名..."/>
 								</div>
 							</ul>
 						</div>
@@ -214,7 +216,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">性别<b>*</b></label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex" id="addStudentSex">
 										<option value="M">男</option>
 										<option value="F">女</option>
 									</select>
@@ -225,8 +227,8 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">状态<b>*</b></label>
-									<select class="isSowIndex" id="newStudentStatus">
+									<label class="selectName" style="margin-top: 14px;">学生状态<b>*</b></label>
+									<select class="isSowIndex" id="addStudentStatus">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -236,17 +238,18 @@
 						<div class="col4 giveBottom dateOfBrithArea">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">出生日期</label>
+									<label class="selectName" style="margin-top: 14px;">出生日期<b>*</b></label>
 									<input readonly="readonly" name="" type="text" class="myInput manyInfoInput" id="dateOfBrith" placeholder="点击选择出生日期..."/>
 								</div>
 							</ul>
 						</div>
 
+
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">校区</label>
-									<select class="isSowIndex" id="">
+									<label class="selectName" style="margin-top: 14px;">层次<b>*</b></label>
+									<select class="isSowIndex" id="addStudentpycc">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -256,9 +259,9 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">培养层次</label>
-									<select class="isSowIndex" id="">
-										<option value="seleceConfigTip">请选择</option>
+									<label class="selectName" style="margin-top: 14px;">系部<b>*</b></label>
+									<select class="isSowIndex" id="addStudentxb">
+										<option value="seleceConfigTip">暂不可选</option>
 									</select>
 								</div>
 							</ul>
@@ -267,9 +270,9 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">系部</label>
-									<select class="isSowIndex" id="">
-										<option value="seleceConfigTip">请选择</option>
+									<label class="selectName" style="margin-top: 14px;">年级<b>*</b></label>
+									<select class="isSowIndex" id="addStudentnj">
+										<option value="seleceConfigTip">暂不可选</option>
 									</select>
 								</div>
 							</ul>
@@ -278,9 +281,9 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">年级</label>
-									<select class="isSowIndex" id="">
-										<option value="seleceConfigTip">请选择</option>
+									<label class="selectName" style="margin-top: 14px;">专业<b>*</b></label>
+									<select class="isSowIndex" id="addStudentzy">
+										<option value="seleceConfigTip">暂不可选</option>
 									</select>
 								</div>
 							</ul>
@@ -289,9 +292,9 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">专业名称</label>
-									<select class="isSowIndex" id="">
-										<option value="seleceConfigTip">请选择</option>
+									<label class="selectName" style="margin-top: 14px;">班级<b>*</b></label>
+									<select class="isSowIndex" id="addStudentxzb">
+										<option value="seleceConfigTip">暂不可选</option>
 									</select>
 								</div>
 							</ul>
@@ -300,28 +303,17 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">班级</label>
-									<select class="isSowIndex" id="">
-										<option value="seleceConfigTip">请选择</option>
-									</select>
+									<label class="selectName" style="margin-top: 14px;">身份证号<b>*</b></label>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentIDNum" placeholder="请填写身份证号..."/>
 								</div>
 							</ul>
 						</div>
-
+                        <div class="clear"></div>
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">身份证号</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写身份证号..."/>
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">民族</label>
-									<select class="isSowIndex" id="">
+									<label class="selectName" style="margin-top: 14px;">民族<b>*</b></label>
+									<select class="isSowIndex" id="addStudentNation">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -332,7 +324,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">是否有学籍</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex isOrNotIsEvement" id="addStudentIsHaveStatus">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -343,28 +335,27 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">学籍号</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写学籍号..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentStatusNum" placeholder="请填写学籍号..."/>
 								</div>
 							</ul>
 						</div>
-						<div class="clear"></div>
 
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">政治面貌</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex" id="addStudentzzmm">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
 							</ul>
 						</div>
-
+						 <div class="clear"></div>
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">生源地</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写生源地..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentsyd" placeholder="请填写生源地..."/>
 								</div>
 							</ul>
 						</div>
@@ -373,7 +364,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">文化程度</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex" id="addStudentwhcd">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -384,7 +375,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">考生号</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填写生源地..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentksh" placeholder="请填写生源地..."/>
 								</div>
 							</ul>
 						</div>
@@ -397,7 +388,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">入学总分</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入学总分..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentrxzf" placeholder="请填入学总分..."/>
 								</div>
 							</ul>
 						</div>
@@ -405,7 +396,7 @@
 						<div class="col4 giveBottom enterSchoolDateArea">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">入学时间</label>
+									<label class="selectName" style="margin-top: 14px;">入学时间<b>*</b></label>
 									<input readonly="readonly" name="" type="text" class="myInput manyInfoInput" id="enterSchoolDate" placeholder="点击选择入学时间..."/>
 								</div>
 							</ul>
@@ -415,7 +406,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">毕业证号</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入毕业证号..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentbyzh" placeholder="请填入毕业证号..."/>
 								</div>
 							</ul>
 						</div>
@@ -424,7 +415,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">准考证号</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入准考证号..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentzkzh" placeholder="请填入准考证号..."/>
 								</div>
 							</ul>
 						</div>
@@ -433,7 +424,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">手机号码</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入手机号码..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentphoneNum" placeholder="请填入手机号码..."/>
 								</div>
 							</ul>
 						</div>
@@ -443,7 +434,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">E-mail</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入E-mail..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentemail" placeholder="请填入E-mail..."/>
 								</div>
 							</ul>
 						</div>
@@ -452,7 +443,16 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">籍贯</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入籍贯..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentjk" placeholder="请填入籍贯..."/>
+								</div>
+							</ul>
+						</div>
+						
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">职业</label>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentzhiye" placeholder="请填入职业..."/>
 								</div>
 							</ul>
 						</div>
@@ -461,7 +461,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">身高</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入身高..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudentsg" placeholder="请填入身高..."/>
 								</div>
 							</ul>
 						</div>
@@ -470,7 +470,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">体重</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入体重..."/>
+									<input name="" type="text" class="myInput manyInfoInput" id="addStudenttz" placeholder="请填入体重..."/>
 								</div>
 							</ul>
 						</div>
@@ -479,7 +479,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">婚否</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex isOrNotIsEvement" id="addStudentIsMarried">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -490,7 +490,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">来自军队</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex isOrNotIsEvement" id="addStudentIsFromArmy">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -501,7 +501,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">招生方式</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex" id="addStudentzsfs">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -512,7 +512,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">定向(订单)培养</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex isOrNotIsEvement" id="addStudentIsDxpy">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
 								</div>
@@ -523,27 +523,9 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">建档贫困家庭</label>
-									<select class="isSowIndex" id="">
+									<select class="isSowIndex isOrNotIsEvement" id="addStudentIsPoorFamily">
 										<option value="seleceConfigTip">请选择</option>
 									</select>
-								</div>
-							</ul>
-						</div>
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">婚否</label>
-									<select class="isSowIndex" id="">
-										<option value="seleceConfigTip">请选择</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">宗教信仰</label>
-									<input name="" type="text" class="myInput manyInfoInput" id="" placeholder="请填入宗教信仰..."/>
 								</div>
 							</ul>
 						</div>
@@ -552,7 +534,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">家庭住址</label>
-									<input name="" type="text" class="myInput allWidthInput" id="" placeholder="请填写家庭住址..."/>
+									<input name="" type="text" class="myInput allWidthInput" id="addStudentjtzz" placeholder="请填写家庭住址..."/>
 								</div>
 							</ul>
 						</div>
@@ -560,11 +542,18 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">宗教信仰</label>
-									<input name="" type="text" class="myInput allWidthInput" id="" placeholder="请填写宗教信仰..."/>
+									<input name="" type="text" class="myInput allWidthInput" id="addStudentzjxy" placeholder="请填写宗教信仰..."/>
 								</div>
 							</ul>
 						</div>
-
+	                    <div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">备注</label>
+									<input name="" type="text" class="myInput allWidthInput" id="addStudentbz" placeholder="请填写备注..."/>
+								</div>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<div class="tipbtn">
@@ -574,7 +563,7 @@
 			</div>
 
 
-			<div class="tip manyInfoShow importStudentInfo">
+		<div class="tip manyInfoShow importStudentInfo">
 				<div class="tiptop"><span>导入学生信息</span><a class="cancel"></a></div>
 
 				<div class="tipBody">
@@ -608,7 +597,7 @@
 
 			</div>
 
-			<div class="tip remindTip">
+		<div class="tip remindTip">
 				<div class="tiptop"><span>提示信息</span><a class="cancel"></a></div>
 				<div class="tipinfo">
 					<span><img src="images/ticon.png"/></span>
@@ -624,7 +613,7 @@
 				</div>
 			</div>
 
-			<div class="modal-backdrop fade maskingElement noneStart"></div>
+		<div class="modal-backdrop fade maskingElement noneStart"></div>
 		<div class="modal-backdrop fade loadingMasking noneStart">
 				<div class="spinner-box">
 					<div class="pulse-container">
@@ -636,8 +625,8 @@
 				</div>
 		</div>
 
-			<script type="text/javascript">
-				$("#usual1 ul").idTabs();
-			</script>
+		<script type="text/javascript">
+			$("#usual1 ul").idTabs();
+		</script>
 	</body>
 </html>

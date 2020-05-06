@@ -743,7 +743,6 @@ function checkIsNumber(num) {
 	} else {
 		return true
 	}
-
 }
 
 //function ejdmToSstring(EJDMEInfo,value){
@@ -988,6 +987,39 @@ function getCrrruentDate() {
 	var min = oDate.getMinutes().toString(); // 分
 	var s = oDate.getSeconds().toString(); // 秒
 	return y + m + d + h + min + s;
+}
+
+//身份证号验证
+function isCardNo (card){
+//	//身份证可以为空
+//	if (isEmpty(card)) {
+//         return false;
+//    }
+	var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/;
+    if (reg.test(card) === false) {
+        return false;
+    }
+    return true;
+}
+
+//手机号验证
+function phoneRex (value){
+	 var rex = /^1[3-9]+\d{9}$/;
+	 if (rex.test(value)) {
+        return true;
+     } else {
+        return false;
+     }
+}
+
+//email验证
+function emailRex (value){
+	var search_str = /^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/;
+	if(!search_str.test(value)){       
+	     return false;
+	}else{
+		 return true;
+	}
 }
 
 //数组去重

@@ -1,14 +1,105 @@
+var EJDMElementInfo;
 $(function() {
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	EJDMElementInfo=queryEJDMElementInfo();
+	stuffEJDElement(EJDMElementInfo);
+	getMajorTrainingSelectInfo();
 	drawStudentBaseInfoEmptyTable();
 	binBind();
 });
+
+//获取-专业培养计划- 有逻辑关系select信息
+function getMajorTrainingSelectInfo() {
+	LinkageSelectPublic("#level","#department","#grade","#major");
+	$("#major").change(function() {
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryCulturePlanStudent",
+			data: {
+	             "culturePlanInfo":JSON.stringify(getNotNullSearchs()) 
+	        },
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				if (backjson.result) {
+					hideloding();
+					if (backjson.classInfo.length===0&&backjson.studentInfo.length===0) {
+						toastr.warning('暂无信息');
+						return;
+					}
+					
+					if (backjson.classInfo.length===0) {
+						toastr.warning('暂无班级信息');
+					}else{
+						var str = '<option value="seleceConfigTip">请选择</option>';
+						for (var i = 0; i < backjson.classInfo.length; i++) {
+							str += '<option value="' + backjson.classInfo[i].xzbbm + '">' + backjson.classInfo[i].xzbmc
+									+ '</option>';
+						}
+						stuffManiaSelect("#administrationClass", str);
+					}
+					if (backjson.studentInfo.length===0) {
+						toastr.warning('暂无学生信息');					
+					}else{
+						stuffStudentBaseInfoTable(backjson.studentInfo);
+					}
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+	
+	$("#administrationClass").change(function() {
+		var xzbCode=new Array();
+		xzbCode.push(getNormalSelectValue("administrationClass"));
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryStudentInfoByAdministrationClass",
+			data: {
+	             "xzbCode":JSON.stringify(xzbCode) 
+	        },
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				if (backjson.result) {
+					hideloding();
+					if (backjson.studentInfo.length===0) {
+						toastr.warning('暂无学生信息');
+						return;
+					}
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+}
 
 //填充空的学生表
 function drawStudentBaseInfoEmptyTable() {
 	stuffStudentBaseInfoTable({});
 }
 
+//渲染学生表
 function stuffStudentBaseInfoTable(tableInfo) {
 	window.releaseNewsEvents = {
 		'click #studentDetails': function(e, value, row, index) {
@@ -23,7 +114,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	};
 
 	$('#studentBaseInfoTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo.newsInfo,
+		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
 		pageSize: 10,
@@ -50,168 +141,149 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				checkbox: true
 			},
 			{
-				field: 'level',
+				field: 'pyccmc',
 				title: '层次',
 				align: 'left',
 				formatter: paramsMatter
 
 			}, {
-				field: 'department',
+				field: 'szxbmc',
 				title: '系部',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'grade',
+				field: 'njmc',
 				title: '年级',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'major',
+				field: 'zymc',
 				title: '专业名称',
 				align: 'center',
 				formatter: paramsMatter
 			}, {
-				field: 'administrationClass',
+				field: 'xzbname',
 				title: '行政班',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'studentNumber',
+				field: 'xh',
 				title: '学号',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'studentName',
+				field: 'xm',
 				title: '姓名',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'sex',
+				field: 'xb',
 				title: '性别',
 				align: 'left',
 				formatter: sexFormatter,
 				visible: false
 			}, {
-				field: 'studentStatus',
+				field: 'zt',
 				title: '状态',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'academyName',
-				title: '学院名称',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'academyCode',
-				title: '学院代码',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'educationalSystem',
-				title: '学制',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'isroll',
+				field: 'sfyxj',
 				title: '是否有学籍',
 				align: 'left',
-				formatter: isrollMatter,
-				visible: false
+				formatter: isrollMatter
 			},
 			{
-				field: 'admissioTicketNumber',
+				field: 'zkzh',
 				title: '准考证号',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			},
 			{
-				field: 'examineeNumber',
+				field: 'ksh',
 				title: '考生号',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'IdNumber',
+				field: 'sfzh',
 				title: '身份证号',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'studentRollNumber',
+				field: 'xjh',
 				title: '学籍号',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'usedName',
+				field: 'zym',
 				title: '曾用名',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'birthDate',
+				field: 'csrq',
 				title: '出生日期',
 				align: 'left',
-				formatter: timeFormatter,
+				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'enterSchoolDate',
+				field: 'rxsj',
 				title: '入学时间',
 				align: 'left',
-				formatter: timeFormatter,
+				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'nation',
+				field: 'mz',
 				title: '民族',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'isMarriage',
+				field: 'hf',
 				title: '婚否',
 				align: 'left',
 				formatter: marriageMatter,
 				visible: false
 			}, {
-				field: 'ducationalLevel',
+				field: 'whcd',
 				title: '文化程度',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'politicalLandscape',
+				field: 'zzmm',
 				title: '政治面貌',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'fromLocal',
+				field: 'syd',
 				title: '生源地',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'familyAddress',
+				field: 'jtzz',
 				title: '家庭住址',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'enterSchoolScore',
+				field: 'rxzf',
 				title: '入学总分',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'studentMark',
+				field: 'bz',
 				title: '备注',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'phoneNumber',
+				field: 'sjhm',
 				title: '手机号',
 				align: 'left',
 				formatter: paramsMatter,
@@ -223,82 +295,40 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'birthplace',
+				field: 'jg',
 				title: '籍贯',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'Height',
+				field: 'sg',
 				title: '身高',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'bodyWeight',
+				field: 'tz',
 				title: '体重',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'fromArmy',
+				field: 'lzjd',
 				title: '来自军队',
 				align: 'left',
 				formatter: isOrNotisMatter,
 				visible: false
 			}, {
-				field: 'fromType',
-				title: '生源类型',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'fromWay',
+				field: 'zsfs',
 				title: '招生方式',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'isOrder',
+				field: 'dxpy',
 				title: '是否订单',
 				align: 'left',
 				formatter: isOrNotisMatter,
-				visible: false
-			}, {
-				field: 'isFiling',
-				title: '是否建档',
-				align: 'left',
-				formatter: isFilingMatter,
-				visible: false
-			}, {
-				field: 'testerType',
-				title: '考生类别',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'enterSchoolWay',
-				title: '入学方式',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'subjectsType',
-				title: '科类',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'enrolWay',
-				title: '录取形式',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'studyWay',
-				title: '学习形式',
-				align: 'left',
-				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'action',
@@ -337,7 +367,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 
 	function marriageMatter(value, row, index) {
-		if (value) {
+		if (value==="T") {
 			return [
 					'<div class="myTooltip" title="已婚">已婚</div>'
 				]
@@ -410,93 +440,309 @@ function removeStudents() {
 
 //预备新增学生
 function wantAddStudent() {
+	//清空模态框中元素原始值
+	emptyStudentBaseInfoArea();
+	//为模态框联动select绑定事件
+	LinkageSelectPublic("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy");
 	$(".addStudentTip").show();
 	showMaskingElement();
-	stuffStatusSelect();
+	//填充日期选择器
 	drawCalenr("#dateOfBrith");
 	drawCalenr("#enterSchoolDate");
+	//专业seclect联动事件
+	$("#addStudentzy").change(function() {
+		var addStudentQueryObject=new Object();
+		addStudentQueryObject.level=getNormalSelectValue("addStudentpycc");
+		addStudentQueryObject.department=getNormalSelectValue("addStudentxb");
+		addStudentQueryObject.grade=getNormalSelectValue("addStudentnj");
+		addStudentQueryObject.major=getNormalSelectValue("addStudentzy");
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryCulturePlanStudent",
+			data: {
+	             "culturePlanInfo":JSON.stringify(addStudentQueryObject) 
+	        },
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				if (backjson.result) {
+					hideloding();
+					if (backjson.classInfo.length===0) {
+						toastr.warning('暂无班级信息');
+					}else{
+						var str = '<option value="seleceConfigTip">请选择</option>';
+						for (var i = 0; i < backjson.classInfo.length; i++) {
+							str += '<option value="' + backjson.classInfo[i].xzbbm + '">' + backjson.classInfo[i].xzbmc
+									+ '</option>';
+						}
+						stuffManiaSelect("#addStudentxzb", str);
+					}
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+	
+	//确认新增学生
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		confirmAddStudent();
+		e.stopPropagation();
+	});
 }
 
-//填充状态下拉框
-function stuffStatusSelect() {
-	if ($("#newStudentStatus").find("option").length === 1) {
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < studentStuatsArray.length; i++) {
-			str += '<option value="' + studentStuatsArray[i] + '">' + studentStuatsArray[i] + '</option>';
+//确认新增学生
+function confirmAddStudent(){
+	var addStudentInfo=getAddStudentInfo();
+	if(typeof addStudentInfo ==='undefined'){
+		return;
+	}
+	
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addStudent",
+		data: {
+             "addInfo":JSON.stringify(addStudentInfo) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				showMaskingElement();
+				if (backjson.xhhave) {
+					toastr.warning('学号已存在');
+					return;
+				}
+				toastr.success('新增成功');
+				$(".tip").hide();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
 		}
-		stuffManiaSelect("#newStudentStatus", str);
-	}
+	});
 }
 
-
-//获取学生信息
-function getStudentInfo() {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	var tableInfo = {
-		"newsInfo": [{
-			"id": "id1",
-			"level": "层次",
-			"department": "系部",
-			"grade": "年级",
-			"major": "专业",
-			"administrationClass": "行政班",
-			"studentNumber": "学号",
-			"studentName": "姓名",
-			"sex": "M",
-			"studentStatus": "在读",
-			"academyName": "学院名称",
-			"academyCode": "学院代码",
-			"educationalSystem": 3,
-			"isroll": true,
-			"admissioTicketNumber": "准考证号",
-			"examineeNumber": "考生号",
-			"IdNumber": "身份证号",
-			"studentRollNumber": "学籍号",
-			"usedName": "曾用名",
-			"birthDate": "199402275210000000",
-			"enterSchoolDate": "201902275210000000",
-			"nation": "汉",
-			"isMarriage": false,
-			"ducationalLevel": "大专",
-			"politicalLandscape": "团员",
-			"fromLocal": "辽宁",
-			"familyAddress": "湖南常德阳光花园1403",
-			"enterSchoolScore": 857,
-			"studentMark": "",
-			"phoneNumber": "18673622251",
-			"email": "",
-			"birthplace": "湖南",
-			"Height": 170,
-			"bodyWeight": 80,
-			"fromArmy": false,
-			"fromType": "生源类型",
-			"fromWay": "招生方式",
-			"isOrder": false,
-			"isFiling": true,
-			"testerType": "考生类别",
-			"enterSchoolWay": "入学方式",
-			"subjectsType": "文科",
-			"enrolWay": "录取形式",
-			"studyWay": "学习方式",
-
-
-		}]
+//获取新增学生的信息
+function getAddStudentInfo(){
+	var xh=$("#addStudentNum").val();
+	var xm=$("#addStudentName").val();
+	var zym=$("#addStudentUsedName").val();
+	var xb= getNormalSelectValue("addStudentSex");
+	var ztCode= getNormalSelectValue("addStudentStatus");
+	var zt= getNormalSelectText("addStudentStatus");
+	var csrq=$("#dateOfBrith").val();
+	var pycc= getNormalSelectValue("addStudentpycc");
+	var pyccmc= getNormalSelectText("addStudentpycc");
+	var szxb= getNormalSelectValue("addStudentxb");
+	var szxbmc= getNormalSelectText("addStudentxb");
+	var nj= getNormalSelectValue("addStudentnj");
+	var njmc= getNormalSelectText("addStudentnj");
+	var zybm= getNormalSelectValue("addStudentzy");
+	var zymc= getNormalSelectText("addStudentzy");
+	var xzbcode= getNormalSelectValue("addStudentxzb");
+	var xzbname= getNormalSelectText("addStudentxzb");
+	var sfzh=$("#addStudentIDNum").val();
+	var mzbm= getNormalSelectValue("addStudentNation");
+	var mz= getNormalSelectText("addStudentNation");
+	var sfyxj= getNormalSelectValue("addStudentIsHaveStatus");
+	var xjh=$("#addStudentStatusNum").val();
+	var zzmmbm= getNormalSelectValue("addStudentzzmm");
+	var zzmm= getNormalSelectText("addStudentzzmm");
+	var syd=$("#addStudentsyd").val();
+	var whcd= getNormalSelectText("addStudentwhcd");
+	var whcdbm= getNormalSelectValue("addStudentwhcd");
+	var ksh=$("#addStudentksh").val();
+	var rxzf=$("#addStudentrxzf").val();
+	var rxsj=$("#enterSchoolDate").val();
+	var byzh=$("#addStudentbyzh").val();
+	var zkzh=$("#addStudentzkzh").val();
+	var sjhm=$("#addStudentphoneNum").val();
+	var email=$("#addStudentemail").val();
+	var jg=$("#addStudentjk").val();
+	var zy=$("#addStudentzhiye").val();
+	var sg=$("#addStudentsg").val();
+	var tz=$("#addStudenttz").val();
+	var hf= getNormalSelectValue("addStudentIsMarried");
+	var lzjd= getNormalSelectValue("addStudentIsFromArmy");
+	var zsfs= getNormalSelectText("addStudentzsfs");
+	var zsfscode= getNormalSelectValue("addStudentzsfs");
+	var dxpy= getNormalSelectValue("addStudentIsDxpy");
+	var pkjt= getNormalSelectValue("addStudentIsPoorFamily");
+	var jtzz=$("#addStudentjtzz").val();
+	var zjxy=$("#addStudentzjxy").val();
+	var bz=$("#addStudentbz").val();
+	
+	
+	if(xh===""){
+		toastr.warning('学号不能为空');
+		return;
 	}
-	stuffStudentBaseInfoTable(tableInfo);
+	
+	if(xm===""){
+		toastr.warning('姓名不能为空');
+		return;
+	}
+	
+	if(xb===""){
+		toastr.warning('性别不能为空');
+		return;
+	}
+	
+	if(ztCode===""){
+		toastr.warning('状态不能为空');
+		return;
+	}
+	
+	if(csrq===""){
+		toastr.warning('出生日期不能为空');
+		return;
+	}
+	
+	if(pycc===""){
+		toastr.warning('层次不能为空');
+		return;
+	}
+	
+	if(szxb===""){
+		toastr.warning('系部不能为空');
+		return;
+	}
+	
+	if(nj===""){
+		toastr.warning('年级不能为空');
+		return;
+	}
+	
+	if(zybm===""){
+		toastr.warning('专业不能为空');
+		return;
+	}
+	
+	if(xzbcode===""){
+		toastr.warning('班级不能为空');
+		return;
+	}
+	
+	if(sfzh===""){
+		toastr.warning('身份证号不能为空');
+		return;
+	}
+	
+	if(mzbm===""){
+		toastr.warning('民族不能为空');
+		return;
+	}
+	
+	if(!checkIsNumber(rxzf) && rxzf!==""){
+		toastr.warning('入学总分必须是数字');
+		return;
+	}
+	
+	if(rxsj===""){
+		toastr.warning('入学时间不能为空');
+		return;
+	}
+	
+	if(!isCardNo(sfzh)&&sfzh!==""){
+		toastr.warning('身份证号格式不正确');
+		return;
+	}
+	
+	if(!phoneRex(sjhm)){
+		toastr.warning('手机号码格式不正确');
+		return;
+	}
+	
+	if(emailRex(email)){
+		toastr.warning('E-mail格式不正确');
+		return;
+	}
+	
+	if(!checkIsNumber(sg) && sg!==""){
+		toastr.warning('身高必须是数字');
+		return;
+	}
+	
+	if(!checkIsNumber(tz) && tz!==""){
+		toastr.warning('体重必须是数字');
+		return;
+	}
+	
+	if(sfyxj==="T" && xjh===""){
+		toastr.warning('学籍号不能为空');
+		return;
+	}
+	
+	var returnObject=new Object();
+	returnObject.xh=xh;
+	returnObject.xm=xm;
+	returnObject.zym=zym;
+	returnObject.xb=xb;
+	returnObject.ztCode=ztCode;
+	returnObject.zt=zt;
+	returnObject.csrq=csrq;
+	returnObject.pycc=pycc;
+	returnObject.pyccmc=pyccmc;
+	returnObject.szxb=szxb;
+	returnObject.szxbmc=szxbmc;
+	returnObject.nj=nj;
+	returnObject.njmc=njmc;
+	returnObject.zybm=zybm;
+	returnObject.zymc=zymc;
+	returnObject.xzbcode=xzbcode;
+	returnObject.xzbname=xzbname;
+	returnObject.sfzh=sfzh;
+	returnObject.mzbm=mzbm;
+	returnObject.mz=mz;
+	returnObject.sfyxj=sfyxj;
+	returnObject.xjh=xjh;
+	returnObject.zzmmbm=zzmmbm;
+	returnObject.zzmm=zzmm;
+	returnObject.syd=syd;
+	returnObject.whcd=whcd;
+	returnObject.whcdbm=whcdbm;
+	returnObject.ksh=ksh;
+	returnObject.rxzf=rxzf;
+	returnObject.rxsj=rxsj;
+	returnObject.byzh=byzh;
+	returnObject.zkzh=zkzh;
+	returnObject.sjhm=sjhm;
+	returnObject.email=email;
+	returnObject.jg=jg;
+	returnObject.zy=zy;
+	returnObject.sg=sg;
+	returnObject.tz=tz;
+	returnObject.hf=hf;
+	returnObject.lzjd=lzjd;
+	returnObject.zsfs=zsfs;
+	returnObject.zsfscode=zsfscode;
+	returnObject.dxpy=dxpy;
+	returnObject.pkjt=pkjt;
+	returnObject.jtzz=jtzz;
+	returnObject.zjxy=zjxy;
+	returnObject.bz=bz;
+	return returnObject;
 }
+
 
 //开始检索
 function startSearch() {
@@ -573,7 +819,6 @@ function startSearch() {
 	// 	 }
 	//  }
 	// });
-	getStudentInfo();
 }
 
 //下载学生信息模板
@@ -630,7 +875,65 @@ function confirmImportStudentInfo() {
 	toastr.success('文件上传成功');
 }
 
+//清空学生信息模态框
+function emptyStudentBaseInfoArea() {
+	var reObject = new Object();
+	reObject.fristSelectId ="#addStudentpycc";
+	reObject.actionSelectIds ="#addStudentxb,#addStudentnj,#addStudentzy,#addStudentxzb";
+	reObject.InputIds = "#addStudentNum,#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentIDNum,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
+	reObject.normalSelectIds = "#addStudentSex,#addStudentStatus,#addStudentNation,#addStudentIsHaveStatus,#addStudentzzmm,#addStudentwhcd,#addStudentIsMarried,#addStudentIsFromArmy,#addStudentzsfs,#addStudentIsDxpy,#addStudentIsPoorFamily";
+	reReloadSearchsWithSelect(reObject);
+}
 
+
+
+
+
+
+
+
+//必选检索条件检查
+function getNotNullSearchs() {
+	var levelValue = getNormalSelectValue("level");
+	var departmentValue = getNormalSelectValue("department");
+	var gradeValue =getNormalSelectValue("grade");
+	var majorValue =getNormalSelectValue("major");
+
+	if (levelValue == "") {
+		toastr.warning('层次不能为空');
+		return;
+	}
+
+	if (departmentValue == "") {
+		toastr.warning('系部不能为空');
+		return;
+	}
+
+	if (gradeValue == "") {
+		toastr.warning('年级不能为空');
+		return;
+	}
+
+	if (majorValue == "") {
+		toastr.warning('专业不能为空');
+		return;
+	}
+	var levelText = getNormalSelectText("level");
+	var departmentText = getNormalSelectText("department");
+	var gradeText =getNormalSelectText("grade");
+	var majorText =getNormalSelectText("major");
+	
+	var returnObject = new Object();
+	returnObject.level = levelValue;
+	returnObject.department = departmentValue;
+	returnObject.grade = gradeValue;
+	returnObject.major = majorValue;
+	returnObject.levelTxt = levelText;
+	returnObject.departmentTxt = departmentText;
+	returnObject.gradeTxt = gradeText;
+	returnObject.majorTxt = majorText;
+	return returnObject;
+}
 
 //初始化页面按钮绑定事件
 function binBind() {
@@ -690,24 +993,5 @@ function binBind() {
 		checkStudentInfoFile();
 		e.stopPropagation();
 	});
-
-
 }
 
-var studentStuatsArray = ["辍学",
-	"取消学籍",
-	"在读",
-	"休学",
-	"退学",
-	"参军",
-	"开出学籍",
-	"离校",
-	"转学",
-	"毕业",
-	"结业",
-	"其它",
-	"离校未毕业",
-	"开出",
-	"死亡",
-	"自动退学",
-];
