@@ -336,15 +336,26 @@ public class AdministrationPageService {
 		edu001DAO.save(edu001);
 	}
 	
-	//新增学生是改变行政班在校人数
-	public void changeAdministrationClassesZXRS(String xzbcode) {
+	//删除学生
+	public void removeStudentByID(long studentId) {
+		edu001DAO.removeStudentByID(studentId);
+	}
+	
+	//新增学生时改变行政班在校人数
+	public void addAdministrationClassesZXRS(String xzbcode) {
 		int oldZXRS=edu300DAO.queryZXRS(xzbcode);
 		int newZXRS=oldZXRS+1;
 		edu300DAO.changeAdministrationClassesZXRS(xzbcode,newZXRS);
 	}
 	
+	//删除学生时改变行政班在校人数
+	public void cutAdministrationClassesZXRS(String xzbCode) {
+		int oldZXRS=edu300DAO.queryZXRS(xzbCode);
+		int newZXRS=oldZXRS-1;
+		edu300DAO.changeAdministrationClassesZXRS(xzbCode,newZXRS);
+	}
 	
-	
+
 	
 	
 	
@@ -703,6 +714,9 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
 
 
 

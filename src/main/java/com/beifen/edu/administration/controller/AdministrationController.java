@@ -1877,17 +1877,22 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryStudentInfoByAdministrationClass")
 	@ResponseBody
-	public Object queryStudentInfoByAdministrationClass(@RequestParam("xzbCode") String xzbCode) {
+	public Object queryStudentInfoByAdministrationClass(@RequestParam("xzbCodeObject") String xzbCodeObject) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONArray array = JSONArray.fromObject(xzbCode); //解析json字符
+		JSONObject xzbCodeJson = JSONObject.fromObject(xzbCodeObject);
+		String xzbcode=xzbCodeJson.getString("xzbCode");
 		List<Edu001> studentInfos = new ArrayList<Edu001>();
-		for (int i = 0; i < array.size(); i++) {
-			List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(array.get(i).toString());
+		if(xzbcode.equals("")){
+			studentInfos = administrationPageService.queryAllStudent();
+		}else{
+			List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(xzbcode);
 			for (int a = 0; a < administrationClassStudents.size(); a++) {
 				Edu001 edu001=administrationClassStudents.get(a);
 				studentInfos.add(edu001);
 			}
 		}
+		
+
 		
 		returnMap.put("studentInfo", studentInfos);
 		returnMap.put("result", true);
@@ -2154,7 +2159,7 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(addInfo);
 		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
-		// 判断层次是否已存在
+		// 判断学号是否已存在
 		boolean xhhave = false;
 		for (int i = 0; i < currentAllStudent.size(); i++) {
 				if(currentAllStudent.get(i).getXh().equals(edu001.getXh())){
@@ -2167,13 +2172,73 @@ public class AdministrationController {
 			String yxbz = "1";
 			edu001.setYxbz(yxbz);
 			administrationPageService.addStudent(edu001);
-			administrationPageService.changeAdministrationClassesZXRS(edu001.getXzbcode());
+			administrationPageService.addAdministrationClassesZXRS(edu001.getXzbcode());
 			Long id = edu001.getEdu001_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
 		}
 		
 		returnMap.put("xhhave", xhhave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 修改学生
+	 * 
+	 * @param updateinfo修改信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("modifyStudent")
+	@ResponseBody
+	public Object modifyStudent(@RequestParam("updateinfo") String updateinfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
+		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
+		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
+		// 判断学号是否已存在
+		boolean xhhave = false;
+		
+		for (int i = 0; i < currentAllStudent.size(); i++) {
+			if(!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())&&
+					currentAllStudent.get(i).getXh().equals(edu001.getXh())
+					){
+				xhhave=true;
+				break;
+			}
+		}
+		// 不存在则修改关系
+		if (!xhhave) {
+			administrationPageService.addStudent(edu001);
+		}
+		
+		returnMap.put("xhhave", xhhave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 删除学生
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("removeStudents")
+	@ResponseBody
+	public Object removeStudents(@RequestParam String removeInfo) {
+		JSONArray deleteArray = JSONArray.fromObject(removeInfo); //解析json字符
+		for (int i = 0; i < deleteArray.size(); i++) {
+		  JSONObject jsonObject = deleteArray.getJSONObject(i); 
+		  String xzbCode=jsonObject.getString("xzbCode");
+		  long  studentId=jsonObject.getLong("studentId");
+		  administrationPageService.removeStudentByID(studentId);
+		  administrationPageService.cutAdministrationClassesZXRS(xzbCode);
+		}
+		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
 		return returnMap;
 	}

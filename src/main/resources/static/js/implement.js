@@ -82,7 +82,7 @@ function drawEJDMselect(EJDMInfo){
 }
 
 //联动select公共方法
-function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId){
+function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId,configValue){
 	//获取层次
 	$.ajax({
 		method : 'get',
@@ -101,11 +101,32 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
-				var str = '<option value="seleceConfigTip">请选择</option>';
-				for (var i = 0; i < backjson.allLevel.length; i++) {
-					str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
-							+ '</option>';
+				var str = '';
+				if (typeof(configValue) === "undefined") {
+					str = '<option value="seleceConfigTip">请选择</option>';
+				}else{
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						if (backjson.allLevel[i].pyccbm===configValue) {
+							str = '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc+ '</option>';
+						}
+					}
 				}
+				
+				
+				if (typeof(configValue) === "undefined") {
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
+								+ '</option>';
+					}
+				}else{
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						if (backjson.allLevel[i].pyccbm!==configValue) {
+							str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
+							+ '</option>';
+						}
+					}
+				}
+				
 				stuffManiaSelect(levelInputId, str);
 			} else {
 				toastr.warning('获取层次失败，请重试');
@@ -227,21 +248,6 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 		});
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //删除动画方法
 function reomveAnimation(domClass, animationClass) {
@@ -379,7 +385,7 @@ function stuffManiaSelect(SelctId, str) {
 }
 
 //maniaSelect 有默认值 指定默认值
-function stuffManiaSelectWithDeafult(id,cheeckedValue){
+function stuffManiaSelectWithDeafult(id,cheeckedValue,cheeckedTxt){
 	if(cheeckedValue===""||cheeckedValue==null||typeof(cheeckedValue) === "undefined"){
 		return;
 	}
@@ -421,8 +427,12 @@ function stuffManiaSelectWithDeafult(id,cheeckedValue){
 		}
 		
 		var str="";
-		for (var i = 0; i < options.length; i++) {
-			str += '<option value="' + options[i].value + '">' + options[i].valueTxt + '</option>';
+		if(options.length!==0){
+			for (var i = 0; i < options.length; i++) {
+				str += '<option value="' + options[i].value + '">' + options[i].valueTxt + '</option>';
+			}
+		}else{
+			str = '<option value="' + cheeckedValue + '">' + cheeckedTxt + '</option>';
 		}
 		stuffManiaSelect(id, str);
 	}
@@ -430,8 +440,15 @@ function stuffManiaSelectWithDeafult(id,cheeckedValue){
 
 //联动SELECT 有默认值 指定默认值
 function actionStuffManiaSelectWithDeafult(id,cheeckedValue,cheeckedTxt){
-	var str='<option value="'+cheeckedValue+'">'+cheeckedTxt+'</option>';
-	stuffManiaSelect(id, str);
+	var str="";
+	if($.isArray(cheeckedValue)){
+		for (var i = 0; i < cheeckedValue.length; i++) {
+			str += '<option value="' + cheeckedValue[i] + '">' + cheeckedTxt[i] + '</option>';
+		}
+	}else{
+		str='<option value="'+cheeckedValue+'">'+cheeckedTxt+'</option>';
+		stuffManiaSelect(id, str);
+	}
 }
 
 //multiInput 有默认值 指定默认值

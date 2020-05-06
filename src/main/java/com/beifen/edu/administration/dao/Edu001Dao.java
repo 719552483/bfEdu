@@ -46,4 +46,10 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select * from edu001 e where e.pycc =? and e.szxb=? and e.nj =? and e.zybm=?", nativeQuery = true)
 	public List<Edu001> queryCulturePlanStudent(String levelCode, String departmentCode, String gradeCode,String majorCode);
 
+	// 删除学生
+	@Transactional
+	@Modifying
+	@Query(value = "delete from edu001 where edu001_id =?1", nativeQuery = true)
+	public void removeStudentByID(long studentId);
+
 }
