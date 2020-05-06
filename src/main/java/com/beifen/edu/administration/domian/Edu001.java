@@ -60,6 +60,7 @@ public class Edu001 {
 	private  String hf;//婚否
 	private  String lzjd;//来自军队
 	private  String zsfs;//招生方式
+	private  String zsfscode;//招生方式编码
 	private  String dxpy;//定向培养
 	private  String pkjt;//贫困家庭
 	private  String jtzz;//家庭住址
@@ -385,6 +386,12 @@ public class Edu001 {
 	}
 	public void setBz(String bz) {
 		this.bz = bz;
+	}
+	public String getZsfscode() {
+		return zsfscode;
+	}
+	public void setZsfscode(String zsfscode) {
+		this.zsfscode = zsfscode;
 	}
 	
 	

@@ -336,7 +336,12 @@ public class AdministrationPageService {
 		edu001DAO.save(edu001);
 	}
 	
-	
+	//新增学生是改变行政班在校人数
+	public void changeAdministrationClassesZXRS(String xzbcode) {
+		int oldZXRS=edu300DAO.queryZXRS(xzbcode);
+		int newZXRS=oldZXRS+1;
+		edu300DAO.changeAdministrationClassesZXRS(xzbcode,newZXRS);
+	}
 	
 	
 	
@@ -698,6 +703,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

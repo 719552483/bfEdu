@@ -141,168 +141,149 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				checkbox: true
 			},
 			{
-				field: 'level',
+				field: 'pyccmc',
 				title: '层次',
 				align: 'left',
 				formatter: paramsMatter
 
 			}, {
-				field: 'department',
+				field: 'szxbmc',
 				title: '系部',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'grade',
+				field: 'njmc',
 				title: '年级',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'major',
+				field: 'zymc',
 				title: '专业名称',
 				align: 'center',
 				formatter: paramsMatter
 			}, {
-				field: 'administrationClass',
+				field: 'xzbname',
 				title: '行政班',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'studentNumber',
+				field: 'xh',
 				title: '学号',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'studentName',
+				field: 'xm',
 				title: '姓名',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'sex',
+				field: 'xb',
 				title: '性别',
 				align: 'left',
 				formatter: sexFormatter,
 				visible: false
 			}, {
-				field: 'studentStatus',
+				field: 'zt',
 				title: '状态',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'academyName',
-				title: '学院名称',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'academyCode',
-				title: '学院代码',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'educationalSystem',
-				title: '学制',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'isroll',
+				field: 'sfyxj',
 				title: '是否有学籍',
 				align: 'left',
-				formatter: isrollMatter,
-				visible: false
+				formatter: isrollMatter
 			},
 			{
-				field: 'admissioTicketNumber',
+				field: 'zkzh',
 				title: '准考证号',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			},
 			{
-				field: 'examineeNumber',
+				field: 'ksh',
 				title: '考生号',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'IdNumber',
+				field: 'sfzh',
 				title: '身份证号',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'studentRollNumber',
+				field: 'xjh',
 				title: '学籍号',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'usedName',
+				field: 'zym',
 				title: '曾用名',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'birthDate',
+				field: 'csrq',
 				title: '出生日期',
 				align: 'left',
-				formatter: timeFormatter,
+				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'enterSchoolDate',
+				field: 'rxsj',
 				title: '入学时间',
 				align: 'left',
-				formatter: timeFormatter,
+				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'nation',
+				field: 'mz',
 				title: '民族',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'isMarriage',
+				field: 'hf',
 				title: '婚否',
 				align: 'left',
 				formatter: marriageMatter,
 				visible: false
 			}, {
-				field: 'ducationalLevel',
+				field: 'whcd',
 				title: '文化程度',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'politicalLandscape',
+				field: 'zzmm',
 				title: '政治面貌',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'fromLocal',
+				field: 'syd',
 				title: '生源地',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'familyAddress',
+				field: 'jtzz',
 				title: '家庭住址',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'enterSchoolScore',
+				field: 'rxzf',
 				title: '入学总分',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'studentMark',
+				field: 'bz',
 				title: '备注',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'phoneNumber',
+				field: 'sjhm',
 				title: '手机号',
 				align: 'left',
 				formatter: paramsMatter,
@@ -314,82 +295,40 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'birthplace',
+				field: 'jg',
 				title: '籍贯',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'Height',
+				field: 'sg',
 				title: '身高',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'bodyWeight',
+				field: 'tz',
 				title: '体重',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'fromArmy',
+				field: 'lzjd',
 				title: '来自军队',
 				align: 'left',
 				formatter: isOrNotisMatter,
 				visible: false
 			}, {
-				field: 'fromType',
-				title: '生源类型',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'fromWay',
+				field: 'zsfs',
 				title: '招生方式',
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
 			}, {
-				field: 'isOrder',
+				field: 'dxpy',
 				title: '是否订单',
 				align: 'left',
 				formatter: isOrNotisMatter,
-				visible: false
-			}, {
-				field: 'isFiling',
-				title: '是否建档',
-				align: 'left',
-				formatter: isFilingMatter,
-				visible: false
-			}, {
-				field: 'testerType',
-				title: '考生类别',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'enterSchoolWay',
-				title: '入学方式',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'subjectsType',
-				title: '科类',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'enrolWay',
-				title: '录取形式',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'studyWay',
-				title: '学习形式',
-				align: 'left',
-				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'action',
@@ -428,7 +367,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 
 	function marriageMatter(value, row, index) {
-		if (value) {
+		if (value==="T") {
 			return [
 					'<div class="myTooltip" title="已婚">已婚</div>'
 				]
@@ -588,12 +527,13 @@ function confirmAddStudent(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
-				hideloding();
+				showMaskingElement();
 				if (backjson.xhhave) {
 					toastr.warning('学号已存在');
 					return;
 				}
 				toastr.success('新增成功');
+				$(".tip").hide();
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -620,17 +560,135 @@ function getAddStudentInfo(){
 	var zymc= getNormalSelectText("addStudentzy");
 	var xzbcode= getNormalSelectValue("addStudentxzb");
 	var xzbname= getNormalSelectText("addStudentxzb");
-	var sfzh= getNormalSelectText("addStudentIDNum");
-	var mzbm= getNormalSelectValue("addStudentxzb");
-	var mz= getNormalSelectText("addStudentxzb");
+	var sfzh=$("#addStudentIDNum").val();
+	var mzbm= getNormalSelectValue("addStudentNation");
+	var mz= getNormalSelectText("addStudentNation");
 	var sfyxj= getNormalSelectValue("addStudentIsHaveStatus");
 	var xjh=$("#addStudentStatusNum").val();
 	var zzmmbm= getNormalSelectValue("addStudentzzmm");
 	var zzmm= getNormalSelectText("addStudentzzmm");
+	var syd=$("#addStudentsyd").val();
+	var whcd= getNormalSelectText("addStudentwhcd");
+	var whcdbm= getNormalSelectValue("addStudentwhcd");
+	var ksh=$("#addStudentksh").val();
+	var rxzf=$("#addStudentrxzf").val();
+	var rxsj=$("#enterSchoolDate").val();
+	var byzh=$("#addStudentbyzh").val();
+	var zkzh=$("#addStudentzkzh").val();
+	var sjhm=$("#addStudentphoneNum").val();
+	var email=$("#addStudentemail").val();
+	var jg=$("#addStudentjk").val();
+	var zy=$("#addStudentzhiye").val();
+	var sg=$("#addStudentsg").val();
+	var tz=$("#addStudenttz").val();
+	var hf= getNormalSelectValue("addStudentIsMarried");
+	var lzjd= getNormalSelectValue("addStudentIsFromArmy");
+	var zsfs= getNormalSelectText("addStudentzsfs");
+	var zsfscode= getNormalSelectValue("addStudentzsfs");
+	var dxpy= getNormalSelectValue("addStudentIsDxpy");
+	var pkjt= getNormalSelectValue("addStudentIsPoorFamily");
+	var jtzz=$("#addStudentjtzz").val();
+	var zjxy=$("#addStudentzjxy").val();
+	var bz=$("#addStudentbz").val();
 	
 	
 	if(xh===""){
 		toastr.warning('学号不能为空');
+		return;
+	}
+	
+	if(xm===""){
+		toastr.warning('姓名不能为空');
+		return;
+	}
+	
+	if(xb===""){
+		toastr.warning('性别不能为空');
+		return;
+	}
+	
+	if(ztCode===""){
+		toastr.warning('状态不能为空');
+		return;
+	}
+	
+	if(csrq===""){
+		toastr.warning('出生日期不能为空');
+		return;
+	}
+	
+	if(pycc===""){
+		toastr.warning('层次不能为空');
+		return;
+	}
+	
+	if(szxb===""){
+		toastr.warning('系部不能为空');
+		return;
+	}
+	
+	if(nj===""){
+		toastr.warning('年级不能为空');
+		return;
+	}
+	
+	if(zybm===""){
+		toastr.warning('专业不能为空');
+		return;
+	}
+	
+	if(xzbcode===""){
+		toastr.warning('班级不能为空');
+		return;
+	}
+	
+	if(sfzh===""){
+		toastr.warning('身份证号不能为空');
+		return;
+	}
+	
+	if(mzbm===""){
+		toastr.warning('民族不能为空');
+		return;
+	}
+	
+	if(!checkIsNumber(rxzf) && rxzf!==""){
+		toastr.warning('入学总分必须是数字');
+		return;
+	}
+	
+	if(rxsj===""){
+		toastr.warning('入学时间不能为空');
+		return;
+	}
+	
+	if(!isCardNo(sfzh)&&sfzh!==""){
+		toastr.warning('身份证号格式不正确');
+		return;
+	}
+	
+	if(!phoneRex(sjhm)){
+		toastr.warning('手机号码格式不正确');
+		return;
+	}
+	
+	if(emailRex(email)){
+		toastr.warning('E-mail格式不正确');
+		return;
+	}
+	
+	if(!checkIsNumber(sg) && sg!==""){
+		toastr.warning('身高必须是数字');
+		return;
+	}
+	
+	if(!checkIsNumber(tz) && tz!==""){
+		toastr.warning('体重必须是数字');
+		return;
+	}
+	
+	if(sfyxj==="T" && xjh===""){
+		toastr.warning('学籍号不能为空');
 		return;
 	}
 	
@@ -652,6 +710,36 @@ function getAddStudentInfo(){
 	returnObject.zymc=zymc;
 	returnObject.xzbcode=xzbcode;
 	returnObject.xzbname=xzbname;
+	returnObject.sfzh=sfzh;
+	returnObject.mzbm=mzbm;
+	returnObject.mz=mz;
+	returnObject.sfyxj=sfyxj;
+	returnObject.xjh=xjh;
+	returnObject.zzmmbm=zzmmbm;
+	returnObject.zzmm=zzmm;
+	returnObject.syd=syd;
+	returnObject.whcd=whcd;
+	returnObject.whcdbm=whcdbm;
+	returnObject.ksh=ksh;
+	returnObject.rxzf=rxzf;
+	returnObject.rxsj=rxsj;
+	returnObject.byzh=byzh;
+	returnObject.zkzh=zkzh;
+	returnObject.sjhm=sjhm;
+	returnObject.email=email;
+	returnObject.jg=jg;
+	returnObject.zy=zy;
+	returnObject.sg=sg;
+	returnObject.tz=tz;
+	returnObject.hf=hf;
+	returnObject.lzjd=lzjd;
+	returnObject.zsfs=zsfs;
+	returnObject.zsfscode=zsfscode;
+	returnObject.dxpy=dxpy;
+	returnObject.pkjt=pkjt;
+	returnObject.jtzz=jtzz;
+	returnObject.zjxy=zjxy;
+	returnObject.bz=bz;
 	return returnObject;
 }
 

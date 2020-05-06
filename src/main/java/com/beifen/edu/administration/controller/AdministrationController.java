@@ -2167,6 +2167,7 @@ public class AdministrationController {
 			String yxbz = "1";
 			edu001.setYxbz(yxbz);
 			administrationPageService.addStudent(edu001);
+			administrationPageService.changeAdministrationClassesZXRS(edu001.getXzbcode());
 			Long id = edu001.getEdu001_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
