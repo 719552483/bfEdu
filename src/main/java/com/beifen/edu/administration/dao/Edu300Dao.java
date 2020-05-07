@@ -15,7 +15,6 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	//查询培养计划下的行政班
 	@Query(value = "select * from edu300 e where pyccbm =?1 and xbbm=?2 and njbm =?3 and zybm=?4", nativeQuery = true)
 	List<Edu300> queryCulturePlanAdministrationClasses(String levelCode, String departmentCode, String gradeCode,String majorCode);
-
 	
 	// 根据id删除专业
 	@Transactional
@@ -30,12 +29,16 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	void generatAdministrationCoursePlan(String edu300Id, String isGeneratCoursePlan);
 
 	//查询行政班在校人数
-	@Query(value = "select e.zxrs from edu300 e where xzbbm =?1", nativeQuery = true)
+	@Query(value = "select e.zxrs from edu300 e where Edu300_ID =?1", nativeQuery = true)
 	int queryZXRS(String xzbcode);
+	
+	//查询行政班容纳人数人数
+	@Query(value = "select e.rnrs from edu300 e where Edu300_ID =?1", nativeQuery = true)
+	int changeTeachingClassesRS(String edu300_ID);
 	
 	//新增学生是改变行政班在校人数
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE edu300 SET zxrs =?2 WHERE xzbbm =?1", nativeQuery = true)
+	@Query(value = "UPDATE edu300 SET zxrs =?2 WHERE Edu300_ID =?1", nativeQuery = true)
 	public void changeAdministrationClassesZXRS(String xzbcode,int newZXRS);
 }

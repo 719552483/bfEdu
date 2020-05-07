@@ -26,7 +26,7 @@ public class Edu301 {
 	private  String kcmc;//培养层次名称 
 	private String bhzyCode;  //包含的专业编码
 	private String bhzymc;  //包含的专业名称
-	private String bhxzbCode;  //包含的行政班编码
+	private String bhxzbid;  //包含的行政班Id
 	private String bhxzbmc;  //包含的行政班名称
 	private String bhxsxm;  //包含的学生姓名
 	private String bhxsCode;  //包含的学生编码   包含的行政班和学生二选一
@@ -69,11 +69,12 @@ public class Edu301 {
 	public void setBhzymc(String bhzymc) {
 		this.bhzymc = bhzymc;
 	}
-	public String getBhxzbCode() {
-		return bhxzbCode;
+
+	public String getBhxzbid() {
+		return bhxzbid;
 	}
-	public void setBhxzbCode(String bhxzbCode) {
-		this.bhxzbCode = bhxzbCode;
+	public void setBhxzbid(String bhxzbid) {
+		this.bhxzbid = bhxzbid;
 	}
 	public String getBhxzbmc() {
 		return bhxzbmc;

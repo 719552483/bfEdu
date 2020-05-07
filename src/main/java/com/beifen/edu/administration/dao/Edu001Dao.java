@@ -29,7 +29,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	// public List<Edu001> queryAllDiseasesByCodeing(String xh);
 
 	// 按行政班搜索学生
-	@Query(value = "select * from edu001 b where b.xzbcode=?1", nativeQuery = true)
+	@Query(value = "select * from edu001 b where b.Edu300_ID=?1", nativeQuery = true)
 	public List<Edu001> queryStudentInfoByAdministrationClass(String xzbCode);
 
 	// 添加教学班的同时更新学生教学班信息
@@ -51,5 +51,10 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "delete from edu001 where edu001_id =?1", nativeQuery = true)
 	public void removeStudentByID(long studentId);
+
+	//统计行政班总人数
+	@Query(value = "select COUNT(*) from edu001 e where e.Edu300_ID  =?1", nativeQuery = true)
+	int countTeachingClassesRS(String edu300_ID);
+
 
 }

@@ -42,7 +42,7 @@ function getMajorTrainingSelectInfo() {
 					}else{
 						var str = '<option value="seleceConfigTip">请选择</option>';
 						for (var i = 0; i < backjson.classInfo.length; i++) {
-							str += '<option value="' + backjson.classInfo[i].xzbbm + '">' + backjson.classInfo[i].xzbmc
+							str += '<option value="' + backjson.classInfo[i].edu300_ID + '">' + backjson.classInfo[i].xzbmc
 									+ '</option>';
 						}
 						stuffManiaSelect("#administrationClass", str);
@@ -471,6 +471,53 @@ function modifyStudent(row,index){
 	stuffStudentDetails(row);
 	//为模态框联动select绑定事件
 	LinkageSelectPublic("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy",row.pycc);
+	$("#addStudentzy").change(function() {
+		var levelValue = getNormalSelectValue("addStudentpycc");
+		var departmentValue = getNormalSelectValue("addStudentxb");
+		var gradeValue =getNormalSelectValue("addStudentnj");
+		var majorValue =getNormalSelectValue("addStudentzy");
+		
+		var culturePlanObject=new Object();
+		culturePlanObject.level=levelValue;
+		culturePlanObject.department=departmentValue;
+		culturePlanObject.grade=gradeValue;
+		culturePlanObject.major=majorValue;
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryCulturePlanAdministrationClasses",
+			data: {
+	             "culturePlanInfo":JSON.stringify(culturePlanObject) 
+	        },
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				if (backjson.result) {
+					hideloding();
+					if (backjson.classesInfo.length===0) {
+						toastr.warning('暂无班级信息');
+						return;
+					}
+					var str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < backjson.classesInfo.length; i++) {
+						str += '<option value="' + backjson.classesInfo[i].xzbbm + '">' + backjson.classesInfo[i].xzbmc
+								+ '</option>';
+					}
+					stuffManiaSelect("#addStudentxzb", str);
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
 	//修改学生确认按钮
 	$('.confirmBtn').unbind('click');
 	$('.confirmBtn').bind('click', function(e) {
@@ -567,7 +614,7 @@ function removeStudent(row) {
 		var removeArray = new Array;
 		var removeObject = new Object;
 		removeObject.studentId=row.edu001_ID;
-		removeObject.xzbCode=row.xzbcode;
+		removeObject.edu300_ID=row.edu300_ID;
 		removeArray.push(removeObject);
 		sendStudentRemoveInfo(removeArray);
 		e.stopPropagation();
@@ -599,7 +646,7 @@ function removeStudents() {
 			for (var i = 0; i < chosenStudents.length; i++) {
 				var removeObject = new Object;
 				removeObject.studentId=chosenStudents[i].edu001_ID;
-				removeObject.xzbCode=chosenStudents[i].xzbcode;
+				removeObject.edu300_ID=chosenStudents[i].edu300_ID;
 				removeArray.push(removeObject);
 			}
 			sendStudentRemoveInfo(removeArray);
@@ -689,7 +736,7 @@ function wantAddStudent() {
 					}else{
 						var str = '<option value="seleceConfigTip">请选择</option>';
 						for (var i = 0; i < backjson.classInfo.length; i++) {
-							str += '<option value="' + backjson.classInfo[i].xzbbm + '">' + backjson.classInfo[i].xzbmc
+							str += '<option value="' + backjson.classInfo[i].edu300_ID + '">' + backjson.classInfo[i].xzbmc
 									+ '</option>';
 						}
 						stuffManiaSelect("#addStudentxzb", str);
@@ -739,6 +786,12 @@ function confirmAddStudent(){
 					toastr.warning('学号已存在');
 					return;
 				}
+				if (backjson.studentSpill) {
+					toastr.warning('班级人数超过上限');
+					return;
+				}
+				addStudentInfo.edu001_ID=backjson.id;
+				$('#studentBaseInfoTable').bootstrapTable("prepend", addStudentInfo);
 				showMaskingElement();
 				toastr.success('新增成功');
 				$(".tip").hide();
@@ -766,7 +819,7 @@ function getAddStudentInfo(){
 	var njmc= getNormalSelectText("addStudentnj");
 	var zybm= getNormalSelectValue("addStudentzy");
 	var zymc= getNormalSelectText("addStudentzy");
-	var xzbcode= getNormalSelectValue("addStudentxzb");
+	var Edu300_ID= getNormalSelectValue("addStudentxzb");
 	var xzbname= getNormalSelectText("addStudentxzb");
 	var sfzh=$("#addStudentIDNum").val();
 	var mzbm= getNormalSelectValue("addStudentNation");
@@ -845,7 +898,7 @@ function getAddStudentInfo(){
 		return;
 	}
 	
-	if(xzbcode===""){
+	if(Edu300_ID===""){
 		toastr.warning('班级不能为空');
 		return;
 	}
@@ -921,7 +974,7 @@ function getAddStudentInfo(){
 	returnObject.njmc=njmc;
 	returnObject.zybm=zybm;
 	returnObject.zymc=zymc;
-	returnObject.xzbcode=xzbcode;
+	returnObject.edu300_ID=Edu300_ID;
 	returnObject.xzbname=xzbname;
 	returnObject.sfzh=sfzh;
 	returnObject.mzbm=mzbm;

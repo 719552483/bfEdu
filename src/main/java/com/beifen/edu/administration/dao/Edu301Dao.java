@@ -28,4 +28,16 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "UPDATE edu301 SET jxbmc =?2 WHERE Edu301_ID =?1", nativeQuery = true)
 	public void modifyTeachingClassName(String edu301id, String newName);
+
+	//根据行政班编码查询教学班
+	@Query(value = "select * from edu301 e where e.bhxzbid like %?1%", nativeQuery = true)
+	List<Edu301> queryTeachingClassByXzbCode(String xzbcode);
+
+	
+	//新增学生时改变教学班人数
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE edu301 SET jxbrs =?2 WHERE Edu301_ID =?1", nativeQuery = true)
+	public void changeTeachingClassesRS(Long edu301_ID, int newRS);
+	
 }

@@ -336,6 +336,41 @@ public class AdministrationPageService {
 		edu001DAO.save(edu001);
 	}
 	
+	//修改学生时修改了行政班的情况
+	public void updateStudent(Edu001 edu001) {
+		List<Edu001> currentAllStudent = edu001DAO.findAll();
+		for (int i = 0; i < currentAllStudent.size(); i++) {
+			if(currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())){
+				//修改行政班相关信息
+				//新行政班人数加一
+				AdministrationPageService.this.addAdministrationClassesZXRS(edu001.getEdu300_ID());
+				//旧行政班人数减一
+				AdministrationPageService.this.cutAdministrationClassesZXRS(currentAllStudent.get(i).getEdu300_ID());
+				
+				List<Edu301> teachingClassInfo=edu301DAO.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+				String newJXB_code=null;
+				String newJXB_name=null;
+				if(teachingClassInfo.size()==0){
+					edu001.setEdu301_ID(newJXB_code);
+					edu001.setJxbname(newJXB_name);
+				}else{
+					newJXB_code=teachingClassInfo.get(0).getEdu301_ID().toString();
+					newJXB_name=teachingClassInfo.get(0).getJxbmc();
+					edu001.setEdu301_ID(newJXB_code);
+					edu001.setJxbname(newJXB_name);
+				}
+				//新教学班人数加一
+				AdministrationPageService.this.addTeachingClassesJXBRS(edu001.getEdu300_ID());
+				
+				//旧教学班人数减一
+				AdministrationPageService.this.cutTeachingClassesJXBRS(currentAllStudent.get(i).getEdu300_ID());
+				break;
+			}
+		}
+		//修改学生
+		edu001DAO.save(edu001);
+	}
+	
 	//删除学生
 	public void removeStudentByID(long studentId) {
 		edu001DAO.removeStudentByID(studentId);
@@ -355,6 +390,51 @@ public class AdministrationPageService {
 		edu300DAO.changeAdministrationClassesZXRS(xzbCode,newZXRS);
 	}
 	
+	//新增学生时改变教学班人数
+	public void addTeachingClassesJXBRS(String xzbcode) {
+		//根据行政班编码查询是否有教学班
+		List<Edu301> allTeachingClasses =edu301DAO.queryTeachingClassByXzbCode(xzbcode);
+		for (int i = 0; i < allTeachingClasses.size(); i++) {
+			String[] bhxzbCode=allTeachingClasses.get(i).getBhxzbid().split(",");
+			for (int b = 0; b < bhxzbCode.length; b++) {
+				if(bhxzbCode[b].equals(xzbcode)){
+					int oldRS=allTeachingClasses.get(i).getJxbrs();
+					int newRS=oldRS+1;
+					edu301DAO.changeTeachingClassesRS(allTeachingClasses.get(i).getEdu301_ID(),newRS);
+					edu001DAO.stuffStudentTeachingClassInfo(allTeachingClasses.get(i).getJxbmc(),allTeachingClasses.get(i).getEdu301_ID(),xzbcode);
+				}
+			}
+		}
+	}
+	
+	//删除学生时改变教学班人数
+	public void cutTeachingClassesJXBRS(String xzbcode) {
+			//根据行政班编码查询是否有教学班
+			List<Edu301> allTeachingClasses =edu301DAO.queryTeachingClassByXzbCode(xzbcode);
+			for (int i = 0; i < allTeachingClasses.size(); i++) {
+				String[] bhxzbCode=allTeachingClasses.get(i).getBhxzbid().split(",");
+				for (int b = 0; b < bhxzbCode.length; b++) {
+					if(bhxzbCode[b].equals(xzbcode)){
+						int oldRS=allTeachingClasses.get(i).getJxbrs();
+						int newRS=oldRS-1;
+						edu301DAO.changeTeachingClassesRS(allTeachingClasses.get(i).getEdu301_ID(),newRS);
+					}
+				}
+			}
+	 }
+	
+	//新增学生是否会超过行政班容纳人数
+	public boolean administrationClassesIsSpill(String edu300_ID) {
+		boolean studentSpill=false;
+		int nrrs=edu300DAO.changeTeachingClassesRS(edu300_ID);
+		int counts=edu001DAO.countTeachingClassesRS(edu300_ID);
+		
+		if((counts+1)>nrrs&&nrrs!=0){
+			studentSpill=true;
+		}
+		return  studentSpill;
+	}
+
 
 	
 	
@@ -632,8 +712,8 @@ public class AdministrationPageService {
 				if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
 					predicates.add(cb.like(root.<String> get("xm"), '%' + edu001.getXm() + '%'));
 				}
-				if (edu001.getXzbcode()!= null && !"".equals(edu001.getXzbcode())) {
-					predicates.add(cb.equal(root.<String> get("xzbcode"), edu001.getXzbcode()));
+				if (edu001.getEdu300_ID()!= null && !"".equals(edu001.getEdu300_ID())) {
+					predicates.add(cb.equal(root.<String> get("edu300_ID"), edu001.getEdu300_ID()));
 				}
 				if (edu001.getXb()!= null && !"".equals(edu001.getXb())) {
 					predicates.add(cb.equal(root.<String> get("xb"), edu001.getXb()));
@@ -714,6 +794,11 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
 
 
 

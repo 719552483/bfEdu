@@ -950,7 +950,7 @@ function saveTeachingClass() {
 			choosedTeaching.zymc = planInfo.majorTxt;
 			choosedTeaching.bhzyCode =allClass[i].zybm;
 			choosedTeaching.bhzymc =allClass[i].zymc ;
-			choosedTeaching.bhxzbCode =allClass[i].xzbbm;
+			choosedTeaching.bhxzbCode =allClass[i].edu300_ID;
 			choosedTeaching.bhxzbmc =allClass[i].xzbmc;
 			choosedTeaching.bhxsxm = "";
 			choosedTeaching.bhxsCode ="";
@@ -993,7 +993,7 @@ function combinedClass() {
 			
 			combinedMajorCodes+=choosedTeachingClass[i].zybm+ ',';
 			combinedAdministrationClassesName+=choosedTeachingClass[i].xzbmc+ ',';
-			combinedAdministrationClassesCodes+=choosedTeachingClass[i].xzbbm+ ',';
+			combinedAdministrationClassesCodes+=choosedTeachingClass[i].edu300_ID+ ',';
 		}
 	}
 	var dealCombinedClassName = '(合)' + combinedClassName.slice(0, -1);
@@ -1758,14 +1758,6 @@ function verifyClassInfo(type,choosedTeaching,isShowMaskingElement,warningTxt){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
-//				if (backjson.isHaveTeachingClass) {
-//					if(!isShowMaskingElement){
-//						hideloding();
-//					}
-//					toastr.warning(warningTxt);
-//					return;
-//				}
-				
 				if (backjson.willDropFirsthand) {
 					$(".combinedClassTip,.breakClassTip").hide();
                     $(".actionTip").show();
