@@ -62,7 +62,7 @@ function getMajorTrainingSelectInfo() {
 	
 	$("#administrationClass").change(function() {
 		var xzbCodeObject=new Object();
-		xzbCodeObject.xzbCode=getNormalSelectValue("administrationClass");
+		xzbCodeObject.edu300_ID=getNormalSelectValue("administrationClass");
 		$.ajax({
 			method : 'get',
 			cache : false,
@@ -168,7 +168,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'xzbname',
 				title: '行政班',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: xzbnameMatter
 			}, {
 				field: 'xh',
 				title: '学号',
@@ -354,7 +354,21 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			]
 			.join('');
 	}
-
+	
+	function xzbnameMatter(value, row, index) {
+		if (value===""||value==null) {
+			return [
+					'<div class="myTooltip redTxt" title="行政班已删除">行政班已删除</div>'
+				]
+				.join('');
+		} else {
+			return [
+					'<div class="myTooltip" title="'+value+'">'+value+'</div>'
+				]
+				.join('');
+		}
+	}
+	
 	function isrollMatter(value, row, index) {
 		if (value) {
 			return [
@@ -508,7 +522,7 @@ function modifyStudent(row,index){
 					}
 					var str = '<option value="seleceConfigTip">请选择</option>';
 					for (var i = 0; i < backjson.classesInfo.length; i++) {
-						str += '<option value="' + backjson.classesInfo[i].xzbbm + '">' + backjson.classesInfo[i].xzbmc
+						str += '<option value="' + backjson.classesInfo[i].edu300_ID + '">' + backjson.classesInfo[i].xzbmc
 								+ '</option>';
 					}
 					stuffManiaSelect("#addStudentxzb", str);

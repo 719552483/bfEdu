@@ -1420,7 +1420,7 @@ public class AdministrationController {
 		JSONObject newCrouseInfo = JSONObject.fromObject(modifyInfo);
 		Edu300 edu300 = (Edu300) JSONObject.toBean(newCrouseInfo, Edu300.class);
 		
-		// 判断课程信息是否冲突
+		// 判断是否冲突
 		boolean namehave = false;
 		boolean codehave = false;
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
@@ -1439,9 +1439,10 @@ public class AdministrationController {
 			}
 			
 		}
-		// 不存在则修改关系
+		// 不存在则修改
 		if (!namehave&&!codehave) {
 			administrationPageService.updateAdministrationClass(edu300);
+			administrationPageService.updateStudentAdministrationInfo(administrationPageService.queryAllStudent(),edu300);
 		}
 		
 		returnMap.put("namehave", namehave);
@@ -1486,8 +1487,12 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteAdministrationClass(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		List<Edu001> allStudent=administrationPageService.queryAllStudent();
+		List<Edu301> allTeachingClass=administrationPageService.queryAllTeachingClass();
+		
 		for (int i = 0; i < deleteArray.size(); i++) {
 			administrationPageService.removeAdministrationClass(deleteArray.get(i).toString());
+			administrationPageService.removeStudentAdministrationInfo(allStudent,deleteArray.get(i).toString());
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
@@ -1879,16 +1884,27 @@ public class AdministrationController {
 	@ResponseBody
 	public Object queryStudentInfoByAdministrationClass(@RequestParam("xzbCodeObject") String xzbCodeObject) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONObject xzbCodeJson = JSONObject.fromObject(xzbCodeObject);
-		String xzbcode=xzbCodeJson.getString("xzbCode");
 		List<Edu001> studentInfos = new ArrayList<Edu001>();
+		JSONObject xzbCodeJson = JSONObject.fromObject(xzbCodeObject);
+		String xzbcode=xzbCodeJson.getString("edu300_ID");
 		if(xzbcode.equals("")){
 			studentInfos = administrationPageService.queryAllStudent();
 		}else{
-			List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(xzbcode);
-			for (int a = 0; a < administrationClassStudents.size(); a++) {
-				Edu001 edu001=administrationClassStudents.get(a);
-				studentInfos.add(edu001);
+			if(xzbcode.indexOf(",")==-1){
+				List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(xzbcode);
+				for (int a = 0; a < administrationClassStudents.size(); a++) {
+					Edu001 edu001=administrationClassStudents.get(a);
+					studentInfos.add(edu001);
+				}
+			}else{
+				com.alibaba.fastjson.JSONArray xzbcodeArray = JSON.parseArray(xzbcode);
+				for (int x = 0; x < xzbcodeArray.size(); x++) {
+					List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(xzbcodeArray.get(x).toString());
+					for (int a = 0; a < administrationClassStudents.size(); a++) {
+						Edu001 edu001=administrationClassStudents.get(a);
+						studentInfos.add(edu001);
+					}
+				}
 			}
 		}
 		
@@ -2000,8 +2016,10 @@ public class AdministrationController {
 	@ResponseBody
 	public Object removeTeachingClass(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		List<Edu001> allStudent=administrationPageService.queryAllStudent();
 		for (int i = 0; i < deleteArray.size(); i++) {
 			administrationPageService.removeTeachingClassByID(deleteArray.get(i).toString());
+			administrationPageService.updateStudentTeachingClassInfo(allStudent,deleteArray.get(i).toString());
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
@@ -2214,10 +2232,16 @@ public class AdministrationController {
 		
 		boolean isChangeXZB= false;
 		for (int i = 0; i < currentAllStudent.size(); i++) {
-			if(currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())&&
-					!currentAllStudent.get(i).getEdu300_ID().equals(edu001.getEdu300_ID())){
-				isChangeXZB=true;
-				break;
+			if(currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())){
+				if(currentAllStudent.get(i).getEdu300_ID()==null||currentAllStudent.get(i).getEdu300_ID().equals("")){
+					isChangeXZB=true;
+					break;
+				}else{
+					if(!currentAllStudent.get(i).getEdu300_ID().equals(edu001.getEdu300_ID())){
+						isChangeXZB=true;
+						break;
+					}
+				}
 			}
 		}
 		
@@ -2255,7 +2279,7 @@ public class AdministrationController {
 		  long  studentId=jsonObject.getLong("studentId");
 		  administrationPageService.removeStudentByID(studentId);
 		  administrationPageService.cutAdministrationClassesZXRS(edu300_ID);
-		  administrationPageService.cutTeachingClassesJXBRS(edu300_ID);
+		  administrationPageService.cutTeachingClassesJXBRS(administrationPageService.queryAllStudent(),edu300_ID);
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);

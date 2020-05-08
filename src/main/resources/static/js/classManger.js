@@ -261,6 +261,7 @@ function confirmModifyAdministrationClass(row){
 				showMaskingElement();
 				toolTipUp(".myTooltip");
 				drawPagination(".administrationClassTableArea", "行政班信息");
+				toastr.success('修改成功');
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -427,6 +428,8 @@ function removeAdministrationClasses() {
 		if(chosenclasses[i].sfsckkjh==="T"){
 			toastr.warning('不能删除已生成开课计划的班级');
 			return;
+		}else if(chosenclasses[i].sfsckkjh==="T"){
+			
 		}
 	}
 	$(".removeTip").show();
@@ -1237,17 +1240,19 @@ function onDblClickforTeachingClassName(field, index, row) {
 // 拆班表指定学生点击事件
 function onDblClickforStudentMenu(field, index, row) {
 	var choosedTeachingClass = $("#classManagementTable").bootstrapTable("getSelections");
-	var xzbCode =new Array();
+	var xzbCodeObject=new Object();
+	var xzbCodes =new Array();
 	for (var i = 0; i < choosedTeachingClass.length; i++) {
-		xzbCode.push(choosedTeachingClass[i].xzbbm);
+		xzbCodes.push(choosedTeachingClass[i].edu300_ID);
 	}
+	xzbCodeObject.edu300_ID=xzbCodes;
 	
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/queryStudentInfoByAdministrationClass",
 		data: {
-             "xzbCode":JSON.stringify(xzbCode) 
+             "xzbCodeObject":JSON.stringify(xzbCodeObject) 
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
