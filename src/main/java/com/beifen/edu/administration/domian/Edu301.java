@@ -28,7 +28,7 @@ public class Edu301 {
 	private String bhzymc;  //包含的专业名称
 	private String bhxzbid;  //包含的行政班Id
 	private String bhxzbmc;  //包含的行政班名称
-	private String bhxsxm;  //包含的学生姓名
+//	private String bhxsxm;  //包含的学生姓名
 	private String bhxsCode;  //包含的学生编码   包含的行政班和学生二选一
 	private int jxbrs;  //教学班人数
 	private String sffbjxrws;  //是否发布教学任务书
@@ -148,12 +148,12 @@ public class Edu301 {
 	public void setZymc(String zymc) {
 		this.zymc = zymc;
 	}
-	public String getBhxsxm() {
-		return bhxsxm;
-	}
-	public void setBhxsxm(String bhxsxm) {
-		this.bhxsxm = bhxsxm;
-	}
+//	public String getBhxsxm() {
+//		return bhxsxm;
+//	}
+//	public void setBhxsxm(String bhxsxm) {
+//		this.bhxsxm = bhxsxm;
+//	}
 	public String getBhxsCode() {
 		return bhxsCode;
 	}

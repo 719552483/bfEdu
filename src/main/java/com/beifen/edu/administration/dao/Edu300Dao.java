@@ -27,13 +27,14 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "UPDATE edu300 SET sfsckkjh =?2 WHERE Edu300_ID =?1", nativeQuery = true)
 	void generatAdministrationCoursePlan(String edu300Id, String isGeneratCoursePlan);
 
-	// 查询行政班在校人数
+	// 根据行政班查询行政班在校人数
 	@Query(value = "select e.zxrs from edu300 e where Edu300_ID =?1", nativeQuery = true)
 	int queryZXRS(String xzbcode);
+	
 
 	// 查询行政班容纳人数人数
 	@Query(value = "select e.rnrs from edu300 e where Edu300_ID =?1", nativeQuery = true)
-	int changeTeachingClassesRS(String edu300_ID);
+	int queryXZBrnrs(String edu300_ID);
 
 	// 新增学生是改变行政班在校人数
 	@Transactional
@@ -44,4 +45,6 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	// 根据id查询行政班人数
 	@Query(value = "select e.rnrs from edu300 e where Edu300_ID =?1", nativeQuery = true)
 	int countXzbStudentsById(String deleteEdu300Id);
+
+
 }
