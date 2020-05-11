@@ -15,7 +15,7 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select * from edu300 e where pyccbm =?1 and xbbm=?2 and njbm =?3 and zybm=?4", nativeQuery = true)
 	List<Edu300> queryCulturePlanAdministrationClasses(String levelCode, String departmentCode, String gradeCode,String majorCode);
 
-	// 根据id删除专业
+	// 根据id删除行政班
 	@Transactional
 	@Modifying
 	@Query(value = "delete from edu300 where Edu300_ID =?1", nativeQuery = true)

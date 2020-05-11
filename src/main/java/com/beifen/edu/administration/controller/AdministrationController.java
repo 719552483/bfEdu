@@ -2208,6 +2208,8 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
 		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
+		
+		
 		// 判断学号是否已存在
 		boolean xhhave = false;
 		
@@ -2241,9 +2243,8 @@ public class AdministrationController {
 				//没有修改行政班的情况
 				administrationPageService.addStudent(edu001);
 			}else{
-				//修改行政班的情况
-				List<Edu300> allXZB = administrationPageService.queryAllAdministrationClasses();
-//				administrationPageService.updateStudent(edu001,allXZB);
+				
+				administrationPageService.updateStudent(edu001);
 			}
 		}
 		

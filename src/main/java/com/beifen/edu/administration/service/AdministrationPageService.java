@@ -296,7 +296,7 @@ public class AdministrationPageService {
 		return edu108DAO.queryAdministrationClassesCrouse(xzbCode);
 	}
 	
-	//教学班插板 合班 生成的相关操作
+	//教学班拆班 合班 生成的相关操作
 	public void classAction(List<Edu301> newTeachingClasses) {
 		List<Edu301> allTeachingClasses = edu301DAO.findAll();
 		boolean dateBaseHaveJXB=false;//数据库是否有教学班
@@ -309,6 +309,7 @@ public class AdministrationPageService {
 			edu301DAO.save(newTeachingClasses.get(n));
 			Edu301 deu301=new Edu301();
 			deu301.setEdu301_ID(newTeachingClasses.get(n).getEdu301_ID());
+			deu301.setJxbmc(newTeachingClasses.get(n).getJxbmc());
 			
 			String bhXSid=newTeachingClasses.get(n).getBhxsCode();
 			if(bhXSid!=null&&!bhXSid.equals("")){
@@ -439,6 +440,8 @@ public class AdministrationPageService {
 				edu001DAO.stuffStudentTeachingClassInfoBy300id(teachingClassesBy300id.get(i).getJxbmc(),teachingClassesBy300id.get(i).getEdu301_ID(), edu300Id);
 			}
 		}
+		
+		//行政班如果生成了教学班并且是以学生划分的话 则该学生只有行政班信息没有教学班信息
 	}
 	
 	// 删除学生
@@ -480,63 +483,47 @@ public class AdministrationPageService {
 		}
 	}
 	
-//	// 修改学生时修改了行政班的情况
-//	public void updateStudent(Edu001 edu001,List<Edu300> allXZB) {
-//		//新行政班人数加一
-//		AdministrationPageService.this.addAdministrationClassesZXRS(edu001.getEdu300_ID());
-//		// 旧行政班未被删除则旧行政班人数减一
-//		String oldXZB =queryStudentXzbCode(edu001.getEdu001_ID().toString());
-//		if(oldXZB!=null){
-//			AdministrationPageService.this.cutAdministrationClassesZXRS(edu001.getEdu001_ID().toString());
-//		}
-//		
-//		//新行政班有教学班
-//		if(edu001.getEdu301_ID()!=null){
-//			
-//		}else{
-//			
-//		}
-//		
-//		
-//		for (int i = 0; i < currentAllStudent.size(); i++) {
-//			if (currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())) {
-//				// 新行政班人数加一
-//				AdministrationPageService.this.addAdministrationClassesZXRS(edu001.getEdu300_ID());
-//
-//				// 旧行政班未被删除则旧行政班人数减一
-//				if (currentAllStudent.get(i).getEdu300_ID() != null) {
-//					AdministrationPageService.this
-//							.cutAdministrationClassesZXRS(currentAllStudent.get(i).getEdu300_ID());
-//				}
-//
-//				List<Edu301> teachingClassInfo = edu301DAO.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
-//				String newJXB_code = null;
-//				String newJXB_name = null;
-//				if (teachingClassInfo.size() == 0) {
-//					edu001.setEdu301_ID(newJXB_code);
-//					edu001.setJxbname(newJXB_name);
-//				} else {
-//					newJXB_code = teachingClassInfo.get(0).getEdu301_ID().toString();
-//					newJXB_name = teachingClassInfo.get(0).getJxbmc();
-//					edu001.setEdu301_ID(newJXB_code);
-//					edu001.setJxbname(newJXB_name);
-//				}
-//				
-//				if (currentAllStudent.get(i).getEdu301_ID() != null) {
-//					if(!currentAllStudent.get(i).getEdu301_ID().equals(edu001.getEdu301_ID())){
-//						// 新教学班人数加一
-//						AdministrationPageService.this.addTeachingClassesJXBRS(edu001.getEdu300_ID());
-//
-//						// 旧教学班人数减一
-//						AdministrationPageService.this.cutTeachingClassesJXBRS(currentAllStudent.get(i).getEdu300_ID());
-//					}
-//				}
-//				break;
-//			}
-//		}
-//		// 修改学生
-//		edu001DAO.save(edu001);
-//	}
+    // 修改学生时修改了行政班的情况
+	public void updateStudent(Edu001 newStudentInfo) {
+		//新行政班人数加一
+		AdministrationPageService.this.addAdministrationClassesZXRS(newStudentInfo.getEdu300_ID());
+		
+		//新行政班有无教学班
+		List<Edu301>  newXZBofJXB= edu301DAO.queryTeachingClassByXzbCode(newStudentInfo.getEdu300_ID());
+	    if(newXZBofJXB.size()!=0){
+	    	// 新行政班有教学班并且是以行政班划分  则该教学班人数加一并更新学生教学班相关信息 
+	    	for (int i = 0; i < newXZBofJXB.size(); i++) {
+		    	AdministrationPageService.this.addTeachingClassesJXBRS(newXZBofJXB.get(i).getEdu301_ID().toString());
+		    	newStudentInfo.setEdu301_ID(newXZBofJXB.get(i).getEdu301_ID().toString());
+		    	newStudentInfo.setJxbname(newXZBofJXB.get(i).getJxbmc());
+	    	}
+	    	
+	    	//新行政班有教学班并且是以学生划分  则不处理
+	    }
+		
+	    // 旧行政班未被删除则旧行政班人数减一
+	 	String oldXZB =queryStudentXzbCode(newStudentInfo.getEdu001_ID().toString());
+	 	if(oldXZB!=null){
+	 		String  oldXZBId=edu001DAO.queryStudentXzbCode(newStudentInfo.getEdu001_ID().toString());
+	 		AdministrationPageService.this.cutAdministrationClassesZXRS(oldXZBId);
+	    }
+	 	
+	 	
+	 	//旧行政班有无教学班
+	 	String  oldXZBofThisStuden=edu001DAO.queryStudentXzbCode(newStudentInfo.getEdu001_ID().toString());
+	 	List<Edu301>  oldXZBofJXB= edu301DAO.queryTeachingClassByXzbCode(oldXZBofThisStuden);
+	 	
+	    if(oldXZBofJXB.size()!=0){
+	 	// 旧行政班有教学班并且是以行政班划分  则该教学班人数减一
+		 	for (int i = 0; i < oldXZBofJXB.size(); i++) {
+		 		AdministrationPageService.this.cutTeachingClassesJXBRS(oldXZBofJXB.get(i).getEdu301_ID().toString());
+		 	}
+	 		    	
+	 	//旧行政班有教学班并且是以学生划分  则不处理
+	 	}
+		// 修改学生
+		edu001DAO.save(newStudentInfo);
+	}
 
 	// 增加行政班在校人数
 	public void addAdministrationClassesZXRS(String xzbcode) {
