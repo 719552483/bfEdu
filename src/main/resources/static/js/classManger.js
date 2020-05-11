@@ -2088,7 +2088,7 @@ function stuffTeachingClassTable(tableInfo) {
 		editable : false,
 		striped : true,
 		toolbar : '#toolbar',
-		showColumns : false,
+		showColumns : true,
 		onPageChange : function() {
 			drawPagination(".teachingClassTableArea", "教学班信息");
 		},
@@ -2099,11 +2099,6 @@ function stuffTeachingClassTable(tableInfo) {
 			modifyTeachingClassName(row, parseInt($element[0].dataset.index));
 		},
 		columns : [ {
-			field : 'id',
-			title : 'id',
-			align : 'center',
-			visible : false
-		}, {
 			field : 'check',
 			checkbox : true
 		},{
@@ -2191,6 +2186,7 @@ function stuffTeachingClassTable(tableInfo) {
 
 	}
 	drawPagination(".teachingClassTableArea", "教学班信息");
+	changeColumnsStyle( ".teachingClassTableArea", "教学班信息");
 	drawSearchInput();
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");

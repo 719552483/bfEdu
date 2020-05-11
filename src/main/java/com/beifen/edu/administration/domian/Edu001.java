@@ -67,7 +67,6 @@ public class Edu001 {
 	private  String zy; //职业
 	private  String bz;//备注
 	private  String yxbz;//有效标志
-//	private  String xsmm;//学生密码
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")

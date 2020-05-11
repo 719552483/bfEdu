@@ -1,38 +1,32 @@
 package com.beifen.edu.administration.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileItemFactory;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.ArrayUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -58,6 +52,7 @@ import com.beifen.edu.administration.utility.ReflectUtils;
  * 业务处理Controller测试
  * */
 @Controller
+@MultipartConfig
 public class AdministrationController {
 
 	@Autowired
@@ -2252,6 +2247,113 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
+	
+	
+	
+	
+	
+	/**
+	 * 下载学生导入模板
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws IOException 
+	 */
+	@RequestMapping("downloadStudentModal")
+	@ResponseBody
+	public void downloadStudentModal(HttpServletResponse response) throws IOException {
+		Map<String, Object> returnMap = new HashMap();
+		// 获取项目根路径
+		String rootPath = getClass().getResource("/").getFile().toString();
+
+		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
+		File f = new File(filePath);
+		if (!f.exists()) {
+			response.sendError(404, "File not found!");
+			return;
+		}
+		BufferedInputStream br = new BufferedInputStream(new FileInputStream(f));
+		byte[] buf = new byte[1024];
+		int len = 0;
+
+		response.reset(); // 非常重要
+		response.setContentType("application/x-msdownload");
+		response.setHeader("Content-Disposition", "attachment; filename=" + f.getName());
+		OutputStream out = response.getOutputStream();
+		while ((len = br.read(buf)) > 0)
+			out.write(buf, 0, len);
+		br.close();
+		out.close();
+	}
+	
+	
+	/**
+	 * 导入学生
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws IOException 
+	 * @throws InvalidFormatException 
+	 * @throws ServletException 
+	 */
+	@RequestMapping("importStudent")
+	@ResponseBody
+
+	public void importStudent(HttpServletRequest request,HttpServletResponse response) throws IOException, InvalidFormatException, ServletException {
+//		Map<String, Object> returnMap = new HashMap();
+//		request.setCharacterEncoding("UTF-8");
+//		String savePath = request.getServletContext().getRealPath("/importStudent");
+//		Part part = request.getPart("file");
+//        //获取文件名
+//        //获取文件类型
+//        System.out.println(savePath+File.separator);
+//
+//		
+//		
+//		 File excel = new File(savePath);
+//         if (excel.isFile() && excel.exists()) {   //判断文件是否存在
+//
+//             String[] split = excel.getName().split("\\.");  //.是特殊字符，需要转义！！！！！
+//             Workbook wb;
+//             //根据文件后缀（xls/xlsx）进行判断
+//             if ( "xls".equals(split[1])){
+//                 FileInputStream fis = new FileInputStream(excel);   //文件流对象
+//                 wb = new HSSFWorkbook(fis);
+//             }else if ("xlsx".equals(split[1])){
+//                 wb = new XSSFWorkbook(excel);
+//             }else {
+//                 System.out.println("文件类型错误!");
+//                 return;
+//             }
+//             }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	// @RequestMapping("/newImgUpload")

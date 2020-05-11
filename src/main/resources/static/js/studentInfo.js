@@ -1103,7 +1103,7 @@ function startSearch() {
 //下载学生信息模板
 function loadStudentInfoModel() {
 	var $eleForm = $("<form method='get'></form>");
-	$eleForm.attr("action", "https://codeload.github.com/douban/douban-client/legacy.zip/master"); //下载文件接口
+	$eleForm.attr("action", "/downloadStudentModal"); //下载文件接口
 	$(document.body).append($eleForm);
 	//提交表单，实现下载
 	$eleForm.submit();
@@ -1117,8 +1117,8 @@ function importStudentInfo() {
 		//判断图片格式
 		var fileName = $("#studentInfoFile").val();
 		var suffixIndex = fileName.lastIndexOf(".");
-		var suffix = fileName.substring(suffixIndex + 1).toUpperCase();
-		if (suffix != "xls".toUpperCase() && suffix !== ".xlsx") {
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
 			toastr.warning('请上传Excel类型的文件');
 			$("#studentInfoFile").val("");
 			return
@@ -1144,12 +1144,52 @@ function confirmImportStudentInfo() {
 		toastr.warning('请选择文件');
 		return;
 	}
-
-	if ($("#studentInfoFile")[0].attributes[2].nodeValue === "false") {
-		toastr.warning('请检验文件\\文件检验不通过');
-		return;
-	}
-	$("#studentInfoForm").attr("action", ""); //提交文件接口
+	
+	$.ajax({
+        type: 'post',
+        url: "/importStudent",
+        data: new FormData($("#studentInfoFile")[0]),
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function(data){
+        	alert(data);
+        }
+	})
+	
+//	var files = $('#studentInfoFile').prop('files');
+//	 var data = new FormData();
+//	 data.append('userFile', files[0]);
+////	$("#studentInfoForm").attr("action", '/importStudent'); //提交文件接口
+//	
+//	
+//	$.ajax({
+//        url:'/importStudent', /*接口域名地址*/
+//        type:'post',
+//        data: data,
+//        contentType: false,
+//        processData: false,
+//        success:function(res){
+//            console.log(res.data);
+//            if(res.data["code"]=="succ"){
+//                alert('成功');
+//            }else if(res.data["code"]=="err"){
+//                alert('失败');
+//            }else{
+//                console.log(res);
+//            }
+//        }
+//    })
+	 
+//	 $.ajax({
+//	  url: '/importStudent',
+//	  type: 'POST',
+//	  data: data,
+//	  cache: false,
+//	  processData: false,
+//	  contentType: false
+//	 });
+	
 	$("#studentInfoForm").submit();
 	toastr.success('文件上传成功');
 }
