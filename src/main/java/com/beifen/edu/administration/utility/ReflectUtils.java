@@ -1,5 +1,11 @@
 package com.beifen.edu.administration.utility;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -13,11 +19,29 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.Date;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.beifen.edu.administration.domian.Edu000;
+import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.service.AdministrationPageService;
 
 public class ReflectUtils {
@@ -240,7 +264,198 @@ public class ReflectUtils {
 		return null;
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * @param suffix文件后缀名
+	 * @return checkPass 验证结果
+	 * */
+	public boolean checkFileType(String  suffix) {
+       boolean checkPass=true;
+	   if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
+		   checkPass=false;
+	   }
+		return checkPass;
+	}
+
+	/**
+	 * 读取上传学生的Excel 获取学生信息
+	 * @param studentStream 学生文件输入流
+	 * @return List<Map<String,Object>> dataList 学生信息
+	 * */
+	public List<Map<String,Object>> getImportStudent(InputStream studentStream)throws EncryptedDocumentException, InvalidFormatException, IOException {
+		List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
+		//获取Excel工作簿
+		Workbook workBook = WorkbookFactory.create(studentStream);
+		// 获取sheet个数
+		int sheetCount = workBook.getNumberOfSheets();
+		
+		//如果sheet个数小于等于0 返回null
+		if (sheetCount <= 0) {
+			return null;
+		} else {
+			Sheet sheet = workBook.getSheetAt(0); // 读取sheet 0
+			int firstRowIndex = sheet.getFirstRowNum() + 1; // 第一行是列名，所以不读
+			int lastRowIndex = sheet.getLastRowNum();  //最后一列
+			// 遍历行
+			for (int rIndex = firstRowIndex; rIndex <= lastRowIndex; rIndex++) {
+				Row row = sheet.getRow(rIndex); // 当前行
+				if (!isRowEmpty(row)) {
+					int firstCellIndex = row.getFirstCellNum(); //第一列
+					int lastCellIndex = row.getLastCellNum();  //最后一列
+					HashMap<String, Object> hashMap = new HashMap<String, Object>();
+					for (int cIndex = firstCellIndex; cIndex < lastCellIndex; cIndex++) { // 遍历列
+						//当前列
+						Cell cell = row.getCell(cIndex);
+						if (cell != null && !cell.equals("")) {
+							String keyName = getKeyName(cell.getColumnIndex()); //获取列名
+							hashMap.put(keyName, cell.toString());
+						}
+					}
+					dataList.add(hashMap); //追加学生信息
+				}
+			}
+		}
+		return dataList;
+	}
+	
+	//获取学生Excel的Key值
+	private String getKeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+        case 0:
+            result="pycc";
+            break;
+        case 1:
+            result="szxb";
+            break;
+        case 2:
+            result="nj";
+            break;
+        case 3:
+            result="zybm";
+            break;
+        default:
+        	result="ycTxt";
+            break;
+        }
+		return result;
+	}
+
+	/*处理空行*/
+	@SuppressWarnings("deprecation")
+	public static boolean isRowEmpty(Row row) {
+		for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+		Cell cell = row.getCell(c);
+		if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK&&!cell.equals(""))
+		return false;
+		}
+		return true;
+    }
+
+	
+	
+	//下载末班
+	public void loadImportStudentModal(String filePath, HttpServletResponse response) throws IOException {
+		File f = new File(filePath);
+		if (!f.exists()) {
+			response.sendError(404, "File not found!");
+			return;
+		}
+		BufferedInputStream br = new BufferedInputStream(new FileInputStream(f));
+		byte[] buf = new byte[1024];
+		int len = 0;
+
+		response.reset(); // 非常重要
+		response.setContentType("application/x-msdownload");
+		response.setHeader("Content-Disposition", "attachment; filename=" + f.getName());
+		OutputStream out = response.getOutputStream();
+		while ((len = br.read(buf)) > 0)
+			out.write(buf, 0, len);
+		br.close();
+		out.close();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+		
+		
+		
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 
-}
+

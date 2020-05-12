@@ -1140,58 +1140,40 @@ function checkStudentInfoFile() {
 
 //确认提交学生信息文件
 function confirmImportStudentInfo() {
-	if ($("#studentInfoFile").val() === "") {
-		toastr.warning('请选择文件');
-		return;
-	}
+		if ($("#studentInfoFile").val() === "") {
+			toastr.warning('请选择文件');
+			return;
+		}
 	
-	$.ajax({
-        type: 'post',
-        url: "/importStudent",
-        data: new FormData($("#studentInfoFile")[0]),
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function(data){
-        	alert(data);
-        }
-	})
-	
-//	var files = $('#studentInfoFile').prop('files');
-//	 var data = new FormData();
-//	 data.append('userFile', files[0]);
-////	$("#studentInfoForm").attr("action", '/importStudent'); //提交文件接口
-//	
-//	
-//	$.ajax({
-//        url:'/importStudent', /*接口域名地址*/
-//        type:'post',
-//        data: data,
-//        contentType: false,
-//        processData: false,
-//        success:function(res){
-//            console.log(res.data);
-//            if(res.data["code"]=="succ"){
-//                alert('成功');
-//            }else if(res.data["code"]=="err"){
-//                alert('失败');
-//            }else{
-//                console.log(res);
-//            }
-//        }
-//    })
-	 
-//	 $.ajax({
-//	  url: '/importStudent',
-//	  type: 'POST',
-//	  data: data,
-//	  cache: false,
-//	  processData: false,
-//	  contentType: false
-//	 });
-	
-	$("#studentInfoForm").submit();
-	toastr.success('文件上传成功');
+	    var formData = new FormData();
+	    formData.append("file",$('#studentInfoFile')[0].files[0]);
+
+	    $.ajax({
+	        url:'/importStudent',
+	        dataType:'json',
+	        type:'POST',
+	        async: false,
+	        data: formData,
+	        processData : false, // 使数据不做处理
+	        contentType : false, // 不要设置Content-Type请求头
+	        success: function(backjosn){
+	          if(!backjosn.isExcel){
+	        	  toastr.warning('请选择文件');
+	  			return;
+	          }else if(!backjosn.haveSheet){
+	        	  toastr.warning('上传文件暂无数据');
+		  			return;
+		      }
+	        },beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+	    });
 }
 
 //清空学生信息模态框

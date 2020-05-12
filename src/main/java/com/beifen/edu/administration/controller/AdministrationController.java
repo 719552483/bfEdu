@@ -1,10 +1,13 @@
 package com.beifen.edu.administration.controller;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -18,15 +21,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -52,12 +66,11 @@ import com.beifen.edu.administration.utility.ReflectUtils;
  * 业务处理Controller测试
  * */
 @Controller
-@MultipartConfig
 public class AdministrationController {
 
 	@Autowired
 	private AdministrationPageService administrationPageService;
-	private ReflectUtils utils;
+	ReflectUtils utils = new ReflectUtils();
 
 	/**
 	 * 查询二级代码信息
@@ -2255,8 +2268,6 @@ public class AdministrationController {
 	/**
 	 * 下载学生导入模板
 	 * 
-	 * @param deleteIds删除ID
-	 * 
 	 * @return returnMap
 	 * @throws IOException 
 	 */
@@ -2268,23 +2279,51 @@ public class AdministrationController {
 		String rootPath = getClass().getResource("/").getFile().toString();
 
 		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
-		File f = new File(filePath);
-		if (!f.exists()) {
-			response.sendError(404, "File not found!");
-			return;
-		}
-		BufferedInputStream br = new BufferedInputStream(new FileInputStream(f));
-		byte[] buf = new byte[1024];
-		int len = 0;
-
-		response.reset(); // 非常重要
-		response.setContentType("application/x-msdownload");
-		response.setHeader("Content-Disposition", "attachment; filename=" + f.getName());
-		OutputStream out = response.getOutputStream();
-		while ((len = br.read(buf)) > 0)
-			out.write(buf, 0, len);
-		br.close();
-		out.close();
+		
+		//修改sheet2  填充各种id
+//		utils.changeImportStudentModal();
+		 List<Edu300> xzbList =administrationPageService.queryAllAdministrationClasses();
+		 XSSFWorkbook workbook = new XSSFWorkbook();
+	     XSSFSheet sheet = workbook.getSheet("辅助 信息");
+//	     Sheet sheet = workBook.getSheetAt(0); // 读取sheet 0
+	     XSSFRow firstRow = sheet.createRow(0);//第一行表头
+	     XSSFCell cells[] = new XSSFCell[2];
+		 
+	     String[] xzbTtile = new String[]{"班级名称","班级编码"};
+		 
+	      //循环设置表头信息
+	        for (int i=0;i<2;i++){
+	            cells[0]=firstRow.createCell(i);
+	            cells[0].setCellValue(xzbTtile[i]);
+	        }
+	        
+	        //遍历list,将数据写入Excel中
+	        for (int i=0;i<xzbList.size();i++){
+	            XSSFRow row = sheet.createRow(i+1);
+	            Edu300 deu300 = xzbList.get(i);
+	            XSSFCell cell = row.createCell(0); //第一列
+	            cell.setCellValue(deu300.getXzbmc());
+	            cell=row.createCell(1); //第二列
+	            cell.setCellValue(deu300.getEdu300_ID());
+	        }
+	        
+	        OutputStream out = null;
+	
+	        try {
+	            out = new FileOutputStream(filePath);
+	            workbook.write(out);
+	            out.close();
+	        } catch (Exception e){
+	            e.printStackTrace();
+	        }
+//		 HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(filePath));
+//         HSSFSheet sheet = workbook.getSheet("辅助信息");
+//         for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+//        	 HSSFRow row = sheet.getRow((short) i);
+//         }
+         
+        //下载模板
+		utils.loadImportStudentModal(filePath,response);
 	}
 	
 	
@@ -2295,40 +2334,46 @@ public class AdministrationController {
 	 * 
 	 * @return returnMap
 	 * @throws IOException 
+	 * @throws EncryptedDocumentException 
+	 * @throws Exception 
 	 * @throws InvalidFormatException 
 	 * @throws ServletException 
 	 */
 	@RequestMapping("importStudent")
 	@ResponseBody
-
-	public void importStudent(HttpServletRequest request,HttpServletResponse response) throws IOException, InvalidFormatException, ServletException {
-//		Map<String, Object> returnMap = new HashMap();
-//		request.setCharacterEncoding("UTF-8");
-//		String savePath = request.getServletContext().getRealPath("/importStudent");
-//		Part part = request.getPart("file");
-//        //获取文件名
-//        //获取文件类型
-//        System.out.println(savePath+File.separator);
-//
-//		
-//		
-//		 File excel = new File(savePath);
-//         if (excel.isFile() && excel.exists()) {   //判断文件是否存在
-//
-//             String[] split = excel.getName().split("\\.");  //.是特殊字符，需要转义！！！！！
-//             Workbook wb;
-//             //根据文件后缀（xls/xlsx）进行判断
-//             if ( "xls".equals(split[1])){
-//                 FileInputStream fis = new FileInputStream(excel);   //文件流对象
-//                 wb = new HSSFWorkbook(fis);
-//             }else if ("xlsx".equals(split[1])){
-//                 wb = new XSSFWorkbook(excel);
-//             }else {
-//                 System.out.println("文件类型错误!");
-//                 return;
-//             }
-//             }
-	}
+	public Object importStudent(@RequestParam("file") MultipartFile file) throws IOException, EncryptedDocumentException, InvalidFormatException {
+		Map<String, Object> returnMap = new HashMap();
+		boolean isExcel=true;
+		boolean haveSheet=true;
+		
+		//判断读取的文件是否为Excel文件
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		
+		//文件格式不正确 返回
+		if(!utils.checkFileType(suffix)){
+			returnMap.put("isExcel", false);
+			return returnMap;
+		}
+		
+		//文件格式正确解析Excel文件 获取新增学生实体 
+		List<Map<String,Object>> importStudents = utils.getImportStudent(file.getInputStream());
+		if(importStudents.size()==0){
+			returnMap.put("haveSheet", false);
+			return returnMap;
+		}
+		
+		
+		
+		//保存到数据库
+		//todo 
+		
+		returnMap.put("importStudents", importStudents);
+		returnMap.put("isExcel", isExcel);
+		returnMap.put("haveSheet", haveSheet);
+	    return returnMap;
+    }
 	
 	
 	
@@ -2339,6 +2384,45 @@ public class AdministrationController {
 	
 	
 	
+	
+	
+//	private ArrayList<Object> getList(InputStream inputStream,String suffix) throws IOException {
+//        ArrayList<Object> arrayList = new ArrayList<Object>();
+//        // 具体执行导入，可以引入策略模式
+//        // 解决excel2003和excel2007版本的问题
+//        if ("xlsx".equals(suffix)) {
+//            xlsxImp(inputStream, arrayList);
+//        }
+//        if ("xls".equals(suffix)) {
+//            xlsImp(inputStream, arrayList);
+//        }
+//        // 万一新增一种新格式，对修改打开了，不符合oo编程规范
+//        return arrayList;
+//    }
+//	
+//	  private void xlsImp(InputStream inputStream, ArrayList<Object> arrayList) throws IOException {
+//	        // 初始整个Excel
+//	        HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
+//	        // 获取第一个sheet表
+//	        HSSFSheet sheet = workbook.getSheetAt(0);
+//	        for (int rowIndex = 2; rowIndex < sheet.getLastRowNum(); rowIndex++) {
+//	            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+//	            HSSFRow row = sheet.getRow(rowIndex);
+//	            //整行都为空去掉
+//	            if(row==null) {
+//	                continue;
+//	            }
+//	        }
+//	    }
+//	
+//	
+//	
+//	  private void xlsxImp(InputStream inputStream, ArrayList<Object> arrayList) throws IOException {
+//	        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
+//	        XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
+//	      
+//	    }
+//	
 	
 	
 	
