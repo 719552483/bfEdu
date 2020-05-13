@@ -1,46 +1,29 @@
 package com.beifen.edu.administration.controller;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -2265,6 +2248,7 @@ public class AdministrationController {
 	
 	
 	
+
 	/**
 	 * 下载学生导入模板
 	 * 
@@ -2275,53 +2259,16 @@ public class AdministrationController {
 	@ResponseBody
 	public void downloadStudentModal(HttpServletResponse response) throws IOException {
 		Map<String, Object> returnMap = new HashMap();
+		Map<String, List> othserInfo = new HashMap();
 		// 获取项目根路径
 		String rootPath = getClass().getResource("/").getFile().toString();
-
+        //获取模板路径
 		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
 		
-		//修改sheet2  填充各种id
-//		utils.changeImportStudentModal();
-		 List<Edu300> xzbList =administrationPageService.queryAllAdministrationClasses();
-		 XSSFWorkbook workbook = new XSSFWorkbook();
-	     XSSFSheet sheet = workbook.getSheet("辅助 信息");
-//	     Sheet sheet = workBook.getSheetAt(0); // 读取sheet 0
-	     XSSFRow firstRow = sheet.createRow(0);//第一行表头
-	     XSSFCell cells[] = new XSSFCell[2];
-		 
-	     String[] xzbTtile = new String[]{"班级名称","班级编码"};
-		 
-	      //循环设置表头信息
-	        for (int i=0;i<2;i++){
-	            cells[0]=firstRow.createCell(i);
-	            cells[0].setCellValue(xzbTtile[i]);
-	        }
-	        
-	        //遍历list,将数据写入Excel中
-	        for (int i=0;i<xzbList.size();i++){
-	            XSSFRow row = sheet.createRow(i+1);
-	            Edu300 deu300 = xzbList.get(i);
-	            XSSFCell cell = row.createCell(0); //第一列
-	            cell.setCellValue(deu300.getXzbmc());
-	            cell=row.createCell(1); //第二列
-	            cell.setCellValue(deu300.getEdu300_ID());
-	        }
-	        
-	        OutputStream out = null;
-	
-	        try {
-	            out = new FileOutputStream(filePath);
-	            workbook.write(out);
-	            out.close();
-	        } catch (Exception e){
-	            e.printStackTrace();
-	        }
-//		 HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(filePath));
-//         HSSFSheet sheet = workbook.getSheet("辅助信息");
-//         for (int i = 0; i <= sheet.getLastRowNum(); i++) {
-//        	 HSSFRow row = sheet.getRow((short) i);
-//         }
-         
+		othserInfo.put("pcyy", administrationPageService.queryAllLevel());
+		othserInfo.put("xb", administrationPageService.queryAllDepartment());
+		//填充模板的辅助信息 sheet2
+		utils.createImportStudentModalOtherInfo(filePath,othserInfo);
         //下载模板
 		utils.loadImportStudentModal(filePath,response);
 	}

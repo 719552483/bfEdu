@@ -3,49 +3,39 @@ package com.beifen.edu.administration.utility;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.Date;
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.beifen.edu.administration.domian.Edu000;
-import com.beifen.edu.administration.domian.Edu001;
-import com.beifen.edu.administration.service.AdministrationPageService;
+
+
+import com.beifen.edu.administration.domian.Edu103;
+import com.beifen.edu.administration.domian.Edu104;
+
 
 public class ReflectUtils {
-
 	// 缓存类的字段
 	private static Map<String, List<Field>> cache = new HashMap<>();
 
@@ -379,7 +369,67 @@ public class ReflectUtils {
 
 	
 	
-	//下载末班
+	
+
+	// 填充学生导入模板的辅助信息 sheet2
+	public void createImportStudentModalOtherInfo(String filePath, Map<String,List> othserInfo) throws IOException {
+		OutputStream out = null;
+		List<Edu103> allPcyy = othserInfo.get("pcyy");
+		List<Edu104> xb = othserInfo.get("xb");
+		// 获取Excel工作簿
+		FileInputStream in = new FileInputStream(filePath);
+		XSSFWorkbook workbook = new XSSFWorkbook(in);
+		// 获取sheet个数 
+		int sheetCount = workbook.getNumberOfSheets();
+		// 如果模板文件中sheet个数大于1 则删除第二个sheet（避免数据重叠）
+		if (sheetCount > 1) {
+			out = new FileOutputStream(filePath);
+			workbook.removeSheetAt(1);
+			workbook.write(out);
+		}
+        
+		//创建新的sheet2
+		workbook.createSheet("辅助信息");
+		//获取sheet2
+		XSSFSheet sheet = workbook.getSheetAt(1);
+		
+		//设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];   
+		String[] titles = new String[] { "培养层次名称", "培养层次编码", "系部名称", "系部编码" };//所有标题数组
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		// 写入培养层次信息
+		for (int i = 0; i < allPcyy.size(); i++) {
+			XSSFRow row = sheet.createRow(i + 1);
+			row.createCell(0).setCellValue(allPcyy.get(i).getPyccmc());
+			row.createCell(1).setCellValue(allPcyy.get(i).getEdu103_ID());
+		}
+
+		// 追加系部信息
+		for (int i = 0; i < xb.size(); i++) {
+			XSSFRow row = sheet.getRow(i + 1);
+			row.createCell(2).setCellValue(xb.get(i).getXbmc());
+			row.createCell(3).setCellValue(xb.get(i).getEdu104_ID());
+		}
+
+		out = new FileOutputStream(filePath);
+		out.flush();
+		workbook.write(out);
+		workbook.close();
+		out.close();
+	}
+	
+	
+	
+	
+	
+
+	// 下载模板
 	public void loadImportStudentModal(String filePath, HttpServletResponse response) throws IOException {
 		File f = new File(filePath);
 		if (!f.exists()) {
@@ -408,34 +458,8 @@ public class ReflectUtils {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-}
-		
-		
-		
-	
 
-	
+}
 	
 	
 	
