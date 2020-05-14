@@ -18,6 +18,8 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	@Query(value = "select * from edu000 b where b.ejdmGlzd=?1", nativeQuery = true)
 	public List<Edu000> queryejdm(String ejdmGlzd);
 	
+	
 	@Query(value = "select * from edu000", nativeQuery = true)
 	public List<Edu000> queryejdm();
+
 }

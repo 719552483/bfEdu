@@ -574,13 +574,6 @@ public class AdministrationPageService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 
 	
 	
@@ -912,6 +905,10 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
 
 
 

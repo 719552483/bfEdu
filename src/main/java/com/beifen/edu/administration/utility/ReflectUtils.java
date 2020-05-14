@@ -9,7 +9,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +32,18 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.assertj.core.util.DateUtil;
+import org.springframework.web.multipart.MultipartFile;
 
-
-
+import com.beifen.edu.administration.domian.Edu000;
+import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu103;
 import com.beifen.edu.administration.domian.Edu104;
+import com.beifen.edu.administration.domian.Edu105;
+import com.beifen.edu.administration.domian.Edu106;
+import com.beifen.edu.administration.domian.Edu300;
+
+import net.minidev.json.parser.ParseException;
 
 
 public class ReflectUtils {
@@ -276,28 +287,180 @@ public class ReflectUtils {
 	
 	
 	
-	
-	
-	
-	
 	/**
+	 * 检验文件
 	 * @param suffix文件后缀名
 	 * @return checkPass 验证结果
+	 * @throws Exception 
+	 * @throws java.text.ParseException 
 	 * */
-	public boolean checkFileType(String  suffix) {
-       boolean checkPass=true;
-	   if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
-		   checkPass=false;
-	   }
-		return checkPass;
+	public Map<String, Object> checkFile(MultipartFile file,String checkType,String hopeSheetName,Map<String, List> checkNeedInfo) throws java.text.ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		boolean isExcel=true;
+		boolean sheetCountPass=true;
+		boolean modalPass=true;
+		boolean haveData=true;
+		
+		// 判断读取的文件是否为Excel文件
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
+			isExcel = false;
+			returnMap.put("isExcel",isExcel);
+			return returnMap;
+		}
+		
+		//获取Excel工作簿
+		InputStream in=file.getInputStream();
+		Workbook workBook = WorkbookFactory.create(in);
+		
+		int sheetCount = workBook.getNumberOfSheets();// 获取sheet个数
+		//验证sheet个数
+		if(sheetCount <= 0){
+			sheetCountPass=false;
+			returnMap.put("sheetCountPass",sheetCountPass);
+			returnMap.put("isExcel",isExcel);
+			return returnMap;
+		}
+		
+		String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
+		//验证sheet名字
+		if (checkType.equals("edu001")&&!sheetName.equals(hopeSheetName)) {
+			modalPass=false;
+			returnMap.put("modalPass",modalPass);
+			returnMap.put("sheetCountPass",sheetCountPass);
+			returnMap.put("isExcel",isExcel);
+			return returnMap;
+		}
+		
+		//验证是否有数据
+		List<Map<String,Object>> importStudents = this.getImportData(file.getInputStream(),checkType);
+		if(importStudents.size()==0){
+			haveData=false;
+			returnMap.put("haveData",haveData);
+			returnMap.put("modalPass",modalPass);
+			returnMap.put("sheetCountPass",sheetCountPass);
+			returnMap.put("isExcel",isExcel);
+			return returnMap;
+		}
+		
+		//验证数据正确性
+		if(checkType.equals("edu001")){
+			Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents,checkNeedInfo);
+			returnMap.put("haveData",haveData);
+			returnMap.put("modalPass",modalPass);
+			returnMap.put("sheetCountPass",sheetCountPass);
+			returnMap.put("isExcel",isExcel);
+			returnMap.put("dataCheck", datacheckInfo.get("chaeckPass"));
+			returnMap.put("errorTxt", datacheckInfo.get("errorTxt"));
+			returnMap.put("importStudent", datacheckInfo.get("importStudent"));
+		}
+		
+		
+		return returnMap;
 	}
 
+
 	/**
-	 * 读取上传学生的Excel 获取学生信息
-	 * @param studentStream 学生文件输入流
-	 * @return List<Map<String,Object>> dataList 学生信息
+	 * 验证导入的学生数据
+	 * @throws Exception 
+	 * @throws java.text.ParseException 
 	 * */
-	public List<Map<String,Object>> getImportStudent(InputStream studentStream)throws EncryptedDocumentException, InvalidFormatException, IOException {
+	private Map<String, Object> checkImportStudentInfo(List<Map<String, Object>> importStudentsMap,Map<String, List> checkNeedInfo) throws java.text.ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu001> importStudent=new ArrayList<Edu001>();
+		boolean chaeckPass=true;
+		
+		//组装上传学生对象
+		for (int i = 0; i < importStudentsMap.size(); i++) {
+			Edu001 edu001 = new Edu001();
+			Map<String, Object> studentInfo = importStudentsMap.get(i);
+			edu001.setPycc((String) studentInfo.get("pycc"));
+			edu001.setSzxb((String) studentInfo.get("szxb"));
+			edu001.setNj((String) studentInfo.get("nj"));
+			edu001.setZybm((String) studentInfo.get("zybm"));
+			edu001.setEdu300_ID((String) studentInfo.get("Edu300_ID"));
+			edu001.setXh((String) studentInfo.get("xh"));
+			edu001.setXm((String) studentInfo.get("xm"));
+			edu001.setXb((String) studentInfo.get("xb"));
+			edu001.setZtCode((String) studentInfo.get("ztCode"));
+			edu001.setCsrq((String) studentInfo.get("csrq"));
+			edu001.setNl(getAge(parse((String) studentInfo.get("csrq"))));
+			importStudent.add(edu001);
+		}
+		
+		//非空验证
+		for (int i = 0; i < importStudent.size(); i++) {
+			Edu001 edu001 = importStudent.get(i);
+			if(isNull(edu001.getPycc())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-培养层次编码不能为空");
+			}
+			if(isNull(edu001.getSzxb())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-系部编码不能为空");
+			}
+			if(isNull(edu001.getNj())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-年级编码不能为空");
+			}
+			if(isNull(edu001.getZybm())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-专业编码不能为空");
+			}
+			if(isNull(edu001.getEdu300_ID())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-行政班编码不能为空");
+			}
+			if(isNull(edu001.getXh())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-学号不能为空");
+			}
+			if(isNull(edu001.getXm())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-学生姓名不能为空");
+			}
+			if(isNull(edu001.getXb())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-性别不能为空");
+			}
+			if(isNull(edu001.getZtCode())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-学生状态不能为空");
+			}
+			if(isNull(edu001.getCsrq())){
+				returnMap.put("chaeckPass", false);
+				returnMap.put("errorTxt", "第"+(i+1)+"行-出生日期不能为空");
+			}
+		}
+		
+		
+		
+		//数据类型和格式验证
+		
+		//上传数据与数据库配对验证
+		
+		//是否有学籍和学籍号是否为空验证
+		
+		 
+		
+		
+		returnMap.put("importStudent", importStudent);
+		return returnMap;
+	}
+
+	
+	
+	
+	
+
+
+	/**
+	 * 读取上传的Excel数据
+	 * @param studentStream 文件输入流
+	 * @return List<Map<String,Object>> dataList 返回信息
+	 * */
+	public List<Map<String,Object>> getImportData(InputStream studentStream,String keyType)throws EncryptedDocumentException, InvalidFormatException, IOException {
 		List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 		//获取Excel工作簿
 		Workbook workBook = WorkbookFactory.create(studentStream);
@@ -322,7 +485,11 @@ public class ReflectUtils {
 						//当前列
 						Cell cell = row.getCell(cIndex);
 						if (cell != null && !cell.equals("")) {
-							String keyName = getKeyName(cell.getColumnIndex()); //获取列名
+							String keyName="";
+							//根据不同需求获取key name
+							if(keyType.equals("edu001")){
+							  keyName = getEdu001KeyName(cell.getColumnIndex()); //获取列名
+							}
 							hashMap.put(keyName, cell.toString());
 						}
 					}
@@ -334,7 +501,7 @@ public class ReflectUtils {
 	}
 	
 	//获取学生Excel的Key值
-	private String getKeyName(int columnIndex) {
+	private String getEdu001KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
         case 0:
@@ -348,6 +515,24 @@ public class ReflectUtils {
             break;
         case 3:
             result="zybm";
+            break;
+        case 4:
+            result="Edu300_ID";
+            break;
+        case 5:
+            result="xh";
+            break;
+        case 6:
+            result="xm";
+            break;
+        case 8:
+            result="xb";
+            break;
+        case 9:
+            result="ztCode";
+            break;
+        case 10:
+            result="csrq";
             break;
         default:
         	result="ycTxt";
@@ -367,15 +552,10 @@ public class ReflectUtils {
 		return true;
     }
 
-	
-	
-	
-
-	// 填充学生导入模板的辅助信息 sheet2
-	public void createImportStudentModalOtherInfo(String filePath, Map<String,List> othserInfo) throws IOException {
+	// 修改学生导入模板
+	public void modifyImportStudentModal(String filePath, Map<String,List> othserInfo) throws IOException {
 		OutputStream out = null;
-		List<Edu103> allPcyy = othserInfo.get("pcyy");
-		List<Edu104> xb = othserInfo.get("xb");
+		
 		// 获取Excel工作簿
 		FileInputStream in = new FileInputStream(filePath);
 		XSSFWorkbook workbook = new XSSFWorkbook(in);
@@ -387,16 +567,40 @@ public class ReflectUtils {
 			workbook.removeSheetAt(1);
 			workbook.write(out);
 		}
-        
+		
 		//创建新的sheet2
 		workbook.createSheet("辅助信息");
 		//获取sheet2
 		XSSFSheet sheet = workbook.getSheetAt(1);
-		
+		//填充sheet2内容
+		this.stuffImportStudentModalSheet2(sheet,othserInfo);
+
+		out = new FileOutputStream(filePath);
+		out.flush();
+		workbook.write(out);
+		workbook.close();
+		out.close();
+	}
+	
+	//填充学生导入模板的辅助信息
+    private void stuffImportStudentModalSheet2(XSSFSheet sheet,Map<String,List> othserInfo) {
+    	List<Edu103> allPcyy = othserInfo.get("pcyy");
+		List<Edu104> xb = othserInfo.get("xb");
+		List<Edu105> nj = othserInfo.get("nj");
+		List<Edu106> zy = othserInfo.get("zy");
+		List<Edu300> xzb = othserInfo.get("xzb");
+		List<Edu000> xszt = othserInfo.get("xszt");
+		List<Edu000> zzmm = othserInfo.get("zzmm");
+		List<Edu000> whcd = othserInfo.get("whcd");
+		List<Edu000> zsfs = othserInfo.get("zsfs");
 		//设置标题
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];   
-		String[] titles = new String[] { "培养层次名称", "培养层次编码", "系部名称", "系部编码" };//所有标题数组
+		//所有标题数组
+		String[] titles = new String[] {
+              "培养层次名称", "培养层次编码", "系部名称", "系部编码" , "年级名称", "年级编码", "专业名称", "专业编码", "行政班名称", "行政班编码"
+             ,"学生状态名称", "学生状态编码","政治面貌名称", "政治面貌编码","文化程度名称", "文化程度编码","招生方式名称", "招生方式编码"
+		                               };
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
 			cells[0] = firstRow.createCell(i);
@@ -412,22 +616,64 @@ public class ReflectUtils {
 
 		// 追加系部信息
 		for (int i = 0; i < xb.size(); i++) {
-			XSSFRow row = sheet.getRow(i + 1);
-			row.createCell(2).setCellValue(xb.get(i).getXbmc());
-			row.createCell(3).setCellValue(xb.get(i).getEdu104_ID());
+			Edu104 edu104=xb.get(i);
+			appendCell(sheet,i,edu104.getXbmc(),edu104.getEdu104_ID().toString(),2,3);
+		}
+		
+		// 追加年级信息
+		for (int i = 0; i < nj.size(); i++) {
+			Edu105 edu105=nj.get(i);
+			appendCell(sheet,i,edu105.getNjmc(),edu105.getEdu105_ID().toString(),4,5);
+		}
+		
+		// 追加专业信息
+		for (int i = 0; i < zy.size(); i++) {
+			Edu106 edu106=zy.get(i);
+			appendCell(sheet,i,edu106.getZymc(),edu106.getEdu106_ID().toString(),6,7);
+		}
+		
+		// 追加行政班信息
+		for (int i = 0; i < xzb.size(); i++) {
+			Edu300 edu300=xzb.get(i);
+			appendCell(sheet,i,edu300.getXzbmc(),edu300.getEdu300_ID().toString(),8,9);
 		}
 
-		out = new FileOutputStream(filePath);
-		out.flush();
-		workbook.write(out);
-		workbook.close();
-		out.close();
+		// 追加学生状态信息
+		for (int i = 0; i < xszt.size(); i++) {
+			Edu000 edu000=xszt.get(i);
+			appendCell(sheet,i,edu000.getEjdmz(),edu000.getEjdm(),10,11);
+		}
+		
+		// 追加政治面貌信息
+		for (int i = 0; i < zzmm.size(); i++) {
+			Edu000 edu000 = zzmm.get(i);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 12, 13);
+		}
+
+		// 追加文化程度信息
+		for (int i = 0; i < whcd.size(); i++) {
+			Edu000 edu000 = whcd.get(i);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 14, 15);
+		}
+		
+		// 追加招生方式信息
+		for (int i = 0; i < zsfs.size(); i++) {
+			Edu000 edu000 = zsfs.get(i);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 16, 17);
+		}
 	}
-	
-	
-	
-	
-	
+
+	//Excel sheet2追加数据
+	private void appendCell(XSSFSheet sheet,int index,String mc,String value,int mcCellIndex,int valueCellIndex) {
+		XSSFRow row = sheet.getRow(index + 1); //从第二行开始追加
+		//如果总行数超过当前数据长度 新建行
+		if(row==null){
+			int rowNum = sheet.getLastRowNum();// 总行数
+			row=sheet.createRow(rowNum+1);//新建一行
+		}
+		row.createCell(mcCellIndex).setCellValue(mc); 
+		row.createCell(valueCellIndex).setCellValue(value);
+	}
 
 	// 下载模板
 	public void loadImportStudentModal(String filePath, HttpServletResponse response) throws IOException {
@@ -449,16 +695,86 @@ public class ReflectUtils {
 		br.close();
 		out.close();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
+	
+	
+	
+	
+	
+	//非空验证
+	private boolean isNull(String notNullCell) {
+		if(notNullCell==null){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	/**
+	 * 解析POI导入Excel中日期格式数据
+	 * @param currentCell
+	 * @return currentCellValue
+	 */
+	public static String importByExcelForDate(Cell currentCell) {
+		String currentCellValue = "";
+		// 判断单元格数据是否是日期
+		if ("yyyy/mm;@".equals(currentCell.getCellStyle().getDataFormatString())
+				|| "m/d/yy".equals(currentCell.getCellStyle().getDataFormatString())
+				|| "yy/m/d".equals(currentCell.getCellStyle().getDataFormatString())
+				|| "mm/dd/yy".equals(currentCell.getCellStyle().getDataFormatString())
+				|| "dd-mmm-yy".equals(currentCell.getCellStyle().getDataFormatString())
+				|| "yyyy/m/d".equals(currentCell.getCellStyle().getDataFormatString())) {
+			if (DateUtil.isCellDateFormatted(currentCell)) {
+				// 用于转化为日期格式
+				Date d = currentCell.getDateCellValue();
+				DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+				currentCellValue = formater.format(d);
+			}
+		} else {
+			// 不是日期原值返回
+			currentCellValue = currentCell.toString();
+		}
+		return currentCellValue;
+	}
+	
+	
+	//出生日期字符串转化成Date对象
+    public  Date parse(String strDate) throws java.text.ParseException  {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.parse(strDate);
+    }
+
+
+	//由出生日期获得年龄
+	public String getAge(Date birthDay) throws Exception {
+		Calendar cal = Calendar.getInstance();
+
+		if (cal.before(birthDay)) {
+			throw new IllegalArgumentException("The birthDay is before Now.It's unbelievable!");
+		}
+		int yearNow = cal.get(Calendar.YEAR);
+		int monthNow = cal.get(Calendar.MONTH);
+		int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+		cal.setTime(birthDay);
+
+		int yearBirth = cal.get(Calendar.YEAR);
+		int monthBirth = cal.get(Calendar.MONTH);
+		int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
+
+		int age = yearNow - yearBirth;
+
+		if (monthNow <= monthBirth) {
+			if (monthNow == monthBirth) {
+				if (dayOfMonthNow < dayOfMonthBirth)
+					age--;
+			} else {
+				age--;
+			}
+		}
+		return String.valueOf(age);
+	}
 }
 	
 	

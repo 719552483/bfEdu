@@ -2,7 +2,7 @@ package com.beifen.edu.administration.controller;
 
 
 import java.io.IOException;
-
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -2267,8 +2267,15 @@ public class AdministrationController {
 		
 		othserInfo.put("pcyy", administrationPageService.queryAllLevel());
 		othserInfo.put("xb", administrationPageService.queryAllDepartment());
-		//填充模板的辅助信息 sheet2
-		utils.createImportStudentModalOtherInfo(filePath,othserInfo);
+		othserInfo.put("nj", administrationPageService.queryAllGrade());
+		othserInfo.put("zy", administrationPageService.queryAllMajor());
+		othserInfo.put("xzb", administrationPageService.queryAllAdministrationClasses());
+		othserInfo.put("xszt", administrationPageService.queryEjdm("xszt"));
+		othserInfo.put("zzmm", administrationPageService.queryEjdm("zzmm"));
+		othserInfo.put("whcd", administrationPageService.queryEjdm("whcd"));
+		othserInfo.put("zsfs", administrationPageService.queryEjdm("zsfs"));
+		//修改学生导入模板
+		utils.modifyImportStudentModal(filePath,othserInfo);
         //下载模板
 		utils.loadImportStudentModal(filePath,response);
 	}
@@ -2290,40 +2297,61 @@ public class AdministrationController {
 	@ResponseBody
 	public Object importStudent(@RequestParam("file") MultipartFile file) throws IOException, EncryptedDocumentException, InvalidFormatException {
 		Map<String, Object> returnMap = new HashMap();
-		boolean isExcel=true;
-		boolean haveSheet=true;
+//		boolean isExcel=true;
+//		boolean haveSheet=true;
+//		
+//		//判断读取的文件是否为Excel文件
+//		String fileName = file.getOriginalFilename();
+//		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+//		
+//		
+//		//文件格式不正确 返回
+//		if(!utils.checkFile(suffix)){
+//			returnMap.put("isExcel", false);
+//			return returnMap;
+//		}
+//		
+//		//文件格式正确解析Excel文件 获取新增学生实体 
+//		List<Map<String,Object>> importStudents = utils.getImportStudent(file.getInputStream());
+//		if(importStudents.size()==0){
+//			returnMap.put("haveSheet", false);
+//			return returnMap;
+//		}
+//		
+//		
+//		
+//		//保存到数据库
+//		//todo 
 		
-		//判断读取的文件是否为Excel文件
-		String fileName = file.getOriginalFilename();
-		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-		
-		
-		//文件格式不正确 返回
-		if(!utils.checkFileType(suffix)){
-			returnMap.put("isExcel", false);
-			return returnMap;
-		}
-		
-		//文件格式正确解析Excel文件 获取新增学生实体 
-		List<Map<String,Object>> importStudents = utils.getImportStudent(file.getInputStream());
-		if(importStudents.size()==0){
-			returnMap.put("haveSheet", false);
-			return returnMap;
-		}
-		
-		
-		
-		//保存到数据库
-		//todo 
-		
-		returnMap.put("importStudents", importStudents);
-		returnMap.put("isExcel", isExcel);
-		returnMap.put("haveSheet", haveSheet);
+//		returnMap.put("importStudents", importStudents);
+//		returnMap.put("isExcel", isExcel);
+//		returnMap.put("haveSheet", haveSheet);
 	    return returnMap;
     }
 	
 	
 	
+	/**
+	 * 检验导入学生的文件
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws ParseException 
+	 * @throws Exception 
+	 * @throws ServletException 
+	 */
+	@RequestMapping("verifiyImportStudentFile")
+	@ResponseBody
+	public Object verifiyImportStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, List> checkNeedInfo = new HashMap();
+		checkNeedInfo.put("pcyy", administrationPageService.queryAllLevel());
+		
+		Map<String, Object> checkRS= utils.checkFile(file,"edu001","学生信息",checkNeedInfo);
+		checkRS.put("result", true);
+	    return checkRS;
+    }
 	
 	
 	

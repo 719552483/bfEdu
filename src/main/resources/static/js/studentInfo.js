@@ -825,6 +825,9 @@ function getAddStudentInfo(){
 	var ztCode= getNormalSelectValue("addStudentStatus");
 	var zt= getNormalSelectText("addStudentStatus");
 	var csrq=$("#dateOfBrith").val();
+	if(csrq!==""){
+	 var nl= byage($("#dateOfBrith").val());
+	}
 	var pycc= getNormalSelectValue("addStudentpycc");
 	var pyccmc= getNormalSelectText("addStudentpycc");
 	var szxb= getNormalSelectValue("addStudentxb");
@@ -980,6 +983,7 @@ function getAddStudentInfo(){
 	returnObject.ztCode=ztCode;
 	returnObject.zt=zt;
 	returnObject.csrq=csrq;
+	returnObject.nl=nl;
 	returnObject.pycc=pycc;
 	returnObject.pyccmc=pyccmc;
 	returnObject.szxb=szxb;
@@ -1133,9 +1137,55 @@ function checkStudentInfoFile() {
 		toastr.warning('请选择文件');
 		return;
 	}
-	$("#studentInfoForm").attr("action", ""); //检验文件接口
-	$("#studentInfoFile").attr("uploadSuccess", true);
-	toastr.success('文件正确');
+
+    var formData = new FormData();
+    formData.append("file",$('#studentInfoFile')[0].files[0]);
+
+    $.ajax({
+        url:'/verifiyImportStudentFile',
+        dataType:'json',
+        type:'POST',
+        async: false,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	if(backjosn.result){
+        		if(!backjosn.isExcel){
+        			showImportErrorInfo(".importStudentInfo","请上传xls或xlsx类型的文件");
+        		   return
+        		}
+        		if(!backjosn.sheetCountPass){
+        			showImportErrorInfo(".importStudentInfo","上传文件的标签页个数不正确");
+        		   return
+        		}
+        		if(!backjosn.modalPass){
+        			showImportErrorInfo(".importStudentInfo","模板格式与原始模板不对应");
+        		   return
+        		}
+        		if(!backjosn.haveData){
+        			showImportErrorInfo(".importStudentInfo","文件暂无数据");
+        		   return
+        		}
+        		if(!backjosn.dataCheck){
+        			showImportErrorInfo(".importStudentInfo",backjosn.errorTxt);
+        		   return
+        		}
+        		
+        		showImportSuccessInfo(".importStudentInfo","上传文件格式/数据正确");
+        	}else{
+        	  toastr.warning('操作失败，请重试');
+        	}
+        },beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
 }
 
 //确认提交学生信息文件
@@ -1158,7 +1208,7 @@ function confirmImportStudentInfo() {
 	        contentType : false, // 不要设置Content-Type请求头
 	        success: function(backjosn){
 	          if(!backjosn.isExcel){
-	        	  toastr.warning('请选择文件');
+	        	  toastr.warning('请上传xls或xlsx类型的文件');
 	  			return;
 	          }else if(!backjosn.haveSheet){
 	        	  toastr.warning('上传文件暂无数据');
