@@ -933,10 +933,10 @@ function showImportErrorInfo(AreaClass,errorInfo){
 }
 
 //上传文件成功渲染
-function showImportSuccessInfo(AreaClass,errorInfo){
+function showImportSuccessInfo(AreaClass,successInfo){
 	$(AreaClass).find(".fileErrorTxTArea").hide();
 	$(AreaClass).find(".fileSuccessTxTArea").show();
-	$(AreaClass).find(".fileErrorTxTArea").find("b").html("Error:"+errorInfo);
+	$(AreaClass).find(".fileSuccessTxTArea").find("b").html("Success:"+successInfo);
 }
 
 //根据出生日期算年龄

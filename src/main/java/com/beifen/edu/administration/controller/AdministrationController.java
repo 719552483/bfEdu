@@ -2265,17 +2265,9 @@ public class AdministrationController {
         //获取模板路径
 		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
 		
-		othserInfo.put("pcyy", administrationPageService.queryAllLevel());
-		othserInfo.put("xb", administrationPageService.queryAllDepartment());
-		othserInfo.put("nj", administrationPageService.queryAllGrade());
-		othserInfo.put("zy", administrationPageService.queryAllMajor());
-		othserInfo.put("xzb", administrationPageService.queryAllAdministrationClasses());
-		othserInfo.put("xszt", administrationPageService.queryEjdm("xszt"));
-		othserInfo.put("zzmm", administrationPageService.queryEjdm("zzmm"));
-		othserInfo.put("whcd", administrationPageService.queryEjdm("whcd"));
-		othserInfo.put("zsfs", administrationPageService.queryEjdm("zsfs"));
+		
 		//修改学生导入模板
-		utils.modifyImportStudentModal(filePath,othserInfo);
+		utils.modifyImportStudentModal(filePath);
         //下载模板
 		utils.loadImportStudentModal(filePath,response);
 	}
@@ -2348,7 +2340,7 @@ public class AdministrationController {
 		Map<String, List> checkNeedInfo = new HashMap();
 		checkNeedInfo.put("pcyy", administrationPageService.queryAllLevel());
 		
-		Map<String, Object> checkRS= utils.checkFile(file,"edu001","学生信息",checkNeedInfo);
+		Map<String, Object> checkRS= utils.checkFile(file,"edu001","学生信息");
 		checkRS.put("result", true);
 	    return checkRS;
     }

@@ -22,4 +22,8 @@ public interface Edu106Dao extends JpaRepository<Edu106, Long>, JpaSpecification
 	@Query(value = "delete from edu106 where Edu106_ID =?1", nativeQuery = true)
 	public void removeGrade(String edu106ID);
 
+	//按专业id查专业
+	@Query(value = "select * from edu106 where zybm =?1", nativeQuery = true)
+	public List<Edu106> queryAllMajorByZybm(String zybm);
+
 }

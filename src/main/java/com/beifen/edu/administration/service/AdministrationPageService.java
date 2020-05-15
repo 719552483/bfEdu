@@ -76,25 +76,55 @@ public class AdministrationPageService {
 	public List<Edu103> queryAllLevel() {
 		return edu103DAO.queryAllLevel();
 	}
+	
+	//按层次编码查询层次
+	public List<Edu103> queryAllLevelByPcccbm(String pcccbm) {
+		return edu103DAO.queryAllLevelByPcccbm(pcccbm);
+	}
 
 	// 查询所有系部
 	public List<Edu104> queryAllDepartment() {
 		return edu104DAO.queryAllDepartment();
 	}
 
+	//按系部编码查询系部
+	public List<Edu104> queryAllDepartmentByXbbm(String xbbm) {
+		return edu104DAO.queryAllDepartmentByXbbm(xbbm);
+	}
+	
 	// 查询所有年级
 	public List<Edu105> queryAllGrade() {
 		return edu105DAO.queryAllGrade();
+	}
+	
+	//按年级编码查年级
+	public List<Edu105> queryAllGradeByNjbm(String njbm) {
+		return edu105DAO.queryAllGradeByNjbm(njbm);
 	}
 
 	// 查询所有专业
 	public List<Edu106> queryAllMajor() {
 		return edu106DAO.queryAllMajor();
 	}
+	
+	//按专业编码查专业
+	public List<Edu106> queryAllMajorByZybm(String zybm) {
+		return edu106DAO.queryAllMajorByZybm(zybm);
+	}
 
 	// 查询所有层次关系管理信息
 	public List<Edu107> queryAllRelation() {
 		return edu107DAO.queryAllRelation();
+	}
+	
+	// 根据层次 系部 年级 专业定位培养计划  (excel导入时可能不对应  所以要返回结果集 而不是基础数据类型)
+	public List<Edu107> queryPyjh(String levelCode, String departmentCode, String gradeCode, String majorCode) {
+		return edu107DAO.queryPyjh(levelCode, departmentCode, gradeCode, majorCode);
+	}
+	
+	// 根据层次 系部 年级 专业定位培养计划
+	public long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode) {
+		return edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 	}
 
 	// 新增层次关系
@@ -187,10 +217,7 @@ public class AdministrationPageService {
 		return edu107DAO.gradeMatchMajor(gradeCode);
 	}
 
-	// 根据层次 系部 年级 专业定位培养计划
-	public long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode) {
-		return edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-	}
+	
 
 	// 查询培养计划下的专业课程
 	public List<Edu108> queryCulturePlanCouses(long edu107id) {
@@ -240,6 +267,11 @@ public class AdministrationPageService {
 	// 查询所有行政班
 	public List<Edu300> queryAllAdministrationClasses() {
 		return edu300DAO.findAll();
+	}
+	
+	//根据300id查询行政班
+	public List<Edu300> queryXzbByEdu300ID(String edu300_ID) {
+		return edu300DAO.queryXzbByEdu300ID(edu300_ID);
 	}
 
 	// 查询培养计划下的行政班
@@ -598,11 +630,14 @@ public class AdministrationPageService {
 		return edu990DAO.getUserInfo(username);
 	}
 
-	// 获取二级代码
+	// 根据二级代码关联字段获取二级代码
 	public List<Edu000> queryEjdm(String ejdmGlzd) {
-
 		return edu000DAO.queryejdm(ejdmGlzd);
+	}
 
+	// 根据二级代码关联字段和值获取二级代码
+	public List<Edu000> queryEjdmByGroupAndValue(String groupName, String value) {
+		return edu000DAO.queryEjdmByGroupAndValue(groupName, value);
 	}
 
 	// 获取二级代码
@@ -905,6 +940,19 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+	
+
+	
+
+
+
+	
+
+
+
+
+	
 
 
 

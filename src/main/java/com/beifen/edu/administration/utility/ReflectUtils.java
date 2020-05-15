@@ -1,5 +1,9 @@
 package com.beifen.edu.administration.utility;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,12 +23,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -32,24 +41,35 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.assertj.core.util.DateUtil;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu103;
 import com.beifen.edu.administration.domian.Edu104;
 import com.beifen.edu.administration.domian.Edu105;
 import com.beifen.edu.administration.domian.Edu106;
+import com.beifen.edu.administration.domian.Edu107;
 import com.beifen.edu.administration.domian.Edu300;
+import com.beifen.edu.administration.service.AdministrationPageService;
 
-import net.minidev.json.parser.ParseException;
 
-
+@Component
 public class ReflectUtils {
 	// 缓存类的字段
 	private static Map<String, List<Field>> cache = new HashMap<>();
-
+	 @Resource
+	private AdministrationPageService administrationPageService;
+	
+	private static ReflectUtils reflectUtils;
+	 @PostConstruct
+	    public void init() {
+		 reflectUtils = this;
+		 reflectUtils.administrationPageService = this.administrationPageService;
+	    }
+	
 	public static Map<String, Object> createMapForNotNull(Object bean) {
 		List<Field> fields = listAllFields(bean.getClass());
 		try {
@@ -294,7 +314,7 @@ public class ReflectUtils {
 	 * @throws Exception 
 	 * @throws java.text.ParseException 
 	 * */
-	public Map<String, Object> checkFile(MultipartFile file,String checkType,String hopeSheetName,Map<String, List> checkNeedInfo) throws java.text.ParseException, Exception {
+	public Map<String, Object> checkFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
 		boolean isExcel=true;
 		boolean sheetCountPass=true;
@@ -346,13 +366,13 @@ public class ReflectUtils {
 		
 		//验证数据正确性
 		if(checkType.equals("edu001")){
-			Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents,checkNeedInfo);
+			Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents);
 			returnMap.put("haveData",haveData);
 			returnMap.put("modalPass",modalPass);
 			returnMap.put("sheetCountPass",sheetCountPass);
 			returnMap.put("isExcel",isExcel);
 			returnMap.put("dataCheck", datacheckInfo.get("chaeckPass"));
-			returnMap.put("errorTxt", datacheckInfo.get("errorTxt"));
+			returnMap.put("checkTxt", datacheckInfo.get("checkTxt"));
 			returnMap.put("importStudent", datacheckInfo.get("importStudent"));
 		}
 		
@@ -366,101 +386,369 @@ public class ReflectUtils {
 	 * @throws Exception 
 	 * @throws java.text.ParseException 
 	 * */
-	private Map<String, Object> checkImportStudentInfo(List<Map<String, Object>> importStudentsMap,Map<String, List> checkNeedInfo) throws java.text.ParseException, Exception {
+	private Map<String, Object> checkImportStudentInfo(List<Map<String, Object>> importStudentsMap) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu001> importStudent=new ArrayList<Edu001>();
 		boolean chaeckPass=true;
+		String checkTxt="";
 		
 		//组装上传学生对象
 		for (int i = 0; i < importStudentsMap.size(); i++) {
-			Edu001 edu001 = new Edu001();
-			Map<String, Object> studentInfo = importStudentsMap.get(i);
-			edu001.setPycc((String) studentInfo.get("pycc"));
-			edu001.setSzxb((String) studentInfo.get("szxb"));
-			edu001.setNj((String) studentInfo.get("nj"));
-			edu001.setZybm((String) studentInfo.get("zybm"));
-			edu001.setEdu300_ID((String) studentInfo.get("Edu300_ID"));
-			edu001.setXh((String) studentInfo.get("xh"));
-			edu001.setXm((String) studentInfo.get("xm"));
-			edu001.setXb((String) studentInfo.get("xb"));
-			edu001.setZtCode((String) studentInfo.get("ztCode"));
-			edu001.setCsrq((String) studentInfo.get("csrq"));
-			edu001.setNl(getAge(parse((String) studentInfo.get("csrq"))));
+			Edu001 edu001 = JSON.parseObject(JSON.toJSONString(importStudentsMap.get(i)), Edu001.class); // mapToBean
+			if (edu001.getCsrq() != null) {
+				int Age = getAge(parse((String) importStudentsMap.get(i).get("csrq")));
+				if (Age <= 0) {
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-出生日期异常";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					return returnMap;
+				}
+				edu001.setNl(String.valueOf(Age));
+			}
 			importStudent.add(edu001);
 		}
 		
-		//非空验证
+		List<Edu103> pcyys=null;
+		List<Edu104> xbs=null;
+		List<Edu105> njs=null;
+		List<Edu106> zys=null;
+		List<Edu300> xzbs=null;
+		List<Edu000> ztbms =null;
+		List<Edu000> mzs =null;
+		List<Edu000> zzmms=null;
+		List<Edu000> whcds=null;
+		List<Edu000> zsfss=null;
+		allforOver:
 		for (int i = 0; i < importStudent.size(); i++) {
 			Edu001 edu001 = importStudent.get(i);
-			if(isNull(edu001.getPycc())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-培养层次编码不能为空");
-			}
-			if(isNull(edu001.getSzxb())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-系部编码不能为空");
-			}
-			if(isNull(edu001.getNj())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-年级编码不能为空");
-			}
-			if(isNull(edu001.getZybm())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-专业编码不能为空");
-			}
-			if(isNull(edu001.getEdu300_ID())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-行政班编码不能为空");
-			}
+			//非空验证
 			if(isNull(edu001.getXh())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-学号不能为空");
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-学号不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", "第"+(i+1)+"行-学号不能为空");
+				break;
 			}
 			if(isNull(edu001.getXm())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-学生姓名不能为空");
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-学生姓名不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
 			}
 			if(isNull(edu001.getXb())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-性别不能为空");
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-性别不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
 			}
 			if(isNull(edu001.getZtCode())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-学生状态不能为空");
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-学生状态不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
 			}
 			if(isNull(edu001.getCsrq())){
-				returnMap.put("chaeckPass", false);
-				returnMap.put("errorTxt", "第"+(i+1)+"行-出生日期不能为空");
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-出生日期不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu001.getPycc())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-培养层次编码不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu001.getSzxb())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-系部编码不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt );
+				break;
+			}
+			if(isNull(edu001.getNj())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-年级编码不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			if(isNull(edu001.getZybm())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-专业编码不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			if(isNull(edu001.getEdu300_ID())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-行政班编码不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu001.getSfzh())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-身份证号不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu001.getMzbm())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-民族不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu001.getRxsj())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-入学时间不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			//是否有学籍和学籍号是否为空验证
+			if(!chaeckPass){
+				break;
+			}else{
+				if(edu001.getSfyxj().equals("T") && edu001.getXjh()==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-学籍号不能为空";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				if(edu001.getSfyxj().equals("F") && edu001.getXjh()!=null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-学籍号必须为空";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+			//上传数据与数据库配对验证
+			if(!chaeckPass){
+				break;
+			}else{
+				//培养层次编码是否存在
+				pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(edu001.getPycc());
+				if(pcyys.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-培养层次编码不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				//系部编码是否存在
+				xbs = reflectUtils.administrationPageService.queryAllDepartmentByXbbm(edu001.getSzxb());
+				if(xbs.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-系部编码不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
+				//年级编码是否存在
+				njs = reflectUtils.administrationPageService.queryAllGradeByNjbm(edu001.getNj());
+				if(njs.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-年级编码不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
+				//专业编码是否存在
+				zys = reflectUtils.administrationPageService.queryAllMajorByZybm(edu001.getZybm());
+				if(zys.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-专业编码不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
+				//培养计划是否能对应
+				List<Edu107>  pyjh = reflectUtils.administrationPageService.queryPyjh(edu001.getPycc(),edu001.getSzxb(),edu001.getNj(),edu001.getZybm());
+				if(pyjh.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-暂无由此行培养层次、所在系部、年级、专业组成的培养计划";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
+				//行政班编码是否存在
+				xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(edu001.getEdu300_ID());
+				if(xzbs.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-行政班不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
+				//状态编码是否存在
+				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",edu001.getZtCode());
+				if(ztbms.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-学生状态编码不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				//民族编码是否存在
+				mzs = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("mz",edu001.getMzbm());
+				if(mzs.size()==0){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-民族编码不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
+				//政治面貌编码是否存在
+				if(edu001.getZzmmbm()!=null){
+					zzmms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zzmm",edu001.getZzmmbm());
+					if(zzmms.size()==0){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-政治面貌不存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}
+				
+				//文化程度编码是否存在
+				if(edu001.getWhcdbm()!=null){
+					whcds = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("whcd",edu001.getWhcdbm());
+					if(whcds.size()==0){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-文化程度不存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}
+				
+				//招生方式编码是否存在
+				if(edu001.getZsfscode()!=null){
+					zsfss = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zsfs",edu001.getZsfscode());
+					if(zsfss.size()==0){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-招生方式不存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}
+			}
+			
+			//判断学号在数据库是否存在
+			if(!chaeckPass){
+				break;
+			}else{
+				List<Edu001> databaseAllStudent = reflectUtils.administrationPageService.queryAllStudent();
+				for (int d = 0;d < databaseAllStudent.size(); d++) {
+					if(importStudent.get(i).getXh().equals(databaseAllStudent.get(d).getXh())){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-学号已存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break allforOver;
+					}
+				}
+			}
+			
+			// 判断新增学生是否会超过行政班容纳人数
+			if(!chaeckPass){
+				break;
+			}else{
+				boolean studentSpill = reflectUtils.administrationPageService.administrationClassesIsSpill(importStudent.get(i).getEdu300_ID());
+				if(studentSpill){
+					List<Edu300> XzbInfo=reflectUtils.administrationPageService.queryXzbByEdu300ID(importStudent.get(i).getEdu300_ID());
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-新增该学生 ("+XzbInfo.get(0).getXzbmc()+") 人数超过上限";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+			//所有验证通过  填充各种编码的名称
+			if(pcyys!=null){
+				edu001.setPyccmc(pcyys.get(0).getPyccmc());
+			}
+			
+			if(xbs!=null){
+				edu001.setSzxbmc(xbs.get(0).getXbmc());
+			}
+			
+			if(njs!=null){
+				edu001.setNjmc(njs.get(0).getNjmc());
+			}
+			
+			if(zys!=null){
+				edu001.setZymc(zys.get(0).getZymc());
+			}
+			
+			if(xzbs!=null){
+				edu001.setXzbname(xzbs.get(0).getXzbmc());
+			}
+			
+			if(ztbms!=null){
+				edu001.setZt(ztbms.get(0).getEjdmz());
+			}
+			
+			if(mzs!=null){
+				edu001.setMz(mzs.get(0).getEjdmz());
+			}
+		    
+			if(zzmms!=null){
+				edu001.setZzmm(zzmms.get(0).getEjdmz());
+			}
+		    
+			if(whcds!=null){
+				edu001.setWhcd(whcds.get(0).getEjdmz());
+			}
+		    
+			if(zsfss!=null){
+				 edu001.setZsfs(zsfss.get(0).getEjdmz());
 			}
 		}
 		
-		
-		
-		//数据类型和格式验证
-		
-		//上传数据与数据库配对验证
-		
-		//是否有学籍和学籍号是否为空验证
-		
-		 
-		
-		
+		if(chaeckPass){
+			checkTxt="上传文件格式/数据正确";
+		} 
+		returnMap.put("chaeckPass", chaeckPass);
+		returnMap.put("checkTxt", checkTxt);
 		returnMap.put("importStudent", importStudent);
 		return returnMap;
 	}
-
 	
 	
 	
 	
-
+	
+	
 
 	/**
 	 * 读取上传的Excel数据
 	 * @param studentStream 文件输入流
 	 * @return List<Map<String,Object>> dataList 返回信息
+	 * @throws java.text.ParseException 
 	 * */
-	public List<Map<String,Object>> getImportData(InputStream studentStream,String keyType)throws EncryptedDocumentException, InvalidFormatException, IOException {
+	public List<Map<String,Object>> getImportData(InputStream studentStream,String keyType)throws EncryptedDocumentException, InvalidFormatException, IOException, java.text.ParseException {
 		List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
 		//获取Excel工作簿
 		Workbook workBook = WorkbookFactory.create(studentStream);
@@ -488,9 +776,12 @@ public class ReflectUtils {
 							String keyName="";
 							//根据不同需求获取key name
 							if(keyType.equals("edu001")){
-							  keyName = getEdu001KeyName(cell.getColumnIndex()); //获取列名
+							    keyName = getEdu001KeyName(cell.getColumnIndex()); //获取列名
 							}
-							hashMap.put(keyName, cell.toString());
+							//行数据不为空 放入返回集
+							if(getCellData(cell)!=null&&!getCellData(cell).equals("")){
+								hashMap.put(keyName, getCellData(cell));
+							}
 						}
 					}
 					dataList.add(hashMap); //追加学生信息
@@ -525,6 +816,9 @@ public class ReflectUtils {
         case 6:
             result="xm";
             break;
+        case 7:
+            result="zym";
+            break;
         case 8:
             result="xb";
             break;
@@ -533,6 +827,84 @@ public class ReflectUtils {
             break;
         case 10:
             result="csrq";
+            break;
+        case 11:
+            result="sfzh";
+            break;
+        case 12:
+            result="mzbm";
+            break;
+        case 13:
+            result="sfyxj";
+            break;
+        case 14:
+            result="xjh";
+            break;
+        case 15:
+            result="zzmmbm";
+            break;
+        case 16:
+            result="syd";
+            break;
+        case 17:
+            result="whcdbm";
+            break;
+        case 18:
+            result="ksh";
+            break;
+        case 19:
+            result="rxzf";
+            break;
+        case 20:
+            result="rxsj";
+            break;
+        case 21:
+            result="byzh";
+            break;
+        case 22:
+            result="zkzh";
+            break;
+        case 23:
+            result="sjhm";
+            break;
+        case 24:
+            result="email";
+            break;
+        case 25:
+            result="jg";
+            break;
+        case 26:
+            result="zy";
+            break;
+        case 27:
+            result="sg";
+            break;
+        case 28:
+            result="tz";
+            break;
+        case 29:
+            result="hf";
+            break;
+        case 30:
+            result="lzjd";
+            break;
+        case 31:
+            result="zsfscode";
+            break;
+        case 32:
+            result="dxpy";
+            break;
+        case 33:
+            result="pkjt";
+            break;
+        case 34:
+            result="jtzz";
+            break;
+        case 35:
+            result="zjxy";
+            break;
+        case 36:
+            result="bz";
             break;
         default:
         	result="ycTxt";
@@ -553,7 +925,7 @@ public class ReflectUtils {
     }
 
 	// 修改学生导入模板
-	public void modifyImportStudentModal(String filePath, Map<String,List> othserInfo) throws IOException {
+	public void modifyImportStudentModal(String filePath) throws IOException {
 		OutputStream out = null;
 		
 		// 获取Excel工作簿
@@ -573,7 +945,7 @@ public class ReflectUtils {
 		//获取sheet2
 		XSSFSheet sheet = workbook.getSheetAt(1);
 		//填充sheet2内容
-		this.stuffImportStudentModalSheet2(sheet,othserInfo);
+		this.stuffImportStudentModalSheet2(sheet);
 
 		out = new FileOutputStream(filePath);
 		out.flush();
@@ -583,22 +955,24 @@ public class ReflectUtils {
 	}
 	
 	//填充学生导入模板的辅助信息
-    private void stuffImportStudentModalSheet2(XSSFSheet sheet,Map<String,List> othserInfo) {
-    	List<Edu103> allPcyy = othserInfo.get("pcyy");
-		List<Edu104> xb = othserInfo.get("xb");
-		List<Edu105> nj = othserInfo.get("nj");
-		List<Edu106> zy = othserInfo.get("zy");
-		List<Edu300> xzb = othserInfo.get("xzb");
-		List<Edu000> xszt = othserInfo.get("xszt");
-		List<Edu000> zzmm = othserInfo.get("zzmm");
-		List<Edu000> whcd = othserInfo.get("whcd");
-		List<Edu000> zsfs = othserInfo.get("zsfs");
+    private void stuffImportStudentModalSheet2(XSSFSheet sheet) {
+    	List<Edu103> allPcyy = reflectUtils.administrationPageService.queryAllLevel();
+		List<Edu104> xb =reflectUtils.administrationPageService.queryAllDepartment();
+		List<Edu105> nj = reflectUtils.administrationPageService.queryAllGrade();
+		List<Edu106> zy = reflectUtils.administrationPageService.queryAllMajor();
+		List<Edu300> xzb = reflectUtils.administrationPageService.queryAllAdministrationClasses();
+		List<Edu000> xszt = reflectUtils.administrationPageService.queryEjdm("xszt");
+		List<Edu000> zzmm = reflectUtils.administrationPageService.queryEjdm("zzmm");
+		List<Edu000> whcd = reflectUtils.administrationPageService.queryEjdm("whcd");
+		List<Edu000> zsfs = reflectUtils.administrationPageService.queryEjdm("zsfs");
+		List<Edu000> mzbm = reflectUtils.administrationPageService.queryEjdm("mz");
+		
 		//设置标题
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];   
 		//所有标题数组
 		String[] titles = new String[] {
-              "培养层次名称", "培养层次编码", "系部名称", "系部编码" , "年级名称", "年级编码", "专业名称", "专业编码", "行政班名称", "行政班编码"
+              "培养层次名称", "培养层次编码", "系部名称", "系部编码" , "年级名称", "年级编码", "专业名称", "专业编码", "行政班名称", "行政班编码","民族名称", "民族编码"
              ,"学生状态名称", "学生状态编码","政治面貌名称", "政治面貌编码","文化程度名称", "文化程度编码","招生方式名称", "招生方式编码"
 		                               };
 		// 循环设置标题
@@ -611,25 +985,25 @@ public class ReflectUtils {
 		for (int i = 0; i < allPcyy.size(); i++) {
 			XSSFRow row = sheet.createRow(i + 1);
 			row.createCell(0).setCellValue(allPcyy.get(i).getPyccmc());
-			row.createCell(1).setCellValue(allPcyy.get(i).getEdu103_ID());
+			row.createCell(1).setCellValue(allPcyy.get(i).getPyccbm());
 		}
 
 		// 追加系部信息
 		for (int i = 0; i < xb.size(); i++) {
 			Edu104 edu104=xb.get(i);
-			appendCell(sheet,i,edu104.getXbmc(),edu104.getEdu104_ID().toString(),2,3);
+			appendCell(sheet,i,edu104.getXbmc(),edu104.getXbbm().toString(),2,3);
 		}
 		
 		// 追加年级信息
 		for (int i = 0; i < nj.size(); i++) {
 			Edu105 edu105=nj.get(i);
-			appendCell(sheet,i,edu105.getNjmc(),edu105.getEdu105_ID().toString(),4,5);
+			appendCell(sheet,i,edu105.getNjmc(),edu105.getNjbm().toString(),4,5);
 		}
 		
 		// 追加专业信息
 		for (int i = 0; i < zy.size(); i++) {
 			Edu106 edu106=zy.get(i);
-			appendCell(sheet,i,edu106.getZymc(),edu106.getEdu106_ID().toString(),6,7);
+			appendCell(sheet,i,edu106.getZymc(),edu106.getZybm().toString(),6,7);
 		}
 		
 		// 追加行政班信息
@@ -637,29 +1011,35 @@ public class ReflectUtils {
 			Edu300 edu300=xzb.get(i);
 			appendCell(sheet,i,edu300.getXzbmc(),edu300.getEdu300_ID().toString(),8,9);
 		}
+		
+		// 追加民族信息
+		for (int i = 0; i < mzbm.size(); i++) {
+			Edu000 edu000 = mzbm.get(i);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 10, 11);
+		}
 
 		// 追加学生状态信息
 		for (int i = 0; i < xszt.size(); i++) {
-			Edu000 edu000=xszt.get(i);
-			appendCell(sheet,i,edu000.getEjdmz(),edu000.getEjdm(),10,11);
+			Edu000 edu000 = xszt.get(i);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 12, 13);
 		}
 		
 		// 追加政治面貌信息
 		for (int i = 0; i < zzmm.size(); i++) {
 			Edu000 edu000 = zzmm.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 12, 13);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 14, 15);
 		}
 
 		// 追加文化程度信息
 		for (int i = 0; i < whcd.size(); i++) {
 			Edu000 edu000 = whcd.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 14, 15);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 16, 17);
 		}
 		
 		// 追加招生方式信息
 		for (int i = 0; i < zsfs.size(); i++) {
 			Edu000 edu000 = zsfs.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 16, 17);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 18, 19);
 		}
 	}
 
@@ -713,11 +1093,12 @@ public class ReflectUtils {
 	
 	
 	/**
-	 * 解析POI导入Excel中日期格式数据
+	 * 解析POI导入cell中的格式数据
 	 * @param currentCell
 	 * @return currentCellValue
+	 * @throws java.text.ParseException 
 	 */
-	public static String importByExcelForDate(Cell currentCell) {
+	public static String getCellData(Cell currentCell) throws java.text.ParseException {
 		String currentCellValue = "";
 		// 判断单元格数据是否是日期
 		if ("yyyy/mm;@".equals(currentCell.getCellStyle().getDataFormatString())
@@ -729,8 +1110,12 @@ public class ReflectUtils {
 			if (DateUtil.isCellDateFormatted(currentCell)) {
 				// 用于转化为日期格式
 				Date d = currentCell.getDateCellValue();
-				DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-				currentCellValue = formater.format(d);
+				if(d!=null){
+					DateFormat formater = new SimpleDateFormat("yyyy年MM月dd");
+					currentCellValue = formater.format(d);
+				}else{
+					currentCellValue="";
+				}
 			}
 		} else {
 			// 不是日期原值返回
@@ -741,14 +1126,14 @@ public class ReflectUtils {
 	
 	
 	//出生日期字符串转化成Date对象
-    public  Date parse(String strDate) throws java.text.ParseException  {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static  Date parse(String strDate) throws java.text.ParseException  {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd");
         return sdf.parse(strDate);
     }
 
 
 	//由出生日期获得年龄
-	public String getAge(Date birthDay) throws Exception {
+	public int getAge(Date birthDay) throws Exception {
 		Calendar cal = Calendar.getInstance();
 
 		if (cal.before(birthDay)) {
@@ -773,7 +1158,7 @@ public class ReflectUtils {
 				age--;
 			}
 		}
-		return String.valueOf(age);
+		return age;
 	}
 }
 	

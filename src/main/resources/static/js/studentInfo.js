@@ -1168,11 +1168,11 @@ function checkStudentInfoFile() {
         		   return
         		}
         		if(!backjosn.dataCheck){
-        			showImportErrorInfo(".importStudentInfo",backjosn.errorTxt);
+        			showImportErrorInfo(".importStudentInfo",backjosn.checkTxt);
         		   return
         		}
         		
-        		showImportSuccessInfo(".importStudentInfo","上传文件格式/数据正确");
+        		showImportSuccessInfo(".importStudentInfo",backjosn.checkTxt);
         	}else{
         	  toastr.warning('操作失败，请重试');
         	}
