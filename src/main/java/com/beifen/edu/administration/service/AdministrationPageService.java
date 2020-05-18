@@ -288,9 +288,10 @@ public class AdministrationPageService {
 	// 修改行政班
 	public void updateAdministrationClass(Edu300 edu300) {
 		edu300DAO.save(edu300);
+		edu001DAO.updateStudentAdministrationInfo(edu300.getEdu300_ID().toString(), edu300.getXzbmc());
 	}
 
-	// 修改行政班时修改行政班下的学生行政班信息
+	// 删除行政班时修改行政班下的学生行政班信息
 	public void removeXZBAndUpdateStudentCorrelationInfo(List<Edu001> allstudent, Edu300 edu300) {
 		for (int i = 0; i < allstudent.size(); i++) {
 			if (allstudent.get(i).getEdu300_ID().equals(edu300.getEdu300_ID().toString())) {

@@ -31,7 +31,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE edu001 set xzbname =?2 WHERE Edu300_ID =?1", nativeQuery = true)
-	public void updateStudentAdministrationInfo(String edu301_ID, String jxbname);
+	public void updateStudentAdministrationInfo(String edu300_ID, String jxbname);
 
 	// 查询学生所在行政班
 	@Query(value = "select e.Edu300_ID from  edu001 e where e.Edu001_ID=?1", nativeQuery = true)
