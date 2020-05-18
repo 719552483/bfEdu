@@ -1116,6 +1116,7 @@ function loadStudentInfoModel() {
 //导入学生信息文件
 function importStudentInfo() {
 	$(".importStudentInfo").show();
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
 	showMaskingElement();
 	$("#studentInfoFile").on("change", function(obj) {
 		//判断图片格式
