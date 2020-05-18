@@ -24,8 +24,7 @@ public class Edu001 {
 	private  String njmc; //年级名称
 	private  String zybm; //专业编码
 	private  String zymc;//专业名称
-//	private  String Edu300_ID; //行政班ID
-	private  String xzbcode; //行政班编码
+	private  String Edu300_ID; //行政班ID
 	private  String xzbname; //行政班名称
 	private  String Edu301_ID;//教学班ID
 	private  String jxbname;//教学班名称
@@ -68,7 +67,6 @@ public class Edu001 {
 	private  String zy; //职业
 	private  String bz;//备注
 	private  String yxbz;//有效标志
-//	private  String xsmm;//学生密码
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -212,12 +210,6 @@ public class Edu001 {
 	}
 	public void setEdu301_ID(String edu301_ID) {
 		Edu301_ID = edu301_ID;
-	}
-	public String getXzbcode() {
-		return xzbcode;
-	}
-	public void setXzbcode(String xzbcode) {
-		this.xzbcode = xzbcode;
 	}
 	public String getXzbname() {
 		return xzbname;
@@ -392,6 +384,12 @@ public class Edu001 {
 	}
 	public void setZsfscode(String zsfscode) {
 		this.zsfscode = zsfscode;
+	}
+	public String getEdu300_ID() {
+		return Edu300_ID;
+	}
+	public void setEdu300_ID(String edu300_ID) {
+		Edu300_ID = edu300_ID;
 	}
 	
 	

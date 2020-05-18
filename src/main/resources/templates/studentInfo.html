@@ -557,7 +557,7 @@
 					</div>
 				</div>
 				<div class="tipbtn">
-					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+					<input name="" type="button" class="sure confirmBtn" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
 			</div>
@@ -583,12 +583,23 @@
 							</div>
 						</div>
 						<div class="fileErrorTxTArea noneStart">
-							<div class="formtext myformtext"><img class="msgErrorbg" src="images/msg.png"/><b>文件上传后的错误信息</b></div>
+							<div class="formtext myformtext"><img class="msgErrorbg" src="images/msg.png"/><b></b></div>
 						</div>
 						<div class="fileSuccessTxTArea noneStart">
-							<div class="formtext myformtext"><img class="msgSuccessbg" src="images/cbg.png"/><b>文件正确</b></div>
+							<div class="formtext myformtext"><img class="msgSuccessbg" src="images/cbg.png"/><b></b></div>
 						</div>
-					</form>
+						<div class="fileLoadingArea noneStart">
+							<div class="spinner-box">
+								<div class="pulse-container">
+									<div class="pulse-bubble pulse-bubble-1"></div>
+									<div class="pulse-bubble pulse-bubble-2"></div>
+									<div class="pulse-bubble pulse-bubble-3"></div>
+								</div>
+								<div class="loadingtxt">文件解析中，请稍后...</div>
+						   </div>
+						</div>
+					
+			</form>
 				</div>
 				<div class="tipbtn">
 					<input name="" type="button" class="sure confirmImportStudentInfo" value="确定"/>&nbsp;

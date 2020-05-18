@@ -12,7 +12,7 @@ import com.beifen.edu.administration.domian.Edu104;
 
 public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecificationExecutor<Edu104> {
 
-	// 查询二级代码
+	// 查询系部
 	@Query(value = "select * from edu104", nativeQuery = true)
 	public List<Edu104> queryAllDepartment();
 
@@ -21,5 +21,9 @@ public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "delete from edu104 where Edu104_ID =?1", nativeQuery = true)
 	public void removeDeaparment(String edu104ID);
+
+	// 根据id查系部
+	@Query(value = "select * from edu104 e  where  e.xbbm =?1", nativeQuery = true)
+	public List<Edu104> queryAllDepartmentByXbbm(String xbbm);
 
 }

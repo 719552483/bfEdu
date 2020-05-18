@@ -45,12 +45,12 @@ public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecification
 	//确认生成开课计划
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE edu108 SET sfsckkjh =?4,xzb_code=?3,xzbmc=?2 WHERE Edu108_ID =?1", nativeQuery = true)
+	@Query(value = "UPDATE edu108 SET sfsckkjh =?4,Edu300_ID=?3,xzbmc=?2 WHERE Edu108_ID =?1", nativeQuery = true)
 	public void chengeCulturePlanCrouseFeedBack(String crouses, String classNames, String classIds,String isGeneratCoursePlan);
 
 	
 	//判断行政班是否包含在培养计划中
-	@Query(value = "select * from edu108 e where e.xzb_code like %?1%", nativeQuery = true)
+	@Query(value = "select * from edu108 e where e.Edu300_ID like %?1%", nativeQuery = true)
 	public List<Edu108> queryAdministrationClassesCrouse(String xzbCode);
 
 

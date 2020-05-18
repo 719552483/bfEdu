@@ -1176,6 +1176,23 @@ margin-left: 4px !important;
     margin-top: 13px;
     margin-left: -82px;
     }
+    
+    
+.fileLoadingArea .spinner-box{
+	    height: 45px;
+	    width: 370px;
+	    margin: 0px 44%;
+}    
+
+.fileLoadingArea .loadingtxt{
+      position: relative;
+    top: 55%;
+    left: -28%;
+    color: gray;
+    font-size: 13px;
+    font-family: initial;
+    width: 100%;
+}
 
 @keyframes serachAnimation {
 	10% {

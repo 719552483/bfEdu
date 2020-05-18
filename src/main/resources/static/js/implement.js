@@ -82,7 +82,7 @@ function drawEJDMselect(EJDMInfo){
 }
 
 //联动select公共方法
-function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId){
+function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId,configValue){
 	//获取层次
 	$.ajax({
 		method : 'get',
@@ -101,11 +101,32 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
-				var str = '<option value="seleceConfigTip">请选择</option>';
-				for (var i = 0; i < backjson.allLevel.length; i++) {
-					str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
-							+ '</option>';
+				var str = '';
+				if (typeof(configValue) === "undefined") {
+					str = '<option value="seleceConfigTip">请选择</option>';
+				}else{
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						if (backjson.allLevel[i].pyccbm===configValue) {
+							str = '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc+ '</option>';
+						}
+					}
 				}
+				
+				
+				if (typeof(configValue) === "undefined") {
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
+								+ '</option>';
+					}
+				}else{
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						if (backjson.allLevel[i].pyccbm!==configValue) {
+							str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
+							+ '</option>';
+						}
+					}
+				}
+				
 				stuffManiaSelect(levelInputId, str);
 			} else {
 				toastr.warning('获取层次失败，请重试');
@@ -227,21 +248,6 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 		});
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //删除动画方法
 function reomveAnimation(domClass, animationClass) {
@@ -379,7 +385,7 @@ function stuffManiaSelect(SelctId, str) {
 }
 
 //maniaSelect 有默认值 指定默认值
-function stuffManiaSelectWithDeafult(id,cheeckedValue){
+function stuffManiaSelectWithDeafult(id,cheeckedValue,cheeckedTxt){
 	if(cheeckedValue===""||cheeckedValue==null||typeof(cheeckedValue) === "undefined"){
 		return;
 	}
@@ -421,8 +427,12 @@ function stuffManiaSelectWithDeafult(id,cheeckedValue){
 		}
 		
 		var str="";
-		for (var i = 0; i < options.length; i++) {
-			str += '<option value="' + options[i].value + '">' + options[i].valueTxt + '</option>';
+		if(options.length!==0){
+			for (var i = 0; i < options.length; i++) {
+				str += '<option value="' + options[i].value + '">' + options[i].valueTxt + '</option>';
+			}
+		}else{
+			str = '<option value="' + cheeckedValue + '">' + cheeckedTxt + '</option>';
 		}
 		stuffManiaSelect(id, str);
 	}
@@ -430,8 +440,15 @@ function stuffManiaSelectWithDeafult(id,cheeckedValue){
 
 //联动SELECT 有默认值 指定默认值
 function actionStuffManiaSelectWithDeafult(id,cheeckedValue,cheeckedTxt){
-	var str='<option value="'+cheeckedValue+'">'+cheeckedTxt+'</option>';
-	stuffManiaSelect(id, str);
+	var str="";
+	if($.isArray(cheeckedValue)){
+		for (var i = 0; i < cheeckedValue.length; i++) {
+			str += '<option value="' + cheeckedValue[i] + '">' + cheeckedTxt[i] + '</option>';
+		}
+	}else{
+		str='<option value="'+cheeckedValue+'">'+cheeckedTxt+'</option>';
+		stuffManiaSelect(id, str);
+	}
 }
 
 //multiInput 有默认值 指定默认值
@@ -907,6 +924,60 @@ function changeClassAreaBg(classType) {
 	}
 
 }
+
+//上传文件失败渲染
+function showImportErrorInfo(AreaClass,errorInfo){
+	$(AreaClass).find(".fileErrorTxTArea").show();
+	$(AreaClass).find(".fileSuccessTxTArea").hide();
+	$(AreaClass).find(".fileErrorTxTArea").find("b").html("Error:"+errorInfo);
+}
+
+//上传文件成功渲染
+function showImportSuccessInfo(AreaClass,successInfo){
+	$(AreaClass).find(".fileErrorTxTArea").hide();
+	$(AreaClass).find(".fileSuccessTxTArea").show();
+	$(AreaClass).find(".fileSuccessTxTArea").find("b").html("Success:"+successInfo);
+}
+
+//根据出生日期算年龄
+function byage(strBirthday){
+	var returnAge;  
+        var birthYear = strBirthday.split("年")[0];  
+        var birthMonth = strBirthday.split("月")[0]; 
+        var birthDay = strBirthday.split("日")[0]; 
+        d = new Date();  
+        var nowYear = d.getFullYear();  
+	var nowMonth = d.getMonth() + 1;  
+	var nowDay = d.getDate();  
+	if(nowYear == birthYear){  
+	  returnAge = 0;//同年 则为0岁  
+	}  
+	else{  
+	var ageDiff = nowYear - birthYear ; //年之差  
+		if(ageDiff > 0){  
+		if(nowMonth == birthMonth) {  
+		var dayDiff = nowDay - birthDay;//日之差  
+		if(dayDiff < 0)  
+		returnAge = ageDiff - 1;  
+		else  
+		returnAge = ageDiff ;  
+		}  
+		else  
+		{  
+		var monthDiff = nowMonth - birthMonth;//月之差  
+		if(monthDiff < 0)  
+		returnAge = ageDiff - 1;  
+		else  
+		returnAge = ageDiff ;  
+		}  
+		}  
+		else  
+		returnAge = -1;//返回-1 表示出生日期输入错误 晚于今天  
+		}  
+		return returnAge;//返回周岁年龄
+	}
+
+
 
 // 列操作改变样式并且绑定点击事件填充toolTip
 function changeColumnsStyle(changeAreaClass, txt) {

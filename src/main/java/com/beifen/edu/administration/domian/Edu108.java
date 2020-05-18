@@ -15,7 +15,7 @@ public class Edu108 {
 	private  Long Edu108_ID;  //ID
 	private  Long Edu107_ID; //(层次 系部 年级 专业关系)培养计划ID
 	private  Long Edu200_ID; //课程ID
-	private String xzbCode;  //行政班ID(非编码-Edu300_ID)
+	private String Edu300_ID;  //行政班ID
 	private String xzbmc;  //行政班名称
 	private String kcmc;  //课程名称
 	private String kcdm;  //课程代码
@@ -296,12 +296,6 @@ public class Edu108 {
 	public void setXbsp(String xbsp) {
 		this.xbsp = xbsp;
 	}
-	public String getXzbCode() {
-		return xzbCode;
-	}
-	public void setXzbCode(String xzbCode) {
-		this.xzbCode = xzbCode;
-	}
 	public String getXzbmc() {
 		return xzbmc;
 	}
@@ -313,6 +307,12 @@ public class Edu108 {
 	}
 	public void setBzzymc(String bzzymc) {
 		this.bzzymc = bzzymc;
+	}
+	public String getEdu300_ID() {
+		return Edu300_ID;
+	}
+	public void setEdu300_ID(String edu300_ID) {
+		Edu300_ID = edu300_ID;
 	}
 
 }

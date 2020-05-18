@@ -1,38 +1,29 @@
 package com.beifen.edu.administration.controller;
 
-import java.io.File;
+
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileItemFactory;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+
+import org.apache.poi.EncryptedDocumentException;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.ArrayUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -62,7 +53,7 @@ public class AdministrationController {
 
 	@Autowired
 	private AdministrationPageService administrationPageService;
-	private ReflectUtils utils;
+	ReflectUtils utils = new ReflectUtils();
 
 	/**
 	 * 查询二级代码信息
@@ -1404,51 +1395,52 @@ public class AdministrationController {
 	 * 
 	 * @return returnMap
 	 */
-	@RequestMapping("modifyAdministrationClass")
-	@ResponseBody
-	public Object modifyAdministrationClass(@RequestParam("culturePlanInfo") String culturePlanInfo,@RequestParam("modifyInfo") String modifyInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		//根据层次等信息查出培养计划id
-		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
-		String levelCode=culturePlan.getString("level");
-		String departmentCode=culturePlan.getString("department");
-		String gradeCode=culturePlan.getString("grade");
-		String majorCode=culturePlan.getString("major");
-		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
-		
-		//将修改信息转化为108实体
-		JSONObject newCrouseInfo = JSONObject.fromObject(modifyInfo);
-		Edu300 edu300 = (Edu300) JSONObject.toBean(newCrouseInfo, Edu300.class);
-		
-		// 判断课程信息是否冲突
-		boolean namehave = false;
-		boolean codehave = false;
-		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
-			if(!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())&&
-					currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())
-					){
-				namehave=true;
-				break;
-			}
-			
-			if(!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())&&
-					currentAllAdministrationClasses.get(i).getXzbbm().equals(edu300.getXzbbm())
-					){
-				codehave=true;
-				break;
-			}
-			
-		}
-		// 不存在则修改关系
-		if (!namehave&&!codehave) {
-			administrationPageService.updateAdministrationClass(edu300);
-		}
-		
-		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
-		returnMap.put("result", true);
-		return returnMap;
-	}
+//	@RequestMapping("modifyAdministrationClass")
+//	@ResponseBody
+//	public Object modifyAdministrationClass(@RequestParam("culturePlanInfo") String culturePlanInfo,@RequestParam("modifyInfo") String modifyInfo) {
+//		Map<String, Object> returnMap = new HashMap();
+//		//根据层次等信息查出培养计划id
+//		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
+//		String levelCode=culturePlan.getString("level");
+//		String departmentCode=culturePlan.getString("department");
+//		String gradeCode=culturePlan.getString("grade");
+//		String majorCode=culturePlan.getString("major");
+//		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
+//		
+//		//将修改信息转化为108实体
+//		JSONObject newCrouseInfo = JSONObject.fromObject(modifyInfo);
+//		Edu300 edu300 = (Edu300) JSONObject.toBean(newCrouseInfo, Edu300.class);
+//		
+//		// 判断是否冲突
+//		boolean namehave = false;
+//		boolean codehave = false;
+//		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
+//			if(!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())&&
+//					currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())
+//					){
+//				namehave=true;
+//				break;
+//			}
+//			
+//			if(!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())&&
+//					currentAllAdministrationClasses.get(i).getXzbbm().equals(edu300.getXzbbm())
+//					){
+//				codehave=true;
+//				break;
+//			}
+//			
+//		}
+//		// 不存在则修改
+//		if (!namehave&&!codehave) {
+//			administrationPageService.updateAdministrationClass(edu300);
+//			administrationPageService.updateStudentAdministrationInfo(administrationPageService.queryAllStudent(),edu300);
+//		}
+//		
+//		returnMap.put("namehave", namehave);
+//		returnMap.put("codehave", codehave);
+//		returnMap.put("result", true);
+//		return returnMap;
+//	}
 	
 	
 	
@@ -1486,8 +1478,11 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteAdministrationClass(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		List<Edu001> allStudent=administrationPageService.queryAllStudent();
+		
 		for (int i = 0; i < deleteArray.size(); i++) {
 			administrationPageService.removeAdministrationClass(deleteArray.get(i).toString());
+			administrationPageService.removeXZBAndUpdateStudentCorrelationInfo(allStudent,deleteArray.get(i).toString());
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
@@ -1626,7 +1621,7 @@ public class AdministrationController {
 					administrationPageService.generatCoursePlan(allCrouse.get(i).getEdu108_ID().toString(),JSONArray.fromObject(classNames).toString(),JSONArray.fromObject(classIds).toString(),isGeneratCoursePlan);
 					Edu108 edu108=allCrouse.get(i);
 					edu108.setSfsckkjh(isGeneratCoursePlan);
-					edu108.setXzbCode(JSONArray.fromObject(classIds).toString());
+					edu108.setEdu300_ID(JSONArray.fromObject(classIds).toString());
 					edu108.setXzbmc(JSONArray.fromObject(classNames).toString());
 					crouseInfo.add(edu108);
 				}
@@ -1729,9 +1724,8 @@ public class AdministrationController {
 			verifyEdu301.setZybm(jsonObject.getString("zybm"));
 			verifyEdu301.setBhzyCode(jsonObject.getString("bhzyCode"));
 			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
-			verifyEdu301.setBhxzbCode(jsonObject.getString("bhxzbCode"));
+			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbCode"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
-			verifyEdu301.setBhxsxm(jsonObject.getString("bhxsxm"));
 			verifyEdu301.setBhxsCode(jsonObject.getString("bhxsCode"));
 			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
@@ -1750,7 +1744,7 @@ public class AdministrationController {
 					 if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
 						   //查询学生所在行政班
 						   String[] students=thisClassInfo.getBhxsCode().split(",");
-						   String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
+						   String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbid();
 						   for (int s = 0; s < students.length; s++) {
 							String xzbCode=administrationPageService.queryStudentXzbCode(students[s]);
 							 //如果学生所在行政班有教学班则提示用户将删除原始教学班
@@ -1766,8 +1760,8 @@ public class AdministrationController {
 			 }else{
 				 for (int a = 0; a < allTeachingClasses.size(); a++) {
 						if(thisClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
-						String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbCode();
-						String[] edu301BhxzbCode=thisClassInfo.getBhxzbCode().split(",");
+						String currentTeachingClassesBhxzbCode=allTeachingClasses.get(a).getBhxzbid();
+						String[] edu301BhxzbCode=thisClassInfo.getBhxzbid().split(",");
 						for (int e = 0; e < edu301BhxzbCode.length; e++) {
 							if(currentTeachingClassesBhxzbCode!=null&&currentTeachingClassesBhxzbCode.indexOf(edu301BhxzbCode[e])!=-1){
 								willDropFirsthand=true;
@@ -1816,55 +1810,15 @@ public class AdministrationController {
 			verifyEdu301.setZybm(jsonObject.getString("zybm"));
 			verifyEdu301.setBhzyCode(jsonObject.getString("bhzyCode"));
 			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
-			verifyEdu301.setBhxzbCode(jsonObject.getString("bhxzbCode"));
+			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbCode"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
-			verifyEdu301.setBhxsxm(jsonObject.getString("bhxsxm"));
 			verifyEdu301.setBhxsCode(jsonObject.getString("bhxsCode"));
 			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
 			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
 			verifyList.add(verifyEdu301);
 		}
-		
-		if(allTeachingClasses.size()==0){
-			for (int v = 0; v < verifyList.size();v++) {
-				Edu301 addClassInfo=verifyList.get(v);
-				administrationPageService.addTeachingClass(addClassInfo);
-				//更新学生教学班信息
-				if(allStudent.size()!=0){
-					String[] bhxzbCode = addClassInfo.getBhxzbCode().split(","); //获取教学班的行政班编码
-					for (int b = 0; b < bhxzbCode.length;b++) {
-						administrationPageService.stuffStudentTeachingClassInfo(addClassInfo.getJxbmc(),addClassInfo.getEdu301_ID(),bhxzbCode[b].toString());
-					}
-				}
-			}
-		}else{
-			for (int a = 0; a < allTeachingClasses.size(); a++) {
-				for (int v = 0; v < verifyList.size();v++) {
-					Edu301 addClassInfo=verifyList.get(v);
-					if(addClassInfo.getEdu108_ID().equals(allTeachingClasses.get(a).getEdu108_ID())){
-						administrationPageService.removeTeachingClassByID(allTeachingClasses.get(a).getEdu301_ID().toString());
-						administrationPageService.addTeachingClass(addClassInfo);
-						//更新学生教学班信息
-						if(allStudent.size()!=0){
-							String[] bhxzbCode = addClassInfo.getBhxzbCode().split(","); //获取教学班的行政班编码
-							for (int b = 0; b < bhxzbCode.length;b++) {
-								administrationPageService.stuffStudentTeachingClassInfo(addClassInfo.getJxbmc(),addClassInfo.getEdu301_ID(),bhxzbCode[b].toString());
-							}
-						}
-					}else{
-						administrationPageService.addTeachingClass(addClassInfo);
-						//更新学生教学班信息
-						if(allStudent.size()!=0){
-							String[] bhxzbCode = addClassInfo.getBhxzbCode().split(","); //获取教学班的行政班编码
-							for (int b = 0; b < bhxzbCode.length;b++) {
-								administrationPageService.stuffStudentTeachingClassInfo(addClassInfo.getJxbmc(),addClassInfo.getEdu301_ID(),bhxzbCode[b].toString());
-							}
-						}
-					}
-				}
-			}
-		}
+		administrationPageService.classAction(verifyList);	
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1877,15 +1831,29 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryStudentInfoByAdministrationClass")
 	@ResponseBody
-	public Object queryStudentInfoByAdministrationClass(@RequestParam("xzbCode") String xzbCode) {
+	public Object queryStudentInfoByAdministrationClass(@RequestParam("xzbCodeObject") String xzbCodeObject) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONArray array = JSONArray.fromObject(xzbCode); //解析json字符
 		List<Edu001> studentInfos = new ArrayList<Edu001>();
-		for (int i = 0; i < array.size(); i++) {
-			List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(array.get(i).toString());
-			for (int a = 0; a < administrationClassStudents.size(); a++) {
-				Edu001 edu001=administrationClassStudents.get(a);
-				studentInfos.add(edu001);
+		JSONObject xzbCodeJson = JSONObject.fromObject(xzbCodeObject);
+		String xzbcode=xzbCodeJson.getString("edu300_ID");
+		if(xzbcode.equals("")){
+			studentInfos = administrationPageService.queryAllStudent();
+		}else{
+			if(xzbcode.indexOf(",")==-1){
+				List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(xzbcode);
+				for (int a = 0; a < administrationClassStudents.size(); a++) {
+					Edu001 edu001=administrationClassStudents.get(a);
+					studentInfos.add(edu001);
+				}
+			}else{
+				com.alibaba.fastjson.JSONArray xzbcodeArray = JSON.parseArray(xzbcode);
+				for (int x = 0; x < xzbcodeArray.size(); x++) {
+					List<Edu001> administrationClassStudents = administrationPageService.queryStudentInfoByAdministrationClass(xzbcodeArray.get(x).toString());
+					for (int a = 0; a < administrationClassStudents.size(); a++) {
+						Edu001 edu001=administrationClassStudents.get(a);
+						studentInfos.add(edu001);
+					}
+				}
 			}
 		}
 		
@@ -1915,7 +1883,7 @@ public class AdministrationController {
 		
 		//填充搜索对象
 		Edu001 edu001 = new Edu001();
-		edu001.setXzbcode(xzbcode);
+		edu001.setEdu300_ID(xzbcode);
 		edu001.setXb(xb);
 		edu001.setZtCode(ztCode);
 		edu001.setXm(xm);
@@ -1997,8 +1965,10 @@ public class AdministrationController {
 	@ResponseBody
 	public Object removeTeachingClass(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		List<Edu001> allStudent=administrationPageService.queryAllStudent();
 		for (int i = 0; i < deleteArray.size(); i++) {
 			administrationPageService.removeTeachingClassByID(deleteArray.get(i).toString());
+			administrationPageService.updateStudentTeachingClassInfo(allStudent,deleteArray.get(i).toString());
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
@@ -2075,7 +2045,7 @@ public class AdministrationController {
 			List<Edu108> palnInfos=new ArrayList<Edu108>();
 			if(!kcmc.equals("")){
 				Edu108 edu108=new Edu108();
-				edu108.setXzbCode(allAdministrationClasses.get(i).getEdu300_ID().toString());
+				edu108.setEdu300_ID(allAdministrationClasses.get(i).getEdu300_ID().toString());
 				edu108.setKcmc(kcmc);
 				palnInfos = administrationPageService.queryAdministrationClassesCrouseWithKCMC(edu108);
 			}else{
@@ -2154,8 +2124,10 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(addInfo);
 		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
-		// 判断层次是否已存在
+		// 判断学号是否已存在
 		boolean xhhave = false;
+		//判断新增学生是否会超过行政班容纳人数
+		boolean studentSpill = administrationPageService.administrationClassesIsSpill(edu001.getEdu300_ID());
 		for (int i = 0; i < currentAllStudent.size(); i++) {
 				if(currentAllStudent.get(i).getXh().equals(edu001.getXh())){
 					xhhave=true;
@@ -2163,20 +2135,258 @@ public class AdministrationController {
 				}
 		}
 		
-		if(!xhhave){
+		if(!xhhave&&!studentSpill){
 			String yxbz = "1";
 			edu001.setYxbz(yxbz);
-			administrationPageService.addStudent(edu001);
-			administrationPageService.changeAdministrationClassesZXRS(edu001.getXzbcode());
-			Long id = edu001.getEdu001_ID();
-			returnMap.put("id", id);
+			administrationPageService.addStudent(edu001); //新增学生
+			Long newStudentid = edu001.getEdu001_ID();
+			
+			List<Edu301> teachingClassesBy300id=administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+			String xzbid=edu001.getEdu300_ID();
+			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id,xzbid); 
+			
+			returnMap.put("id", newStudentid);
 			returnMap.put("yxbz", yxbz);
+		}
+		
+		returnMap.put("xhhave", xhhave);
+		returnMap.put("studentSpill", studentSpill);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 删除学生
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("removeStudents")
+	@ResponseBody
+	public Object removeStudents(@RequestParam String removeInfo) {
+		JSONArray deleteArray = JSONArray.fromObject(removeInfo); //解析json字符
+		for (int i = 0; i < deleteArray.size(); i++) {
+		  JSONObject jsonObject = deleteArray.getJSONObject(i); 
+		  String edu300_ID=jsonObject.getString("edu300_ID");
+		  long  studentId=jsonObject.getLong("studentId");
+		  
+		  List<Edu301> teachingClassesBy300id=administrationPageService.queryTeachingClassByXzbCode(edu300_ID);
+		  List<Edu301> teachingClassesBy001id=administrationPageService.queryTeachingClassByXSCode(String.valueOf(studentId));
+		  administrationPageService.removeStudentUpdateCorrelationInfo(teachingClassesBy300id,teachingClassesBy001id,edu300_ID,studentId); 
+		  administrationPageService.removeStudentByID(studentId);
+		}
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	
+	/**
+	 * 修改学生
+	 * 
+	 * @param updateinfo修改信息
+	 * 
+	 * @return returnMap
+	 */
+	
+	@RequestMapping("modifyStudent")
+	@ResponseBody
+	public Object modifyStudent(@RequestParam("updateinfo") String updateinfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
+		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
+		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
+		
+		
+		// 判断学号是否已存在
+		boolean xhhave = false;
+		
+		for (int i = 0; i < currentAllStudent.size(); i++) {
+			if(!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())&&
+					currentAllStudent.get(i).getXh().equals(edu001.getXh())
+					){
+				xhhave=true;
+				break;
+			}
+		}
+		
+		boolean isChangeXZB= false;
+		for (int i = 0; i < currentAllStudent.size(); i++) {
+			if(currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())){
+				if(currentAllStudent.get(i).getEdu300_ID()==null||currentAllStudent.get(i).getEdu300_ID().equals("")){
+					isChangeXZB=true;
+					break;
+				}else{
+					if(!currentAllStudent.get(i).getEdu300_ID().equals(edu001.getEdu300_ID())){
+						isChangeXZB=true;
+						break;
+					}
+				}
+			}
+		}
+		
+		// 不存在则修改学生
+		if (!xhhave) {
+			if(!isChangeXZB){
+				//没有修改行政班的情况
+				administrationPageService.addStudent(edu001);
+			}else{
+				
+				administrationPageService.updateStudent(edu001);
+			}
 		}
 		
 		returnMap.put("xhhave", xhhave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
+	
+	
+	
+	
+	
+
+	/**
+	 * 下载学生导入模板
+	 * 
+	 * @return returnMap
+	 * @throws IOException 
+	 */
+	@RequestMapping("downloadStudentModal")
+	@ResponseBody
+	public void downloadStudentModal(HttpServletResponse response) throws IOException {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, List> othserInfo = new HashMap();
+		// 获取项目根路径
+		String rootPath = getClass().getResource("/").getFile().toString();
+        //获取模板路径
+		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
+		
+		
+		//修改学生导入模板
+		utils.modifyImportStudentModal(filePath);
+        //下载模板
+		utils.loadImportStudentModal(filePath,response);
+	}
+	
+	
+	/**
+	 * 导入学生
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws Exception 
+	 * @throws ServletException 
+	 */
+	@RequestMapping("importStudent")
+	@ResponseBody
+	public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
+		Map<String, Object> returnMap= utils.checkFile(file,"edu001","学生信息");
+		boolean dataCheck=(boolean) returnMap.get("dataCheck");
+		if(!dataCheck){
+			 return returnMap;
+		}
+		
+		List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
+		String yxbz = "1";
+		for (int i = 0; i < importStudent.size(); i++) {
+			Edu001 edu001=importStudent.get(i);
+			edu001.setYxbz(yxbz);
+			administrationPageService.addStudent(edu001); //新增学生
+			List<Edu301> teachingClassesBy300id=administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+			String xzbid=edu001.getEdu300_ID();
+			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id,xzbid); 
+		}
+		
+	    return returnMap;
+    }
+	
+	
+	
+	/**
+	 * 检验导入学生的文件
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws ParseException 
+	 * @throws Exception 
+	 * @throws ServletException 
+	 */
+	@RequestMapping("verifiyImportStudentFile")
+	@ResponseBody
+	public Object verifiyImportStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, List> checkNeedInfo = new HashMap();
+		checkNeedInfo.put("pcyy", administrationPageService.queryAllLevel());
+		Map<String, Object> checkRS= utils.checkFile(file,"edu001","学生信息");
+		checkRS.put("result", true);
+	    return checkRS;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	private ArrayList<Object> getList(InputStream inputStream,String suffix) throws IOException {
+//        ArrayList<Object> arrayList = new ArrayList<Object>();
+//        // 具体执行导入，可以引入策略模式
+//        // 解决excel2003和excel2007版本的问题
+//        if ("xlsx".equals(suffix)) {
+//            xlsxImp(inputStream, arrayList);
+//        }
+//        if ("xls".equals(suffix)) {
+//            xlsImp(inputStream, arrayList);
+//        }
+//        // 万一新增一种新格式，对修改打开了，不符合oo编程规范
+//        return arrayList;
+//    }
+//	
+//	  private void xlsImp(InputStream inputStream, ArrayList<Object> arrayList) throws IOException {
+//	        // 初始整个Excel
+//	        HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
+//	        // 获取第一个sheet表
+//	        HSSFSheet sheet = workbook.getSheetAt(0);
+//	        for (int rowIndex = 2; rowIndex < sheet.getLastRowNum(); rowIndex++) {
+//	            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+//	            HSSFRow row = sheet.getRow(rowIndex);
+//	            //整行都为空去掉
+//	            if(row==null) {
+//	                continue;
+//	            }
+//	        }
+//	    }
+//	
+//	
+//	
+//	  private void xlsxImp(InputStream inputStream, ArrayList<Object> arrayList) throws IOException {
+//	        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
+//	        XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
+//	      
+//	    }
+//	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
