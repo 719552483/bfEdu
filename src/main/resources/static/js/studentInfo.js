@@ -137,7 +137,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'edu001_ID',
 				title: 'edu001_ID',
 				align: 'center',
-				visible: false
+				visible: true
 			},
 			{
 				field: 'check',
@@ -370,7 +370,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 	
 	function isrollMatter(value, row, index) {
-		if (value) {
+		if (value==="T") {
 			return [
 					'<div class="myTooltip greenTxt" title="有学籍">有学籍</div>'
 				]
@@ -997,8 +997,8 @@ function getAddStudentInfo(){
 	returnObject.sfzh=sfzh;
 	returnObject.mzbm=mzbm;
 	returnObject.mz=mz;
-	returnObject.sfyxj=sfyxj;
 	returnObject.xjh=xjh;
+	xjh===""||xjh==="F"?returnObject.sfyxj="F":returnObject.sfyxj="T";
 	returnObject.zzmmbm=zzmmbm;
 	returnObject.zzmm=zzmm;
 	returnObject.syd=syd;
@@ -1151,6 +1151,7 @@ function checkStudentInfoFile() {
         contentType : false, // 不要设置Content-Type请求头
         success: function(backjosn){
         	if(backjosn.result){
+        		$(".fileLoadingArea").hide();
         		if(!backjosn.isExcel){
         			showImportErrorInfo(".importStudentInfo","请上传xls或xlsx类型的文件");
         		   return
@@ -1177,7 +1178,7 @@ function checkStudentInfoFile() {
         	  toastr.warning('操作失败，请重试');
         	}
         },beforeSend: function(xhr) {
-			requestErrorbeforeSend();
+			$(".fileLoadingArea").show();
 		},
 		error: function(textStatus) {
 			requestError();
@@ -1207,15 +1208,37 @@ function confirmImportStudentInfo() {
 	        processData : false, // 使数据不做处理
 	        contentType : false, // 不要设置Content-Type请求头
 	        success: function(backjosn){
-	          if(!backjosn.isExcel){
-	        	  toastr.warning('请上传xls或xlsx类型的文件');
-	  			return;
-	          }else if(!backjosn.haveSheet){
-	        	  toastr.warning('上传文件暂无数据');
-		  			return;
-		      }
+	        	$(".fileLoadingArea").hide();
+        		if(!backjosn.isExcel){
+        			showImportErrorInfo(".importStudentInfo","请上传xls或xlsx类型的文件");
+        		   return
+        		}
+        		if(!backjosn.sheetCountPass){
+        			showImportErrorInfo(".importStudentInfo","上传文件的标签页个数不正确");
+        		   return
+        		}
+        		if(!backjosn.modalPass){
+        			showImportErrorInfo(".importStudentInfo","模板格式与原始模板不对应");
+        		   return
+        		}
+        		if(!backjosn.haveData){
+        			showImportErrorInfo(".importStudentInfo","文件暂无数据");
+        		   return
+        		}
+        		if(!backjosn.dataCheck){
+        			showImportErrorInfo(".importStudentInfo",backjosn.checkTxt);
+        		   return
+        		}
+        		
+        		var importStudents=backjosn.importStudent;
+        		for (var i = 0; i <importStudents.length; i++) {
+    				$('#studentBaseInfoTable').bootstrapTable("prepend", importStudents[i]);
+        		}
+        		showMaskingElement();
+				toastr.success('导入成功');
+				$(".tip").hide();
 	        },beforeSend: function(xhr) {
-				requestErrorbeforeSend();
+	           $(".fileLoadingArea").show();
 			},
 			error: function(textStatus) {
 				requestError();

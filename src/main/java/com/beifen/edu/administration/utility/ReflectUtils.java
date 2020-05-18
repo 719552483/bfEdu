@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -515,6 +517,15 @@ public class ReflectUtils {
 				break;
 			}
 			
+			//验证数字列内容
+			if(!isNumeric(edu001.getRxzf())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-入学总分必须是数字";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
 			//是否有学籍和学籍号是否为空验证
 			if(!chaeckPass){
 				break;
@@ -678,7 +689,7 @@ public class ReflectUtils {
 				if(studentSpill){
 					List<Edu300> XzbInfo=reflectUtils.administrationPageService.queryXzbByEdu300ID(importStudent.get(i).getEdu300_ID());
 					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-新增该学生 ("+XzbInfo.get(0).getXzbmc()+") 人数超过上限";
+					checkTxt="第"+(i+1)+"行-新增该学生 班级:("+XzbInfo.get(0).getXzbmc()+") 人数超过上限";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
@@ -1090,6 +1101,16 @@ public class ReflectUtils {
 	}
 	
 	
+	//判断变量是否能转为数字
+	public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
+ }
+
 	
 	
 	/**

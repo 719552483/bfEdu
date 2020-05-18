@@ -2279,45 +2279,29 @@ public class AdministrationController {
 	 * @param deleteIds删除ID
 	 * 
 	 * @return returnMap
-	 * @throws IOException 
-	 * @throws EncryptedDocumentException 
 	 * @throws Exception 
-	 * @throws InvalidFormatException 
 	 * @throws ServletException 
 	 */
 	@RequestMapping("importStudent")
 	@ResponseBody
-	public Object importStudent(@RequestParam("file") MultipartFile file) throws IOException, EncryptedDocumentException, InvalidFormatException {
-		Map<String, Object> returnMap = new HashMap();
-//		boolean isExcel=true;
-//		boolean haveSheet=true;
-//		
-//		//判断读取的文件是否为Excel文件
-//		String fileName = file.getOriginalFilename();
-//		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-//		
-//		
-//		//文件格式不正确 返回
-//		if(!utils.checkFile(suffix)){
-//			returnMap.put("isExcel", false);
-//			return returnMap;
-//		}
-//		
-//		//文件格式正确解析Excel文件 获取新增学生实体 
-//		List<Map<String,Object>> importStudents = utils.getImportStudent(file.getInputStream());
-//		if(importStudents.size()==0){
-//			returnMap.put("haveSheet", false);
-//			return returnMap;
-//		}
-//		
-//		
-//		
-//		//保存到数据库
-//		//todo 
+	public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
+		Map<String, Object> returnMap= utils.checkFile(file,"edu001","学生信息");
+		boolean dataCheck=(boolean) returnMap.get("dataCheck");
+		if(!dataCheck){
+			 return returnMap;
+		}
 		
-//		returnMap.put("importStudents", importStudents);
-//		returnMap.put("isExcel", isExcel);
-//		returnMap.put("haveSheet", haveSheet);
+		List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
+		String yxbz = "1";
+		for (int i = 0; i < importStudent.size(); i++) {
+			Edu001 edu001=importStudent.get(i);
+			edu001.setYxbz(yxbz);
+			administrationPageService.addStudent(edu001); //新增学生
+			List<Edu301> teachingClassesBy300id=administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+			String xzbid=edu001.getEdu300_ID();
+			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id,xzbid); 
+		}
+		
 	    return returnMap;
     }
 	
@@ -2339,7 +2323,6 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		Map<String, List> checkNeedInfo = new HashMap();
 		checkNeedInfo.put("pcyy", administrationPageService.queryAllLevel());
-		
 		Map<String, Object> checkRS= utils.checkFile(file,"edu001","学生信息");
 		checkRS.put("result", true);
 	    return checkRS;
