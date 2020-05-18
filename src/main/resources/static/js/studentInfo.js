@@ -137,7 +137,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'edu001_ID',
 				title: 'edu001_ID',
 				align: 'center',
-				visible: true
+				visible: false
 			},
 			{
 				field: 'check',
