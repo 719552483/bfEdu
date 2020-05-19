@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu300;
 
 public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecificationExecutor<Edu300> {
@@ -48,6 +49,10 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "UPDATE edu300 SET zxrs =?2 WHERE Edu300_ID =?1", nativeQuery = true)
 	public void changeAdministrationClassesZXRS(String xzbcode, int newZXRS);
+
+	// 判断导入学生的培养计划和行政班是否对应
+	@Query(value = "select * from edu300 e where e.Edu300_ID=?1 and e.pyccbm=?2 and e.xbbm=?3 and njbm=?4 and zybm=?5", nativeQuery = true)
+	public List<Edu300> classMatchCultruePaln(String edu300_ID, String pycc, String szxb, String nj, String zybm);
 
 
 }

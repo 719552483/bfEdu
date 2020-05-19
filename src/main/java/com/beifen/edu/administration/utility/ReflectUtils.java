@@ -635,6 +635,17 @@ public class ReflectUtils {
 					break;
 				}
 				
+				
+				//行政班编码是否和填写的培养计划对应
+				boolean classMatchCultruePaln=reflectUtils.administrationPageService.classMatchCultruePaln(edu001.getEdu300_ID(),edu001.getPycc(),edu001.getSzxb(),edu001.getNj(),edu001.getZybm());
+				if(!classMatchCultruePaln){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-行政班与培养计划不对应";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				
 				//状态编码是否存在
 				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",edu001.getZtCode());
 				if(ztbms.size()==0){
