@@ -318,67 +318,56 @@ public class ReflectUtils {
 	 * */
 	public Map<String, Object> checkFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
-		boolean isExcel=true;
-		boolean sheetCountPass=true;
-		boolean modalPass=true;
-		boolean haveData=true;
+		boolean isExcel=false;
+		boolean sheetCountPass=false;
+		boolean modalPass=false;
+		boolean haveData=false;
 		
 		// 判断读取的文件是否为Excel文件
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-		if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
-			isExcel = false;
-			returnMap.put("isExcel",isExcel);
-			return returnMap;
+		if ("xlsx".equals(suffix) || "xls".equals(suffix)) {
+			isExcel = true;
 		}
 		
-		//获取Excel工作簿
-		InputStream in=file.getInputStream();
-		Workbook workBook = WorkbookFactory.create(in);
-		
-		int sheetCount = workBook.getNumberOfSheets();// 获取sheet个数
-		//验证sheet个数
-		if(sheetCount <= 0){
-			sheetCountPass=false;
-			returnMap.put("sheetCountPass",sheetCountPass);
-			returnMap.put("isExcel",isExcel);
-			return returnMap;
+		if(isExcel){
+			//获取Excel工作簿
+			InputStream in=file.getInputStream();
+			Workbook workBook = WorkbookFactory.create(in);
+			int sheetCount = workBook.getNumberOfSheets();// 获取sheet个数
+			
+			//验证sheet个数
+			if(sheetCount > 0){
+				sheetCountPass=true;
+			}
+			
+			//验证sheet名字
+			String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
+			if (sheetCountPass&&checkType.equals("edu001")&&sheetName.equals(hopeSheetName)) {
+				modalPass=true;
+			}
+			
+			//验证是否有数据
+			List<Map<String,Object>> importStudents = this.getImportData(file.getInputStream(),checkType);
+			if(sheetCountPass&&modalPass&&importStudents.size()>0){
+				haveData=true;
+			}
+			
+			//验证数据正确性
+			if(sheetCountPass&&modalPass&&haveData){
+				if(checkType.equals("edu001")){
+					Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents);
+					returnMap.put("dataCheck", datacheckInfo.get("chaeckPass"));
+					returnMap.put("checkTxt", datacheckInfo.get("checkTxt"));
+					returnMap.put("importStudent", datacheckInfo.get("importStudent"));
+				}
+			}
 		}
 		
-		String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
-		//验证sheet名字
-		if (checkType.equals("edu001")&&!sheetName.equals(hopeSheetName)) {
-			modalPass=false;
-			returnMap.put("modalPass",modalPass);
-			returnMap.put("sheetCountPass",sheetCountPass);
-			returnMap.put("isExcel",isExcel);
-			return returnMap;
-		}
-		
-		//验证是否有数据
-		List<Map<String,Object>> importStudents = this.getImportData(file.getInputStream(),checkType);
-		if(importStudents.size()==0){
-			haveData=false;
-			returnMap.put("haveData",haveData);
-			returnMap.put("modalPass",modalPass);
-			returnMap.put("sheetCountPass",sheetCountPass);
-			returnMap.put("isExcel",isExcel);
-			return returnMap;
-		}
-		
-		//验证数据正确性
-		if(checkType.equals("edu001")){
-			Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents);
-			returnMap.put("haveData",haveData);
-			returnMap.put("modalPass",modalPass);
-			returnMap.put("sheetCountPass",sheetCountPass);
-			returnMap.put("isExcel",isExcel);
-			returnMap.put("dataCheck", datacheckInfo.get("chaeckPass"));
-			returnMap.put("checkTxt", datacheckInfo.get("checkTxt"));
-			returnMap.put("importStudent", datacheckInfo.get("importStudent"));
-		}
-		
-		
+		returnMap.put("isExcel",isExcel);
+		returnMap.put("sheetCountPass",sheetCountPass);
+		returnMap.put("modalPass",modalPass);
+		returnMap.put("haveData",haveData);
 		return returnMap;
 	}
 
@@ -518,9 +507,46 @@ public class ReflectUtils {
 			}
 			
 			//验证数字列内容
+			//入学总分
 			if(!isNumeric(edu001.getRxzf())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-入学总分必须是数字";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			//身高
+			if(!isNumeric(edu001.getSg())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-身高必须是数字";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			//体重
+			if(!isNumeric(edu001.getTz())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-体重必须是数字";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			//手机号码
+			if(!isPhone(edu001.getSjhm())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-手机号码格式不正确";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			//email
+			if(!isEmail(edu001.getEmail())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-email格式不正确";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt", checkTxt);
 				break;
@@ -673,11 +699,25 @@ public class ReflectUtils {
 				for (int d = 0;d < databaseAllStudent.size(); d++) {
 					if(importStudent.get(i).getXh().equals(databaseAllStudent.get(d).getXh())){
 						chaeckPass=false;
-						checkTxt="第"+(i+1)+"行-学号已存在";
+						checkTxt="第"+(i+1)+"行- 学号已存在";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break allforOver;
 					}
+				}
+			}
+			
+			//判断身份证号在数据库是否存在
+			if(!chaeckPass){
+				break;
+			}else{
+				boolean IDcardIshave = reflectUtils.administrationPageService.IDcardIshave(importStudent.get(i).getSfzh());
+				if(IDcardIshave){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行- 身份证号已存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
 				}
 			}
 			
@@ -1086,11 +1126,6 @@ public class ReflectUtils {
 		br.close();
 		out.close();
 	}
-
-	
-	
-	
-	
 	
 	//非空验证
 	private boolean isNull(String notNullCell) {
@@ -1099,7 +1134,6 @@ public class ReflectUtils {
 		}
 		return false;
 	}
-	
 	
 	//判断变量是否能转为数字
 	public boolean isNumeric(String str){
@@ -1122,7 +1156,35 @@ public class ReflectUtils {
         
  }
 
-	
+	//手机号码验证
+	public boolean isPhone(String phone) {
+		boolean isPhone=true;
+		if(phone!=null){
+			 String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+			    if (phone.length() != 11) {
+			        return false;
+			    } else {
+			        Pattern p = Pattern.compile(regex);
+			        Matcher m = p.matcher(phone);
+			        boolean isMatch = m.matches();
+			        return isMatch;
+			    }
+		}
+		return isPhone;
+	}
+
+	//email验证
+	public boolean isEmail(String email){
+		boolean isEmail=true;
+		if(null!=email){
+			 Pattern p =  Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");//复杂匹配
+		     Matcher m = p.matcher(email);
+		     boolean isMatch = m.matches();
+		     return isMatch;
+		}
+		return isEmail;
+    }
+
 	
 	/**
 	 * 解析POI导入cell中的格式数据

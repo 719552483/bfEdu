@@ -423,6 +423,16 @@ public class AdministrationPageService {
 	public String queryStudentXzbCode(String edu001Id) {
 		return edu001DAO.queryStudentXzbCode(edu001Id);
 	}
+	
+	//查询身份证号是否存在
+	public boolean IDcardIshave(String sfzh) {
+		boolean isHave=false;
+		if(sfzh!=null){
+			List<Edu001> IDcards =edu001DAO.IDcardIshave(sfzh);
+			if(IDcards.size()>0) isHave=true;
+		}
+		return isHave;
+	}
 
 	// 查询培养计划下所有教学班
 	public List<Edu301> getCulturePlanAllTeachingClasses(String levelCode, String departmentCode, String gradeCode,
@@ -941,6 +951,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 	
 

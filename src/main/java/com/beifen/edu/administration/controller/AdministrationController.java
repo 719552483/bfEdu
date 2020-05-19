@@ -2278,6 +2278,11 @@ public class AdministrationController {
 	@ResponseBody
 	public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
 		Map<String, Object> returnMap= utils.checkFile(file,"edu001","学生信息");
+		boolean modalPass=(boolean) returnMap.get("modalPass");
+		if(!modalPass){
+			 return returnMap;
+		}
+		
 		boolean dataCheck=(boolean) returnMap.get("dataCheck");
 		if(!dataCheck){
 			 return returnMap;
