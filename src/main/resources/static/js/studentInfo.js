@@ -716,8 +716,8 @@ function wantAddStudent() {
 	$(".addStudentTip").show();
 	showMaskingElement();
 	//填充日期选择器
-	drawCalenr("#dateOfBrith");
-	drawCalenr("#enterSchoolDate");
+	drawCalenr("#dateOfBrith",0);
+	drawCalenr("#enterSchoolDate",1);
 	//专业seclect联动事件
 	$("#addStudentzy").change(function() {
 		var addStudentQueryObject=new Object();

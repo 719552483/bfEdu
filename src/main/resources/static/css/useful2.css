@@ -1194,6 +1194,23 @@ margin-left: 4px !important;
     width: 100%;
 }
 
+.collapse.in{
+	margin-bottom: 0px;
+}
+
+.datePickerBtns{
+	margin-left: 20px;
+}
+
+/*每个日期选择器有不同的位置*/
+#dateOfBrith +.dropdown-menu{
+    top: 186px;
+    left: 326px;
+}
+
+
+
+
 @keyframes serachAnimation {
 	10% {
 		transform: translateX(-3px) rotate(-2deg);
