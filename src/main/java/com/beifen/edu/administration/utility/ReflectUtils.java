@@ -1103,12 +1103,23 @@ public class ReflectUtils {
 	
 	//判断变量是否能转为数字
 	public boolean isNumeric(String str){
-        Pattern pattern = Pattern.compile("[0-9]*");
-        Matcher isNum = pattern.matcher(str);
-        if( !isNum.matches() ){
-            return false;
-        }
-        return true;
+		boolean canChangeNumber;
+		if(str!=null){
+			 Pattern pattern = Pattern.compile("[0-9]*");
+			 Matcher isNum = pattern.matcher(str);
+			 if( !isNum.matches() ){
+				 canChangeNumber=false;
+		     }else{
+		    	 canChangeNumber=true;
+		     }
+		}else{
+			canChangeNumber=true;
+		}
+		
+		return canChangeNumber;
+       
+        
+        
  }
 
 	
