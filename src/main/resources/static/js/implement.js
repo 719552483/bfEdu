@@ -1006,35 +1006,18 @@ function toolTipUp(className) {
 }
 
 // 日期选择初始化
-function drawCalenr(id,pickerIndex) {
+function drawCalenr(id) {
 	$(id).datetimepicker({
-		  format : 'yyyy年mm月dd',
+		  format : 'yyyy-mm-dd',
 		  language:'zh-CN',
+		  initialDate:new Date(),
 		  weekStart: 1,
 		  autoclose :true,
-		  minView :2
-	});
-	
-	var $one_li = $(id);             
-	var $two_li = $(".bootstrap-datetimepicker-widget:eq("+pickerIndex+")");     
-	$two_li.insertAfter($one_li);    //移动节点
-	//拼接确认清空
-	var btns=$(id+" +.dropdown-menu").find('ul').find(".confirmPickDate");
-	if(btns.length===0){
-		$(id+" +.dropdown-menu").find('ul').append('<div class="datePickerBtns"><input type="button" class="sure confirmPickDate" value="确定"/>&nbsp;<input type="button" class="cancel cancelPickDate" value="清空"/></div>');
-	}
-	
-	$('.confirmPickDate').unbind('click');
-	$('.confirmPickDate').bind('click', function(e) {
-		$(".bootstrap-datetimepicker-widget").hide();
-		e.stopPropagation();
-	});
-	
-	$('.cancelPickDate').unbind('click');
-	$('.cancelPickDate').bind('click', function(e) {
-		$(".bootstrap-datetimepicker-widget").hide();
-		$(id).val("fsdf");
-		e.stopPropagation();
+		  minView :2,
+		  todayHighlight:true,
+		  startView:2,
+		  endDate:new Date(),
+          todayBtn: "linked",
 	});
 }
 

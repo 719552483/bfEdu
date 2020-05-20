@@ -1194,22 +1194,42 @@ margin-left: 4px !important;
     width: 100%;
 }
 
-.collapse.in{
-	margin-bottom: 0px;
+.datetimepicker .prev,.datetimepicker .prev:hover{
+	background-image: url(../images/uew_icon_hover.png)!important;
+	background-repeat: no-repeat!important;
+	background-position: center!important;
+	transform: rotate(90deg)!important;
+	-ms-transform: rotate(90deg)!important; /* IE 9 */
+	-moz-transform: rotate(90deg)!important; /* Firefox */
+	-webkit-transform: rotate(90deg)!important; /* Safari 和 Chrome */
+	-o-transform: rotate(90deg)!important; /* Opera */
 }
 
-.datePickerBtns{
-	margin-left: 20px;
+.datetimepicker .next,.datetimepicker .next:hover{
+	background-image: url(../images/uew_icon_hover.png)!important;
+	background-repeat: no-repeat!important;
+	background-position: center!important;
+	transform: rotate(-90deg)!important;
+	-ms-transform: rotate(-90deg)!important; /* IE 9 */
+	-moz-transform: rotate(-90deg)!important; /* Firefox */
+	-webkit-transform: rotate(-90deg)!important; /* Safari 和 Chrome */
+	-o-transform: rotate(-90deg)!important; /* Opera */
 }
 
-/*每个日期选择器有不同的位置*/
-#dateOfBrith +.dropdown-menu{
-    top: 186px;
-    left: 326px;
+.datetimepicker .switch{
+	background: rgba(105, 185, 204, 0.788235294117647);
+    color: white;
 }
 
+.datetimepicker .today:hover{
+background: rgba(36, 138, 187, 0.77);
+    color: white;
+}
 
-
+.datetimepicker table tr td.active.active,.datetimepicker table tr td span.active.active{
+	background: rgba(36, 138, 187, 0.77)!important;
+}
+    
 
 @keyframes serachAnimation {
 	10% {
