@@ -704,24 +704,59 @@ function tableToExecl(id) {
 	myExcel.generate();
 }
 
-// 模态框效果
-function showMaskingElement() {
-	$(".maskingElement").toggle();
-	$(parent.frames["topFrame"].document).find(".maskingElement").toggle(); // frame获取父窗
-	$(parent.frames["leftFrame"].document).find(".maskingElement").toggle(); // frame获取父窗
+
+//模态框出现
+jQuery.extend({  
+	showModal:function(id,showFooter) {  
+		$(id).modal("show");
+		if(showFooter){
+			$(id).find(".modal-footer").show();
+		}else{
+			$(id).find(".modal-footer").hide();
+		}
+		$(parent.frames["topFrame"].document).find(".maskingElement").show(); // frame获取父窗
+		$(parent.frames["leftFrame"].document).find(".maskingElement").show(); // frame获取父窗
+   }  
+})  
+
+//模态框消失
+jQuery.extend({  
+	hideModal:function(id,hideOtherMasking) { 
+		if (typeof(id) != "undefined") {
+			$(id).modal("hide");
+		}else{
+			var allModal=$(".modal");
+			for (var i = 0; i < allModal.length; ++i) {
+				$("#"+allModal[i].id).modal("hide");
+			}
+		}
+		
+		if(typeof(hideOtherMasking) == "undefined"){
+			$(parent.frames["topFrame"].document).find(".maskingElement").fadeOut(300); // frame获取父窗
+			$(parent.frames["leftFrame"].document).find(".maskingElement").fadeOut(300); // frame获取父窗
+		}
+   }  
+}) 
+
+
+// 请求beforeSend
+function requestErrorbeforeSend() {
+	$(".loadingMasking").show();
+	$(parent.frames["topFrame"].document).find(".maskingElement").show(); // frame获取父窗
+	$(parent.frames["leftFrame"].document).find(".maskingElement").show(); // frame获取父窗
 }
 
 // loading 效果隐藏
 function hideloding() {
 	$(".loadingMasking").hide();
-	var allTip=$(".tip")
-	for (var i = 0; i < allTip.length; ++i) {
-		if(allTip[i].style.display==="none"||allTip[i].style.display===""){
-			$(".maskingElement").hide();
+	$(parent.frames["topFrame"].document).find(".maskingElement").hide(); // frame获取父窗
+	$(parent.frames["leftFrame"].document).find(".maskingElement").hide(); // frame获取父窗
+	var allModal=$(".modal-backdrop");
+	for (var i = 0; i < allModal.length; ++i) {
+		if(allModal.length<=1){
 			$(parent.frames["topFrame"].document).find(".maskingElement").hide(); // frame获取父窗
 			$(parent.frames["leftFrame"].document).find(".maskingElement").hide(); // frame获取父窗
 		}else{
-			$(".maskingElement").show();
 			$(parent.frames["topFrame"].document).find(".maskingElement").show(); // frame获取父窗
 			$(parent.frames["leftFrame"].document).find(".maskingElement").show(); // frame获取父窗
 			return;
@@ -734,15 +769,6 @@ function requestComplete() {
 	if (status == 'timeout') {
 		ajaxTimeOut.abort(); // 取消请求;
 		toastr.error("获取所有用户请求超时");
-	}
-}
-
-// 请求beforeSend
-function requestErrorbeforeSend() {
-	if($(".maskingElement")[0].style.display==="none"||$(".maskingElement")[0].style.display===""){
-		$(".loadingMasking").show();
-		$(parent.frames["topFrame"].document).find(".maskingElement").show(); // frame获取父窗
-		$(parent.frames["leftFrame"].document).find(".maskingElement").show(); // frame获取父窗
 	}
 }
 
@@ -942,9 +968,11 @@ function showImportSuccessInfo(AreaClass,successInfo){
 //根据出生日期算年龄
 function byage(strBirthday){
 	var returnAge;  
-        var birthYear = strBirthday.split("年")[0];  
-        var birthMonth = strBirthday.split("月")[0]; 
-        var birthDay = strBirthday.split("日")[0]; 
+	
+	
+        var birthYear = strBirthday.split("-")[0];  
+        var birthMonth = strBirthday.split("-")[1]; 
+        var birthDay = strBirthday.split("-")[2]; 
         d = new Date();  
         var nowYear = d.getFullYear();  
 	var nowMonth = d.getMonth() + 1;  

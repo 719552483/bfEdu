@@ -1216,7 +1216,7 @@ public class ReflectUtils {
 				// 用于转化为日期格式
 				Date d = currentCell.getDateCellValue();
 				if(d!=null){
-					DateFormat formater = new SimpleDateFormat("yyyy年MM月dd");
+					DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 					currentCellValue = formater.format(d);
 				}else{
 					currentCellValue="";
@@ -1232,7 +1232,7 @@ public class ReflectUtils {
 	
 	//出生日期字符串转化成Date对象
     public static  Date parse(String strDate) throws java.text.ParseException  {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.parse(strDate);
     }
 

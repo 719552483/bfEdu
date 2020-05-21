@@ -373,10 +373,10 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .manyInfoInput {
-	width: 67% !important;
-	margin-left: -1% !important;
-	text-indent: 13px;
-	color: #636363;
+    width: 70% !important;
+    margin-left: -1% !important;
+    text-indent: 13px;
+    color: #636363;
     font-weight: 600;
 }
 
@@ -633,6 +633,7 @@ padding:1.6em 0em 0.6em 31px !important
 	margin-bottom: 9px;
 }
 
+/*
 .manyInfoShow {
 	width: 984px;
 	height: auto;
@@ -641,6 +642,15 @@ padding:1.6em 0em 0.6em 31px !important
 	padding-bottom: 15px;
 	margin-top: -5%;
 }
+*/
+
+.manyInfoShow {
+	height: auto;
+	padding-left: 2%;
+	margin: 0px 29px;
+}
+
+
 
 .tipAUTOheight {
 	height: auto;
@@ -670,10 +680,8 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .manyInfoShow .selectName {
-	padding-right: 7px;
-	margin-top: 6px;
-	width: 29%;
-	color: #3c3b3b;
+	width: 30%;
+    color: #3c3b3b;
     font-weight: 500;
     font-family: fantasy;
 }
@@ -986,8 +994,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .fileErrorTxTArea .myformtext,
-.tipBody .tools,
-.L_R_P {
+.tipBody .tools {
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -1042,19 +1049,20 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .file {
-	position: absolute;
-	display: inline-block;
-	background: #D0EEFF;
-	/* border: 1px solid #99D3F5; */
-	border-radius: 4px;
-	padding: 2px 12px;
-	overflow: hidden;
-	color: #1E88C7;
-	text-decoration: none;
-	text-indent: 0;
-	line-height: 38px;
-	float: right;
-	margin-left: 59%;
+    position: absolute;
+    display: inline-block;
+    background: #D0EEFF;
+    /* border: 1px solid #99D3F5; */
+    border-radius: 4px;
+    padding: 3px 11px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0px;
+    line-height: 37px;
+    float: right;
+    margin-left: 54%;
+    max-height: 44px;
 }
 
 .file input {
@@ -1230,6 +1238,38 @@ background: rgba(36, 138, 187, 0.77);
 	background: rgba(36, 138, 187, 0.77)!important;
 }
     
+.modal{
+	    z-index: 99999;
+}    
+
+.modal-header{
+	padding:initial;
+}
+
+.modal-body {
+    padding: 5px;
+}
+
+.modal-content{
+	min-width:290px;
+}
+
+#remindModal .modal-content{
+    min-width: 500px;
+}
+
+#importStudentInfoModal .modal-body{
+	padding: 13px 0px 1px 20px;
+}
+
+.loadingMasking{
+	 z-index: 999999!important;
+}
+
+
+#remindModal .tipinfo{
+ padding: 17px 0px 0px 17px;
+}
 
 @keyframes serachAnimation {
 	10% {

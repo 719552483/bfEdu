@@ -2126,8 +2126,11 @@ public class AdministrationController {
 					break;
 				}
 		}
+		//判断身份证是否存在
+		boolean IDcardIshave = administrationPageService.IDcardIshave(edu001.getSfzh());
 		
-		if(!xhhave&&!studentSpill){
+		
+		if(!xhhave&&!studentSpill&&!IDcardIshave){
 			String yxbz = "1";
 			edu001.setYxbz(yxbz);
 			administrationPageService.addStudent(edu001); //新增学生
@@ -2141,6 +2144,7 @@ public class AdministrationController {
 			returnMap.put("yxbz", yxbz);
 		}
 		
+		returnMap.put("IDcardIshave", IDcardIshave);
 		returnMap.put("xhhave", xhhave);
 		returnMap.put("studentSpill", studentSpill);
 		returnMap.put("result", true);
