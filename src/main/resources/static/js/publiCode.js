@@ -398,9 +398,9 @@ function stuffAllMajorTable(allMajor){
 
 //预备新增培养层次
 function addNewLevel(){
-	$(".addNewLevelTip").show();
+	$.showModal("#addNewLevelModal",true);
+	$("#addNewLevelModal").find(".moadalTitle").html("新增层次");
 	emptyLevelChooseArea();
-	showMaskingElement();
 	//确认新增层次
 	$('.confimAddNewLevel').unbind('click');
 	$('.confimAddNewLevel').bind('click', function(e) {
@@ -435,6 +435,7 @@ function confimAddNewLevel(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('培养层次名称已存在');
 					return;
@@ -444,12 +445,11 @@ function confimAddNewLevel(){
 					return;
 				}
 				
-				showMaskingElement();
 				newLevelObject.edu103_ID=backjson.id;
 				newLevelObject.yxbz=backjson.yxbz;
 				$('#allLevlTable').bootstrapTable('prepend', newLevelObject);
 				toastr.success('新增培养层次成功');
-				$(".addNewLevelTip").hide();
+				$.hideModal("#addNewLevelModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allLevlTableArea", "培养层次信息");
 			} else {
@@ -461,11 +461,10 @@ function confimAddNewLevel(){
 
 //预备修改培养层次
 function modifyLevel(row){
-	showMaskingElement();
 	stufDeadultLevekInfo(row);
-	$(".addNewLevelTip").show();
-	
-	//确认新增关系按钮
+	$.showModal("#addNewLevelModal",true);
+	$("#addNewLevelModal").find(".moadalTitle").html("修改层次");
+	//确认修改培养层次
 	$('.confimAddNewLevel').unbind('click');
 	$('.confimAddNewLevel').bind('click', function(e) {
 		confimModifyNewLevel(row);
@@ -502,6 +501,7 @@ function confimModifyNewLevel(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('培养层次名称已存在');
 					return;
@@ -511,13 +511,12 @@ function confimModifyNewLevel(row){
 					return;
 				}
 				
-				showMaskingElement();
 				$("#allLevlTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu103_ID,
 					row: newLevelObject
 				});
 				toastr.success('修改培养层次成功');
-				$(".addNewLevelTip").hide();
+				$.hideModal("#addNewLevelModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allLevlTableArea", "培养层次信息");
 			} else {
@@ -590,10 +589,9 @@ function getLevelInfo(){
 
 //单个删除培养层次
 function removeLevle(removeID){
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("培养层次");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -612,10 +610,9 @@ function reomoveLevels(){
 		return;
 	}
 	
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("培养层次");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
@@ -648,8 +645,9 @@ function sendLvelRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#allLevlTable", removeArray, ".allLevlTableArea", "培养层次信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -660,9 +658,9 @@ function sendLvelRemoveInfo(removeArray){
 
 //预备新增系部
 function addNewDepartment(){
-	$(".addNewDeaparmentTip").show();
+	$.showModal("#addNewDeaparmentModal",true);
+	$("#addNewDeaparmentModal").find(".moadalTitle").html("新增系部");
 	emptyDepartmentChooseArea();
-	showMaskingElement();
 	//确认新增系部
 	$('.confimaddNewDeaparment').unbind('click');
 	$('.confimaddNewDeaparment').bind('click', function(e) {
@@ -697,6 +695,7 @@ function confimAddNewDeaparment(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('系部名称已存在');
 					return;
@@ -706,12 +705,11 @@ function confimAddNewDeaparment(){
 					return;
 				}
 				
-				showMaskingElement();
 				newDeaparmentObject.edu104_ID=backjson.id;
 				newDeaparmentObject.yxbz=backjson.yxbz;
 				$('#allDepartmentTable').bootstrapTable('prepend', newDeaparmentObject);
 				toastr.success('新增系部成功');
-				$(".addNewDeaparmentTip").hide();
+				$.hideModal("#addNewDeaparmentModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allDepartmentTableArea", "系部信息");
 			} else {
@@ -723,9 +721,9 @@ function confimAddNewDeaparment(){
 
 //预备修改系部
 function modifyDepartment(row){
-	$(".addNewDeaparmentTip").show();
+	$.showModal("#addNewDeaparmentModal",true);
+	$("#addNewDeaparmentModal").find(".moadalTitle").html("修改系部");
 	stufDeadultDepartmentInfo(row);
-	showMaskingElement();
 	//确认修改系部
 	$('.confimaddNewDeaparment').unbind('click');
 	$('.confimaddNewDeaparment').bind('click', function(e) {
@@ -763,6 +761,7 @@ function confimModifyDeaparment(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('系部名称已存在');
 					return;
@@ -772,13 +771,12 @@ function confimModifyDeaparment(row){
 					return;
 				}
 				
-				showMaskingElement();
 				$("#allDepartmentTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu104_ID,
 					row: newDeaparmentObject
 				});
 				toastr.success('修改系部成功');
-				$(".addNewDeaparmentTip").hide();
+				$.hideModal("#addNewDeaparmentModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allDepartmentTableArea", "系部信息");
 			} else {
@@ -824,10 +822,9 @@ function getDeaparmentInfo(){
 
 //单个删除系部
 function removeDepartment(removeID){
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("系部");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -846,10 +843,9 @@ function reomoveDepartments(){
 		return;
 	}
 	
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("系部");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
@@ -882,8 +878,9 @@ function sendDeaparmentRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#allDepartmentTable", removeArray, ".allDepartmentTableArea", "系部信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -894,9 +891,9 @@ function sendDeaparmentRemoveInfo(removeArray){
 
 //预备新增年级
 function addNewGrade(){
-	$(".addNewGradeTip").show();
+	$.showModal("#addNewGradeModal",true);
+	$("#addNewGradeModal").find(".moadalTitle").html("新增年级");
 	emptyGradeChooseArea();
-	showMaskingElement();
 	//确认新增年级
 	$('.confimaddNewGrade').unbind('click');
 	$('.confimaddNewGrade').bind('click', function(e) {
@@ -931,6 +928,7 @@ function confimaddNewGrade(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('年级名称已存在');
 					return;
@@ -940,12 +938,11 @@ function confimaddNewGrade(){
 					return;
 				}
 				
-				showMaskingElement();
 				newGradeObject.edu105_ID=backjson.id;
 				newGradeObject.yxbz=backjson.yxbz;
 				$('#allGradeTable').bootstrapTable('prepend', newGradeObject);
 				toastr.success('新增年级成功');
-				$(".addNewGradeTip").hide();
+				$.hideModal("#addNewGradeModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allGradeTableArea", "年级信息");
 			} else {
@@ -957,9 +954,9 @@ function confimaddNewGrade(){
 
 //预备修改年级
 function modifyGrade(row){
-	$(".addNewGradeTip").show();
+	$.showModal("#addNewGradeModal",true);
+	$("#addNewGradeModal").find(".moadalTitle").html("修改年级");
 	stufDeadultGradeInfo(row);
-	showMaskingElement();
 	//确认修改系部
 	$('.confimaddNewGrade').unbind('click');
 	$('.confimaddNewGrade').bind('click', function(e) {
@@ -997,6 +994,7 @@ function confimModifyGrade(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('年级名称已存在');
 					return;
@@ -1006,13 +1004,12 @@ function confimModifyGrade(row){
 					return;
 				}
 				
-				showMaskingElement();
 				$("#allGradeTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu105_ID,
 					row: newGradeObject
 				});
 				toastr.success('修改年级成功');
-				$(".addNewGradeTip").hide();
+				$.hideModal("#addNewGradeModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allGradeTableArea", "年级信息");
 			} else {
@@ -1058,10 +1055,9 @@ function getGradeInfo(){
 
 //单个删除年级
 function removeGrade(removeID){
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("年级");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -1080,10 +1076,9 @@ function reomoveGrades(){
 		return;
 	}
 	
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("年级");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
@@ -1116,8 +1111,9 @@ function sendGradeRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#allGradeTable", removeArray, ".allGradeTableArea", "年级信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1128,9 +1124,9 @@ function sendGradeRemoveInfo(removeArray){
 
 //预备新增专业
 function addNewMajor(){
-	$(".addNewMajorTip").show();
+	$.showModal("#addNewMajorModal",true);
+	$("#addNewMajorModal").find(".moadalTitle").html("新增专业");
 	emptyMajorChooseArea();
-	showMaskingElement();
 	//确认新增专业
 	$('.confimaddNewMajor').unbind('click');
 	$('.confimaddNewMajor').bind('click', function(e) {
@@ -1165,6 +1161,7 @@ function confimaddNewMajor(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('专业名称已存在');
 					return;
@@ -1174,12 +1171,11 @@ function confimaddNewMajor(){
 					return;
 				}
 				
-				showMaskingElement();
 				newMajorObject.edu106_ID=backjson.id;
 				newMajorObject.yxbz=backjson.yxbz;
 				$('#allMajorTable').bootstrapTable('prepend', newMajorObject);
 				toastr.success('新增专业成功');
-				$(".addNewMajorTip").hide();
+				$.hideModal("#addNewMajorModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allMajorTableArea", "专业信息");
 			} else {
@@ -1191,9 +1187,9 @@ function confimaddNewMajor(){
 
 //预备修改专业
 function modifyMajor(row){
-	$(".addNewMajorTip").show();
+	$.showModal("#addNewMajorModal",true);
+	$("#addNewMajorModal").find(".moadalTitle").html("修改专业");
 	stufDeadultMajorInfo(row);
-	showMaskingElement();
 	//确认修改系部
 	$('.confimaddNewMajor').unbind('click');
 	$('.confimaddNewMajor').bind('click', function(e) {
@@ -1231,6 +1227,7 @@ function confimModifyMajor(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('专业名称已存在');
 					return;
@@ -1240,13 +1237,12 @@ function confimModifyMajor(row){
 					return;
 				}
 				
-				showMaskingElement();
 				$("#allMajorTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu106_ID,
 					row: newMajorObject
 				});
 				toastr.success('修改专业成功');
-				$(".addNewMajorTip").hide();
+				$.hideModal("#addNewMajorModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".allMajorTableArea", "专业信息");
 			} else {
@@ -1292,10 +1288,9 @@ function stufDeadultMajorInfo(row){
 
 //单个删除年级
 function removeMajor(removeID){
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("专业");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -1314,10 +1309,9 @@ function  reomoveMajors(){
 		return;
 	}
 	
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("专业");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
@@ -1350,8 +1344,9 @@ function sendMajorRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#allMajorTable", removeArray, ".allMajorTableArea", "专业信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1584,10 +1579,9 @@ function stuffAllRelationInfoTable(allRelationInfo){
 
 //预备修改关系
 function modifyRelation(row){
-	showMaskingElement();
 	stufDeadultRelation(row);
-	$(".addNewRelationTip").show();
-	
+	$.showModal("#addNewRelationModal",true);
+	$("#addNewRelationModal").find(".moadalTitle").html("修改培养计划");
 	//确认新增关系按钮
 	$('.addNewRelationTip_confimBtn').unbind('click');
 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
@@ -1634,6 +1628,7 @@ function confimModifyRelation(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.have){
 					toastr.warning('层次关系已存在');
 					return;
@@ -1642,13 +1637,12 @@ function confimModifyRelation(row){
 					toastr.warning('培养计划名称已存在');
 					return;
 				}
-				showMaskingElement();
 				$("#relationTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu107_ID,
 					row: newRelationObject
 				});
 				toastr.success('修改培养计划成功');
-				$(".addNewRelationTip").hide();
+				$.hideModal("#addNewRelationModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".relationTableArea", "培养计划信息");
 			} else {
@@ -1660,9 +1654,9 @@ function confimModifyRelation(row){
 
 //预备新增关系
 function wantAddRelation(){
-	$(".addNewRelationTip").show();
+	$.showModal("#addNewRelationModal",true);
+	$("#addNewRelationModal").find(".moadalTitle").html("新增培养计划");
 	emptyRelationChooseArea();
-	showMaskingElement();
 	//确认新增关系按钮
 	$('.addNewRelationTip_confimBtn').unbind('click');
 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
@@ -1697,6 +1691,7 @@ function confimAddNewRelation(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.have){
 					toastr.warning('层次关系已存在');
 					return;
@@ -1705,12 +1700,11 @@ function confimAddNewRelation(){
 					toastr.warning('培养计划名称已存在');
 					return;
 				}
-				showMaskingElement();
 				newRelationObject.edu107_ID=backjson.id;
 				newRelationObject.yxbz=backjson.yxbz;
 				$('#relationTable').bootstrapTable('prepend', newRelationObject);
 				toastr.success('新增培养计划成功');
-				$(".addNewRelationTip").hide();
+				$.hideModal("#addNewRelationModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".relationTableArea", "培养计划信息");
 			} else {
@@ -1824,10 +1818,9 @@ function stuffRelationTipSelect(){
 
 //单个删除关系
 function removeRelation(removeID){
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("层次关系");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -1846,10 +1839,9 @@ function removeRelations() {
 		return;
 	}
 	
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("层次关系");
 	$(".remindActionType").html("删除");
-	showMaskingElement();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
@@ -1882,8 +1874,9 @@ function sendRelationRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1894,18 +1887,16 @@ function sendRelationRemoveInfo(removeArray){
 
 //开始检索层次关系
 function relationStartSearch(){
-	var relationName=$("#relation_seaechRelationName").val();
 	var lvelName=$("#relation_seaechLvel").val();
 	var deaparmentName=$("#relation_seaechDeaparment").val();
 	var gradeName=$("#relation_seaechGrade").val();
 	var majorName=$("#relation_seaechMajor").val();
-	if(relationName===""&&lvelName===""&&deaparmentName===""&&gradeName===""&&majorName===""){
+	if(lvelName===""&&deaparmentName===""&&gradeName===""&&majorName===""){
 		toastr.warning('请输入检索条件');
 		return;
 	}
 	
 	var serachObject=new Object();
-	relationName===""?serachObject.relationName="":serachObject.relationName=relationName;
 	lvelName===""?serachObject.lvelName="":serachObject.lvelName=lvelName;
 	deaparmentName===""?serachObject.deaparmentName="":serachObject.deaparmentName=deaparmentName;
 	gradeName===""?serachObject.gradeName="":serachObject.gradeName=gradeName;
@@ -1969,8 +1960,7 @@ function btnbind(){
 	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		showMaskingElement();
+		$.hideModal();
 		e.stopPropagation();
 	});
 	

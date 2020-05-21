@@ -574,7 +574,6 @@ function tableRemoveAction(tableId, removeId, pagnationClass, pagnationTxt) {
 		$(tableId).bootstrapTable('removeByUniqueId', removeId[i]);
 	}
 	$(".tip").hide();
-	showMaskingElement();
 	drawPagination(pagnationClass, pagnationTxt);
 	toastr.success('删除成功');
 	$(".myTooltip").tooltipify();

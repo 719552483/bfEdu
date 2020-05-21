@@ -547,7 +547,6 @@ public class AdministrationController {
 		edu107.setXbmc(jsonObject.getString("deaparmentName"));
 		edu107.setNjmc(jsonObject.getString("gradeName"));
 		edu107.setZymc(jsonObject.getString("majorName"));
-		edu107.setPyjhmc(jsonObject.getString("relationName"));
 		List<Edu107> relationList = administrationPageService.seacchRelation(edu107);
 		returnMap.put("relationList", relationList);
 		returnMap.put("result", true);
