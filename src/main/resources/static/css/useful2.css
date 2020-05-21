@@ -478,10 +478,7 @@ padding:1.6em 0em 0.6em 31px !important
 	color: #fff;
 }
 
-.allClassMangersTableArea .search{
-    margin-top: 2px;
-    margin-left: 72%;
-}
+
 
 .relationTableArea .search{
    relationNameHave
@@ -623,6 +620,10 @@ padding:1.6em 0em 0.6em 31px !important
 	width: 25%;
 	float: left;
 }
+.col3{
+	width: 33.3333%;
+	float: left;
+}
 
 .myTabson {
 	margin-top: 7px !important;
@@ -680,10 +681,11 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .manyInfoShow .selectName {
-	width: 30%;
+	    width: 67px;
     color: #3c3b3b;
     font-weight: 500;
     font-family: fantasy;
+        margin-top: 14px;
 }
 
 .selectName {
@@ -763,11 +765,17 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .allWidthInput {
-	width: 70% !important;
-	margin-left: -18.5% !important;
-	text-indent: 13px;
-	color: #636363;
+	    width: 378px !important;
+    margin-left: 10px !important;
+    text-indent: 13px;
+    color: #636363;
     font-weight: 600;
+}
+
+@media screen and (max-width:780px) {
+	.allWidthInput {
+		    width: 58% !important;
+	}
 }
 
 .colInput {
@@ -822,10 +830,14 @@ padding:1.6em 0em 0.6em 31px !important
 .searchGivePaddingR .fixed-table-toolbar {
 	padding-right: 1.8%;
 }
+
 .spelocl_R .fixed-table-toolbar {
 	padding-right: 5.8%;
 }
 
+.paddingL{
+	padding-left:2%;
+}
 
 .combinedClassTipInput {
 	width: 70% !important;
@@ -1258,6 +1270,10 @@ background: rgba(36, 138, 187, 0.77);
     min-width: 500px;
 }
 
+#allClassMangersModal .modal-content{
+    min-width: 619px;
+}
+
 .bodyOnlyOneRow{
 	min-width:500px;
 }
@@ -1275,7 +1291,20 @@ background: rgba(36, 138, 187, 0.77);
  padding: 17px 0px 0px 17px;
 }
 
-@keyframes serachAnimation {
+.specialCanle {
+	background: url(../images/btnbg2.png) repeat-x;
+	color: rgba(0, 0, 0, 0.7490196078431373);
+	font-weight: normal;
+	width: 96px;
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+@
+keyframes serachAnimation {
 	10% {
 		transform: translateX(-3px) rotate(-2deg);
 		-ms-transform: translateX(-3px) rotate(-2deg);

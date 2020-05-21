@@ -412,7 +412,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 
 	drawPagination(".studentBaseInfoTableArea", "学生信息");
-	drawSearchInput();
+	drawSearchInput(".studentBaseInfoTableArea");
 	changeTableNoRsTip();
 	changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息");
 	toolTipUp(".myTooltip");

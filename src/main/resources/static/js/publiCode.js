@@ -154,7 +154,7 @@ function stuffAllLevelTable(allLevel){
 					.join('');
 			}
 		}
-		drawSearchInput();
+		drawSearchInput(".allLevlTableArea");
 		drawPagination(".allLevlTableArea", "培养层次信息");
 		toolTipUp(".myTooltip");
 }
@@ -233,7 +233,7 @@ function stuffAllDepartmentTable(allDepartment){
 				]
 				.join('');
 		}
-		drawSearchInput();
+		drawSearchInput(".allDepartmentTableArea ");
 		drawPagination(".allDepartmentTableArea", "系部信息");
 		toolTipUp(".myTooltip");
 }
@@ -312,7 +312,7 @@ function stuffAllGradeTable(allGrade){
 				]
 				.join('');
 		}
-		drawSearchInput();
+		drawSearchInput(".allGradeTableArea");
 		drawPagination(".allGradeTableArea", "年级信息");
 		toolTipUp(".myTooltip");
 }
@@ -391,7 +391,7 @@ function stuffAllMajorTable(allMajor){
 				]
 				.join('');
 		}
-		drawSearchInput();
+		drawSearchInput(".allMajorTableArea");
 		drawPagination(".allMajorTableArea", "专业信息");
 		toolTipUp(".myTooltip");
 }
@@ -1572,7 +1572,7 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				]
 				.join('');
 		}
-		drawSearchInput();
+		drawSearchInput(".relationTableArea");
 		drawPagination(".relationTableArea", "培养计划信息");
 		toolTipUp(".myTooltip");
 }

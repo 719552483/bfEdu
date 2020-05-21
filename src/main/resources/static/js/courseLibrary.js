@@ -174,7 +174,7 @@ function stuffCourseLibraryTable(tableInfo){
 
 		drawPagination(".courseLibraryTableArea", "课程信息");
 		changeColumnsStyle(".courseLibraryTableArea", "培养计划");
-		drawSearchInput();
+		drawSearchInput(".courseLibraryTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 }
@@ -183,7 +183,6 @@ function stuffCourseLibraryTable(tableInfo){
 function modifyCourseLibrary(row){
 	var idArray=new Array();
 	idArray.push(row.bf200_ID);
-	showMaskingElement();
 	modifyClassesCheckCrouseIsInPlan(idArray,row);
 }
 
@@ -250,7 +249,6 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 		}
 	});
 }
-
 
 //填充课程详情tip内容
 function stuffclassDetailsArea(row){
@@ -336,7 +334,6 @@ function comfirmmodifyCourseInfo(row){
 				toastr.success('修改专业课程成功');
 				$(".addNewClassTip").hide();
 				$("#addNewClass_calssManger").removeAttr("mangerId");
-				showMaskingElement();
 				$(".myTooltip").tooltipify();
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			} else {
@@ -349,10 +346,9 @@ function comfirmmodifyCourseInfo(row){
 //新增课程
 function wantAddClass() {
 	emptyClassDetailsArea();
-	$(".addNewClassTip").show();
-	$(".tipTile").html("录入新课");
+	$.showModal("#addNewClassModal",true);
+	$("#addNewClassModal").find(".moadalTitle").html("录入新课");
 	$(".comfirmAddNewClass").attr("value","录入");
-	showMaskingElement();
 	
 	// 确认按钮绑定事件
 	$('.comfirmAddNewClass').unbind('click');
@@ -411,6 +407,7 @@ function comfirmAddNewClass(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.nameHave){
 					toastr.warning('课程名称已存在');
 					return;
@@ -425,10 +422,9 @@ function comfirmAddNewClass(){
 				newClassObject.kcfzr=$("#addNewClass_calssManger").val();
 				$('#courseLibraryTable').bootstrapTable("prepend", newClassObject);
 				toastr.success('新增专业课程成功');
-				$(".addNewClassTip").hide();
+				$.hideModal("#addNewClassModal");
 				$("#addNewClass_calssManger").removeAttr("mangerId");
 				$(".myTooltip").tooltipify();
-				showMaskingElement();
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -455,9 +451,10 @@ function getAllClassMangers(){
 		},
 		success : function(backjson) {
 			 if (backjson.result) {
+				    hideloding();
 			 		stuffAllClassMangersTable(backjson.teacherList);
-			 		$(".addNewClassTip").hide();
-			 		$(".allClassMangersTip").show();
+			 		$.hideModal("#addNewClassModal",false);
+			 		$.showModal("#allClassMangersModal",true);
 			 	 } else {
 					toastr.warning('操作失败，请重试');
 			 	 }
@@ -526,7 +523,7 @@ function stuffAllClassMangersTable(tableInfo){
 			}
 		}
 		drawPagination(".allClassMangersTableArea", "负责人信息");
-		drawSearchInput();
+		drawSearchInput(".allClassMangersTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 }
@@ -536,8 +533,8 @@ function confirmChoosedManger(){
 	var choosedManger=$("#allClassMangersTable").bootstrapTable("getSelections");
 	$("#addNewClass_calssManger").val(choosedManger[0].jsxm);
 	$("#addNewClass_calssManger").attr("mangerId",choosedManger[0].edu101_ID);
-	$(".addNewClassTip").show();
-	$(".allClassMangersTip").hide();
+	$.hideModal("#allClassMangersModal",false);
+    $.showModal("#addNewClassModal",true);
 }
 
 //课程信息模态框确认按钮事件
@@ -642,7 +639,6 @@ function removeClasses(){
 	for (var i = 0; i < choosedClass.length; i++) {
 		idArray.push(choosedClass[i].bf200_ID);
 	}
-	showMaskingElement();
 	removeClassesCheckCrouseIsInPlan(idArray);
 }
 
@@ -725,7 +721,6 @@ function confirmRemoveClasses(idArray){
 					$("#courseLibraryTable").bootstrapTable('removeByUniqueId', idArray[i]);
 				}
 				$(".tip").hide();
-				showMaskingElement();
 				toastr.success('操作成功');
 				toolTipUp(".myTooltip");
 				drawPagination(".courseLibraryTableArea", "课程信息");
@@ -856,12 +851,10 @@ function binBind(){
 		e.stopPropagation();
 	});
 	
-	// 提示框取消按钮
+	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		$("#addNewClass_calssManger").removeAttr("mangerId");
-		showMaskingElement();
+		$.hideModal();
 		e.stopPropagation();
 	});
 	
@@ -871,9 +864,6 @@ function binBind(){
 		startSearch();
 		e.stopPropagation();
 	});
-	
-	
-
 	
 	// 删除课程
 	$('#removeClasses').unbind('click');
@@ -897,17 +887,18 @@ function binBind(){
 	});
 	
 	// 选择课程负责人
-    $('#addNewClass_calssManger').focus(function(){
-    	allClassMangersReSearch();
-   	    getAllClassMangers();
+    $('#addNewClass_calssManger').focus(function(e){
+		allClassMangersReSearch();
+		getAllClassMangers();
+		e.stopPropagation();
     });
     
     
    // 负责人模态框消失
 	$('.specialCanle').unbind('click');
 	$('.specialCanle').bind('click', function(e) {
-		$(".addNewClassTip").show();
-		$(".allClassMangersTip").hide();
+		$.hideModal("#allClassMangersModal",false);
+ 		$.showModal("#addNewClassModal",true);
 		e.stopPropagation();
 	});
 	
