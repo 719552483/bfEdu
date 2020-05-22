@@ -275,7 +275,7 @@
 						</div>
 					</div>
 
-					<div class="teachingClassTableArea searchGivePaddingR">
+					<div class="teachingClassTableArea searchGivePaddingR columnsStyle">
 						<table class="tablelist myTableStyle" id="teachingClassTable" data-unique-id="edu301_ID" style="margin-top: 10px;"></table>
 					</div>
 				</div>
@@ -284,315 +284,360 @@
 		</div>
 	</div>
 	
-	<div class="tip manyInfoShow addAdministrationClassTip">
-		<div class="tiptop">
-			<div class="tiptop"><span class="addAdministrationClassTipTitle"></span><a class="cancel cancelTipBtn"></a></div>
-		</div>
-		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-		  <div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">校区<b>*</b></label>
-							<select class="isSowIndex" id="addAdministrationClass_campus">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">层次<b>*</b></label>
-							<select class="isSowIndex" id="addAdministrationClass_level">
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">系部<b>*</b></label>
-							<select class="isSowIndex" id="addAdministrationClass_department">
-								<option value="seleceConfigTip">暂不可选</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">年级<b>*</b></label>
-							<select class="isSowIndex" id="addAdministrationClass_garde">
-								<option value="seleceConfigTip">暂不可选</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">专业<b>*</b></label>
-							<select class="isSowIndex" id="addAdministrationClass_major">
-								<option value="seleceConfigTip">暂不可选</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-		
-		   <div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">班级编码<b>*</b></label>
-						<input name="" type="text" class="myInput colInput" id="addAdministrationClass_classCode" placeholder="请输入班级编码..."/>
-					</div>
-				</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">班级名称<b>*</b></label>
-						<input name="" type="text" class="myInput colInput" id="addAdministrationClass_className" placeholder="请输入班级名称..."/>
-					</div>
-				</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">容纳人数</label>
-						<input name="" type="text" class="myInput colInput" id="addAdministrationClass_houldNum" placeholder="请输入容纳人数..."/>
-					</div>
-				</ul>
-			</div>
-		
-			
-		</div>
-
-		<div class="tipbtn myabeNoneTipBtn">
-			<input name="" type="button" class="sure confirmAddAdministrationClass" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
+	
 	
 	
 
-	<div class="tip combinedClassTip">
-		<div class="tiptop">
-			<span>合班信息</span><a class="cancel"></a>
-		</div>
-		<div class="tipinfo combinedClassTipinfo">
-			<div class="col1 giveBottom">
-				<div class="">
-					<label class="selectName" style="margin-top: 14px;">教学班名称</label> <input
-						name="" type="text" class="myInput combinedClassTipInput"
-						id="combinedClassName" placeholder="请输入教学班名称..." />
-				</div>
-			</div>
-
-			<div class="col1 giveBottom">
-				<div class="">
-					<label class="selectName" style="margin-top: 14px;">教学班人数</label> <input
-						name="" type="text" class="myInput combinedClassTipInput" readonly="readonly"
-						id="combinedClassHoldStudentNum" placeholder="请输入教学班人数..." />
-				</div>
-			</div>
-
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure" id="confirmCombinedClass"
-				value="确定" />&nbsp; <input name="" type="button" class="cancel"
-				value="取消" />
-		</div>
-	</div>
-
-	<div class="tip tipAUTOheight breakClassTip">
-		<div class="tiptop">
-			<span>拆班信息</span><a class="cancel"></a>
-		</div>
-		<div class="tipinfo combinedClassTipinfo">
-			<div class="col1 giveBottom">
-				<div class="">
-					<label class="selectName" style="margin-top: 14px;">学生总人数</label> <input
-						name="" type="text" readonly="readonly"
-						class="myInput combinedClassTipInput" id="allStudentNum"
-						placeholder="请输入学生总人数..." />
-				</div>
-			</div>
-
-			<div class="col1 giveBottom">
-				<div class="MyspinnerStyle">
-					<label class="selectName" style="padding-top: 10px">拆班个数</label> <input
-						type="number" value="2" min="2" max="100" step="1"
-						id="breakClassNum" /> <label class="labelToBtn"
-						style="padding-top: 10px" id="startBreak">拆分</label>
-				</div>
-			</div>
-
-			<div class="formtext myformtext">
-				<b>Tips:&#8197;&#8197;指定行政班和学生名单只能选其一；选了指定行政班，则把行政班所有学生加到对应教学班。</b>
-			</div>
 
 
-
-		</div>
-		<div class="breakClassTableArea">
-			<table class="tablelist myTableStyle" id="breakClassTable" data-unique-id="id" style="margin-top: 10px;"></table>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure" id="confirmBreakClass"
-				value="确定" />&nbsp; <input name="" type="button" class="cancel"
-				value="取消" />
-		</div>
-	</div>
+	
 
 	<div class="tip manyInfoShow appointClassStudenInfoTip">
 		<div class="tiptop">
 			<span>学生列表</span><a class="cancel specialCanle"></a>
 		</div>
-		<div class="searchArea moreInfoSelectStyle">
-			<div class="tools">
-				<ul class="toolbar" style="float: none">
-					<li class="click" id="studenStartSearch"><span><img
-							src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
-					<li class="click" id="studenReSearch"><span><img
-							src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
-					<div class="emptyChoosedStudentCheckArea"></div>
-				</ul>
-			</div>
-			<div class="clear"></div>
-
-			<div class="col4 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">行政班名称</label>
-						<select id="appointClassStudenInfo_administrationClass"></select>
-					</div>
-				</ul>
-			</div>
-
-			<div class="col4 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">学生姓名</label> <input
-							name="" type="text" class="myInput manyInfoInput"
-							id="appointClassStudenInfo_studentName" placeholder="请输入学生姓名..." />
-					</div>
-				</ul>
-			</div>
-
-			<div class="col4 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">性别</label> <select
-							class="isSowIndex" id="appointClassStudenInfo_studentSex">
-							<option value="seleceConfigTip">请选择</option>
-							<option value="M">男</option>
-							<option value="F">女</option>
-						</select>
-					</div>
-				</ul>
-			</div>
-
-			<div class="col4 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">状态</label> <select
-							class="isSowIndex" id="appointClassStudenInfo_studenStatus">
-							<option value="seleceConfigTip">请选择</option>
-							<option value="reading">在读</option>
-							<option value="suspension">休学</option>
-						</select>
-					</div>
-				</ul>
-			</div>
-		</div>
-
-		<div class="studentTableArea">
-			<table class="tablelist myTableStyle" id="studentTable"
-				data-unique-id="id" style="margin-top: 10px;"></table>
-		</div>
+		
 
 		<div class="tipbtn">
-			<input name="" type="button" class="sure" id="confirmChoosedStudent"
+			<input name="" type="button" class="sure" 
 				value="确定" />&nbsp; <input name="" type="button"
 				class="cancel specialCanle" value="返回" />
 		</div>
 	</div>
 
-	<div class="tip removeTip">
-		<div class="tiptop">
-			<span>提示信息</span><a class="cancel"></a>
-		</div>
-		<div class="tipinfo">
-			<span><img src="images/ticon.png" /></span>
-			<div class="tipright">
-				<p>
-					是否确认对<a class="removeType"></a>的<a class="tipTitle">删除</a> ？
-				</p>
-				<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-			</div>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confirmremove" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
-
-	<div class="tip remindTip">
-		<div class="tiptop">
-			<span>提示信息</span><a class="cancel"></a>
-		</div>
-		<div class="tipinfo">
-			<span><img src="images/ticon.png" /></span>
-			<div class="tipright">
-				<p>
-					是否确认对<a class="remindType"></a>的<a class="remindActionType"></a> ？
-				</p>
-				<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-			</div>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confirmRemind" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
 	
-	<div class="tip actionTip">
-				<div class="tiptop"><span>提示信息</span><a class="cancel"></a></div>
-				<div class="tipinfo">
-					<span><img src="images/ticon.png"/></span>
-					<div class="tipright">
-						<p class="actionTxt"></p>
-						<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+	
+
+
+	<!-- 行政班Modal -->
+	<div class="modal fade bs-example-modal-lg addAdministrationClassTip" id="addAdministrationClassModal" tabindex="-1" role="dialog" aria-labelledby="addAdministrationClassModal" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">校区<b>*</b></label>
+									<select class="isSowIndex" id="addAdministrationClass_campus">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层次<b>*</b></label>
+									<select class="isSowIndex" id="addAdministrationClass_level">
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">系部<b>*</b></label>
+									<select class="isSowIndex"
+										id="addAdministrationClass_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年级<b>*</b></label>
+									<select class="isSowIndex" id="addAdministrationClass_garde">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专业<b>*</b></label>
+									<select class="isSowIndex" id="addAdministrationClass_major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">班级编码<b>*</b></label>
+									<input name="" type="text" class="myInput colInput"
+										id="addAdministrationClass_classCode" placeholder="请输入班级编码..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">班级名称<b>*</b></label>
+									<input name="" type="text" class="myInput colInput"
+										id="addAdministrationClass_className" placeholder="请输入班级名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">容纳人数</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addAdministrationClass_houldNum" placeholder="请输入容纳人数..." />
+								</div>
+							</ul>
+						</div>
+
+
 					</div>
 				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmAddAdministrationClass" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 
-				<div class="tipbtn">
+	<!-- 合班Modal -->
+	<div class="modal fade bs-example-modal-lg" id="combinedClassModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">合班信息</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="tipinfo combinedClassTipinfo">
+						<div class="col1 giveBottom">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">教学班名称</label>
+								<input name="" type="text" class="myInput combinedClassTipInput"
+									id="combinedClassName" placeholder="请输入教学班名称..." />
+							</div>
+						</div>
+
+						<div class="col1 giveBottom">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">教学班人数</label>
+								<input name="" type="text" class="myInput combinedClassTipInput"
+									readonly="readonly" id="combinedClassHoldStudentNum"
+									placeholder="请输入教学班人数..." />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure" id="confirmCombinedClass" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 拆班Modal -->
+	<div class="modal fade bs-example-modal-lg" id="breakClassModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">拆班信息</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="tipinfo combinedClassTipinfo">
+						<div class="col1 giveBottom">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">学生总人数</label>
+								<input name="" type="text" readonly="readonly"
+									class="myInput combinedClassTipInput" id="allStudentNum"
+									placeholder="请输入学生总人数..." />
+							</div>
+						</div>
+
+						<div class="col1 giveBottom">
+							<div class="MyspinnerStyle">
+								<label class="selectName" style="padding-top: 10px">拆班个数</label>
+								<input type="number" value="2" min="2" max="100" step="1"
+									id="breakClassNum" /> <label class="labelToBtn"
+									style="padding-top: 10px" id="startBreak">拆分</label>
+							</div>
+						</div>
+
+						<div class="formtext myformtext">
+							<b>Tips:&#8197;&#8197;指定行政班和学生名单只能选其一；选了指定行政班，则把行政班所有学生加到对应教学班。</b>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="breakClassTableArea">
+						<table class="tablelist myTableStyle" id="breakClassTable" data-unique-id="id" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure" id="confirmBreakClass" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 指定学生Modal -->
+	<div class="modal fade bs-example-modal-lg" id="appointClassStudenInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">学生列表</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="searchArea moreInfoSelectStyle">
+						<div class="tools">
+							<ul class="toolbar" style="float: none">
+								<li class="click" id="studenStartSearch"><span><img
+										src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+								<li class="click" id="studenReSearch"><span><img
+										src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+								<div class="emptyChoosedStudentCheckArea"></div>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+						<div class="col2 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
+									<select id="appointClassStudenInfo_administrationClass"></select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col2 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学生姓名</label>
+									<input name="" type="text" class="myInput manyInfoInput"
+										id="appointClassStudenInfo_studentName"
+										placeholder="请输入学生姓名..." />
+								</div>
+							</ul>
+						</div>
+                        <div class="clear"></div>
+						<div class="col2 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">性别</label>
+									<select class="isSowIndex"
+										id="appointClassStudenInfo_studentSex">
+										<option value="seleceConfigTip">请选择</option>
+										<option value="M">男</option>
+										<option value="F">女</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col2 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">状态</label>
+									<select class="isSowIndex"
+										id="appointClassStudenInfo_studenStatus">
+										<option value="seleceConfigTip">请选择</option>
+										<option value="reading">在读</option>
+										<option value="suspension">休学</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="studentTableArea">
+						<table class="tablelist myTableStyle" id="studentTable"
+							data-unique-id="id" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure" id="confirmChoosedStudent" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <!-- actionModal -->
+	<div class="modal fade bs-example-modal-lg" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="tipinfo">
+						<span><img src="images/ticon.png" /></span>
+						<div class="tipright">
+							<p class="actionTxt"></p>
+							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
 					<input name="" type="button" class="sure confirmAction" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
+			</div>
+		</div>
 	</div>
 
-	<div class="modal-backdrop fade maskingElement noneStart"></div>
-	<div class="modal-backdrop fade loadingMasking noneStart">
-				<div class="spinner-box">
-					<div class="pulse-container">
-						<div class="pulse-bubble pulse-bubble-1"></div>
-						<div class="pulse-bubble pulse-bubble-2"></div>
-						<div class="pulse-bubble pulse-bubble-3"></div>
-					</div>
-					<div class="loadingtxt">数据加载中，请稍后...</div>
+	<!-- 提示Modal -->
+	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
 				</div>
+				<div class="modal-body">
+					<div class="tipinfo">
+						<span><img src="images/ticon.png" /></span>
+						<div class="tipright">
+							<p>
+								是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
+							</p>
+							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
 		</div>
+	</div>
+
+	<!-- ajax请求masking -->
+	<div class="modal-backdrop fade loadingMasking noneStart">
+		<div class="spinner-box">
+			<div class="pulse-container">
+				<div class="pulse-bubble pulse-bubble-1"></div>
+				<div class="pulse-bubble pulse-bubble-2"></div>
+				<div class="pulse-bubble pulse-bubble-3"></div>
+			</div>
+			<div class="loadingtxt">数据加载中，请稍后...</div>
+		</div>
+	</div>
 
 	<script type="text/javascript">
 		$("#usual1 ul").idTabs();
