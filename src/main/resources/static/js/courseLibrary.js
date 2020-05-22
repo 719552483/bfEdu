@@ -186,7 +186,7 @@ function modifyCourseLibrary(row){
 	modifyClassesCheckCrouseIsInPlan(idArray,row);
 }
 
-//删除检查课程是否有存在培养计划的
+//检查课程是否有存在培养计划的
 function modifyClassesCheckCrouseIsInPlan(idArray,row){
 	 var deleteIds=new Object();
 	 deleteIds.deleteIdArray=idArray;
@@ -210,18 +210,19 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.isInPlan){
-					$(".actionTip").show();
-					$(".actionTxt").html("该课程存在培养计划,是否还要修改？");
+					$.showModal("#actionModal",true);
+					$("#actionModal").find(".actionTxt").html("该课程存在培养计划,是否还要修改？");
 					// 确认删除事件
 					$('.confirmAction').unbind('click');
 					$('.confirmAction').bind('click', function(e) {
-						$(".addNewClassTip").show();
-						$(".actionTip").hide();
-						stuffclassDetailsArea(row);
-						$(".tipTile").html("修改课程-"+row.kcmc);
-						$("#addNewClass_calssManger").attr("mangerId",row.kcfzrID);
+						$.hideModal("#actionModal",false);
+						$.showModal("#addNewClassModal",true);
+						$("#addNewClassModal").find(".moadalTitle").html("修改课程-"+row.kcmc);
 						$(".comfirmAddNewClass").attr("value","确定");
+						stuffclassDetailsArea(row);
+						$("#addNewClass_calssManger").attr("mangerId",row.kcfzrID);
 						// 确认按钮绑定事件
 						$('.comfirmAddNewClass').unbind('click');
 						$('.comfirmAddNewClass').bind('click', function(e) {
@@ -232,8 +233,8 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 					});
 				}else{
 					stuffclassDetailsArea(row);
-					$(".addNewClassTip").show();
-					$(".tipTile").html("修改课程-"+row.kcmc);
+					$.showModal("#addNewClassModal",true);
+					$("#addNewClassModal").find(".moadalTitle").html("修改课程-"+row.kcmc);
 					$("#addNewClass_calssManger").attr("mangerId",row.kcfzrID);
 					$(".comfirmAddNewClass").attr("value","确定");
 					// 确认按钮绑定事件
@@ -313,6 +314,7 @@ function comfirmmodifyCourseInfo(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.nameHave){
 					toastr.warning('课程名称已存在');
 					return;
@@ -321,7 +323,7 @@ function comfirmmodifyCourseInfo(row){
 					toastr.warning('课程代码已存在');
 					return;
 				}
-				hideloding();
+				$.hideModal("#addNewClassModal");
 				newClassObject.lrsj=backjson.currentTimeStamp;
 				newClassObject.zt="noStatus";
 				newClassObject.shr=null;
@@ -332,7 +334,6 @@ function comfirmmodifyCourseInfo(row){
 					row: newClassObject
 				});
 				toastr.success('修改专业课程成功');
-				$(".addNewClassTip").hide();
 				$("#addNewClass_calssManger").removeAttr("mangerId");
 				$(".myTooltip").tooltipify();
 				drawPagination(".courseLibraryTableArea", "课程信息");
@@ -666,9 +667,10 @@ function removeClassesCheckCrouseIsInPlan(idArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.isInPlan){
-					$(".actionTip").show();
-					$(".actionTxt").html("有课程存在培养计划,是否确定删除？");
+					$.showModal("#actionModal",true);
+					$("#actionModal").find(".actionTxt").html("有课程存在培养计划,是否确定删除？");
 					// 确认删除事件
 					$('.confirmAction').unbind('click');
 					$('.confirmAction').bind('click', function(e) {
@@ -676,7 +678,7 @@ function removeClassesCheckCrouseIsInPlan(idArray){
 						e.stopPropagation();
 					});
 				}else{
-					$(".remindTip").show();
+					$.showModal("#remindModal",true);
 					$(".remindType").html("课程");
 					$(".remindActionType").html("删除");
 					// 确认按钮改变事件
@@ -717,10 +719,11 @@ function confirmRemoveClasses(idArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				for (var i = 0; i < idArray.length; i++) {
 					$("#courseLibraryTable").bootstrapTable('removeByUniqueId', idArray[i]);
 				}
-				$(".tip").hide();
+				$.hideModal("");
 				toastr.success('操作成功');
 				toolTipUp(".myTooltip");
 				drawPagination(".courseLibraryTableArea", "课程信息");

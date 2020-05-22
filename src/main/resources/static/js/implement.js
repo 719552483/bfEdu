@@ -721,7 +721,7 @@ jQuery.extend({
 //模态框消失
 jQuery.extend({  
 	hideModal:function(id,hideOtherMasking) { 
-		if (typeof(id) != "undefined") {
+		if (typeof(id) != "undefined"&&id!=="") {
 			$(id).modal("hide");
 		}else{
 			var allModal=$(".modal");
