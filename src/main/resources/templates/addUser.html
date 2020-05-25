@@ -73,51 +73,48 @@
 			</div>
 		</div>
 
-		<div class="tip removeUserTip">
-			<div class="tiptop"><span>提示信息</span><a class="tipCancelBtn"></a></div>
-			<div class="tipinfo">
-				<span><img src="images/ticon.png"/></span>
-				<div class="tipright">
-					<p>是否确认对用户的<a class="tipTitle">删除</a> ？</p>
-					<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+	<!-- 提示Modal -->
+	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
 				</div>
-			</div>
-
-			<div class="tipbtn">
-				<input name="" type="button" class="sure confirmremoveUser" value="确定"/>&nbsp;
-				<input name="" type="button" class="cancel cancelremoveUser" value="取消"/>
-			</div>
-		</div>
-
-		<div class="tip modifyUserTip">
-			<div class="tiptop"><span>提示信息</span><a class="tipCancelBtn"></a></div>
-			<div class="tipinfo">
-				<span><img src="images/ticon.png"/></span>
-				<div class="tipright">
-					<p>是否确认对用户的<a class="tipTitle">修改</a> ？</p>
-					<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-				</div>
-			</div>
-
-			<div class="tipbtn">
-				<input name="" type="button" class="sure confirmodifyUser" value="确定"/>&nbsp;
-				<input name="" type="button" class="cancel cancelmodifyUser" value="取消"/>
-			</div>
-		</div>
-
-		<script type="text/javascript">
-			$("#usual1 ul").idTabs();
-		</script>
-		<div class="modal-backdrop fade maskingElement noneStart"></div>
-		<div class="modal-backdrop fade loadingMasking noneStart">
-				<div class="spinner-box">
-					<div class="pulse-container">
-						<div class="pulse-bubble pulse-bubble-1"></div>
-						<div class="pulse-bubble pulse-bubble-2"></div>
-						<div class="pulse-bubble pulse-bubble-3"></div>
+				<div class="modal-body">
+					<div class="tipinfo">
+						<span><img src="images/ticon.png" /></span>
+						<div class="tipright">
+							<p>
+								是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
+							</p>
+							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+						</div>
 					</div>
-					<div class="loadingtxt">数据加载中，请稍后...</div>
+					<div class="clear"></div>
 				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
 		</div>
+	</div>
+
+	<!-- ajax请求masking -->
+	<div class="modal-backdrop fade loadingMasking noneStart">
+		<div class="spinner-box">
+			<div class="pulse-container">
+				<div class="pulse-bubble pulse-bubble-1"></div>
+				<div class="pulse-bubble pulse-bubble-2"></div>
+				<div class="pulse-bubble pulse-bubble-3"></div>
+			</div>
+			<div class="loadingtxt">数据加载中，请稍后...</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+			$("#usual1 ul").idTabs();
+	</script>
+		
 	</body>
 </html>
