@@ -629,7 +629,10 @@ public class AdministrationPageService {
 	
 	
 	
-	
+	//新建或修改用户
+	public void newUser(Edu990 edu990) {
+		edu990DAO.save(edu990);
+	}
 	
 	// 查询用户是否存在
 	public String checkIsHaveUser(String userName) {
@@ -959,6 +962,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

@@ -3,7 +3,9 @@ package com.beifen.edu.administration.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,19 +106,26 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		String checkIsHaveUser = administrationPageService.checkIsHaveUser(username);
 		String datebasePwd = administrationPageService.checkPwd(username);
+		String ErroeTxt="";
 		// 用户不存在
 		if (checkIsHaveUser == null) {
 			result = false;
+			ErroeTxt="用户不存在";
 			returnMap.put("result", result);
+			returnMap.put("ErroeTxt", ErroeTxt);
 		} else if (!password.equals(datebasePwd)) {
 			result = false;
+			ErroeTxt="密码错误";
 			returnMap.put("result", result);
+			returnMap.put("ErroeTxt", ErroeTxt);
 		} else if (checkIsHaveUser != null && password.equals(datebasePwd)) {
 			result = true;
-
 			Map<String, Object> UserInfo = new HashMap();
-			Edu990 edu000 = administrationPageService.getUserInfo(username);
-			returnMap.put("UserInfo", JSON.toJSONString(edu000));
+			Edu990 edu990 = administrationPageService.getUserInfo(username);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+			edu990.setScdlsj(df.format(new Date()));
+			administrationPageService.newUser(edu990);
+			returnMap.put("UserInfo", JSON.toJSONString(edu990));
 			returnMap.put("result", result);
 		}
 		return returnMap;
