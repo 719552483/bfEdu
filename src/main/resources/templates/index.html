@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="js/implement.js"></script>
 		<script src="sripts/select-mania.js" type="text/javascript"></script>
 		<script src="sripts/toastr.min.js" type="text/javascript"></script>
+		<script src="sripts/jquerySession.js"></script>
 </head>
 	<body>
 
@@ -112,16 +113,19 @@
 
 			</div>
 		</div>
-		<div class="modal-backdrop fade maskingElement noneStart"></div>
-				<div class="modal-backdrop fade loadingMasking noneStart">
-				<div class="spinner-box">
-					<div class="pulse-container">
-						<div class="pulse-bubble pulse-bubble-1"></div>
-						<div class="pulse-bubble pulse-bubble-2"></div>
-						<div class="pulse-bubble pulse-bubble-3"></div>
-					</div>
-					<div class="loadingtxt">数据加载中，请稍后...</div>
-				</div>
+	
+	
+	
+	<!-- ajax请求masking -->
+	<div class="modal-backdrop fade loadingMasking noneStart">
+		<div class="spinner-box">
+			<div class="pulse-container">
+				<div class="pulse-bubble pulse-bubble-1"></div>
+				<div class="pulse-bubble pulse-bubble-2"></div>
+				<div class="pulse-bubble pulse-bubble-3"></div>
+			</div>
+			<div class="loadingtxt">数据加载中，请稍后...</div>
 		</div>
+	</div>
 	</body>
 </html>

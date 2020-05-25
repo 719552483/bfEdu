@@ -1,5 +1,5 @@
 $(function() {
-	//新增学生
+	//登录
 	$('#confrimLogin').unbind('click');
 	$('#confrimLogin').bind('click', function(e) {
 		btnBind();

@@ -1,4 +1,16 @@
-//查询需要的二级代码信息
+$(document).ready(function() {
+	checkSession();
+});
+
+//检查是否存在session 实现拦截
+function checkSession(){
+	 var userInfo =$.session.get('userInfo');
+	 if(typeof userInfo == "undefined" ){
+		 top.location = "login.html";
+     }
+}
+
+// 查询需要的二级代码信息
 function queryEJDMElementInfo(){
 	var queryRs;
 	$.ajax({
