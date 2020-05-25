@@ -547,7 +547,6 @@ public class AdministrationController {
 		edu107.setXbmc(jsonObject.getString("deaparmentName"));
 		edu107.setNjmc(jsonObject.getString("gradeName"));
 		edu107.setZymc(jsonObject.getString("majorName"));
-		edu107.setPyjhmc(jsonObject.getString("relationName"));
 		List<Edu107> relationList = administrationPageService.seacchRelation(edu107);
 		returnMap.put("relationList", relationList);
 		returnMap.put("result", true);
@@ -2126,8 +2125,11 @@ public class AdministrationController {
 					break;
 				}
 		}
+		//判断身份证是否存在
+		boolean IDcardIshave = administrationPageService.IDcardIshave(edu001.getSfzh());
 		
-		if(!xhhave&&!studentSpill){
+		
+		if(!xhhave&&!studentSpill&&!IDcardIshave){
 			String yxbz = "1";
 			edu001.setYxbz(yxbz);
 			administrationPageService.addStudent(edu001); //新增学生
@@ -2141,6 +2143,7 @@ public class AdministrationController {
 			returnMap.put("yxbz", yxbz);
 		}
 		
+		returnMap.put("IDcardIshave", IDcardIshave);
 		returnMap.put("xhhave", xhhave);
 		returnMap.put("studentSpill", studentSpill);
 		returnMap.put("result", true);
@@ -2278,6 +2281,11 @@ public class AdministrationController {
 	@ResponseBody
 	public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
 		Map<String, Object> returnMap= utils.checkFile(file,"edu001","学生信息");
+		boolean modalPass=(boolean) returnMap.get("modalPass");
+		if(!modalPass){
+			 return returnMap;
+		}
+		
 		boolean dataCheck=(boolean) returnMap.get("dataCheck");
 		if(!dataCheck){
 			 return returnMap;

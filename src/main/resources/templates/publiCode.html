@@ -436,247 +436,295 @@
 	<script type="text/javascript">
 		$("#usual1 ul").idTabs();
 	</script>
+
+    <!-- 培养层次Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addNewLevelModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">校区</label>
+									<select class="isSowIndex" id="addNewLevel_schoolLocation">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">名称</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewLevel_levelName" placeholder="请输入培养层次名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">编码</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewLevel_levelCode" placeholder="请输入培养层次编码..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">入学季节</label>
+									<select class="isSowIndex" id="addNewLevel_enterSeason">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学制</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewLevel_academicStructure" placeholder="请输入学制..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confimAddNewLevel" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <!-- 系部Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addNewDeaparmentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">系部名称</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewDeaparment_deaparmentName" placeholder="请输入系部名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">系部编码</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewDeaparment_deaparmentCode" placeholder="请输入系部编码..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confimaddNewDeaparment" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <!-- 年级Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addNewGradeModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年级名称</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewGrade_gradeName" placeholder="请输入年级名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年级编码</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewGrade_gradeCode" placeholder="请输入年级编码..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confimaddNewGrade" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <!-- 专业Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addNewMajorModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专业名称</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewMajor_mjorName" placeholder="请输入专业名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专业编码</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewMajor_majorCode" placeholder="请输入专业编码..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confimaddNewMajor" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 	
-	
-	<div class="tip manyInfoShow addNewRelationTip">
-		<div class="tiptop">
-			<span>新增培养计划</span><a class="cancel"></a>
-		</div>
-		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-		   <div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">培养计划名称</label>
-						<input name="" type="text" class="myInput colInput" id="addNewRelation_RelationName" placeholder="请输入培养计划名称..."/>
-					</div>
-				</ul>
-			</div>
-		
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">培养层次</label>
-							<select class="isSowIndex" id="addNewRelation_level">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
+	 <!-- 培养计划Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addNewRelationModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">培养计划名称</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addNewRelation_RelationName" placeholder="请输入培养计划名称..." />
+								</div>
+							</ul>
 						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">系部</label>
-							<select class="isSowIndex" id="addNewRelation_department">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">年级</label>
-							<select class="isSowIndex" id="addNewRelation_garde">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">专业</label>
-							<select class="isSowIndex" id="addNewRelation_major">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-		</div>
 
-		<div class="tipbtn">
-			<input name="" type="button" class="sure addNewRelationTip_confimBtn" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">培养层次</label>
+									<select class="isSowIndex" id="addNewRelation_level">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">系部</label>
+									<select class="isSowIndex" id="addNewRelation_department">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年级</label>
+									<select class="isSowIndex" id="addNewRelation_garde">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专业</label>
+									<select class="isSowIndex" id="addNewRelation_major">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure addNewRelationTip_confimBtn" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<div class="tip manyInfoShow addNewLevelTip">
-		<div class="tiptop">
-			<span>新增层次</span><a class="cancel"></a>
-		</div>
-		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-		  <div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">校区</label>
-							<select class="isSowIndex" id="addNewLevel_schoolLocation">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
+
+
+    <!-- 提示Modal -->
+	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="tipinfo">
+						<span><img src="images/ticon.png" /></span>
+						<div class="tipright">
+							<p>
+								是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
+							</p>
+							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
 						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">名称</label>
-						<input name="" type="text" class="myInput colInput" id="addNewLevel_levelName" placeholder="请输入培养层次名称..."/>
 					</div>
-				</ul>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
 			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">编码</label>
-						<input name="" type="text" class="myInput colInput" id="addNewLevel_levelCode" placeholder="请输入培养层次编码..."/>
-					</div>
-				</ul>
-			</div>
-		
-			<div class="col1 giveBottom">
-					<ul class="forminfo">
-						<div class="">
-							<label class="selectName" style="margin-top: 14px;">入学季节</label>
-							<select class="isSowIndex" id="addNewLevel_enterSeason">
-								<option value="seleceConfigTip">请选择</option>
-							</select>
-						</div>
-					</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">学制</label>
-						<input name="" type="text" class="myInput colInput" id="addNewLevel_academicStructure" placeholder="请输入学制..."/>
-					</div>
-				</ul>
-			</div>
-		
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confimAddNewLevel" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
 		</div>
 	</div>
 
-	<div class="tip manyInfoShow addNewDeaparmentTip">
-		<div class="tiptop">
-			<span>新增系部</span><a class="cancel"></a>
-		</div>
-		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">系部名称</label>
-						<input name="" type="text" class="myInput colInput" id="addNewDeaparment_deaparmentName" placeholder="请输入系部名称..."/>
-					</div>
-				</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">系部编码</label>
-						<input name="" type="text" class="myInput colInput" id="addNewDeaparment_deaparmentCode" placeholder="请输入系部编码..."/>
-					</div>
-				</ul>
-			</div>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confimaddNewDeaparment" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
-
-	<div class="tip manyInfoShow addNewGradeTip">
-		<div class="tiptop">
-			<span>新增年级</span><a class="cancel"></a>
-		</div>
-		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">年级名称</label>
-						<input name="" type="text" class="myInput colInput" id="addNewGrade_gradeName" placeholder="请输入年级名称..."/>
-					</div>
-				</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">年级编码</label>
-						<input name="" type="text" class="myInput colInput" id="addNewGrade_gradeCode" placeholder="请输入年级编码..."/>
-					</div>
-				</ul>
-			</div>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confimaddNewGrade" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
-
-    <div class="tip manyInfoShow addNewMajorTip">
-		<div class="tiptop">
-			<span>新增专业</span><a class="cancel"></a>
-		</div>
-		<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">专业名称</label>
-						<input name="" type="text" class="myInput colInput" id="addNewMajor_mjorName" placeholder="请输入专业名称..."/>
-					</div>
-				</ul>
-			</div>
-			
-			<div class="col1 giveBottom">
-				<ul class="forminfo">
-					<div class="">
-						<label class="selectName" style="margin-top: 14px;">专业编码</label>
-						<input name="" type="text" class="myInput colInput" id="addNewMajor_majorCode" placeholder="请输入专业编码..."/>
-					</div>
-				</ul>
-			</div>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confimaddNewMajor" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
-
-	<div class="tip remindTip">
-		<div class="tiptop">
-			<span>提示信息</span><a class="cancel"></a>
-		</div>
-		<div class="tipinfo">
-			<span><img src="images/ticon.png" /></span>
-			<div class="tipright">
-				<p>
-					是否确认对<a class="remindType"></a>的<a class="remindActionType"></a> ？
-				</p>
-				<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-			</div>
-		</div>
-
-		<div class="tipbtn">
-			<input name="" type="button" class="sure confirmRemind" value="确定" />&nbsp;
-			<input name="" type="button" class="cancel" value="取消" />
-		</div>
-	</div>
-
-	<div class="modal-backdrop fade maskingElement noneStart"></div>
-		<div class="modal-backdrop fade loadingMasking noneStart">
+    <!-- ajax请求masking -->
+	<div class="modal-backdrop fade loadingMasking noneStart">
 				<div class="spinner-box">
 					<div class="pulse-container">
 						<div class="pulse-bubble pulse-bubble-1"></div>
@@ -685,7 +733,7 @@
 					</div>
 					<div class="loadingtxt">数据加载中，请稍后...</div>
 				</div>
-		</div>
+	</div>
 
 </body>
 </html>

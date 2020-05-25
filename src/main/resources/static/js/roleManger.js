@@ -145,7 +145,6 @@ function btnBind() {
 	$('.tipCancelBtn,.cancelAddRole,.cancelModifyRoleBtn,.cancelRemoveRoleBtn').unbind('click');
 	$('.tipCancelBtn,.cancelAddRole,.cancelModifyRoleBtn,.cancelRemoveRoleBtn').bind('click', function(e) {
 		$(".tip").hide();
-		showMaskingElement();
 		e.stopPropagation();
 	});
 
@@ -187,7 +186,6 @@ function addShortcuts() {
 
 	if (!isSameArray(newShortcutsList, oldShortcutsList)) {
 		$(".tip").show().fadeIn(200);
-		showMaskingElement();
 		$(".tipTitle").html("快捷方式");
 	} else {
 		shortcutsGiveup();
@@ -321,7 +319,6 @@ function addRole() {
 		return;
 	}
 	$(".comfirmAddRoleTip").show();
-	showMaskingElement();
 	$('.comfirmAddRole').unbind('click');
 	$('.comfirmAddRole').bind('click', function(e) {
 		comfirmAddRole(addRolename, newRoleAuthoritys);
@@ -359,7 +356,6 @@ function comfirmAddRole(roleName, authorityInfo) {
 	$("#add_rolename").val("");
 	shortcutsRefresh();
 	$(".tip").hide();
-	showMaskingElement();
 }
 
 /*
@@ -574,7 +570,6 @@ function modifyRole(row, index) {
 	}
 
 	$(".comfirmModifyRoleTip").show();
-	showMaskingElement();
 	$('.comfirmModifyRoleBtn').unbind('click');
 	$('.comfirmModifyRoleBtn').bind('click', function(e) {
 		comfirmModifyRole(index, addRolename, newRoleAuthoritys);
@@ -608,7 +603,6 @@ function comfirmModifyRole(index, roleName, authorityInfo) {
 	});
 	toolTipUp(".myTooltip");
 	$("#tab1,#modifyRole,#canleiModifRole,.tip").hide();
-	showMaskingElement();
 	$("#addRole,#tab2").show();
 	$(".forminfo").find("li").find("i").show();
 	toastr.success('修改角色成功');
@@ -625,7 +619,6 @@ function canleiModifRole() {
 //删除角色
 function removeRoler(row) {
 	$(".comfirmRemoveRoleTip").show();
-	showMaskingElement();
 	$('.comfirmRemoveRoleBtn').unbind('click');
 	$('.comfirmRemoveRoleBtn').bind('click', function(e) {
 		var removeUserArray = new Array;
@@ -643,7 +636,6 @@ function removeRolersBtn() {
 	} else {
 		var removeUserArray = new Array;
 		$(".comfirmRemoveRoleTip").show();
-		showMaskingElement();
 		for (var i = 0; i < chosenUsers.length; i++) {
 			removeUserArray.push(chosenUsers[i].id);
 		}

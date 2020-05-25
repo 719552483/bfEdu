@@ -165,7 +165,7 @@ function stuffAdministrationClassTable(tableInfo){
 		
 
 		drawPagination(".administrationClassTableArea", "行政班信息");
-		drawSearchInput();
+		drawSearchInput(".administrationClassTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 		changeColumnsStyle(".administrationClassTableArea", "行政班信息");
@@ -173,12 +173,11 @@ function stuffAdministrationClassTable(tableInfo){
 
 //查看行政班详情
 function administrationClassInfo(row){
-	$(".addAdministrationClassTipTitle").html(row.pyccmc+'/'+row.xbmc+'/'+row.njmc+'/'+row.zymc+"-"+row.xzbmc);
-	$(".addAdministrationClassTip").show();
+	$.showModal("#addAdministrationClassModal",false);
+	$("#addAdministrationClassModal").find(".moadalTitle").html(row.pyccmc+'/'+row.xbmc+'/'+row.njmc+'/'+row.zymc+"-"+row.xzbmc);
 	$('.addAdministrationClassTip').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn").hide();
 	$(".addAdministrationClassTip").find(".canNotModifythings").remove();
-	showMaskingElement();
 	stuffAdministrationClassDetails(row);
 }
 
@@ -200,12 +199,11 @@ function modifyAdministrationClass(row){
 		toastr.warning('不能修改已生成开课计划的班级');
 		return;
 	}
-	$(".addAdministrationClassTipTitle").html(row.pyccmc+'/'+row.xbmc+'/'+row.njmc+'/'+row.zymc+"-"+row.xzbmc);
-	$(".addAdministrationClassTip").show();
+	$.showModal("#addAdministrationClassModal",true);
+	$("#addAdministrationClassModal").find(".moadalTitle").html(row.pyccmc+'/'+row.xbmc+'/'+row.njmc+'/'+row.zymc+"-"+row.xzbmc);
 	$('.addAdministrationClassTip').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn,.canNotModifythings").show();
 	$(".addAdministrationClassTip").find("label:lt(5)").after('<samll class="canNotModifythings"><br />(不可改)</samll>');
-	showMaskingElement();
 	stuffAdministrationClassDetails(row);
 	//确认修改行政班
 	$('.confirmAddAdministrationClass').unbind('click');
@@ -244,6 +242,7 @@ function confirmModifyAdministrationClass(row){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('班级名称已存在');
 					return;
@@ -257,8 +256,7 @@ function confirmModifyAdministrationClass(row){
 					id: row.edu300_ID,
 					row: newAdministrationClassObject
 				});
-				$(".addAdministrationClassTip").hide();
-				showMaskingElement();
+				$.hideModal("#addAdministrationClassModal");
 				toolTipUp(".myTooltip");
 				drawPagination(".administrationClassTableArea", "行政班信息");
 				toastr.success('修改成功');
@@ -272,12 +270,10 @@ function confirmModifyAdministrationClass(row){
 //预备添加行政班
 function wantAddAdministrationClass(){
 	$(".addAdministrationClassTip").find(".canNotModifythings").remove();
-	$(".addAdministrationClassTip").show();
 	emptyAdministrationClassDetailsArea();
-	$(".addAdministrationClassTipTitle").html("新增行政班");
-	$(".myabeNoneTipBtn").show();
 	$(".canNotModifythings").hide();
-	showMaskingElement();
+	$.showModal("#addAdministrationClassModal",true);
+	$("#addAdministrationClassModal").find(".moadalTitle").html("新增行政班");
 	//确认新增行政班
 	$('.confirmAddAdministrationClass').unbind('click');
 	$('.confirmAddAdministrationClass').bind('click', function(e) {
@@ -312,6 +308,7 @@ function confirmAddAdministrationClass(){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if(backjson.namehave){
 					toastr.warning('班级名称已存在');
 					return;
@@ -320,15 +317,14 @@ function confirmAddAdministrationClass(){
 					toastr.warning('班级编码已存在');
 					return;
 				}
-				hideloding();
 				newAdministrationClassObject.edu300_ID=backjson.id;
 				newAdministrationClassObject.yxbz=backjson.yxbz;
 				newAdministrationClassObject.sfsckkjh=backjson.sfsckkjh;
 				$('#administrationClassTable').bootstrapTable("prepend", newAdministrationClassObject);
-				$(".addAdministrationClassTip").hide();
-				showMaskingElement();
+				$.hideModal("#addAdministrationClassModal");
 				toolTipUp(".myTooltip");
 				drawPagination(".administrationClassTableArea", "行政班信息");
+				toastr.success('新增行政班成功');
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -405,11 +401,11 @@ function removeAdministrationClass(row){
 		toastr.warning('不能删除已生成开课计划的班级');
 		return;
 	}
-	$(".removeTip").show();
-	showMaskingElement();
-	$(".removeType").html("行政班");
-	$('.confirmremove').unbind('click');
-	$('.confirmremove').bind('click', function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("行政班 -"+row.xzbmc);
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
 		removeArray.push(row.edu300_ID);
 		sendLvelRemoveInfo(removeArray);
@@ -432,11 +428,11 @@ function removeAdministrationClasses() {
 			
 		}
 	}
-	$(".removeTip").show();
-	showMaskingElement();
-	$(".removeType").html("培养计划");
-	$('.confirmremove').unbind('click');
-	$('.confirmremove').bind('click', function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("已选行政班");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
 		for (var i = 0; i < chosenclasses.length; i++) {
 			removeArray.push(chosenclasses[i].edu300_ID);
@@ -467,8 +463,9 @@ function sendLvelRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#administrationClassTable", removeArray, ".administrationClassTableArea", "行政班信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -580,12 +577,10 @@ function getNotNullSearchs() {
 
 //页面初始化时按钮事件绑定
 function btnBind(){
-	// 提示框取消按钮
+	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		showMaskingElement();
-		hideloding();
+		$.hideModal();
 		e.stopPropagation();
 	});
 	
@@ -690,7 +685,7 @@ function drawClassManagementEmptyTable() {
 function stuffClassManagementTable(tableInfo) {
 	window.classManagementEvents = {
 		'click #generateClassName' : function(e, value, row, index) {
-			generateClassName(row,index);
+			generateClassName(row,index,true);
 		},
 		'click #editorClassName' : function(e, value, row, index) {
 			editorClassName(row,index);
@@ -825,21 +820,25 @@ function stuffClassManagementTable(tableInfo) {
 		}
 	}
 	drawPagination(".classManagementTableArea", "行政班信息");
-	drawSearchInput();
+	drawSearchInput(".classManagementTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip")
 	changeColumnsStyle(".classManagementTableArea", "行政班信息");
 }
 
 //生成教学班名称
-function generateClassName(row,index){
+function generateClassName(row,index,showToastr){
 	if(row.zdrs>row.rnrs){
-		toastr.warning('行政班在读人数大于容纳人数');
+		if(showToastr){
+			toastr.warning('行政班在读人数大于容纳人数');
+		}
 		return;
 	}
 	
 	if( row.zdrs===0){
-		toastr.warning('行政班暂无学生');
+		if(showToastr){
+			toastr.warning('行政班 -'+row.xzbmc+' 暂无学生');
+		}
 		return;
 	}
 	
@@ -914,9 +913,7 @@ function stuffNewTeachingClassInfo() {
 	var choosedTeachingClass = $("#classManagementTable").bootstrapTable(
 			"getSelections");
 	for (var i = 0; i < choosedTeachingClass.length; i++) {
-		if (choosedTeachingClass[i].jxbrl === 0) {
-			generateClassName(choosedTeachingClass[i],i);
-		}
+		generateClassName(choosedTeachingClass[i],i,false);
 	}
 	toolTipUp(".myTooltip");
 }
@@ -1034,8 +1031,7 @@ function combinedClass() {
 
 	$("#combinedClassName").val(dealCombinedClassName);
 	$("#combinedClassHoldStudentNum").val(combinedClassStudentNum);
-	$(".combinedClassTip").show();
-	showMaskingElement();
+	$.showModal("#combinedClassModal",true);
 	// 确定按钮
 	$('#confirmCombinedClass').unbind('click');
 	$('#confirmCombinedClass').bind('click', function(e) {
@@ -1073,8 +1069,7 @@ function breakClass() {
 	$("#allStudentNum").val(allStudentNum);
 
 	stuffEmptyClassTable();
-	$(".breakClassTip").show();
-	showMaskingElement();
+	$.showModal("#breakClassModal",true);
 	// 拆分按钮
 	$('#startBreak').unbind('click');
 	$('#startBreak').bind('click', function(e) {
@@ -1287,14 +1282,21 @@ function onDblClickforStudentMenu(field, index, row) {
 				stuffStudentTable(backjson.studentInfo);
 				
 				// 提示框
-				$(".breakClassTip").hide();
-				$(".appointClassStudenInfoTip").show();
+				$.hideModal("#breakClassModal",false);
+				$.showModal("#appointClassStudenInfoModal",true);
 				//按钮事件绑定
 				studenBtnBind();
 				// 确定按钮事件绑定
 				$('#confirmChoosedStudent').unbind('click');
 				$('#confirmChoosedStudent').bind('click', function(e) {
 					confirmChoosedStudent(index);
+					e.stopPropagation();
+				});
+				//取消按钮
+				$("#appointClassStudenInfoModal").find('.cancelTipBtn,.cancel').unbind('click');
+				$("#appointClassStudenInfoModal").find('.cancelTipBtn,.cancel').bind('click', function(e) {
+					$.hideModal("#appointClassStudenInfoModal",false);
+					$.showModal("#breakClassModal",true);
 					e.stopPropagation();
 				});
 			} else {
@@ -1572,8 +1574,9 @@ function stuffChoosedStudent(choosedStudent, index) {
 	$("#breakClassTable").bootstrapTable("updateCell", {index : index,field : "bhxzbmc",value : ""});
 	$("#breakClassTable").bootstrapTable("updateCell", {index : index,field : "bhxzbCode",value : ""});
 	
-	$(".breakClassTip").show();
-	$(".appointClassStudenInfoTip").hide();
+	$.hideModal("#appointClassStudenInfoModal",false);
+	$.showModal("#breakClassModal",true);
+	
 	toolTipUp(".myTooltip");
 }
 
@@ -1765,9 +1768,10 @@ function verifyClassInfo(type,choosedTeaching,isShowMaskingElement,warningTxt){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				if (backjson.willDropFirsthand) {
-					$(".combinedClassTip,.breakClassTip").hide();
-                    $(".actionTip").show();
+					$.hideModal("",false);
+					$.showModal("#actionModal",true);
                     $(".actionTxt").html("本次操作将删除原始教学班,是否确认继续？");
                 	$('.confirmAction').unbind('click');
                 	$('.confirmAction').bind('click', function(e) {
@@ -1808,12 +1812,12 @@ function confirmClassAction(type,choosedTeaching,isShowMaskingElement) {
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				toastr.success(type+'成功');
-				$(".tip").hide();
+				$.hideModal();
 				if(!isShowMaskingElement){
 					hideloding();
 				}else{
-					showMaskingElement();
 				}
 				
 				$('#classManagementTable').bootstrapTable('uncheckAll');
@@ -2186,8 +2190,8 @@ function stuffTeachingClassTable(tableInfo) {
 
 	}
 	drawPagination(".teachingClassTableArea", "教学班信息");
-	changeColumnsStyle( ".teachingClassTableArea", "教学班信息");
-	drawSearchInput();
+	changeColumnsStyle(".teachingClassTableArea", "教学班信息");
+	drawSearchInput(".teachingClassTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 }
@@ -2255,11 +2259,11 @@ function modifyTeachingClassName(row, index) {
 
 // 单个删除教学班
 function removeTeachingClass(row) {
-	$(".removeTip").show();
-	showMaskingElement();
-	$(".removeType").html("教学班");
-	$('.confirmremove').unbind('click');
-	$('.confirmremove').bind('click',function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("教学班");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click',function(e) {
 				var removeArray = new Array;
 				removeArray.push(row.edu301_ID);
 				sendTeachingClassRemoveInfo(removeArray);
@@ -2282,11 +2286,11 @@ function removeTeachingClasses() {
 		}
 	}
 
-	$(".removeTip").show();
-	showMaskingElement();
-	$(".removeType").html("教学班");
-	$('.confirmremove').unbind('click');
-	$('.confirmremove').bind('click',function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("教学班");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click',function(e) {
 				var removeArray = new Array;
 				for (var i = 0; i < chosenTeachingClasses.length; i++) {
 					removeArray.push(chosenTeachingClasses[i].edu301_ID);
@@ -2317,8 +2321,9 @@ function sendTeachingClassRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#teachingClassTable", removeArray, ".teachingClassTableArea", "教学班信息");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');

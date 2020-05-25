@@ -373,10 +373,10 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .manyInfoInput {
-	width: 67% !important;
-	margin-left: -1% !important;
-	text-indent: 13px;
-	color: #636363;
+    width: 70% !important;
+    margin-left: -1% !important;
+    text-indent: 13px;
+    color: #636363;
     font-weight: 600;
 }
 
@@ -387,8 +387,8 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .multi-select-container {
-	margin-left: -4.5%;
-	margin-top: -5px;
+	    margin-left: -1.5%;
+    margin-top: -2px;
 }
 
 .multi-select-button {
@@ -478,10 +478,7 @@ padding:1.6em 0em 0.6em 31px !important
 	color: #fff;
 }
 
-.allClassMangersTableArea .search{
-    margin-top: 2px;
-    margin-left: 72%;
-}
+
 
 .relationTableArea .search{
    relationNameHave
@@ -514,10 +511,10 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .breakClassTableArea .search {
-    margin-top: 0px !important;
-    margin-left: 25%;
+  margin-top: 10px !important;
+    margin-right: 1%;
     margin-bottom: 3px;
-    float: none !important;
+    float: right !important;
 }
 
 .allClassTableArea .search {
@@ -606,7 +603,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .moreInfoSelectStyle .select-mania {
-	margin-left: -4px !important;
+	margin-left: 1px !important;
 	margin-top: 1px !important;
 	margin-bottom: 1% !important;
 	width: 68% !important;
@@ -623,6 +620,15 @@ padding:1.6em 0em 0.6em 31px !important
 	width: 25%;
 	float: left;
 }
+.col3{
+	width: 33.3333%;
+	float: left;
+}
+
+.col2{
+	width: 49%;
+	float: left;
+}
 
 .myTabson {
 	margin-top: 7px !important;
@@ -633,6 +639,7 @@ padding:1.6em 0em 0.6em 31px !important
 	margin-bottom: 9px;
 }
 
+/*
 .manyInfoShow {
 	width: 984px;
 	height: auto;
@@ -641,6 +648,15 @@ padding:1.6em 0em 0.6em 31px !important
 	padding-bottom: 15px;
 	margin-top: -5%;
 }
+*/
+
+.manyInfoShow {
+	height: auto;
+	padding-left: 2%;
+	margin: 0px 29px;
+}
+
+
 
 .tipAUTOheight {
 	height: auto;
@@ -670,12 +686,11 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .manyInfoShow .selectName {
-	padding-right: 7px;
-	margin-top: 6px;
-	width: 29%;
-	color: #3c3b3b;
+	    width: 67px;
+    color: #3c3b3b;
     font-weight: 500;
     font-family: fantasy;
+        margin-top: 14px;
 }
 
 .selectName {
@@ -755,11 +770,17 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .allWidthInput {
-	width: 70% !important;
-	margin-left: -18.5% !important;
-	text-indent: 13px;
-	color: #636363;
+	    width: 378px !important;
+    margin-left: 10px !important;
+    text-indent: 13px;
+    color: #636363;
     font-weight: 600;
+}
+
+@media screen and (max-width:780px) {
+	.allWidthInput {
+		    width: 58% !important;
+	}
 }
 
 .colInput {
@@ -814,10 +835,14 @@ padding:1.6em 0em 0.6em 31px !important
 .searchGivePaddingR .fixed-table-toolbar {
 	padding-right: 1.8%;
 }
+
 .spelocl_R .fixed-table-toolbar {
 	padding-right: 5.8%;
 }
 
+.paddingL{
+	padding-left:2%;
+}
 
 .combinedClassTipInput {
 	width: 70% !important;
@@ -840,10 +865,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 
-.breakClassTableArea .search input {
-	    width: 83%;
-    margin-left: -7px;
-}
+
 
 .breakClassTip .tipinfo,
 .combinedClassTip .tipinfo {
@@ -852,15 +874,15 @@ padding:1.6em 0em 0.6em 31px !important
 
 .labelToBtn {
 	float: right;
-	margin-top: -32px;
-	margin-right: 64px;
-	padding: 7px;
-	font-weight: 800;
-	background: rgba(87, 149, 202, 0.9803921568627451);
-	color: white;
-	border-radius: 4px;
-	letter-spacing: 10px;
-	text-indent: 10px;
+    margin-top: -34px;
+    margin-right: 28%;
+    padding: 7px;
+    font-weight: 800;
+    background: rgba(87, 149, 202, 0.9803921568627451);
+    color: white;
+    border-radius: 4px;
+    letter-spacing: 10px;
+    text-indent: 10px;
 }
 
 .labelToBtn:hover {
@@ -890,7 +912,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .modal-backdrop.fade {
-	opacity: 0.5 !important;
+	opacity: 0.5;
 	    z-index: 9999;
 }
 
@@ -986,8 +1008,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .fileErrorTxTArea .myformtext,
-.tipBody .tools,
-.L_R_P {
+.tipBody .tools {
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -1042,19 +1063,20 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .file {
-	position: absolute;
-	display: inline-block;
-	background: #D0EEFF;
-	/* border: 1px solid #99D3F5; */
-	border-radius: 4px;
-	padding: 2px 12px;
-	overflow: hidden;
-	color: #1E88C7;
-	text-decoration: none;
-	text-indent: 0;
-	line-height: 38px;
-	float: right;
-	margin-left: 59%;
+    position: absolute;
+    display: inline-block;
+    background: #D0EEFF;
+    /* border: 1px solid #99D3F5; */
+    border-radius: 4px;
+    padding: 3px 11px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0px;
+    line-height: 37px;
+    float: right;
+    margin-left: 54%;
+    max-height: 44px;
 }
 
 .file input {
@@ -1192,6 +1214,122 @@ margin-left: 4px !important;
     font-size: 13px;
     font-family: initial;
     width: 100%;
+}
+
+.datetimepicker .prev,.datetimepicker .prev:hover{
+	background-image: url(../images/uew_icon_hover.png)!important;
+	background-repeat: no-repeat!important;
+	background-position: center!important;
+	transform: rotate(90deg)!important;
+	-ms-transform: rotate(90deg)!important; /* IE 9 */
+	-moz-transform: rotate(90deg)!important; /* Firefox */
+	-webkit-transform: rotate(90deg)!important; /* Safari 和 Chrome */
+	-o-transform: rotate(90deg)!important; /* Opera */
+}
+
+.datetimepicker .next,.datetimepicker .next:hover{
+	background-image: url(../images/uew_icon_hover.png)!important;
+	background-repeat: no-repeat!important;
+	background-position: center!important;
+	transform: rotate(-90deg)!important;
+	-ms-transform: rotate(-90deg)!important; /* IE 9 */
+	-moz-transform: rotate(-90deg)!important; /* Firefox */
+	-webkit-transform: rotate(-90deg)!important; /* Safari 和 Chrome */
+	-o-transform: rotate(-90deg)!important; /* Opera */
+}
+
+.datetimepicker .switch{
+	background: rgba(105, 185, 204, 0.788235294117647);
+    color: white;
+}
+
+.datetimepicker .today:hover{
+background: rgba(36, 138, 187, 0.77);
+    color: white;
+}
+
+.datetimepicker table tr td.active.active,.datetimepicker table tr td span.active.active{
+	background: rgba(36, 138, 187, 0.77)!important;
+}
+    
+.modal{
+	    z-index: 99999;
+}    
+
+.modal-header{
+	padding:initial;
+}
+
+.modal-body {
+    padding: 5px;
+}
+
+.modal-content{
+	min-width:290px;
+}
+
+#remindModal .modal-content,#actionModal .modal-content{
+    min-width: 500px;
+}
+
+#allClassMangersModal .modal-content{
+    min-width: 619px;
+}
+
+#allClassMangersModal .modal-content{
+    min-width:441px;
+}
+
+#appointClassStudenInfoModal .modal-content{
+    min-width: 600px;
+}
+
+#breakClassModal .modal-content{
+    min-width: 588px;
+}
+
+.bodyOnlyOneRow{
+	min-width:500px;
+}
+
+.bodyOnlyOneRow .only_col_SelectTipInfo{
+	    margin-left: 12px;
+}
+
+.bodyOnlyOneRow .only_col_SelectTipInfo .selectName {
+    width: 16%;
+}
+
+.moadalTitle{
+	max-width: 88%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#importStudentInfoModal .modal-body{
+	padding: 13px 0px 1px 20px;
+}
+
+.loadingMasking{
+	 z-index: 999999!important;
+}
+
+
+#remindModal .tipinfo{
+ padding: 17px 0px 0px 17px;
+}
+
+.specialCanle {
+	background: url(../images/btnbg2.png) repeat-x;
+	color: rgba(0, 0, 0, 0.7490196078431373);
+	font-weight: normal;
+	width: 96px;
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
+	border-radius: 3px;
+	cursor: pointer;
 }
 
 @keyframes serachAnimation {

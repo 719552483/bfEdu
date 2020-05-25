@@ -423,6 +423,24 @@ public class AdministrationPageService {
 	public String queryStudentXzbCode(String edu001Id) {
 		return edu001DAO.queryStudentXzbCode(edu001Id);
 	}
+	
+	//查询身份证号是否存在
+	public boolean IDcardIshave(String sfzh) {
+		boolean isHave=false;
+		if(sfzh!=null){
+			List<Edu001> IDcards =edu001DAO.IDcardIshave(sfzh);
+			if(IDcards.size()>0) isHave=true;
+		}
+		return isHave;
+	}
+	
+	//判断导入学生的培养计划和行政班是否对应
+	public boolean classMatchCultruePaln(String edu300_ID, String pycc, String szxb, String nj, String zybm) {
+		boolean isMatch=true;
+		List<Edu300> matchs =edu300DAO.classMatchCultruePaln(edu300_ID,pycc,szxb,nj,zybm);
+		if(matchs.size()<=0) isMatch=false;
+		return isMatch;
+	}
 
 	// 查询培养计划下所有教学班
 	public List<Edu301> getCulturePlanAllTeachingClasses(String levelCode, String departmentCode, String gradeCode,
@@ -941,6 +959,10 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
 
 	
 

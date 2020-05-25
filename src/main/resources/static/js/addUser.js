@@ -264,7 +264,6 @@ function modifiRole(row) {
 //单个删除用户
 function removeUser(row) {
 	$(".removeUserTip").show();
-	showMaskingElement();
 	$('.confirmremoveUser').unbind('click');
 	$('.confirmremoveUser').bind('click', function(e) {
 		var removeUserArray = new Array;
@@ -282,7 +281,6 @@ function removeUsersBtn() {
 	} else {
 		var removeUserArray = new Array;
 		$(".removeUserTip").show();
-		showMaskingElement();
 		for (var i = 0; i < chosenUsers.length; i++) {
 			removeUserArray.push(chosenUsers[i].id);
 		}
@@ -310,7 +308,6 @@ function okModify(row, index) {
 	var roleInSelect = $('.myTableSelect' + row.id).val();
 	if (usernameInInput !== row.userName || roleInSelect !== row.userRole) {
 		$(".modifyUserTip").show();
-		showMaskingElement();
 		//确认修改用户按钮
 		$('.confirmodifyUser').unbind('click');
 		$('.confirmodifyUser').bind('click', function(e) {
@@ -350,7 +347,6 @@ function confirmodifyUser(row, index) {
 	});
 	$(".tip").hide();
 	toolTipUp(".myTooltip");
-	showMaskingElement();
 	toastr.success('修改用户成功');
 	drawPagination(".allUserTableArea", "用户信息");
 }
@@ -401,7 +397,6 @@ function btnBind() {
 	$('.tipCancelBtn,.cancelremoveUser,.modifyUserTip,.tipCancelBtn').unbind('click');
 	$('.tipCancelBtn,.cancelremoveUser,.modifyUserTip,.tipCancelBtn').bind('click', function(e) {
 		$(".tip").hide();
-		showMaskingElement();
 		e.stopPropagation();
 	});
 

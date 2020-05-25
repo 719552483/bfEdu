@@ -180,10 +180,9 @@ function stuffMajorTrainingTable(tableInfo) {
 
 // 查看培养计划详情
 function majorTrainingInfo(row) {
-	showAndStuffDetails(row);
+	showAndStuffDetails(row,false);
 	$('.majorTrainingTableActionArea').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn").hide();
-	showMaskingElement();
 }
 
 // 修改培养计划
@@ -192,11 +191,10 @@ function modifyMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
-	showAndStuffDetails(row);
+	showAndStuffDetails(row,true);
 	$('.majorTrainingTableActionArea').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	$('#majorTrainingDetails_feedback').attr("disabled", true) // 反馈意见不可修改
 	$(".myabeNoneTipBtn").show();
-	showMaskingElement();
 	// 确认修改按钮
 	$('.confirmModifyMajorTraining').unbind('click');
 	$('.confirmModifyMajorTraining').bind('click', function(e) {
@@ -232,15 +230,15 @@ function confirmModifyMajorTraining(row) {
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				crouseModifyInfo.xbsp="noStatus";
 				$("#majorTrainingTable").bootstrapTable('updateByUniqueId', {
 					id : row.edu108_ID,
 					row : crouseModifyInfo
 				});
 				toolTipUp(".myTooltip");
-				$(".majorTrainingTableActionArea").hide();
+				$.hideModal("#majorTrainingModal");
 				drawPagination(".majorTrainingTableArea", "培养计划");
-				showMaskingElement();
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -284,12 +282,6 @@ function getCrouseModifyInfo(row){
 		toastr.warning('请选择授课学期');
 		return;
 	}
-	
-	
-	
-	
-
-	
 
 	var crouseInfoObject=new Object();
 	crouseInfoObject.edu108_ID=row.edu108_ID;
@@ -340,11 +332,11 @@ function removeMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
-	$(".removeTip").show();
-	showMaskingElement();
-	$(".removeType").html("培养计划");
-	$('.confirmremove').unbind('click');
-	$('.confirmremove').bind('click', function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("培养计划");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
 		removeArray.push(row.edu108_ID);
 		sendLvelRemoveInfo(removeArray);
@@ -365,11 +357,11 @@ function removeChoosedMajorTraining() {
 			return;
 		}
 	}
-	$(".removeTip").show();
-	showMaskingElement();
-	$(".removeType").html("培养计划");
-	$('.confirmremove').unbind('click');
-	$('.confirmremove').bind('click', function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("培养计划");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
 		for (var i = 0; i < chosenCrouse.length; i++) {
 			removeArray.push(chosenCrouse[i].edu108_ID);
@@ -400,8 +392,9 @@ function sendLvelRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableRemoveAction("#majorTrainingTable", removeArray, ".majorTrainingTableArea", "培养计划");
-				$(".remindTip").hide();
+				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -411,9 +404,8 @@ function sendLvelRemoveInfo(removeArray){
 }
 
 // 显示详细信息并填充内容
-function showAndStuffDetails(row) {
+function showAndStuffDetails(row,showFooter) {
 	var nouNullSearch=getNotNullSearchs();
-	$(".majorTrainingName").html(nouNullSearch.levelTxt+'/'+nouNullSearch.departmentTxt+'/'+nouNullSearch.gradeTxt+'/'+nouNullSearch.majorTxt+"-"+row.kcmc);
 	$("#majorTrainingDetails_teachingTerm").multiSelect(); 
 	$("#majorTrainingDetails_code").val(row.kcdm);
 	$("#majorTrainingDetails_coursesName").val(row.kcmc);
@@ -445,7 +437,8 @@ function showAndStuffDetails(row) {
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isTextual", row.zyzgkzkc);  //职业资格考证
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isCalssTextual", row.kztrkc);  //课证通融
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isTeachingReform", row.jxgglxkc);  //教学改革
-	$(".majorTrainingTableActionArea").show();
+	$("#majorTrainingModal").find(".moadalTitle").html(nouNullSearch.levelTxt+'/'+nouNullSearch.departmentTxt+'/'+nouNullSearch.gradeTxt+'/'+nouNullSearch.majorTxt+"-"+row.kcmc);
+	$.showModal("#majorTrainingModal",showFooter);
 }
 
 // 开始检索按钮
@@ -1194,7 +1187,6 @@ function showCourseInfo(row) {
 	showAndStuffDetails(row);
 	$('.generatCourseDeatilsTip').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn").hide();
-	showMaskingElement();
 }
 
 // 准备生成开课计划
@@ -1223,9 +1215,7 @@ function startGeneratCourse() {
 			return;
 		}
 	}
-	
-	$(".remindTip").show();
-	showMaskingElement();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("所选班级");
 	$(".remindActionType").html("开课计划");
 
@@ -1284,6 +1274,7 @@ function sendGeneratCoursePalnInfo(sendObject) {
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				//更改培养计划下课程是否生成开课计划属性
 				for (var i = 0; i < sendObject.crouses.length; i++) {
 					var currentCrouses=$("#majorTrainingTable").bootstrapTable("getRowByUniqueId", sendObject.crouses[i]);
@@ -1295,9 +1286,8 @@ function sendGeneratCoursePalnInfo(sendObject) {
 						row: currentCrouses
 					});
 				}
+				$.hideModal("#remindModal");
 				toastr.success('生成开课计划成功');
-				$(".remindTip").hide();
-				showMaskingElement();
 				drawPagination(".majorTrainingTableArea", "培养计划");
 				toolTipUp(".myTooltip");
 				$(".generatCoursePalnArea").hide();
@@ -1435,8 +1425,7 @@ function wantGeneratAllClassAllCourse() {
 
 // 生成专业下所有班级课程
 function generatAllClassAllCourse(level, department, grade, major) {
-	$(".remindTip").show();
-	showMaskingElement();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("专业下所有班级课程");
 	$(".remindActionType").html("生成");
 	$('.confirmRemind').unbind('click');
@@ -1473,8 +1462,8 @@ function confirmGeneratAllClassAllCourse(generatObject) {
 		},
 		success : function(backjson) {
 			if (backjson.result) {
-				showMaskingElement();
-				$(".remindTip").hide();
+				hideloding();
+				$.hideModal("#remindModal");
 				if(backjson.crouseInfo.length===0){
 					toastr.warning('该专业下暂无可生成课程');
 					return;
@@ -1518,11 +1507,10 @@ function binBind() {
 		e.stopPropagation();
 	});
 
-	// 提示框取消按钮
+	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		showMaskingElement();
+		$.hideModal();
 		e.stopPropagation();
 	});
 

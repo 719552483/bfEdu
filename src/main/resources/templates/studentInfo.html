@@ -4,7 +4,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>学生基本信息</title>
 		<link href="css/loading.css" rel="stylesheet" type="text/css" />
-		<link href="css/calendar.css" rel="stylesheet" type="text/css" />
 		<link href='css/bootstrap.min.css' media='all' rel='stylesheet' type='text/css' />
 		<link href='css/bootstrap-table.css' media='all' rel='stylesheet' type='text/css' />
 		<link href="css/example-styles.css" rel="stylesheet" type="text/css" />
@@ -15,6 +14,7 @@
 		<link href="css/select-mania.css" rel="stylesheet" type="text/css" />
 		<link href="css/tooltipify.min.css" rel="stylesheet" type="text/css" />
 		<link href="css/icon.css" rel="stylesheet" type="text/css" />
+		<link href='css/bootstrap-datetimepicker.min.css' rel='stylesheet' type='text/css' />
 		<script type="text/javascript" src="sripts/jquery.min.js"></script>
 		<script src='sripts/bootstrap.min.js' type='text/javascript'></script>
 		<script src='sripts/bootstrap-table.js' type='text/javascript'></script>
@@ -28,9 +28,8 @@
 		<script src="sripts/excel-gen.js" type="text/javascript"></script>
 		<script src="sripts/jquery.multi-select.min.js" type="text/javascript"></script>
 		<script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
-		<script src='sripts/monent.js' type='text/javascript'></script>
-		<script src='sripts/data-zh-cn.js' type='text/javascript'></script>
-		<script src='sripts/date-es6.js' type='text/javascript'></script>
+		<script type="text/javascript" src="sripts/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="sripts/bootstrap-datetimepicker.zh-CN.js"></script>
 		<script type="text/javascript" src="js/studentInfo.js"></script>
 		<script type="text/javascript" src="js/implement.js"></script>
 	</head>
@@ -61,7 +60,6 @@
 						<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出Excel</li>
 					</ul>
 				</div>
-
 
 				<div class="searchArea searchAreaWitheSelect">
 					<div class="col4 giveBottom">
@@ -174,16 +172,21 @@
 				<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">
 					<table class="tablelist myTableStyle" id="studentBaseInfoTable" data-unique-id="edu001_ID" style="margin-top: 10px;"></table>
 				</div>
-
 			</div>
+       </div>
+			
 
-</div>
-			
-			
-		<div class="tip manyInfoShow addStudentTip">
-				<div class="tiptop"><span>新增学生</span><a class="cancel"></a></div>
-				<div class="tipBody">
-					<div class="L_R_P searchArea moreInfoSelectStyle">
+
+	<!-- 新增学生Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="manyInfoShow">
+					 <div class="searchArea moreInfoSelectStyle">
 						<div class="formtitle" style="margin-bottom: 6px;"><span>基本信息：</span></div>
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
@@ -243,7 +246,7 @@
 								</div>
 							</ul>
 						</div>
-
+                        <div class="clear"></div>
 
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
@@ -380,9 +383,10 @@
 							</ul>
 						</div>
 					</div>
-					<div class="clear"></div>
-
-					<div class="L_R_P searchArea moreInfoSelectStyle">
+					 
+					 <div class="clear"></div>
+					 
+					 <div class="searchArea moreInfoSelectStyle">
 						<div class="formtitle" style="margin-bottom: 6px;"><span>其他：</span></div>
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
@@ -555,18 +559,54 @@
 							</ul>
 						</div>
 					</div>
+					
+					</div>
 				</div>
-				<div class="tipbtn">
+				<div class="modal-footer tipbtn">
 					<input name="" type="button" class="sure confirmBtn" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
 			</div>
+		</div>
+	</div>
+	
+	
+	<!-- 提示Modal -->
+	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="tipinfo">
+						<span><img src="images/ticon.png" /></span>
+						<div class="tipright">
+							<p>
+								是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
+							</p>
+							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-		<div class="tip manyInfoShow importStudentInfo">
-				<div class="tiptop"><span>导入学生信息</span><a class="cancel"></a></div>
-
-				<div class="tipBody">
+    <!-- 导入学生Modal -->
+	<div class="modal fade bs-example-modal-lg" id="importStudentInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">批量导入学生</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
 					<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="loadStudentInfoModel"><span><img src="images/icon05.png" style="width: 24px;"/></span>下载学生导入模板</li>
@@ -598,34 +638,20 @@
 								<div class="loadingtxt">文件解析中，请稍后...</div>
 						   </div>
 						</div>
+			       </form>
 					
-			</form>
+					
 				</div>
-				<div class="tipbtn">
+				<div class="modal-footer tipbtn">
 					<input name="" type="button" class="sure confirmImportStudentInfo" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
-
 			</div>
-
-		<div class="tip remindTip">
-				<div class="tiptop"><span>提示信息</span><a class="cancel"></a></div>
-				<div class="tipinfo">
-					<span><img src="images/ticon.png"/></span>
-					<div class="tipright">
-						<p>是否确认对<a class="remindType"></a>的<a class="remindActionType"></a> ？</p>
-						<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-					</div>
-				</div>
-
-				<div class="tipbtn">
-					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
-					<input name="" type="button" class="cancel" value="取消"/>
-				</div>
-			</div>
-
-		<div class="modal-backdrop fade maskingElement noneStart"></div>
-		<div class="modal-backdrop fade loadingMasking noneStart">
+		</div>
+	</div>
+	
+	 <!-- ajax请求masking -->
+	<div class="modal-backdrop fade loadingMasking noneStart">
 				<div class="spinner-box">
 					<div class="pulse-container">
 						<div class="pulse-bubble pulse-bubble-1"></div>
@@ -636,7 +662,7 @@
 				</div>
 		</div>
 
-		<script type="text/javascript">
+	<script type="text/javascript">
 			$("#usual1 ul").idTabs();
 		</script>
 	</body>

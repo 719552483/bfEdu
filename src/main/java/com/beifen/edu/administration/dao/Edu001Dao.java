@@ -51,4 +51,8 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	// 统计行政班总人数
 	@Query(value = "select COUNT(*) from edu001 e where e.Edu300_ID  =?1", nativeQuery = true)
 	int countXzbRS(String edu300_ID);
+
+	//身份证是否存在
+	@Query(value = "select * from edu001 e where e.sfzh=?1", nativeQuery = true)
+	public List<Edu001> IDcardIshave(String sfzh);
 }
