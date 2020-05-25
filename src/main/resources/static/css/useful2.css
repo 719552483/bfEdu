@@ -1300,6 +1300,13 @@ background: rgba(36, 138, 187, 0.77);
     width: 16%;
 }
 
+.moadalTitle{
+	max-width: 88%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 #importStudentInfoModal .modal-body{
 	padding: 13px 0px 1px 20px;
 }

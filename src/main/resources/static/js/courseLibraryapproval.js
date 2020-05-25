@@ -171,17 +171,11 @@ function stuffCourseLibraryTable(tableInfo){
 //课程详情
 function crouseDetails(row){
 	stuffclassDetailsArea(row);
-	$(".addNewClassTip").show();
-	$(".tipTile").html(row.kcmc+"-详细信息");
+	$.showModal("#addNewClassModal",false);
+	$("#addNewClassModal").find(".moadalTitle").html(row.kcmc+"-详细信息");
 	$("#addNewClass_calssManger").attr("mangerId",row.kcfzrID);
-	$(".comfirmAddNewClass").attr("value","确定");
-	showMaskingElement();
-	// 确认按钮绑定事件
+	// 审批不可修改
 	$('.comfirmAddNewClass').unbind('click');
-	$('.comfirmAddNewClass').bind('click', function(e) {
-		comfirmmodifyCourseInfo(row);
-		e.stopPropagation();
-	});
 }
 
 //填充课程详情tip内容
@@ -228,12 +222,6 @@ function emptyClassDetailsArea(){
 	reReloadSearchsWithSelect(reObject);
 }
 
-
-
-
-
-
-
 //课程库课程通过审核
 function passClass(){
 	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
@@ -250,10 +238,9 @@ function passClass(){
 		}
 		idArray.push(choosedClass[i].bf200_ID);
 	}
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("课程");
 	$(".remindActionType").html("审核通过");
-	showMaskingElement();
 	// 确认按钮改变事件
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -278,10 +265,9 @@ function cannotPass(){
 		}
 		idArray.push(choosedClass[i].bf200_ID);
 	}
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("课程");
 	$(".remindActionType").html("审核不通过");
-	showMaskingElement();
 	// 确认按钮改变事件
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -303,10 +289,9 @@ function cancelPass(){
 	for (var i = 0; i < choosedClass.length; i++) {
 		idArray.push(choosedClass[i].bf200_ID);
 	}
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("课程");
 	$(".remindActionType").html("审核取消");
-	showMaskingElement();
 	// 确认按钮改变事件
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -328,10 +313,9 @@ function stopClass(){
 	for (var i = 0; i < choosedClass.length; i++) {
 		idArray.push(choosedClass[i].bf200_ID);
 	}
-	$(".remindTip").show();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("课程");
 	$(".remindActionType").html("停用");
-	showMaskingElement();
 	// 确认按钮改变事件
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -339,8 +323,6 @@ function stopClass(){
 		e.stopPropagation();
 	});
 }
-
-
 
 //确认通过审核
 function confirmPassClass(choosedClassIDs,choosedClass){
@@ -369,6 +351,7 @@ function confirmPassClass(choosedClassIDs,choosedClass){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableAction(true,backjson.notInPlan,choosedClass,backjson.approvalTime,modifyInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -404,6 +387,7 @@ function confirmCannotPass(choosedClassIDs,choosedClass){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableAction(false,backjson.notInPlan,choosedClass,backjson.approvalTime,modifyInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -439,6 +423,7 @@ function confirmCancelPass(choosedClassIDs,choosedClass){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableAction(false,backjson.notInPlan,choosedClass,backjson.approvalTime,modifyInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -474,6 +459,7 @@ function confirmStopClass(choosedClassIDs,choosedClass){
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				tableAction(false,backjson.notInPlan,choosedClass,backjson.approvalTime,modifyInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -482,12 +468,9 @@ function confirmStopClass(choosedClassIDs,choosedClass){
 	});
 }
 
-
-
 //课程库表更新操作
 function tableAction(isPass,notInPlan,choosedClass,approvalTime,modifyInfo){
-	$(".remindTip").hide();
-	showMaskingElement();
+	$.hideModal("#remindModal");
 	toolTipUp(".myTooltip");
 	
 	if(!isPass){
@@ -565,9 +548,6 @@ function startSearch(){
 	});
 }
 
-
-
-
 //重置检索
 function reReloadSearchs(){
 	var reObject = new Object();
@@ -579,12 +559,10 @@ function reReloadSearchs(){
 
 //页面初始化时按钮事件绑定
 function binBind(){
-	// 提示框取消按钮
+	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		$("#addNewClass_calssManger").removeAttr("mangerId");
-		showMaskingElement();
+		$.hideModal();
 		e.stopPropagation();
 	});
 	

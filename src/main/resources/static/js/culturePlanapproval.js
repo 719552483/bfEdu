@@ -248,18 +248,16 @@ function stuffMajorTrainingVerifyTable(tableInfo) {
 
 //查看培养计划详情
 function showCulturePlanInfo(row,index){
-	showAndStuffDetails(row);
+	showAndStuffDetails(row,false);
 	givefeedbackrow(row,index);
 	$('.majorTrainingTableActionArea').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 	$('#majorTrainingDetails_feedback').attr("disabled", false) // 反馈意见可修改
 	$(".myabeNoneTipBtn").hide();
-	showMaskingElement();
 }
 
 //显示详细信息并填充内容
-function showAndStuffDetails(row) {
+function showAndStuffDetails(row,showFooter) {
 	var nouNullSearch=getNotNullSearchs();
-	$(".majorTrainingName").html(nouNullSearch.levelTxt+'/'+nouNullSearch.departmentTxt+'/'+nouNullSearch.gradeTxt+'/'+nouNullSearch.majorTxt+"-"+row.kcmc);
 	$("#majorTrainingDetails_teachingTerm").multiSelect(); 
 	$("#majorTrainingDetails_code").val(row.kcdm);
 	$("#majorTrainingDetails_coursesName").val(row.kcmc);
@@ -291,7 +289,8 @@ function showAndStuffDetails(row) {
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isTextual", row.zyzgkzkc);  //职业资格考证
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isCalssTextual", row.kztrkc);  //课证通融
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isTeachingReform", row.jxgglxkc);  //教学改革
-	$(".majorTrainingTableActionArea").show();
+	$("#majorTrainingModal").find(".moadalTitle").html(nouNullSearch.levelTxt+'/'+nouNullSearch.departmentTxt+'/'+nouNullSearch.gradeTxt+'/'+nouNullSearch.majorTxt+"-"+row.kcmc);
+	$.showModal("#majorTrainingModal",showFooter);
 }
 
 //反馈意见事件绑定
@@ -327,9 +326,7 @@ function culturePlanVerify_pass() {
 	if (!tableIsChecked("#culturePlanVerifyTable", '培养计划')) {
 		return;
 	}
-
-	$(".remindTip").show();
-	showMaskingElement();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("已选培养计划");
 	$(".remindActionType").html("审核通过");
 
@@ -354,11 +351,10 @@ function culturePlanVerify_cannotPass() {
 		toastr.warning('不能修改已生成开课计划课程的状态');
 		return;
 	}
-	$(".remindTip").show();
-	showMaskingElement();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("已选培养计划");
 	$(".remindActionType").html("审核不通过");
-
+	
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind(
 			'click',
@@ -383,9 +379,7 @@ function culturePlanVerify_cancelVerify() {
 		toastr.warning('不能修改已生成开课计划课程的状态');
 		return;
 	}
-	
-	$(".remindTip").show();
-	showMaskingElement();
+	$.showModal("#remindModal",true);
 	$(".remindType").html("已选培养计划");
 	$(".remindActionType").html("审批取消");
 
@@ -443,6 +437,7 @@ function chengeCulturePlanApprovalStatus(choosedArray, changeType) {
 		},
 		success : function(backjson) {
 			if (backjson.result) {
+				hideloding();
 				for (var i = 0; i < choosedArray.length; i++) {
 					var currentChangeRow=$("#culturePlanVerifyTable").bootstrapTable("getRowByUniqueId",choosedArray[i]);
 					currentChangeRow.xbsp = backjson.status;
@@ -453,8 +448,7 @@ function chengeCulturePlanApprovalStatus(choosedArray, changeType) {
 				}
 				toolTipUp(".myTooltip")
 				toastr.success('培养计划审核状态修改完成');
-				$(".remindTip").hide();
-				showMaskingElement();
+				$.hideModal("#remindModal");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -569,11 +563,10 @@ function culturePlanVerifyAreaBtnbnid() {
 		e.stopPropagation();
 	});
 	
-	// 提示框取消按钮
+	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		showMaskingElement();
+		$.hideModal();
 		e.stopPropagation();
 	});
 }
