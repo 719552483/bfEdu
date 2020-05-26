@@ -237,7 +237,8 @@ padding:1.6em 0em 0.6em 31px !important
 #allMajorTable td:last-child,
 #allGradeTable td:last-child,
 #allDepartmentTable td:last-child,
-#allLevlTable td:last-child {
+#allLevlTable td:last-child ,
+#allRoleTable td:last-child {
 	width: 165px;
 }
 
@@ -489,8 +490,7 @@ padding:1.6em 0em 0.6em 31px !important
     margin-bottom: 0px;
 }
 
-.allUserTableArea .search,
-.allRoleTableArea .search {
+.allUserTableArea .search {
 	margin-top: 38px !important;
 }
 
@@ -554,8 +554,6 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .removeUsersArea {
-	width: 20%;
-	margin-top: 36px;
 	float: left;
 }
 
@@ -573,6 +571,13 @@ padding:1.6em 0em 0.6em 31px !important
 	color: rgba(3, 70, 128, 0.8588235294117647);
 }
 
+.authorityGroupArea .multi-select-container{
+	    margin-left: -2px!important;
+}
+
+.authorityGroupArea .multi-select-menuitem input{
+	       margin-top: 0.9em!important;
+}
 
 .newUserAuthority .select-mania {
 	margin-left: 20px !important;
@@ -582,7 +587,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .authorityGroupArea .select-mania{
-	margin-left: 32px !important;
+	margin-left: 7px !important;
 	margin-top: 1px !important;
 	margin-bottom: 1% !important;
 	width: 350px !important;

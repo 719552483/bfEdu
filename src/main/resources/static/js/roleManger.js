@@ -4,6 +4,7 @@ $(function() {
 	drawAuthorityGroup();
 	authorityGroupChange();
 	getAllRoleInfo();
+	$("#anqx").multiSelect(); 
 });
 
 //获取所有角色类型
@@ -430,11 +431,12 @@ function stuffTable(tableInfo) {
 		pageList: [10],
 		showToggle: false,
 		showFooter: false,
+		clickToSelect: true,
 		search: true,
 		editable: false,
 		striped: true,
 		toolbar: '#toolbar',
-		showColumns: false,
+		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".allRoleTableArea", "角色信息");
 		},
@@ -455,16 +457,18 @@ function stuffTable(tableInfo) {
 				formatter: paramsMatter
 			}, {
 				field: 'authorityInfo',
-				title: '角色权限',
+				title: '菜单权限',
 				align: 'left',
-				width: '40%',
 				formatter: authorityInfoFormatter,
 				events: allRoleEvents
+			}, {
+				field: 'authorityInfo',
+				title: '按钮权限',
+				align: 'left'
 			}, {
 				field: 'action',
 				title: '操作',
 				align: 'center',
-				width: '16%',
 				formatter: allRoleFormatter,
 				events: allRoleEvents
 			}
@@ -475,8 +479,8 @@ function stuffTable(tableInfo) {
 		return [
 				'<ul class="toolbar tabletoolbar">' +
 				'<li id="wantModifyRole" class="blockStart blockStart' + row.id +
-				'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
-				'<li id="removeRole" class="blockStart blockStart' + row.id + '"><span><img src="images/t03.png"></span>删除角色</li>' +
+				'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+				'<li id="removeRole" class="blockStart blockStart' + row.id + '"><span><img src="images/t03.png"></span>删除</li>' +
 				'</ul>'
 			]
 			.join('');
@@ -490,9 +494,10 @@ function stuffTable(tableInfo) {
 			'</ul>'
 		]
 	}
-
-	drawPagination("角色信息");
-	drawSearchInput();
+	drawPagination(".allRoleTableArea", "角色信息");
+	drawSearchInput(".allRoleTableArea");
+	changeColumnsStyle( ".allRoleTableArea", "学生信息");
+	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 }
 

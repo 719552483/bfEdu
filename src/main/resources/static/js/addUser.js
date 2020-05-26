@@ -394,9 +394,9 @@ function btnBind() {
 	});
 
 	//提示框取消按钮
-	$('.tipCancelBtn,.cancelremoveUser,.modifyUserTip,.tipCancelBtn').unbind('click');
-	$('.tipCancelBtn,.cancelremoveUser,.modifyUserTip,.tipCancelBtn').bind('click', function(e) {
-		$(".tip").hide();
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
 		e.stopPropagation();
 	});
 
