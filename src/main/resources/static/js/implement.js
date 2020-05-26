@@ -5,8 +5,11 @@ $(document).ready(function() {
 //检查是否存在session 实现拦截
 function checkSession(){
 	 var userInfo =$.session.get('userInfo');
+	 //url拦截  无session转登录页
 	 if(typeof userInfo == "undefined" ){
 		 top.location = "login.html";
+     }else{
+     //用户验证  没有初始化用户转注册页	 
      }
 }
 
