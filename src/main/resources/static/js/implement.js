@@ -9,7 +9,8 @@ function checkSession(){
 	 if(typeof userInfo == "undefined" ){
 		 top.location = "login.html";
      }else{
-     //用户验证  没有初始化用户转注册页	 
+     //发送请求用户验证  没有初始化用户转注册页	 
+    	 
      }
 }
 
@@ -43,7 +44,6 @@ function queryEJDMElementInfo(){
 	});
 	return queryRs;
 }
-
 
 //渲染二级代码相关的元素
 function stuffEJDElement(rs){
@@ -574,7 +574,6 @@ function reReloadSearchsWithSelect(reObject) {
 	}
 }
 
-
 //有标签页页面切换更新面包屑导航
 function drawBreadPilot(eve) {
 	if ($(".placeul").find("li").length > 2) {
@@ -802,16 +801,6 @@ function checkIsNumber(num) {
 	}
 }
 
-//function ejdmToSstring(EJDMEInfo,value){
-//	var kcleIDtoString;
-//	for (var i = 0; i < EJDMEInfo.length; ++i) {
-//		if(EJDMEInfo[i].ejdm===value){
-//			kcleIDtoString=EJDMEInfo[i].ejdmz
-//		}
-//	}
-//	return '<div class="myTooltip" title="'+kcleIDtoString+'">'+kcleIDtoString+'</div>';
-//}
-
 //课程名字文字化
 function calssNameMatter(value, row, index) {
 	if (row.sfsckkjh==="T") {
@@ -901,7 +890,6 @@ function scheduleFormatter(value, row, index) {
 	return [ htmlStr ].join('');
 }
 
-
 //时间戳转换时间格式字符
 function stampToDatetimeString(time,splitTotime){
 	 var date=new Date(time);
@@ -926,6 +914,7 @@ function stampToDatetimeString(time,splitTotime){
 	    	return  y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
 	    }
 }
+
 // table增加tooltip
 function paramsMatter(value, row, index) {
 	// 替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
@@ -948,8 +937,6 @@ function paramsMatter(value, row, index) {
 		.join('');
 	}
 }
-
-
 
 // 根据课程类型改变背景颜色
 function changeClassAreaBg(classType) {
@@ -1019,8 +1006,6 @@ function byage(strBirthday){
 		return returnAge;//返回周岁年龄
 	}
 
-
-
 // 列操作改变样式并且绑定点击事件填充toolTip
 function changeColumnsStyle(changeAreaClass, txt) {
 	var colum = $(changeAreaClass).find(".columns").find("i").removeClass()
@@ -1062,8 +1047,6 @@ function drawCalenr(id) {
           todayBtn: "linked",
 	});
 }
-
-
 
 // 数据库时间转化
 function formatterTimeToBase(time, indludeTime) {

@@ -27,7 +27,9 @@ import com.beifen.edu.administration.dao.Edu200Dao;
 import com.beifen.edu.administration.dao.Edu300Dao;
 import com.beifen.edu.administration.dao.Edu301Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
+import com.beifen.edu.administration.dao.Edu991Dao;
 import com.beifen.edu.administration.domian.Edu990;
+import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu101;
@@ -51,6 +53,8 @@ public class AdministrationPageService {
 	private Edu000Dao edu000DAO;
 	@Autowired
 	private Edu990Dao edu990DAO;
+	@Autowired
+	private Edu991Dao edu991DAO;
 	@Autowired
 	private Edu200Dao edu200DAO;
 	@Autowired
@@ -651,6 +655,19 @@ public class AdministrationPageService {
 
 		return edu990DAO.getUserInfo(username);
 	}
+	
+	//修改首页快捷方式
+	public void newShortcut(String userId, String newShortcut) {
+		 edu990DAO.newShortcut(userId,newShortcut);
+	}
+
+	
+	
+	// 根据角色获取权限信息
+	public Edu991 getAuthoritysInfo(String js) {
+		return edu991DAO.getAuthoritysInfo(js);
+	}
+	
 
 	// 根据二级代码关联字段获取二级代码
 	public List<Edu000> queryEjdm(String ejdmGlzd) {
@@ -962,6 +979,11 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
 
 
 

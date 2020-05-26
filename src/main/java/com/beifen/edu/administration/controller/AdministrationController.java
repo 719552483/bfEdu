@@ -32,6 +32,7 @@ import net.sf.json.JSONObject;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.domian.Edu990;
+import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu101;
@@ -122,15 +123,45 @@ public class AdministrationController {
 			result = true;
 			Map<String, Object> UserInfo = new HashMap();
 			Edu990 edu990 = administrationPageService.getUserInfo(username);
+			
+			//用户首次登陆
+			if(edu990.getScdlsj()==null){
+				edu990.setScdlsj("fristTime");
+			}
+			
+			Edu991 edu991=administrationPageService.getAuthoritysInfo(edu990.getJs());
+			returnMap.put("UserInfo",JSON.toJSONString(edu990));
+			returnMap.put("authoritysInfo", JSON.toJSONString(edu991));
+			
+			//更新用户上次登陆时间
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 			edu990.setScdlsj(df.format(new Date()));
 			administrationPageService.newUser(edu990);
-			returnMap.put("UserInfo", JSON.toJSONString(edu990));
 			returnMap.put("result", result);
 		}
 		return returnMap;
 	}
 
+	
+	/**
+	 * 修改首页快捷方式
+	 * 
+	 * @param username用户名
+	 * 
+	 * @param password密码
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/newShortcut")
+	@ResponseBody
+	public Object newShortcut(@RequestParam String userId,@RequestParam String newShortcut) {
+		boolean result = true; 
+		Map<String, Object> returnMap = new HashMap();
+		administrationPageService.newShortcut(userId,newShortcut);
+		return returnMap;
+	}
+	
+	
 	/**
 	 * 课程库新增课程
 	 * 

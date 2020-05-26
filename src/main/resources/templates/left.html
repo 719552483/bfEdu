@@ -9,30 +9,7 @@
 		<script language="JavaScript" src="sripts/jquery.min.js"></script>
 		<script src="sripts/jquerySession.js"></script>
 		<script type="text/javascript" src="js/implement.js"></script>
-		
-
-		<script type="text/javascript">
-			$(function() {
-				//导航切换
-				$(".menuson li").click(function() {
-					$(".menuson li.active").removeClass("active")
-					$(this).addClass("active");
-					$(parent.frames["topFrame"].document).find(".nav").find("a").removeClass("selected");
-				});
-
-				$('.title').click(function() {
-					var $ul = $(this).next('ul');
-					$('dd').find('ul').slideUp();
-					if ($ul.is(':visible')) {
-						$(this).next('ul').slideUp();
-					} else {
-						$(this).next('ul').slideDown();
-					}
-				});
-			})
-		</script>
-
-
+		<script type="text/javascript" src="js/left.js"></script>
 	</head>
 
 	<body style="background:#f0f9fd;">
@@ -48,7 +25,7 @@
 			</dd>
 
 
-			<dd>
+			<dd class="studentBlock">
 				<div class="title">
 					<i class="iconfont icon-xuesheng menuIcon"></i><span></span>学生管理
 				</div>
@@ -64,7 +41,7 @@
 			</dd>
 
 
-			<dd>
+			<dd class="teacherBlock">
 				<div class="title">
 					<i class="iconfont icon-jiaoshi menuIcon"></i><span></span>教师管理
 				</div>
@@ -80,7 +57,7 @@
 				</ul>
 			</dd>
 
-			<dd>
+			<dd class="officeBlock">
 				<div class="title">
 					<i class="iconfont icon-jiaowuxitong menuIcon"></i><span></span>教务管理
 				</div>
@@ -96,7 +73,7 @@
 				</ul>
 			</dd>
 
-			<dd>
+			<dd class="leaderBlock">
 				<div class="title">
 					<i class="iconfont icon-banzhuren menuIcon"></i><span></span>辅导员/班主任管理
 				</div>
@@ -109,7 +86,7 @@
 				</ul>
 			</dd>
 
-			<dd>
+			<dd class="loccalBlock">
 				<div class="title">
 					<i class="iconfont icon-xuexiaogaikuang menuIcon"></i><span></span>教学点管理
 				</div>
@@ -120,7 +97,7 @@
 				</ul>
 			</dd>
 
-			<dd>
+			<dd class="approvalBlock">
 				<div class="title">
 					<i class="iconfont icon-shenpi menuIcon"></i><span></span>审批平台
 				</div>
@@ -137,7 +114,7 @@
 			</dd>
 
 
-			<dd>
+			<dd class="dataBlock">
 				<div class="title"><i class="iconfont icon-dashuju menuIcon"></i><span></span>大数据分析平台</div>
 				<ul class="menuson">
 					<li><cite></cite><a href="right.html" target="rightFrame" id="teachDatasConfiguration">教学数据驾驶舱配置</a><i></i></li>
@@ -151,80 +128,14 @@
 			</dd>
 			
 			
-			<dd>
+			<dd class="systemBlock">
 				<div class="title"><i class="iconfont icon-dashuju menuIcon"></i><span></span>系统管理</div>
 				<ul class="menuson">
 					<li><cite></cite><a href="addUser.html" target="rightFrame" id="addAccount">账号管理</a><i></i></li>
 					<li><cite></cite><a href="roleManger.html" target="rightFrame" id="authoritysConfiguration">权限管理</a><i></i></li>
 				</ul>
 			</dd>
-			
-
-		
-
-			<!-- <dd>
-				<div class="title">
-					<i class="iconfont icon-jiaoshiguanli menuIcon"></i><span></span>教师管理
-				</div>
-				<ul class="menuson">
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachersInfo">教师基本信息管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachersAndClass">教师-班级管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachersClassSchedule">教师课表明细管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="gradeEntr">成绩录入</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="scheduleManger">课程管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="businessApplication">出差信息申请录入</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherHire">教师聘任审批流程</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherChangeClass">教师调课管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherStopClass">教师停课管理</a><i></i></li>
-				</ul>
-			</dd>
-
-
-			<dd>
-				<div class="title">
-					<i class="iconfont icon-jiaoshi menuIcon"></i><span></span>辅导员管理
-				</div>
-				<ul class="menuson">
-					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsInfo">辅导员基本信息管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsAttendanceforstudent">辅导员-学生考勤管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsConclusion">辅导员学期总结</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsLog">辅导员日志</a><i></i></li>
-				</ul>
-			</dd>
-
-
-			<dd>
-				<div class="title"><i class="iconfont icon-jiaoxue menuIcon"></i><span></span>教学点管理</div>
-				<ul class="menuson">
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachLocationsInfo">教学点基本信息管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachAssets">教学点固定资产管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachLeasing">教学点租赁审批</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="culturingPlan">人才定向培养方案</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="policys">政策文件下发/查询</a><i></i></li>
-				</ul>
-			</dd>
-
-
-			<dd>
-				<div class="title"><i class="iconfont icon-shenpi menuIcon"></i><span></span>审批管理平台</div>
-				<ul class="menuson">
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachProgress">教学进度查询</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="budget">预算管理</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="studentSuspension">学生休学管理审批</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="businessApproval">出差信息申请审批</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teacherHireApproval">教师聘任审批</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="teachLeasingApproval">教学点租赁审批</a><i></i></li>
-					<li><cite></cite><a href="right.html" target="rightFrame" id="counsellorsHireApproval">辅导员聘任审批</a><i></i></li>
-				</ul>
-
-			</dd>
-
-
-
-
-
-
- -->
+	
 		</dl>
 		<div class="modal-backdrop fade maskingElement noneStart"></div>
 	</body>

@@ -41,9 +41,12 @@ function comfirmLogin(username,password) {
 				var userInfo = $.session.get('userInfo');
 			    if(userInfo==="undefined"||userInfo===undefined){
 			    	$.session.set('userInfo', backjson.UserInfo);
+			    	$.session.set('authoritysInfo', backjson.authoritysInfo);
 			    }else{
 			    	$.session.remove('userInfo');
+			    	$.session.remove('authoritysInfo');
 			    	$.session.set('userInfo', backjson.UserInfo);
+			    	$.session.set('authoritysInfo', backjson.authoritysInfo);
 			    }
 				window.location.href = "main.html";
 			} else {
