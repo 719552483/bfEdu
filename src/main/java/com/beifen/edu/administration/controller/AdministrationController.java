@@ -158,6 +158,92 @@ public class AdministrationController {
 		boolean result = true; 
 		Map<String, Object> returnMap = new HashMap();
 		administrationPageService.newShortcut(userId,newShortcut);
+		returnMap.put("result", result);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 新增角色
+	 * 
+	 * @param newRoleInfo角色信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/addRole")
+	@ResponseBody
+	public Object addRole(@RequestParam String newRoleInfo) {
+		boolean result = true; 
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(newRoleInfo);
+		Edu991 newRole = (Edu991) JSONObject.toBean(jsonObject, Edu991.class);
+		administrationPageService.addRole(newRole);
+		returnMap.put("id", newRole.getBF991_ID());
+		returnMap.put("result", result);
+		return returnMap;
+	}
+	
+	/**
+	 * 修改角色
+	 * 
+	 * @param updateInfo修改信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/modifyRole")
+	@ResponseBody
+	public Object modifyRole(@RequestParam String updateInfo) {
+		boolean result = true; 
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(updateInfo);
+		Edu991 newRole = (Edu991) JSONObject.toBean(jsonObject, Edu991.class);
+		administrationPageService.addRole(newRole);
+		returnMap.put("result", result);
+		return returnMap;
+	}
+	
+	/**
+	 * 删除角色
+	 * 
+	 * @param deleteIds删除id
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/removeRole")
+	@ResponseBody
+	public Object removeRole(@RequestParam String deleteIds) {
+		Map<String, Object> returnMap = new HashMap();
+		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		for (int i = 0; i < deleteArray.size(); i++) {
+			administrationPageService.removeRole(deleteArray.get(i).toString());
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 获取所有角色
+	 * 
+	 * @param newRoleInfo角色信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/getAllRole")
+	@ResponseBody
+	public Object getAllRole() {
+		boolean result = true; 
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu991> allRoleInfo=administrationPageService.getAllRole();
+		//去掉sys角色
+		for (int i = 0; i < allRoleInfo.size(); i++) {
+			Edu991 edu991=allRoleInfo.get(i);
+			if(edu991.getJs().equals("sys")){
+				allRoleInfo.remove(i);
+			}
+		}
+		
+		returnMap.put("allRoleInfo", allRoleInfo);
+		returnMap.put("result", result);
 		return returnMap;
 	}
 	

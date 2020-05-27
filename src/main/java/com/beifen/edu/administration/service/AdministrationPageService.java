@@ -668,6 +668,21 @@ public class AdministrationPageService {
 		return edu991DAO.getAuthoritysInfo(js);
 	}
 	
+	//新增角色
+	public void addRole(Edu991 newRole) {
+		edu991DAO.save(newRole);
+	}
+	
+	//删除角色
+	public void removeRole(String bf991_ID) {
+		edu991DAO.removeRole(bf991_ID);
+	}
+	
+	//获取所有角色
+	public List<Edu991> getAllRole() {
+		return edu991DAO.findAll();
+	}
+	
 
 	// 根据二级代码关联字段获取二级代码
 	public List<Edu000> queryEjdm(String ejdmGlzd) {
@@ -979,6 +994,11 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
 
 
 

@@ -469,21 +469,38 @@ function actionStuffManiaSelectWithDeafult(id,cheeckedValue,cheeckedTxt){
 
 //multiInput 有默认值 指定默认值
 function multiSelectWithDefault(id,Default){
-	$(id)[0].nextElementSibling.childNodes[0].innerText=Default;
 	$(id).val(Default);
-	var allinputEVE=$(id)[0].nextSibling.childNodes[1].childNodes[0].childNodes;
-
+	var allinputEVE = $(id)[0].nextSibling.childNodes[1].childNodes[0].childNodes;
 	for (var i = 0; i < allinputEVE.length; ++i) {
 		allinputEVE[i].childNodes[0].checked = false;
 	}
 	
+    var showStr="";
 	for (var j = 0; j < Default.length; ++j) {
 		for (var i = 0; i < allinputEVE.length; ++i) {
-			if(Default[j]===allinputEVE[i].childNodes[0].attributes[2].nodeValue){
+			if (Default[j] === allinputEVE[i].childNodes[0].attributes[2].nodeValue) {
 				allinputEVE[i].childNodes[0].checked = true;
+				showStr+=allinputEVE[i].innerText+',';
 			}
 		}
 	}
+	showStr=showStr.substring(0,showStr.length-1);
+	$(id)[0].nextElementSibling.childNodes[0].innerText=showStr;
+//	$(id)[0].nextElementSibling.childNodes[0].innerText=Default;
+//	$(id).val(Default);
+//	var allinputEVE=$(id)[0].nextSibling.childNodes[1].childNodes[0].childNodes;
+//
+//	for (var i = 0; i < allinputEVE.length; ++i) {
+//		allinputEVE[i].childNodes[0].checked = false;
+//	}
+//	
+//	for (var j = 0; j < Default.length; ++j) {
+//		for (var i = 0; i < allinputEVE.length; ++i) {
+//			if(Default[j]===allinputEVE[i].childNodes[0].attributes[2].nodeValue){
+//				allinputEVE[i].childNodes[0].checked = true;
+//			}
+//		}
+//	}
 }
 
 // 获取无action select的值
