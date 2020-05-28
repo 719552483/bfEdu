@@ -163,7 +163,7 @@ public class AdministrationController {
 	public Object verifyUser(@RequestParam String username, @RequestParam String password) {
 		boolean result = false; // 密码验证结果
 		Map<String, Object> returnMap = new HashMap();
-		String checkIsHaveUser = administrationPageService.checkIsHaveUser(username);
+		Edu990 checkIsHaveUser = administrationPageService.checkIsHaveUser(username);
 		String datebasePwd = administrationPageService.checkPwd(username);
 		String ErroeTxt="";
 		// 用户不存在
@@ -233,11 +233,19 @@ public class AdministrationController {
 	@ResponseBody
 	public Object addRole(@RequestParam String newRoleInfo) {
 		boolean result = true; 
+		boolean jsHave = true; 
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(newRoleInfo);
 		Edu991 newRole = (Edu991) JSONObject.toBean(jsonObject, Edu991.class);
-		administrationPageService.addRole(newRole);
-		returnMap.put("id", newRole.getBF991_ID());
+		//判断角色名称是否存在
+		Edu991 newRole2=administrationPageService.getAuthoritysInfo(newRole.getJs());
+		if(newRole2==null){
+			jsHave = false; 
+			administrationPageService.addRole(newRole);
+			returnMap.put("id", newRole.getBF991_ID());
+		}
+		
+		returnMap.put("jsHave", jsHave);
 		returnMap.put("result", result);
 		return returnMap;
 	}
@@ -253,10 +261,18 @@ public class AdministrationController {
 	@ResponseBody
 	public Object modifyRole(@RequestParam String updateInfo) {
 		boolean result = true; 
+		boolean jsHave = true; 
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(updateInfo);
 		Edu991 newRole = (Edu991) JSONObject.toBean(jsonObject, Edu991.class);
-		administrationPageService.addRole(newRole);
+		//判断修改的角色名称是否存在
+		Edu991 newRole2=administrationPageService.getAuthoritysInfo(newRole.getJs());
+		if(newRole2==null){
+			jsHave = false; 
+			administrationPageService.addRole(newRole);
+		}
+		
+		returnMap.put("jsHave", jsHave);
 		returnMap.put("result", result);
 		return returnMap;
 	}
@@ -358,11 +374,19 @@ public class AdministrationController {
 	@ResponseBody
 	public Object newUser(@RequestParam("newUserInfo") String newUserInfo) {
 		boolean result = true; 
+		boolean userNameHave = true; 
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(newUserInfo);
 		Edu990 newUser = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
-		administrationPageService.newUser(newUser);
-		returnMap.put("id", newUser.getBF990_ID());
+		//判读用户名是否存在
+		Edu990 edu990= administrationPageService.checkIsHaveUser(newUser.getYhm());
+		if(edu990==null){
+			userNameHave=false;
+			administrationPageService.newUser(newUser);
+			returnMap.put("id", newUser.getBF990_ID());
+		}
+		
+		returnMap.put("userNameHave",userNameHave);
 		return returnMap;
 	}
 	

@@ -132,6 +132,10 @@ function saveNewUser(username, newRole, pwd, confirmPwd) {
 		success : function(backjson) {
 			hideloding();
 			$.hideModal("#remindModal");
+			if(backjson.userNameHave){
+				toastr.warning('用户名已存在');
+				return;
+			}
 			newUserObject.bf990_ID = backjson.id; //数据库生成的id
 			$('#allUserTable').bootstrapTable('append', newUserObject);
 			toastr.success('新增用户成功');
@@ -374,6 +378,10 @@ function confirmodifyUser(row, index) {
 		success : function(backjson) {
 			hideloding();
 			$.hideModal("#remindModal");
+			if(backjson.userNameHave){
+				toastr.warning('用户名已存在');
+				return;
+			}
 			$('#allUserTable').bootstrapTable('updateRow', {
 				index: index,
 				row: modifyObject
@@ -416,13 +424,6 @@ function removeuUerAjaxDemo(removeArray) {
 			}
 		}
 	});
-//	for (var i = 0; i < news.length; i++) {
-//		$('#allUserTable').bootstrapTable('removeByUniqueId', news[i]);
-//		toolTipUp(".myTooltip");
-//	}
-//	$(".tip").hide();
-//	drawPagination(".allUserTableArea", "用户信息");
-//	toastr.success('删除用户成功');
 }
 
 //按钮事件绑定

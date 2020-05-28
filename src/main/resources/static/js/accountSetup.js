@@ -3,22 +3,33 @@ $(function() {
 	stuffTimeStamp();
 });
 
-//填充登录时间戳
+//填充登录时间
 function stuffTimeStamp(){
-	// $.ajax({
-	// 	method : 'get',
-	// 	cache : false,
-	// 	url : "testJson/getIndexChartsInfo.json",
-	// 	dataType : 'json',
-	// 	success : function(backjson) {
-	// 		showCostConsumption(backjson);
-	// 		showMdc(backjson);
-	// 		showOfficeCount(backjson);
-	// 		showDoctorsStatistical(backjson);
-	// 	}
-	// });
-	var backjson="20200226145600";
-	$(".loginTimeStamp").html(formatterTimeToPage(backjson,true));
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeachingClassQueryAdministrationClassesLibrary",
+		data: {
+             "culturePlanInfo":JSON.stringify(notNullSearchs),
+             "SearchCriteria":JSON.stringify(searchObject) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			$(".loginTimeStamp").html(formatterTimeToPage(backjson,true));
+		}
+	});
+//	var backjson="20200226145600";
+//	$(".loginTimeStamp").html(formatterTimeToPage(backjson,true));
 }
 
 

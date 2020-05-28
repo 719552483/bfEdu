@@ -636,7 +636,6 @@ public class AdministrationPageService {
 		}else{
 			return true;
 		}
-		
 	}
 	
 	// 查询所有用户
@@ -655,10 +654,8 @@ public class AdministrationPageService {
 	}
 	
 	// 查询用户是否存在
-	public String checkIsHaveUser(String userName) {
-
+	public Edu990 checkIsHaveUser(String userName) {
 		return edu990DAO.checkIsHaveUser(userName);
-
 	}
 
 	// 查询密码是否正确
