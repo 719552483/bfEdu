@@ -628,14 +628,30 @@ public class AdministrationPageService {
 	
 	
 	
+	//检查有没有系统用户
+	public boolean checkHaveSysUser() {
+		Edu990 edu990=edu990DAO.checkHaveSysUser("sys");
+		if(edu990==null){
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
 	
+	// 查询所有用户
+	public List<Edu990> queryAllUser() {
+		 return edu990DAO.findAll();
+	}
 
-	
-	
-	
 	//新建或修改用户
 	public void newUser(Edu990 edu990) {
 		edu990DAO.save(edu990);
+	}
+	
+	//删除用户
+	public void removeUser(String bf990_ID) {
+		edu990DAO.removeUser(bf990_ID);
 	}
 	
 	// 查询用户是否存在
@@ -660,8 +676,13 @@ public class AdministrationPageService {
 	public void newShortcut(String userId, String newShortcut) {
 		 edu990DAO.newShortcut(userId,newShortcut);
 	}
-
 	
+	//删除角色时查看角色当前是否有人使用
+	public List<Edu990> useThisRoleEdu990s(String edu991_id) {
+	    String js=edu991DAO.queryNAMEBy991id(edu991_id);
+		return edu990DAO.useThisRoleEdu990s(js);
+	}
+
 	
 	// 根据角色获取权限信息
 	public Edu991 getAuthoritysInfo(String js) {
@@ -994,6 +1015,13 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
+
 
 
 

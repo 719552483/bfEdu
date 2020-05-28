@@ -18,4 +18,8 @@ public interface Edu991Dao extends JpaRepository<Edu991, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "delete from edu991 where Bf991_ID =?1", nativeQuery = true)
 	public void removeRole(String bf991_ID);
+
+	//根据角色名称查询角色id
+	@Query(value = "select e.js from edu991 e where e.Bf991_ID=?1", nativeQuery = true)
+	public String queryNAMEBy991id(String js);
 }

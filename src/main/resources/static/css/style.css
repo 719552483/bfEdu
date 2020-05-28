@@ -163,6 +163,10 @@ h2 {
 	margin-top: 30px;
 }
 
+.registerbox {
+	background: url(../images/register.png) no-repeat!important;
+}
+
 .loginbox ul {
 	margin-top: 88px;
 	margin-left: 285px;

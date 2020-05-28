@@ -1,11 +1,10 @@
 package com.beifen.edu.administration.controller;
 
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * */
 @Controller
 public class PageRelatedController {
-
 	/*
 	 * 配置默认端口访问页面
 	 */
@@ -28,8 +26,11 @@ public class PageRelatedController {
 		}
 	}
 	
+	@RequestMapping("register")
+	public String registerPage() {
+		return "register";
+	}
 	
-
 	@RequestMapping("main")
 	public String mainPage() {
 		return "main";

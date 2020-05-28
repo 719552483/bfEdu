@@ -1,5 +1,7 @@
 package com.beifen.edu.administration.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,6 +30,20 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	@Modifying
 	@Query(value = "UPDATE edu990 SET yxkjfs =?2 WHERE BF990_ID =?1", nativeQuery = true)
 	public void newShortcut(String userId, String newShortcut);
+
 	
+	//检查有没有系统用户
+	@Query(value = "select * from edu990 b where b.js=?1", nativeQuery = true)
+	public Edu990 checkHaveSysUser(String sysUse);
 	
+	//删除角色
+	@Transactional
+	@Modifying
+	@Query(value = "delete from edu990 where Bf990_ID =?1", nativeQuery = true)
+	public void removeUser(String bf990_ID);
+
+	
+	//删除角色时查看角色当前是否有人使用
+	@Query(value = "select * from edu990 b where b.js=?1", nativeQuery = true)
+	public List<Edu990> useThisRoleEdu990s(String js);
 }

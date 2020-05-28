@@ -361,7 +361,7 @@ function changeTableNoRsTip(str) {
 		$(".no-records-found").find("td").html(str);
 		return;
 	}
-	$(".no-records-found").find("td").html("暂无数据,请选择检索条件.....");
+	$(".no-records-found").find("td").html("暂无数据.....");
 }
 
 // 下拉框选值后渲染下一个select

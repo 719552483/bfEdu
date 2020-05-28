@@ -1,6 +1,6 @@
-roleOptionStr = getallRole(); //全局变量接收当前所有角色类型
-
+var roleOptionStr="";//全局变量接收当前所有角色类型
 $(function() {
+	getallRole(); 
 	drawNewUserRoleSelect();
 	btnBind();
 	getAllUserInfo();
@@ -8,27 +8,34 @@ $(function() {
 
 //获取所有角色类型
 function getallRole() {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	//这里还应该考虑首次使用  backjson长度为0 既用户角色为空的情况
-	backjson = ["角色1", "角色2", "角色3"];
-	var str;
-	for (var i = 0; i < backjson.length; i++) {
-		str += '<option value="' + backjson[i] + '">' + backjson[i] + '</option>';
-	}
-	return str;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRole",
+		async:false,
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if(backjson.allRoleInfo.length===0){
+				//首次使用 用户角色为空的情况
+				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
+			}else{
+				roleOptionStr='<option value="seleceConfigTip">请选择用户角色</option>';
+				for (var i = 0; i < backjson.allRoleInfo.length; i++) {
+					roleOptionStr += '<option value="' +  backjson.allRoleInfo[i].js + '">' +  backjson.allRoleInfo[i].js + '</option>';
+				}
+			}
+		}
+	});
 }
 
 //初始化页面内容
@@ -40,7 +47,7 @@ function drawNewUserRoleSelect() {
 //添加用户
 function addUser() {
 	var username = $("#add_username").val();
-	var newRole = $('#newRole').selectMania('get')[0].value;
+	var newRole = getNormalSelectValue("newRole");
 	var pwd = $("#add_pwd").val();
 	var confirmPwd = $("#add_confirmPwd").val();
 
@@ -70,12 +77,12 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 		return;
 	}
 
-	// if(newRole===""){
-	// 	toastr.warning('新用户权限未设置');
-	// 	$(".saveNewAccountSetUp").addClass("animated shake");
-	// 	reomveAnimation('.saveNewAccountSetUp', "animated shake");
-	// 	return;
-	// }
+	 if(newRole===""){
+	 	toastr.warning('新用户权限未设置');
+	 	$(".saveNewAccountSetUp").addClass("animated shake");
+	 	reomveAnimation('.saveNewAccountSetUp', "animated shake");
+	 	return;
+	 }
 
 	//新旧密码对比
 	if (pwd !== confirmPwd) {
@@ -86,66 +93,74 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 	}
 
 	//规则检查   todo
-
-	//保存新用户设置
-	saveNewUser(username, newRole, pwd, confirmPwd);
+	
+	$.showModal("#remindModal",true);
+	$(".remindType").html("用户"+username);
+	$(".remindActionType").html("生成");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		//保存新用户设置
+		saveNewUser(username, newRole, pwd, confirmPwd);
+		e.stopPropagation();
+	});
+	
 }
 
 //发送新用户保存数据库
 function saveNewUser(username, newRole, pwd, confirmPwd) {
-	// $.ajax({
-	// 	method : 'get',
-	// 	cache : false,
-	// 	url : "testJson/getIndexChartsInfo.json",
-	// 	dataType : 'json',
-	// 	success : function(backjson) {
-	// 		showCostConsumption(backjson);
-	// 		showMdc(backjson);
-	// 		showOfficeCount(backjson);
-	// 		showDoctorsStatistical(backjson);
-	// 	}
-	// });
-	var insertObject = new Object();
-	insertObject.id = "id3"; //数据库生成的id
-	insertObject.userName = username;
-	insertObject.userRole = newRole;
-	$('#allUserTable').bootstrapTable('append', insertObject);
-	toastr.success('新增用户成功');
-	$("#add_username,#add_pwd,#add_confirmPwd").val("");
-	drawPagination(".allUserTableArea", "用户信息");
-}
-
-//获取所有用户
-function getAllUserInfo() {
-	// 发送查询所有用户请求
+	var newUserObject = new Object();
+	newUserObject.yhm = username;
+	newUserObject.js = newRole;
+	newUserObject.mm = pwd;
 	$.ajax({
-		method: 'get',
-		cache: false,
-		url: "mapJson/test.json",
-		dataType: 'json',
+		method : 'get',
+		cache : false,
+		url : "/newUser",
+		data: {
+            "newUserInfo":JSON.stringify(newUserObject),
+        },
+		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
-		},
-		success: function(backjson) {
-			var tableInfo = {
-				"newsInfo": [{
-					"id": "id1",
-					"userName": "admin1",
-					"userRole": "角色1"
-				}, {
-					"id": "id2",
-					"userName": "admin2",
-					"userRole": "角色1"
-				}]
-			}
-			stuffTable(tableInfo);
-			hideloding();
 		},
 		error: function(textStatus) {
 			requestError();
 		},
 		complete: function(xhr, status) {
 			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			$.hideModal("#remindModal");
+			newUserObject.bf990_ID = backjson.id; //数据库生成的id
+			$('#allUserTable').bootstrapTable('append', newUserObject);
+			toastr.success('新增用户成功');
+			$("#add_username,#add_pwd,#add_confirmPwd").val("");
+			drawPagination(".allUserTableArea", "用户信息");
+		}
+	});
+}
+
+//获取所有用户
+function getAllUserInfo() {
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllUser",
+		async:false,
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			stuffTable(backjson.allUser);
 		}
 	});
 }
@@ -168,7 +183,7 @@ function stuffTable(tableInfo) {
 	};
 
 	$('#allUserTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo.newsInfo,
+		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
 		pageSize: 10,
@@ -179,13 +194,13 @@ function stuffTable(tableInfo) {
 		editable: false,
 		striped: true,
 		toolbar: '#toolbar',
-		showColumns: false,
+		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".allUserTableArea", "用户信息");
 		},
 		columns: [{
-				field: 'id',
-				title: 'id',
+				field: 'bf990_ID',
+				title: 'bf990_ID',
 				align: 'center',
 				visible: false
 			},
@@ -194,12 +209,12 @@ function stuffTable(tableInfo) {
 				checkbox: true
 			},
 			{
-				field: 'userName',
+				field: 'yhm',
 				title: '用户名称',
 				formatter: userNameFormatter,
 				align: 'left'
 			}, {
-				field: 'userRole',
+				field: 'js',
 				title: '用户角色',
 				align: 'left',
 				formatter: userRoleFormatter,
@@ -217,12 +232,12 @@ function stuffTable(tableInfo) {
 	function allUserFormatter(value, row, index) {
 		return [
 				'<ul class="toolbar tabletoolbar">' +
-				'<li id="modifiRole" class="blockStart blockStart' + row.id +
+				'<li id="modifiRole" class="blockStart blockStart' + row.bf990_ID +
 				'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
-				'<li id="removeUser" class="blockStart blockStart' + row.id + '"><span><img src="images/t03.png"></span>删除用户</li>' +
-				'<li id="tableOk" class="noneStart noneStart' + row.id +
+				'<li id="removeUser" class="blockStart blockStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>删除用户</li>' +
+				'<li id="tableOk" class="noneStart noneStart' + row.bf990_ID +
 				'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
-				'<li id="tableCanle" class="noneStart noneStart' + row.id + '"><span><img src="images/t03.png"></span>取消</li>' +
+				'<li id="tableCanle" class="noneStart noneStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>取消</li>' +
 				'</ul>'
 			]
 			.join('');
@@ -230,45 +245,48 @@ function stuffTable(tableInfo) {
 
 	function userRoleFormatter(value, row, index) {
 		return [
-				'<span title="'+row.userRole+'" class="myTooltip roleTxt roleTxt' + row.id + '">' + row.userRole + '</span><select class="myTableSelect myTableSelect' +
-				row.id + '" id="isSowIndex">' + roleOptionStr + '</select>'
+				'<span title="'+row.js+'" class="myTooltip roleTxt roleTxt' + row.bf990_ID + '">' + row.js + '</span><select class="myTableSelect myTableSelect' +
+				row.bf990_ID + '" id="isSowIndex">' + roleOptionStr + '</select>'
 			]
 			.join('');
 	}
 
 	function userNameFormatter(value, row, index) {
 		return [
-				'<input id="userNameInTable' + row.id + '" type="text" class="dfinput UserNameInTable" value="' + row.userName +
-				'"><span title="'+row.userName+'" class="myTooltip blockName' +
-				row.id + '">' + row.userName + '</span>'
+				'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable" value="' + row.yhm +
+				'"><span title="'+row.yhm+'" class="myTooltip blockName' +
+				row.bf990_ID + '">' + row.yhm + '</span>'
 			]
 			.join('');
 	}
-
 	drawPagination(".allUserTableArea", "用户信息");
-	drawSearchInput();
+	drawSearchInput(".allUserTableArea");
+	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+	changeColumnsStyle(".allUserTableArea", "用户信息");
 }
 
 //修改用户
 function modifiRole(row) {
-	$('.roleTxt' + row.id).hide();
-	$('.blockStart' + row.id).hide();
-	$(".blockName" + row.id).hide();
-	$(".myTableSelect" + row.id).show();
-	$(".noneStart" + row.id).show();
-	$("#userNameInTable" + row.id).show();
-	$(".currentId").html(row.id);
+	$('.roleTxt' + row.bf990_ID).hide();
+	$('.blockStart' + row.bf990_ID).hide();
+	$(".blockName" + row.bf990_ID).hide();
+	$(".myTableSelect" + row.bf990_ID).show();
+	$(".noneStart" + row.bf990_ID).show();
+	$("#userNameInTable" + row.bf990_ID).show();
+	$(".currentId").html(row.bf990_ID);
 }
 
 //单个删除用户
 function removeUser(row) {
-	$(".removeUserTip").show();
-	$('.confirmremoveUser').unbind('click');
-	$('.confirmremoveUser').bind('click', function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("用户"+row.yhm);
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeUserArray = new Array;
-		removeUserArray.push(row.id);
-		removeNewsAjaxDemo("#allUserTable", removeUserArray, ".allUserTableArea", "用户信息");
+		removeUserArray.push(row.bf990_ID);
+		removeuUerAjaxDemo(removeUserArray);
 		e.stopPropagation();
 	});
 }
@@ -277,16 +295,18 @@ function removeUser(row) {
 function removeUsersBtn() {
 	var chosenUsers = $('#allUserTable').bootstrapTable('getAllSelections');
 	if (chosenUsers.length === 0) {
-		toastr.warning('暂未选择任何通知');
+		toastr.warning('暂未选择任何用户');
 	} else {
 		var removeUserArray = new Array;
-		$(".removeUserTip").show();
+		$.showModal("#remindModal",true);
+		$(".remindType").html("所选用户");
+		$(".remindActionType").html("删除");
 		for (var i = 0; i < chosenUsers.length; i++) {
-			removeUserArray.push(chosenUsers[i].id);
+			removeUserArray.push(chosenUsers[i].bf990_ID);
 		}
-		$('.confirmremoveUser').unbind('click');
-		$('.confirmremoveUser').bind('click', function(e) {
-			removeNewsAjaxDemo("#allUserTable", removeUserArray, ".allUserTableArea", "用户信息");
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
+			removeuUerAjaxDemo(removeUserArray);
 			e.stopPropagation();
 		});
 	}
@@ -294,94 +314,115 @@ function removeUsersBtn() {
 
 //取消删除用户
 function canleModify(row) {
-	$('.roleTxt' + row.id).show();
-	$('.blockStart' + row.id).show();
-	$(".blockName" + row.id).show();
-	$(".myTableSelect" + row.id).hide();
-	$(".noneStart" + row.id).hide();
-	$("#userNameInTable" + row.id).hide();
+	$('.roleTxt' + row.bf990_ID).show();
+	$('.blockStart' + row.bf990_ID).show();
+	$(".blockName" + row.bf990_ID).show();
+	$(".myTableSelect" + row.bf990_ID).hide();
+	$(".noneStart" + row.bf990_ID).hide();
+	$("#userNameInTable" + row.bf990_ID).hide();
 }
 
 //确认修改用户
 function okModify(row, index) {
-	var usernameInInput = $("#userNameInTable" + row.id).val();
-	var roleInSelect = $('.myTableSelect' + row.id).val();
-	if (usernameInInput !== row.userName || roleInSelect !== row.userRole) {
-		$(".modifyUserTip").show();
-		//确认修改用户按钮
-		$('.confirmodifyUser').unbind('click');
-		$('.confirmodifyUser').bind('click', function(e) {
-			confirmodifyUser(row, index);
-			e.stopPropagation();
-		});
-	} else {
-		canleModify(row);
+	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
+	var roleInSelect = $('.myTableSelect' + row.bf990_ID).val();
+	if (usernameInInput === "") {
+		toastr.warning('用户名不能为空');
+		return;
 	}
+	if (typeof(roleInSelect) === "undefined"||roleInSelect==="seleceConfigTip") {
+		toastr.warning('用户权限未设置');
+		return;
+	}
+	
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.yhm);
+	$(".remindActionType").html("修改");
+	//确认修改用户按钮
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		confirmodifyUser(row, index);
+		e.stopPropagation();
+	});
 }
 
-//确认修改用户
+//发送修改用户
 function confirmodifyUser(row, index) {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	var usernameInInput = $("#userNameInTable" + row.id).val();
-	var roleInSelect = $('.myTableSelect' + row.id).val();
-	var updateObject = new Object();
-	updateObject.id = row.id;
-	updateObject.userName = usernameInInput;
-	updateObject.userRole = roleInSelect;
-	$('#allUserTable').bootstrapTable('updateRow', {
-		index: index,
-		row: updateObject
+	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
+	var roleInSelect = $('.myTableSelect' + row.bf990_ID).val();
+	var modifyObject =row;
+	modifyObject.BF990_ID = row.bf990_ID;
+	modifyObject.yhm = usernameInInput;
+	modifyObject.js = roleInSelect;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/newUser",
+		data: {
+            "newUserInfo":JSON.stringify(modifyObject),
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			$.hideModal("#remindModal");
+			$('#allUserTable').bootstrapTable('updateRow', {
+				index: index,
+				row: modifyObject
+			});
+			$(".tip").hide();
+			toolTipUp(".myTooltip");
+			toastr.success('修改用户成功');
+			drawPagination(".allUserTableArea", "用户信息");
+		}
 	});
-	$(".tip").hide();
-	toolTipUp(".myTooltip");
-	toastr.success('修改用户成功');
-	drawPagination(".allUserTableArea", "用户信息");
 }
 
 //删除用户请求模板
-function removeuUerAjaxDemo(news) {
-	// 发送查询所有用户请求
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "mapJson/test.json",
-	// 	data: {
-	// 		"newShortcut": JSON.stringify(news)
-	// 	},
-	// 	dataType: 'json',
-	// 	success: function(backjson) {
-	// 		if (backjson.result) {
-	// 			for (var i = 0; i < news.length; i++) {
-	// 					$('#releaseNewsTable').bootstrapTable('removeByUniqueId',news[i]);
-	// 			}
-	// 			$(".tip").hide();
-	// 			drawPagination("通知");
-	// 			toastr.success('删除成功');
-	// 		} else {
-	// 			toastr.error('操作失败');
-	// 		}
-	// 	}
-	// });
-	for (var i = 0; i < news.length; i++) {
-		$('#allUserTable').bootstrapTable('removeByUniqueId', news[i]);
-		toolTipUp(".myTooltip");
-	}
-	$(".tip").hide();
-	drawPagination(".allUserTableArea", "用户信息");
-	toastr.success('删除用户成功');
+function removeuUerAjaxDemo(removeArray) {
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/removeUser",
+		data: {
+             "deleteIds":JSON.stringify(removeArray) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				tableRemoveAction("#allUserTable", removeArray, ".allUserTableArea", "用户信息");
+				$.hideModal("#remindModal");
+				$(".myTooltip").tooltipify();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+//	for (var i = 0; i < news.length; i++) {
+//		$('#allUserTable').bootstrapTable('removeByUniqueId', news[i]);
+//		toolTipUp(".myTooltip");
+//	}
+//	$(".tip").hide();
+//	drawPagination(".allUserTableArea", "用户信息");
+//	toastr.success('删除用户成功');
 }
 
 //按钮事件绑定

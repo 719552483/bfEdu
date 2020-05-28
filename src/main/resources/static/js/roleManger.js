@@ -776,8 +776,12 @@ function sendRoleRemoveInfo(removeArray){
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
-				tableRemoveAction("#allRoleTable", removeArray, ".allRoleTableArea", "角色信息");
 				$.hideModal("#remindModal");
+				if(backjson.roleIsUse){
+					toastr.warning('不可删除正在使用中的角色');
+					return;
+				}
+				tableRemoveAction("#allRoleTable", removeArray, ".allRoleTableArea", "角色信息");
 				$(".myTooltip").tooltipify();
 			} else {
 				toastr.warning('操作失败，请重试');

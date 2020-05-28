@@ -57,6 +57,64 @@ public class AdministrationController {
 	@Autowired
 	private AdministrationPageService administrationPageService;
 	ReflectUtils utils = new ReflectUtils();
+	
+	/**
+	 * 检查有没有系统用户
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/checkHaveSysUser")
+	@ResponseBody
+	public Object checkHaveSysUser() {
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("haveSysUser", administrationPageService.checkHaveSysUser());
+		return returnMap;
+	}
+	
+	/**
+	 * 注册系统用户
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/registerUser")
+	@ResponseBody
+	public Object registerUser(@RequestParam String username, @RequestParam String password) {
+		Map<String, Object> returnMap = new HashMap();
+		String sysRole="sys";
+		//生成系统用户
+		Edu990 edu990=new Edu990();
+		edu990.setJs(sysRole);
+		edu990.setYhm(username);
+		edu990.setMm(password);
+		administrationPageService.newUser(edu990);
+		
+		//生成系统用户权限
+		Edu991 edu991=new Edu991();
+		edu991.setJs(sysRole);
+		edu991.setAnqx(sysRole);
+		edu991.setCdqx(sysRole);
+		administrationPageService.addRole(edu991);
+		
+		//获取系统用户保存在页面session信息
+		Edu990 UserInfo = administrationPageService.getUserInfo(username);
+		UserInfo.setScdlsj("fristTime");
+		Edu991 authoritysInfo=administrationPageService.getAuthoritysInfo(edu990.getJs());
+		
+		returnMap.put("UserInfo",JSON.toJSONString(UserInfo));
+		returnMap.put("authoritysInfo", JSON.toJSONString(authoritysInfo));
+		returnMap.put("result", true);
+		
+		//更新系统用户上次登陆时间
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		UserInfo.setScdlsj(df.format(new Date()));
+		administrationPageService.newUser(UserInfo);
+		return returnMap;
+	}
+	
 
 	/**
 	 * 查询二级代码信息
@@ -123,13 +181,14 @@ public class AdministrationController {
 			result = true;
 			Map<String, Object> UserInfo = new HashMap();
 			Edu990 edu990 = administrationPageService.getUserInfo(username);
-			
-			//用户首次登陆
-			if(edu990.getScdlsj()==null){
-				edu990.setScdlsj("fristTime");
+			Edu991 edu991=administrationPageService.getAuthoritysInfo(edu990.getJs());
+			if(edu990!=null&&edu991!=null){
+				//用户首次登陆
+				if(edu990.getScdlsj()==null){
+					edu990.setScdlsj("fristTime");
+				}
 			}
 			
-			Edu991 edu991=administrationPageService.getAuthoritysInfo(edu990.getJs());
 			returnMap.put("UserInfo",JSON.toJSONString(edu990));
 			returnMap.put("authoritysInfo", JSON.toJSONString(edu991));
 			
@@ -214,15 +273,30 @@ public class AdministrationController {
 	public Object removeRole(@RequestParam String deleteIds) {
 		Map<String, Object> returnMap = new HashMap();
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		boolean roleIsUse=false;
+		
+		//查看角色当前是否有人使用
 		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.removeRole(deleteArray.get(i).toString());
+			List<Edu990> useThisRoleEdu990s = administrationPageService.useThisRoleEdu990s(deleteArray.get(i).toString());
+			if(useThisRoleEdu990s.size()>0){
+				roleIsUse=true;
+				break;
+			}
 		}
+		
+		if(!roleIsUse){
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeRole(deleteArray.get(i).toString());
+			}
+		}
+		
+		returnMap.put("roleIsUse", roleIsUse);
 		returnMap.put("result", true);
 		return returnMap;
 	}
 	
 	/**
-	 * 获取所有角色
+	 * 获取所有角色（不包括系统用户角色）
 	 * 
 	 * @param newRoleInfo角色信息
 	 * 
@@ -247,6 +321,69 @@ public class AdministrationController {
 		return returnMap;
 	}
 	
+	/**
+	 * 获取所有用户（不包括系统用户）
+	 * 
+	 * @param newRoleInfo角色信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/getAllUser")
+	@ResponseBody
+	public Object getAllUser() {
+		boolean result = true; 
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu990> allUser=administrationPageService.queryAllUser();
+		//去掉sys角色的用户
+		for (int i = 0; i < allUser.size(); i++) {
+			Edu990 edu990=allUser.get(i);
+			if(edu990.getJs().equals("sys")){
+				allUser.remove(i);
+			}
+		}
+		returnMap.put("allUser", allUser);
+		returnMap.put("result", result);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 新增用户
+	 * 
+	 * @param newRoleInfo角色信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/newUser")
+	@ResponseBody
+	public Object newUser(@RequestParam("newUserInfo") String newUserInfo) {
+		boolean result = true; 
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(newUserInfo);
+		Edu990 newUser = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
+		administrationPageService.newUser(newUser);
+		returnMap.put("id", newUser.getBF990_ID());
+		return returnMap;
+	}
+	
+	/**
+	 * 删除用户
+	 * 
+	 * @param deleteIds删除id
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/removeUser")
+	@ResponseBody
+	public Object removeUser(@RequestParam String deleteIds) {
+		Map<String, Object> returnMap = new HashMap();
+		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		for (int i = 0; i < deleteArray.size(); i++) {
+			administrationPageService.removeUser(deleteArray.get(i).toString());
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	/**
 	 * 课程库新增课程

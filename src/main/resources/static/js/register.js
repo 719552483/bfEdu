@@ -1,41 +1,20 @@
 $(function() {
-	checkHaveSysUser();
-	
-	
-	
 	//登录
-	$('#confrimLogin').unbind('click');
-	$('#confrimLogin').bind('click', function(e) {
-		login();
+	$('#confrimRegister').unbind('click');
+	$('#confrimRegister').bind('click', function(e) {
+		register();
 		e.stopPropagation();
 	});
 	
 	 // 俘获 enter 键
 	$(document).keyup(function (e) {
 	    if (e.keyCode === 13) {
-	        login();
+	    	register();
 	    }
 	});
 });
 
-//检查有没有系统用户
-function checkHaveSysUser(){
-	$.ajax({
-		method : 'get',
-		cache : false,
-		async :false,
-		url : "/checkHaveSysUser",
-		dataType : 'json',
-		success : function(backjson) {
-			if (!backjson.haveSysUser) {
-				window.location.href = "register.html";
-			}
-		}
-	});
-}
-
-
-function login(){
+function register(){
 	if($(".loginuser").val()===""){
 		toastr.warning('用户名不能为空');
 		return
@@ -44,14 +23,14 @@ function login(){
 		toastr.warning('密码不能为空');
 		return
 	}
-	comfirmLogin($(".loginuser").val(),$(".loginpwd").val());
+	comfirmRegisterUser($(".loginuser").val(),$(".loginpwd").val());
 }
 
-function comfirmLogin(username,password) {
+function comfirmRegisterUser(username,password) {
 	$.ajax({
 		method: 'post',
 		cache: false,
-		url: "/verifyUser",
+		url: "/registerUser",
 		data: {
 			"username": username,
 			"password":  password
@@ -59,7 +38,6 @@ function comfirmLogin(username,password) {
 		dataType: 'json',
 		success: function(backjson) {
 			if(backjson.result) {
-				//注册？？？
 				var userInfo = $.session.get('userInfo');
 			    if(userInfo==="undefined"||userInfo===undefined){
 			    	$.session.set('userInfo', backjson.UserInfo);
@@ -72,8 +50,9 @@ function comfirmLogin(username,password) {
 			    }
 				window.location.href = "main.html";
 			} else {
-				toastr.warning(backjson.ErroeTxt);
+				toastr.warning("操作失败,请重试");
 			}
 		}
 	});
 }
+
