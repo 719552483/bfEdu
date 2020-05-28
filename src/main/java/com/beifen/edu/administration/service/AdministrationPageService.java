@@ -642,6 +642,11 @@ public class AdministrationPageService {
 	public List<Edu990> queryAllUser() {
 		 return edu990DAO.findAll();
 	}
+	
+	//根据用户id查询用户信息
+	public Edu990 queryUserById(String userId) {
+		return edu990DAO.queryUserById(userId);
+	}
 
 	//新建或修改用户
 	public void newUser(Edu990 edu990) {
@@ -1012,6 +1017,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

@@ -46,4 +46,8 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	//删除角色时查看角色当前是否有人使用
 	@Query(value = "select * from edu990 b where b.js=?1", nativeQuery = true)
 	public List<Edu990> useThisRoleEdu990s(String js);
+
+	//根据用户id查询用户信息
+	@Query(value = "select * from edu990 b where b.BF990_ID=?1", nativeQuery = true)
+	public Edu990 queryUserById(String userId);
 }

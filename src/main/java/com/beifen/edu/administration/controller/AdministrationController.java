@@ -364,6 +364,25 @@ public class AdministrationController {
 	
 	
 	/**
+	 * 根据用户id查询用户信息
+	 * 
+	 * @param newRoleInfo角色信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/queryUserById")
+	@ResponseBody
+	public Object queryUserById(@RequestParam("userId") String userId) {
+		Map<String, Object> returnMap = new HashMap();
+	    Edu990	edu990=administrationPageService.queryUserById(userId);
+	    returnMap.put("userInfo", edu990);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	
+	/**
 	 * 新增用户
 	 * 
 	 * @param newRoleInfo角色信息
@@ -386,6 +405,42 @@ public class AdministrationController {
 			returnMap.put("id", newUser.getBF990_ID());
 		}
 		
+		returnMap.put("userNameHave",userNameHave);
+		return returnMap;
+	}
+	
+	/**
+	 * 账号设置
+	 * 
+	 * @param newRoleInfo角色信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/userSetup")
+	@ResponseBody
+	public Object accountSetup(@RequestParam("accountSetupInfo") String accountSetupInfo) {
+		boolean result = true; 
+		boolean userNameHave = true; 
+		boolean pwdRight = true; 
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(accountSetupInfo);
+		Edu990 newUser = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
+		Edu990 otherUserInfo=administrationPageService.queryUserById(newUser.getBF990_ID().toString());
+		
+		//判读用户名是否存在
+	    Edu990 edu990= administrationPageService.checkIsHaveUser(newUser.getYhm());
+	    if(edu990==null){
+			userNameHave=false;
+		}
+	    
+		if(!userNameHave){
+			newUser.setJs(otherUserInfo.getJs());
+			newUser.setScdlsj(otherUserInfo.getScdlsj());
+			newUser.setYxkjfs(otherUserInfo.getYxkjfs());
+			administrationPageService.newUser(newUser);
+		}
+		
+		returnMap.put("result",result);
 		returnMap.put("userNameHave",userNameHave);
 		return returnMap;
 	}
