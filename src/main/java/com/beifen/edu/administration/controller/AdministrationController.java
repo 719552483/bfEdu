@@ -439,22 +439,26 @@ public class AdministrationController {
 		newUser.setJs(otherUserInfo.getJs());
 		newUser.setScdlsj(otherUserInfo.getScdlsj());
 		newUser.setYxkjfs(otherUserInfo.getYxkjfs());
-		administrationPageService.newUser(newUser);
-//		//判读用户名是否存在
-//	    Edu990 edu990= administrationPageService.checkIsHaveUser(newUser.getYhm());
-//	    if(edu990==null){
-//			userNameHave=false;
-//		}
+		//判读用户名是否存在
+	    Edu990 edu990= administrationPageService.checkIsHaveUser(newUser.getYhm());
+	    if(edu990==null){
+			userNameHave=false;
+		}else{
+			if(newUser.getBF990_ID().equals(edu990.getBF990_ID())){
+				userNameHave=false;
+			}
+		}
 	    
-//		if(!userNameHave){
+	    
+		if(!userNameHave){
 			newUser.setJs(otherUserInfo.getJs());
 			newUser.setScdlsj(otherUserInfo.getScdlsj());
 			newUser.setYxkjfs(otherUserInfo.getYxkjfs());
 			administrationPageService.newUser(newUser);
-//		}
+		}
 		
 		returnMap.put("result",result);
-//		returnMap.put("userNameHave",userNameHave);
+		returnMap.put("userNameHave",userNameHave);
 		return returnMap;
 	}
 	
@@ -2740,7 +2744,9 @@ public class AdministrationController {
 	
 	
 	
-	
+	// @RequestMapping("/newImgUpload")
+		// @ResponseBody
+		// protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	
 	
 	

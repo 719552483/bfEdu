@@ -1347,6 +1347,9 @@ background: rgba(36, 138, 187, 0.77);
 .anqxArea span{
     margin-right: 5px;
 }
+.newsInfoArea .selectName{
+     width:initial; 
+}
 
 @keyframes serachAnimation {
 	10% {
