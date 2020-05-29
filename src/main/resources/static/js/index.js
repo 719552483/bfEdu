@@ -1,27 +1,49 @@
 /*
+加载用户信息
+*/
+function loadUserInfo() {
+	//渲染用户信息
+	var userInfo = JSON.parse($.session.get('userInfo'));
+	$(parent.frames["topFrame"].document).find(".user").find("span").attr("userId",userInfo.bF990_ID); // frame获取父窗
+	$(parent.frames["topFrame"].document).find(".user").find("span").html(userInfo.yhm); // frame获取父窗
+	if(userInfo.scdlsj==="fristTime"){
+		$(".welinfo:eq(1)").hide(); 
+	}else{
+		$(".welinfo:eq(1)").find("i").html("您上次登录的时间："+userInfo.scdlsj); 
+		$(".welinfo:eq(1)").show(); 
+	}
+}
+
+
+/*
 加载已选的快捷方式
 */
 function loadChoosendShortcuts() {
-	// $.ajax({
-	//     method: 'get',
-	//     cache: false,
-	//     url: "/host",
-	//     data: {},
-	//     dataType: 'json',
-	//     success: function (backjson) {
-	//     }
-	// });
-	var allChoosedShortcuts = ["studentInfo", "performance", "leaderCheck", "localAssets"];
+	//根据权限渲染菜单
+	var userInfo = JSON.parse($.session.get('userInfo'));
 	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
-
-	for (var k = 0; k < currentMenus.length; ++k) {
-		for (var i = 0; i < allChoosedShortcuts.length; ++i) {
-			if (allChoosedShortcuts[i] === currentMenus[k].id) {
-				$(".choosendShortcuts").append('<li class="' + allChoosedShortcuts[i] +
-					'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
-					'.png" />' +
-					'<p><a href="#">' + currentMenus[k].innerText + '</a></p>' +
-					'</li>');
+	if(typeof(userInfo.yxkjfs) !== "undefined"){
+		var allChoosedShortcuts =userInfo.yxkjfs.split(",");
+		for (var k = 0; k < currentMenus.length; ++k) {
+			for (var i = 0; i < allChoosedShortcuts.length; ++i) {
+				if (allChoosedShortcuts[i] === currentMenus[k].id) {
+					$(".choosendShortcuts").append('<li class="' + allChoosedShortcuts[i] +
+						'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
+						'.png" />' +
+						'<p><a href="#">' + currentMenus[k].innerText + '</a></p>' +
+						'</li>');
+				}
+			}
+		}
+	}else{
+		//默认显示6个快捷方式
+		for (var k = 0; k < currentMenus.length; ++k) {
+			if(k<=5){
+				$(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
+						'"><img class="choosedShortcutsIcon" src="img/' + currentMenus[k].id +
+						'.png" />' +
+						'<p><a href="'+currentMenus[k].id+'.html">' + currentMenus[k].innerText + '</a></p>' +
+						'</li>');
 			}
 		}
 	}
@@ -42,7 +64,7 @@ function showAllShortcuts() {
 }
 
 /*
-根据菜单渲染所有选择
+根据菜单渲染所有待选快捷键
 */
 function drawAllShortcuts() {
 	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
@@ -64,7 +86,7 @@ function drawAllShortcuts() {
 }
 
 /*
-渲染已选
+渲染已选快捷键
 */
 function allShortcutsDrawChoosend() {
 	var choosedShortcutsArray = new Array;
@@ -146,9 +168,14 @@ function addShortcuts() {
 	}
 
 	if (!isSameArray(newShortcutsList, oldShortcutsList)) {
-		$(".tip").show().fadeIn(200);
-		showMaskingElement();
-		$(".tipTitle").html("快捷方式");
+		$.showModal("#remindModal",true);
+		$(".remindType").html("快捷方式");
+		$(".remindActionType").html("修改");
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
+			readyToReloadShortcutsList();
+			e.stopPropagation();
+		});
 	} else {
 		toastr.warning('暂未进行任何操作');
 	}
@@ -227,36 +254,12 @@ function shortcutsAllChose() {
 }
 
 /*
-快捷方式提示框取消
-*/
-function shortcutsCancelBtn() {
-	$('.shortcutsCancelBtn').unbind('click');
-	$('.shortcutsCancelBtn').bind('click', function(e) {
-		allShortcutsDrawChoosend();
-		$(".tip").hide().fadeOut(200);
-		showMaskingElement();
-		e.stopPropagation();
-	});
-}
-
-/*
-快捷方式提示框确定
-*/
-function shortcutsConfirmBtn() {
-	$('.shortcutsConfirm').unbind('click');
-	$('.shortcutsConfirm').bind('click', function(e) {
-		readyToReloadShortcutsList();
-		e.stopPropagation();
-	});
-}
-
-/*
 获得新选择快捷方式
 */
 function readyToReloadShortcutsList() {
 	var allShortcuts = $(".bacimg");
 	var currentShortcutList = new Array();
-	var newShortcut = new Array();
+	var newShortcut ="";
 
 	for (var i = 0; i < $(".choosendShortcuts").find("li").length; ++i) {
 		currentShortcutList.push($(".choosendShortcuts").find("li")[i].classList[0]);
@@ -264,27 +267,35 @@ function readyToReloadShortcutsList() {
 
 	for (var i = 0; i < allShortcuts.length; ++i) {
 		if (allShortcuts[i].attributes[1].nodeValue === "true") {
-			newShortcut.push(allShortcuts[i].classList[1]);
+			newShortcut+=allShortcuts[i].classList[1]+",";
 		}
 	}
+	
+	
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "mapJson/test.json",
+		url: "/newShortcut",
 		data: {
-			"newShortcut": JSON.stringify(newShortcut)
+			"userId":$(parent.frames["topFrame"].document).find(".userName").attr("userid"),
+			"newShortcut":newShortcut.substring(0,newShortcut.length-1)
 		},
 		dataType: 'json',
 		success: function(backjson) {
 			if (backjson) {
 				for (var i = 0; i < allShortcuts.length; ++i) {
 					reloadShortcutsList(allShortcuts[i], currentShortcutList, i);
-					$(".tip").hide().fadeOut(200);
+					
+					var userInfo = JSON.parse($.session.get('userInfo'));
+					userInfo.yxkjfs=newShortcut.substring(0,newShortcut.length-1);
+					$.session.remove('userInfo');
+					$.session.set('userInfo', JSON.stringify(userInfo));
+					
+					$.hideModal();
 					$(".allShortcuts").hide();
 					$(".configIndexPage").show();
 					$(".placeul").find("li:eq(1)").remove();
 				}
-				showMaskingElement();
 			} else {
 				alert(1)
 			}
@@ -322,7 +333,6 @@ function addChoosendShortcut(className, TextName) {
 function removeChoosendShortcut(className) {
 	$(".choosendShortcuts").find("." + className).remove();
 }
-
 
 //获取所有角色类型
 function drawAuthorityGroup() {
@@ -383,23 +393,34 @@ function groupChangeAction() {
 }
 
 $(function() {
+	checkSession();
+	loadUserInfo();
 	loadChoosendShortcuts();
 	ShortcutsButtonBind();
-	shortcutsCancelBtn();
-	shortcutsConfirmBtn();
 	drawAuthorityGroup();
+	//返回首页事件绑定
 	$('.backIndex').unbind('click');
 	$('.backIndex').bind('click', function(e) {
 		backToIndex();
 		e.stopPropagation();
 	});
+	
+	//权限分类下拉框事件绑定
 	$("#authorityGroup").change(function() {
 		groupChangeAction();
 	})
 
+	//全选快捷键
 	$('#shortcutsAllChose').unbind('click');
 	$('#shortcutsAllChose').bind('click', function(e) {
 		shortcutsAllChose();
+		e.stopPropagation();
+	});
+	
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
 		e.stopPropagation();
 	});
 });

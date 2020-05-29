@@ -27,7 +27,9 @@ import com.beifen.edu.administration.dao.Edu200Dao;
 import com.beifen.edu.administration.dao.Edu300Dao;
 import com.beifen.edu.administration.dao.Edu301Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
+import com.beifen.edu.administration.dao.Edu991Dao;
 import com.beifen.edu.administration.domian.Edu990;
+import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu101;
@@ -51,6 +53,8 @@ public class AdministrationPageService {
 	private Edu000Dao edu000DAO;
 	@Autowired
 	private Edu990Dao edu990DAO;
+	@Autowired
+	private Edu991Dao edu991DAO;
 	@Autowired
 	private Edu200Dao edu200DAO;
 	@Autowired
@@ -624,18 +628,39 @@ public class AdministrationPageService {
 	
 	
 	
+	//检查有没有系统用户
+	public boolean checkHaveSysUser() {
+		Edu990 edu990=edu990DAO.checkHaveSysUser("sys");
+		if(edu990==null){
+			return false;
+		}else{
+			return true;
+		}
+	}
 	
+	// 查询所有用户
+	public List<Edu990> queryAllUser() {
+		 return edu990DAO.findAll();
+	}
+	
+	//根据用户id查询用户信息
+	public Edu990 queryUserById(String userId) {
+		return edu990DAO.queryUserById(userId);
+	}
 
+	//新建或修改用户
+	public void newUser(Edu990 edu990) {
+		edu990DAO.save(edu990);
+	}
 	
-	
-	
-	
+	//删除用户
+	public void removeUser(String bf990_ID) {
+		edu990DAO.removeUser(bf990_ID);
+	}
 	
 	// 查询用户是否存在
-	public String checkIsHaveUser(String userName) {
-
+	public Edu990 checkIsHaveUser(String userName) {
 		return edu990DAO.checkIsHaveUser(userName);
-
 	}
 
 	// 查询密码是否正确
@@ -648,6 +673,50 @@ public class AdministrationPageService {
 
 		return edu990DAO.getUserInfo(username);
 	}
+	
+	//修改首页快捷方式
+	public void newShortcut(String userId, String newShortcut) {
+		 edu990DAO.newShortcut(userId,newShortcut);
+	}
+	
+	//修改角色时更新用户角色信息
+	public void updateUserJs(Edu991 edu991) {
+		List<Edu990> userThisJsUsers =AdministrationPageService.this.useThisRoleEdu990s(edu991.getBF991_ID().toString());
+		for (int i = 0; i < userThisJsUsers.size(); i++) {
+			Edu990 edu990=userThisJsUsers.get(i);
+			edu990.setJs(edu991.getJs());
+			edu990DAO.save(edu990);
+		}
+	}
+		
+	//删除角色时查看角色当前是否有人使用
+	public List<Edu990> useThisRoleEdu990s(String edu991_id) {
+	    String js=edu991DAO.queryNAMEBy991id(edu991_id);
+		return edu990DAO.useThisRoleEdu990s(js);
+	}
+
+	
+	
+	// 根据角色获取权限信息
+	public Edu991 getAuthoritysInfo(String js) {
+		return edu991DAO.getAuthoritysInfo(js);
+	}
+	
+	//新增角色
+	public void addRole(Edu991 newRole) {
+		edu991DAO.save(newRole);
+	}
+	
+	//删除角色
+	public void removeRole(String bf991_ID) {
+		edu991DAO.removeRole(bf991_ID);
+	}
+	
+	//获取所有角色
+	public List<Edu991> getAllRole() {
+		return edu991DAO.findAll();
+	}
+	
 
 	// 根据二级代码关联字段获取二级代码
 	public List<Edu000> queryEjdm(String ejdmGlzd) {
@@ -959,6 +1028,29 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

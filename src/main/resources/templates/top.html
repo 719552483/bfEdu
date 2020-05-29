@@ -7,6 +7,8 @@
 		<link href="css/icon.css" rel="stylesheet" type="text/css" />
 		<link href="css/useful2.css" rel="stylesheet" type="text/css" />
 		<script language="JavaScript" src="sripts/jquery.min.js"></script>
+		<script src="sripts/jquerySession.js"></script>
+		<script src="js/implement.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			$(function() {
 				//顶部导航切换
@@ -42,11 +44,12 @@
 
 		<div class="topright">
 			<ul>
+			    <li><a href="accountSetup.html" target="rightFrame"><i class="iconfont icon-shezhi endIcon"></i>账号设置</a></li>
 				<li><a href="login.html" target="_parent"><i class="iconfont icon-tuichu endIcon"></i>退出</a></li>
-			</ul>
+		</ul>
 
 			<div class="user">
-				<span userId="012321">admin</span>
+				<span userId="" class="userName"></span>
 				<i>消息</i>
 				<b>5</b>
 			</div>

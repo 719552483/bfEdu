@@ -4,6 +4,7 @@ $(function() {
 	drawAuthorityGroup();
 	authorityGroupChange();
 	getAllRoleInfo();
+	$("#anqx").multiSelect(); 
 });
 
 //获取所有角色类型
@@ -142,9 +143,9 @@ function btnBind() {
 	});
 
 	//提示框取消按钮
-	$('.tipCancelBtn,.cancelAddRole,.cancelModifyRoleBtn,.cancelRemoveRoleBtn').unbind('click');
-	$('.tipCancelBtn,.cancelAddRole,.cancelModifyRoleBtn,.cancelRemoveRoleBtn').bind('click', function(e) {
-		$(".tip").hide();
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
 		e.stopPropagation();
 	});
 
@@ -309,53 +310,81 @@ function groupChangeAction() {
 function addRole() {
 	var addRolename = $("#add_rolename").val();
 	var newRoleAuthoritys = getNewRoleAuthoritys();
+	var newAnqx = getNewAnqxs();
 	if (addRolename === "") {
 		toastr.warning('新角色名称不能为空');
 		return;
 	}
 
 	if (newRoleAuthoritys.length === 0) {
-		toastr.warning('新角色暂未选择任何权限');
+		toastr.warning('新角色未选择菜单权限');
 		return;
 	}
-	$(".comfirmAddRoleTip").show();
-	$('.comfirmAddRole').unbind('click');
-	$('.comfirmAddRole').bind('click', function(e) {
-		comfirmAddRole(addRolename, newRoleAuthoritys);
+	
+	if (newAnqx==="") {
+		toastr.warning('新角色未选择按钮权限');
+		return;
+	}
+	
+	
+	
+	$.showModal("#remindModal",true);
+	$(".remindType").html("角色");
+	$(".remindActionType").html("新增");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		comfirmAddRole(addRolename, newRoleAuthoritys,newAnqx);
 		e.stopPropagation();
 	});
-	// $.ajax({
-	//     method: 'get',
-	//     cache: false,
-	//     url: "/host",
-	//     data: {},
-	//     dataType: 'json',
-	//     success: function (backjson) {
-	//     }
-	// });
 }
 
 //确认新增角色
-function comfirmAddRole(roleName, authorityInfo) {
-	// $.ajax({
-	//     method: 'get',
-	//     cache: false,
-	//     url: "/host",
-	//     data: {},
-	//     dataType: 'json',
-	//     success: function (backjson) {
-	//     }
-	// });
-	var insertObject = new Object();
-	insertObject.id = "id3"; //数据库生成的id
-	insertObject.roleName = roleName;
-	insertObject.authorityInfo = authorityInfo.toString();
-	$('#allRoleTable').bootstrapTable('append', insertObject);
-	drawPagination(".allRoleTableArea", "角色信息");
-	toastr.success('角色新增成功');
-	$("#add_rolename").val("");
-	shortcutsRefresh();
-	$(".tip").hide();
+function comfirmAddRole(roleName, authorityInfo,newAnqx) {
+	//组装角色对象
+	var roleObject=new Object();
+	roleObject.js=roleName;
+	roleObject.cdqx=authorityInfo;
+	roleObject.anqx=newAnqx;
+	
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addRole",
+		data: {
+             "newRoleInfo":JSON.stringify(roleObject) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				$.hideModal("#remindModal");
+				if (backjson.jsHave) {
+					toastr.warning('角色名称已存在');
+					return;
+				}
+				roleObject.bf991_ID=backjson.id;
+				$('#allRoleTable').bootstrapTable('append', roleObject);
+				drawPagination(".allRoleTableArea", "角色信息");
+				toastr.success('角色新增成功');
+				$("#add_rolename").val("");
+				shortcutsRefresh();
+			} else {
+				hideloding();
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+	
+	
 }
 
 /*
@@ -365,7 +394,7 @@ function getNewRoleAuthoritys() {
 	var allShortcuts = $(".bacimg");
 	var currentShortcutList = new Array();
 	var newShortcut = new Array();
-
+	var newShortcutValues = "";
 	for (var i = 0; i < $(".choosendShortcuts").find("li").length; ++i) {
 		currentShortcutList.push($(".choosendShortcuts").find("li")[i].classList[0]);
 	}
@@ -375,37 +404,54 @@ function getNewRoleAuthoritys() {
 			newShortcut.push(allShortcuts[i].classList[1]);
 		}
 	}
-	return newShortcut;
+	
+	for (var i = 0; i < newShortcut.length; ++i) {
+		newShortcutValues+=newShortcut[i]+',';
+	}
+	
+	return newShortcutValues.substring(0,newShortcutValues.length-1);
+}
+
+/*
+获得新选择按钮权限
+*/
+function getNewAnqxs() {
+	var anqxs =$("#anqx").val();
+	var anqxValues = "";
+	if(anqxs!=null){
+		for (var i = 0; i < anqxs.length; ++i) {
+			anqxValues+=anqxs[i]+',';
+		}
+	}
+	return anqxValues.substring(0,anqxValues.length-1);
 }
 
 //获取所有角色信息
 function getAllRoleInfo() {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	var tableInfo = {
-		"newsInfo": [{
-			"id": "id1",
-			"roleName": "管理员",
-			"authorityInfo": "studentBreak,studentClass"
-		}, {
-			"id": "id2",
-			"roleName": "用户",
-			"authorityInfo": "studentInfo,studentFiles"
-		}]
-	}
-	stuffTable(tableInfo);
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRole",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				stuffTable(backjson.allRoleInfo);
+			} else {
+				hideloding();
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //填充角色表
@@ -423,24 +469,25 @@ function stuffTable(tableInfo) {
 	};
 
 	$('#allRoleTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo.newsInfo,
+		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
 		pageSize: 10,
 		pageList: [10],
 		showToggle: false,
 		showFooter: false,
+		clickToSelect: true,
 		search: true,
 		editable: false,
 		striped: true,
 		toolbar: '#toolbar',
-		showColumns: false,
+		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".allRoleTableArea", "角色信息");
 		},
 		columns: [{
-				field: 'id',
-				title: 'id',
+				field: 'bf991_ID',
+				title: 'bf991_ID',
 				align: 'center',
 				visible: false
 			},
@@ -449,22 +496,27 @@ function stuffTable(tableInfo) {
 				checkbox: true
 			},
 			{
-				field: 'roleName',
+				field: 'js',
 				title: '角色名称',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'authorityInfo',
-				title: '角色权限',
+				field: 'cdqx',
+				title: '菜单权限',
 				align: 'left',
-				width: '40%',
+				clickToSelect: false,
 				formatter: authorityInfoFormatter,
 				events: allRoleEvents
+			}, {
+				field: 'anqx',
+				title: '按钮权限',
+				clickToSelect: false,
+				formatter: anqxFormatter,
+				align: 'left'
 			}, {
 				field: 'action',
 				title: '操作',
 				align: 'center',
-				width: '16%',
 				formatter: allRoleFormatter,
 				events: allRoleEvents
 			}
@@ -475,8 +527,8 @@ function stuffTable(tableInfo) {
 		return [
 				'<ul class="toolbar tabletoolbar">' +
 				'<li id="wantModifyRole" class="blockStart blockStart' + row.id +
-				'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
-				'<li id="removeRole" class="blockStart blockStart' + row.id + '"><span><img src="images/t03.png"></span>删除角色</li>' +
+				'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+				'<li id="removeRole" class="blockStart blockStart' + row.id + '"><span><img src="images/t03.png"></span>删除</li>' +
 				'</ul>'
 			]
 			.join('');
@@ -486,13 +538,33 @@ function stuffTable(tableInfo) {
 		return [
 			'<ul class="toolbar tabletoolbar">' +
 			'<li id="showRoleAuthoritys" class="blockStart blockStart' + row.id +
-			'"><span><img src="images/i02.png" style="width:24px"></span>查看角色所有权限</li>' +
+			'"><span><img src="images/i02.png" style="width:24px"></span>查看所有菜单权限</li>' +
 			'</ul>'
 		]
 	}
-
-	drawPagination("角色信息");
-	drawSearchInput();
+	
+	function anqxFormatter(value, row, index) {
+		var anqxString="";
+		var anqx=row.anqx.split(",");
+		for (var i = 0; i < anqx.length; i++) {
+			if(anqx[i]==="insert"){
+				anqxString+='<span class="label label-success">可新增</span>';
+			}else if(anqx[i]==="delete"){
+				anqxString+='<span class="label label-danger">可删除</span>';
+			}else if(anqx[i]==="modify"){
+				anqxString+='<span class="label label-primary">可修改</span>';
+			}else if(anqx[i]==="query"){
+				anqxString+='<span class="label label-info">可查询</span>';
+			}
+		}
+		return [
+			'<div class="anqxArea">'+anqxString+'</div>'
+		]
+	}
+	drawPagination(".allRoleTableArea", "角色信息");
+	drawSearchInput(".allRoleTableArea");
+	changeColumnsStyle( ".allRoleTableArea", "学生信息");
+	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 }
 
@@ -500,7 +572,7 @@ function stuffTable(tableInfo) {
 function showRoleAuthoritys(row, index) {
 	$("#tab1,#canleShowRoleAuthoritys,.formtext").show();
 	$("#addRole,#tab2,#shortcutsAllChose,#shortcutsRefresh,.forminfo").hide();
-	$(".roleName_forShowAuthority").html(row.roleName);
+	$(".roleName_forShowAuthority").html(row.js);
 	$(".forminfo").find("li").find("i").hide();
 	choseCurrentAuthoritys(row, index)
 }
@@ -514,34 +586,45 @@ function canleShowRoleAuthoritys(row, index) {
 
 //修改角色
 function wantModifyRole(row, index) {
-	$(".currentId").html(row.id);
+	$(".currentId").html(row.bf991_ID);
 	$("#tab1,#modifyRole,#canleiModifRole").show();
 	$("#addRole,#tab2").hide();
-	// $(".forminfo").find("li").find("i").hide();
-	$("#add_rolename").val(row.roleName).focus();
+	$("#add_rolename").val(row.js).focus();
 	shortcutsRefresh();
-	choseCurrentAuthoritys(row, index)
+	choseCurrentAuthoritys(row, index);
+	multiSelectWithDefault("#anqx",row.anqx.split(",")); //授课学期
 }
 
 //在所有权限去勾选当前角色所拥护的权限
 function choseCurrentAuthoritys(row, index) {
 	var currentALLShortcuts = $(".bacimg");
 	$(".bacimg").removeClass("imgSha");
-	var authorityInfoArray = row.authorityInfo.split(",");
-	for (var i = 0; i < currentALLShortcuts.length; ++i) {
-		if (authorityInfoArray.indexOf(currentALLShortcuts[i].classList[1]) !== -1) {
+	if(row.cdqx==="sys"){
+		for (var i = 0; i < currentALLShortcuts.length; ++i) {
 			currentALLShortcuts[i].attributes[1].nodeValue = true;
 			currentALLShortcuts[i].childNodes[0].childNodes[1].style.display = "block";
 			currentALLShortcuts[i].classList.add("imgSha");
-		} else {
-			currentALLShortcuts[i].attributes[1].nodeValue = false;
-			currentALLShortcuts[i].childNodes[0].childNodes[1].style.display = "none";
+		}
+	}else{
+		var authorityInfoArray = row.cdqx.split(",");
+		for (var i = 0; i < currentALLShortcuts.length; ++i) {
+			if (authorityInfoArray.indexOf(currentALLShortcuts[i].classList[1]) !== -1) {
+				currentALLShortcuts[i].attributes[1].nodeValue = true;
+				currentALLShortcuts[i].childNodes[0].childNodes[1].style.display = "block";
+				currentALLShortcuts[i].classList.add("imgSha");
+			} else {
+				currentALLShortcuts[i].attributes[1].nodeValue = false;
+				currentALLShortcuts[i].childNodes[0].childNodes[1].style.display = "none";
+			}
+		}
+
+		for (var i = 0; i < currentALLShortcuts.length; ++i) {
+			currentALLShortcuts[i].style.display = "block";
 		}
 	}
+	
+	
 
-	for (var i = 0; i < currentALLShortcuts.length; ++i) {
-		currentALLShortcuts[i].style.display = "block";
-	}
 
 	$('#modifyRole').unbind('click');
 	$('#modifyRole').bind('click', function(e) {
@@ -554,59 +637,88 @@ function choseCurrentAuthoritys(row, index) {
 function modifyRole(row, index) {
 	var addRolename = $("#add_rolename").val();
 	var newRoleAuthoritys = getNewRoleAuthoritys();
+	var newAnqx = getNewAnqxs();
 	if (addRolename === "") {
-		toastr.warning('新角色名称不能为空');
+		toastr.warning('角色名称不能为空');
 		return;
 	}
 
 	if (newRoleAuthoritys.length === 0) {
-		toastr.warning('新角色暂未选择任何权限');
+		toastr.warning('角色暂未选择任何权限');
 		return;
 	}
+	
+	if (newAnqx==="") {
+		toastr.warning('角色未选择按钮权限');
+		return;
+	}
+	
 
-	if (isSameArray(newRoleAuthoritys, row.authorityInfo.split(",")) && addRolename === row.roleName) {
+	if (newRoleAuthoritys===row.cdqx && addRolename === row.js&&row.anqx===newAnqx) {
 		toastr.warning('暂未进行任何操作');
 		return;
 	}
 
-	$(".comfirmModifyRoleTip").show();
-	$('.comfirmModifyRoleBtn').unbind('click');
-	$('.comfirmModifyRoleBtn').bind('click', function(e) {
-		comfirmModifyRole(index, addRolename, newRoleAuthoritys);
+	$.showModal("#remindModal",true);
+	$(".remindType").html("所选角色权限");
+	$(".remindActionType").html("修改");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		//组装角色对象
+		var roleObject=new Object();
+		roleObject.BF991_ID=row.bf991_ID;
+		roleObject.js=addRolename;
+		roleObject.cdqx=newRoleAuthoritys;
+		roleObject.anqx=newAnqx;
+		comfirmModifyRole(roleObject,index);
 		e.stopPropagation();
 	});
 }
 
 //确认修改角色
-function comfirmModifyRole(index, roleName, authorityInfo) {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	var updateObject = new Object();
-	updateObject.id = $(".currentId").innerText;
-	updateObject.roleName = roleName;
-	updateObject.authorityInfo = authorityInfo.toString();
-	$('#allRoleTable').bootstrapTable('updateRow', {
-		index: index,
-		row: updateObject
+function comfirmModifyRole(roleObject,index) {
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/modifyRole",
+		data: {
+             "updateInfo":JSON.stringify(roleObject) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				$.hideModal("#remindModal");
+				if (backjson.jsHave) {
+					toastr.warning('角色名称已存在');
+					return;
+				}
+				$('#allRoleTable').bootstrapTable('updateRow', {
+					index: index,
+					row: roleObject
+				});
+				toolTipUp(".myTooltip");
+				$("#tab1,#modifyRole,#canleiModifRole").hide();
+				$("#addRole,#tab2").show();
+				$(".forminfo").find("li").find("i").show();
+				toastr.success('修改角色成功');
+				drawPagination(".allRoleTableArea", "角色信息");
+			} else {
+				hideloding();
+				toastr.warning('操作失败，请重试');
+			}
+		}
 	});
-	toolTipUp(".myTooltip");
-	$("#tab1,#modifyRole,#canleiModifRole,.tip").hide();
-	$("#addRole,#tab2").show();
-	$(".forminfo").find("li").find("i").show();
-	toastr.success('修改角色成功');
-	drawPagination(".allRoleTableArea", "角色信息");
+
 }
 
 //取消修改角色
@@ -618,12 +730,14 @@ function canleiModifRole() {
 
 //删除角色
 function removeRoler(row) {
-	$(".comfirmRemoveRoleTip").show();
-	$('.comfirmRemoveRoleBtn').unbind('click');
-	$('.comfirmRemoveRoleBtn').bind('click', function(e) {
+	$.showModal("#remindModal",true);
+	$(".remindType").html("角色");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeUserArray = new Array;
-		removeUserArray.push(row.id);
-		removeNewsAjaxDemo("#allRoleTable", removeUserArray,".allRoleTableArea", "角色信息");
+		removeUserArray.push(row.bf991_ID);
+		sendRoleRemoveInfo(removeUserArray);
 		e.stopPropagation();
 	});
 }
@@ -637,14 +751,53 @@ function removeRolersBtn() {
 		var removeUserArray = new Array;
 		$(".comfirmRemoveRoleTip").show();
 		for (var i = 0; i < chosenUsers.length; i++) {
-			removeUserArray.push(chosenUsers[i].id);
+			removeUserArray.push(chosenUsers[i].bf991_ID);
 		}
-		$('.comfirmRemoveRoleBtn').unbind('click');
-		$('.comfirmRemoveRoleBtn').bind('click', function(e) {
-			removeNewsAjaxDemo("#allRoleTable", removeUserArray,".allRoleTableArea", "角色信息");
+		$.showModal("#remindModal",true);
+		$(".remindType").html("所选角色");
+		$(".remindActionType").html("删除");
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
+			sendRoleRemoveInfo(removeUserArray);
 			e.stopPropagation();
 		});
 	}
+}
+
+//发送删除培养计划下的专业课程请求
+function sendRoleRemoveInfo(removeArray){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/removeRole",
+		data: {
+             "deleteIds":JSON.stringify(removeArray) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				$.hideModal("#remindModal");
+				if(backjson.roleIsUse){
+					toastr.warning('不可删除正在使用中的角色');
+					return;
+				}
+				tableRemoveAction("#allRoleTable", removeArray, ".allRoleTableArea", "角色信息");
+				$(".myTooltip").tooltipify();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //重新加载tab

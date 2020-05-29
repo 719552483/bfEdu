@@ -1,4 +1,32 @@
-//查询需要的二级代码信息
+$(document).ready(function() {
+	checkSession();
+});
+
+//检查是否存在session 实现拦截
+function checkSession(){
+	 var userInfo =$.session.get('userInfo');
+	 //url拦截  无session转登录页
+	 if(typeof userInfo == "undefined" ){
+		 top.location = "login.html";
+     }
+}
+
+//根据session的按钮权限控制按钮
+function btnControl(){
+	 var allAnqx=["insert","delete","modify","query"];
+	 var btnInfo =JSON.parse($.session.get('authoritysInfo')).anqx;
+	 if(btnInfo==="sys"){
+		 return;
+	 }
+	 btnInfo=btnInfo.split(",");
+	 for (var i = 0; i < allAnqx.length; i++) {
+		 if(btnInfo.indexOf(allAnqx[i])===-1){
+			 $("."+allAnqx[i]+"Btn").remove();
+		 }
+	 }
+}
+
+// 查询需要的二级代码信息
 function queryEJDMElementInfo(){
 	var queryRs;
 	$.ajax({
@@ -28,7 +56,6 @@ function queryEJDMElementInfo(){
 	});
 	return queryRs;
 }
-
 
 //渲染二级代码相关的元素
 function stuffEJDElement(rs){
@@ -345,7 +372,7 @@ function changeTableNoRsTip(str) {
 		$(".no-records-found").find("td").html(str);
 		return;
 	}
-	$(".no-records-found").find("td").html("暂无数据,请选择检索条件.....");
+	$(".no-records-found").find("td").html("暂无数据.....");
 }
 
 // 下拉框选值后渲染下一个select
@@ -453,21 +480,38 @@ function actionStuffManiaSelectWithDeafult(id,cheeckedValue,cheeckedTxt){
 
 //multiInput 有默认值 指定默认值
 function multiSelectWithDefault(id,Default){
-	$(id)[0].nextElementSibling.childNodes[0].innerText=Default;
 	$(id).val(Default);
-	var allinputEVE=$(id)[0].nextSibling.childNodes[1].childNodes[0].childNodes;
-
+	var allinputEVE = $(id)[0].nextSibling.childNodes[1].childNodes[0].childNodes;
 	for (var i = 0; i < allinputEVE.length; ++i) {
 		allinputEVE[i].childNodes[0].checked = false;
 	}
 	
+    var showStr="";
 	for (var j = 0; j < Default.length; ++j) {
 		for (var i = 0; i < allinputEVE.length; ++i) {
-			if(Default[j]===allinputEVE[i].childNodes[0].attributes[2].nodeValue){
+			if (Default[j] === allinputEVE[i].childNodes[0].attributes[2].nodeValue) {
 				allinputEVE[i].childNodes[0].checked = true;
+				showStr+=allinputEVE[i].innerText+',';
 			}
 		}
 	}
+	showStr=showStr.substring(0,showStr.length-1);
+	$(id)[0].nextElementSibling.childNodes[0].innerText=showStr;
+//	$(id)[0].nextElementSibling.childNodes[0].innerText=Default;
+//	$(id).val(Default);
+//	var allinputEVE=$(id)[0].nextSibling.childNodes[1].childNodes[0].childNodes;
+//
+//	for (var i = 0; i < allinputEVE.length; ++i) {
+//		allinputEVE[i].childNodes[0].checked = false;
+//	}
+//	
+//	for (var j = 0; j < Default.length; ++j) {
+//		for (var i = 0; i < allinputEVE.length; ++i) {
+//			if(Default[j]===allinputEVE[i].childNodes[0].attributes[2].nodeValue){
+//				allinputEVE[i].childNodes[0].checked = true;
+//			}
+//		}
+//	}
 }
 
 // 获取无action select的值
@@ -558,7 +602,6 @@ function reReloadSearchsWithSelect(reObject) {
 		$(reObject.actionSelectIds).selectMania(); // 初始化下拉框
 	}
 }
-
 
 //有标签页页面切换更新面包屑导航
 function drawBreadPilot(eve) {
@@ -787,16 +830,6 @@ function checkIsNumber(num) {
 	}
 }
 
-//function ejdmToSstring(EJDMEInfo,value){
-//	var kcleIDtoString;
-//	for (var i = 0; i < EJDMEInfo.length; ++i) {
-//		if(EJDMEInfo[i].ejdm===value){
-//			kcleIDtoString=EJDMEInfo[i].ejdmz
-//		}
-//	}
-//	return '<div class="myTooltip" title="'+kcleIDtoString+'">'+kcleIDtoString+'</div>';
-//}
-
 //课程名字文字化
 function calssNameMatter(value, row, index) {
 	if (row.sfsckkjh==="T") {
@@ -886,7 +919,6 @@ function scheduleFormatter(value, row, index) {
 	return [ htmlStr ].join('');
 }
 
-
 //时间戳转换时间格式字符
 function stampToDatetimeString(time,splitTotime){
 	 var date=new Date(time);
@@ -911,6 +943,7 @@ function stampToDatetimeString(time,splitTotime){
 	    	return  y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
 	    }
 }
+
 // table增加tooltip
 function paramsMatter(value, row, index) {
 	// 替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
@@ -933,8 +966,6 @@ function paramsMatter(value, row, index) {
 		.join('');
 	}
 }
-
-
 
 // 根据课程类型改变背景颜色
 function changeClassAreaBg(classType) {
@@ -1004,8 +1035,6 @@ function byage(strBirthday){
 		return returnAge;//返回周岁年龄
 	}
 
-
-
 // 列操作改变样式并且绑定点击事件填充toolTip
 function changeColumnsStyle(changeAreaClass, txt) {
 	var colum = $(changeAreaClass).find(".columns").find("i").removeClass()
@@ -1047,8 +1076,6 @@ function drawCalenr(id) {
           todayBtn: "linked",
 	});
 }
-
-
 
 // 数据库时间转化
 function formatterTimeToBase(time, indludeTime) {

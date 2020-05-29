@@ -134,8 +134,8 @@ function stuffAllLevelTable(allLevel){
 		function releaseNewsFormatter(value, row, index) {
 			return [
 					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyLevel"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-					'<li id="removeLevle"><span><img src="images/t03.png"></span>删除</li>' +
+					'<li class="modifyBtn" id="modifyLevel"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li class="deleteBtn" id="removeLevle"><span><img src="images/t03.png"></span>删除</li>' +
 					'</ul>'
 				]
 				.join('');
@@ -157,6 +157,7 @@ function stuffAllLevelTable(allLevel){
 		drawSearchInput(".allLevlTableArea");
 		drawPagination(".allLevlTableArea", "培养层次信息");
 		toolTipUp(".myTooltip");
+		btnControl();
 }
 
 //填充系部表
@@ -227,8 +228,8 @@ function stuffAllDepartmentTable(allDepartment){
 		function releaseNewsFormatter(value, row, index) {
 			return [
 					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyDepartment"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-					'<li id="removeDepartment"><span><img src="images/t03.png"></span>删除</li>' +
+					'<li class="modifyBtn" id="modifyDepartment"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li class="deleteBtn" id="removeDepartment"><span><img src="images/t03.png"></span>删除</li>' +
 					'</ul>'
 				]
 				.join('');
@@ -236,6 +237,7 @@ function stuffAllDepartmentTable(allDepartment){
 		drawSearchInput(".allDepartmentTableArea ");
 		drawPagination(".allDepartmentTableArea", "系部信息");
 		toolTipUp(".myTooltip");
+		btnControl();
 }
 
 //填充年级表
@@ -306,8 +308,8 @@ function stuffAllGradeTable(allGrade){
 		function releaseNewsFormatter(value, row, index) {
 			return [
 					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyGrade"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-					'<li id="removeGrade"><span><img src="images/t03.png"></span>删除</li>' +
+					'<li id="modifyGrade" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li id="removeGrade" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
 					'</ul>'
 				]
 				.join('');
@@ -315,6 +317,7 @@ function stuffAllGradeTable(allGrade){
 		drawSearchInput(".allGradeTableArea");
 		drawPagination(".allGradeTableArea", "年级信息");
 		toolTipUp(".myTooltip");
+		btnControl();
 }
 
 //填充专业表
@@ -385,8 +388,8 @@ function stuffAllMajorTable(allMajor){
 		function releaseNewsFormatter(value, row, index) {
 			return [
 					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyMajor"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-					'<li id="removeMajor"><span><img src="images/t03.png"></span>删除</li>' +
+					'<li id="modifyMajor" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li id="removeMajor" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
 					'</ul>'
 				]
 				.join('');
@@ -394,6 +397,7 @@ function stuffAllMajorTable(allMajor){
 		drawSearchInput(".allMajorTableArea");
 		drawPagination(".allMajorTableArea", "专业信息");
 		toolTipUp(".myTooltip");
+		btnControl();
 }
 
 //预备新增培养层次
@@ -1566,8 +1570,8 @@ function stuffAllRelationInfoTable(allRelationInfo){
 		function releaseNewsFormatter(value, row, index) {
 			return [
 					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyRelation"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-					'<li id="removeRelation"><span><img src="images/t03.png"></span>删除</li>' +
+					'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li id="removeRelation" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
 					'</ul>'
 				]
 				.join('');
@@ -1575,6 +1579,7 @@ function stuffAllRelationInfoTable(allRelationInfo){
 		drawSearchInput(".relationTableArea");
 		drawPagination(".relationTableArea", "培养计划信息");
 		toolTipUp(".myTooltip");
+		btnControl();
 }
 
 //预备修改关系

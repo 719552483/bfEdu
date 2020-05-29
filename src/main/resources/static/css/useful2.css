@@ -227,7 +227,7 @@ padding:1.6em 0em 0.6em 31px !important
 #majorTrainingTable td:last-child,
 #allRoleTable td:last-child,
 #releaseNewsTable td:last-child,
-#allUserTable td:last-child {
+#allUserTable td:last-child{
 	min-width: 234px;
 }
 
@@ -237,7 +237,9 @@ padding:1.6em 0em 0.6em 31px !important
 #allMajorTable td:last-child,
 #allGradeTable td:last-child,
 #allDepartmentTable td:last-child,
-#allLevlTable td:last-child {
+#allLevlTable td:last-child ,
+#allRoleTable td:last-child,
+#courseLibraryTable td:last-child{
 	width: 165px;
 }
 
@@ -484,15 +486,15 @@ padding:1.6em 0em 0.6em 31px !important
    relationNameHave
  }
 
-.allLevlTableArea .search {
-	    margin-top: 0px !important;
+.allMajorTable .search,
+.allGradeTable .search,
+.allLevlTableArea .search,
+.allDepartmentTable .search{
+	margin-top:-40px !important;
     margin-bottom: 0px;
 }
 
-.allUserTableArea .search,
-.allRoleTableArea .search {
-	margin-top: 38px !important;
-}
+
 
 .majorTrainingTableArea .search {
 	    margin-top: 2px !important;
@@ -554,8 +556,6 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .removeUsersArea {
-	width: 20%;
-	margin-top: 36px;
 	float: left;
 }
 
@@ -573,6 +573,13 @@ padding:1.6em 0em 0.6em 31px !important
 	color: rgba(3, 70, 128, 0.8588235294117647);
 }
 
+.authorityGroupArea .multi-select-container{
+	    margin-left: -2px!important;
+}
+
+.authorityGroupArea .multi-select-menuitem input{
+	       margin-top: 0.9em!important;
+}
 
 .newUserAuthority .select-mania {
 	margin-left: 20px !important;
@@ -582,7 +589,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .authorityGroupArea .select-mania{
-	margin-left: 32px !important;
+	margin-left: 7px !important;
 	margin-top: 1px !important;
 	margin-bottom: 1% !important;
 	width: 350px !important;
@@ -1330,6 +1337,15 @@ background: rgba(36, 138, 187, 0.77);
 	font-size: 14px;
 	border-radius: 3px;
 	cursor: pointer;
+}
+
+.anqxArea{
+	    padding-top: 15px;
+  
+}
+
+.anqxArea span{
+    margin-right: 5px;
 }
 
 @keyframes serachAnimation {

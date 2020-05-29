@@ -15,11 +15,9 @@ public class Edu991 {
 	
 	
 	private Long BF991_ID;
-	private String js;  //角色类型
-	private String cdqx;  //菜单权限
-	private String anqx;//按钮权限
-	
-	
+	private String js;  //角色类型(名称)
+	private String cdqx;  //菜单权限(指定长度700)
+	private String anqx;//按钮权限  
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -36,6 +34,7 @@ public class Edu991 {
 	public void setJs(String js) {
 		this.js = js;
 	}
+	@Column(length=700)
 	public String getCdqx() {
 		return cdqx;
 	}
