@@ -1,38 +1,38 @@
 package com.beifen.edu.administration.controller;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletException;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import org.apache.poi.EncryptedDocumentException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
+import org.apache.commons.fileupload.*;
+import org.apache.commons.fileupload.disk.*;
+import org.apache.commons.fileupload.servlet.*;
+import org.apache.tomcat.jni.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.alibaba.fastjson.JSON;
-import com.beifen.edu.administration.domian.Edu990;
-import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu101;
@@ -45,8 +45,13 @@ import com.beifen.edu.administration.domian.Edu108;
 import com.beifen.edu.administration.domian.Edu200;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
+import com.beifen.edu.administration.domian.Edu990;
+import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.service.AdministrationPageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /*
  * 业务处理Controller测试
@@ -2688,239 +2693,124 @@ public class AdministrationController {
     }
 	
 	
-	
-	
-	
-	
-	
-	
-	
-//	private ArrayList<Object> getList(InputStream inputStream,String suffix) throws IOException {
-//        ArrayList<Object> arrayList = new ArrayList<Object>();
-//        // 具体执行导入，可以引入策略模式
-//        // 解决excel2003和excel2007版本的问题
-//        if ("xlsx".equals(suffix)) {
-//            xlsxImp(inputStream, arrayList);
-//        }
-//        if ("xls".equals(suffix)) {
-//            xlsImp(inputStream, arrayList);
-//        }
-//        // 万一新增一种新格式，对修改打开了，不符合oo编程规范
-//        return arrayList;
-//    }
-//	
-//	  private void xlsImp(InputStream inputStream, ArrayList<Object> arrayList) throws IOException {
-//	        // 初始整个Excel
-//	        HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
-//	        // 获取第一个sheet表
-//	        HSSFSheet sheet = workbook.getSheetAt(0);
-//	        for (int rowIndex = 2; rowIndex < sheet.getLastRowNum(); rowIndex++) {
-//	            HashMap<String, Object> hashMap = new HashMap<String, Object>();
-//	            HSSFRow row = sheet.getRow(rowIndex);
-//	            //整行都为空去掉
-//	            if(row==null) {
-//	                continue;
-//	            }
-//	        }
-//	    }
-//	
-//	
-//	
-//	  private void xlsxImp(InputStream inputStream, ArrayList<Object> arrayList) throws IOException {
-//	        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
-//	        XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
-//	      
-//	    }
-//	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// @RequestMapping("/newImgUpload")
-		// @ResponseBody
-		// protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	
-	
-	
-	
-	// @RequestMapping("/newImgUpload")
-	// @ResponseBody
-	// protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	// throws ServletException, IOException {
-	// //设置Response响应的编码
-	// resp.setContentType("text/html; charset=UTF-8");
-	//
-	//
-	// //获取一个Response的Write对象
-	// PrintWriter writer = resp.getWriter();
-	//
-	//
-	// //文件保存目录路径
-	// String savePath = "D://icon";
-	// System.out.println(savePath);
-	//
-	// //文件保存目录URL
-	// String saveUrl = req.getContextPath() + "/a/";
-	// System.out.print(saveUrl);
-	//
-	// //定义允许上传的文件扩展名
-	// HashMap<String, String> extMap = new HashMap<String, String>();
-	// extMap.put("image", "gif,jpg,jpeg,png,bmp");
-	// extMap.put("flash", "swf,flv");
-	// extMap.put("media", "swf,flv,mp3,wav,wma,wmv,mid,avi,mpg,asf,rm,rmvb");
-	// extMap.put("file", "doc,docx,xls,xlsx,ppt,htm,html,txt,zip,rar,gz,bz2");
-	//
-	//
-	// //最大文件大小
-	// long maxSize = 1000000;
-	//
-	//
-	// //判断是否是一个文件
-	// if (!ServletFileUpload.isMultipartContent(req)) {
-	// writer.println(getError("请选择文件。"));
-	// return;
-	// }
-	// //检查目录
-	// File uploadDir = new File(savePath);
-	// if (!uploadDir.isDirectory()) {
-	// writer.println(getError("上传目录不存在。"));
-	// return;
-	// }
-	// //检查目录写权限
-	// if (!uploadDir.canWrite()) {
-	// writer.println(getError("上传目录没有写权限。"));
-	// return;
-	// }
-	//
-	// String dirName = req.getParameter("dir");
-	// if (dirName == null) {
-	// dirName = "image";
-	// }
-	// if (!extMap.containsKey(dirName)) {
-	// writer.println(getError("目录名不正确。"));
-	// return;
-	// }
-	//
-	//
-	// //创建文件夹
-	// savePath += dirName + "/";
-	// saveUrl += dirName + "/";
-	// File saveDirFile = new File(savePath);
-	// if (!saveDirFile.exists()) {
-	// saveDirFile.mkdirs();
-	// }
-	// SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-	// String ymd = sdf.format(new Date());
-	// savePath += ymd + "/";
-	// saveUrl += ymd + "/";
-	// File dirFile = new File(savePath);
-	// if (!dirFile.exists()) {
-	// dirFile.mkdirs();
-	// }
-	//
-	// FileItemFactory factory = new DiskFileItemFactory();
-	// ServletFileUpload upload = new ServletFileUpload(factory);
-	// upload.setHeaderEncoding("UTF-8");
-	// List items = null;
-	// try {
-	// items = upload.parseRequest((RequestContext) req);
-	// } catch (FileUploadException e) {
-	// e.printStackTrace();
-	// }
-	// Iterator itr = items.iterator();
-	// while (itr.hasNext()) {
-	// FileItem item = (FileItem) itr.next();
-	// String fileName = item.getName();
-	// long fileSize = item.getSize();
-	// if (!item.isFormField()) {
-	// //检查文件大小
-	// if (item.getSize() > maxSize) {
-	// writer.println(getError("上传文件大小超过限制。"));
-	// return;
-	// }
-	// //检查扩展名
-	// String fileExt = fileName.substring(fileName.lastIndexOf(".") +
-	// 1).toLowerCase();
-	// if
-	// (!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt))
-	// {
-	// writer.println(getError("上传文件扩展名是不允许的扩展名。\n只允许" + extMap.get(dirName) +
-	// "格式。"));
-	// return;
-	// }
-	//
-	// SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-	// String newFileName = df.format(new Date()) + "_" + new
-	// Random().nextInt(1000) + "." + fileExt;
-	// try {
-	// File uploadedFile = new File(savePath, newFileName);
-	// item.write(uploadedFile);
-	// } catch (Exception e) {
-	// writer.println(getError("上传文件失败。"));
-	// return;
-	// }
-	//
-	// JSONObject obj = new JSONObject();
-	// obj.put("error", 0);
-	// obj.put("url", saveUrl + newFileName);
-	// writer.println(obj.toJSONString());
-	// }
-	// }
-	//
-	//
-	// //将writer对象中的内容输出
-	// writer.flush();
-	// //关闭writer对象
-	// writer.close();
-	// }
-	//
-	//
-	// //一个私有的方法，用于响应错误信息
-	// private String getError(String message) {
-	// JSONObject obj = new JSONObject();
-	// obj.put("error", 1);
-	// obj.put("message", message);
-	// return obj.toJSONString();
-	// }
-	//
-
-	/*
-	 * 查询所有学生信息
+	/**
+	 *img
+	 * @throws FileUploadException 
 	 * 
-	 * @return returnMap
 	 */
-//
-//	@RequestMapping("/sad")
-//	@ResponseBody
-//	public Object searchDiseaseCodeing(@RequestParam String ejdmGlzd) {
-//		Map<String, Object> returnMap = new HashMap();
-//		ReflectUtils reflectUtils = new ReflectUtils();
-//		List<Map> diseaseList = new ArrayList<>();
-//		List<Edu000> edu000 = new ArrayList<>();
-//		List<Edu001> allDiseases = administrationPageService.queryAllInformation();
-//
-//		List<String> list = new ArrayList<String>();
-//		list = queryEdu000(ejdmGlzd);
-//
-//		Map<String, Object> std = new HashMap<>();
-//		try {
-//			std = reflectUtils.simpleReflectBeanToMap(allDiseases);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return list;
-//
-//	}
+	@RequestMapping("newImgUpload")
+	@ResponseBody
+	 public void uploadFile( HttpServletRequest request,
+	            HttpServletResponse response) throws IOException {
+	        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+	        Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+	        PrintWriter out = response.getWriter();
+	        //文件保存目录路径
+//	      String savePath = pageContext.getServletContext().getRealPath("/") + "attached/";
+	        String savePath = "D://test"; // 完整路径
+	        //文件保存目录URL
+	        String saveUrl  = "D://test";
+//	      String saveUrl  = Global.UPLOAD_FOLDER + File.separator + "kindeditor/";
+
+	        //定义允许上传的文件扩展名
+	        HashMap<String, String> extMap = new HashMap<String, String>();
+	        extMap.put("image", "gif,jpg,jpeg,png,bmp");
+	        extMap.put("flash", "swf,flv");
+	        extMap.put("media", "swf,flv,mp3,wav,wma,wmv,mid,avi,mpg,asf,rm,rmvb");
+	        extMap.put("file", "doc,docx,xls,xlsx,ppt,htm,html,txt,zip,rar,gz,bz2");
+
+	        //最大文件大小
+	        long maxSize = 1000000;
+
+	        response.setContentType("text/html; charset=UTF-8");
+
+	        if(!ServletFileUpload.isMultipartContent(request)){
+	            out.println(getError("请选择文件。"));
+	            return;
+	        }
+	        //检查目录
+	        File uploadDir = new File(savePath);
+	        if(!uploadDir.isDirectory()){
+	            //如果不存在，创建文件夹
+	            if (!uploadDir.exists()){
+	                uploadDir.mkdirs();
+	            }
+	            else{
+	                out.println(getError("上传目录不存在。"));
+	                return; 
+	            }
+	        }
+	        //检查目录写权限
+	        if(!uploadDir.canWrite()){
+	            out.println(getError("上传目录没有写权限。"));
+	            return;
+	        }
+
+	        String dirName = request.getParameter("dir");
+	        if (dirName == null) {
+	            dirName = "image";
+	        }
+	        if(!extMap.containsKey(dirName)){
+	            out.println(getError("目录名不正确。"));
+	            return;
+	        }
+	        //创建文件夹
+	        savePath += dirName + "/";
+	        saveUrl += dirName + "/";
+	        File saveDirFile = new File(savePath);
+	        if (!saveDirFile.exists()) {
+	            saveDirFile.mkdirs();
+	        }
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	        String ymd = sdf.format(new Date());
+	        savePath += ymd + "/";
+	        saveUrl += ymd + "/";
+	        File dirFile = new File(savePath);
+	        if (!dirFile.exists()) {
+	            dirFile.mkdirs();
+	        }
+	        //此处是直接采用Spring的上传
+	        for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
+	            MultipartFile mf = entity.getValue();
+	            String fileFullname = mf.getOriginalFilename();
+	            fileFullname = fileFullname.replace('&', 'a');
+	            fileFullname = fileFullname.replace(',', 'b');
+	            fileFullname = fileFullname.replace('，', 'c');
+	            //检查扩展名
+	            String fileExt = fileFullname.substring(fileFullname.lastIndexOf(".") + 1).toLowerCase();
+	            if(!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt)){
+	                out.println(getError("上传文件扩展名是不允许的扩展名。\n只允许" + extMap.get(dirName) + "格式。"));
+	                return;
+	            }
+
+	            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+	            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt;
+
+	            File uploadFile = new File(savePath + newFileName);
+	            try {
+	                FileCopyUtils.copy(mf.getBytes(), uploadFile);
+	                JSONObject obj = new JSONObject();
+	                obj.put("error", 0);
+	                obj.put("url", saveUrl + newFileName);
+	                out.println(obj.toString());
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	                out.println(getError("上传文件失败。"));
+	                return;
+	            }
+	        }
+	        //上传结束
+
+	    }
+
+	
+	private String getError(String message) {
+		JSONObject obj = new JSONObject();
+		obj.put("error", 1);
+		obj.put("message", message);
+		return obj.toString();
+	}
+	
 
 	/*
 	 * 根据传入的二级代码参数 获取二级代码将二级代码装入LIST中返回前台

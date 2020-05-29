@@ -12,6 +12,7 @@
 		<link href="css/select-mania.css" rel="stylesheet" type="text/css" />
 		<link href='css/animate.min.css' media='all' rel='stylesheet' type='text/css' />
 		<link href="css/tooltipify.min.css" rel="stylesheet" type="text/css" />
+		<link href="editor/kindeditor/plugins/code/prettify.css" rel="stylesheet" type="text/css" />
 		<script src="sripts/jquery.min.js" type="text/javascript"></script>
 		<script src='sripts/bootstrap.min.js' type='text/javascript'></script>
 		<script src='sripts/bootstrap-table.js' type='text/javascript'></script>
@@ -24,26 +25,23 @@
 		<script src="sripts/select-mania.js" type="text/javascript"></script>
 		<script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
 		<script type="text/javascript">
-		var editor1;
-    	/**页面初始化 创建文本编辑器工具**/
-	    KindEditor.ready(function(K) {
-	    	//定义生成编辑器的文本类型
-		    	editor1 = K.create('textarea[name="content"]', {
-					cssPath : 'editor/plugins/code/prettify.css',
-					allowImageUpload: true, //上传图片框本地上传的功能，false为隐藏，默认为true
-					allowImageRemote : false, //上传图片框网络图片的功能，false为隐藏，默认为true
-					formatUploadUrl:false,
-				    uploadJson : '/newImgUpload',//文件上传请求后台路径
-	                allowFileManager : true,
-						items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
-							'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
-							'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-							'superscript', '|', 'selectall', '-',
-							'title', 'fontname', 'fontsize', '|', 'textcolor', 'bgcolor', 'bold',
-							'italic', 'underline', 'strikethrough', 'removeformat', '|', 'image',
-							'advtable', 'hr', 'emoticons', 'link', 'unlink', '|'
-						]
-		    	});
+		KindEditor.ready(function(K) {
+			var editor1 = K.create('textarea[name="content1"]', {
+				cssPath : '../plugins/code/prettify.css',
+				uploadJson : '/newImgUpload',
+				allowFileManager : false,
+				afterCreate : function() {
+					var self = this;
+					K.ctrl(document, 13, function() {
+						self.sync();
+						document.forms['example'].submit();
+					});
+					K.ctrl(self.edit.doc, 13, function() {
+						self.sync();
+						document.forms['example'].submit();
+					});
+				}
+			});
 		});
 		</script>
 		<style>
@@ -83,12 +81,13 @@
 					</select>
 				</div>
 
-				<textarea id="newsBody" spellcheck="false" name="content" style="width:100%;height:300px;visibility:hidden;"></textarea>
-				<cite class="tipTxt">tips:请不要再文本编辑区重复键入通知标题....</cite>
-				<div class="selectArea">
-					<input type="button" class="btn submitBtn submitNews" value="马上发布" />
-				</div>
-			</div>
+
+				<form name="example" method="post" action="">
+					<textarea name="content1" cols="100" rows="8"
+						style="width: 700px; height: 200px; visibility: hidden;"></textarea>
+					<br /> <input type="submit" name="button" value="提交内容" /> (提交快捷键:Ctrl + Enter)
+				</form>
+		    </div>
 
 			<div class="tableArea">
 				<table class="tablelist myTableStyle" id="releaseNewsTable" data-unique-id="id"></table>
