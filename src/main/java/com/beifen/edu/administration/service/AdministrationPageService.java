@@ -86,7 +86,7 @@ public class AdministrationPageService {
 		return edu103DAO.queryAllLevelByPcccbm(pcccbm);
 	}
 
-	// 查询所有系部
+	// 查询所有系部//
 	public List<Edu104> queryAllDepartment() {
 		return edu104DAO.queryAllDepartment();
 	}
