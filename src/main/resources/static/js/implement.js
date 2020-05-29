@@ -8,11 +8,22 @@ function checkSession(){
 	 //url拦截  无session转登录页
 	 if(typeof userInfo == "undefined" ){
 		 top.location = "login.html";
-     }else{
-     //发送请求用户验证  没有初始化用户转注册页	 
-    	 
-    	//有查看用户按钮权限  动态改变 
      }
+}
+
+//根据session的按钮权限控制按钮
+function btnControl(){
+	 var allAnqx=["insert","delete","modify","query"];
+	 var btnInfo =JSON.parse($.session.get('authoritysInfo')).anqx;
+	 if(btnInfo==="sys"){
+		 return;
+	 }
+	 btnInfo=btnInfo.split(",");
+	 for (var i = 0; i < allAnqx.length; i++) {
+		 if(btnInfo.indexOf(allAnqx[i])===-1){
+			 $("."+allAnqx[i]+"Btn").remove();
+		 }
+	 }
 }
 
 // 查询需要的二级代码信息

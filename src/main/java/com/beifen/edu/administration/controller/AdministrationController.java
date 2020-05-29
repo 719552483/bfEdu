@@ -265,12 +265,22 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(updateInfo);
 		Edu991 newRole = (Edu991) JSONObject.toBean(jsonObject, Edu991.class);
+		
 		//判断修改的角色名称是否存在
 		Edu991 newRole2=administrationPageService.getAuthoritysInfo(newRole.getJs());
 		if(newRole2==null){
 			jsHave = false; 
+		}else{
+			if(newRole.getBF991_ID().equals(newRole2.getBF991_ID())){
+				jsHave = false; 
+			}
+		}
+		
+		if(!jsHave){
+			administrationPageService.updateUserJs(newRole);
 			administrationPageService.addRole(newRole);
 		}
+		
 		
 		returnMap.put("jsHave", jsHave);
 		returnMap.put("result", result);
@@ -426,22 +436,25 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(accountSetupInfo);
 		Edu990 newUser = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
 		Edu990 otherUserInfo=administrationPageService.queryUserById(newUser.getBF990_ID().toString());
-		
-		//判读用户名是否存在
-	    Edu990 edu990= administrationPageService.checkIsHaveUser(newUser.getYhm());
-	    if(edu990==null){
-			userNameHave=false;
-		}
+		newUser.setJs(otherUserInfo.getJs());
+		newUser.setScdlsj(otherUserInfo.getScdlsj());
+		newUser.setYxkjfs(otherUserInfo.getYxkjfs());
+		administrationPageService.newUser(newUser);
+//		//判读用户名是否存在
+//	    Edu990 edu990= administrationPageService.checkIsHaveUser(newUser.getYhm());
+//	    if(edu990==null){
+//			userNameHave=false;
+//		}
 	    
-		if(!userNameHave){
+//		if(!userNameHave){
 			newUser.setJs(otherUserInfo.getJs());
 			newUser.setScdlsj(otherUserInfo.getScdlsj());
 			newUser.setYxkjfs(otherUserInfo.getYxkjfs());
 			administrationPageService.newUser(newUser);
-		}
+//		}
 		
 		returnMap.put("result",result);
-		returnMap.put("userNameHave",userNameHave);
+//		returnMap.put("userNameHave",userNameHave);
 		return returnMap;
 	}
 	

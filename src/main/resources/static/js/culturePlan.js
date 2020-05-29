@@ -163,9 +163,9 @@ function stuffMajorTrainingTable(tableInfo) {
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
-				+ '<li id="majorTrainingInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
-				+ '<li id="modifyMajorTraining"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
-				+ '<li id="removeMajorTraining"><span><img src="images/t03.png"></span>删除</li>'
+				+ '<li class="queryBtn" id="majorTrainingInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+				+ '<li class="modifyBtn" id="modifyMajorTraining"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
+				+ '<li class="deleteBtn" id="removeMajorTraining"><span><img src="images/t03.png"></span>删除</li>'
 				+ '</ul>' ].join('');
 	}
 
@@ -176,6 +176,7 @@ function stuffMajorTrainingTable(tableInfo) {
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".majorTrainingTableArea", "培养计划");
+	btnControl();
 }
 
 // 查看培养计划详情

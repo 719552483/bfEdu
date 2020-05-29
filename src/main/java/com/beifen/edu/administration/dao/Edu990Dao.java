@@ -23,9 +23,8 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	//根据用户名查询用户信息
 	@Query(value = "select * from edu990 b where b.yhm=?1", nativeQuery = true)
 	public Edu990 getUserInfo(String userName);
-
 	
-	// 修改教学班名称
+	// 修改已选快捷方式
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE edu990 SET yxkjfs =?2 WHERE BF990_ID =?1", nativeQuery = true)
@@ -50,4 +49,5 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	//根据用户id查询用户信息
 	@Query(value = "select * from edu990 b where b.BF990_ID=?1", nativeQuery = true)
 	public Edu990 queryUserById(String userId);
+
 }

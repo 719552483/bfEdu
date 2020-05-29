@@ -5,6 +5,7 @@ $(function() {
 	stuffEJDElement(EJDMElementInfo);
 	getMajorTrainingSelectInfo();
 	drawStudentBaseInfoEmptyTable();
+	btnControl();
 	binBind();
 });
 
@@ -347,9 +348,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	function releaseNewsFormatter(value, row, index) {
 		return [
 				'<ul class="toolbar tabletoolbar">' +
-				'<li id="studentDetails"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
-				'<li id="modifyStudent"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-				'<li id="removeStudent"><span><img src="images/t03.png"></span>删除</li>' +
+				'<li id="studentDetails" class="queryBtn"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
+				'<li id="modifyStudent" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+				'<li id="removeStudent" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
 				'</ul>'
 			]
 			.join('');
@@ -416,6 +417,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	changeTableNoRsTip();
 	changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息");
 	toolTipUp(".myTooltip");
+	btnControl();
 }
 
 //展示学生详情

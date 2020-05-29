@@ -19,7 +19,10 @@ function stuffCourseLibraryTable(tableInfo){
 	window.releaseNewsEvents = {
 			'click #modifyCourseLibrary' : function(e, value, row, index) {
 				modifyCourseLibrary(row);
-			}
+			},
+			'click #courseLibraryInfo' : function(e, value, row, index) {
+				courseLibraryInfo(row);
+			}	
 		};
 
 		$('#courseLibraryTable').bootstrapTable('destroy').bootstrapTable({
@@ -151,7 +154,8 @@ function stuffCourseLibraryTable(tableInfo){
 		
 		function releaseNewsFormatter(value, row, index) {
 			return [ '<ul class="toolbar tabletoolbar">'
-					+ '<li id="modifyCourseLibrary"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
+			        + '<li class="queryBtn" id="courseLibraryInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+					+ '<li class="modifyBtn" id="modifyCourseLibrary"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
 					+ '</ul>' ].join('');
 		}
 		
@@ -177,6 +181,14 @@ function stuffCourseLibraryTable(tableInfo){
 		drawSearchInput(".courseLibraryTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
+		btnControl();
+}
+
+//课程详情
+function courseLibraryInfo(row){
+	stuffclassDetailsArea(row);
+	$.showModal("#addNewClassModal",false);
+	$("#addNewClassModal").find(".moadalTitle").html("课程-"+row.kcmc+" 详细信息");
 }
 
 //修改课程

@@ -679,12 +679,23 @@ public class AdministrationPageService {
 		 edu990DAO.newShortcut(userId,newShortcut);
 	}
 	
+	//修改角色时更新用户角色信息
+	public void updateUserJs(Edu991 edu991) {
+		List<Edu990> userThisJsUsers =AdministrationPageService.this.useThisRoleEdu990s(edu991.getBF991_ID().toString());
+		for (int i = 0; i < userThisJsUsers.size(); i++) {
+			Edu990 edu990=userThisJsUsers.get(i);
+			edu990.setJs(edu991.getJs());
+			edu990DAO.save(edu990);
+		}
+	}
+		
 	//删除角色时查看角色当前是否有人使用
 	public List<Edu990> useThisRoleEdu990s(String edu991_id) {
 	    String js=edu991DAO.queryNAMEBy991id(edu991_id);
 		return edu990DAO.useThisRoleEdu990s(js);
 	}
 
+	
 	
 	// 根据角色获取权限信息
 	public Edu991 getAuthoritysInfo(String js) {
@@ -1017,6 +1028,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

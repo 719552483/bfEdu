@@ -149,9 +149,9 @@ function stuffAdministrationClassTable(tableInfo){
 
 		function releaseNewsFormatter(value, row, index) {
 			return [ '<ul class="toolbar tabletoolbar">'
-					+ '<li id="administrationClassInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
-					+ '<li id="modifyAdministrationClass"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
-					+ '<li id="removeAdministrationClass"><span><img src="images/t03.png"></span>删除</li>'
+					+ '<li class="queryBtn" id="administrationClassInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+					+ '<li class="modifyBtn" id="modifyAdministrationClass"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
+					+ '<li class="deleteBtn" id="removeAdministrationClass"><span><img src="images/t03.png"></span>删除</li>'
 					+ '</ul>' ].join('');
 		}
 		
@@ -169,6 +169,7 @@ function stuffAdministrationClassTable(tableInfo){
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 		changeColumnsStyle(".administrationClassTableArea", "行政班信息");
+		btnControl();
 }
 
 //查看行政班详情
