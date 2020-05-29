@@ -285,6 +285,12 @@ function readyToReloadShortcutsList() {
 			if (backjson) {
 				for (var i = 0; i < allShortcuts.length; ++i) {
 					reloadShortcutsList(allShortcuts[i], currentShortcutList, i);
+					
+					var userInfo = JSON.parse($.session.get('userInfo'));
+					userInfo.yxkjfs=newShortcut.substring(0,newShortcut.length-1);
+					$.session.remove('userInfo');
+					$.session.set('userInfo', JSON.stringify(userInfo));
+					
 					$.hideModal();
 					$(".allShortcuts").hide();
 					$(".configIndexPage").show();
