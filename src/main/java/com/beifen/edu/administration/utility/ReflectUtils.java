@@ -57,6 +57,8 @@ import com.beifen.edu.administration.domian.Edu107;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.service.AdministrationPageService;
 
+import net.sf.json.JSONObject;
+
 
 @Component
 public class ReflectUtils {
@@ -1265,6 +1267,15 @@ public class ReflectUtils {
 		}
 		return age;
 	}
+	
+	//上传图片返回工具
+	public String getError(String message) {
+		JSONObject obj = new JSONObject();
+		obj.put("error", 1);
+		obj.put("message", message);
+		return obj.toString();
+	}
+	
 }
 	
 	

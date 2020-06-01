@@ -28,8 +28,10 @@ import com.beifen.edu.administration.dao.Edu300Dao;
 import com.beifen.edu.administration.dao.Edu301Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
 import com.beifen.edu.administration.dao.Edu991Dao;
+import com.beifen.edu.administration.dao.Edu993Dao;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu991;
+import com.beifen.edu.administration.domian.Edu993;
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu101;
@@ -55,6 +57,8 @@ public class AdministrationPageService {
 	private Edu990Dao edu990DAO;
 	@Autowired
 	private Edu991Dao edu991DAO;
+	@Autowired
+	private Edu993Dao edu993DAO;
 	@Autowired
 	private Edu200Dao edu200DAO;
 	@Autowired
@@ -717,6 +721,25 @@ public class AdministrationPageService {
 		return edu991DAO.findAll();
 	}
 	
+	//发布通知
+	public void issueNotice(Edu993 edu993) {
+		edu993DAO.save(edu993);
+	}
+	
+	//根据id获取通知
+	public Edu993 getNoteInfoById(String noteId) {
+		return edu993DAO.getNoteInfoById(noteId);
+	}
+	
+	 //改变消息是否在首页展示
+	public void changeNoticeIsShowIndex(String noticeId) {
+		edu993DAO.changeNoticeIsShowIndex(noticeId);
+	}
+	
+	//获取所有通知
+	public  List<Edu993> getNotices() {
+		return edu993DAO.findAll();
+	}
 
 	// 根据二级代码关联字段获取二级代码
 	public List<Edu000> queryEjdm(String ejdmGlzd) {
@@ -1028,6 +1051,13 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
+
 
 
 

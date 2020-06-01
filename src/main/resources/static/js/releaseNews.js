@@ -1,38 +1,34 @@
 $(function() {
 	btnBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	hideloding();
 });
 
 //获取所有通知
 function getTableInfo() {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	var tableInfo = {
-		"newsInfo": [{
-			"id": "id1",
-			"newsName": "上海自dd贸区今日正式挂牌成立",
-			"isShow": true,
-			"releaseDate": "20191211000000",
-		}, {
-			"id": "id2",
-			"newsName": "上海自贸区今日正式挂牌成立",
-			"isShow": true,
-			"releaseDate": "20191211000000",
-		}]
-	}
-	stuffReleaseNewsTable(tableInfo);
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getNotices",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				stuffReleaseNewsTable(backjson.allNotices);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //渲染通知表格
@@ -47,7 +43,7 @@ function stuffReleaseNewsTable(tableInfo) {
 	};
 
 	$('#releaseNewsTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo.newsInfo,
+		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
 		pageSize: 10,
@@ -58,13 +54,13 @@ function stuffReleaseNewsTable(tableInfo) {
 		editable: false,
 		striped: true,
 		toolbar: '#toolbar',
-		showColumns: false,
+		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".tableArea", "通知");
 		},
 		columns: [{
-				field: 'id',
-				title: 'id',
+				field: 'edu993_ID',
+				title: 'edu993_ID',
 				align: 'center',
 				visible: false
 			},
@@ -73,17 +69,17 @@ function stuffReleaseNewsTable(tableInfo) {
 				checkbox: true
 			},
 			{
-				field: 'newsName',
+				field: 'tzbt',
 				title: '通知名称',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'releaseDate',
+				field: 'fbsj',
 				title: '发布日期',
 				align: 'left',
-				formatter: dateFormatter,
+				formatter: paramsMatter,
 			}, {
-				field: 'isShow',
+				field: 'sfsyzs',
 				title: '页面是否显示',
 				formatter: switchFormatter,
 				align: 'center',
@@ -100,16 +96,16 @@ function stuffReleaseNewsTable(tableInfo) {
 	});
 
 	function switchFormatter(value, row, index) {
-		if (row.isShow) {
+		if (row.sfsyzs==="T") {
 			return [
-					'<section newsId="' + row.id +
-					'" class="model-1 isShowControl"><div class="checkbox mycheckbox"><input type="checkbox" checked="checked"><label></label></div></section>'
+					'<section id="section'+row.edu993_ID+'" newsId="' + row.edu993_ID +
+					'" class="model-1 isShowControl"><div class="checkbox mycheckbox"><input id="ShowControl'+row.edu993_ID+'" type="checkbox" checked="checked"><label></label></div></section>'
 				]
 				.join('');
 		} else {
 			return [
-					'<section newsId="' + row.id +
-					'" class="model-1 isShowControl"><div class="checkbox mycheckbox"><input type="checkbox"><label></label></div></section>'
+					'<section id="section'+row.edu993_ID+'" newsId="' + row.edu993_ID +
+					'" class="model-1 isShowControl"><div class="checkbox mycheckbox"><input id="ShowControl'+row.edu993_ID+'" type="checkbox"><label></label></div></section>'
 				]
 				.join('');
 		}
@@ -123,63 +119,80 @@ function stuffReleaseNewsTable(tableInfo) {
 	}
 
 	function releaseNewsFormatter(value, row, index) {
+		var str="modify";
 		return [
-				'<ul class="toolbar tabletoolbar">' +
-				'<a href="newsModify.html?newId=' + row.id +
-				'"><li id="modifyNews"><span><img src="images/t02.png"></span>修改</li></a>' +
+				'<ul class="toolbar tabletoolbar">' 
+				+'<a href="newsModify.html?newId=' + row.edu993_ID +'&&type='+str+'"><li id="modifyNews"><span><img src="images/t02.png"></span>修改</li></a>' +
 				'<li id="removeNews"><span><img src="images/t03.png"></span>删除</li>' +
 				'<li id="newsDetails"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
 				'</ul>'
 			]
 			.join('');
 	}
+	
 	drawPagination(".tableArea", "通知");
-	drawSearchInput();
-	isShowControlBind();
+	changeColumnsStyle(".tableArea", "通知");
+	drawSearchInput(".tableArea");
+	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+	btnControl();
+	isShowControlBind();
 }
 
-function isShowControlBind(e) {
+//switch事件绑定
+function isShowControlBind() {
 	$('.isShowControl').unbind('click');
 	$('.isShowControl').bind('click', function(e) {
-		changNewsIshow(e.currentTarget.attributes[0].nodeValue);
+		changNewsIshow(e.currentTarget.attributes[1].nodeValue);
 		e.stopPropagation();
 	});
 }
 
+//改变是否页面展示
 function changNewsIshow(currentNewId) {
-	// var 
-	// 发送查询所有用户请求
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "mapJson/test.json",
-	// 	data: {
-	// 		"newShortcut": JSON.stringify(news)
-	// 	},
-	// 	dataType: 'json',
-	// 	success: function(backjson) {
-	// 		if (backjson.result) {
-	// 			for (var i = 0; i < news.length; i++) {
-	// 					$('#releaseNewsTable').bootstrapTable('removeByUniqueId',news[i]);
-	// 			}
-	// 			$(".tip").hide();
-	// 			drawPagination("通知");
-	// 			toastr.success('删除成功');
-	// 		} else {
-	// 			toastr.error('操作失败');
-	// 		}
-	// 	}
-	// });
-
-	//不确定是否在Index页面已删除???
-	toastr.success('操作成功');
+	var currentStatus=$("#ShowControl"+currentNewId)[0].checked;
+	var sfsyzs="";
+    if(currentStatus){
+    	sfsyzs="F";
+    	$("#section"+currentNewId).off();
+    }else{
+    	
+    	sfsyzs="T";
+    	$("#section"+currentNewId).on();
+    }
+	
+//	$.ajax({
+//		method : 'get',
+//		cache : false,
+//		url : "/changeNoticeIsShowIndex",
+//		data: {
+//             "noticeId":currentNewId 
+//        },
+//		dataType : 'json',
+//		beforeSend: function(xhr) {
+//			requestErrorbeforeSend();
+//		},
+//		error: function(textStatus) {
+//			requestError();
+//		},
+//		complete: function(xhr, status) {
+//			requestComplete();
+//		},
+//		success : function(backjson) {
+//			hideloding();
+//			if (backjson.result) {
+//				//不确定是否在Index页面已删除???
+//				toastr.success('操作成功');
+//			} else {
+//				toastr.warning('操作失败，请重试');
+//			}
+//		}
+//	});
 }
 
 /*单选删除通知*/
 function removeNews(row) {
 	$(".removeNewsTip").show();
-	showMaskingElement();
 	$(".removeNewsTip").find(".tipTitle").html("删除");
 
 	$('.removeNewsTip_confirmBtn').unbind('click');
@@ -200,7 +213,6 @@ function removeChoosedNews() {
 	} else {
 		var removeNewsArray = new Array;
 		$(".removeNewsTip").show();
-		showMaskingElement();
 		$(".removeNewsTip").find(".tipTitle").html("删除");
 		for (var i = 0; i < chosenNews.length; i++) {
 			removeNewsArray.push(chosenNews[i].id);
@@ -239,7 +251,6 @@ function newsDetails(row) {
 	// 	}
 	// });
 	$(".newsDetailsTip").show();
-	showMaskingElement();
 	$(".newsDetailsForTitle").html(row.newsName);
 	var backjson =
 		'<h1 style="text-align:center;">sdas</h1><div style="text-align:center;"><img src="http://127.0.0.1:8848/education/editor/plugins/emoticons/etc_09.gif" border="0" /></div><div style="text-align:left;">dasdd</div>'
@@ -288,8 +299,7 @@ function returnAaaNews() {
 function pushNews() {
 	var newsTitle = $("#newTitle").val();
 	var isShow = $('#isSowIndex').selectMania('get')[0].value;
-	var newsBody = KE.util.getData("newsBody");
-	var date = getCrrruentDate();
+	var newsBody = $('#newsBody').val(); 
 	if (newsTitle === "") {
 		toastr.warning('通知标题不能为空');
 		$(".submitNews").addClass("animated shake");
@@ -306,45 +316,51 @@ function pushNews() {
 	}
 
 	var pushNewsObject = new Object();
-	pushNewsObject.title = newsTitle;
-	isShow === "true" ? pushNewsObject.isShow = "T" : pushNewsObject.isShow = "F";
-	pushNewsObject.date = date;
-	pushNewsObject.body = newsBody;
-	$(".pushNewsTip").show();
-	showMaskingElement();
+	pushNewsObject.tzbt = newsTitle;
+	isShow === "true" ? pushNewsObject.sfsyzs = "T" : pushNewsObject.sfsyzs = "F";
+	pushNewsObject.tzzt = newsBody;
+	
+	$.showModal("#remindModal",true);
+	$(".remindType").html("新通知");
+	$(".remindActionType").html("发布");
 	//发布通知按钮
-	$('.pushNewsTip_confirmBtn').unbind('click');
-	$('.pushNewsTip_confirmBtn').bind('click', function(e) {
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		confirmPushNews(pushNewsObject);
 		e.stopPropagation();
 	});
 }
 
+//确认发布
 function confirmPushNews(pushNewsObject) {
-	// 发送查询所有用户请求
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "mapJson/test.json",
-	// 	data: {
-	// 		"newShortcut": JSON.stringify(news)
-	// 	},
-	// 	dataType: 'json',
-	// 	success: function(backjson) {
-	// 		if (backjson.result) {
-	// 			for (var i = 0; i < news.length; i++) {
-	// 					$('#releaseNewsTable').bootstrapTable('removeByUniqueId',news[i]);
-	// 			}
-	// 			$(".tip").hide();
-	// 			drawPagination("通知");
-	// 			toastr.success('删除成功');
-	// 		} else {
-	// 			toastr.error('操作失败');
-	// 		}
-	// 	}
-	// });
-	window.location.href = "index.html";
-	backToIndex();
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/issueNotice",
+		data: {
+             "noticeInfo":JSON.stringify(pushNewsObject) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				window.location.href = "index.html";
+				//首页消息表根据新通知的是否首页展示新增消息
+				backToIndex();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //为已知行为的按钮绑定事件
@@ -364,10 +380,9 @@ function btnBind() {
 	});
 
 	//提示框取消按钮
-	$('.cancelBtn,.shortcutsCancelBtn').unbind('click');
-	$('.cancelBtn,.shortcutsCancelBtn').bind('click', function(e) {
-		$(".tip").hide();
-		showMaskingElement();
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
 		e.stopPropagation();
 	});
 

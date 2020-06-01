@@ -7,79 +7,88 @@ $(function() {
 
 /*获取URL中的通知ID*/
 function getNewId() {
-	var newId = window.location.href.split("?")[1].split("=")[1];
-	// 发送查询所有用户请求
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "mapJson/test.json",
-	// 	data: {
-	// 		"newShortcut": JSON.stringify(news)
-	// 	},
-	// 	dataType: 'json',
-	// 	success: function(backjson) {
-	// 		if (backjson.result) {
-	// 			for (var i = 0; i < news.length; i++) {
-	// 					$('#releaseNewsTable').bootstrapTable('removeByUniqueId',news[i]);
-	// 			}
-	// 			$(".tip").hide();
-	// 			drawPagination("通知");
-	// 			toastr.success('删除成功');
-	// 		} else {
-	// 			toastr.error('操作失败');
-	// 		}
-	// 	}
-	// });
-	newsInfo = {
-		"id": "id1",
-		"newsName": "上海自贸区今日正式挂牌成立",
-		"isShow": true,
-		"releaseDate": "20191211000000",
-		"newsBody": "<ol><li>fsafsafsdafds〓</li></ol>",
-	}
-	stuffCurrentNewsInfo();
+	var newId = window.location.href.split("?")[1].split("&&")[0].split("=")[1];
+	var type = window.location.href.split("?")[1].split("&&")[1].split("=")[1];
+	
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getNoteInfoById",
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		data: {
+			"noteId":newId
+		},
+		dataType: 'json',
+		success: function(backjson) {
+			hideloding();
+			if (backjson) {
+				stuffCurrentNewsInfo(backjson.currentNoteInfo);
+				if(type==="show"){
+					$(".selectArea:eq(2)").hide();
+					$(".myPlaceul").find("li:eq(2)").find("a").html("通知详情");
+					editor1.readonly(true);
+				}
+				//发布通知按钮
+				$('.modifyNews').unbind('click');
+				$('.modifyNews').bind('click', function(e) {
+					checkIsModify(backjson.currentNoteInfo);
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warninf('操作失败');
+			}
+		}
+	});
 }
 
 /*填充当前通知内容*/
-function stuffCurrentNewsInfo() {
-	$("#newTitle").val(newsInfo.newsName);
-	stuffSelect(newsInfo.isShow);
-	$("#newsBody").html(newsInfo.newsBody);
+function stuffCurrentNewsInfo(currentNoteInfo) {
+	$("#newTitle").val(currentNoteInfo.tzbt);
+	KindEditor.html("#newsBody", currentNoteInfo.tzzt);
+	var isShow;
+	currentNoteInfo.sfsyzs==="T"?isShow=true:isShow=false;
+	stuffSelect(isShow);
 }
 
 /*根据值填充下拉框*/
 function stuffSelect(isShow) {
-	var trueHtml = '<option value="true">在首页显示</option>';
-	var falseHtml = '<option value="false">不在首页显示</option>';
+	var trueHtml = '<option value="T">在首页显示</option>';
+	var falseHtml = '<option value="F">不在首页显示</option>';
 	var optionHtml;
 	if (isShow) {
 		optionHtml = trueHtml + falseHtml;
 	} else {
 		optionHtml = falseHtml + trueHtml;
 	}
-	$("#isSowIndex").append(optionHtml);
+	stuffManiaSelect("#isSowIndex", optionHtml);
 }
 
 /*检查是否对通知进项了更改*/
-function checkIsModify() {
+function checkIsModify(currentNoteInfo) {
 	var currentNewsInfo = new Object();
-	currentNewsInfo.id = newsInfo.id;
-	currentNewsInfo.releaseDate = newsInfo.releaseDate;
-	currentNewsInfo.newsName = $("#newTitle").val();
-	$('#isSowIndex').selectMania('get')[0].value === "true" ? currentNewsInfo.isShow = true : currentNewsInfo.isShow =
-		false;
-	currentNewsInfo.newsBody = KE.util.getData("newsBody");
-	if (newsInfo.newsName !== currentNewsInfo.newsName || newsInfo.isShow !== currentNewsInfo.isShow || newsInfo.newsBody !==
-		currentNewsInfo.newsBody) {
-		$(".modifiDetailsTip").show();
-		showMaskingElement();
-		$(".modifiDetailsTip").find(".tipTitle").html("修改");
-		$('.modifiDetailsTip_confirmBtn').unbind('click');
-		$('.modifiDetailsTip_confirmBtn').bind('click', function(e) {
+	currentNewsInfo.edu993_ID = window.location.href.split("?")[1].split("&&")[0].split("=")[1];
+	currentNewsInfo.tzbt = $("#newTitle").val();
+	currentNewsInfo.sfsyzs=$('#isSowIndex').selectMania('get')[0].value
+	currentNewsInfo.tzzt =editor1.html(); 
+	
+	if (currentNoteInfo.tzbt !== currentNewsInfo.tzbt || currentNoteInfo.sfsyzs !== currentNewsInfo.sfsyzs || currentNoteInfo.tzzt !==currentNewsInfo.tzzt) {
+		$.showModal("#remindModal",true);
+		$(".remindType").html("通知");
+		$(".remindActionType").html("修改");
+		//修改通知按钮
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
 			confirmModify(currentNewsInfo);
 			e.stopPropagation();
 		});
-		
 	} else {
 		$(".modifyNews").addClass("animated shake");
 		//动画执行完后删除类名
@@ -89,32 +98,32 @@ function checkIsModify() {
 }
 
 function confirmModify(currentNewsInfo){
-	// 发送查询所有用户请求
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "mapJson/test.json",
-	// 	data: {
-	// 		"newShortcut": JSON.stringify(news)
-	// 	},
-	// 	dataType: 'json',
-	// 	success: function(backjson) {
-	// 		if (backjson.result) {
-	// 			for (var i = 0; i < news.length; i++) {
-	// 					$('#releaseNewsTable').bootstrapTable('removeByUniqueId',news[i]);
-	// 			}
-	// 			$(".tip").hide();
-	// 			drawPagination("通知");
-	// 			toastr.success('删除成功');
-	// 		} else {
-	// 			toastr.error('操作失败');
-	// 		}
-	// 	}
-	// });
-	window.location.href = "releaseNews.html";
-	$(".maskingElement").hide();
-	$(parent.frames["topFrame"].document).find(".maskingElement").hide(); //frame获取父窗
-	$(parent.frames["leftFrame"].document).find(".maskingElement").hide(); //frame获取父窗
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/issueNotice",
+		data: {
+             "noticeInfo":JSON.stringify(currentNewsInfo) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				window.location.href = "releaseNews.html";
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 
@@ -128,19 +137,10 @@ function confirmModify(currentNewsInfo){
 
 /*为已知按钮绑定事件*/
 function btnBind() {
-	//发布通知按钮
-	$('.modifyNews').unbind('click');
-	$('.modifyNews').bind('click', function(e) {
-		checkIsModify();
-		e.stopPropagation();
-	});
-	
 	//提示框取消按钮
-	$('.cancelBtn,.shortcutsCancelBtn').unbind('click');
-	$('.cancelBtn,.shortcutsCancelBtn').bind('click', function(e) {
-		$(".modifiDetailsTip").hide();
-		showMaskingElement();
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
 		e.stopPropagation();
 	});
-	
 }

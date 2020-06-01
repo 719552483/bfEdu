@@ -14,7 +14,6 @@ function loadUserInfo() {
 	}
 }
 
-
 /*
 加载已选的快捷方式
 */
@@ -297,7 +296,7 @@ function readyToReloadShortcutsList() {
 					$(".placeul").find("li:eq(1)").remove();
 				}
 			} else {
-				alert(1)
+				toastr.warninf('操作失败');
 			}
 		}
 	});
@@ -392,12 +391,72 @@ function groupChangeAction() {
 	}
 }
 
+//加载通知
+function loadNotices(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getNotices",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+			    drawNotices(backjson.allNotices);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//渲染通知区域
+function drawNotices(allNotices){
+	$(".newlist").find("li").remove();
+	var str="";
+	var Typestr="show";
+	for (var i = 0; i < allNotices.length; i++) {
+		if(allNotices[i].sfsyzs==="T"){
+			str+='<a href="newsModify.html?newId=' + allNotices[i].edu993_ID +'&&type='+Typestr+'"><li class="NoticeChildren" id="'+allNotices[i].edu993_ID+'">'+allNotices[i].tzbt+'<b>'+allNotices[i].fbsj+'</b></li></a>';
+		}
+	}
+	
+	if(str.length===0){
+		str='<li class="NoNotice">暂未发布任何重要通知...</li>';
+		$(".leftinfos").find("a").remove();
+	}
+	
+	$(".newlist").append(str);
+	//发布通知按钮
+	$('.NoticeChildren').unbind('click');
+	$('.NoticeChildren').bind('click', function(e) {
+		getNoticeInfo(e.currentTarget.id);
+		e.stopPropagation();
+	});
+}
+
+//查看通知详情
+function getNoticeInfo(id){
+	
+}
+
+
 $(function() {
-	checkSession();
+	checkSession(); 
 	loadUserInfo();
 	loadChoosendShortcuts();
 	ShortcutsButtonBind();
 	drawAuthorityGroup();
+	loadNotices();
+	
 	//返回首页事件绑定
 	$('.backIndex').unbind('click');
 	$('.backIndex').bind('click', function(e) {

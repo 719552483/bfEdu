@@ -533,6 +533,10 @@ padding:1.6em 0em 0.6em 31px !important
 	margin-top: 5px !important;
 }
 
+.tableArea .search,.tableArea .columns {
+    margin-top: -42px !important;
+}
+
 .teacher_studentInfoTableArea .search {
     margin-top: 2px !important;
     left: 2%;
@@ -1349,6 +1353,12 @@ background: rgba(36, 138, 187, 0.77);
 }
 .newsInfoArea .selectName{
      width:initial; 
+}
+
+.NoNotice{
+	background: none!important;
+	text-align: center;
+	margin-top: 33px;
 }
 
 @keyframes serachAnimation {
