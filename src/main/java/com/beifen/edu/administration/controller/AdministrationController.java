@@ -2577,7 +2577,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 发布消息是上传图片
+	 * 发布消息时上传图片
 	 * 
 	 * @throws FileUploadException
 	 * 
@@ -2588,12 +2588,9 @@ public class AdministrationController {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		PrintWriter out = response.getWriter();
-		 //文件保存目录路径
-        String savePath = request.getServletContext().getRealPath("/") + "attached/";
-
-        //文件保存目录URL
-        String saveUrl = request.getContextPath() + "/attached/";
-
+		
+        String savePath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
+	
 		// 定义允许上传的文件扩展名
 		HashMap<String, String> extMap = new HashMap<String, String>();
 		extMap.put("image", "gif,jpg,jpeg,png,bmp");
@@ -2634,9 +2631,10 @@ public class AdministrationController {
 			out.println(utils.getError("The directory name is incorrect!"));
 			return;
 		}
+		
+		
 		// 创建文件夹
 		savePath += dirName + "/";
-		saveUrl += dirName + "/";
 		File saveDirFile = new File(savePath);
 		if (!saveDirFile.exists()) {
 			saveDirFile.mkdirs();
@@ -2644,7 +2642,6 @@ public class AdministrationController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());
 		savePath += ymd + "/";
-		saveUrl += ymd + "/";
 		File dirFile = new File(savePath);
 		if (!dirFile.exists()) {
 			dirFile.mkdirs();
@@ -2677,7 +2674,7 @@ public class AdministrationController {
 				FileCopyUtils.copy(mf.getBytes(), uploadFile);
 				JSONObject obj = new JSONObject();
 				obj.put("error", 0);
-				obj.put("url", saveUrl + newFileName);
+				obj.put("url", dirName + "/"+ymd+"/"+newFileName);
 				out.println(obj.toString());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -2748,9 +2745,33 @@ public class AdministrationController {
 	 */
 	@RequestMapping("changeNoticeIsShowIndex")
 	@ResponseBody
-	public Object changeNoticeIsShowIndex(@RequestParam("noticeId") String noticeId) {
+	public Object changeNoticeIsShowIndex(@RequestParam("noticeId") String noticeId,@RequestParam("isShow") String isShow) {
 		Map<String, Object> returnMap = new HashMap();
-		administrationPageService.changeNoticeIsShowIndex(noticeId);
+		administrationPageService.changeNoticeIsShowIndex(noticeId,isShow);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 删除通知
+	 * @return returnMap
+	 */
+	@RequestMapping("removeNotices")
+	@ResponseBody
+	public Object removeNotices(@RequestParam("removeInfo") String removeInfo,HttpServletRequest request) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
+		for (int i = 0; i < deleteArray.size(); i++) {
+			Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(deleteArray.get(i).toString());
+			String noticeBody=currentNoteInfo.getTzzt();
+			List<String> imgSrcs=utils.getImgSrc(noticeBody);
+				for (int img = 0; img < imgSrcs.size(); img++) {
+					String[] fileNames=imgSrcs.get(img).split("/");
+					String fileName=fileNames[fileNames.length - 1];
+				
+				}
+			administrationPageService.removeNotices(deleteArray.get(i).toString());
+		}
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -2765,6 +2786,8 @@ public class AdministrationController {
 	public List<String> queryEdu000(String ejdmglzd) {
 		List<Edu000> ejdm = administrationPageService.queryEjdm(ejdmglzd);
 		List<String> relist = new ArrayList<String>();
+		
+		
 		if (ejdm.size() > 0) {
 
 			for (int i = 0; i < ejdm.size(); i++) {

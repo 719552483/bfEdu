@@ -1,8 +1,35 @@
 $(function() {
+	drawEditor();
 	btnBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	hideloding();
 });
+
+function drawEditor(){
+	var editor1;
+	/**页面初始化 创建文本编辑器工具**/
+    KindEditor.ready(function(K) {
+    	//定义生成编辑器的文本类型
+	    	editor1 = K.create('textarea[name="content"]', {
+				cssPath : 'editor/plugins/code/prettify.css',
+				allowImageUpload: true, //上传图片框本地上传的功能，false为隐藏，默认为true
+				allowImageRemote : false, //上传图片框网络图片的功能，false为隐藏，默认为true
+				formatUploadUrl:false,
+			    uploadJson : '/newsImgUpload',//文件上传请求后台路径
+			    afterUpload: function(url){this.sync();toastr.warning("a:"+url);}, //图片上传后，将上传内容同步到textarea中
+	            afterBlur: function(){this.sync();},   ////失去焦点时，将上传内容同步到textarea中
+                allowFileManager : true,
+					items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
+						'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+						'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+						'superscript', '|', 'selectall', '-',
+						'title', 'fontname', 'fontsize', '|', 'textcolor', 'bgcolor', 'bold',
+						'italic', 'underline', 'strikethrough', 'removeformat', '|', 'image',
+						'advtable', 'hr', 'emoticons', 'link', 'unlink', '|'
+					]
+	    	});
+	});
+}
 
 //获取所有通知
 function getTableInfo() {
@@ -98,14 +125,12 @@ function stuffReleaseNewsTable(tableInfo) {
 	function switchFormatter(value, row, index) {
 		if (row.sfsyzs==="T") {
 			return [
-					'<section id="section'+row.edu993_ID+'" newsId="' + row.edu993_ID +
-					'" class="model-1 isShowControl"><div class="checkbox mycheckbox"><input id="ShowControl'+row.edu993_ID+'" type="checkbox" checked="checked"><label></label></div></section>'
+					'<section newsId="' + row.edu993_ID +'" currentStatus="'+row.sfsyzs+'" class="model-1"><div class="checkbox mycheckbox"><input class="isShowControl" type="checkbox" checked="checked"><label></label></div></section>'
 				]
 				.join('');
 		} else {
 			return [
-					'<section id="section'+row.edu993_ID+'" newsId="' + row.edu993_ID +
-					'" class="model-1 isShowControl"><div class="checkbox mycheckbox"><input id="ShowControl'+row.edu993_ID+'" type="checkbox"><label></label></div></section>'
+					'<section newsId="' + row.edu993_ID +'" currentStatus="'+row.sfsyzs+'" class="model-1"><div class="checkbox mycheckbox"><input class="isShowControl" type="checkbox"><label></label></div></section>'
 				]
 				.join('');
 		}
@@ -143,63 +168,58 @@ function stuffReleaseNewsTable(tableInfo) {
 function isShowControlBind() {
 	$('.isShowControl').unbind('click');
 	$('.isShowControl').bind('click', function(e) {
-		changNewsIshow(e.currentTarget.attributes[1].nodeValue);
+		changNewsIshow(e.currentTarget.parentNode.parentNode.attributes[0].nodeValue,e.currentTarget.parentNode.parentNode.attributes[1].nodeValue,e);
 		e.stopPropagation();
 	});
 }
 
 //改变是否页面展示
-function changNewsIshow(currentNewId) {
-	var currentStatus=$("#ShowControl"+currentNewId)[0].checked;
-	var sfsyzs="";
-    if(currentStatus){
-    	sfsyzs="F";
-    	$("#section"+currentNewId).off();
-    }else{
-    	
-    	sfsyzs="T";
-    	$("#section"+currentNewId).on();
-    }
-	
-//	$.ajax({
-//		method : 'get',
-//		cache : false,
-//		url : "/changeNoticeIsShowIndex",
-//		data: {
-//             "noticeId":currentNewId 
-//        },
-//		dataType : 'json',
-//		beforeSend: function(xhr) {
-//			requestErrorbeforeSend();
-//		},
-//		error: function(textStatus) {
-//			requestError();
-//		},
-//		complete: function(xhr, status) {
-//			requestComplete();
-//		},
-//		success : function(backjson) {
-//			hideloding();
-//			if (backjson.result) {
-//				//不确定是否在Index页面已删除???
-//				toastr.success('操作成功');
-//			} else {
-//				toastr.warning('操作失败，请重试');
-//			}
-//		}
-//	});
+function changNewsIshow(currentNewId,currentStatus,e) {
+	var newStatus="";
+	currentStatus==="T"?newStatus="F":newStatus="T";
+		
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/changeNoticeIsShowIndex",
+		data: {
+             "noticeId":currentNewId,
+             "isShow":newStatus 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				//不确定是否在Index页面已删除???
+				toastr.success('操作成功');
+				e.currentTarget.parentNode.parentNode.attributes[1].nodeValue=newStatus;
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 /*单选删除通知*/
 function removeNews(row) {
-	$(".removeNewsTip").show();
-	$(".removeNewsTip").find(".tipTitle").html("删除");
+	$.showModal("#remindModal",true);
+	$(".remindType").html("通知");
+	$(".remindActionType").html("删除");
 
-	$('.removeNewsTip_confirmBtn').unbind('click');
-	$('.removeNewsTip_confirmBtn').bind('click', function(e) {
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		var removeNewsArray = new Array;
-		removeNewsArray.push(row.id);
-		removeNewsAjaxDemo("#releaseNewsTable", removeNewsArray,".tableArea", "通知");
+		removeNewsArray.push(row.edu993_ID);
+		sendStudentRemoveInfo(removeNewsArray);
 		e.stopPropagation();
 	});
 
@@ -212,18 +232,51 @@ function removeChoosedNews() {
 		toastr.warning('暂未选择任何通知');
 	} else {
 		var removeNewsArray = new Array;
-		$(".removeNewsTip").show();
-		$(".removeNewsTip").find(".tipTitle").html("删除");
+		$.showModal("#remindModal",true);
+		$(".remindType").html("已选通知");
+		$(".remindActionType").html("删除");
+
 		for (var i = 0; i < chosenNews.length; i++) {
-			removeNewsArray.push(chosenNews[i].id);
+			removeNewsArray.push(chosenNews[i].edu993_ID);
 		}
-		$('.removeNewsTip_confirmBtn').unbind('click');
-		$('.removeNewsTip_confirmBtn').bind('click', function(e) {
-			removeNewsAjaxDemo("#releaseNewsTable", removeNewsArray,".tableArea", "通知");
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
+			sendStudentRemoveInfo(removeNewsArray);
 			e.stopPropagation();
 		});
 
 	}
+}
+
+//发送删除通知请求
+function sendStudentRemoveInfo(removeArray){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/removeNotices",
+		data: {
+             "removeInfo":JSON.stringify(removeArray) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				tableRemoveAction("#releaseNewsTable", removeArray, ".tableArea", "通知");
+				$.hideModal("#remindModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 /*查看消息详情*/

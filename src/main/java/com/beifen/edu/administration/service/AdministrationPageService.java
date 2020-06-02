@@ -732,13 +732,18 @@ public class AdministrationPageService {
 	}
 	
 	 //改变消息是否在首页展示
-	public void changeNoticeIsShowIndex(String noticeId) {
-		edu993DAO.changeNoticeIsShowIndex(noticeId);
+	public void changeNoticeIsShowIndex(String noticeId,String isShow) {
+		edu993DAO.changeNoticeIsShowIndex(noticeId,isShow);
 	}
 	
 	//获取所有通知
 	public  List<Edu993> getNotices() {
 		return edu993DAO.findAll();
+	}
+	
+	//删除通知
+	public void removeNotices(String edu990id) {
+		edu993DAO.removeNotices(edu990id);
 	}
 
 	// 根据二级代码关联字段获取二级代码
@@ -1051,6 +1056,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

@@ -14,10 +14,16 @@ public interface Edu993Dao extends JpaRepository<Edu993, Long>, JpaSpecification
 	@Query(value = "select * from edu993 e where e.Edu993_ID=?1", nativeQuery = true)
 	public Edu993 getNoteInfoById(String noteId);
 
-	// 根据id删除专业
+	// 改变通知是否首页展示
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE edu993 SET sfsyzs='F' WHERE Edu993_ID =?1", nativeQuery = true)
-	public void changeNoticeIsShowIndex(String noticeId);
+	@Query(value = "UPDATE edu993 SET sfsyzs=?2 WHERE Edu993_ID =?1", nativeQuery = true)
+	public void changeNoticeIsShowIndex(String noticeId, String isShow);
+
+	//删除通知
+	@Transactional
+	@Modifying
+	@Query(value = "delete from edu993 where Edu993_ID =?1", nativeQuery = true)
+	public void removeNotices(String edu990id);
 
 }

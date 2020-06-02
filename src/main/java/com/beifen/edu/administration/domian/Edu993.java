@@ -20,7 +20,7 @@ public class Edu993 {
 	private String tzzt; // 通知主体
 	private String tzbt;// 通知标题
 	private String fbsj;// 发布时间
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -40,7 +40,8 @@ public class Edu993 {
 	public void setSfsyzs(String sfsyzs) {
 		this.sfsyzs = sfsyzs;
 	}
-    //指定blob字段
+
+	// 指定blob字段
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	public String getTzzt() {
