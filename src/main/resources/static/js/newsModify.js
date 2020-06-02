@@ -143,4 +143,11 @@ function btnBind() {
 		$.hideModal();
 		e.stopPropagation();
 	});
+	
+	//面包屑-首页
+	$('.backIndex').unbind('click');
+	$('.backIndex').bind('click', function(e) {
+		backToIndex();
+		e.stopPropagation();
+	});
 }

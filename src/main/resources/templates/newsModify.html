@@ -66,24 +66,28 @@
 					<a href="releaseNews.html"><li class="return"><span><img src="img/back.png" style="width: 24px;" /></span>返回</li></a>
 				</ul>
 			</div>
-			<div class="newsDetailsArea">
-				<div class="selectArea">
-					<cite class="selectName">通知标题 <b>*</b>:</cite>
-					<input name="" type="text" class="myInput" id="newTitle" placeholder="请填写通知标题..." />
-				</div>
-				
-				<div class="selectArea">
-					<cite class="selectName">是否在首页显示 <b>*</b>:</cite>
-					<select class="isSowIndex" id="isSowIndex">
-					
-					</select>
-				</div>
-				<textarea id="newsBody" spellcheck="false" name="content" style="width:100%;height:300px;visibility:hidden;"></textarea>
-				<div class="selectArea">
-					<input type="button" class="btn submitBtn modifyNews" value="确认修改" />
-				</div>
+
+		<div class="newsInfoArea">
+			<div class="selectArea">
+				<cite class="selectName">通知标题 <b>*</b>:
+				</cite> <input name="" type="text" class="myInput" id="newTitle"
+					placeholder="请填写通知标题..." />
+			</div>
+
+			<div class="selectArea">
+				<cite class="selectName">是否在首页显示 <b>*</b>:
+				</cite> <select class="isSowIndex" id="isSowIndex">
+
+				</select>
+			</div>
+			<textarea id="newsBody" spellcheck="false" name="content"
+				style="width: 100%; height: 300px; visibility: hidden;"></textarea>
+			<div class="selectArea">
+				<input type="button" class="btn submitBtn modifyNews" value="确认修改" />
 			</div>
 		</div>
+
+	</div>
 
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal"
