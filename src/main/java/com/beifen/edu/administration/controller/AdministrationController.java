@@ -2761,14 +2761,20 @@ public class AdministrationController {
 	public Object removeNotices(@RequestParam("removeInfo") String removeInfo,HttpServletRequest request) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
+		String imgRootPath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
+		
 		for (int i = 0; i < deleteArray.size(); i++) {
 			Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(deleteArray.get(i).toString());
 			String noticeBody=currentNoteInfo.getTzzt();
 			List<String> imgSrcs=utils.getImgSrc(noticeBody);
 				for (int img = 0; img < imgSrcs.size(); img++) {
 					String[] fileNames=imgSrcs.get(img).split("/");
-					String fileName=fileNames[fileNames.length - 1];
-				
+					File file = new File(imgRootPath+imgSrcs.get(img));
+			        if (file.exists()) {
+			        	 if (file.delete()) {
+			        		 System.out.println("通知附带图片删除成功");
+			        	 }
+			        }
 				}
 			administrationPageService.removeNotices(deleteArray.get(i).toString());
 		}
