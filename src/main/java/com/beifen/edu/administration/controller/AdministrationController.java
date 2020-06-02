@@ -2758,7 +2758,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("removeNotices")
 	@ResponseBody
-	public Object removeNotices(@RequestParam("removeInfo") String removeInfo,HttpServletRequest request) {
+	public Object removeNotices(@RequestParam("removeInfo") String removeInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
 		String imgRootPath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
@@ -2768,13 +2768,15 @@ public class AdministrationController {
 			String noticeBody=currentNoteInfo.getTzzt();
 			List<String> imgSrcs=utils.getImgSrc(noticeBody);
 				for (int img = 0; img < imgSrcs.size(); img++) {
-					String[] fileNames=imgSrcs.get(img).split("/");
-					File file = new File(imgRootPath+imgSrcs.get(img));
-			        if (file.exists()) {
-			        	 if (file.delete()) {
-			        		 System.out.println("通知附带图片删除成功");
-			        	 }
-			        }
+					//只删除插入的图片 不删除表情
+					if(imgSrcs.get(img).startsWith("image")){
+						File file = new File(imgRootPath+imgSrcs.get(img));
+				        if (file.exists()) {
+				        	 if (file.delete()) {
+				        		 System.out.println("通知附带图片删除成功");
+				        	 }
+				        }
+					}
 				}
 			administrationPageService.removeNotices(deleteArray.get(i).toString());
 		}
