@@ -76,6 +76,11 @@ public class PageRelatedController {
 		return "LargeScreen";
 	}
 
+	@RequestMapping("noticeHTMLmodel")
+	public String noticeHTMLmodelPage() {
+		return "noticeHTMLmodel";
+	}
+
 	@RequestMapping("releaseNews")
 	public String releaseNewsPage() {
 		return "releaseNews";

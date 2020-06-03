@@ -425,7 +425,7 @@ function drawNotices(allNotices){
 	var Typestr="show";
 	for (var i = 0; i < allNotices.length; i++) {
 		if(allNotices[i].sfsyzs==="T"){
-			str+='<a href="newsModify.html?newId=' + allNotices[i].edu993_ID +'&&type='+Typestr+'"><li class="NoticeChildren" id="'+allNotices[i].edu993_ID+'">'+allNotices[i].tzbt+'<b>'+allNotices[i].fbsj+'</b></li></a>';
+			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu993_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu993_ID+'">'+allNotices[i].tzbt+'<b>'+allNotices[i].fbsj+'</b></li></a>';
 		}
 	}
 	

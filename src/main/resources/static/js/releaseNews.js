@@ -236,7 +236,7 @@ function stuffSelect(isShow) {
 //确认修改通知
 function confirmModify(currentNewsInfo,index){
 	$.ajax({
-		method : 'get',
+		method : 'post',
 		cache : false,
 		url : "/issueNotice",
 		data: {
@@ -486,7 +486,7 @@ function pushNews() {
 //确认发布
 function confirmPushNews(pushNewsObject) {
 	$.ajax({
-		method : 'get',
+		method : 'post',
 		cache : false,
 		url : "/issueNotice",
 		data: {

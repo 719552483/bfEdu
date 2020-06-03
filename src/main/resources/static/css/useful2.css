@@ -1362,6 +1362,12 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: 33px;
 }
 
+.noticeTitleArea{
+    font-weight: 500;
+    font-size: 35px;
+    padding-bottom: 17px;
+    }
+
 @keyframes serachAnimation {
 	10% {
 		transform: translateX(-3px) rotate(-2deg);
