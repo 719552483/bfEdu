@@ -13,7 +13,7 @@ function drawEditor(){
     	//定义生成编辑器的文本类型
 	    	editor1 = K.create('textarea[name="content"]', {
 				cssPath : 'editor/plugins/code/prettify.css',
-				allowImageUpload: true, //上传图片框本地上传的功能，false为隐藏，默认为true
+				allowImageUpload: true, //上传图片框本地上传的功能，false为隐藏，默认为true--
 				allowImageRemote : false, //上传图片框网络图片的功能，false为隐藏，默认为true
 				formatUploadUrl:false,
 			    uploadJson : '/newsImgUpload',//文件上传请求后台路径
