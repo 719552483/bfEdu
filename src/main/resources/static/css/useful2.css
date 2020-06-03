@@ -1368,6 +1368,7 @@ background: rgba(36, 138, 187, 0.77);
     padding-bottom: 17px;
  }
 
+/*
 .noticeBodyArea span{
     display: inline-block!important;
 }
@@ -1382,6 +1383,27 @@ display: block;
     overflow: hidden;
     border-style: inset;
     border-width: 1px;
+}
+
+.noticeBodyArea p{
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+*/
+
+.noticeBodyArea .ke-toolbar,.noticeBodyArea .ke-statusbar{
+	display:none!important;
+}
+
+.noticeBodyArea .ke-edit-iframe{
+	background:rgba(237, 246, 250, 0.61)!important;
+}
+
+.noticeBodyArea .ke-container{
+	border: none!important;
 }
 
 @keyframes serachAnimation {
