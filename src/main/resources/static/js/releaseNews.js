@@ -1,10 +1,12 @@
 $(function() {
 	drawEditor();
+	isShowMangerArea();
 	btnBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	hideloding();
 });
 
+//渲染编辑器
 function drawEditor(){
 	var editor1;
 	/**页面初始化 创建文本编辑器工具**/
