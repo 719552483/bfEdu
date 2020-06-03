@@ -1,7 +1,7 @@
 $(function() {
 	drawEditor();
 	btnBind();
-	$('.isSowIndex').selectMania(); //初始化下拉框
+	$('.isSowIndex').selectMania(); //初始化下拉框11
 	hideloding();
 });
 
