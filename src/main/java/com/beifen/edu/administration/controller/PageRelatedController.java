@@ -76,11 +76,6 @@ public class PageRelatedController {
 		return "LargeScreen";
 	}
 
-	@RequestMapping("newsModify")
-	public String newsModifyPage() {
-		return "newsModify";
-	}
-
 	@RequestMapping("releaseNews")
 	public String releaseNewsPage() {
 		return "releaseNews";

@@ -2699,19 +2699,6 @@ public class AdministrationController {
 		return returnMap;
 	}
 	
-	/**
-	 * 根据id获取通知
-	 * @return returnMap
-	 */
-	@RequestMapping("getNoteInfoById")
-	@ResponseBody
-	public Object getNoteInfoById(@RequestParam("noteId") String noteId) {
-		Map<String, Object> returnMap = new HashMap();
-		Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(noteId);
-		returnMap.put("currentNoteInfo", currentNoteInfo);
-		returnMap.put("result", true);
-		return returnMap;
-	}
 	
 	/**
 	 * 发布通知
