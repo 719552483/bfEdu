@@ -1372,6 +1372,18 @@ background: rgba(36, 138, 187, 0.77);
     display: inline-block!important;
 }
 
+.noticeBodyArea hr{
+display: block;
+    unicode-bidi: isolate;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    overflow: hidden;
+    border-style: inset;
+    border-width: 1px;
+}
+
 @keyframes serachAnimation {
 	10% {
 		transform: translateX(-3px) rotate(-2deg);
