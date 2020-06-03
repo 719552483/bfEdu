@@ -169,7 +169,7 @@ function stuffReleaseNewsTable(tableInfo) {
 //修改通知
 function modifyNews(row,index){
 	$(".tableArea,.newsManger,.formtext,.removeChoosedNews").hide();
-	$(".newsInfoArea").show();
+	$(".newsInfoArea,.submitNews").show();
 	$(".placeul").find("li:eq(2)").find("a").html("修改通知");
 	$("#newTitle").val(row.tzbt);
 	KindEditor.html("#newsBody", row.tzzt);
@@ -196,6 +196,21 @@ function modifyNews(row,index){
 
 /*检查是否对通知进项了更改*/
 function checkIsModify(currentNoteInfo,index) {
+	if ($("#newTitle").val() === "") {
+		toastr.warning('通知标题不能为空');
+		$(".submitNews").addClass("animated shake");
+		//动画执行完后删除类名
+		reomveAnimation('.submitNews', "animated shake");
+		return;
+	}
+	if (editor1.html() === "") {
+		toastr.warning('通知主体不能为空');
+		$(".submitNews").addClass("animated shake");
+		//动画执行完后删除类名
+		reomveAnimation('.submitNews', "animated shake");
+		return;
+	}
+	
 	var currentNewsInfo = new Object();
 	currentNewsInfo.edu993_ID = currentNoteInfo.edu993_ID;
 	currentNewsInfo.tzbt = $("#newTitle").val();
@@ -260,7 +275,7 @@ function confirmModify(currentNewsInfo,index){
 					row: currentNewsInfo
 				});
 				$.hideModal();
-				newsManger(false);
+				newsManger(false,false);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -388,7 +403,7 @@ function newsDetails(row) {
 	editor1.readonly();  
 	$(".tableArea,.newsManger,.formtext,.removeChoosedNews,.submitNews,.tipTxt").hide();
 	$(".newsInfoArea").show();
-	$(".placeul").find("li:eq(2)").find("a").html("通知详情");
+	$(".placeul").find("li").last()[0].innerText="通知详情";
 	$("#newTitle").val(row.tzbt);
 	KindEditor.html("#newsBody", row.tzzt);
 	var isShow;
@@ -407,12 +422,18 @@ function newsDetails(row) {
 }
 
 /*管理通知按钮*/
-function newsManger(loadData) {
+function newsManger(loadData,appendLoacl) {
 	$(".tableArea").show();
 	$(".removeChoosedNews").show();
 	$(".newsInfoArea").hide();
 	$(".newsManger").hide();
-	$(".placeul").append('<li><a>管理通知</a></li>'); //更改位置
+	if (typeof appendLoacl === 'undefined') {
+		$(".placeul").append('<li><a>管理通知</a></li>'); //更改位置
+	}else{
+		$(".placeul").find("li").last()[0].innerText="管理通知";
+	}
+	
+	
 	//返回按钮重新绑定事件
 	$('.return').unbind('click');
 	$('.return').bind('click', function(e) {
