@@ -1402,9 +1402,12 @@ display: block;
 	background:rgba(237, 246, 250, 0.61)!important;
 }
 
+
 .noticeBodyArea .ke-container{
 	border: none!important;
 }
+
+
 
 @keyframes serachAnimation {
 	10% {

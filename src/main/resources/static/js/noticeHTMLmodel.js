@@ -65,7 +65,9 @@ function getNoticeInfo() {
 //填充通知
 function stuffNotices(currentNoteInfo){
 	$(".noticeTitleArea").html(currentNoteInfo.tzbt);
-	KindEditor.html("#newsBody", currentNoteInfo.tzzt);
+	KindEditor.html("#newsInfoBody", currentNoteInfo.tzzt);
+	var autoheight=editor1.edit.doc.body.scrollHeight;//此处的editor为kindeditor
+	editor1.edit.setHeight(autoheight);
 }
 
 
