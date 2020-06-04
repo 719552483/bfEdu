@@ -16,8 +16,11 @@ function drawEditor(){
 						cssPath : 'editor/plugins/code/prettify.css'
 	    	});
 	    	var autoheight=editor1.edit.doc.body.scrollHeight;//此处的editor为kindeditor
+	    	editor1.edit.doc.body.style.paddingLeft="25px";
+	    	editor1.edit.doc.body.style.paddingRight="25px";
 	    	editor1.edit.setHeight(autoheight);
 	});
+ $(".noticeBodyArea").find(".ke-content")
 }
 
 //获取通知
@@ -56,20 +59,7 @@ function stuffNotices(currentNoteInfo){
 	$(".noticeTitleArea").html(currentNoteInfo.tzbt);
 	KindEditor.html("#newsInfoBody", currentNoteInfo.tzzt);
 	$(".ke-edit-iframe");
-//	var autoheight=editor1.edit.doc.body.scrollHeight;//此处的editor为kindeditor
-//	editor1.edit.setHeight(autoheight);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //为已知行为的按钮绑定事件
 function btnBind() {
