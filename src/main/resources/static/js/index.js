@@ -29,7 +29,7 @@ function loadChoosendShortcuts() {
 					$(".choosendShortcuts").append('<li class="' + allChoosedShortcuts[i] +
 						'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
 						'.png" />' +
-						'<p><a href="#">' + currentMenus[k].innerText + '</a></p>' +
+						'<p><a href="'+allChoosedShortcuts[i]+'.html">' + currentMenus[k].innerText + '</a></p>' +
 						'</li>');
 				}
 			}
@@ -322,7 +322,7 @@ function addChoosendShortcut(className, TextName) {
 	$(".choosendShortcuts").append('<li class="' + className +
 		'"><img class="choosedShortcutsIcon" src="img/' + className +
 		'.png" />' +
-		'<p><a href="#">' + TextName + '</a></p>' +
+		'<p><a href="'+className+'.html">' + TextName + '</a></p>' +
 		'</li>');
 }
 

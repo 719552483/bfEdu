@@ -1381,7 +1381,9 @@ background: rgba(36, 138, 187, 0.77);
 	border: none!important;
 }
 
-
+.myPlaceul li:last-child a{
+				color:rgba(7, 89, 93, 0.6901960784313725)!important;
+			}
 
 @keyframes serachAnimation {
 	10% {
