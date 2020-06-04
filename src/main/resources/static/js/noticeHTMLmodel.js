@@ -12,6 +12,7 @@ function drawEditor(){
   	//定义生成编辑器的文本类型
 	    	editor1 = K.create('textarea[name="content"]', {
 	    		        minHeight : '800px',
+	    		       
 						cssPath : 'editor/plugins/code/prettify.css'
 	    	});
 	    	var autoheight=editor1.edit.doc.body.scrollHeight;//此处的editor为kindeditor

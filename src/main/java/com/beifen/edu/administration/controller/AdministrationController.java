@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -19,9 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.*;
-import org.apache.commons.fileupload.disk.*;
 import org.apache.commons.fileupload.servlet.*;
-import org.apache.tomcat.jni.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -52,6 +50,7 @@ import com.beifen.edu.administration.utility.ReflectUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 
 /*
  * 业务处理Controller测试
@@ -2726,7 +2725,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("issueNotice")
 	@ResponseBody
-	public Object issueNotice(@RequestParam("noticeInfo") String noticeInfo) {
+	public Object issueNotice(@RequestParam("noticeInfo") String noticeInfo,HttpServletRequest request)throws java.lang.IllegalArgumentException{
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(noticeInfo);
