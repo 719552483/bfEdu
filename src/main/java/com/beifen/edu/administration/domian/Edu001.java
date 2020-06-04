@@ -10,11 +10,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
-
+//学生基本信息表
 @Entity
 @Table(name = "Edu001")
 public class Edu001 {
- //学生基本信息表
 	private  Long Edu001_ID; 	
 	private  String pycc;//培养层次编码
 	private  String pyccmc;//培养层次名称

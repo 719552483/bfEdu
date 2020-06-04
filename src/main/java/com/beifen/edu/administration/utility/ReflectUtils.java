@@ -1,9 +1,6 @@
 package com.beifen.edu.administration.utility;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -799,12 +795,6 @@ public class ReflectUtils {
 		returnMap.put("importStudent", importStudent);
 		return returnMap;
 	}
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * 读取上传的Excel数据
@@ -1009,7 +999,41 @@ public class ReflectUtils {
 		//获取sheet2
 		XSSFSheet sheet = workbook.getSheetAt(1);
 		//填充sheet2内容
-		this.stuffImportStudentModalSheet2(sheet);
+		this.stuffStudentModalSheet2(sheet);
+
+		out = new FileOutputStream(filePath);
+		out.flush();
+		workbook.write(out);
+		workbook.close();
+		out.close();
+	}
+	
+	// 更改学生更新模板
+	public void updateModifyStudentModal(String filePath,List<Edu001> chosedStudents) throws IOException {
+		OutputStream out = null;
+
+		// 获取Excel工作簿
+		FileInputStream in = new FileInputStream(filePath);
+		XSSFWorkbook workbook = new XSSFWorkbook(in);
+		// 获取sheet个数
+		int sheetCount = workbook.getNumberOfSheets();
+		// 如果模板文件中sheet个数大于1 则删除第二个sheet（避免数据重叠）
+		if (sheetCount > 1) {
+			out = new FileOutputStream(filePath);
+			workbook.removeSheetAt(1);
+			workbook.write(out);
+		}
+		// 获取sheet1
+	    XSSFSheet sheet1 = workbook.getSheetAt(0);
+	    // 填充sheet1内容
+	    this.stuffModifyStudentModalSheet1(sheet1,chosedStudents);
+	 		
+		// 创建新的sheet2
+		workbook.createSheet("辅助信息");
+		// 获取sheet2
+		XSSFSheet sheet2 = workbook.getSheetAt(1);
+		// 填充sheet2内容
+		this.stuffStudentModalSheet2(sheet2);
 
 		out = new FileOutputStream(filePath);
 		out.flush();
@@ -1019,7 +1043,7 @@ public class ReflectUtils {
 	}
 	
 	//填充学生导入模板的辅助信息
-    private void stuffImportStudentModalSheet2(XSSFSheet sheet) {
+    private void stuffStudentModalSheet2(XSSFSheet sheet) {
     	List<Edu103> allPcyy = reflectUtils.administrationPageService.queryAllLevel();
 		List<Edu104> xb =reflectUtils.administrationPageService.queryAllDepartment();
 		List<Edu105> nj = reflectUtils.administrationPageService.queryAllGrade();
@@ -1106,8 +1130,19 @@ public class ReflectUtils {
 			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 18, 19);
 		}
 	}
+    
+    //填充更新学生模板的学生信息
+    private void stuffModifyStudentModalSheet1(XSSFSheet sheet,List<Edu001> chosedStudents) {
+		// 写入学生编码
+		for (int i = 0; i < chosedStudents.size(); i++) {
+			XSSFRow row = sheet.createRow(i + 1);
+			row.createCell(0).setCellValue(chosedStudents.get(i).getEdu001_ID());
+		}
 
-	//Excel sheet2追加数据
+	
+	}
+
+	//Excel 追加数据
 	private void appendCell(XSSFSheet sheet,int index,String mc,String value,int mcCellIndex,int valueCellIndex) {
 		XSSFRow row = sheet.getRow(index + 1); //从第二行开始追加
 		//如果总行数超过当前数据长度 新建行
@@ -1302,6 +1337,13 @@ public class ReflectUtils {
 		return pics;
 	}
 	
+
+	
+
+
+
+
+
 
 
 }

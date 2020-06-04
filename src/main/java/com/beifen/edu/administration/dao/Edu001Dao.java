@@ -36,11 +36,15 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	// 查询学生所在行政班
 	@Query(value = "select e.Edu300_ID from  edu001 e where e.Edu001_ID=?1", nativeQuery = true)
 	public String queryStudentXzbCode(String edu001Id);
+	
+	// 根据id查询学生信息
+	@Query(value = "select * from  edu001 e where e.Edu001_ID=?1", nativeQuery = true)
+	public Edu001 queryStudentBy001ID(String edu001Id);
+
 
 	// 查询培养计划下所有学生
 	@Query(value = "select * from edu001 e where e.pycc =? and e.szxb=? and e.nj =? and e.zybm=?", nativeQuery = true)
-	public List<Edu001> queryCulturePlanStudent(String levelCode, String departmentCode, String gradeCode,
-			String majorCode);
+	public List<Edu001> queryCulturePlanStudent(String levelCode, String departmentCode, String gradeCode,String majorCode);
 
 	// 删除学生
 	@Transactional

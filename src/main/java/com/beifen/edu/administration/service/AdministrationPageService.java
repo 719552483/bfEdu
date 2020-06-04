@@ -426,6 +426,11 @@ public class AdministrationPageService {
 	public List<Edu001> queryAllStudent() {
 		return edu001DAO.findAll();
 	}
+	
+	// 根据id查询学生信息
+	public Edu001 queryStudentBy001ID(String edu001Id) {
+		return edu001DAO.queryStudentBy001ID(edu001Id);
+	}
 
 	// 查询学生所在行政班ID
 	public String queryStudentXzbCode(String edu001Id) {

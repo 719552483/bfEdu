@@ -8,13 +8,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -2509,9 +2509,34 @@ public class AdministrationController {
 		String rootPath = getClass().getResource("/").getFile().toString();
 		// 获取模板路径
 		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
-
 		// 修改学生导入模板
 		utils.modifyImportStudentModal(filePath);
+		// 下载模板
+		utils.loadImportStudentModal(filePath, response);
+	}
+	
+	/**
+	 * 下载学生更新模板
+	 * 
+	 * @return returnMap
+	 * @throws Exception 
+	 */
+	@RequestMapping("downloadModifyStudentsModal")
+	@ResponseBody
+	public void downloadModifyStudentsModal(HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException {
+		// 获取项目根路径
+		String rootPath = getClass().getResource("/").getFile().toString();
+		// 获取模板路径
+		String filePath = rootPath + "static/modalFile/modifyStudent.xlsx";
+		// 修改学生更新模板
+	
+		com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
+		List<Edu001> chosedStudents=new ArrayList<Edu001>();
+		for (int i = 0; i < modifyStudentArray.size(); i++) {
+			Edu001 edu001=administrationPageService.queryStudentBy001ID(modifyStudentArray.get(i).toString());
+			chosedStudents.add(edu001);
+		}
+		utils.updateModifyStudentModal(filePath,chosedStudents);
 		// 下载模板
 		utils.loadImportStudentModal(filePath, response);
 	}
@@ -2575,6 +2600,22 @@ public class AdministrationController {
 		return checkRS;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 发布消息时上传图片
 	 * 

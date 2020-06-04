@@ -1257,9 +1257,75 @@ function emptyStudentBaseInfoArea() {
 	reReloadSearchsWithSelect(reObject);
 }
 
+//批量更新学生信息
+function modifyStudents(){
+	var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+	if(choosendStudents.length===0){
+		toastr.warning('暂未选择学生');
+		return;
+	}
+	$.showModal("#modifyStudentsModal",true);
+	//下载更新模板
+	$('#loadModifyStudentsModal').unbind('click');
+	$('#loadModifyStudentsModal').bind('click', function(e) {
+		loadModifyStudentsModal(choosendStudents);
+		e.stopPropagation();
+	});
+	
+}
 
+//下载更新模板
+function loadModifyStudentsModal(choosendStudents){
+	var choosendStudentsId=new Array();
+	for (var i = 0; i < choosendStudents.length; i++) {
+		choosendStudentsId.push(choosendStudents[i].edu001_ID);
+	}
 
+	 var url = "/downloadModifyStudentsModal";
+     var modifyStudentIDs = JSON.stringify(choosendStudentsId) ;
+     var form = $("<form></form>").attr("action", url).attr("method", "post");
+     form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyStudentIDs").attr("value", modifyStudentIDs));
+     form.appendTo('body').submit().remove();
 
+//	var $eleForm = $("<form method='get'></form>");
+//	$eleForm.attr("action", '/downloadModifyStudentsModal'); //下载文件接口
+//	$(document.body).append($eleForm);
+//	//提交表单，实现下载
+//	$eleForm.submit();
+//	
+//	
+//	var choosendStudentsId=new Array();
+//	for (var i = 0; i < choosendStudents.length; i++) {
+//		choosendStudentsId.push(choosendStudents[i].edu001_ID);
+//	}
+//	$.ajax({
+//		method : 'get',
+//		cache : false,
+//		url : "/downloadModifyStudentsModal",
+//		data: {
+//             "modifyStudentIDs":JSON.stringify(choosendStudentsId) 
+//        },
+//		dataType : 'json',
+//		beforeSend: function(xhr) {
+//			requestErrorbeforeSend();
+//		},
+//		error: function(textStatus) {
+//			requestError();
+//		},
+//		complete: function(xhr, status) {
+//			requestComplete();
+//		},
+//		success : function(backjson) {
+//			hideloding();
+//			if (backjson.result) {
+//				
+//				
+//			} else {
+//				toastr.warning('操作失败，请重试');
+//			}
+//		}
+//	});
+}
 
 
 
@@ -1343,7 +1409,7 @@ function binBind() {
 		e.stopPropagation();
 	});
 
-	//下载学生信息模板
+	//下载导入模板
 	$('#loadStudentInfoModel').unbind('click');
 	$('#loadStudentInfoModel').bind('click', function(e) {
 		loadStudentInfoModel();
@@ -1361,6 +1427,13 @@ function binBind() {
 	$('#checkStudentInfoFile').unbind('click');
 	$('#checkStudentInfoFile').bind('click', function(e) {
 		checkStudentInfoFile();
+		e.stopPropagation();
+	});
+	
+	//批量更新学生信息
+	$('#modifyStudents').unbind('click');
+	$('#modifyStudents').bind('click', function(e) {
+		modifyStudents();
 		e.stopPropagation();
 	});
 }
