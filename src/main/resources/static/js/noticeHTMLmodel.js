@@ -12,15 +12,13 @@ function drawEditor(){
   	//定义生成编辑器的文本类型
 	    	editor1 = K.create('textarea[name="content"]', {
 	    		        minHeight : '800px',
-	    		       
-						cssPath : 'editor/plugins/code/prettify.css'
+						cssPath : 'editor/plugins/code/prettify.css',
 	    	});
 	    	var autoheight=editor1.edit.doc.body.scrollHeight;//此处的editor为kindeditor
 	    	editor1.edit.doc.body.style.paddingLeft="25px";
 	    	editor1.edit.doc.body.style.paddingRight="25px";
 	    	editor1.edit.setHeight(autoheight);
 	});
- $(".noticeBodyArea").find(".ke-content")
 }
 
 //获取通知
@@ -47,6 +45,7 @@ function getNoticeInfo() {
 			if (backjson.result) {
 				hideloding();
 				stuffNotices(backjson.currentNoteInfo);
+				editor1.readonly(); 
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -58,7 +57,6 @@ function getNoticeInfo() {
 function stuffNotices(currentNoteInfo){
 	$(".noticeTitleArea").html(currentNoteInfo.tzbt);
 	KindEditor.html("#newsInfoBody", currentNoteInfo.tzzt);
-	$(".ke-edit-iframe");
 }
 
 //为已知行为的按钮绑定事件

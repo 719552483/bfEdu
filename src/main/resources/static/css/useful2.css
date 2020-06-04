@@ -1382,6 +1382,7 @@ background: rgba(36, 138, 187, 0.77);
 }
 
 
+
 @keyframes serachAnimation {
 	10% {
 		transform: translateX(-3px) rotate(-2deg);
