@@ -2391,8 +2391,7 @@ public class AdministrationController {
 			administrationPageService.addStudent(edu001); // 新增学生
 			Long newStudentid = edu001.getEdu001_ID();
 
-			List<Edu301> teachingClassesBy300id = administrationPageService
-					.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+			List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
 			String xzbid = edu001.getEdu300_ID();
 			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
 
@@ -2453,7 +2452,6 @@ public class AdministrationController {
 
 		// 判断学号是否已存在
 		boolean xhhave = false;
-
 		for (int i = 0; i < currentAllStudent.size(); i++) {
 			if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
 					&& currentAllStudent.get(i).getXh().equals(edu001.getXh())) {
@@ -2461,7 +2459,19 @@ public class AdministrationController {
 				break;
 			}
 		}
+		
+		// 判断身份证是否存在
+		boolean IdcardHave= false;
+		for (int i = 0; i < currentAllStudent.size(); i++) {
+			if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
+					&& currentAllStudent.get(i).getSfzh().equals(edu001.getSfzh())) {
+				IdcardHave = true;
+				break;
+			}
+		}
+	
 
+		// 判断是否改变行政班
 		boolean isChangeXZB = false;
 		for (int i = 0; i < currentAllStudent.size(); i++) {
 			if (currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())) {
@@ -2479,7 +2489,7 @@ public class AdministrationController {
 		}
 
 		// 不存在则修改学生
-		if (!xhhave) {
+		if (!xhhave&&!IdcardHave) {
 			if (!isChangeXZB) {
 				// 没有修改行政班的情况
 				administrationPageService.addStudent(edu001);
@@ -2490,6 +2500,7 @@ public class AdministrationController {
 		}
 
 		returnMap.put("xhhave", xhhave);
+		returnMap.put("IdcardHave", IdcardHave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -2529,7 +2540,6 @@ public class AdministrationController {
 		// 获取模板路径
 		String filePath = rootPath + "static/modalFile/modifyStudent.xlsx";
 		// 修改学生更新模板
-	
 		com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
 		List<Edu001> chosedStudents=new ArrayList<Edu001>();
 		for (int i = 0; i < modifyStudentArray.size(); i++) {
@@ -2570,8 +2580,7 @@ public class AdministrationController {
 			Edu001 edu001 = importStudent.get(i);
 			edu001.setYxbz(yxbz);
 			administrationPageService.addStudent(edu001); // 新增学生
-			List<Edu301> teachingClassesBy300id = administrationPageService
-					.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+			List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
 			String xzbid = edu001.getEdu300_ID();
 			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
 		}
@@ -2582,7 +2591,6 @@ public class AdministrationController {
 	/**
 	 * 检验导入学生的文件
 	 * 
-	 * @param deleteIds删除ID
 	 * 
 	 * @return returnMap
 	 * @throws ParseException
@@ -2593,12 +2601,28 @@ public class AdministrationController {
 	@ResponseBody
 	public Object verifiyImportStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
-		Map<String, List> checkNeedInfo = new HashMap();
-		checkNeedInfo.put("pcyy", administrationPageService.queryAllLevel());
-		Map<String, Object> checkRS = utils.checkFile(file, "edu001", "学生信息");
+		Map<String, Object> checkRS = utils.checkFile(file, "ImportEdu001", "学生信息");
 		checkRS.put("result", true);
 		return checkRS;
 	}
+	
+	/**
+	 * 检验修改学生的文件
+	 * 
+	 * 
+	 * @return returnMap
+	 * @throws ParseException
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+//	@RequestMapping("verifiyModifyStudentFile")
+//	@ResponseBody
+//	public Object verifiyModifyStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+//		Map<String, Object> returnMap = new HashMap();
+//		Map<String, Object> checkRS = utils.checkFile(file, "ModifyEdu001", "已选学生信息");
+//		checkRS.put("result", true);
+//		return checkRS;
+//	}
 
 	
 	

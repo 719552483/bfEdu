@@ -599,13 +599,18 @@ function confirmModifyStudent(row){
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
+				$.hideModal("#remindModal",false);
+				$.showModal("#addStudentModal",true);
 				if (backjson.xhhave) {
 					toastr.warning('学号已存在');
 					return;
 				}
+				if (backjson.IdcardHave) {
+					toastr.warning('身份证号已存在');
+					return;
+				}
 				$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: row.edu001_ID, row: modifyStudentInfo});
 				toastr.success('修改成功');
-				$.hideModal("#remindModal");
 				toolTipUp(".myTooltip");
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1111,7 +1116,7 @@ function loadStudentInfoModel() {
 	$eleForm.submit();
 }
 
-//导入学生信息文件
+//预备导入学生
 function importStudentInfo() {
 	$.showModal("#importStudentInfoModal",true);
 	$("#studentInfoFile,#showFileName").val("");
@@ -1130,7 +1135,7 @@ function importStudentInfo() {
 	});
 }
 
-//检验学生信息文件
+//检验导入学生文件
 function checkStudentInfoFile() {
 	if ($("#studentInfoFile").val() === "") {
 		toastr.warning('请选择文件');
@@ -1173,6 +1178,64 @@ function checkStudentInfoFile() {
         		}
         		
         		showImportSuccessInfo("#importStudentInfoModal",backjosn.checkTxt);
+        	}else{
+        	  toastr.warning('操作失败，请重试');
+        	}
+        },beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
+}
+
+//检验修改学生文件
+function checkModifyStudentsFile(){
+	if ($("#ModifyStudentsFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	
+	var formData = new FormData();
+	formData.append("file",$('#ModifyStudentsFile')[0].files[0]);
+	
+    $.ajax({
+        url:'/verifiyModifyStudentFile',
+        dataType:'json',
+        type:'POST',
+        async: false,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	if(backjosn.result){
+        		$(".fileLoadingArea").hide();
+        		if(!backjosn.isExcel){
+        			showImportErrorInfo("#modifyStudentsModal","请上传xls或xlsx类型的文件");
+        		   return
+        		}
+        		if(!backjosn.sheetCountPass){
+        			showImportErrorInfo("#modifyStudentsModal","上传文件的标签页个数不正确");
+        		   return
+        		}
+        		if(!backjosn.modalPass){
+        			showImportErrorInfo("#modifyStudentsModal","模板格式与原始模板不对应");
+        		   return
+        		}
+        		if(!backjosn.haveData){
+        			showImportErrorInfo("#modifyStudentsModal","文件暂无数据");
+        		   return
+        		}
+        		if(!backjosn.dataCheck){
+        			showImportErrorInfo("#modifyStudentsModal",backjosn.checkTxt);
+        		   return
+        		}
+        		
+        		showImportSuccessInfo("#modifyStudentsModal",backjosn.checkTxt);
         	}else{
         	  toastr.warning('操作失败，请重试');
         	}
@@ -1247,6 +1310,9 @@ function confirmImportStudentInfo() {
 	    });
 }
 
+
+
+
 //清空学生信息模态框
 function emptyStudentBaseInfoArea() {
 	var reObject = new Object();
@@ -1257,7 +1323,7 @@ function emptyStudentBaseInfoArea() {
 	reReloadSearchsWithSelect(reObject);
 }
 
-//批量更新学生信息
+//预备批量更新学生
 function modifyStudents(){
 	var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
 	if(choosendStudents.length===0){
@@ -1265,13 +1331,27 @@ function modifyStudents(){
 		return;
 	}
 	$.showModal("#modifyStudentsModal",true);
+	$("#ModifyStudentsFile,#showModifyFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#ModifyStudentsFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#ModifyStudentsFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#ModifyStudentsFile").val("");
+			return
+		}
+		$("#showModifyFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	
 	//下载更新模板
 	$('#loadModifyStudentsModal').unbind('click');
 	$('#loadModifyStudentsModal').bind('click', function(e) {
 		loadModifyStudentsModal(choosendStudents);
 		e.stopPropagation();
 	});
-	
 }
 
 //下载更新模板
@@ -1287,44 +1367,6 @@ function loadModifyStudentsModal(choosendStudents){
      form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyStudentIDs").attr("value", modifyStudentIDs));
      form.appendTo('body').submit().remove();
 
-//	var $eleForm = $("<form method='get'></form>");
-//	$eleForm.attr("action", '/downloadModifyStudentsModal'); //下载文件接口
-//	$(document.body).append($eleForm);
-//	//提交表单，实现下载
-//	$eleForm.submit();
-//	
-//	
-//	var choosendStudentsId=new Array();
-//	for (var i = 0; i < choosendStudents.length; i++) {
-//		choosendStudentsId.push(choosendStudents[i].edu001_ID);
-//	}
-//	$.ajax({
-//		method : 'get',
-//		cache : false,
-//		url : "/downloadModifyStudentsModal",
-//		data: {
-//             "modifyStudentIDs":JSON.stringify(choosendStudentsId) 
-//        },
-//		dataType : 'json',
-//		beforeSend: function(xhr) {
-//			requestErrorbeforeSend();
-//		},
-//		error: function(textStatus) {
-//			requestError();
-//		},
-//		complete: function(xhr, status) {
-//			requestComplete();
-//		},
-//		success : function(backjson) {
-//			hideloding();
-//			if (backjson.result) {
-//				
-//				
-//			} else {
-//				toastr.warning('操作失败，请重试');
-//			}
-//		}
-//	});
 }
 
 
@@ -1416,19 +1458,28 @@ function binBind() {
 		e.stopPropagation();
 	});
 
-	//确认上传
-	$('.confirmImportStudentInfo').unbind('click');
-	$('.confirmImportStudentInfo').bind('click', function(e) {
+	//确认导入学生
+	$('.confirmImportStudentInfo,.confirmModifyStudents').unbind('click');
+	$('.confirmImportStudentInfo,.confirmModifyStudents').bind('click', function(e) {
 		confirmImportStudentInfo();
 		e.stopPropagation();
 	});
+	
 
-	//检验学生信息文件
+	//检验学生文件
 	$('#checkStudentInfoFile').unbind('click');
 	$('#checkStudentInfoFile').bind('click', function(e) {
 		checkStudentInfoFile();
 		e.stopPropagation();
 	});
+	
+	//检验修改学生文件
+	$('#checkModifyStudentsFile').unbind('click');
+	$('#checkModifyStudentsFile').bind('click', function(e) {
+		checkModifyStudentsFile();
+		e.stopPropagation();
+	});
+	
 	
 	//批量更新学生信息
 	$('#modifyStudents').unbind('click');

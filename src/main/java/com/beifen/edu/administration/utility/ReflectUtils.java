@@ -341,7 +341,7 @@ public class ReflectUtils {
 			
 			//验证sheet名字
 			String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
-			if (sheetCountPass&&checkType.equals("edu001")&&sheetName.equals(hopeSheetName)) {
+			if (sheetCountPass&&checkType.equals("ImportEdu001")&&sheetName.equals(hopeSheetName)) {
 				modalPass=true;
 			}
 			
@@ -829,7 +829,7 @@ public class ReflectUtils {
 						if (cell != null && !cell.equals("")) {
 							String keyName="";
 							//根据不同需求获取key name
-							if(keyType.equals("edu001")){
+							if(keyType.equals("ImportEdu001")){
 							    keyName = getEdu001KeyName(cell.getColumnIndex()); //获取列名
 							}
 							//行数据不为空 放入返回集
@@ -1079,79 +1079,133 @@ public class ReflectUtils {
 		// 追加系部信息
 		for (int i = 0; i < xb.size(); i++) {
 			Edu104 edu104=xb.get(i);
-			appendCell(sheet,i,edu104.getXbmc(),edu104.getXbbm().toString(),2,3);
+			appendCell(sheet,i,edu104.getXbmc(),edu104.getXbbm().toString(),2,3,true);
 		}
 		
 		// 追加年级信息
 		for (int i = 0; i < nj.size(); i++) {
 			Edu105 edu105=nj.get(i);
-			appendCell(sheet,i,edu105.getNjmc(),edu105.getNjbm().toString(),4,5);
+			appendCell(sheet,i,edu105.getNjmc(),edu105.getNjbm().toString(),4,5,true);
 		}
 		
 		// 追加专业信息
 		for (int i = 0; i < zy.size(); i++) {
 			Edu106 edu106=zy.get(i);
-			appendCell(sheet,i,edu106.getZymc(),edu106.getZybm().toString(),6,7);
+			appendCell(sheet,i,edu106.getZymc(),edu106.getZybm().toString(),6,7,true);
 		}
 		
 		// 追加行政班信息
 		for (int i = 0; i < xzb.size(); i++) {
 			Edu300 edu300=xzb.get(i);
-			appendCell(sheet,i,edu300.getXzbmc(),edu300.getEdu300_ID().toString(),8,9);
+			appendCell(sheet,i,edu300.getXzbmc(),edu300.getEdu300_ID().toString(),8,9,true);
 		}
 		
 		// 追加民族信息
 		for (int i = 0; i < mzbm.size(); i++) {
 			Edu000 edu000 = mzbm.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 10, 11);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 10, 11,true);
 		}
 
 		// 追加学生状态信息
 		for (int i = 0; i < xszt.size(); i++) {
 			Edu000 edu000 = xszt.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 12, 13);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 12, 13,true);
 		}
 		
 		// 追加政治面貌信息
 		for (int i = 0; i < zzmm.size(); i++) {
 			Edu000 edu000 = zzmm.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 14, 15);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 14, 15,true);
 		}
 
 		// 追加文化程度信息
 		for (int i = 0; i < whcd.size(); i++) {
 			Edu000 edu000 = whcd.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 16, 17);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 16, 17,true);
 		}
 		
 		// 追加招生方式信息
 		for (int i = 0; i < zsfs.size(); i++) {
 			Edu000 edu000 = zsfs.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 18, 19);
+			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 18, 19,true);
 		}
 	}
     
     //填充更新学生模板的学生信息
     private void stuffModifyStudentModalSheet1(XSSFSheet sheet,List<Edu001> chosedStudents) {
-		// 写入学生编码
 		for (int i = 0; i < chosedStudents.size(); i++) {
-			XSSFRow row = sheet.createRow(i + 1);
-			row.createCell(0).setCellValue(chosedStudents.get(i).getEdu001_ID());
+			appendCell(sheet,i,"",chosedStudents.get(i).getPycc(),-1,0,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSzxb(),-1,1,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getNj(),-1,2,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZybm(),-1,3,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEdu300_ID(),-1,4,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXb(),-1,9,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZtCode(),-1,10,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getMzbm(),-1,13,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSfyxj(),-1,14,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,15,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZzmmbm(),-1,16,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,17,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getWhcdbm(),-1,18,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,19,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,20,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,21,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getByzh(),-1,22,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZkzh(),-1,23,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSjhm(),-1,24,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEmail(),-1,24,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getJg(),-1,25,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,26,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,27,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,28,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getHf(),-1,29,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getLzjd(),-1,30,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZsfscode(),-1,31,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getDxpy(),-1,32,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getPkjt(),-1,33,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,34,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,35,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,36,false);
 		}
-
-	
 	}
 
-	//Excel 追加数据
-	private void appendCell(XSSFSheet sheet,int index,String mc,String value,int mcCellIndex,int valueCellIndex) {
+    
+    /**
+     * 向Excel 追加数据
+     * @param sheet  当前sheet
+     * @param index  当前行的索引
+     * @param mc     名称列的值  （stuffTwoCell为false时为""）
+     * @param value  真实值列的值
+     * @param mcCellIndex  名称列的列索引（stuffTwoCell为false时为-1）
+     * @param valueCellIndex  真实值列的列索引
+     * @param stuffTwoCell  是否填充两列 （false只填充一列）
+     * */
+	private void appendCell(XSSFSheet sheet,int index,String mc,String value,int mcCellIndex,int valueCellIndex,boolean stuffTwoCell) {
+		if(mc!=null){
+			mc=mc.toString();
+		}
+		if(value!=null){
+			value=value.toString();
+		}
+		
 		XSSFRow row = sheet.getRow(index + 1); //从第二行开始追加
 		//如果总行数超过当前数据长度 新建行
 		if(row==null){
 			int rowNum = sheet.getLastRowNum();// 总行数
 			row=sheet.createRow(rowNum+1);//新建一行
 		}
-		row.createCell(mcCellIndex).setCellValue(mc); 
-		row.createCell(valueCellIndex).setCellValue(value);
+		if(stuffTwoCell){
+			row.createCell(mcCellIndex).setCellValue(mc); 
+			row.createCell(valueCellIndex).setCellValue(value);
+		}else{
+			row.createCell(valueCellIndex).setCellValue(value);
+		}
 	}
 
 	// 下载模板
