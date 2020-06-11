@@ -20,6 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -2514,16 +2518,11 @@ public class AdministrationController {
 	@RequestMapping("downloadStudentModal")
 	@ResponseBody
 	public void downloadStudentModal(HttpServletResponse response) throws IOException {
-		Map<String, Object> returnMap = new HashMap();
-		Map<String, List> othserInfo = new HashMap();
-		// 获取项目根路径
-		String rootPath = getClass().getResource("/").getFile().toString();
-		// 获取模板路径
-		String filePath = rootPath + "static/modalFile/importStudent.xlsx";
-		// 修改学生导入模板
-		utils.modifyImportStudentModal(filePath);
-		// 下载模板
-		utils.loadImportStudentModal(filePath, response);
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createImportStudentModal(workbook);
+		
+        utils.loadImportStudentModal(response,"导入学生模板", workbook);
 	}
 	
 	/**
@@ -2535,20 +2534,18 @@ public class AdministrationController {
 	@RequestMapping("downloadModifyStudentsModal")
 	@ResponseBody
 	public void downloadModifyStudentsModal(HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException {
-		// 获取项目根路径
-		String rootPath = getClass().getResource("/").getFile().toString();
-		// 获取模板路径
-		String filePath = rootPath + "static/modalFile/modifyStudent.xlsx";
-		// 修改学生更新模板
+		// 根据ID查询已选学生信息
 		com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
 		List<Edu001> chosedStudents=new ArrayList<Edu001>();
 		for (int i = 0; i < modifyStudentArray.size(); i++) {
 			Edu001 edu001=administrationPageService.queryStudentBy001ID(modifyStudentArray.get(i).toString());
 			chosedStudents.add(edu001);
 		}
-		utils.updateModifyStudentModal(filePath,chosedStudents);
-		// 下载模板
-		utils.loadImportStudentModal(filePath, response);
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createModifyStudentModal(workbook,chosedStudents);
+        utils.loadImportStudentModal(response,"批量更新学生模板", workbook);
+
 	}
 
 	/**
@@ -2563,28 +2560,31 @@ public class AdministrationController {
 	@RequestMapping("importStudent")
 	@ResponseBody
 	public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
-		Map<String, Object> returnMap = utils.checkFile(file, "edu001", "学生信息");
+		Map<String, Object> returnMap = utils.checkFile(file, "ImportEdu001", "导入学生信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
 			return returnMap;
 		}
 
-		boolean dataCheck = (boolean) returnMap.get("dataCheck");
-		if (!dataCheck) {
-			return returnMap;
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				return returnMap;
+			}
 		}
-
-		List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
-		String yxbz = "1";
-		for (int i = 0; i < importStudent.size(); i++) {
-			Edu001 edu001 = importStudent.get(i);
-			edu001.setYxbz(yxbz);
-			administrationPageService.addStudent(edu001); // 新增学生
-			List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
-			String xzbid = edu001.getEdu300_ID();
-			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
-		}
-
+		
+        if(!returnMap.get("importStudent").equals("")){
+        	List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
+        	String yxbz = "1";
+    		for (int i = 0; i < importStudent.size(); i++) {
+    			Edu001 edu001 = importStudent.get(i);
+    			edu001.setYxbz(yxbz);
+    			administrationPageService.addStudent(edu001); // 新增学生
+    			List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+    			String xzbid = edu001.getEdu300_ID();
+    			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
+    		}
+        }
 		return returnMap;
 	}
 
@@ -2601,7 +2601,7 @@ public class AdministrationController {
 	@ResponseBody
 	public Object verifiyImportStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
-		Map<String, Object> checkRS = utils.checkFile(file, "ImportEdu001", "学生信息");
+		Map<String, Object> checkRS = utils.checkFile(file, "ImportEdu001", "导入学生信息");
 		checkRS.put("result", true);
 		return checkRS;
 	}

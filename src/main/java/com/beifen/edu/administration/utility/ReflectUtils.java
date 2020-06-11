@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,12 +31,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -320,7 +325,9 @@ public class ReflectUtils {
 		boolean sheetCountPass=false;
 		boolean modalPass=false;
 		boolean haveData=false;
-		
+		Object dataCheck="";
+		Object checkTxt="";
+		Object importStudent="";
 		// 判断读取的文件是否为Excel文件
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -352,12 +359,13 @@ public class ReflectUtils {
 			}
 			
 			//验证数据正确性
+			
 			if(sheetCountPass&&modalPass&&haveData){
-				if(checkType.equals("edu001")){
+				if(checkType.equals("ImportEdu001")){
 					Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents);
-					returnMap.put("dataCheck", datacheckInfo.get("chaeckPass"));
-					returnMap.put("checkTxt", datacheckInfo.get("checkTxt"));
-					returnMap.put("importStudent", datacheckInfo.get("importStudent"));
+					dataCheck=datacheckInfo.get("chaeckPass");
+					checkTxt=datacheckInfo.get("checkTxt");
+					importStudent=datacheckInfo.get("importStudent");
 				}
 			}
 		}
@@ -366,9 +374,11 @@ public class ReflectUtils {
 		returnMap.put("sheetCountPass",sheetCountPass);
 		returnMap.put("modalPass",modalPass);
 		returnMap.put("haveData",haveData);
+		returnMap.put("dataCheck",dataCheck );
+		returnMap.put("checkTxt", checkTxt);
+		returnMap.put("importStudent",importStudent);
 		return returnMap;
 	}
-
 
 	/**
 	 * 验证导入的学生数据
@@ -385,6 +395,15 @@ public class ReflectUtils {
 		for (int i = 0; i < importStudentsMap.size(); i++) {
 			Edu001 edu001 = JSON.parseObject(JSON.toJSONString(importStudentsMap.get(i)), Edu001.class); // mapToBean
 			if (edu001.getCsrq() != null) {
+				boolean strCanChnageDate= isValidDate(importStudentsMap.get(i).get("csrq").toString());
+				if(!strCanChnageDate){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-出生日期格式不正确(正确格式:1990-01-01)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					return returnMap;
+				}
+				
 				int Age = getAge(parse((String) importStudentsMap.get(i).get("csrq")));
 				if (Age <= 0) {
 					chaeckPass = false;
@@ -433,6 +452,15 @@ public class ReflectUtils {
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
+			
+			if(!edu001.getXb().equals("M")&&!edu001.getXb().equals("F")){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-性别只接受M(男)或F(女)";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
 			if(isNull(edu001.getZtCode())){
 				chaeckPass=false;
 				checkTxt= "第"+(i+1)+"行-学生状态不能为空";
@@ -477,7 +505,7 @@ public class ReflectUtils {
 			}
 			if(isNull(edu001.getEdu300_ID())){
 				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-行政班编码不能为空";
+				checkTxt="第"+(i+1)+"行-行政班ID不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt", checkTxt);
 				break;
@@ -504,9 +532,18 @@ public class ReflectUtils {
 				break;
 			}
 			
+			boolean strCanChnageDate= isValidDate(edu001.getRxsj().toString());
+			if(!strCanChnageDate){
+				chaeckPass = false;
+				checkTxt = "第" + (i + 1) + "行-入校时间格式不正确(正确格式:1990-01-01)";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				return returnMap;
+			}
+			
 			//验证数字列内容
 			//入学总分
-			if(!isNumeric(edu001.getRxzf())){
+			if(edu001.getRxzf()!=null&&!isNumeric(edu001.getRxzf())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-入学总分必须是数字";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -515,7 +552,7 @@ public class ReflectUtils {
 			}
 			
 			//身高
-			if(!isNumeric(edu001.getSg())){
+			if(edu001.getSg()!=null&&!isNumeric(edu001.getSg())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-身高必须是数字";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -524,7 +561,7 @@ public class ReflectUtils {
 			}
 			
 			//体重
-			if(!isNumeric(edu001.getTz())){
+			if(edu001.getTz()!=null&&!isNumeric(edu001.getTz())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-体重必须是数字";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -533,7 +570,7 @@ public class ReflectUtils {
 			}
 			
 			//手机号码
-			if(!isPhone(edu001.getSjhm())){
+			if(edu001.getSjhm()!=null&&!isPhone(edu001.getSjhm())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-手机号码格式不正确";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -542,7 +579,7 @@ public class ReflectUtils {
 			}
 			
 			//email
-			if(!isEmail(edu001.getEmail())){
+			if(edu001.getEmail()!=null&&!isEmail(edu001.getEmail())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-email格式不正确";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -554,18 +591,89 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
-				if(edu001.getSfyxj().equals("T") && edu001.getXjh()==null){
+				if(edu001.getSfyxj()!=null){
+					if(!edu001.getSfyxj().equals("T")&&!edu001.getSfyxj().equals("F")){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-是否有学籍只接受T(有)或F(无)";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;
+					}
+					
+					if(edu001.getSfyxj().equals("T") && edu001.getXjh()==null){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-学籍号不能为空";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+					
+					if(edu001.getSfyxj().equals("F") && edu001.getXjh()!=null){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-学籍号必须为空";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}else{
+					if(edu001.getXjh()!=null){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-学籍号必须为空";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}
+			}
+			
+			//验证婚否格式
+			if(!chaeckPass){
+				break;
+			}else{
+				if(edu001.getHf()!=null&&!edu001.getHf().equals("T")&&!edu001.getHf().equals("F")){
 					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-学籍号不能为空";
+					checkTxt= "第"+(i+1)+"行-婚否只接受T(已婚)或F(未婚)";
 					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
+					returnMap.put("checkTxt",checkTxt);
 					break;
 				}
-				if(edu001.getSfyxj().equals("F") && edu001.getXjh()!=null){
+			}
+			
+			//验证来自军队格式
+			if(!chaeckPass){
+				break;
+			}else{
+				if(edu001.getLzjd()!=null&&!edu001.getLzjd().equals("T")&&!edu001.getLzjd().equals("F")){
 					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-学籍号必须为空";
+					checkTxt= "第"+(i+1)+"行-来自军队只接受T(是)或F(否)";
 					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
+					returnMap.put("checkTxt",checkTxt);
+					break;
+				}
+			}
+			
+			//验证定向培养格式
+			if(!chaeckPass){
+				break;
+			}else{
+				if(edu001.getDxpy()!=null&&!edu001.getDxpy().equals("T")&&!edu001.getDxpy().equals("F")){
+					chaeckPass=false;
+					checkTxt= "第"+(i+1)+"行-定向培养只接受T(是)或F(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt",checkTxt);
+					break;
+				}
+			}
+			
+			//验证贫困家庭格式
+			if(!chaeckPass){
+				break;
+			}else{
+				if(edu001.getPkjt()!=null&&!edu001.getPkjt().equals("T")&&!edu001.getPkjt().equals("F")){
+					chaeckPass=false;
+					checkTxt= "第"+(i+1)+"行-贫困家庭只接受T(是)或F(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt",checkTxt);
 					break;
 				}
 			}
@@ -830,7 +938,7 @@ public class ReflectUtils {
 							String keyName="";
 							//根据不同需求获取key name
 							if(keyType.equals("ImportEdu001")){
-							    keyName = getEdu001KeyName(cell.getColumnIndex()); //获取列名
+							    keyName = getImportantEdu001KeyName(cell.getColumnIndex()); //获取列名
 							}
 							//行数据不为空 放入返回集
 							if(getCellData(cell)!=null&&!getCellData(cell).equals("")){
@@ -846,7 +954,7 @@ public class ReflectUtils {
 	}
 	
 	//获取学生Excel的Key值
-	private String getEdu001KeyName(int columnIndex) {
+	private String getImportantEdu001KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
         case 0:
@@ -978,68 +1086,103 @@ public class ReflectUtils {
 		return true;
     }
 
-	// 修改学生导入模板
-	public void modifyImportStudentModal(String filePath) throws IOException {
-		OutputStream out = null;
-		
-		// 获取Excel工作簿
-		FileInputStream in = new FileInputStream(filePath);
-		XSSFWorkbook workbook = new XSSFWorkbook(in);
-		// 获取sheet个数 
-		int sheetCount = workbook.getNumberOfSheets();
-		// 如果模板文件中sheet个数大于1 则删除第二个sheet（避免数据重叠）
-		if (sheetCount > 1) {
-			out = new FileOutputStream(filePath);
-			workbook.removeSheetAt(1);
-			workbook.write(out);
-		}
-		
-		//创建新的sheet2
-		workbook.createSheet("辅助信息");
-		//获取sheet2
-		XSSFSheet sheet = workbook.getSheetAt(1);
-		//填充sheet2内容
-		this.stuffStudentModalSheet2(sheet);
-
-		out = new FileOutputStream(filePath);
-		out.flush();
-		workbook.write(out);
-		workbook.close();
-		out.close();
+	// 导入学生模板
+	public void createImportStudentModal(XSSFWorkbook workbook){
+		// 创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("导入学生信息");
+		this.stuffStudentInfoSheet1(sheet1);
+		// 创建创建sheet2
+		XSSFSheet sheet2 = workbook.createSheet("辅助信息");
+		this.stuffStudentModalSheet2(sheet2);
 	}
 	
-	// 更改学生更新模板
-	public void updateModifyStudentModal(String filePath,List<Edu001> chosedStudents) throws IOException {
-		OutputStream out = null;
-
-		// 获取Excel工作簿
-		FileInputStream in = new FileInputStream(filePath);
-		XSSFWorkbook workbook = new XSSFWorkbook(in);
-		// 获取sheet个数
-		int sheetCount = workbook.getNumberOfSheets();
-		// 如果模板文件中sheet个数大于1 则删除第二个sheet（避免数据重叠）
-		if (sheetCount > 1) {
-			out = new FileOutputStream(filePath);
-			workbook.removeSheetAt(1);
-			workbook.write(out);
-		}
-		// 获取sheet1
-	    XSSFSheet sheet1 = workbook.getSheetAt(0);
-	    // 填充sheet1内容
-	    this.stuffModifyStudentModalSheet1(sheet1,chosedStudents);
-	 		
-		// 创建新的sheet2
-		workbook.createSheet("辅助信息");
-		// 获取sheet2
-		XSSFSheet sheet2 = workbook.getSheetAt(1);
-		// 填充sheet2内容
+	// 批量更新学生模板
+	public void createModifyStudentModal(XSSFWorkbook workbook,List<Edu001> chosedStudents) {
+		//创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("已选学生信息");
+		this.stuffStudentInfoSheet1(sheet1,chosedStudents);
+		//创建创建sheet2
+		XSSFSheet sheet2 =workbook.createSheet("辅助信息");
 		this.stuffStudentModalSheet2(sheet2);
-
-		out = new FileOutputStream(filePath);
-		out.flush();
-		workbook.write(out);
-		workbook.close();
-		out.close();
+	}
+	
+	//填充更新学生模板的Sheet1
+    private void stuffStudentInfoSheet1(XSSFSheet sheet,List<Edu001> chosedStudents) {
+		// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"培养层次编码", "所在系部编码", "年级编码", "专业编码", "行政班ID", "学号", "学生ID", "学生姓名",
+				"曾用名", "性别", "状态编码", "出生日期", "身份证号 ", "民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
+				"文化程度编码", "考生号", "入学总分", "入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+		
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+    	
+		//循环填充数据
+		for (int i = 0; i < chosedStudents.size(); i++) {
+			appendCell(sheet,i,"",chosedStudents.get(i).getPycc(),-1,0,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSzxb(),-1,1,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getNj(),-1,2,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZybm(),-1,3,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEdu300_ID(),-1,4,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXb(),-1,9,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZtCode(),-1,10,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getMzbm(),-1,13,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSfyxj(),-1,14,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,15,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZzmmbm(),-1,16,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,17,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getWhcdbm(),-1,18,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,19,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,20,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,21,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getByzh(),-1,22,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZkzh(),-1,23,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSjhm(),-1,24,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEmail(),-1,24,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getJg(),-1,25,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,26,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,27,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,28,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getHf(),-1,29,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getLzjd(),-1,30,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZsfscode(),-1,31,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getDxpy(),-1,32,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getPkjt(),-1,33,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,34,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,35,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,36,false);
+		}
+	}
+	
+    //填充导入学生模板的Sheet1
+    private void stuffStudentInfoSheet1(XSSFSheet sheet) {
+		// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		
+		// 所有标题数组
+		String[] titles = new String[] {"培养层次编码", "系部编码", "年级编码", "专业编码", "行政班ID", "学号", "学生姓名",
+				"曾用名", "性别", "状态编码", "出生日期", "身份证号 ", "民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
+				"文化程度编码", "考生号", "入学总分", "入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+		
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
 	}
 	
 	//填充学生导入模板的辅助信息
@@ -1131,51 +1274,6 @@ public class ReflectUtils {
 		}
 	}
     
-    //填充更新学生模板的学生信息
-    private void stuffModifyStudentModalSheet1(XSSFSheet sheet,List<Edu001> chosedStudents) {
-		for (int i = 0; i < chosedStudents.size(); i++) {
-			appendCell(sheet,i,"",chosedStudents.get(i).getPycc(),-1,0,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSzxb(),-1,1,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getNj(),-1,2,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZybm(),-1,3,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEdu300_ID(),-1,4,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXb(),-1,9,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZtCode(),-1,10,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getMzbm(),-1,13,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSfyxj(),-1,14,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,15,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZzmmbm(),-1,16,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,17,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getWhcdbm(),-1,18,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,19,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,20,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,21,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getByzh(),-1,22,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZkzh(),-1,23,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSjhm(),-1,24,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEmail(),-1,24,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getJg(),-1,25,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,26,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,27,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,28,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getHf(),-1,29,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getLzjd(),-1,30,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZsfscode(),-1,31,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getDxpy(),-1,32,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getPkjt(),-1,33,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,34,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,35,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,36,false);
-		}
-	}
-
-    
     /**
      * 向Excel 追加数据
      * @param sheet  当前sheet
@@ -1206,27 +1304,32 @@ public class ReflectUtils {
 		}else{
 			row.createCell(valueCellIndex).setCellValue(value);
 		}
+		
 	}
 
 	// 下载模板
-	public void loadImportStudentModal(String filePath, HttpServletResponse response) throws IOException {
-		File f = new File(filePath);
-		if (!f.exists()) {
-			response.sendError(404, "File not found!");
-			return;
+	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException {
+		//设置默认数据格式为文本
+		Sheet sheet = workbook.getSheetAt(0); // 读取sheet 0
+		int firstRowIndex = sheet.getFirstRowNum(); // 第一行
+		int lastRowIndex = sheet.getLastRowNum();  //最后一列
+		// 遍历行
+		for (int rIndex = firstRowIndex; rIndex <= lastRowIndex; rIndex++) {
+			Row row = sheet.getRow(rIndex); // 当前行
+			int firstCellIndex = row.getFirstCellNum(); //第一列
+			int lastCellIndex = row.getLastCellNum();  //最后一列
+			for (int cIndex = firstCellIndex; cIndex < lastCellIndex; cIndex++) { // 遍历列
+				CellStyle textStyle = workbook.createCellStyle();
+				XSSFDataFormat format = workbook.createDataFormat();
+				textStyle.setDataFormat(format.getFormat("@"));
+				workbook.getSheetAt(0).setDefaultColumnStyle(cIndex, textStyle);
+			}
 		}
-		BufferedInputStream br = new BufferedInputStream(new FileInputStream(f));
-		byte[] buf = new byte[1024];
-		int len = 0;
-
-		response.reset(); // 非常重要
-		response.setContentType("application/x-msdownload");
-		response.setHeader("Content-Disposition", "attachment; filename=" + f.getName());
-		OutputStream out = response.getOutputStream();
-		while ((len = br.read(buf)) > 0)
-			out.write(buf, 0, len);
-		br.close();
-		out.close();
+		response.setHeader("Content-type","application/vnd.ms-excel");
+        // 解决导出文件名中文乱码
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"ISO-8859-1")+".xls");
+        workbook.write(response.getOutputStream());
 	}
 	
 	//非空验证
@@ -1325,6 +1428,24 @@ public class ReflectUtils {
     public static  Date parse(String strDate) throws java.text.ParseException  {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.parse(strDate);
+    }
+
+    
+    private static boolean isValidDate(String str) {
+        boolean convertSuccess = true;
+        // 指定日期格式为四位年/两位月份/两位日期，注意yyyy/MM/dd区分大小写；
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            // 设置lenient为false.
+            // 否则SimpleDateFormat会比较宽松地验证日期，比如2007/02/29会被接受，并转换成2007/03/01
+            format.setLenient(false);
+            format.parse(str);
+        } catch (ParseException e) {
+            // e.printStackTrace();
+            // 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
+            convertSuccess = false;
+        }
+        return convertSuccess;
     }
 
 
