@@ -350,6 +350,8 @@ public class ReflectUtils {
 			String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
 			if (sheetCountPass&&checkType.equals("ImportEdu001")&&sheetName.equals(hopeSheetName)) {
 				modalPass=true;
+			}else if(sheetCountPass&&checkType.equals("ModifyEdu001")&&sheetName.equals(hopeSheetName)){
+				modalPass=true;
 			}
 			
 			//验证是否有数据
@@ -359,10 +361,14 @@ public class ReflectUtils {
 			}
 			
 			//验证数据正确性
-			
 			if(sheetCountPass&&modalPass&&haveData){
-				if(checkType.equals("ImportEdu001")){
-					Map<String, Object> datacheckInfo=this.checkImportStudentInfo(importStudents);
+				if(checkType.equals("ImportEdu001")||checkType.equals("ModifyEdu001")){
+					boolean isModify;
+					if (checkType.equals("ImportEdu001"))
+						isModify=false;
+					else
+						 isModify=true;
+					Map<String, Object> datacheckInfo=this.checkStudentInfo(importStudents,isModify);
 					dataCheck=datacheckInfo.get("chaeckPass");
 					checkTxt=datacheckInfo.get("checkTxt");
 					importStudent=datacheckInfo.get("importStudent");
@@ -385,7 +391,7 @@ public class ReflectUtils {
 	 * @throws Exception 
 	 * @throws java.text.ParseException 
 	 * */
-	private Map<String, Object> checkImportStudentInfo(List<Map<String, Object>> importStudentsMap) throws java.text.ParseException, Exception {
+	private Map<String, Object> checkStudentInfo(List<Map<String, Object>> importStudentsMap,boolean isModify) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu001> importStudent=new ArrayList<Edu001>();
 		boolean chaeckPass=true;
@@ -569,6 +575,16 @@ public class ReflectUtils {
 				break;
 			}
 			
+			
+			//身份证号格式
+			if(edu001.getSfzh()!=null&&!isIDCard(edu001.getSfzh())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-身份证号格式不正确";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
 			//手机号码
 			if(edu001.getSjhm()!=null&&!isPhone(edu001.getSjhm())){
 				chaeckPass=false;
@@ -682,6 +698,19 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
+				//如果是更新操作判断学生id是否存在
+				if(isModify){
+					Edu001 haveThisStudent=reflectUtils.administrationPageService.queryStudentBy001ID(edu001.getEdu001_ID().toString());
+					if(haveThisStudent==null){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-学生ID不存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}
+				
+				
 				//培养层次编码是否存在
 				pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(edu001.getPycc());
 				if(pcyys.size()==0){
@@ -808,11 +837,19 @@ public class ReflectUtils {
 				}
 			}
 			
+			List<Edu001> databaseAllStudent=null;
 			//判断学号在数据库是否存在
 			if(!chaeckPass){
 				break;
 			}else{
-				List<Edu001> databaseAllStudent = reflectUtils.administrationPageService.queryAllStudent();
+				databaseAllStudent = reflectUtils.administrationPageService.queryAllStudent();
+				if(isModify){
+					for (int d = 0;d < databaseAllStudent.size(); d++) {
+						if(databaseAllStudent.get(d).getEdu001_ID().equals(edu001.getEdu001_ID())){
+							databaseAllStudent.remove(d);
+						}
+					}
+				}
 				for (int d = 0;d < databaseAllStudent.size(); d++) {
 					if(importStudent.get(i).getXh().equals(databaseAllStudent.get(d).getXh())){
 						chaeckPass=false;
@@ -828,13 +865,25 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
-				boolean IDcardIshave = reflectUtils.administrationPageService.IDcardIshave(importStudent.get(i).getSfzh());
-				if(IDcardIshave){
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行- 身份证号已存在";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
+				if(isModify){
+					for (int d = 0;d < databaseAllStudent.size(); d++) {
+						if(databaseAllStudent.get(d).getSfzh().equals(edu001.getSfzh())){
+							chaeckPass=false;
+							checkTxt="第"+(i+1)+"行- 身份证号已存在";
+							returnMap.put("chaeckPass", chaeckPass);
+							returnMap.put("checkTxt", checkTxt);
+							break;
+						}
+					}
+				}else{
+					boolean IDcardIshave = reflectUtils.administrationPageService.IDcardIshave(importStudent.get(i).getSfzh());
+					if(IDcardIshave){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行- 身份证号已存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
 				}
 			}
 			
@@ -842,15 +891,26 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
-				boolean studentSpill = reflectUtils.administrationPageService.administrationClassesIsSpill(importStudent.get(i).getEdu300_ID());
-				if(studentSpill){
-					List<Edu300> XzbInfo=reflectUtils.administrationPageService.queryXzbByEdu300ID(importStudent.get(i).getEdu300_ID());
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-新增该学生 班级:("+XzbInfo.get(0).getXzbmc()+") 人数超过上限";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
+				boolean needCheckXzb=true;
+				if(isModify){
+					//判断是否改变行政班
+					String oldXzb=reflectUtils.administrationPageService.queryStudentXzbCode(edu001.getEdu001_ID().toString());
+					String newXzb=edu001.getEdu300_ID().toString();
+					if(oldXzb.equals(newXzb)){
+						needCheckXzb=false;
+					}
 				}
+                if(needCheckXzb){
+                	boolean studentSpill = reflectUtils.administrationPageService.administrationClassesIsSpill(importStudent.get(i).getEdu300_ID());
+    				if(studentSpill){
+    					List<Edu300> XzbInfo=reflectUtils.administrationPageService.queryXzbByEdu300ID(importStudent.get(i).getEdu300_ID());
+    					chaeckPass=false;
+    					checkTxt="第"+(i+1)+"行-新增该学生 班级:("+XzbInfo.get(0).getXzbmc()+") 人数超过上限";
+    					returnMap.put("chaeckPass", chaeckPass);
+    					returnMap.put("checkTxt", checkTxt);
+    					break;
+    				}
+                }				
 			}
 			
 			//所有验证通过  填充各种编码的名称
@@ -940,8 +1000,15 @@ public class ReflectUtils {
 							if(keyType.equals("ImportEdu001")){
 							    keyName = getImportantEdu001KeyName(cell.getColumnIndex()); //获取列名
 							}
+							if(keyType.equals("ModifyEdu001")){
+							    keyName = getModifyEdu001KeyName(cell.getColumnIndex()); //获取列名
+							}
 							//行数据不为空 放入返回集
 							if(getCellData(cell)!=null&&!getCellData(cell).equals("")){
+								//数据格式统一都为文本格式
+								if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+						            cell.setCellType(Cell.CELL_TYPE_STRING);
+						        }
 								hashMap.put(keyName, getCellData(cell));
 							}
 						}
@@ -953,7 +1020,7 @@ public class ReflectUtils {
 		return dataList;
 	}
 	
-	//获取学生Excel的Key值
+	//获取导入学生Excel的Key值
 	private String getImportantEdu001KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
@@ -1075,6 +1142,131 @@ public class ReflectUtils {
 		return result;
 	}
 
+	//获取批量修改学生Excel的Key值
+	private String getModifyEdu001KeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+        case 0:
+            result="pycc";
+            break;
+        case 1:
+            result="szxb";
+            break;
+        case 2:
+            result="nj";
+            break;
+        case 3:
+            result="zybm";
+            break;
+        case 4:
+            result="Edu300_ID";
+            break;
+        case 5:
+            result="xh";
+            break;
+        case 6:
+            result="Edu001_ID";
+            break;
+        case 7:
+            result="xm";
+            break;
+        case 8:
+            result="zym";
+            break;
+        case 9:
+            result="xb";
+            break;
+        case 10:
+            result="ztCode";
+            break;
+        case 11:
+            result="csrq";
+            break;
+        case 12:
+            result="sfzh";
+            break;
+        case 13:
+            result="mzbm";
+            break;
+        case 14:
+            result="sfyxj";
+            break;
+        case 15:
+            result="xjh";
+            break;
+        case 16:
+            result="zzmmbm";
+            break;
+        case 17:
+            result="syd";
+            break;
+        case 18:
+            result="whcdbm";
+            break;
+        case 19:
+            result="ksh";
+            break;
+        case 20:
+            result="rxzf";
+            break;
+        case 21:
+            result="rxsj";
+            break;
+        case 22:
+            result="byzh";
+            break;
+        case 23:
+            result="zkzh";
+            break;
+        case 24:
+            result="sjhm";
+            break;
+        case 25:
+            result="email";
+            break;
+        case 26:
+            result="jg";
+            break;
+        case 27:
+            result="zy";
+            break;
+        case 28:
+            result="sg";
+            break;
+        case 29:
+            result="tz";
+            break;
+        case 30:
+            result="hf";
+            break;
+        case 31:
+            result="lzjd";
+            break;
+        case 32:
+            result="zsfscode";
+            break;
+        case 33:
+            result="dxpy";
+            break;
+        case 34:
+            result="pkjt";
+            break;
+        case 35:
+            result="jtzz";
+            break;
+        case 36:
+            result="zjxy";
+            break;
+        case 37:
+            result="bz";
+            break;
+        default:
+        	result="ycTxt";
+            break;
+        }
+		return result;
+	}
+	
 	/*处理空行*/
 	@SuppressWarnings("deprecation")
 	public static boolean isRowEmpty(Row row) {
@@ -1173,7 +1365,8 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"培养层次编码", "系部编码", "年级编码", "专业编码", "行政班ID", "学号", "学生姓名",
+		String[] titles = new String[] {"培养层次编码", "系部编码", "年级编码", "专业编"
+				+ "码", "行政班ID", "学号", "学生姓名",
 				"曾用名", "性别", "状态编码", "出生日期", "身份证号 ", "民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
 				"文化程度编码", "考生号", "入学总分", "入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
@@ -1309,7 +1502,7 @@ public class ReflectUtils {
 
 	// 下载模板
 	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException {
-		//设置默认数据格式为文本
+		//设置sheet1数据格式为文本
 		Sheet sheet = workbook.getSheetAt(0); // 读取sheet 0
 		int firstRowIndex = sheet.getFirstRowNum(); // 第一行
 		int lastRowIndex = sheet.getLastRowNum();  //最后一列
@@ -1325,6 +1518,7 @@ public class ReflectUtils {
 				workbook.getSheetAt(0).setDefaultColumnStyle(cIndex, textStyle);
 			}
 		}
+		
 		response.setHeader("Content-type","application/vnd.ms-excel");
         // 解决导出文件名中文乱码
         response.setCharacterEncoding("UTF-8");
@@ -1390,6 +1584,15 @@ public class ReflectUtils {
 		return isEmail;
     }
 
+	//身份证验证
+	public boolean isIDCard(String idCardNum) {
+		String regex = "\\d{15}(\\d{2}[0-9xX])?";
+		if(idCardNum.matches(regex)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
 	/**
 	 * 解析POI导入cell中的格式数据
@@ -1430,7 +1633,7 @@ public class ReflectUtils {
         return sdf.parse(strDate);
     }
 
-    
+    //判断字符能否转为日期
     private static boolean isValidDate(String str) {
         boolean convertSuccess = true;
         // 指定日期格式为四位年/两位月份/两位日期，注意yyyy/MM/dd区分大小写；
@@ -1514,6 +1717,7 @@ public class ReflectUtils {
 	
 
 	
+
 
 
 

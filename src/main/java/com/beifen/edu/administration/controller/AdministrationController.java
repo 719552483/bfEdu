@@ -2491,18 +2491,23 @@ public class AdministrationController {
 				}
 			}
 		}
-
+		
+		boolean studentSpill=false;
 		// 不存在则修改学生
 		if (!xhhave&&!IdcardHave) {
 			if (!isChangeXZB) {
 				// 没有修改行政班的情况
 				administrationPageService.addStudent(edu001);
 			} else {
-
-				administrationPageService.updateStudent(edu001);
+				// 判断修改是否会超过行政班容纳人数
+				studentSpill = administrationPageService.administrationClassesIsSpill(edu001.getEdu300_ID());
+			    if(!studentSpill){
+			    	administrationPageService.updateStudent(edu001);
+			    }
 			}
 		}
 
+		returnMap.put("studentSpill", studentSpill);
 		returnMap.put("xhhave", xhhave);
 		returnMap.put("IdcardHave", IdcardHave);
 		returnMap.put("result", true);
@@ -2587,6 +2592,43 @@ public class AdministrationController {
         }
 		return returnMap;
 	}
+	
+	/**
+	 * 批量修改学生
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("modifyStudents")
+	@ResponseBody
+	public Object modifyStudents(@RequestParam("file") MultipartFile file) throws Exception {
+		Map<String, Object> returnMap = utils.checkFile(file, "ModifyEdu001", "已选学生信息");
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			return returnMap;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				return returnMap;
+			}
+		}
+		
+		
+		
+        if(!returnMap.get("importStudent").equals("")){
+        	List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
+        	for (int i = 0; i < modifyStudents.size(); i++) {
+        		administrationPageService.updateStudent(modifyStudents.get(i)); //修改学生
+        	}
+        	returnMap.put("modifyStudentsInfo", modifyStudents);
+        }
+		return returnMap;
+	}
 
 	/**
 	 * 检验导入学生的文件
@@ -2615,14 +2657,14 @@ public class AdministrationController {
 	 * @throws Exception
 	 * @throws ServletException
 	 */
-//	@RequestMapping("verifiyModifyStudentFile")
-//	@ResponseBody
-//	public Object verifiyModifyStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
-//		Map<String, Object> returnMap = new HashMap();
-//		Map<String, Object> checkRS = utils.checkFile(file, "ModifyEdu001", "已选学生信息");
-//		checkRS.put("result", true);
-//		return checkRS;
-//	}
+	@RequestMapping("verifiyModifyStudentFile")
+	@ResponseBody
+	public Object verifiyModifyStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, Object> checkRS = utils.checkFile(file, "ModifyEdu001", "已选学生信息");
+		checkRS.put("result", true);
+		return checkRS;
+	}
 
 	
 	
