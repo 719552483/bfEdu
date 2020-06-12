@@ -447,6 +447,11 @@ public class AdministrationPageService {
 		return isHave;
 	}
 	
+	//批量发放毕业证
+	public void graduationStudents(String edu001Id) {
+		edu001DAO.graduationStudents(edu001Id);
+	}
+	
 	//判断导入学生的培养计划和行政班是否对应
 	public boolean classMatchCultruePaln(String edu300_ID, String pycc, String szxb, String nj, String zybm) {
 		boolean isMatch=true;
@@ -1061,6 +1066,8 @@ public class AdministrationPageService {
 		List<Edu108> entities = edu108DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

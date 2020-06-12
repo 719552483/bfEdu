@@ -2550,9 +2550,8 @@ public class AdministrationController {
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyStudentModal(workbook,chosedStudents);
         utils.loadImportStudentModal(response,"批量更新学生模板", workbook);
-
 	}
-
+	
 	/**
 	 * 导入学生
 	 * 
@@ -2667,7 +2666,24 @@ public class AdministrationController {
 	
 	
 	
-	
+	/**
+	 * 批量发放毕业证
+	 * 
+	 * @param deleteIds删除id
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("/graduationStudents")
+	@ResponseBody
+	public Object graduationStudents(@RequestParam String choosendStudents) {
+		Map<String, Object> returnMap = new HashMap();
+		com.alibaba.fastjson.JSONArray graduationArray = JSON.parseArray(choosendStudents);
+		for (int i = 0; i < graduationArray.size(); i++) {
+			administrationPageService.graduationStudents(graduationArray.get(i).toString());
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	

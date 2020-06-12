@@ -59,4 +59,10 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//身份证是否存在
 	@Query(value = "select * from edu001 e where e.sfzh=?1", nativeQuery = true)
 	public List<Edu001> IDcardIshave(String sfzh);
+
+	//批量发放毕业证
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE edu001 set zt_code ='graduation',zt='毕业' WHERE Edu001_ID =?1", nativeQuery = true)
+	public void graduationStudents(String edu001Id);
 }

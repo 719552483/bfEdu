@@ -190,7 +190,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'zt',
 				title: '状态',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: ztMatter
 			}, {
 				field: 'sfyxj',
 				title: '是否有学籍',
@@ -397,6 +397,21 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				.join('');
 		}
 	}
+	
+	function ztMatter(value, row, index) {
+		if (row.zt==="毕业") {
+			return [
+					'<div class="myTooltip greenTxt" title="毕业">毕业</div>'
+				]
+				.join('');
+		} else {
+			return [
+					'<div class="myTooltip redTxt" title="'+row.zt+'">'+row.zt+'</div>'
+				]
+				.join('');
+		}
+	}
+	
 
 	function isFilingMatter(value, row, index) {
 		if (value) {
@@ -1114,15 +1129,6 @@ function startSearch() {
 	// });
 }
 
-//下载学生信息模板
-function loadStudentInfoModel() {
-	var $eleForm = $("<form method='get'></form>");
-	$eleForm.attr("action", "/downloadStudentModal"); //下载文件接口
-	$(document.body).append($eleForm);
-	//提交表单，实现下载
-	$eleForm.submit();
-}
-
 //预备导入学生
 function importStudentInfo() {
 	$.showModal("#importStudentInfoModal",true);
@@ -1139,6 +1145,12 @@ function importStudentInfo() {
 			return
 		}
 		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//下载导入模板
+	$('#loadStudentInfoModel').unbind('click');
+	$('#loadStudentInfoModel').bind('click', function(e) {
+		loadStudentInfoModel();
+		e.stopPropagation();
 	});
 }
 
@@ -1169,6 +1181,30 @@ function modifyStudents(){
 	$('#loadModifyStudentsModal').unbind('click');
 	$('#loadModifyStudentsModal').bind('click', function(e) {
 		loadModifyStudentsModal(choosendStudents);
+		e.stopPropagation();
+	});
+}
+
+//预备批量发放毕业证
+function graduationStudents(){
+	var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+	if(choosendStudents.length===0){
+		toastr.warning('暂未选择学生');
+		return;
+	}else{
+		var choosendStudentArray=new Array();
+		for (var i = 0; i < choosendStudents.length; i++) {
+			choosendStudentArray.push(choosendStudents[i].edu001_ID);
+		}
+	}
+	$.showModal("#remindModal",true);
+	$(".remindType").html("已选学生");
+	$(".remindActionType").html("毕业证发放");
+	
+	//确认发放毕业证按钮
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		confirmGraduationStudents(choosendStudentArray);
 		e.stopPropagation();
 	});
 }
@@ -1349,7 +1385,7 @@ function confirmImportStudentInfo() {
 }
 
 //确认提交修改学生文件
-function confirmImportStudentInfo() {
+function confirmModifyStudentInfo() {
 		if ($("#ModifyStudentsFile").val() === "") {
 			toastr.warning('请选择文件');
 			return;
@@ -1406,8 +1442,6 @@ function confirmImportStudentInfo() {
 	    });
 }
 
-
-
 //清空学生信息模态框
 function emptyStudentBaseInfoArea() {
 	var reObject = new Object();
@@ -1416,6 +1450,15 @@ function emptyStudentBaseInfoArea() {
 	reObject.InputIds = "#addStudentNum,#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentIDNum,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
 	reObject.normalSelectIds = "#addStudentSex,#addStudentStatus,#addStudentNation,#addStudentIsHaveStatus,#addStudentzzmm,#addStudentwhcd,#addStudentIsMarried,#addStudentIsFromArmy,#addStudentzsfs,#addStudentIsDxpy,#addStudentIsPoorFamily";
 	reReloadSearchsWithSelect(reObject);
+}
+
+//下载学生信息模板
+function loadStudentInfoModel() {
+	var $eleForm = $("<form method='get'></form>");
+	$eleForm.attr("action", "/downloadStudentModal"); //下载文件接口
+	$(document.body).append($eleForm);
+	//提交表单，实现下载
+	$eleForm.submit();
 }
 
 //下载更新模板
@@ -1431,6 +1474,42 @@ function loadModifyStudentsModal(choosendStudents){
      form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyStudentIDs").attr("value", modifyStudentIDs));
      form.appendTo('body').submit().remove();
 
+}
+
+//确认发放毕业证
+function confirmGraduationStudents(choosendStudents){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/graduationStudents",
+		data: {
+             "choosendStudents":JSON.stringify(choosendStudents) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+				for (var i = 0; i < choosendStudents.length; i++) {
+					choosendStudents[i].zt="毕业";
+					choosendStudents[i].ztCode="graduation";
+					$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
+				}
+				 $.hideModal("#remindModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //必选检索条件检查
@@ -1506,41 +1585,27 @@ function binBind() {
 		e.stopPropagation();
 	});
 
-	//上传学生信息文件
+	//导入学生
 	$('#importStudentInfo').unbind('click');
 	$('#importStudentInfo').bind('click', function(e) {
 		importStudentInfo();
 		e.stopPropagation();
 	});
-
-	//下载导入模板
-	$('#loadStudentInfoModel').unbind('click');
-	$('#loadStudentInfoModel').bind('click', function(e) {
-		loadStudentInfoModel();
-		e.stopPropagation();
-	});
-
-	//确认导入学生
-	$('.confirmImportStudentInfo').unbind('click');
-	$('.confirmImportStudentInfo').bind('click', function(e) {
-		confirmImportStudentInfo();
+	
+	//批量更新学生
+	$('#modifyStudents').unbind('click');
+	$('#modifyStudents').bind('click', function(e) {
+		modifyStudents();
 		e.stopPropagation();
 	});
 	
-	//确认批量修改学生
-	$('.confirmImportStudentInfo,.confirmModifyStudents').unbind('click');
-	$('.confirmImportStudentInfo,.confirmModifyStudents').bind('click', function(e) {
-		var id="";
-		if(e.target.attributes[2].nodeValue==="import"){
-			id="#studentInfoFile";
-		}else{
-			id="#ModifyStudentsFile";
-		}
-		confirmImportStudentInfo(id);
+	//批量发放毕业证
+	$('#graduationStudents').unbind('click');
+	$('#graduationStudents').bind('click', function(e) {
+		graduationStudents();
 		e.stopPropagation();
 	});
 	
-
 	//检验学生文件
 	$('#checkStudentInfoFile').unbind('click');
 	$('#checkStudentInfoFile').bind('click', function(e) {
@@ -1554,12 +1619,18 @@ function binBind() {
 		checkModifyStudentsFile();
 		e.stopPropagation();
 	});
+
+	//确认导入学生
+	$('.confirmImportStudentInfo').unbind('click');
+	$('.confirmImportStudentInfo').bind('click', function(e) {
+		confirmImportStudentInfo();
+		e.stopPropagation();
+	});
 	
-	
-	//批量更新学生信息
-	$('#modifyStudents').unbind('click');
-	$('#modifyStudents').bind('click', function(e) {
-		modifyStudents();
+	//确认批量修改学生
+	$('.confirmModifyStudents').unbind('click');
+	$('.confirmModifyStudents').bind('click', function(e) {
+		confirmModifyStudentInfo();
 		e.stopPropagation();
 	});
 }
