@@ -2686,16 +2686,49 @@ public class AdministrationController {
 	}
 	
 	
+	/**
+	 * 学生管理搜索学生
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("studentMangerSearchStudent")
+	@ResponseBody
+	public Object studentMangerSearchStudent(@RequestParam String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		// 根据层次等信息查出培养计划id
+		String level = searchObject.getString("level");
+		String department = searchObject.getString("department");
+		String grade = searchObject.getString("grade");
+		String major = searchObject.getString("major");
+		String administrationClass = searchObject.getString("administrationClass");
+		String status = searchObject.getString("status");
+		String studentNumber = searchObject.getString("studentNumber");
+		String studentName = searchObject.getString("studentName");
+		String studentRollNumber = searchObject.getString("studentRollNumber");
+		String className = searchObject.getString("className");
+
+		// 填充搜索对象
+		Edu001 edu001 = new Edu001();
+		edu001.setPycc(level);
+		edu001.setSzxb(department);
+		edu001.setNj(grade);
+		edu001.setZybm(major);
+		edu001.setEdu300_ID(administrationClass);
+		edu001.setZtCode(status);
+		edu001.setXh(studentNumber);
+		edu001.setXm(studentName);
+		edu001.setXjh(studentRollNumber);
+		edu001.setXzbname(className);
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		List<Edu001> studentInfo = administrationPageService.studentMangerSearchStudent(edu001);
+		returnMap.put("studentInfo", studentInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
 	/**
 	 * 发布消息时上传图片
 	 * 

@@ -1052,83 +1052,6 @@ function getAddStudentInfo(){
 	return returnObject;
 }
 
-//开始检索
-function startSearch() {
-	var level = getNormalSelectValue("level");
-	var department = getNormalSelectValue("department");
-	var grade = getNormalSelectValue("grade");
-	var major = getNormalSelectValue("major");
-	var administrationClass = getNormalSelectValue("administrationClass");
-	var status = getNormalSelectValue("status");
-	var studentNumber = $("#studentNumber").val();
-	var studentName = $("#studentName").val();
-	var studentRollNumber = $("#studentRollNumber").val();
-	var className = $("#className").val();
-
-	if (level === "seleceConfigTip" &&
-		department === "seleceConfigTip" &&
-		grade === "seleceConfigTip" &&
-		major === "seleceConfigTip" &&
-		administrationClass === "seleceConfigTip" &&
-		status === "seleceConfigTip" &&
-		studentNumber === "" &&
-		studentName === "" &&
-		studentRollNumber === "" &&
-		className === ""
-	) {
-		toastr.warning('请输入检索条件');
-		return;
-	}
-
-	var searchObject = new Object();
-	if (level !== "seleceConfigTip") {
-		searchObject.level = level;
-	}
-	if (department !== "seleceConfigTip") {
-		searchObject.department = department;
-	}
-	if (grade !== "seleceConfigTip") {
-		searchObject.grade = grade;
-	}
-	if (major !== "seleceConfigTip") {
-		searchObject.major = major;
-	}
-	if (administrationClass !== "seleceConfigTip") {
-		searchObject.administrationClass = administrationClass;
-	}
-	if (status !== "seleceConfigTip") {
-		searchObject.status = status;
-	}
-
-	if (studentNumber !== "") {
-		searchObject.studentNumber = studentNumber;
-	}
-	if (studentName !== "") {
-		searchObject.studentName = studentName;
-	}
-	if (studentRollNumber !== "") {
-		searchObject.studentRollNumber = studentRollNumber;
-	}
-	if (className !== "") {
-		searchObject.className = className;
-	}
-
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-}
-
 //预备导入学生
 function importStudentInfo() {
 	$.showModal("#importStudentInfoModal",true);
@@ -1505,6 +1428,74 @@ function confirmGraduationStudents(choosendStudents){
 					$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
 				}
 				 $.hideModal("#remindModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//开始检索
+function startSearch() {
+	var level = getNormalSelectValue("level");
+	var department = getNormalSelectValue("department");
+	var grade = getNormalSelectValue("grade");
+	var major = getNormalSelectValue("major");
+	var administrationClass = getNormalSelectValue("administrationClass");
+	var status = getNormalSelectValue("status");
+	var studentNumber = $("#studentNumber").val();
+	var studentName = $("#studentName").val();
+	var studentRollNumber = $("#studentRollNumber").val();
+	var className = $("#className").val();
+
+	if (level === "" &&
+		department === "" &&
+		grade === "" &&
+		major === "" &&
+		administrationClass === "" &&
+		status === "" &&
+		studentNumber === "" &&
+		studentName === "" &&
+		studentRollNumber === "" &&
+		className === ""
+	) {
+		toastr.warning('请输入检索条件');
+		return;
+	}
+
+	var searchObject = new Object();
+	level !== ""?searchObject.level = level:searchObject.level = "";
+	department !== ""?searchObject.department = department:searchObject.department = "";
+	grade !== ""?searchObject.grade = grade:searchObject.grade = "";
+	major !== ""?searchObject.major = major:searchObject.major = "";
+	administrationClass !== ""?searchObject.administrationClass = administrationClass:searchObject.administrationClass = "";
+	status !== ""?searchObject.status = status:searchObject.status = "";
+	studentNumber !== ""?searchObject.studentNumber = studentNumber:searchObject.studentNumber = "";
+	studentName !== ""?searchObject.studentName = studentName:searchObject.studentName = "";
+	studentRollNumber !== ""?searchObject.studentRollNumber = studentRollNumber:searchObject.studentRollNumber = "";
+	className !== ""?searchObject.className = className:searchObject.className = "";
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/studentMangerSearchStudent",
+		data: {
+             "SearchCriteria":JSON.stringify(searchObject) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				stuffStudentBaseInfoTable(backjson.studentInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}

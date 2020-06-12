@@ -1067,6 +1067,48 @@ public class AdministrationPageService {
 		return entities;
 	}
 
+	//学生管理搜索学生
+	public List<Edu001> studentMangerSearchStudent(Edu001 edu001) {
+		Specification<Edu001> specification = new Specification<Edu001>() {
+			public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
+					predicates.add(cb.equal(root.<String> get("pycc"), edu001.getPycc()));
+				}
+				if (edu001.getSzxb()!= null && !"".equals(edu001.getSzxb())) {
+					predicates.add(cb.equal(root.<String> get("szxb"), edu001.getSzxb()));
+				}
+				if (edu001.getNj()!= null && !"".equals(edu001.getNj())) {
+					predicates.add(cb.equal(root.<String> get("nj"), edu001.getNj()));
+				}
+				if (edu001.getZybm()!= null && !"".equals(edu001.getZybm())) {
+					predicates.add(cb.equal(root.<String> get("zybm"), edu001.getZybm()));
+				}
+				if (edu001.getEdu300_ID()!= null && !"".equals(edu001.getEdu300_ID())) {
+					predicates.add(cb.equal(root.<String> get("Edu300_ID"), edu001.getEdu300_ID()));
+				}
+				if (edu001.getZtCode()!= null && !"".equals(edu001.getZtCode())) {
+					predicates.add(cb.equal(root.<String> get("ztCode"), edu001.getZtCode()));
+				}
+				if (edu001.getXjh()!= null && !"".equals(edu001.getXjh())) {
+					predicates.add(cb.like(root.<String> get("xjh"), '%' +edu001.getXjh()+ '%'));
+				}
+				if (edu001.getXh()!= null && !"".equals(edu001.getXh())) {
+					predicates.add(cb.like(root.<String> get("xh"), '%' + edu001.getXh() + '%'));
+				}
+				if (edu001.getXm()!= null && !"".equals(edu001.getXm())) {
+					predicates.add(cb.like(root.<String> get("xm"),'%' + edu001.getXm() + '%'));
+				}
+				if (edu001.getXzbname()!= null && !"".equals(edu001.getXzbname())) {
+					predicates.add(cb.like(root.<String> get("xzbname"),'%' + edu001.getXzbname() + '%'));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu001> classesEntities = edu001DAO.findAll(specification);
+		return classesEntities;
+	}
+
 
 
 
