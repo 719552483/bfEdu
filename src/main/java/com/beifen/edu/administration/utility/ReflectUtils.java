@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -1005,11 +1006,8 @@ public class ReflectUtils {
 							}
 							//行数据不为空 放入返回集
 							if(getCellData(cell)!=null&&!getCellData(cell).equals("")){
-								//数据格式统一都为文本格式
-								if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
-						            cell.setCellType(Cell.CELL_TYPE_STRING);
-						        }
-								hashMap.put(keyName, getCellData(cell));
+								String Value=getCellData(cell);
+								 hashMap.put(keyName, Value);
 							}
 						}
 					}
@@ -1537,7 +1535,7 @@ public class ReflectUtils {
 	//判断变量是否能转为数字
 	public boolean isNumeric(String str){
 		boolean canChangeNumber;
-		if(str!=null){
+		if(str!=null&&!str.equals("")){
 			 Pattern pattern = Pattern.compile("[0-9]*");
 			 Matcher isNum = pattern.matcher(str);
 			 if( !isNum.matches() ){
@@ -1558,7 +1556,7 @@ public class ReflectUtils {
 	//手机号码验证
 	public boolean isPhone(String phone) {
 		boolean isPhone=true;
-		if(phone!=null){
+		if(phone!=null&&!phone.equals("")){
 			 String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
 			    if (phone.length() != 11) {
 			        return false;
@@ -1575,7 +1573,7 @@ public class ReflectUtils {
 	//email验证
 	public boolean isEmail(String email){
 		boolean isEmail=true;
-		if(null!=email){
+		if(null!=email&&!email.equals("")){
 			 Pattern p =  Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");//复杂匹配
 		     Matcher m = p.matcher(email);
 		     boolean isMatch = m.matches();
@@ -1586,12 +1584,16 @@ public class ReflectUtils {
 
 	//身份证验证
 	public boolean isIDCard(String idCardNum) {
-		String regex = "\\d{15}(\\d{2}[0-9xX])?";
-		if(idCardNum.matches(regex)){
-			return true;
-		}else{
-			return false;
+		boolean isidCardNum=true;
+		if(null!=idCardNum&&!idCardNum.equals("")){
+			String regex = "\\d{15}(\\d{2}[0-9xX])?";
+			if(idCardNum.matches(regex)){
+				isidCardNum= true;
+			}else{
+				isidCardNum= false;
+			}
 		}
+		return isidCardNum;
 	}
 	
 	/**
@@ -1609,17 +1611,24 @@ public class ReflectUtils {
 				|| "mm/dd/yy".equals(currentCell.getCellStyle().getDataFormatString())
 				|| "dd-mmm-yy".equals(currentCell.getCellStyle().getDataFormatString())
 				|| "yyyy/m/d".equals(currentCell.getCellStyle().getDataFormatString())) {
-			if (DateUtil.isCellDateFormatted(currentCell)) {
-				// 用于转化为日期格式
-				Date d = currentCell.getDateCellValue();
-				if(d!=null){
-					DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-					currentCellValue = formater.format(d);
+			if(currentCell.getCellType()==1){
+				if(!isValidDate(currentCell.toString()) ){
+					currentCellValue="error";
 				}else{
-					currentCellValue="";
+					// 用于转化为日期格式1
+					Date date = HSSFDateUtil.getJavaDate(Double.parseDouble(currentCell.toString()));
+					currentCellValue = new SimpleDateFormat("yyyy-MM-dd").format(date);
 				}
+			}else if(currentCell.getCellType()==0){
+				// 用于转化为日期格式2
+				currentCellValue=currentCell.toString();
+				currentCellValue = new SimpleDateFormat("yyyy-MM-dd").format(currentCell.getDateCellValue());
 			}
 		} else {
+			//数据格式统一都为文本格式
+			if(currentCell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+				currentCell.setCellType(Cell.CELL_TYPE_STRING);
+	        }
 			// 不是日期原值返回
 			currentCellValue = currentCell.toString();
 		}
