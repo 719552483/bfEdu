@@ -121,28 +121,34 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
-		pageSize: 10,
-		pageList: [10],
+		pageSize: 1,
+		pageList: [1],
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
 		search: true,
 		editable: false,
+		exportDataType: "all",  
+		showExport: true,      //是否显示导出
+		exportOptions:{  
+		    fileName: '学生信息导出'  //文件名称
+		},
 		striped: true,
+	    sidePagination: "client",   
 		toolbar: '#toolbar',
 		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".studentBaseInfoTableArea", "学生信息");
 		},
-		columns: [{
-				field: 'edu001_ID',
-				title: 'edu001_ID',
-				align: 'center',
-				visible: false
-			},
+		columns: [
 			{
 				field: 'check',
 				checkbox: true
+			},{
+				field: 'edu001_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
 			},
 			{
 				field: 'pyccmc',
@@ -1546,6 +1552,17 @@ function getNotNullSearchs() {
 	return returnObject;
 }
 
+//重置检索
+function researchStudents(){
+	var reObject = new Object();
+	reObject.fristSelectId = "#level";
+	reObject.actionSelectIds = "#department,#grade,#major";
+	reObject.normalSelectIds = "#administrationClass,#status,#testWay,#coursesSemester";
+	reObject.InputIds = "#studentNumber,#studentName,#studentRollNumber,#className";
+	reReloadSearchsWithSelect(reObject);
+	drawStudentBaseInfoEmptyTable();
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//开始检索
@@ -1622,6 +1639,13 @@ function binBind() {
 	$('.confirmModifyStudents').unbind('click');
 	$('.confirmModifyStudents').bind('click', function(e) {
 		confirmModifyStudentInfo();
+		e.stopPropagation();
+	});
+	
+	//重置检索
+	$('#researchStudents').unbind('click');
+	$('#researchStudents').bind('click', function(e) {
+		researchStudents();
 		e.stopPropagation();
 	});
 }

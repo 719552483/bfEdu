@@ -341,6 +341,42 @@ function drawPagination(tableAreaClass, paginationTxt) {
 							+ '</i> 条' + paginationTxt + '，总共 <i class="blue">'
 							+ num3 + '</i> 条' + paginationTxt + '</span>');
 	toolTipUp(".myTooltip");
+	
+	$(".bootstrap4").find(".columns").find(".btn,.keep-open").removeAttr("title");
+	$(".bootstrap4").find(".export").find("a").html("导出Excel");
+	
+	$(".bootstrap4").find(".export").find("i").addClass("iconfont icon-Excel");
+	if($(".bootstrap4").find(".export").find(".exportImg").length===0){
+		var str=$(".bootstrap4").find(".export").find("a:last-child").html();
+		$(".bootstrap4").find(".export").find("a:last-child").html('<img class="exportImg" src="images/i01.png" style="width: 24px;">'+str);
+	}
+	
+	$(".bootstrap4").find(".export").unbind('click');
+	$(".bootstrap4").find(".export").bind('click', function(e) {
+	    checkTableHaveData(tableAreaClass);
+		e.stopPropagation();
+	});
+}
+
+//判断table是否渲染了数据
+function checkTableHaveData(tableAreaClass){
+	var tables=$(tableAreaClass).find("table");
+	var id="";
+	for (var i = 0; i < tables.length; i++) {
+		if(tables[i].id!==""&&typeof(tables[i].id) !== "undefined"){
+			id=tables[i].id;
+		}
+	}
+	
+	var datas = $("#"+id).bootstrapTable("getData");
+	if(datas.length===0){
+		toastr.warning('暂未产生数据源');
+	}else{
+		$(".bootstrap4").find(".export").find(".dropdown-menu").show();
+		$('body').click(function(e) {
+			$('.dropdown-menu').hide();
+	    })
+	}
 }
 
 // 渲染表格搜索框
@@ -355,13 +391,13 @@ function drawSearchInput(area) {
 	$(".fixed-table-toolbar").find(".search").find("input").attr("spellcheck",false);
 	// 聚焦
 	$(".fixed-table-toolbar").find(".search").find("input").focus(function(e) {
-		e.currentTarget.previousSibling.className="searchIcon serachFocus";
+		$(area).find(".searchIcon").addClass("serachFocus");
 		toolTipUp(".myTooltip");
 	});
 
 	// 失焦
 	$(".fixed-table-toolbar").find(".search").find("input").blur(function(e) {
-		e.currentTarget.previousSibling.className="searchIcon";
+		$(area).find(".searchIcon").removeClass("serachFocus");
 		toolTipUp(".myTooltip");
 	});
 }
@@ -620,6 +656,8 @@ function tableRemoveAction(tableId, removeId, pagnationClass, pagnationTxt) {
 	drawPagination(pagnationClass, pagnationTxt);
 	toastr.success('删除成功');
 	$(".myTooltip").tooltipify();
+	
+	
 }
 
 // 返回首页按钮
@@ -731,21 +769,6 @@ function refreshMultiSselect(id){
 	$(id)[0].nextElementSibling.children[0].innerText="-- 请选择 --";
 	$(id).val(null);
 }
-
-// 导出Excel
-function tableToExecl(id) {
-	if (!tableIsChecked(id, '数据源')) {
-		return;
-	}
-	// 创建Excel实例
-	myExcel = new ExcelGen({
-		"src_id" : id.substring(1), // tableId
-		"show_header" : true
-	});
-	// 开始导出
-	myExcel.generate();
-}
-
 
 //模态框出现
 jQuery.extend({  
@@ -1037,15 +1060,13 @@ function byage(strBirthday){
 
 // 列操作改变样式并且绑定点击事件填充toolTip
 function changeColumnsStyle(changeAreaClass, txt) {
-	var colum = $(changeAreaClass).find(".columns").find("i").removeClass()
-			.addClass("iconfont icon-liebiao");
+	var colum = $(changeAreaClass).find(".columns").find(".keep-open").find("i").removeClass().addClass("iconfont icon-liebiao");
 
-	$(changeAreaClass).find(".columns").find("ul").find("input").bind('click',
-			function(e) {
+	$(changeAreaClass).find(".columns").find(".keep-open").find("ul").find("input").bind('click',function(e) {
 				drawPagination(changeAreaClass, txt);
 				toolTipUp(".myTooltip");
 				e.stopPropagation();
-			});
+	});
 }
 
 //导航定位

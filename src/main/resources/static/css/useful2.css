@@ -408,7 +408,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .fixed-table-container input[type="checkbox"] {
-	margin: 15px -18px auto !important;
+	margin:15px -24px auto !important;
 }
 
 .multi-select-menuitems label:last-child input {
@@ -1384,6 +1384,44 @@ background: rgba(36, 138, 187, 0.77);
 .myPlaceul li:last-child a{
 				color:rgba(7, 89, 93, 0.6901960784313725)!important;
 			}
+
+
+.bootstrap4 .columns,.bootstrap4 .search {
+	    float: right!important;
+	        margin-top: -3px;
+}
+
+.bootstrap4 .search{
+    margin-top: -1px;
+ }
+ 
+.bootstrap4 .export {
+	margin-left: 5px !important;
+}
+
+.bootstrap4 .dropdown-menu{
+	    min-width: 112px!important;
+}
+
+.bootstrap4 .export .dropdown-menu a{
+	display: none;
+}
+
+.bootstrap4 .export .dropdown-menu a:last-child{
+	display: block;
+	text-align: center;
+}
+
+.bootstrap4 .keep-open input[type="checkbox"]{
+margin: 0px 0px -14px -15px!important;
+}
+
+.bootstrap4 .keep-open label{
+    margin-top: 8px;}
+    
+.no-records-found td{
+	    color: rgb(9, 127, 162)!important;
+} 
 
 @keyframes serachAnimation {
 	10% {
