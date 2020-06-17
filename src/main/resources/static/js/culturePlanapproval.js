@@ -121,14 +121,14 @@ function stuffMajorTrainingVerifyTable(tableInfo) {
 			drawPagination(".culturePlanVerifyTableArea", "培养计划");
 		},
 		columns : [ {
-			field : 'edu108_ID',
-			title : 'edu108_ID',
-			align : 'center',
-			visible : false
-		}, {
 			field : 'check',
 			checkbox : true
-		}, {
+		},{
+			field : 'edu108_ID',
+			title: '唯一标识',
+			align : 'center',
+			visible : false
+		},  {
 			field : 'skxq',
 			title : '授课学期',
 			align : 'left',

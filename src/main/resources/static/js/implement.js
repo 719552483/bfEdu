@@ -315,8 +315,8 @@ function reDrawSelect(ID, value, text) {
 
 // 渲染分页信息样式
 function drawPagination(tableAreaClass, paginationTxt) {
-	var numInfo = $(tableAreaClass).find(".fixed-table-pagination").find(
-			".pagination-detail").find("span:eq(0)")[0].innerText;
+	//分页信息样式
+	var numInfo =Trim($(tableAreaClass).find(".fixed-table-pagination").find(".pagination-detail").find("span:eq(0)")[0].innerText,":g") ;
 	var a = numInfo.indexOf(" ");
 	var numInfo1 = numInfo.substring(a + 1);
 	var b = numInfo1.indexOf(" ")
@@ -342,6 +342,7 @@ function drawPagination(tableAreaClass, paginationTxt) {
 							+ num3 + '</i> 条' + paginationTxt + '</span>');
 	toolTipUp(".myTooltip");
 	
+	//导出重构
 	$(".bootstrap4").find(".columns").find(".btn,.keep-open").removeAttr("title");
 	$(".bootstrap4").find(".export").find("a").html("导出Excel");
 	
@@ -356,9 +357,25 @@ function drawPagination(tableAreaClass, paginationTxt) {
 	    checkTableHaveData(tableAreaClass);
 		e.stopPropagation();
 	});
+	
+	$(".bootstrap4").find(".keep-open").unbind('click');
+	$(".bootstrap4").find(".keep-open").bind('click', function(e) {
+		$(".bootstrap4").find(".keep-open").find(".dropdown-menu").toggle();
+		
+		$(".dropdown-menu").find("label").unbind('click');
+		$(".dropdown-menu").find("label").bind('click', function(e) {
+			drawPagination(tableAreaClass, paginationTxt);
+			e.stopPropagation();
+		});
+		
+		$('body').click(function(e) {
+			$('.dropdown-menu').hide();
+	    });
+		e.stopPropagation();
+	});
 }
 
-//判断table是否渲染了数据
+// 判断table是否渲染了数据
 function checkTableHaveData(tableAreaClass){
 	var tables=$(tableAreaClass).find("table");
 	var id="";
@@ -880,10 +897,10 @@ function skxqMatter(value, row, index) {
 //审批状态文字化
 function approvalMatter(value, row, index) {
 	if (value==="pass") {
-		return [ '<div class="myTooltip greenTxt" title="已通过"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
+		return [ '<div class="myTooltip greenTxt" title="已通过"><i class="iconfont icon-yixuanze greenTxt"></i>已通过</div>' ]
 				.join('');
 	} else if (value==="nopass"){
-		return [ '<div class="myTooltip redTxt" title="不通过"><i class="iconfont icon-chacha redTxt"></i></div>' ]
+		return [ '<div class="myTooltip redTxt" title="不通过"><i class="iconfont icon-chacha redTxt"></i>不通过</div>' ]
 				.join('');
 	} else if (value==="noStatus"){
 		return [ '<div class="myTooltip normalTxt" title="未审批">未审批</div>' ]
@@ -1143,6 +1160,27 @@ function getCrrruentDate() {
 	var min = oDate.getMinutes().toString(); // 分
 	var s = oDate.getSeconds().toString(); // 秒
 	return y + m + d + h + min + s;
+}
+
+//字符去所有空格  需要设置第2个参数为":g"
+function Trim(str, is_global)
+
+{
+
+	var result;
+
+	result = str.replace(/(^\s+)|(\s+$)/g, "");
+
+	if (is_global.toLowerCase() == "g")
+
+	{
+
+		result = result.replace(/\s/g, "");
+
+	}
+
+	return result;
+
 }
 
 //身份证号验证

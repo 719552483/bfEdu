@@ -76,6 +76,11 @@ function stuffAdministrationClassTable(tableInfo){
 			showToggle : false,
 			showFooter : false,
 			clickToSelect : true,
+			exportDataType: "all",  
+			showExport: true,      //是否显示导出
+			exportOptions:{  
+			    fileName: '行政班导出'  //文件名称
+			},
 			search : true,
 			editable : false,
 			striped : true,
@@ -85,14 +90,14 @@ function stuffAdministrationClassTable(tableInfo){
 				drawPagination(".administrationClassTableArea", "行政班信息");
 			},
 			columns : [ {
-				field : 'edu300_ID',
-				title : 'edu300_ID',
-				align : 'center',
-				visible : false
-			}, {
 				field : 'check',
 				checkbox : true
-			}, {
+			},  {
+				field : 'edu300_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
+			},{
 				field : 'pyccmc',
 				title : '培养层次',
 				align : 'left',
@@ -612,13 +617,6 @@ function btnBind(){
 		reReloadAdministrationClassSearchs();
 		e.stopPropagation();
 	});
-	
-	//导出Excel
-	$('#AdministrationClassTableToExecl').unbind('click');
-	$('#AdministrationClassTableToExecl').bind('click', function(e) {
-		tableToExecl("#administrationClassTable");
-		e.stopPropagation();
-	});
 }
 
 
@@ -705,6 +703,11 @@ function stuffClassManagementTable(tableInfo) {
 		showToggle : false,
 		showFooter : false,
 		clickToSelect : true,
+		exportDataType: "all",  
+		showExport: true,      //是否显示导出
+		exportOptions:{  
+		    fileName: '教学班管理导出'  //文件名称
+		},
 		search : true,
 		editable : false,
 		striped : true,
@@ -719,14 +722,14 @@ function stuffClassManagementTable(tableInfo) {
 			drawPagination(".classManagementTableArea", "行政班信息");
 		},
 		columns : [ {
-			field : 'edu300_ID',
-			title : 'edu300_ID',
-			align : 'center',
-			visible : false
-		}, {
 			field : 'check',
 			checkbox : true
-		}, {
+		},{
+			field : 'edu300_ID',
+			title: '唯一标识',
+			align : 'center',
+			visible : false
+		},  {
 			field : 'xqmc',
 			title : '校区名称',
 			align : 'left',
@@ -1983,13 +1986,6 @@ function classManagementBtnbnid() {
 		generatTeachingClassReSearch();
 		e.stopPropagation();
 	});
-
-	// 导出Excel
-	$('#generatTeachingClass_tableToExecl').unbind('click');
-	$('#generatTeachingClass_tableToExecl').bind('click', function(e) {
-		tableToExecl("#classManagementTable");
-		e.stopPropagation();
-	});
 }
 
 // 添加教学班区域初始化时按钮事件绑定
@@ -2019,13 +2015,6 @@ function addTeachingClassBtnbind() {
 	$('#allteachingClassArea_reSearch').unbind('click');
 	$('#allteachingClassArea_reSearch').bind('click', function(e) {
 		allteachingClassAreaReSearch();
-		e.stopPropagation();
-	});
-
-	// 导出Excel
-	$('#allteachingClassArea_tableToExecl').unbind('click');
-	$('#allteachingClassArea_tableToExecl').bind('click', function(e) {
-		tableToExecl("#teachingClassTable");
 		e.stopPropagation();
 	});
 }
@@ -2089,6 +2078,11 @@ function stuffTeachingClassTable(tableInfo) {
 		showToggle : false,
 		showFooter : false,
 		clickToSelect : true,
+		exportDataType: "all",  
+		showExport: true,      //是否显示导出
+		exportOptions:{  
+		    fileName: '教学班导出'  //文件名称
+		},
 		search : true,
 		editable : false,
 		striped : true,

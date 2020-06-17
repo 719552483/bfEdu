@@ -34,6 +34,11 @@ function stuffCourseLibraryTable(tableInfo){
 			showToggle : false,
 			showFooter : false,
 			clickToSelect : true,
+			exportDataType: "all",  
+			showExport: true,      //是否显示导出
+			exportOptions:{  
+			    fileName: '课程库导出'  //文件名称
+			},
 			search : true,
 			editable : false,
 			striped : true,
@@ -43,14 +48,14 @@ function stuffCourseLibraryTable(tableInfo){
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			},
 			columns : [ {
+				field : 'check',
+				checkbox : true
+			},{
 				field : 'bf200_ID',
-				title : 'bf200_ID',
+				title: '唯一标识',
 				align : 'center',
 				visible : false
 			},{
-				field : 'check',
-				checkbox : true
-			}, {
 				field : 'kcdm',
 				title : '课程代码',
 				align : 'left',
@@ -140,17 +145,6 @@ function stuffCourseLibraryTable(tableInfo){
 				events : releaseNewsEvents,
 			} ]
 		});
-		
-		
-//		function kclxMatter(value, row, index) {
-//			return [ ejdmToSstring(EJDMElementInfo.cklx,value) ]
-//			.join('');
-//		}
-//		
-//		function ckxzMatter(value, row, index) {
-//			return [ ejdmToSstring(EJDMElementInfo.ckxz,value) ]
-//			.join('');
-//		}
 		
 		function releaseNewsFormatter(value, row, index) {
 			return [ '<ul class="toolbar tabletoolbar">'
@@ -884,13 +878,6 @@ function binBind(){
 	$('#removeClasses').unbind('click');
 	$('#removeClasses').bind('click', function(e) {
 		removeClasses();
-		e.stopPropagation();
-	});
-	
-	//导出Excel
-	$('#tableToExecl').unbind('click');
-	$('#tableToExecl').bind('click', function(e) {
-		tableToExecl("#courseLibraryTable");
 		e.stopPropagation();
 	});
 	

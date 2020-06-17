@@ -40,13 +40,13 @@ function stuffCourseLibraryTable(tableInfo){
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			},
 			columns : [ {
-				field : 'bf200_ID',
-				title : 'bf200_ID',
-				align : 'center',
-				visible : false
-			},{
 				field : 'check',
 				checkbox : true
+			},{
+				field : 'bf200_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
 			}, {
 				field : 'kcdm',
 				title : '课程代码',

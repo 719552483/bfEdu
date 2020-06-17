@@ -74,6 +74,11 @@ function stuffMajorTrainingTable(tableInfo) {
 		pageList : [ 10 ],
 		showToggle : false,
 		showFooter : false,
+		exportDataType: "all",  
+		showExport: true,      //是否显示导出
+		exportOptions:{  
+		    fileName: '培养计划导出'  //文件名称
+		},
 		clickToSelect : true,
 		search : true,
 		editable : false,
@@ -84,13 +89,13 @@ function stuffMajorTrainingTable(tableInfo) {
 			drawPagination(".majorTrainingTableArea", "培养计划");
 		},
 		columns : [ {
-			field : 'edu108_ID',
-			title : 'edu108_ID',
-			align : 'center',
-			visible : false
-		}, {
 			field : 'check',
 			checkbox : true
+		}, {
+			field : 'edu108_ID',
+			title: '唯一标识',
+			align : 'center',
+			visible : false
 		}, {
 			field : 'xbsp',
 			title : '系部审批',
@@ -1109,14 +1114,14 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 			drawPagination(".generatCourseArea", "课程");
 		},
 		columns : [ {
-			field : 'edu108_ID',
-			title : 'edu108_ID',
-			align : 'center',
-			visible : false
-		}, {
 			field : 'check',
 			checkbox : true
-		}, {
+		},{
+			field : 'edu108_ID',
+			title: '唯一标识',
+			align : 'center',
+			visible : false
+		},  {
 			field : 'skxq',
 			title : '授课学期',
 			align : 'left',

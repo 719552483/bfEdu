@@ -485,15 +485,15 @@ function stuffTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".allRoleTableArea", "角色信息");
 		},
-		columns: [{
-				field: 'bf991_ID',
-				title: 'bf991_ID',
-				align: 'center',
-				visible: false
-			},
+		columns: [
 			{
 				field: 'check',
 				checkbox: true
+			},{
+				field: 'bf991_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
 			},
 			{
 				field: 'js',

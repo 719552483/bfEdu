@@ -88,15 +88,15 @@ function stuffReleaseNewsTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".tableArea", "通知");
 		},
-		columns: [{
-				field: 'edu993_ID',
-				title: 'edu993_ID',
-				align: 'center',
-				visible: false
-			},
+		columns: [
 			{
 				field: 'check',
 				checkbox: true
+			},{
+				field: 'edu993_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
 			},
 			{
 				field: 'tzbt',

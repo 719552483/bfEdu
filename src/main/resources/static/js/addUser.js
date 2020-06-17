@@ -202,15 +202,15 @@ function stuffTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".allUserTableArea", "用户信息");
 		},
-		columns: [{
-				field: 'bf990_ID',
-				title: 'bf990_ID',
-				align: 'center',
-				visible: false
-			},
+		columns: [
 			{
 				field: 'check',
 				checkbox: true
+			},{
+				field: 'bf990_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
 			},
 			{
 				field: 'yhm',
