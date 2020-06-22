@@ -16,17 +16,17 @@ public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecification
 	@Query(value = "select * from edu108 e where e.Edu107_ID=?1", nativeQuery = true)
 	public List<Edu108> queryCulturePlanCouses(long edu107id);
 	
-//	//根据ID查询课程信息
-//	@Query(value = "select * from edu108 e where e.Edu108_ID=?1", nativeQuery = true)
-//	public Edu108 queryPlanByEdu108ID(String edu108id);
+	//根据ID查询培养计划信息
+	@Query(value = "select * from edu108 e where e.Edu108_ID=?1", nativeQuery = true)
+	public Edu108 queryPlanByEdu108ID(String edu108id);
 
-	// 根据id删除专业
+	// 根据ID删除培养计划
 	@Transactional
 	@Modifying
 	@Query(value = "delete from edu108 where Edu108_ID =?1", nativeQuery = true)
 	public void removeCultureCrose(String edu108id);
 
-	// 根据id修改课程状态
+	// 根据id修改培养计划
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE edu108 SET xbsp =?2 WHERE Edu108_ID =?1", nativeQuery = true)

@@ -788,6 +788,8 @@ THE SOFTWARE.*/
         return utftext;
       }
 
+      
+      
       function base64encode(input) {
         var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
         var output = "";

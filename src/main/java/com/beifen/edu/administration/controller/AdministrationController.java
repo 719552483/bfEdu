@@ -2938,6 +2938,52 @@ public class AdministrationController {
 		return returnMap;
 	}
 	
+	
+	
+	
+	/**
+	 * 改变消息是否在首页展示
+	 * @return returnMap
+	 */
+	@RequestMapping("getTaskInfo")
+	@ResponseBody
+	public Object getTaskInfo(@RequestParam("searchInfo") String searchInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(searchInfo);
+		String xzbmc = searchObject.getString("xzbmc");
+		String kcmc = searchObject.getString("kcmc");
+		Edu301 edu301=new Edu301();
+		edu301.setBhxzbmc(xzbmc);
+		edu301.setKcmc(kcmc);
+		List<Edu301> jxbInfo = administrationPageService.searchTeachingClass(edu301);
+		returnMap.put("taskInfo", administrationPageService.getTaskInfo(jxbInfo));
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/*
 	 * 根据传入的二级代码参数 获取二级代码将二级代码装入LIST中返回前台

@@ -2,7 +2,9 @@ package com.beifen.edu.administration.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -819,11 +821,26 @@ public class AdministrationPageService {
 		return edu101DAO.queryTeacherById(techerId);
 	}
 
-	// 根据所有教师
+	// 查询所有教师
 	public List<Edu101> queryAllTeacher() {
 		return edu101DAO.findAll();
 	}
 
+	//根据教学班组装任务书信息
+	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {
+		List<Object> taskList=new ArrayList();
+		for (int i = 0; i < jxbInfo.size(); i++) {
+			Map<String, Object> taskObject = new HashMap();
+			taskObject.put("jxbInfo", jxbInfo.get(i));
+			Edu108 edu108=edu108DAO.queryPlanByEdu108ID(jxbInfo.get(i).getEdu108_ID().toString());
+			taskObject.put("crouseInfo", edu108);
+			taskList.add(taskObject);
+		}
+		return taskList;
+	}
+	
+	
+	
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
 		Specification<Edu200> specification = new Specification<Edu200>() {
@@ -1013,6 +1030,9 @@ public class AdministrationPageService {
 				if (edu301.getKcmc() != null && !"".equals(edu301.getKcmc())) {
 					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu301.getKcmc() + '%'));
 				}
+				if (edu301.getBhxzbmc() != null && !"".equals(edu301.getBhxzbmc())) {
+					predicates.add(cb.like(root.<String> get("bhxzbmc"), '%' + edu301.getBhxzbmc() + '%'));
+				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
@@ -1108,6 +1128,10 @@ public class AdministrationPageService {
 		List<Edu001> classesEntities = edu001DAO.findAll(specification);
 		return classesEntities;
 	}
+
+	
+	
+
 
 
 

@@ -2127,10 +2127,10 @@ function stuffTeachingClassTable(tableInfo) {
 			align : 'left',
 			formatter : paramsMatter
 		}, {
-			field : 'missionIsPass',
-			title : '是否发了任务书',
+			field : 'sffbjxrws',
+			title : '是否发布任务书',
 			align : 'left',
-			formatter : missionIsPassFormatter,
+			formatter : sffbjxrwsFormatter,
 		}, {
 			field : 'action',
 			title : '操作',
@@ -2152,13 +2152,13 @@ function stuffTeachingClassTable(tableInfo) {
 	}
 
 	function teachingClassFormatter(value, row, index) {
-		if (!row.missionIsPass) {
+		if (row.sffbjxrws==="F") {
 			return [ '<ul class="toolbar tabletoolbar">'
 					+ '<li id="modifyTeachingClassName"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
 					+ '<li id="removeTeachingClass"><span><img src="images/t03.png"></span>删除</li>'
 					+ '</ul>' ].join('');
 		} else {
-			return [ '' ].join('');
+			return [ '<div class="myTooltip" title="不可操作">不可操作</div>' ].join('');
 		}
 	}
 	
@@ -2174,8 +2174,8 @@ function stuffTeachingClassTable(tableInfo) {
 		}
 	}
 
-	function missionIsPassFormatter(value, row, index) {
-		if (value) {
+	function sffbjxrwsFormatter(value, row, index) {
+		if (value==="T") {
 			return [ '<span class="greenTxt myTooltip" title="已发任务书">已发任务书</span>' ]
 					.join('');
 		} else {
@@ -2275,7 +2275,7 @@ function removeTeachingClasses() {
 	}
 
 	for (var i = 0; i < chosenTeachingClasses.length; i++) {
-		if (chosenTeachingClasses[i].missionIsPass) {
+		if (chosenTeachingClasses[i].sffbjxrws==="T") {
 			toastr.warning('不能删除已发布任务书的教学班');
 			return;
 		}
