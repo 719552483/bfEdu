@@ -1020,7 +1020,7 @@ public class AdministrationPageService {
 	}
 
 	// 搜索教学班
-	public List<Edu301> searchTeachingClass(Edu301 edu301) {
+	public List<Edu301> searchTeachingClass(Edu301 edu301,boolean checkSFFBRWS) {
 		Specification<Edu301> specification = new Specification<Edu301>() {
 			public Predicate toPredicate(Root<Edu301> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1033,6 +1033,10 @@ public class AdministrationPageService {
 				if (edu301.getBhxzbmc() != null && !"".equals(edu301.getBhxzbmc())) {
 					predicates.add(cb.like(root.<String> get("bhxzbmc"), '%' + edu301.getBhxzbmc() + '%'));
 				}
+				if(checkSFFBRWS){
+					predicates.add(cb.equal(root.<String> get("sffbjxrws"),"F"));
+				}
+				
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};

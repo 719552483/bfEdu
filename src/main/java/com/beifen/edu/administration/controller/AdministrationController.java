@@ -2249,7 +2249,7 @@ public class AdministrationController {
 		Edu301 edu301 = new Edu301();
 		edu301.setJxbmc(className);
 		edu301.setKcmc(coursesName);
-		List<Edu301> tableInfo = administrationPageService.searchTeachingClass(edu301);
+		List<Edu301> tableInfo = administrationPageService.searchTeachingClass(edu301,false);
 		returnMap.put("tableInfo", tableInfo);
 		returnMap.put("result", true);
 		return returnMap;
@@ -2955,7 +2955,7 @@ public class AdministrationController {
 		Edu301 edu301=new Edu301();
 		edu301.setBhxzbmc(xzbmc);
 		edu301.setKcmc(kcmc);
-		List<Edu301> jxbInfo = administrationPageService.searchTeachingClass(edu301);
+		List<Edu301> jxbInfo = administrationPageService.searchTeachingClass(edu301,true);
 		returnMap.put("taskInfo", administrationPageService.getTaskInfo(jxbInfo));
 		returnMap.put("result", true);
 		return returnMap;
