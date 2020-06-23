@@ -32,6 +32,7 @@ public class Edu301 {
 	private String bhxsCode;  //包含的学生编码   包含的行政班和学生二选一
 	private int jxbrs;  //教学班人数
 	private String sffbjxrws;  //是否发布教学任务书
+	private Long Edu201_ID; //教学任务书ID
 	private String yxbz;//有效标志
 	
 	
@@ -70,6 +71,12 @@ public class Edu301 {
 		this.bhzymc = bhzymc;
 	}
 
+	public Long getEdu201_ID() {
+		return Edu201_ID;
+	}
+	public void setEdu201_ID(Long edu201_ID) {
+		Edu201_ID = edu201_ID;
+	}
 	public String getBhxzbid() {
 		return bhxzbid;
 	}

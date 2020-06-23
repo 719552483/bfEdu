@@ -53,7 +53,6 @@ public class Edu108 {
 	private String kztrkc;  //课证通融课程
 	private String jxgglxkc;  //教学改革立项课程
 	private String sfsckkjh;  //是否生成开课计划--
-	private String sfxylcj;  //是否需要录成绩
 	private String xbsp;  //系部审批--
 	
 	
@@ -198,14 +197,6 @@ public class Edu108 {
 	}
 	public void setKcsx(String kcsx) {
 		this.kcsx = kcsx;
-	}
-
-
-	public String getSfxylcj() {
-		return sfxylcj;
-	}
-	public void setSfxylcj(String sfxylcj) {
-		this.sfxylcj = sfxylcj;
 	}
 	public String getFkyj() {
 		return fkyj;

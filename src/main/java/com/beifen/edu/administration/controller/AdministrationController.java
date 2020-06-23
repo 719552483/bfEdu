@@ -2942,7 +2942,7 @@ public class AdministrationController {
 	
 	
 	/**
-	 * 改变消息是否在首页展示
+	 * 获取可供发布的教学任务书
 	 * @return returnMap
 	 */
 	@RequestMapping("getTaskInfo")
@@ -2962,7 +2962,19 @@ public class AdministrationController {
 	}
 	
 	
-	
+	/**
+	 * 获得部门信息
+	 * @return returnMap
+	 */
+	@RequestMapping("getKkbmInfo")
+	@ResponseBody
+	public Object getKkbmInfo(@RequestParam("ejdmGlzd") String ejdmGlzd) {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu000> bmInfo = administrationPageService.queryEjdm(ejdmGlzd);
+		returnMap.put("bmInfo", bmInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	
