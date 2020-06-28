@@ -44,6 +44,7 @@ import com.beifen.edu.administration.domian.Edu106;
 import com.beifen.edu.administration.domian.Edu107;
 import com.beifen.edu.administration.domian.Edu108;
 import com.beifen.edu.administration.domian.Edu200;
+import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
 import com.beifen.edu.administration.domian.Edu990;
@@ -2939,8 +2940,6 @@ public class AdministrationController {
 	}
 	
 	
-	
-	
 	/**
 	 * 获取可供发布的教学任务书
 	 * @return returnMap
@@ -2977,11 +2976,57 @@ public class AdministrationController {
 	}
 	
 	
+	/**
+	 * 发布教学任务书
+	 * @return returnMap
+	 */
+	@RequestMapping("putOutTask")
+	@ResponseBody
+	public Object putOutTask(@RequestParam("taskInfo") String taskInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONArray array = JSONArray.fromObject(taskInfo); // 解析json字符
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
+			Edu201 edu201 = new Edu201();
+			edu201.setEdu108_ID(jsonObject.getLong("edu108_ID"));
+			edu201.setEdu301_ID(jsonObject.getLong("edu301_ID"));
+			edu201.setJxbmc(jsonObject.getString("jxbmc"));
+			edu201.setKcmc(jsonObject.getString("kcmc"));
+			edu201.setZymc(jsonObject.getString("zymc"));
+			edu201.setJxbrs(jsonObject.getString("jxbrs"));
+			edu201.setXzbmc(jsonObject.getString("xzbmc"));
+			edu201.setZxs(jsonObject.getString("zxs"));
+			edu201.setLs(jsonObject.getString("ls"));
+			edu201.setLsmc(jsonObject.getString("lsmc"));
+			edu201.setZyls(jsonObject.getString("zyls"));
+			edu201.setZylsmc(jsonObject.getString("zylsmc"));
+			edu201.setPkbm(jsonObject.getString("pkbm"));
+			edu201.setPkbmCode(jsonObject.getString("pkbmCode"));
+			edu201.setKkbm(jsonObject.getString("kkbm"));
+			edu201.setKkbmCode(jsonObject.getString("kkbmCode"));
+			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
+			edu201.setSszt("noStatus");
+			administrationPageService.putOutTask(edu201);
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	
-	
-	
+	/**
+	 * 查看已发布任务书
+	 * @return returnMap
+	 */
+	@RequestMapping("queryPutedTasks")
+	@ResponseBody
+	public Object queryPutedTasks() {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu201> taskInfo = administrationPageService.queryPutedTasks();
+		returnMap.put("taskInfo", taskInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	

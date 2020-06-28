@@ -233,6 +233,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格2个操作 按钮字数不超过2个*/
+#putOutTaskTable td:last-child,
 #relationTable td:last-child,
 #teachingClassTable td:last-child,
 #allMajorTable td:last-child,
@@ -1423,6 +1424,7 @@ background: rgba(36, 138, 187, 0.77);
 	        margin-top: 4px;
 }
 
+.putOutTaskTableArea  .bootstrap4 .columns,
 .scheduleClassesTableArea  .bootstrap4 .columns,
 .allRoleTableArea  .bootstrap4 .columns,
 .allUserTableArea .bootstrap4 .columns,
@@ -1431,8 +1433,11 @@ background: rgba(36, 138, 187, 0.77);
     margin-top: 3px;
 }
 
-
-
+.noActionText{
+	text-align: left;
+	color: rgb(30, 128, 167);
+    font-weight: bolder;
+}
 
 .bootstrap4 .fixed-table-container tbody .selected td {
     background-color: rgba(193, 226, 239, 0.25);

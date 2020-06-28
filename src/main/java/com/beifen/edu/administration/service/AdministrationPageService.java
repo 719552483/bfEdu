@@ -26,6 +26,7 @@ import com.beifen.edu.administration.dao.Edu106Dao;
 import com.beifen.edu.administration.dao.Edu107Dao;
 import com.beifen.edu.administration.dao.Edu108Dao;
 import com.beifen.edu.administration.dao.Edu200Dao;
+import com.beifen.edu.administration.dao.Edu201Dao;
 import com.beifen.edu.administration.dao.Edu300Dao;
 import com.beifen.edu.administration.dao.Edu301Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
@@ -44,6 +45,7 @@ import com.beifen.edu.administration.domian.Edu106;
 import com.beifen.edu.administration.domian.Edu107;
 import com.beifen.edu.administration.domian.Edu108;
 import com.beifen.edu.administration.domian.Edu200;
+import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
 
@@ -63,6 +65,8 @@ public class AdministrationPageService {
 	private Edu993Dao edu993DAO;
 	@Autowired
 	private Edu200Dao edu200DAO;
+	@Autowired
+	private Edu201Dao edu201DAO;
 	@Autowired
 	private Edu101Dao edu101DAO;
 	@Autowired
@@ -828,18 +832,40 @@ public class AdministrationPageService {
 
 	//根据教学班组装任务书信息
 	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {
-		List<Object> taskList=new ArrayList();
+		List<Object> sendTaskList=new ArrayList();
+		List<Edu201> currentTaskList=edu201DAO.findAll();
 		for (int i = 0; i < jxbInfo.size(); i++) {
 			Map<String, Object> taskObject = new HashMap();
 			taskObject.put("jxbInfo", jxbInfo.get(i));
 			Edu108 edu108=edu108DAO.queryPlanByEdu108ID(jxbInfo.get(i).getEdu108_ID().toString());
 			taskObject.put("crouseInfo", edu108);
-			taskList.add(taskObject);
+			sendTaskList.add(taskObject);
 		}
-		return taskList;
+		
+		//排除已发布的教学任务书(108ID和301ID都相同的)
+		for (int s = 0; s < sendTaskList.size(); s++) {
+			Map<String, Object> map=(HashMap)sendTaskList.get(s);
+			Edu108 edu108=(Edu108) map.get("crouseInfo");
+			Edu301 edu301=(Edu301) map.get("jxbInfo");
+			for (int c = 0; c < currentTaskList.size(); c++) {
+				Edu201 edu201=currentTaskList.get(c);
+				if(edu201.getEdu108_ID().equals(edu108.getEdu108_ID())&&edu201.getEdu301_ID().equals(edu301.getEdu301_ID())){
+					sendTaskList.remove(s);
+				}
+			}
+		}
+		return sendTaskList;
 	}
 	
+	//发布教学任务书
+	public void putOutTask(Edu201 edu201) {
+		 edu201DAO.save(edu201);
+	}
 	
+	//查询已发布任务书
+	public List<Edu201> queryPutedTasks() {
+		return edu201DAO.findAll();
+	}
 	
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
@@ -1132,6 +1158,10 @@ public class AdministrationPageService {
 		List<Edu001> classesEntities = edu001DAO.findAll(specification);
 		return classesEntities;
 	}
+
+
+
+
 
 	
 	
