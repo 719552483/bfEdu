@@ -601,14 +601,6 @@ function binBind(){
 		e.stopPropagation();
 	});
 	
-	
-	//导出Excel
-	$('#tableToExecl').unbind('click');
-	$('#tableToExecl').bind('click', function(e) {
-		tableToExecl("#courseLibraryTable");
-		e.stopPropagation();
-	});
-	
 	//重置检索
 	$('#reReloadSearchs').unbind('click');
 	$('#reReloadSearchs').bind('click', function(e) {

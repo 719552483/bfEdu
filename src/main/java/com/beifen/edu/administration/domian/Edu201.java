@@ -31,6 +31,7 @@ public class Edu201 {
 	private String kkbmCode;  //开课部门编码
 	private String sfxylcj;  //是否需要录成绩
 	private String sszt;  //审核状态
+	private String fkyj;  //反馈意见
 	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -150,6 +151,12 @@ public class Edu201 {
 	}
 	public void setSszt(String sszt) {
 		this.sszt = sszt;
+	}
+	public String getFkyj() {
+		return fkyj;
+	}
+	public void setFkyj(String fkyj) {
+		this.fkyj = fkyj;
 	}
 	
 	
