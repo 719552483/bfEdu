@@ -32,6 +32,7 @@ public class Edu201 {
 	private String sfxylcj;  //是否需要录成绩
 	private String sszt;  //审核状态
 	private String fkyj;  //反馈意见
+	private String sfypk;  //是否已排课
 	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -157,6 +158,12 @@ public class Edu201 {
 	}
 	public void setFkyj(String fkyj) {
 		this.fkyj = fkyj;
+	}
+	public String getSfypk() {
+		return sfypk;
+	}
+	public void setSfypk(String sfypk) {
+		this.sfypk = sfypk;
 	}
 	
 	

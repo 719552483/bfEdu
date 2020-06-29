@@ -177,7 +177,7 @@ function stuffMajorTrainingTable(tableInfo) {
 
 
 	drawPagination(".majorTrainingTableArea", "培养计划");
-	drawSearchInput();
+	drawSearchInput(".majorTrainingTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".majorTrainingTableArea", "培养计划");
@@ -849,7 +849,7 @@ function stuffAllClassTable(tableInfo) {
 		} ]
 	});
 	drawPagination(".allClassTableArea", "专业课程");
-	drawSearchInput();
+	drawSearchInput(".allClassTableArea");
 	toolTipUp(".myTooltip");
 }
 
@@ -1182,7 +1182,7 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 				+ '</ul>' ].join('');
 	}
 	drawPagination(".generatCourseArea", "课程");
-	drawSearchInput();
+	drawSearchInput(".generatCourseArea");
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".generatCourseArea", "课程");
 }

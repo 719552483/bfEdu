@@ -3087,9 +3087,11 @@ public class AdministrationController {
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
 		String xzbmc = searchObject.getString("xzbmc");
 		String kcmc = searchObject.getString("kcmc");
+		String sszt = searchObject.getString("sszt");
 		Edu201 edu201=new Edu201();
 		edu201.setXzbmc(xzbmc);
 		edu201.setKcmc(kcmc);
+		edu201.setSszt(sszt);
 		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);

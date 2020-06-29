@@ -876,11 +876,16 @@ function stuffPutOutTaskTable(tableInfo) {
 				align: 'left',
 				formatter: putOutTaskpkbmMatter,
 				clickToSelect: false
-			},	{
+			},{
 				field: 'sszt',
 				title: '审核状态',
 				align: 'left',
 				formatter: ztMatter
+			},{
+				field: 'fkyj',
+				title: '反馈意见',
+				align: 'left',
+				formatter: paramsMatter
 			},{
 				field: 'action',
 				title: '操作',
@@ -1120,7 +1125,7 @@ function startSearchPutOutTasks(){
 	var serachObject=new Object();
 	xzbmc===""?serachObject.xzbmc="":serachObject.xzbmc=xzbmc;
 	kcmc===""?serachObject.kcmc="":serachObject.kcmc=kcmc;
-	
+	serachObject.sszt="";
 	$.ajax({
 		method : 'get',
 		cache : false,

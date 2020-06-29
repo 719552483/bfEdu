@@ -60,6 +60,11 @@ public class PageRelatedController {
 	public String officeClassesSchedulePage() {
 		return "officeClassesSchedule";
 	}
+	
+	@RequestMapping("taskApproval")
+	public String taskApprovalPage() {
+		return "taskApproval";
+	}
 
 	@RequestMapping("addUser")
 	public String addUserPage() {

@@ -1182,6 +1182,10 @@ public class AdministrationPageService {
 				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
 					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu201.getKcmc() + '%'));
 				}
+				
+				if (edu201.getSszt() != null && !"".equals(edu201.getSszt())) {
+					predicates.add(cb.equal(root.<String> get("sszt"), edu201.getSszt()));
+				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};

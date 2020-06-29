@@ -405,15 +405,15 @@ function drawSearchInput(area) {
 	}
 	
 
-	$(".fixed-table-toolbar").find(".search").find("input").attr("spellcheck",false);
+	$(area).find(".fixed-table-toolbar").find(".search").find("input").attr("spellcheck",false);
 	// 聚焦
-	$(".fixed-table-toolbar").find(".search").find("input").focus(function(e) {
+	$(area).find(".fixed-table-toolbar").find(".search").find("input").focus(function(e) {
 		$(area).find(".searchIcon").addClass("serachFocus");
 		toolTipUp(".myTooltip");
 	});
 
 	// 失焦
-	$(".fixed-table-toolbar").find(".search").find("input").blur(function(e) {
+	$(area).find(".fixed-table-toolbar").find(".search").find("input").blur(function(e) {
 		$(area).find(".searchIcon").removeClass("serachFocus");
 		toolTipUp(".myTooltip");
 	});

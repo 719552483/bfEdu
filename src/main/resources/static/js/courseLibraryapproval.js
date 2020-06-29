@@ -88,12 +88,7 @@ function stuffCourseLibraryTable(tableInfo){
 				title : '课程性质',
 				align : 'left',
 				formatter : paramsMatter
-			}, {
-				field : 'bzzymc',
-				title : '标志专业名称',
-				align : 'left',
-				formatter : paramsMatter
-			}, {
+			},{
 				field : 'kcfzr',
 				title : '课程负责人',
 				align : 'left',
@@ -128,7 +123,12 @@ function stuffCourseLibraryTable(tableInfo){
 				title : '审核时间',
 				align : 'left',
 				formatter : timeFormatter
-			},{
+			}, {
+				field : 'bz',
+				title : '备注',
+				align : 'left',
+				formatter : paramsMatter
+			}, {
 				field : 'action',
 				title : '操作',
 				align : 'center',
@@ -163,7 +163,7 @@ function stuffCourseLibraryTable(tableInfo){
 
 		drawPagination(".courseLibraryTableArea", "课程信息");
 		changeColumnsStyle(".courseLibraryTableArea", "培养计划");
-		drawSearchInput();
+		drawSearchInput(".courseLibraryTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 }

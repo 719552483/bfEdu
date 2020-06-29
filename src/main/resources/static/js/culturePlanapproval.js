@@ -240,7 +240,7 @@ function stuffMajorTrainingVerifyTable(tableInfo) {
 	
 	
 	drawPagination(".culturePlanVerifyTableArea", "培养计划");
-	drawSearchInput();
+	drawSearchInput(".culturePlanVerifyTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".culturePlanVerifyTableArea", "培养计划");
