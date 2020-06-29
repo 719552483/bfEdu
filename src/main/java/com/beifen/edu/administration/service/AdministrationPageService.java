@@ -867,6 +867,17 @@ public class AdministrationPageService {
 		return edu201DAO.findAll();
 	}
 	
+    // 删除教学任务书
+	public void removeTasks(String edu201id) {
+		edu201DAO.removeTasks(edu201id);
+	}
+	
+	//根据ID查询任务书
+	public Edu201 queryTaskByID(String iD) {
+		return edu201DAO.queryTaskByID(iD);
+	}
+
+	
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
 		Specification<Edu200> specification = new Specification<Edu200>() {
@@ -1158,6 +1169,28 @@ public class AdministrationPageService {
 		List<Edu001> classesEntities = edu001DAO.findAll(specification);
 		return classesEntities;
 	}
+
+	//检索已发布的教学任务书
+	public List<Edu201> searchPutOutTasks(Edu201 edu201) {
+		Specification<Edu201> specification = new Specification<Edu201>() {
+			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu201.getXzbmc() != null && !"".equals(edu201.getXzbmc())) {
+					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu201.getXzbmc() + '%'));
+				}
+
+				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
+					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu201.getKcmc() + '%'));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu201> entities = edu201DAO.findAll(specification);
+		return entities;
+	}
+
+
+
 
 
 

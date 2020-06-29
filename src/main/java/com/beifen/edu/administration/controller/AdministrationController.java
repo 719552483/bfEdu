@@ -3029,14 +3029,72 @@ public class AdministrationController {
 	}
 	
 	
+	/**
+	 * 删除教学任务书
+	 * @return returnMap
+	 */
+	@RequestMapping("removeTasks")
+	@ResponseBody
+	public Object removeTasks(@RequestParam("removeInfo") String removeInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
+		for (int i = 0; i< deleteArray.size(); i++) {
+			 administrationPageService.removeTasks(deleteArray.get(i).toString());
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
+	/**
+	 * 根据ID查询任务书
+	 * @return returnMap
+	 */
+	@RequestMapping("queryTaskByID")
+	@ResponseBody
+	public Object queryTaskByID(@RequestParam("ID") String ID) {
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("taskInfo", administrationPageService.queryTaskByID(ID));
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 根据ID修改任务书
+	 * @return returnMap
+	 */
+	@RequestMapping("modifyTask")
+	@ResponseBody
+	public Object modifyTask(@RequestParam("modifyInfo") String modifyInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
+		Edu201 edu201 = (Edu201) JSONObject.toBean(jsonObject, Edu201.class);
+		administrationPageService.putOutTask(edu201);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
-	
-	
-	
-	
+	/**
+	 * 检索已发布的教学任务书
+	 * @return returnMap
+	 */
+	@RequestMapping("searchPutOutTasks")
+	@ResponseBody
+	public Object searchPutOutTasks(@RequestParam("SearchCriteria") String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		String xzbmc = searchObject.getString("xzbmc");
+		String kcmc = searchObject.getString("kcmc");
+		Edu201 edu201=new Edu201();
+		edu201.setXzbmc(xzbmc);
+		edu201.setKcmc(kcmc);
+		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201);
+		returnMap.put("taskInfo", taskInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 	
