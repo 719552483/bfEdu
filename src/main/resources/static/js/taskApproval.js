@@ -79,15 +79,14 @@ function stuffCourseLibraryTable(tableInfo){
 				},{
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
-					align: 'left',
+					align: 'center',
 					clickToSelect: false,
-					formatter: paramsMatter
+					formatter: sfxylcjMatter
 				},{
 					field: 'kkbm',
 					title: '开课部门',
 					align: 'left',
 					formatter: paramsMatter
-
 				},	{
 					field: 'pkbm',
 					title: '排课部门',
@@ -103,7 +102,7 @@ function stuffCourseLibraryTable(tableInfo){
 					field: 'fkyj',
 					title: '反馈意见',
 					align: 'left',
-					formatter: ztMatter
+					formatter: paramsMatter
 				},{
 					field: 'action',
 					title: '操作',
@@ -121,14 +120,15 @@ function stuffCourseLibraryTable(tableInfo){
 						+ '</ul>' ].join('');
 		}
 		
-		function putOutTaskpkbmMatter(value, row, index) {
-			return [
-					'<span title="'+row.pkbm+'" class="myTooltip putOutTaskpkbmTxt putOutTaskpkbmTxt' + index + '">' + row.pkbm + '</span><select class="myTableSelect myputOutTaskTableSelect' +
-					index + '" id="putOutTaskpkbmSelect'+index+'">' + roleOptionStr + '</select>'
-				]
-				.join('');
+		function sfxylcjMatter(value, row, index) {
+			if (row.sfxylcj==="T") {
+				return [ '<div class="myTooltip" title="需要录成绩"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
+						.join('');
+			} else{
+				return [ '<div class="myTooltip" title="不需要录成绩"><i class="iconfont icon-chacha normalTxt"></i></div>' ]
+						.join('');
+			}
 		}
-		
 		
 		function ztMatter(value, row, index) {
 			if (row.sszt==="pass") {
@@ -142,8 +142,6 @@ function stuffCourseLibraryTable(tableInfo){
 				.join('');
 	        }
 		}
-		
-
 
 		drawPagination(".putOutTaskTableArea", "教学任务书");
 		changeColumnsStyle(".putOutTaskTableArea", "教学任务书");
