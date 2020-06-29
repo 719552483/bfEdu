@@ -103,6 +103,11 @@ function stuffCourseLibraryTable(tableInfo){
 					title: '反馈意见',
 					align: 'left',
 					formatter: paramsMatter
+				},	{
+					field: 'yztg',
+					title: '验证通过',
+					align: 'left',
+					formatter:yztgMatter
 				},{
 					field: 'action',
 					title: '操作',
@@ -127,6 +132,19 @@ function stuffCourseLibraryTable(tableInfo){
 			} else{
 				return [ '<div class="myTooltip" title="不需要录成绩"><i class="iconfont icon-chacha normalTxt"></i></div>' ]
 						.join('');
+			}
+		}
+		
+		function yztgMatter(value, row, index) {
+			if (row.yztg==="T") {
+				return [ '<div class="myTooltip" title="已通过"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
+						.join('');
+			} else if(row.yztg==="F"){
+				return [ '<div class="myTooltip" title="不通过"><i class="iconfont icon-chacha redTxt"></i></div>' ]
+						.join('');
+			}else{
+				return [ '<div class="myTooltip normalTxt" title="未验证">未验证</div>' ]
+				.join('');
 			}
 		}
 		
