@@ -3129,6 +3129,37 @@ public class AdministrationController {
 	}
 	
 	
+	/**
+	 * 根据层次关系查询待排课程
+	 * @return returnMap
+	 */
+	@RequestMapping("getTaskByCulturePlan")
+	@ResponseBody
+	public Object getTaskByCulturePlan(@RequestParam String culturePlanInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
+		String levelCode = culturePlan.getString("level");
+		String departmentCode = culturePlan.getString("department");
+		String gradeCode = culturePlan.getString("grade");
+		String majorCode = culturePlan.getString("major");
+		//所有教学班
+		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode, departmentCode,gradeCode, majorCode);
+		List<Edu201> taskInfo = new ArrayList<Edu201>();
+		// 如果层次关系下有教学班查询所有教学班待排课程
+		if (calssInfo.size() > 0) {
+			for (int i = 0; i < calssInfo.size(); i++) {
+				Edu201 edu201=administrationPageService.queryWaitTaskByEud301ID(calssInfo.get(i).getEdu301_ID().toString());
+				if(edu201!=null){
+					taskInfo.add(edu201);
+				}
+			}
+		}
+		
+		returnMap.put("calssInfo", calssInfo);
+		returnMap.put("taskInfo", taskInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	
 

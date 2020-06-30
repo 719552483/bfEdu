@@ -633,7 +633,7 @@ float: left;
 }
 
 .myformtext b:not(:first-child){
-	margin-left: 32px;
+	margin-left: 36px;
 }
 
 .col4 {
@@ -1425,6 +1425,11 @@ background: rgba(36, 138, 187, 0.77);
 	        margin-top: 4px;
 }
 
+
+.WaitTaskTableArea .search{
+    margin-top: 11px;
+}
+
 .putOutTaskTableArea  .bootstrap4 .columns,
 .scheduleClassesTableArea  .bootstrap4 .columns,
 .allRoleTableArea  .bootstrap4 .columns,
@@ -1494,6 +1499,8 @@ margin: 0px 0px -14px -15px!important;
 .toast-message{
 	    text-align: left;
 }
+
+
 
 @keyframes serachAnimation {
 	10% {

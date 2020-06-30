@@ -49,52 +49,113 @@
 
 		<div class="formbody">
 			<div class="scheduleClassesMainArea">
-			<div class="formtext myformtext" style="margin-bottom: 14px;">
-				<b>Tips: 1.勾选多条任务书，双击教师栏，可实现多任务书指定相同授课教师</b><br></br>
-				<b>2.排课部门默认为开课部门，双击可手动更改排课部门</b><br></br>
-			</div>
-			<div class="tools">
-					<ul class="toolbar">
-						<li class="click insertBtn" id="putOutTasks"><span><img src="img/right.png" style="width: 24px;"/></span>批量发布任务书</li>
-						<li class="click" id="showputedTask"><span><img src="images/i02.png" style="width: 24px;"/></span>查看已发布任务书</li>
-						<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
-						<li class="click noneStart" id="reback"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
-					    <li class="click noneStart deleteBtn" id="removePutOutTasks"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除任务书</li>
-					    <li class="click noneStart" id="startSearchPutOutTasks"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
-					</ul>
-					<ul class="toolbar1">
-						<li class="click" id="research1"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
-						<li class="click noneStart" id="research2"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
-					</ul>
-			</div>
-
-				<div class="searchArea searchAreaWitheSelect">
-					<div class="col4 giveBottom">
-						<ul class="forminfo">
-							<div class="">
-								<label class="selectName" style="margin-top: 14px;">行政班名称</label>
-								<input name="" type="text" class="myInput searchInput" id="xzbmc" placeholder="请填写行政班名称..."/>
-							</div>
-						</ul>
-					</div>
-
-					<div class="col4 giveBottom">
-						<ul class="forminfo">
-							<div class="">
-								<label class="selectName" style="margin-top: 14px;">课程名称</label>
-								<input name="" type="text" class="myInput searchInput" id="kcmc" placeholder="请填写课程名称..."/>
-							</div>
-						</ul>
-					</div>
+				<div class="formtext myformtext">
+					<b>提示：蓝色底色课程为专业选修课，绿色底色课程为公共必修课，黄色底色课程为模块课</b>
 				</div>
-
-				<div class="scheduleClassesTableArea columnsStyle searchGivePaddingR">
-					<table class="tablelist myTableStyle" id="scheduleClassesTable" style="margin-top: 10px;"></table>
+				<div class="tools">
+						<ul class="toolbar">
+							<li class="click insertBtn" id="startSchedule"><span><img src="images/t01.png" style="width: 24px;"/></span>开始排课</li>
+							<li class="click" id="cancelSchedule"><span><img src="images/time.png" style="width: 24px;"/></span>取消排课</li>
+							<li class="click" id="puttedSchedule"><span><img src="images/leaderSchedule.png" style="width: 24px;"/></span>已排课表</li>
+						    <li class="click" id="startSearchSchedule"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						</ul>
+						<ul class="toolbar1">
+							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
 				</div>
 				
-				<div class="putOutTaskTableArea columnsStyle searchGivePaddingR noneStart">
-					<table class="tablelist myTableStyle" id="putOutTaskTable" data-unique-id="edu201_ID" style="margin-top: 10px;"></table>
+				<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom levelSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次<b>*</b></label>
+									<select id="level">
+									</select>
+								</div>
+							</ul>
+						</div>
+	
+						<div class="col4 giveBottom departmentSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">系&#12288;&#8197;部<b>*</b></label>
+									<select class="isSowIndex" id="department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+	
+	
+	
+						<div class="col4 giveBottom gradeSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级<b>*</b></label>
+									<select class="isSowIndex" id="grade">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+	
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业<b>*</b></label>
+									<select class="isSowIndex" id="major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+	
+								</div>
+							</ul>
+						</div>
+	
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName"
+										style="margin-top: 14px; margin-left: -1%;">教学班</label> <select
+										class="isSowIndex" id="jxb">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+	
+								</div>
+							</ul>
+						</div>
+	
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课程性质</label>
+									<select class="isSowIndex" id="kcxz">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+	
+								</div>
+							</ul>
+						</div>
+	
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课程名字</label>
+									<input name="" type="text" class="myInput searchInput"
+										id="coursesName" placeholder="请输入课程名字..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+	
+	           <div class="WaitTaskArea">
+					<div class="formtitle" style="clear:both;margin-bottom: unset;">
+						<span>待排课程列表</span>
+					</div>
+					<div class="WaitTaskTableArea columnsStyle searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="WaitTaskTable" data-unique-id="edu201_ID" style="margin-top: 10px;"></table>
+					</div>
 				</div>
+	          
 			</div>
        </div>
 			
@@ -144,63 +205,6 @@
 	</div>
 
 
-	<!-- 选择教师Modal -->
-	<div class="modal fade bs-example-modal-lg" id="allTeacherModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">教师列表</span><a class="cancel" shape="rect"></a></div>
-				</div>
-				<div class="modal-body">
-					<div class="tools paddingL" style="padding-top:1%">
-						<ul class="toolbar" style="float: none">
-							<li class="click" id="allClassMangers_StartSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
-							<li class="click" id="allClassMangers_ReSearch"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
-						</ul>
-					</div>
-					<div class="searchArea moreInfoSelectStyle">
-						<div class="col3 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 7px;">部门名称</label>
-									<input name="" type="text" class="myInput manyInfoInput"
-										id="departmentName" placeholder="请输入部门名称..." />
-								</div>
-							</ul>
-						</div>
-
-						<div class="col3 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">姓名</label>
-									<input name="" type="text" class="myInput manyInfoInput"
-										id="mangerName" placeholder="请输入姓名..." />
-								</div>
-							</ul>
-						</div>
-
-						<div class="col3 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">工号</label>
-									<input name="" type="text" class="myInput manyInfoInput"
-										id="mangerNumber" placeholder="请输入工号..." />
-								</div>
-							</ul>
-						</div>
-					</div>
-
-					<div class="allClassMangersTableArea">
-						<table class="tablelist myTableStyle" id="allTeacherTable" data-unique-id="id" style="margin-top: 10px;"></table>
-					</div>
-				</div>
-				<div class="modal-footer tipbtn">
-					<input name="" type="button" class="sure" id="confirmChoosedTeacher" value="确定"/>&nbsp;
-					<input name="" type="button" class="cancel" value="取消"/>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<script type="text/javascript">
 			$("#usual1 ul").idTabs();

@@ -887,6 +887,11 @@ public class AdministrationPageService {
 		edu201DAO.changeTaskStatus(id,status);
 	}
 
+	//根据301ID查询待排任务书
+	public Edu201 queryWaitTaskByEud301ID(String edu301ID) {
+		return edu201DAO.queryWaitTaskByEud301ID(edu301ID);
+	}
+
 	
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
@@ -1202,6 +1207,7 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
 
 
 
