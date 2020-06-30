@@ -3098,6 +3098,36 @@ public class AdministrationController {
 		return returnMap;
 	}
 	
+	/**
+	 * 任务书反馈意见
+	 * @return returnMap
+	 */
+	@RequestMapping("chengeTaskFfkyj")
+	@ResponseBody
+	public Object chengeTaskFfkyj(@RequestParam("id") String id,@RequestParam("feedBack") String feedBack) {
+		Map<String, Object> returnMap = new HashMap();
+		// 获得更改的意见
+		administrationPageService.chengeTaskFfkyj(id, feedBack);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 修改任务书状态
+	 * @return returnMap
+	 */
+	@RequestMapping("changeTaskStatus")
+	@ResponseBody
+	public Object changeTaskStatus(@RequestParam("choosedIds") String choosedIds,@RequestParam("status") String status) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONArray choosedIdArray = JSONArray.fromObject(choosedIds); // 解析json字符
+		for (int i = 0; i< choosedIdArray.size(); i++) {
+			administrationPageService.changeTaskStatus(choosedIdArray.get(i).toString(), status);
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
 	
 	
 	

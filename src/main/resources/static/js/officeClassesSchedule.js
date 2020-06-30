@@ -965,6 +965,13 @@ function onDblClickputOutTaskTable(row, $element, field){
 //批量删除任务书
 function removePutOutTasks(){
 	var chosenTask = $('#putOutTaskTable').bootstrapTable('getAllSelections');
+	for (var i = 0; i < chosenTask.length; i++) {
+		if(chosenTask[i].sszt==="pass"){
+			toastr.warning('不能删除已通过审核的教学任务书');
+			return;
+		}
+	}
+	
 	if (chosenTask.length === 0) {
 		toastr.warning('暂未选择任何教学任务书');
 	} else {
@@ -987,6 +994,10 @@ function removePutOutTasks(){
 
 //单个删除任务书
 function removeTask(row,index){
+	if(row.sszt==="pass"){
+		toastr.warning('不能删除已通过审核的教学任务书');
+		return;
+	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html('教学任务书');
 	$(".remindActionType").html("删除");

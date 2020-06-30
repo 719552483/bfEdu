@@ -49,7 +49,6 @@
 							<li class="click" id="pass"><span><img src="img/right.png" style="width: 24px;"/></span>通过</li>
 							<li class="click" id="cannotPass"><span><img src="images/close1.png" style="width: 24px;"/></span>不通过</li>
 							<li class="click" id="cancelPass"><span><img src="img/cancel.png" style="width: 24px;"/></span>取消审批</li>
-							<li class="click" id="verifyTaskConflict"><span><img src="images/info.png" style="width: 24px;"/></span>验证任务书冲突</li>
 							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
 						<ul class="toolbar1">
@@ -91,11 +90,153 @@
 						</div>
 			</div>
 			<div class="putOutTaskTableArea columnsStyle searchGivePaddingR">
-					<table class="tablelist myTableStyle" id="putOutTaskTable" style="margin-top: 10px;"></table>
+					<table class="tablelist myTableStyle" id="putOutTaskTable" data-unique-id="edu201_ID" style="margin-top: 10px;"></table>
 			</div>
 		</div>
 		
+	<!-- 任务书详情Modal -->
+	<div class="modal fade bs-example-modal-lg" id="taskInfoModal" tabindex="-1" role="dialog" aria-labelledby="majorTrainingModal" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="manyInfoShow">
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">教学班名称</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_jxbmc" placeholder="请输入教学班名称..." />
+									</div>
+								</ul>
+							</div>
+							
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">课程名称</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_kcmc" placeholder="请输入课程名称..." />
+									</div>
+								</ul>
+							</div>
 
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">专业名称</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_zymc" placeholder="请输入专业名称..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">行政班</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_xzb" placeholder="请输入行政班..." />
+									</div>
+								</ul>
+							</div>
+
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">教学班人数</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_jxbrs" placeholder="请输入教学班人数..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">老师</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_ls" placeholder="请输入老师..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">主要老师</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_zyls" placeholder="请输入主要老师..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">是否需要录成绩</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_sfxylcj" placeholder="请输入是否需要录成绩..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">周课时</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_zks" placeholder="请输入周课时..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">开课部门</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_kkbm" placeholder="请输入开课部门..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">排课部门</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_pkbm" placeholder="请输入排课部门..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">反馈意见</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											id="taskInfo_fkyj" placeholder="请输入反馈意见..." />
+									</div>
+								</ul>
+							</div>
+
+
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 	<!-- 提示Modal -->

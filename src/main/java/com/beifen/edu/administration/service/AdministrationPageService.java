@@ -877,6 +877,16 @@ public class AdministrationPageService {
 		return edu201DAO.queryTaskByID(iD);
 	}
 
+	//任务书反馈意见
+	public void chengeTaskFfkyj(String id, String feedBack) {
+		edu201DAO.chengeTaskFfkyj(id,feedBack);
+	}
+	
+	// 修改任务书状态
+	public void changeTaskStatus(String id, String status) {
+		edu201DAO.changeTaskStatus(id,status);
+	}
+
 	
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
@@ -1192,6 +1202,9 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
 
 
 

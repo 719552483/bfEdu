@@ -21,4 +21,16 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	//根据ID查询任务书
 	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)
 	public Edu201 queryTaskByID(String iD);
+
+	//任务书反馈意见
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE edu201 SET fkyj =?2 WHERE Edu201_ID =?1", nativeQuery = true)
+	void chengeTaskFfkyj(String id, String feedBack);
+
+	// 修改任务书状态
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE edu201 SET sszt =?2 WHERE Edu201_ID =?1", nativeQuery = true)
+	void changeTaskStatus(String id, String status);
 }

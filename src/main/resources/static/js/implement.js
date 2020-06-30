@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	checkSession();
+	$("body").find("input").attr("spellcheck",false);
 });
 
 //检查是否存在session 实现拦截
