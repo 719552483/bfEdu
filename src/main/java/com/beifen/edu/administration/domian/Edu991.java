@@ -1,10 +1,13 @@
 package com.beifen.edu.administration.domian;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -34,7 +37,9 @@ public class Edu991 {
 	public void setJs(String js) {
 		this.js = js;
 	}
-	@Column(length=700)
+	// 指定blob字段
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	public String getCdqx() {
 		return cdqx;
 	}

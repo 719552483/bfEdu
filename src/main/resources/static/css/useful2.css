@@ -1430,6 +1430,10 @@ background: rgba(36, 138, 187, 0.77);
     margin-top: 11px;
 }
 
+.WaitTaskTableArea {
+    margin-top: -63px;
+}
+
 .putOutTaskTableArea  .bootstrap4 .columns,
 .scheduleClassesTableArea  .bootstrap4 .columns,
 .allRoleTableArea  .bootstrap4 .columns,
@@ -1499,6 +1503,7 @@ margin: 0px 0px -14px -15px!important;
 .toast-message{
 	    text-align: left;
 }
+
 
 
 

@@ -3162,6 +3162,26 @@ public class AdministrationController {
 	}
 	
 	
+	
+	/**
+	 * 
+	 * @return returnMap
+	 */
+//	@RequestMapping("filterTaskByKcxz")
+//	@ResponseBody
+//	public Object filterTaskByKcxz(@RequestParam("taskIDs") String taskIDs,@RequestParam("kcxz") String kcxz) {
+//		Map<String, Object> returnMap = new HashMap();
+//		JSONArray choosedIdArray = JSONArray.fromObject(taskIDs); // 解析json字符
+//		List
+//		for (int i = 0; i< choosedIdArray.size(); i++) {
+//			boolean isQualified=administrationPageService.filterTaskByKcxz(choosedIdArray.get(i).toString(), kcxz);
+//			
+//			administrationPageService.filterTaskByKcxz(choosedIdArray.get(i).toString(), kcxz);
+//		}
+//		returnMap.put("result", true);
+//		returnMap.put("qualifiedTask", qualifiedTask);
+//		return returnMap;
+//	}
 
 	/*
 	 * 根据传入的二级代码参数 获取二级代码将二级代码装入LIST中返回前台

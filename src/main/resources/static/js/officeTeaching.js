@@ -56,16 +56,75 @@ function getTaskSelectInfo() {
 	});
 	
 	$("#jxb").change(function() {
-		var choosedJxbMc=getNormalSelectText("jxb");
-		var all = $("#WaitTaskTable").bootstrapTable("getData");
-		for (var i = 0; i < all.length; i++) {
-			if(choosedJxbMc!==all[i].jxbmc){
-				$("#WaitTaskTable").bootstrapTable("hideRow", { uniqueId: all[i].edu201_ID });
-			}else{
-				$("#WaitTaskTable").bootstrapTable("showRow", { uniqueId: all[i].edu201_ID });
-			}
-		}
+		contorlWaitTaskTable(getNormalSelectText("jxb"));
 	});
+	
+	$("#kcxz").change(function() {
+		var all=getShowTableRow();
+		var showRowsID=new Array();
+		for (var i = 0; i < all.length; i++) {
+			showRowsID.push(all[i].edu201_ID);
+		}
+		if(showRowsID.length===0){
+			return;
+		}
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/filterTaskByKcxz",
+			data: {
+	             "taskIDs":JSON.stringify(showRowsID),
+	             "kcxz":getNormalSelectValue("kcxz")
+	        },
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.result) {
+					
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+}
+
+//根据教学班名称过滤表格
+function contorlWaitTaskTable(choosedJxbMc){
+	var all = $("#WaitTaskTable").bootstrapTable("getData");
+	if(choosedJxbMc===""){
+		for (var i = 0; i < all.length; i++) {
+			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
+		}
+		return;
+	}
+	
+	var hideNum=0;
+	for (var i = 0; i < all.length; i++) {
+		if(choosedJxbMc===all[i].jxbmc){
+			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
+		}else if(choosedJxbMc!==all[i].jxbmc){
+			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").hide();
+			hideNum++;
+		}
+	}
+	
+	if(hideNum===all.length){
+		if($(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").length<=0){
+			$(".WaitTaskTableArea").find("table").find("tbody").append('<tr class="no-records-found"><td colspan="8">暂无数据.....</td></tr>');
+		}
+	}else{
+		$(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").remove();
+	}
 }
 
 //渲染空待排课程表
@@ -162,8 +221,18 @@ function stuffWaitTaskTable(tableInfo){
 		toolTipUp(".myTooltip");
 }
 
-
-
+//获取所有显示的行数据
+function getShowTableRow(){
+	var all = $("#WaitTaskTable").bootstrapTable("getData");
+	var returnArray=new Array;
+	for (var i = 0; i < all.length; i++) {
+		var currentRow=$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")");
+		if(!currentRow.is(':hidden')){
+			returnArray.push(all[i]);
+		}
+	}
+	return returnArray;
+}
 
 
 
