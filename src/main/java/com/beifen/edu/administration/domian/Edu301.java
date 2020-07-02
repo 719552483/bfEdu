@@ -35,11 +35,11 @@ public class Edu301 {
 	private Long Edu201_ID; //教学任务书ID
 	private String yxbz;//有效标志
 	
-	
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
 	@Column(name = "Edu301_ID")
-	@Id
+	
 	public Long getEdu301_ID() {
 		return Edu301_ID;
 	}

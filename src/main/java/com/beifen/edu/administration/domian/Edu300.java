@@ -30,10 +30,10 @@ public class Edu300 {
 	private String sfsckkjh;  //是否生成开课计划--
 	private  String yxbz;//有效标志
 	
+	@Id                                                             
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
 	@Column(name = "Edu300_ID")
-	@Id
 	public Long getEdu300_ID() {
 		return Edu300_ID;
 	}

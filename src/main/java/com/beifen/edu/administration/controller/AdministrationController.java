@@ -1636,7 +1636,7 @@ public class AdministrationController {
 		Edu300 edu300 = (Edu300) JSONObject.toBean(jsonObject, Edu300.class);
 		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
 
-		// 判断层次是否已存在
+		// 判断行政班名称和编码是否已存在
 		boolean namehave = false;
 		boolean codehave = false;
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {

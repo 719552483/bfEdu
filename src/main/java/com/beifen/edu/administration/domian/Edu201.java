@@ -34,10 +34,10 @@ public class Edu201 {
 	private String fkyj;  //反馈意见
 	private String sfypk;  //是否已排课
 	
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
 	@Column(name = "Edu201_ID")
-	@Id
 	public Long getEdu201_ID() {
 		return Edu201_ID;
 	}

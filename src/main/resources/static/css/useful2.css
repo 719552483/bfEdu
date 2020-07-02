@@ -632,7 +632,7 @@ float: left;
 	margin-top: -45px;
 }
 
-.myformtext b:not(:first-child){
+.myformtextTipArea b:not(:first-child){
 	margin-left: 36px;
 }
 

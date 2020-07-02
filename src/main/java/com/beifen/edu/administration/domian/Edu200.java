@@ -56,10 +56,11 @@ public class Edu200 {
 	private Long shsj;  //审核时间
 	private String zt;  //状态
 	
+	
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
 	@Column(name = "BF200_ID")
-	@Id
 	public Long getBF200_ID() {
 		return BF200_ID;
 	}
