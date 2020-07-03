@@ -460,12 +460,18 @@ public class ReflectUtils {
 				break;
 			}
 			
-			if(!edu001.getXb().equals("M")&&!edu001.getXb().equals("F")){
+			if(!edu001.getXb().equals("男")&&!edu001.getXb().equals("女")){
 				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-性别只接受M(男)或F(女)";
+				checkTxt= "第"+(i+1)+"行-性别只接受(男)或(女)";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt",checkTxt);
 				break;
+			}else if(edu001.getXb().equals("男")||edu001.getXb().equals("女")){
+				if (edu001.getXb().equals("男"))
+					edu001.setXb("M");
+				else{
+					edu001.setXb("F");
+				}
 			}
 			
 			if(isNull(edu001.getZtCode())){
@@ -609,12 +615,18 @@ public class ReflectUtils {
 				break;
 			}else{
 				if(edu001.getSfyxj()!=null){
-					if(!edu001.getSfyxj().equals("T")&&!edu001.getSfyxj().equals("F")){
+					if(!edu001.getSfyxj().equals("有")&&!edu001.getSfyxj().equals("无")){
 						chaeckPass=false;
-						checkTxt= "第"+(i+1)+"行-是否有学籍只接受T(有)或F(无)";
+						checkTxt= "第"+(i+1)+"行-是否有学籍只接受(有)或(无)";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt",checkTxt);
 						break;
+					}else if(edu001.getSfyxj().equals("有")||edu001.getSfyxj().equals("无")){
+						if(edu001.getSfyxj().equals("有")){
+							edu001.setSfyxj("T");
+						}else{
+							edu001.setSfyxj("F");
+						}
 					}
 					
 					if(edu001.getSfyxj().equals("T") && edu001.getXjh()==null){
@@ -647,12 +659,18 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
-				if(edu001.getHf()!=null&&!edu001.getHf().equals("T")&&!edu001.getHf().equals("F")){
+				if(edu001.getHf()!=null&&!edu001.getHf().equals("已婚")&&!edu001.getHf().equals("未婚")){
 					chaeckPass=false;
-					checkTxt= "第"+(i+1)+"行-婚否只接受T(已婚)或F(未婚)";
+					checkTxt= "第"+(i+1)+"行-婚否只接受(已婚)或(未婚)";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt",checkTxt);
 					break;
+				}else if(edu001.getHf()!=null&&(edu001.getHf().equals("已婚")||edu001.getHf().equals("未婚"))){
+					if(edu001.getHf().equals("已婚")){
+						edu001.setHf("T");
+					}else{
+						edu001.setHf("F");
+					}
 				}
 			}
 			
@@ -660,38 +678,57 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
-				if(edu001.getLzjd()!=null&&!edu001.getLzjd().equals("T")&&!edu001.getLzjd().equals("F")){
+				if(edu001.getLzjd()!=null&&!edu001.getLzjd().equals("是")&&!edu001.getLzjd().equals("否")){
 					chaeckPass=false;
-					checkTxt= "第"+(i+1)+"行-来自军队只接受T(是)或F(否)";
+					checkTxt= "第"+(i+1)+"行-来自军队只接受(是)或(否)";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt",checkTxt);
 					break;
+				}else if(edu001.getLzjd()!=null&&(edu001.getLzjd().equals("是")||edu001.getLzjd().equals("否"))){
+					if(edu001.getLzjd().equals("是")){
+						edu001.setLzjd("T");
+					}else{
+						edu001.setLzjd("F");
+					}
 				}
 			}
 			
 			//验证定向培养格式
-			if(!chaeckPass){
+			if (!chaeckPass) {
 				break;
-			}else{
-				if(edu001.getDxpy()!=null&&!edu001.getDxpy().equals("T")&&!edu001.getDxpy().equals("F")){
-					chaeckPass=false;
-					checkTxt= "第"+(i+1)+"行-定向培养只接受T(是)或F(否)";
+			} else {
+				if (edu001.getDxpy() != null && !edu001.getDxpy().equals("是") && !edu001.getDxpy().equals("否")) {
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-定向培养只接受(是)或(否)";
 					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt",checkTxt);
+					returnMap.put("checkTxt", checkTxt);
 					break;
+				} else if (edu001.getDxpy() != null && (edu001.getDxpy().equals("是") || edu001.getDxpy().equals("否"))) {
+					if (edu001.getDxpy().equals("是")) {
+						edu001.setDxpy("T");
+					} else {
+						edu001.setDxpy("F");
+					}
 				}
 			}
+			
 			
 			//验证贫困家庭格式
 			if(!chaeckPass){
 				break;
 			}else{
-				if(edu001.getPkjt()!=null&&!edu001.getPkjt().equals("T")&&!edu001.getPkjt().equals("F")){
+				if(edu001.getPkjt()!=null&&!edu001.getPkjt().equals("是")&&!edu001.getPkjt().equals("否")){
 					chaeckPass=false;
-					checkTxt= "第"+(i+1)+"行-贫困家庭只接受T(是)或F(否)";
+					checkTxt= "第"+(i+1)+"行-贫困家庭只接受(是)或(否)";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt",checkTxt);
 					break;
+				}else if(edu001.getPkjt()!=null&&(edu001.getPkjt().equals("是")||edu001.getPkjt().equals("否"))){
+					if(edu001.getPkjt().equals("是")){
+						edu001.setPkjt("T");
+					}else{
+						edu001.setPkjt("F");
+					}
 				}
 			}
 			
