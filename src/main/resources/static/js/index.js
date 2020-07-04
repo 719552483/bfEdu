@@ -26,10 +26,10 @@ function loadChoosendShortcuts() {
 		for (var k = 0; k < currentMenus.length; ++k) {
 			for (var i = 0; i < allChoosedShortcuts.length; ++i) {
 				if (allChoosedShortcuts[i] === currentMenus[k].id) {
-					$(".choosendShortcuts").append('<li class="' + allChoosedShortcuts[i] +
+					$(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +
 						'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
 						'.png" />' +
-						'<p><a href="'+allChoosedShortcuts[i]+'.html">' + currentMenus[k].innerText + '</a></p>' +
+						'<p>' + currentMenus[k].innerText + '</a></p>' +
 						'</li>');
 				}
 			}
@@ -39,13 +39,18 @@ function loadChoosendShortcuts() {
 		for (var k = 0; k < currentMenus.length; ++k) {
 			if(k<=5){
 				$(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
-						'"><img class="choosedShortcutsIcon" src="img/' + currentMenus[k].id +
+						'"><img class="choosedShortcutsIcon" onclick="pointPage(this)" src="img/' + currentMenus[k].id +
 						'.png" />' +
-						'<p><a href="'+currentMenus[k].id+'.html">' + currentMenus[k].innerText + '</a></p>' +
+						'<p>' + currentMenus[k].innerText + '</a></p>' +
 						'</li>');
 			}
 		}
 	}
+}
+
+function pointPage(eve){
+	
+	window.location.href = eve.className+".html";
 }
 
 /*
@@ -319,10 +324,10 @@ function reloadShortcutsList(thisShortcuts, currentShortcutList, index) {
 添加已选快捷方式至list
 */
 function addChoosendShortcut(className, TextName) {
-	$(".choosendShortcuts").append('<li class="' + className +
+	$(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + className +
 		'"><img class="choosedShortcutsIcon" src="img/' + className +
 		'.png" />' +
-		'<p><a href="'+className+'.html">' + TextName + '</a></p>' +
+		'<p>' + TextName + '</a></p>' +
 		'</li>');
 }
 
