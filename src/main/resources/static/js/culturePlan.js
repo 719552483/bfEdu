@@ -1547,14 +1547,6 @@ function binBind() {
 		wantGeneratAllClassAllCourse();
 		e.stopPropagation();
 	});
-
-	// 导出Excel
-	$('#tableToExecl').unbind('click');
-	$('#tableToExecl').bind('click', function(e) {
-		tableToExecl("#majorTrainingTable");
-		e.stopPropagation();
-	});
-	
 	
 	// 添加培养计划初始化事件
 	$('.addCulturePlan').unbind('click');
