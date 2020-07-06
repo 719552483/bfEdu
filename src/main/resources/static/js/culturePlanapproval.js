@@ -261,11 +261,13 @@ function showAndStuffDetails(row,showFooter) {
 	$("#majorTrainingDetails_teachingTerm").multiSelect(); 
 	$("#majorTrainingDetails_code").val(row.kcdm);
 	$("#majorTrainingDetails_coursesName").val(row.kcmc);
-	$("#majorTrainingDetails_enName").val(row.ywmc);
+//	$("#majorTrainingDetails_enName").val(row.ywmc);
 	$("#majorTrainingDetails_allhours").val(row.zxs);
 	$("#majorTrainingDetails_credits").val(row.xf);
 	$("#majorTrainingDetails_theoryHours").val(row.llxs);
 	$("#majorTrainingDetails_practiceHours").val(row.sjxs);
+	$("#majorTrainingDetails_disperseHours").val(row.fsxs);
+	$("#majorTrainingDetails_centralizedHours").val(row.jzxs);
 	multiSelectWithDefault("#majorTrainingDetails_teachingTerm",JSON.parse(row.skxq)); //授课学期
 	$("#majorTrainingDetails_weekHours").val(row.zhouxs);
 	$("#majorTrainingDetails_weekCounts").val(row.zzs);

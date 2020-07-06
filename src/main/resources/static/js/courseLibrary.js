@@ -261,14 +261,16 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 function stuffclassDetailsArea(row){
 	$("#addNewClass_calssName").val(row.kcmc);//填充默认课程名称
 	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
-	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
+//	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
 	$("#addNewClass_calssManger").val(row.kcfzr);//填充默认课程负责人
 	stuffManiaSelectWithDeafult("#addNewClass_classNature",row.kcxz);  //填充默认课程性质
 	stuffManiaSelectWithDeafult("#addNewClass_classType",row.kclx); //填充默认课程类型
-	stuffManiaSelectWithDeafult("#addNewClass_level",row.kccc); //填充默认课程层次
+//	stuffManiaSelectWithDeafult("#addNewClass_level",row.kccc); //填充默认课程层次
 	$("#addNewClass_theoryHours").val(row.llxs);//填充默认理论学时
 	$("#addNewClass_practiceHours").val(row.sjxs);//填充默认实践学时
-	$("#addNewClass_allHours").val(row.zxs);//填充默认总学时
+	$("#addNewClass_disperseHours").val(row.fsxs);//填充默认分散学时
+	$("#addNewClass_centralizedHours").val(row.jzxs);//填充默认集中学时
+//	$("#addNewClass_allHours").val(row.zxs);//填充默认总学时
 	stuffManiaSelectWithDeafult("#addNewClass_testWay",row.ksfs);  //填充默认考试方式
 	$("#addNewClass_credits").val(row.xf);//填充默认学分
 	stuffManiaSelectWithDeafult("#addNewClass_moduleType",row.mklb);  //填充默认模块类别
@@ -382,9 +384,9 @@ function wantAddClass() {
 //清空课程详情tip内容
 function emptyClassDetailsArea(){
 	var reObject = new Object();
-	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssCode,#addNewClass_enName,#addNewClass_calssManger,#addNewClass_allHours,#addNewClass_markName";
-	reObject.normalSelectIds = "#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_level,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
-	reObject.numberInputs = "#addNewClass_theoryHours,#addNewClass_practiceHours,#addNewClass_credits";
+	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssCode,#addNewClass_calssManger,#addNewClass_markName";
+	reObject.normalSelectIds = "#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
+	reObject.numberInputs = "#addNewClass_theoryHours,#addNewClass_practiceHours,#addNewClass_credits,#addNewClass_disperseHours,#addNewClass_centralizedHours";
 	reReloadSearchsWithSelect(reObject);
 }
 
@@ -576,14 +578,17 @@ function classDetailsConfirmBtnAction(){
 		return;
 	}
 	
-	if(parseFloat($("#addNewClass_allHours").val())===0){
-		toastr.warning('总学时不能为0');
-		return;
-	}else if(parseFloat($("#addNewClass_practiceHours").val())+parseFloat($("#addNewClass_theoryHours").val())===0){
+	
+	var allHosrs=parseFloat($("#addNewClass_practiceHours").val())+parseFloat($("#addNewClass_theoryHours").val());
+	var allHosrs2=parseFloat($("#addNewClass_disperseHours").val())+parseFloat($("#addNewClass_centralizedHours").val());
+	if(allHosrs===0){
 		toastr.warning('理论学时实践学时之和不能为0');
 		return;
-	}else if(parseFloat($("#addNewClass_allHours").val())!==parseFloat($("#addNewClass_practiceHours").val())+parseFloat($("#addNewClass_theoryHours").val())){
-		toastr.warning('总学时不等于理论学时实践学时之和');
+	}else if(allHosrs2===0){
+		toastr.warning('分散学时集中学时之和不能为0');
+		return;
+	}else if(allHosrs!==allHosrs2){
+		toastr.warning('（理论学时+实践学时）不等于（分散学时+集中学时）');
 		return;
 	}
 	
@@ -596,18 +601,20 @@ function classDetailsConfirmBtnAction(){
 	var newClassObject=new Object();
 	newClassObject.kcmc=$("#addNewClass_calssName").val();
 	newClassObject.kcdm=$("#addNewClass_calssCode").val();
-	newClassObject.ywmc=$("#addNewClass_enName").val();
+//	newClassObject.ywmc=$("#addNewClass_enName").val();
 	newClassObject.kcfzr=$("#addNewClass_calssManger").val();
 	newClassObject.kcfzrID=$("#addNewClass_calssManger").attr("mangerId");
 	newClassObject.kclx=getNormalSelectText("addNewClass_classType");
 	newClassObject.kclxCode=getNormalSelectValue("addNewClass_classType");
 	newClassObject.kcxzCode=getNormalSelectValue("addNewClass_classNature");
 	newClassObject.kcxz=getNormalSelectText("addNewClass_classNature");
-	newClassObject.kccc=getNormalSelectText("addNewClass_level");
-	newClassObject.kcccCode=getNormalSelectValue("addNewClass_level");
+//	newClassObject.kccc=getNormalSelectText("addNewClass_level");
+//	newClassObject.kcccCode=getNormalSelectValue("addNewClass_level");
 	newClassObject.llxs=parseFloat($("#addNewClass_theoryHours").val());
 	newClassObject.sjxs=parseFloat($("#addNewClass_practiceHours").val());
-	newClassObject.zxs=parseFloat($("#addNewClass_allHours").val());
+	newClassObject.fsxs=parseFloat($("#addNewClass_disperseHours").val());
+	newClassObject.jzxs=parseFloat($("#addNewClass_centralizedHours").val());
+	newClassObject.zxs=allHosrs;
 	newClassObject.ksfs=getNormalSelectValue("addNewClass_testWay");
 	newClassObject.xf=parseFloat($("#addNewClass_credits").val());
 	newClassObject.mklb=getNormalSelectValue("addNewClass_moduleType");

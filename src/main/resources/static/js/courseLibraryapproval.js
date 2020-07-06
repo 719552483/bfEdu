@@ -182,14 +182,16 @@ function crouseDetails(row){
 function stuffclassDetailsArea(row){
 	$("#addNewClass_calssName").val(row.kcmc);//填充默认课程名称
 	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
-	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
+//	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
 	$("#addNewClass_calssManger").val(row.kcfzr);//填充默认课程负责人
 	stuffManiaSelectWithDeafult("#addNewClass_classNature",row.kcxz);  //填充默认课程性质
 	stuffManiaSelectWithDeafult("#addNewClass_classType",row.kclx); //填充默认课程类型
-	stuffManiaSelectWithDeafult("#addNewClass_level",row.kccc); //填充默认课程层次
+//	stuffManiaSelectWithDeafult("#addNewClass_level",row.kccc); //填充默认课程层次
 	$("#addNewClass_theoryHours").val(row.llxs);//填充默认理论学时
 	$("#addNewClass_practiceHours").val(row.sjxs);//填充默认实践学时
-	$("#addNewClass_allHours").val(row.zxs);//填充默认总学时
+	$("#addNewClass_disperseHours").val(row.fsxs);//填充默认分散学时
+	$("#addNewClass_centralizedHours").val(row.jzxs);//填充默认集中学时
+//	$("#addNewClass_allHours").val(row.zxs);//填充默认总学时
 	stuffManiaSelectWithDeafult("#addNewClass_testWay",row.ksfs);  //填充默认考试方式
 	$("#addNewClass_credits").val(row.xf);//填充默认学分
 	stuffManiaSelectWithDeafult("#addNewClass_moduleType",row.mklb);  //填充默认模块类别
@@ -216,8 +218,8 @@ function stuffclassDetailsArea(row){
 //清空课程详情tip内容
 function emptyClassDetailsArea(){
 	var reObject = new Object();
-	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssCode,#addNewClass_enName,#addNewClass_calssManger,#addNewClass_allHours,#addNewClass_markName";
-	reObject.normalSelectIds = "#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_level,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
+	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssCode,#addNewClass_calssManger,#addNewClass_markName";
+	reObject.normalSelectIds = "#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
 	reObject.numberInputs = "#addNewClass_theoryHours,#addNewClass_practiceHours,#addNewClass_credits";
 	reReloadSearchsWithSelect(reObject);
 }

@@ -264,8 +264,23 @@ function getCrouseModifyInfo(row){
 		return;
 	}
 	
-	if(parseFloat($("#majorTrainingDetails_theoryHours").val())+parseFloat($("#majorTrainingDetails_practiceHours").val())!==parseFloat($("#majorTrainingDetails_allhours").val())){
+	var realAllHosrs=row.zxs;
+	var allHosrs=parseFloat($("#majorTrainingDetails_theoryHours").val())+parseFloat($("#majorTrainingDetails_practiceHours").val());
+	var allHosrs2=parseFloat($("#majorTrainingDetails_disperseHours").val())+parseFloat($("#majorTrainingDetails_centralizedHours").val());
+	if(allHosrs===0){
+		toastr.warning('理论学时实践学时之和不能为0');
+		return;
+	}else if(allHosrs2===0){
+		toastr.warning('分散学时集中学时之和不能为0');
+		return;
+	}else if(allHosrs!==realAllHosrs){
 		toastr.warning('理论学时实践学时之和不等于总学时');
+		return;
+	}else if(allHosrs2!==realAllHosrs){
+		toastr.warning('分散学时集中学时之和不等于总学时');
+		return;
+	}else if(allHosrs!==allHosrs2){
+		toastr.warning('（理论学时+实践学时）不等于（分散学时+集中学时）');
 		return;
 	}
 	
@@ -276,11 +291,6 @@ function getCrouseModifyInfo(row){
 	
 	if(parseFloat($("#majorTrainingDetails_credits").val())===0){
 		toastr.warning('学分不能为0');
-		return;
-	}
-	
-	if(parseFloat($("#majorTrainingDetails_theoryHours").val())+parseFloat($("#majorTrainingDetails_practiceHours").val())===0){
-		toastr.warning('理论学时实践学时之和不能为0');
 		return;
 	}
 	
@@ -300,6 +310,8 @@ function getCrouseModifyInfo(row){
 	crouseInfoObject.xf=$("#majorTrainingDetails_credits").val();
 	crouseInfoObject.llxs=$("#majorTrainingDetails_theoryHours").val();
 	crouseInfoObject.sjxs=$("#majorTrainingDetails_practiceHours").val();
+	crouseInfoObject.fsxs=$("#majorTrainingDetails_disperseHours").val();
+	crouseInfoObject.jzxs=$("#majorTrainingDetails_centralizedHours").val();
 	crouseInfoObject.skxq=JSON.stringify($("#majorTrainingDetails_teachingTerm").val());
 	crouseInfoObject.zhouxs=$("#majorTrainingDetails_weekHours").val();
 	crouseInfoObject.zzs=$("#majorTrainingDetails_weekCounts").val();
@@ -420,6 +432,8 @@ function showAndStuffDetails(row,showFooter) {
 	$("#majorTrainingDetails_credits").val(row.xf);
 	$("#majorTrainingDetails_theoryHours").val(row.llxs);
 	$("#majorTrainingDetails_practiceHours").val(row.sjxs);
+	$("#majorTrainingDetails_disperseHours").val(row.fsxs);
+	$("#majorTrainingDetails_centralizedHours").val(row.jzxs);
 	multiSelectWithDefault("#majorTrainingDetails_teachingTerm",JSON.parse(row.skxq)); //授课学期
 	$("#majorTrainingDetails_weekHours").val(row.zhouxs);
 	$("#majorTrainingDetails_weekCounts").val(row.zzs);
@@ -682,13 +696,23 @@ function getNewCulturePlanInfo(crouseID){
 		return;
 	}
 	
-	if(parseFloat($("#classBaseInfo_theoryHours").val())+parseFloat($("#classBaseInfo_practiceHours").val())===0){
+	var realAllHosrs=parseFloat($("#classBaseInfo_allHours").val());
+	var allHosrs=parseFloat($("#classBaseInfo_theoryHours").val())+parseFloat($("#classBaseInfo_practiceHours").val());
+	var allHosrs2=parseFloat($("#classBaseInfo_disperseHours").val())+parseFloat($("#classBaseInfo_centralizedHours").val());
+	if(allHosrs===0){
 		toastr.warning('理论学时实践学时之和不能为0');
 		return;
-	}
-	
-	if(parseFloat($("#classBaseInfo_theoryHours").val())+parseFloat($("#classBaseInfo_practiceHours").val())!==parseFloat($("#classBaseInfo_allHours").val())){
+	}else if(allHosrs2===0){
+		toastr.warning('分散学时集中学时之和不能为0');
+		return;
+	}else if(allHosrs!==realAllHosrs){
 		toastr.warning('理论学时实践学时之和不等于总学时');
+		return;
+	}else if(allHosrs2!==realAllHosrs){
+		toastr.warning('分散学时集中学时之和不等于总学时');
+		return;
+	}else if(allHosrs!==allHosrs2){
+		toastr.warning('（理论学时+实践学时）不等于（分散学时+集中学时）');
 		return;
 	}
 	
@@ -735,6 +759,8 @@ function getNewCulturePlanInfo(crouseID){
 	crouseInfoObject.xf=$("#classBaseInfo_credits").val();
 	crouseInfoObject.llxs=$("#classBaseInfo_theoryHours").val();
 	crouseInfoObject.sjxs=$("#classBaseInfo_practiceHours").val();
+	crouseInfoObject.fsxs=$("#classBaseInfo_disperseHours").val();
+	crouseInfoObject.jzxs=$("#classBaseInfo_centralizedHours").val();
 	crouseInfoObject.skxq=JSON.stringify($("#classBaseInfo_classSemesters").val());
 	crouseInfoObject.zhouxs=$("#classBaseInfo_weekHours").val();
 	crouseInfoObject.zzs=$("#classBaseInfo_countWeeks").val();
@@ -843,7 +869,7 @@ function stuffAllClassTable(tableInfo) {
 			formatter : paramsMatter
 		}, {
 			field : 'bzzymc',
-			title : '标志专业名称',
+			title : '专业名称',
 			align : 'left',
 			formatter : paramsMatter
 		} ]
@@ -862,6 +888,8 @@ function stuffClassBaseInfo(row) {
 	$("#classBaseInfo_credits").val(row.xf);       //学分
 	$("#classBaseInfo_theoryHours").val(row.llxs);  //理论学时
 	$("#classBaseInfo_practiceHours").val(row.sjxs); //实践学时
+	$("#classBaseInfo_disperseHours").val(row.fsxs);  //分散学时
+	$("#classBaseInfo_centralizedHours").val(row.jzxs); //集中学时
 	$("#classBaseInfo_allHours").val(row.zxs);  //总学时
 	stuffManiaSelectWithDeafult("#classBaseInfo_classType", row.kclxCode);  //课程类型
 	stuffManiaSelectWithDeafult("#classBaseInfo_classNature", row.kcxzCode); //课程性质
@@ -962,6 +990,8 @@ function rebackClassBaseInfo() {
 	$("#classBaseInfo_credits").val(0);
 	$("#classBaseInfo_theoryHours").val(0);
 	$("#classBaseInfo_practiceHours").val(0);
+	$("#classBaseInfo_disperseHours").val(0);
+	$("#classBaseInfo_centralizedHours").val(0);
 	$("#classBaseInfo_weekHours").val(0);
 	$("#classBaseInfo_countWeeks").val(0);
 	$("#classBaseInfo_startWeek").val(1);

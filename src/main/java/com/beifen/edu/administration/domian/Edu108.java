@@ -19,11 +19,13 @@ public class Edu108 {
 	private String xzbmc;  //行政班名称
 	private String kcmc;  //课程名称
 	private String kcdm;  //课程代码
-	private String ywmc;  //英文名称
+//	private String ywmc;  //英文名称
 	private double zxs;  //总学时
 	private double xf;  //学分
 	private double llxs;  //理论学时
 	private double sjxs;  //实践学时
+	private double fsxs;  //分散学时
+	private double jzxs;  //集中学时
 	private String skxq;  //授课学期
 	private double zhouxs;  //周学时
 	private double zzs;  //总周数
@@ -90,14 +92,27 @@ public class Edu108 {
 	public void setKcdm(String kcdm) {
 		this.kcdm = kcdm;
 	}
-	public String getYwmc() {
-		return ywmc;
-	}
-	public void setYwmc(String ywmc) {
-		this.ywmc = ywmc;
-	}
+//	public String getYwmc() {
+//		return ywmc;
+//	}
+//	public void setYwmc(String ywmc) {
+//		this.ywmc = ywmc;
+//	}
+	
 	public double getZxs() {
 		return zxs;
+	}
+	public double getFsxs() {
+		return fsxs;
+	}
+	public void setFsxs(double fsxs) {
+		this.fsxs = fsxs;
+	}
+	public double getJzxs() {
+		return jzxs;
+	}
+	public void setJzxs(double jzxs) {
+		this.jzxs = jzxs;
 	}
 	public void setZxs(double zxs) {
 		this.zxs = zxs;

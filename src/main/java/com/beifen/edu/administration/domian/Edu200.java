@@ -15,17 +15,19 @@ public class Edu200 {
 	private Long BF200_ID;
 	private String kcmc;  //课程名称
 	private String kcdm;  //课程代码
-	private String ywmc;  //英文名称
+//	private String ywmc;  //英文名称
 	private String kcfzr;  //课程负责人
 	private Long kcfzrID;  //课程负责人id
 	private String kclx;  //课程类型
 	private String kclxCode;  //课程类型编码
 	private String kcxz;  //课程性质
 	private String kcxzCode;  //课程性质编码
-	private String kccc;  //课程层次
-	private String kcccCode;  //课程层次编码
+//	private String kccc;  //课程层次
+//	private String kcccCode;  //课程层次编码
 	private double llxs;  //理论学时
 	private double sjxs;  //实践学时
+	private double fsxs;  //分散学时
+	private double jzxs;  //集中学时
 	private double zxs;  //总学时
 	private String ksfs;  //考试方式
 	private double xf;  //学分
@@ -79,12 +81,27 @@ public class Edu200 {
 	public void setKcdm(String kcdm) {
 		this.kcdm = kcdm;
 	}
-	public String getYwmc() {
-		return ywmc;
+	
+	
+	
+public double getFsxs() {
+		return fsxs;
 	}
-	public void setYwmc(String ywmc) {
-		this.ywmc = ywmc;
+	public void setFsxs(double fsxs) {
+		this.fsxs = fsxs;
 	}
+	public double getJzxs() {
+		return jzxs;
+	}
+	public void setJzxs(double jzxs) {
+		this.jzxs = jzxs;
+	}
+	//	public String getYwmc() {
+//		return ywmc;
+//	}
+//	public void setYwmc(String ywmc) {
+//		this.ywmc = ywmc;
+//	}
 	public String getKcfzr() {
 		return kcfzr;
 	}
@@ -103,12 +120,12 @@ public class Edu200 {
 	public void setKcxz(String kcxz) {
 		this.kcxz = kcxz;
 	}
-	public String getKccc() {
-		return kccc;
-	}
-	public void setKccc(String kccc) {
-		this.kccc = kccc;
-	}
+//	public String getKccc() {
+//		return kccc;
+//	}
+//	public void setKccc(String kccc) {
+//		this.kccc = kccc;
+//	}
 	public double getLlxs() {
 		return llxs;
 	}
@@ -314,12 +331,13 @@ public class Edu200 {
 	public void setKcxzCode(String kcxzCode) {
 		this.kcxzCode = kcxzCode;
 	}
-	public String getKcccCode() {
-		return kcccCode;
-	}
-	public void setKcccCode(String kcccCode) {
-		this.kcccCode = kcccCode;
-	}
+//	public String getKcccCode() {
+//		return kcccCode;
+//	}
+//	public void setKcccCode(String kcccCode) {
+//		this.kcccCode = kcccCode;
+//	}
+
 	
 	
 	
