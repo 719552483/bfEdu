@@ -1355,9 +1355,7 @@ public class AdministrationController {
 
 	/**
 	 * 删除专业
-	 * 
 	 * @param deleteIds删除ID
-	 * 
 	 * @return returnMap
 	 */
 	@RequestMapping("removeMajor")
