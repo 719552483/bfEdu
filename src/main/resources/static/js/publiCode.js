@@ -648,11 +648,15 @@ function sendLvelRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.result) {
-				hideloding();
-				tableRemoveAction("#allLevlTable", removeArray, ".allLevlTableArea", "培养层次信息");
-				$.hideModal("#remindModal");
-				$(".myTooltip").tooltipify();
+				if (backjson.canRemove) {
+					tableRemoveAction("#allLevlTable", removeArray, ".allLevlTableArea", "培养层次信息");
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的培养层次');
+				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -881,11 +885,15 @@ function sendDeaparmentRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.result) {
-				hideloding();
-				tableRemoveAction("#allDepartmentTable", removeArray, ".allDepartmentTableArea", "系部信息");
-				$.hideModal("#remindModal");
-				$(".myTooltip").tooltipify();
+				if (backjson.canRemove) {
+					tableRemoveAction("#allDepartmentTable", removeArray, ".allDepartmentTableArea", "系部信息");
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的系部');
+				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1114,11 +1122,15 @@ function sendGradeRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.result) {
-				hideloding();
-				tableRemoveAction("#allGradeTable", removeArray, ".allGradeTableArea", "年级信息");
-				$.hideModal("#remindModal");
-				$(".myTooltip").tooltipify();
+				if (backjson.canRemove) {
+					tableRemoveAction("#allGradeTable", removeArray, ".allGradeTableArea", "年级信息");
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的年级');
+				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1347,11 +1359,15 @@ function sendMajorRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.result) {
-				hideloding();
-				tableRemoveAction("#allMajorTable", removeArray, ".allMajorTableArea", "专业信息");
-				$.hideModal("#remindModal");
-				$(".myTooltip").tooltipify();
+				if (backjson.canRemove) {
+					tableRemoveAction("#allMajorTable", removeArray, ".allMajorTableArea", "专业信息");
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的专业');
+				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1824,7 +1840,7 @@ function stuffRelationTipSelect(){
 //单个删除关系
 function removeRelation(removeID){
 	$.showModal("#remindModal",true);
-	$(".remindType").html("层次关系");
+	$(".remindType").html("培养计划");
 	$(".remindActionType").html("删除");
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
@@ -1845,7 +1861,7 @@ function removeRelations() {
 	}
 	
 	$.showModal("#remindModal",true);
-	$(".remindType").html("层次关系");
+	$(".remindType").html("培养计划");
 	$(".remindActionType").html("删除");
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -1878,11 +1894,15 @@ function sendRelationRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.result) {
-				hideloding();
-				tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
-				$.hideModal("#remindModal");
-				$(".myTooltip").tooltipify();
+				if (backjson.canRemove) {
+					tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的培养计划');
+				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}

@@ -151,8 +151,18 @@ public class AdministrationPageService {
 		edu107DAO.save(edu107);
 	}
 
+	//删除培养层次系部、年级、专业时验证有没有相应的培养计划，有则不允许删除
+	public boolean  verifyRelation(String edu107ID) {
+		boolean canRemove=true;
+		List<Edu108> planByEdu107=edu108DAO.queryCulturePlanCouses(Long.valueOf(edu107ID));
+		if(planByEdu107.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
+	
 	// 删除层次关系
-	public void removeRelation(String edu107ID) {
+	public void  removeRelation(String edu107ID) {
 		edu107DAO.removeRelation(edu107ID);
 	}
 
@@ -166,6 +176,17 @@ public class AdministrationPageService {
 		edu103DAO.save(edu103);
 	}
 
+	// 验证层次
+	public boolean verifyLevel(String edu103id) {
+		boolean canRemove=true;
+		Edu103 edu103=edu103DAO.query103BYID(edu103id);
+		List<Edu107> levelMatchDepartment=edu107DAO.levelMatchDepartment(edu103.getPyccbm());
+		if(levelMatchDepartment.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
+	
 	// 删除层次
 	public void removeLevel(String edu103ID) {
 		edu103DAO.removeLevel(edu103ID);
@@ -175,12 +196,23 @@ public class AdministrationPageService {
 	public void addNewDeaparment(Edu104 edu104) {
 		edu104DAO.save(edu104);
 	}
-
+	
 	// 修改系部
 	public void updateDeaparment(Edu104 edu104) {
 		edu104DAO.save(edu104);
 	}
 
+	//验证系部
+	public boolean verifyDeaparment(String edu104id) {
+		boolean canRemove=true;
+		Edu104 edu104=edu104DAO.query104BYID(edu104id);
+		List<Edu107> levelMatchDepartment=edu107DAO.departmentMatchGrade(edu104.getXbbm());
+		if(levelMatchDepartment.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
+	
 	// 删除系部
 	public void removeDeaparment(String edu104ID) {
 		edu104DAO.removeDeaparment(edu104ID);
@@ -196,6 +228,17 @@ public class AdministrationPageService {
 		edu105DAO.save(edu105);
 	}
 
+	//验证年级
+	public boolean verifyGrade(String edu105id) {
+		boolean canRemove=true;
+		Edu105 edu105=edu105DAO.query105BYID(edu105id);
+		List<Edu107> grades=edu107DAO.gradeMatchMajor(edu105.getNjbm());
+		if(grades.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
+	
 	// 删除年级
 	public void removeGrade(String edu105ID) {
 		edu105DAO.removeGrade(edu105ID);
@@ -211,6 +254,17 @@ public class AdministrationPageService {
 		edu106DAO.save(edu106);
 	}
 
+	//验证专业
+	public boolean verifyMajor(String edu106id) {
+		boolean canRemove=true;
+		Edu106 edu106=edu106DAO.query105BYID(edu106id);
+		List<Edu107> grades=edu107DAO.query107ByMajorCode(edu106.getZybm());
+		if(grades.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
+	
 	// 删除专业
 	public void removeMajor(String edu106ID) {
 		edu106DAO.removeGrade(edu106ID);
@@ -1207,6 +1261,12 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
 
 
 

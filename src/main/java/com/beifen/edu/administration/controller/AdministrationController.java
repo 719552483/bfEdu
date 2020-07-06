@@ -863,11 +863,25 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteRelation(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		boolean canRemove=true;
 		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.removeRelation(deleteArray.get(i).toString());
+			boolean verifyRelation= administrationPageService.verifyRelation(deleteArray.get(i).toString());
+			if(!verifyRelation){
+				canRemove=false;
+				break;
+			}else{
+				canRemove=true;
+			}
+		}
+		
+		if(canRemove){
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeRelation(deleteArray.get(i).toString());
+			}
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
 
@@ -992,11 +1006,25 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteLevel(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		boolean canRemove=true;
 		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.removeLevel(deleteArray.get(i).toString());
+			boolean verifyLevel= administrationPageService.verifyLevel(deleteArray.get(i).toString());
+			if(!verifyLevel){
+				canRemove=false;
+				break;
+			}else{
+				canRemove=true;
+			}
+		}
+		
+		if(canRemove){
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeLevel(deleteArray.get(i).toString());
+			}
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
 
@@ -1097,11 +1125,25 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteDeaparment(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		boolean canRemove=true;
 		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.removeDeaparment(deleteArray.get(i).toString());
+			boolean verifyDeaparment= administrationPageService.verifyDeaparment(deleteArray.get(i).toString());
+			if(!verifyDeaparment){
+				canRemove=false;
+				break;
+			}else{
+				canRemove=true;
+			}
+		}
+		
+		if(canRemove){
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeDeaparment(deleteArray.get(i).toString());
+			}
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
 
@@ -1202,11 +1244,26 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteGrade(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		boolean canRemove=true;
 		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.removeGrade(deleteArray.get(i).toString());
+			boolean verifyGrade= administrationPageService.verifyGrade(deleteArray.get(i).toString());
+			if(!verifyGrade){
+				canRemove=false;
+				break;
+			}else{
+				canRemove=true;
+			}
 		}
+		
+		if(canRemove){
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeGrade(deleteArray.get(i).toString());
+			}
+		}
+		
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
 
@@ -1307,11 +1364,25 @@ public class AdministrationController {
 	@ResponseBody
 	public Object deleteMajor(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
+		boolean canRemove=true;
 		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.removeMajor(deleteArray.get(i).toString());
+			boolean verifyMajor= administrationPageService.verifyMajor(deleteArray.get(i).toString());
+			if(!verifyMajor){
+				canRemove=false;
+				break;
+			}else{
+				canRemove=true;
+			}
+		}
+		
+		if(canRemove){
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeMajor(deleteArray.get(i).toString());
+			}
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
 
