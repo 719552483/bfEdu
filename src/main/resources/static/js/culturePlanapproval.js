@@ -5,7 +5,6 @@ $(function() {
 	stuffEJDElement(EJDMElementInfo);
 	drawMajorTrainingVerifyEmptyTable();
 	getMajorTrainingSelectInfo();
-	
 	culturePlanVerifyAreaBtnbnid();
 	$("input[type='number']").inputSpinner();
 });

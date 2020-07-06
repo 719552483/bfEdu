@@ -164,6 +164,40 @@ public class AdministrationPageService {
 	// 删除层次关系
 	public void  removeRelation(String edu107ID) {
 		edu107DAO.removeRelation(edu107ID);
+//		
+//		/*
+//		 * 删除层次关系下的教学班、课表、教学任务书都不应存在     学生的相应教学班删除
+//		 * */
+//		
+//		
+//		List<Edu108> planByEdu107=edu108DAO.queryCulturePlanCouses(Long.valueOf(edu107ID));
+//		for (int p = 0; p < planByEdu107.size(); p++) {
+//			Edu108 edu108=planByEdu107.get(p);
+//			List<Edu301> willRemove301=edu301DAO.queryTeachingClassByEdu108ID(edu108.getEdu108_ID().toString());
+//			for (int w = 0; w < willRemove301.size(); w++) {
+//				//删除教学班
+//				edu301DAO.removeTeachingClassByID(willRemove301.get(w).getEdu301_ID().toString());
+//				
+//				//修改学生的教学班信息
+//				List<Edu001> willUpdate001=edu001DAO.queryStudentInfoBy301iD(willRemove301.get(w).getEdu301_ID().toString());
+//				for (int w2 = 0; w2 < willUpdate001.size(); w2++) {
+//					edu001DAO.updateStudent301InfoBy301id(null,null,willUpdate001.get(w2).getEdu301_ID());
+//				}
+//			}
+//			
+//			//删除任务书
+//			Edu201 willRemoveTask=edu201DAO.queryTaskByedu108ID(edu108.getEdu108_ID().toString());
+//			edu201DAO.removeTasks(willRemoveTask.getEdu201_ID().toString());
+//
+//			//删除课表
+//			// TODO Auto-generated method stub
+//			
+//			//删除层次和相关培养计划
+//			if(edu108.getEdu107_ID().equals(Long.valueOf(edu107ID))){
+//				edu107DAO.removeRelation(edu107ID);
+//				edu108DAO.removePlanBy107ID(edu108.getEdu107_ID().toString());
+//			}
+//		}
 	}
 
 	// 新增层次
@@ -393,8 +427,8 @@ public class AdministrationPageService {
 	}
 
 	// 判断行政班是否包含在培养计划中
-	public List<Edu108> queryAdministrationClassesCrouse(String xzbCode) {
-		return edu108DAO.queryAdministrationClassesCrouse(xzbCode);
+	public List<Edu108> queryAdministrationClassesCrouse(String Edu300_ID) {
+		return edu108DAO.queryAdministrationClassesCrouse(Edu300_ID);
 	}
 	
 	//教学班拆班 合班 生成的相关操作
@@ -1261,6 +1295,8 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 
