@@ -2661,12 +2661,19 @@ public class AdministrationController {
 	 */
 	@RequestMapping("downloadStudentModal")
 	@ResponseBody
-	public void downloadStudentModal(HttpServletResponse response) throws IOException {
+	public void downloadStudentModal(HttpServletRequest request,HttpServletResponse response) throws IOException {
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createImportStudentModal(workbook);
-		
-        utils.loadImportStudentModal(response,"导入学生模板", workbook);
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="ImportStudent";
+		}else{
+			fileName="导入学生模板";
+			
+		}
+        utils.loadImportStudentModal(response,fileName, workbook);
 	}
 	
 	/**

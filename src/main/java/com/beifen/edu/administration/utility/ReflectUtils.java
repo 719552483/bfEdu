@@ -1554,10 +1554,12 @@ public class ReflectUtils {
 			}
 		}
 		
-		response.setHeader("Content-type","application/vnd.ms-excel");
+		
+		
         // 解决导出文件名中文乱码
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"ISO-8859-1")+".xls");
+        response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
+        response.setHeader("Content-type","application/vnd.ms-excel");
         workbook.write(response.getOutputStream());
 	}
 	
@@ -1762,7 +1764,25 @@ public class ReflectUtils {
 	}
 	
 
-	
+	/**
+	  * 获取浏览器是否为ie
+	  * @Title: getBrowserName
+	  * @data:2015-1-12下午05:08:49
+	  * @author:wolf
+	  *
+	  * @param agent
+	  * @return
+	  */
+
+	public boolean isIE(String agent) {
+		boolean rs =false;
+		if (agent.indexOf("trident") !=-1) {
+			rs = true;
+		} else  {
+			rs = false;
+		}
+		 return rs;
+	}
 
 
 
