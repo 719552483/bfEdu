@@ -2671,7 +2671,6 @@ public class AdministrationController {
 			fileName="ImportStudent";
 		}else{
 			fileName="导入学生模板";
-			
 		}
         utils.loadImportStudentModal(response,fileName, workbook);
 	}
@@ -2684,7 +2683,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("downloadModifyStudentsModal")
 	@ResponseBody
-	public void downloadModifyStudentsModal(HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException {
+	public void downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException {
 		// 根据ID查询已选学生信息
 		com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
 		List<Edu001> chosedStudents=new ArrayList<Edu001>();
@@ -2692,10 +2691,17 @@ public class AdministrationController {
 			Edu001 edu001=administrationPageService.queryStudentBy001ID(modifyStudentArray.get(i).toString());
 			chosedStudents.add(edu001);
 		}
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="modifyStudents";
+		}else{
+			fileName="批量更新学生模板";
+		}
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyStudentModal(workbook,chosedStudents);
-        utils.loadImportStudentModal(response,"批量更新学生模板", workbook);
+        utils.loadImportStudentModal(response,fileName, workbook);
 	}
 	
 	/**
