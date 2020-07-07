@@ -1926,8 +1926,7 @@ public class AdministrationController {
 		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 查询培养计划下的行政班
-		List<Edu300> administrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode,
-				departmentCode, gradeCode, majorCode);
+		List<Edu300> administrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode,departmentCode, gradeCode, majorCode);
 		List<String> classNames = new ArrayList();
 		List<String> classIds = new ArrayList();
 		for (int i = 0; i < administrationClasses.size(); i++) {
@@ -1967,7 +1966,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 教学班管理 - 查询已生成开课计划的行政班班级库
+	 * 教学班管理 - 查询已生成开课计划的行政班班级库(指定培养计划)
 	 */
 	@RequestMapping("/teachingClassQueryAdministrationClassesLibrary")
 	@ResponseBody
@@ -1988,13 +1987,11 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		List<Edu300> allAdministrationClasses = administrationPageService
-				.queryCulturePlanAdministrationClasses(levelCode, departmentCode, gradeCode, majorCode);
+		List<Edu300> allAdministrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 组装行政班的培养计划信息
 		for (int i = 0; i < allAdministrationClasses.size(); i++) {
-			List<Edu108> palnInfos = administrationPageService
-					.queryAdministrationClassesCrouse(allAdministrationClasses.get(i).getEdu300_ID().toString());
+			List<Edu108> palnInfos = administrationPageService.queryAdministrationClassesCrouse(allAdministrationClasses.get(i).getEdu300_ID().toString());
 			for (int p = 0; p < palnInfos.size(); p++) {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
@@ -2023,6 +2020,62 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
+	
+	/**
+	 * 教学班管理 - 查询已生成开课计划的行政班班级库(不指定培养计划)
+	 */
+	@RequestMapping("/getAllClassesLibrary")
+	@ResponseBody
+	public Object getAllClassesLibrary() {
+		Map<String, Object> returnMap = new HashMap();
+		List<Map> classesInfo = new ArrayList(); // 组装返回信息
+		/*
+		 * 1.查询所有行政班 List<Edu300>
+		 * 
+		 * 2.查询培养计划 List<Edu108>
+		 * 
+		 * 3.行政班信息+课程信息 组装返回信息
+		 * 
+		 */
+		List<Edu300> allAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
+		// 组装行政班的培养计划信息
+		for (int i = 0; i < allAdministrationClasses.size(); i++) {
+			List<Edu108> palnInfos = administrationPageService.queryAdministrationClassesCrouse(allAdministrationClasses.get(i).getEdu300_ID().toString());
+			for (int p = 0; p < palnInfos.size(); p++) {
+				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
+				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
+				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
+				administrationClassesWithcrouseInfo.put("pycc", allAdministrationClasses.get(i).getPyccmc());
+				administrationClassesWithcrouseInfo.put("pyccbm", allAdministrationClasses.get(i).getPyccbm());
+				administrationClassesWithcrouseInfo.put("xb", allAdministrationClasses.get(i).getXbmc());
+				administrationClassesWithcrouseInfo.put("xbbm", allAdministrationClasses.get(i).getXzbbm());
+				administrationClassesWithcrouseInfo.put("nj", allAdministrationClasses.get(i).getNjmc());
+				administrationClassesWithcrouseInfo.put("njbm", allAdministrationClasses.get(i).getNjbm());
+				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
+				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
+				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
+				administrationClassesWithcrouseInfo.put("xzbbm", allAdministrationClasses.get(i).getXzbbm());
+				administrationClassesWithcrouseInfo.put("kcmc", palnInfos.get(p).getKcmc());
+				administrationClassesWithcrouseInfo.put("ksdm", palnInfos.get(p).getKcdm());
+				administrationClassesWithcrouseInfo.put("kcxz", palnInfos.get(p).getKcxz());
+				administrationClassesWithcrouseInfo.put("kcxzCode", palnInfos.get(p).getKcxzCode());
+				administrationClassesWithcrouseInfo.put("xf", palnInfos.get(p).getXf());
+				administrationClassesWithcrouseInfo.put("skxq", palnInfos.get(p).getSkxq());
+				administrationClassesWithcrouseInfo.put("zdrs", allAdministrationClasses.get(i).getZxrs());
+				administrationClassesWithcrouseInfo.put("rnrs", allAdministrationClasses.get(i).getRnrs());
+				administrationClassesWithcrouseInfo.put("jxbrs", 0);
+				administrationClassesWithcrouseInfo.put("jxbmc", "");
+				classesInfo.add(administrationClassesWithcrouseInfo);
+			}
+		}
+
+		returnMap.put("classesInfo", classesInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
 
 	/**
 	 * 教学班管理 -验证行政班信息
@@ -2222,7 +2275,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 查询所有教学班
+	 * 查询所有教学班(指定培养计划)
 	 * 
 	 * @param SearchCriteria
 	 *            搜索条件
@@ -2238,8 +2291,24 @@ public class AdministrationController {
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
 
-		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode, departmentCode,
-				gradeCode, majorCode);
+		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode, departmentCode,gradeCode, majorCode);
+		returnMap.put("calssInfo", calssInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 查询所有教学班(不指定培养计划)
+	 * 
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("getAllTeachingClasses2")
+	@ResponseBody
+	public Object getAllTeachingClasses2() {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu301> calssInfo = administrationPageService.getAllTeachingClasses();
 		returnMap.put("calssInfo", calssInfo);
 		returnMap.put("result", true);
 		return returnMap;

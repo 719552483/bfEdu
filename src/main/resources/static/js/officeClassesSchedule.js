@@ -83,7 +83,7 @@ function stuffTaskInfoTable(tableInfo) {
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: kcmcMatter
 
 			},	{
 				field: 'bhzymc',
@@ -161,13 +161,12 @@ function stuffTaskInfoTable(tableInfo) {
 			.join('');
 	}
 	
+	function kcmcMatter(value, row, index) {
+		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.kcmc)+'">'+$.uniqueArray(row.kcmc)+'</span>' ].join('');
+	}
+	
 	function bhxzbmcMatter(value, row, index) {
-		var str=row.bhzymc[0];
-		
-		return [
-				'<div class="myTooltip" title="'+str+'">'+str+'</div>'
-			]
-			.join('');
+		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.bhzymc)+'">'+$.uniqueArray(row.bhzymc)+'</span>' ].join('');
 	}
 	
 	function pkbmMatter(value, row, index) {
