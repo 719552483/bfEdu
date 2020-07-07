@@ -696,7 +696,6 @@ function getNewCulturePlanInfo(crouseID){
 		return;
 	}
 	
-	var realAllHosrs=parseFloat($("#classBaseInfo_allHours").val());
 	var allHosrs=parseFloat($("#classBaseInfo_theoryHours").val())+parseFloat($("#classBaseInfo_practiceHours").val());
 	var allHosrs2=parseFloat($("#classBaseInfo_disperseHours").val())+parseFloat($("#classBaseInfo_centralizedHours").val());
 	if(allHosrs===0){
@@ -705,18 +704,12 @@ function getNewCulturePlanInfo(crouseID){
 	}else if(allHosrs2===0){
 		toastr.warning('分散学时集中学时之和不能为0');
 		return;
-	}else if(allHosrs!==realAllHosrs){
-		toastr.warning('理论学时实践学时之和不等于总学时');
-		return;
-	}else if(allHosrs2!==realAllHosrs){
-		toastr.warning('分散学时集中学时之和不等于总学时');
-		return;
 	}else if(allHosrs!==allHosrs2){
 		toastr.warning('（理论学时+实践学时）不等于（分散学时+集中学时）');
 		return;
 	}
 	
-	if(parseFloat($("#classBaseInfo_weekHours").val())*parseFloat($("#classBaseInfo_countWeeks").val())!==parseFloat($("#classBaseInfo_allHours").val())){
+	if(parseFloat($("#classBaseInfo_weekHours").val())*parseFloat($("#classBaseInfo_countWeeks").val())!==allHosrs){
 		toastr.warning('周学时*总周数不等于总学时');
 		return;
 	}
@@ -755,7 +748,7 @@ function getNewCulturePlanInfo(crouseID){
 	crouseInfoObject.kcmc=$("#classBaseInfo_className").val();
 	crouseInfoObject.kcdm=$("#classBaseInfo_classCode").val();
 	crouseInfoObject.ywmc=$("#classBaseInfo_enName").val();
-	crouseInfoObject.zxs=$("#classBaseInfo_allHours").val();
+	crouseInfoObject.zxs=allHosrs;
 	crouseInfoObject.xf=$("#classBaseInfo_credits").val();
 	crouseInfoObject.llxs=$("#classBaseInfo_theoryHours").val();
 	crouseInfoObject.sjxs=$("#classBaseInfo_practiceHours").val();
@@ -890,7 +883,7 @@ function stuffClassBaseInfo(row) {
 	$("#classBaseInfo_practiceHours").val(row.sjxs); //实践学时
 	$("#classBaseInfo_disperseHours").val(row.fsxs);  //分散学时
 	$("#classBaseInfo_centralizedHours").val(row.jzxs); //集中学时
-	$("#classBaseInfo_allHours").val(row.zxs);  //总学时
+//	$("#classBaseInfo_allHours").val(row.zxs);  //总学时
 	stuffManiaSelectWithDeafult("#classBaseInfo_classType", row.kclxCode);  //课程类型
 	stuffManiaSelectWithDeafult("#classBaseInfo_classNature", row.kcxzCode); //课程性质
 	stuffManiaSelectWithDeafult("#classBaseInfo_testWay", row.ksfs);    //考试方式
@@ -984,7 +977,7 @@ function addClassAreaStartSearch() {
 function rebackClassBaseInfo() {
 	var reObject = new Object();
 	reObject.normalSelectIds = "#classBaseInfo_isTeachingReform,#classBaseInfo_isCalssTextual,#classBaseInfo_isTextual,#classBaseInfo_isKernelClass,#classBaseInfo_isSchoolBusiness,#classBaseInfo_classWay,#classBaseInfo_signatureCourseLevel,#classBaseInfo_isNewClass,#classBaseInfo_classQuality,#classBaseInfo_classSchedRequire,#classBaseInfo_classType,#classBaseInfo_testWay,#classBaseInfo_classNature,#classBaseInfo_setUp,#classBaseInfo_classLocation,#classBaseInfo_moduleType";
-	reObject.InputIds = "#classBaseInfo_classCode,#classBaseInfo_className,#classBaseInfo_enName,#classBaseInfo_allHours,#classBaseInfo_midtermPrcent,#classBaseInfo_endtermPrcent";
+	reObject.InputIds = "#classBaseInfo_classCode,#classBaseInfo_className,#classBaseInfo_enName,#classBaseInfo_midtermPrcent,#classBaseInfo_endtermPrcent";
 	reReloadSearchsWithSelect(reObject);
 	// 数字input必须逐个重置 否则报错
 	$("#classBaseInfo_credits").val(0);
