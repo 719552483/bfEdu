@@ -46,11 +46,22 @@ function loadChoosendShortcuts() {
 			}
 		}
 	}
+	
+	$(".choosendShortcuts").find("li").on({
+		mouseover : function(e){
+			var hoverClass=e.currentTarget.className;
+			$(".choosendShortcuts").find("."+hoverClass).addClass("wantPonitShortcuts");
+		} ,
+		mouseout : function(e){
+			var hoverClass=e.currentTarget.classList[0];
+			$(".choosendShortcuts").find("."+hoverClass).removeClass("wantPonitShortcuts");
+		} 
+	}) ;
 }
 
+//跳转指定页面
 function pointPage(eve){
-	
-	window.location.href = eve.className+".html";
+	window.location.href = eve.classList[0]+".html";
 }
 
 /*

@@ -42,6 +42,14 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 
+.wantPonitShortcuts{
+    background-color: rgba(114, 207, 251, 0.12);
+    border-radius: 10px;
+    box-shadow: 4px 1px 11px 0px rgba(143, 209, 228, 0.38);
+    color: #1e94c3;
+}
+
+
 .giveBottom .multi-select-button {
 	padding: 12px 0.6em;
 	max-width: 100% !important
