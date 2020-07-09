@@ -35,6 +35,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,6 +43,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -1339,9 +1341,9 @@ public class ReflectUtils {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"培养层次编码", "所在系部编码", "年级编码", "专业编码", "行政班ID", "学号", "学生ID", "学生姓名",
-				"曾用名", "性别", "状态编码", "出生日期", "身份证号 ", "民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
-				"文化程度编码", "考生号", "入学总分", "入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+		String[] titles = new String[] {"*培养层次编码", "*所在系部编码", "*年级编码", "*专业编码", "*行政班ID", "*学号", "*学生ID", "*学生姓名",
+				"曾用名", "*性别", "*状态编码", "*出生日期", "*身份证号 ", "*民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
+				"文化程度编码", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		
 		// 循环设置标题
@@ -1400,10 +1402,10 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"培养层次编码", "系部编码", "年级编码", "专业编"
-				+ "码", "行政班ID", "学号", "学生姓名",
-				"曾用名", "性别", "状态编码", "出生日期", "身份证号 ", "民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
-				"文化程度编码", "考生号", "入学总分", "入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+		String[] titles = new String[] {"*培养层次编码", "*系部编码", "*年级编码", "*专业编"
+				+ "码", "*行政班ID", "*学号", "*学生姓名",
+				"曾用名", "*性别", "*状态编码", "*出生日期", "*身份证号 ", "*民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
+				"文化程度编码", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		
 		// 循环设置标题
@@ -1536,7 +1538,77 @@ public class ReflectUtils {
 	}
 
 	// 下载模板
-	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException {
+	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
+		setEXCELstyle(workbook);
+		setEXCELformatter(workbook);
+	
+        // 解决导出文件名中文乱码
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
+        response.setHeader("Content-type","application/vnd.ms-excel");
+        workbook.write(response.getOutputStream());
+	}
+	
+	//设置模title样式
+	private void setEXCELstyle(XSSFWorkbook workbook) throws ParseException {
+		workbook.getSheetAt(1).protectSheet("beifeninfo");//上锁sheet2并设置密码
+		workbook.getSheetAt(0).getRow(0).setHeightInPoints(30); //sheet1标题行行高设置
+		workbook.getSheetAt(1).getRow(0).setHeightInPoints(30);;//sheet2标题行行高设置
+		
+		//sheet1 样式
+		Row row = workbook.getSheetAt(0).getRow(0); //  sheet1第一行标题行
+		int firstCellIndex = row.getFirstCellNum(); //  sheet1第一行标题行第一cell
+		int lastCellIndex = row.getLastCellNum(); //  sheet1第一行标题行最后cell
+		//遍历sheet1 标题行cell
+		for (int cIndex = firstCellIndex; cIndex <= lastCellIndex; cIndex++) {
+			//标题列全局样式
+			CellStyle style = workbook.createCellStyle();
+			style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//上下对齐
+			style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());//背景色
+			style.setFillPattern(CellStyle.SOLID_FOREGROUND);//前景色
+			XSSFFont redFont = workbook.createFont();
+			// 当前cell
+			Cell cell = row.getCell(cIndex);
+			if(cell!=null&&!getCellData(cell).equals("")){
+				if(cell.toString().indexOf("*")!=-1){
+					// 必填列样式
+					redFont.setColor(IndexedColors.RED.getIndex());//文字颜色
+					style.setFont(redFont);//文字颜色
+					cell.setCellStyle(style);
+					cell.setCellValue(cell.toString());
+				}else{
+					redFont.setColor(IndexedColors.GREY_80_PERCENT.getIndex());//文字颜色
+					style.setFont(redFont);//文字颜色
+					cell.setCellStyle(style);
+					cell.setCellValue(cell.toString());
+				}
+			}
+		}
+		
+		//sheet2 样式
+		Row row2 = workbook.getSheetAt(1).getRow(0); //  sheet2第一行标题行
+		int firstCellIndex2 = row.getFirstCellNum(); //  sheet2第一行标题行第一cell
+		int lastCellIndex2 = row.getLastCellNum(); //  sheet2第一行标题行最后cell
+		//遍历sheet1 标题行cell
+		for (int cIndex = firstCellIndex2; cIndex <= lastCellIndex2; cIndex++) {
+			// 当前cell
+			CellStyle style = workbook.createCellStyle();
+			style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//上下对齐
+			style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());//背景色
+			style.setFillPattern(CellStyle.SOLID_FOREGROUND);//前景色
+			XSSFFont redFont = workbook.createFont();
+			Cell cell = row2.getCell(cIndex);
+			if (cell != null && !getCellData(cell).equals("")) {
+				redFont.setColor(IndexedColors.GREY_80_PERCENT.getIndex());//文字颜色
+				style.setFont(redFont);//文字颜色
+				cell.setCellStyle(style);
+				cell.setCellValue(cell.toString());
+			}	
+		}
+	}
+	
+	//设置模板数据类型
+	private void setEXCELformatter(XSSFWorkbook workbook) {
 		//设置sheet1数据格式为文本
 		Sheet sheet = workbook.getSheetAt(0); // 读取sheet 0
 		int firstRowIndex = sheet.getFirstRowNum(); // 第一行
@@ -1553,14 +1625,6 @@ public class ReflectUtils {
 				workbook.getSheetAt(0).setDefaultColumnStyle(cIndex, textStyle);
 			}
 		}
-		
-		
-		
-        // 解决导出文件名中文乱码
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
-        response.setHeader("Content-type","application/vnd.ms-excel");
-        workbook.write(response.getOutputStream());
 	}
 	
 	//非空验证

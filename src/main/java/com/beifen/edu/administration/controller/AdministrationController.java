@@ -2658,10 +2658,11 @@ public class AdministrationController {
 	 * 
 	 * @return returnMap
 	 * @throws IOException
+	 * @throws ParseException 
 	 */
 	@RequestMapping("downloadStudentModal")
 	@ResponseBody
-	public void downloadStudentModal(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public void downloadStudentModal(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createImportStudentModal(workbook);
@@ -2679,11 +2680,12 @@ public class AdministrationController {
 	 * 下载学生更新模板
 	 * 
 	 * @return returnMap
+	 * @throws ParseException 
 	 * @throws Exception 
 	 */
 	@RequestMapping("downloadModifyStudentsModal")
 	@ResponseBody
-	public void downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException {
+	public void downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException, ParseException {
 		// 根据ID查询已选学生信息
 		com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
 		List<Edu001> chosedStudents=new ArrayList<Edu001>();
