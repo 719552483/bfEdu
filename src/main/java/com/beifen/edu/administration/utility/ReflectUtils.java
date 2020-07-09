@@ -1331,9 +1331,6 @@ public class ReflectUtils {
 		// 创建创建sheet1
 		XSSFSheet sheet1 = workbook.createSheet("导入学生信息");
 		this.stuffStudentInfoSheet1(sheet1);
-		// 创建创建sheet2
-		XSSFSheet sheet2 = workbook.createSheet("辅助信息");
-		this.stuffStudentModalSheet2(sheet2);
 	}
 	
 	// 批量更新学生模板
@@ -1341,9 +1338,6 @@ public class ReflectUtils {
 		//创建创建sheet1
 		XSSFSheet sheet1 = workbook.createSheet("已选学生信息");
 		this.stuffStudentInfoSheet1(sheet1,chosedStudents);
-		//创建创建sheet2
-		XSSFSheet sheet2 =workbook.createSheet("辅助信息");
-		this.stuffStudentModalSheet2(sheet2);
 	}
 	
 	//填充更新学生模板的Sheet1
@@ -1466,95 +1460,6 @@ public class ReflectUtils {
 		for (int i = 0; i < titles.length; i++) {
 			cells[0] = firstRow.createCell(i);
 			cells[0].setCellValue(titles[i]);
-		}
-	}
-	
-	//填充学生导入模板的辅助信息
-    private void stuffStudentModalSheet2(XSSFSheet sheet) {
-    	List<Edu103> allPcyy = reflectUtils.administrationPageService.queryAllLevel();
-		List<Edu104> xb =reflectUtils.administrationPageService.queryAllDepartment();
-		List<Edu105> nj = reflectUtils.administrationPageService.queryAllGrade();
-		List<Edu106> zy = reflectUtils.administrationPageService.queryAllMajor();
-		List<Edu300> xzb = reflectUtils.administrationPageService.queryAllAdministrationClasses();
-		List<Edu000> xszt = reflectUtils.administrationPageService.queryEjdm("xszt");
-		List<Edu000> zzmm = reflectUtils.administrationPageService.queryEjdm("zzmm");
-		List<Edu000> whcd = reflectUtils.administrationPageService.queryEjdm("whcd");
-		List<Edu000> zsfs = reflectUtils.administrationPageService.queryEjdm("zsfs");
-		List<Edu000> mzbm = reflectUtils.administrationPageService.queryEjdm("mz");
-		
-		//设置标题
-		XSSFRow firstRow = sheet.createRow(0);// 第一行
-		XSSFCell cells[] = new XSSFCell[1];   
-		//所有标题数组
-		String[] titles = new String[] {
-              "培养层次名称", "培养层次编码", "系部名称", "系部编码" , "年级名称", "年级编码", "专业名称", "专业编码", "行政班名称", "行政班编码","民族名称", "民族编码"
-             ,"学生状态名称", "学生状态编码","政治面貌名称", "政治面貌编码","文化程度名称", "文化程度编码","招生方式名称", "招生方式编码"
-		                               };
-		// 循环设置标题
-		for (int i = 0; i < titles.length; i++) {
-			cells[0] = firstRow.createCell(i);
-			cells[0].setCellValue(titles[i]);
-		}
-
-		// 写入培养层次信息
-		for (int i = 0; i < allPcyy.size(); i++) {
-			XSSFRow row = sheet.createRow(i + 1);
-			row.createCell(0).setCellValue(allPcyy.get(i).getPyccmc());
-			row.createCell(1).setCellValue(allPcyy.get(i).getPyccbm());
-		}
-
-		// 追加系部信息
-		for (int i = 0; i < xb.size(); i++) {
-			Edu104 edu104=xb.get(i);
-			appendCell(sheet,i,edu104.getXbmc(),edu104.getXbbm().toString(),2,3,true);
-		}
-		
-		// 追加年级信息
-		for (int i = 0; i < nj.size(); i++) {
-			Edu105 edu105=nj.get(i);
-			appendCell(sheet,i,edu105.getNjmc(),edu105.getNjbm().toString(),4,5,true);
-		}
-		
-		// 追加专业信息
-		for (int i = 0; i < zy.size(); i++) {
-			Edu106 edu106=zy.get(i);
-			appendCell(sheet,i,edu106.getZymc(),edu106.getZybm().toString(),6,7,true);
-		}
-		
-		// 追加行政班信息
-		for (int i = 0; i < xzb.size(); i++) {
-			Edu300 edu300=xzb.get(i);
-			appendCell(sheet,i,edu300.getXzbmc(),edu300.getEdu300_ID().toString(),8,9,true);
-		}
-		
-		// 追加民族信息
-		for (int i = 0; i < mzbm.size(); i++) {
-			Edu000 edu000 = mzbm.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 10, 11,true);
-		}
-
-		// 追加学生状态信息
-		for (int i = 0; i < xszt.size(); i++) {
-			Edu000 edu000 = xszt.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 12, 13,true);
-		}
-		
-		// 追加政治面貌信息
-		for (int i = 0; i < zzmm.size(); i++) {
-			Edu000 edu000 = zzmm.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 14, 15,true);
-		}
-
-		// 追加文化程度信息
-		for (int i = 0; i < whcd.size(); i++) {
-			Edu000 edu000 = whcd.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 16, 17,true);
-		}
-		
-		// 追加招生方式信息
-		for (int i = 0; i < zsfs.size(); i++) {
-			Edu000 edu000 = zsfs.get(i);
-			appendCell(sheet, i, edu000.getEjdmz(), edu000.getEjdm(), 18, 19,true);
 		}
 	}
     
@@ -1833,9 +1738,7 @@ public class ReflectUtils {
 	
 	//设置模title样式
 	private void setEXCELstyle(XSSFWorkbook workbook) throws ParseException {
-		workbook.getSheetAt(1).protectSheet("beifeninfo");//上锁sheet2并设置密码
 		workbook.getSheetAt(0).getRow(0).setHeightInPoints(30); //sheet1标题行行高设置
-		workbook.getSheetAt(1).getRow(0).setHeightInPoints(30);;//sheet2标题行行高设置
 		
 		//sheet1 样式
 		Row row = workbook.getSheetAt(0).getRow(0); //  sheet1第一行标题行
@@ -1867,26 +1770,6 @@ public class ReflectUtils {
 			}
 		}
 		
-		//sheet2 样式
-		Row row2 = workbook.getSheetAt(1).getRow(0); //  sheet2第一行标题行
-		int firstCellIndex2 = row.getFirstCellNum(); //  sheet2第一行标题行第一cell
-		int lastCellIndex2 = row.getLastCellNum(); //  sheet2第一行标题行最后cell
-		//遍历sheet1 标题行cell
-		for (int cIndex = firstCellIndex2; cIndex <= lastCellIndex2; cIndex++) {
-			// 当前cell
-			CellStyle style = workbook.createCellStyle();
-			style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//上下对齐
-			style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());//背景色
-			style.setFillPattern(CellStyle.SOLID_FOREGROUND);//前景色
-			XSSFFont redFont = workbook.createFont();
-			Cell cell = row2.getCell(cIndex);
-			if (cell != null && !getCellData(cell).equals("")) {
-				redFont.setColor(IndexedColors.GREY_80_PERCENT.getIndex());//文字颜色
-				style.setFont(redFont);//文字颜色
-				cell.setCellStyle(style);
-				cell.setCellValue(cell.toString());
-			}	
-		}
 	}
 	
 	//设置模板数据类型
