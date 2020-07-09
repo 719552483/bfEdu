@@ -18,13 +18,12 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	@Query(value = "select * from edu000 b where b.ejdmGlzd=?1", nativeQuery = true)
 	public List<Edu000> queryejdm(String ejdmGlzd);
 	
-	
-	
+	// 根据二级代码获取二级代码值
+	@Query(value = "select e.ejdmz from edu000 e where e.ejdm=?1 and e.ejdmmc=?2", nativeQuery = true)
+	public String queryEjdmZByEjdm(String ejdm,String ejdmmc);
 	
 	@Query(value = "select * from edu000", nativeQuery = true)
 	public List<Edu000> queryejdm();
-
-
 
 	// 根据二级代码关联字段和值获取二级代码
 	@Query(value = "select * from edu000 b where b.ejdmGlzd=?1 and b.ejdm=?2", nativeQuery = true)

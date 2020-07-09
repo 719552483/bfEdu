@@ -859,6 +859,11 @@ public class AdministrationPageService {
 	public List<Edu000> queryEjdmByGroupAndValue(String groupName, String value) {
 		return edu000DAO.queryEjdmByGroupAndValue(groupName, value);
 	}
+	
+	// 根据二级代码获取二级代码值
+	public String queryEjdmZByEjdm(String ejdm,String ejdmmc) {
+		return edu000DAO.queryEjdmZByEjdm(ejdm,ejdmmc);
+	}
 
 	// 获取二级代码
 	public List<Edu000> queryEjdm() {

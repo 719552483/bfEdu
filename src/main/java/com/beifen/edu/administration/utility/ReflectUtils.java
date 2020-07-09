@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,24 +30,34 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTDataValidation;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTDataValidations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -1354,25 +1365,39 @@ public class ReflectUtils {
     	
 		//循环填充数据
 		for (int i = 0; i < chosedStudents.size(); i++) {
-			appendCell(sheet,i,"",chosedStudents.get(i).getPycc(),-1,0,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSzxb(),-1,1,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getNj(),-1,2,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZybm(),-1,3,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEdu300_ID(),-1,4,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getPyccmc(),-1,0,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSzxbmc(),-1,1,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getNjmc(),-1,2,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZymc(),-1,3,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXzbname(),-1,4,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXb(),-1,9,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZtCode(),-1,10,false);
+			if(chosedStudents.get(i).getXb().equals("M")){
+				appendCell(sheet,i,"","男",-1,9,false);
+			}else{
+				appendCell(sheet,i,"","女",-1,9,false);
+			}
+			String ztTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZtCode(),"学生状态");
+			appendCell(sheet,i,"",ztTxt,-1,10,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getMzbm(),-1,13,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSfyxj(),-1,14,false);
+			String mzTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getMzbm(),"民族");
+			appendCell(sheet,i,"",mzTxt,-1,13,false);
+			if(chosedStudents.get(i).getSfyxj()!=null){
+				if(chosedStudents.get(i).getSfyxj().equals("T")){
+					appendCell(sheet,i,"","是",-1,14,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,14,false);
+				}
+			}
 			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,15,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZzmmbm(),-1,16,false);
+			String zzmmTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZzmmbm(),"政治面貌");
+			appendCell(sheet,i,"",zzmmTxt,-1,16,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,17,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getWhcdbm(),-1,18,false);
+			String whcdTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getWhcdbm(),"文化程度");
+			appendCell(sheet,i,"",whcdTxt,-1,18,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,19,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,20,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,21,false);
@@ -1384,11 +1409,40 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,26,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,27,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,28,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getHf(),-1,29,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getLzjd(),-1,30,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZsfscode(),-1,31,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getDxpy(),-1,32,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getPkjt(),-1,33,false);
+			if(chosedStudents.get(i).getHf()!=null){
+				if(chosedStudents.get(i).getHf().equals("T")){
+					appendCell(sheet,i,"","已婚",-1,29,false);
+				}else{
+					appendCell(sheet,i,"","未婚",-1,29,false);
+				}
+			}
+			if(chosedStudents.get(i).getLzjd()!=null){
+				if(chosedStudents.get(i).getLzjd().equals("T")){
+					appendCell(sheet,i,"","是",-1,30,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,30,false);
+				}
+			}
+			if(chosedStudents.get(i).getZsfscode()!=null){
+				String zsfsTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZsfscode(),"招生方式");
+				appendCell(sheet,i,"",zsfsTxt,-1,31,false);
+			}
+			if(chosedStudents.get(i).getDxpy()!=null){
+				if(chosedStudents.get(i).getDxpy().equals("T")){
+					appendCell(sheet,i,"","是",-1,32,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,32,false);
+				}
+			}
+			
+			if(chosedStudents.get(i).getPkjt()!=null){
+				if(chosedStudents.get(i).getPkjt().equals("T")){
+					appendCell(sheet,i,"","是",-1,33,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,33,false);
+				}
+			}
+			
 			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,34,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,35,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,36,false);
@@ -1541,12 +1595,240 @@ public class ReflectUtils {
 	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
 		setEXCELstyle(workbook);
 		setEXCELformatter(workbook);
+		ExcelStuffSelect(workbook,filename);
 	
         // 解决导出文件名中文乱码
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
         response.setHeader("Content-type","application/vnd.ms-excel");
         workbook.write(response.getOutputStream());
+	}
+	
+	//为Excel填充下拉框
+	public void ExcelStuffSelect(XSSFWorkbook workbook,String filename){
+		int  maxRoeNum=1048575;
+		HashMap<String, String> sexMap=new HashMap<String, String>();
+		sexMap.put("F", "女");
+		sexMap.put("M", "男");
+		
+		HashMap<String, String> isOrNotMap=new HashMap<String, String>();
+		isOrNotMap.put("T", "否");
+		isOrNotMap.put("F", "是");
+		
+		HashMap<String, String> marrayOrNotMap=new HashMap<String, String>();
+		marrayOrNotMap.put("T", "已婚");
+		marrayOrNotMap.put("F", "未婚");
+		
+		HashMap<String, String> ztMap=new HashMap<String, String>();
+		List<Edu000> ztbms = reflectUtils.administrationPageService.queryEjdm("xszt");
+		for (int i = 0; i < ztbms.size(); i++) {
+			ztMap.put(ztbms.get(i).getEjdm(), ztbms.get(i).getEjdmz());
+		}
+		
+		HashMap<String, String> mzMap=new HashMap<String, String>();
+		List<Edu000> mzbms = reflectUtils.administrationPageService.queryEjdm("mz");
+		for (int i = 0; i < mzbms.size(); i++) {
+			mzMap.put(mzbms.get(i).getEjdm(), mzbms.get(i).getEjdmz());
+		}
+		
+		HashMap<String, String> zsfsMap=new HashMap<String, String>();
+		List<Edu000> zsfss = reflectUtils.administrationPageService.queryEjdm("zsfs");
+		for (int i = 0; i < zsfss.size(); i++) {
+			zsfsMap.put(zsfss.get(i).getEjdm(), zsfss.get(i).getEjdmz());
+		}
+		
+		HashMap<String, String> whcdMap=new HashMap<String, String>();
+		List<Edu000> whcds = reflectUtils.administrationPageService.queryEjdm("whcd");
+		for (int i = 0; i < whcds.size(); i++) {
+			whcdMap.put(whcds.get(i).getEjdm(), whcds.get(i).getEjdmz());
+		}
+		
+		HashMap<String, String> zzmmMap=new HashMap<String, String>();
+		List<Edu000> zzmms = reflectUtils.administrationPageService.queryEjdm("zzmm");
+		for (int i = 0; i < zzmms.size(); i++) {
+			zzmmMap.put(zzmms.get(i).getEjdm(), zzmms.get(i).getEjdmz());
+		}
+		
+		HashMap<String, String> pyccMap=new HashMap<String, String>();
+		List<Edu103> pyccs = reflectUtils.administrationPageService.queryAllLevel();
+		for (int i = 0; i < pyccs.size(); i++) {
+			pyccMap.put(pyccs.get(i).getPyccbm(), pyccs.get(i).getPyccmc());
+		}
+		
+		HashMap<String, String> xbMap=new HashMap<String, String>();
+		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
+		for (int i = 0; i < xbs.size(); i++) {
+			xbMap.put(xbs.get(i).getXbbm(), xbs.get(i).getXbmc());
+		}
+		
+		HashMap<String, String> njMap=new HashMap<String, String>();
+		List<Edu105> njs = reflectUtils.administrationPageService.queryAllGrade();
+		for (int i = 0; i < njs.size(); i++) {
+			njMap.put(njs.get(i).getNjbm(), njs.get(i).getNjmc());
+		}
+		
+		HashMap<String, String> zyMap=new HashMap<String, String>();
+		List<Edu106> zys = reflectUtils.administrationPageService.queryAllMajor();
+		for (int i = 0; i < zys.size(); i++) {
+			zyMap.put(zys.get(i).getZybm(), zys.get(i).getZymc());
+		}
+		
+		HashMap<String, String> xzbMap=new HashMap<String, String>();
+		List<Edu300> xzbs = reflectUtils.administrationPageService.queryAllAdministrationClasses();
+		for (int i = 0; i < xzbs.size(); i++) {
+			xzbMap.put(xzbs.get(i).getEdu300_ID().toString(), xzbs.get(i).getXzbmc());
+		}
+		
+		int[] pyccIndex={0};
+		int[] xbIndex={1};
+		int[] njIndex={2};
+		int[] zyIndex={3};
+		int[] xzbIndex={4};
+		int[] sexNeedIndex={8};
+		int[] ztNeedIndex={9};
+		int[] mzNeedIndex={12};
+		int[] zzmmIndex={15};
+		int[]  whcdIndex={17};
+		int[]  marrayOrNotIndex={29};
+		int[] isOrNOTNeedIndex={13,30,32,33};
+		int[]  zsfsIndex={31};
+		
+		if(filename.equals("ImportStudent")||filename.equals("导入学生模板")){
+			for (int i = 0; i < pyccIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, pyccIndex[i], pyccIndex[i], pyccMap);
+			}
+			
+			for (int i = 0; i < xbIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xbIndex[i], xbIndex[i], xbMap);
+			}
+			
+			for (int i = 0; i < njIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, njIndex[i], njIndex[i], njMap);
+			}
+			
+			for (int i = 0; i < zyIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zyIndex[i], zyIndex[i], zyMap);
+			}
+			
+			for (int i = 0; i < xzbIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xzbIndex[i], xzbIndex[i], xzbMap);
+			}
+			
+			for (int i = 0; i < sexNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, sexNeedIndex[i], sexNeedIndex[i], sexMap);
+			}
+			
+			for (int i = 0; i < ztNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, ztNeedIndex[i], ztNeedIndex[i], ztMap);
+			}
+			
+			for (int i = 0; i < mzNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, mzNeedIndex[i], mzNeedIndex[i], mzMap);
+			}
+			
+			for (int i = 0; i < zzmmIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zzmmIndex[i], zzmmIndex[i], zzmmMap);
+			}
+			
+			for (int i = 0; i < whcdIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, whcdIndex[i], whcdIndex[i], whcdMap);
+			}
+			
+			for (int i = 0; i < marrayOrNotIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, marrayOrNotIndex[i], marrayOrNotIndex[i], marrayOrNotMap);
+			}
+			
+			for (int i = 0; i < isOrNOTNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, isOrNOTNeedIndex[i], isOrNOTNeedIndex[i], isOrNotMap);
+			}
+			
+			for (int i = 0; i < zsfsIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zsfsIndex[i], zsfsIndex[i], zsfsMap);
+			}
+		}else if(filename.equals("modifyStudents")||filename.equals("批量更新学生模板")){
+			for (int i = 0; i < pyccIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, pyccIndex[i], pyccIndex[i], pyccMap);
+			}
+			
+			for (int i = 0; i < xbIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xbIndex[i], xbIndex[i], xbMap);
+			}
+			
+			for (int i = 0; i < njIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, njIndex[i], njIndex[i], njMap);
+			}
+			
+			for (int i = 0; i < zyIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zyIndex[i], zyIndex[i], zyMap);
+			}
+			
+			for (int i = 0; i < xzbIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xzbIndex[i], xzbIndex[i], xzbMap);
+			}
+			
+			for (int i = 0; i < sexNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, sexNeedIndex[i]+1, sexNeedIndex[i]+1, sexMap);
+			}
+			
+			for (int i = 0; i < ztNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, ztNeedIndex[i]+1, ztNeedIndex[i]+1, ztMap);
+			}
+			
+			for (int i = 0; i < mzNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, mzNeedIndex[i]+1, mzNeedIndex[i]+1, mzMap);
+			}
+			
+			for (int i = 0; i < zzmmIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zzmmIndex[i]+1, zzmmIndex[i]+1, zzmmMap);
+			}
+			
+			for (int i = 0; i < whcdIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, whcdIndex[i]+1, whcdIndex[i]+1, whcdMap);
+			}
+			
+			for (int i = 0; i < marrayOrNotIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, marrayOrNotIndex[i]+1, marrayOrNotIndex[i]+1, marrayOrNotMap);
+			}
+			
+			for (int i = 0; i < isOrNOTNeedIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, isOrNOTNeedIndex[i]+1, isOrNOTNeedIndex[i]+1, isOrNotMap);
+			}
+			
+			for (int i = 0; i < zsfsIndex.length; i++) {
+				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zsfsIndex[i]+1, zsfsIndex[i]+1, zsfsMap);
+			}
+		}
+	}
+    
+	//cell设置下拉框
+	private void addValidate2Cell(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol,HashMap<String, String> deviceCategryMap) {
+		//值的范围为空，则不添加校验
+		if(deviceCategryMap == null || deviceCategryMap.isEmpty()) 
+			return;
+		
+		try {
+			Collection<String> collection = deviceCategryMap.values();
+			String[] category = new String[collection.size()];
+			collection.toArray(category);
+			if(sheet instanceof HSSFSheet){
+				CellRangeAddressList addressList = new CellRangeAddressList(firstRow, lastRow, firstCol, lastCol);
+				DVConstraint dvConstraint = DVConstraint.createExplicitListConstraint(category);
+				DataValidation dataValidation = new HSSFDataValidation(addressList, dvConstraint);
+				dataValidation.setSuppressDropDownArrow(false); //03默认false
+				sheet.addValidationData(dataValidation);
+			}else if(sheet instanceof XSSFSheet){
+				XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper((XSSFSheet) sheet);
+				XSSFDataValidationConstraint dvConstraint = (XSSFDataValidationConstraint)dvHelper.createExplicitListConstraint(category);
+				CellRangeAddressList addressList = new CellRangeAddressList(firstRow, lastRow, firstCol, lastCol);
+				XSSFDataValidation validation = (XSSFDataValidation)dvHelper.createValidation(dvConstraint, addressList);
+				validation.setShowErrorBox(true);
+				validation.setSuppressDropDownArrow(true); //07默认true
+				sheet.addValidationData(validation); 
+			}
+		} catch (Exception e) {
+			//log.error("下拉框的选项过多导致出错：java.lang.IllegalArgumentException:String literals in formulas can't be bigger than 255 characters ASCII");
+            e.printStackTrace();
+		}
 	}
 	
 	//设置模title样式
