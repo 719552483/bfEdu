@@ -260,7 +260,7 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 //填充课程详情tip内容
 function stuffclassDetailsArea(row){
 	$("#addNewClass_calssName").val(row.kcmc);//填充默认课程名称
-	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
+//	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
 //	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
 	$("#addNewClass_calssManger").val(row.kcfzr);//填充默认课程负责人
 	stuffManiaSelectWithDeafult("#addNewClass_classNature",row.kcxz);  //填充默认课程性质
@@ -384,7 +384,7 @@ function wantAddClass() {
 //清空课程详情tip内容
 function emptyClassDetailsArea(){
 	var reObject = new Object();
-	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssCode,#addNewClass_calssManger,#addNewClass_markName";
+	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssManger,#addNewClass_markName";
 	reObject.normalSelectIds = "#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
 	reObject.numberInputs = "#addNewClass_theoryHours,#addNewClass_practiceHours,#addNewClass_credits,#addNewClass_disperseHours,#addNewClass_centralizedHours";
 	reReloadSearchsWithSelect(reObject);
@@ -421,11 +421,8 @@ function comfirmAddNewClass(){
 					toastr.warning('课程名称已存在');
 					return;
 				}
-				if(backjson.codeHave){
-					toastr.warning('课程代码已存在');
-					return;
-				}
 				newClassObject.bf200_ID=backjson.newId;
+				newClassObject.kcdm=backjson.kcdm;
 				newClassObject.zt=backjson.zt;
 				newClassObject.lrsj=backjson.lrsj;
 				newClassObject.kcfzr=$("#addNewClass_calssManger").val();
@@ -553,10 +550,10 @@ function classDetailsConfirmBtnAction(){
 		return;
 	}
 	
-	if($("#addNewClass_calssCode").val()===""){
-		toastr.warning('课程代码不能为空');
-		return;
-	}
+//	if($("#addNewClass_calssCode").val()===""){
+//		toastr.warning('课程代码不能为空');
+//		return;
+//	}
 	
 	if(typeof $("#addNewClass_calssManger").attr("mangerId")==="undefined"){
 		toastr.warning('请选择课程负责人');
@@ -600,7 +597,7 @@ function classDetailsConfirmBtnAction(){
 	
 	var newClassObject=new Object();
 	newClassObject.kcmc=$("#addNewClass_calssName").val();
-	newClassObject.kcdm=$("#addNewClass_calssCode").val();
+//	newClassObject.kcdm=$("#addNewClass_calssCode").val();
 //	newClassObject.ywmc=$("#addNewClass_enName").val();
 	newClassObject.kcfzr=$("#addNewClass_calssManger").val();
 	newClassObject.kcfzrID=$("#addNewClass_calssManger").attr("mangerId");

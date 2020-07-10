@@ -499,34 +499,30 @@ public class AdministrationController {
 		List<Edu200> allClass = administrationPageService.queryAllClass();
 		// 判断课程名称和代码是否已存在
 		boolean nameHave = false;
-		boolean codeHave = false;
 		for (int i = 0; i < allClass.size(); i++) {
 			if (allClass.get(i).getKcmc().equals(addClassInfo.getKcmc())) {
 				nameHave = true;
 				break;
 			}
-
-			if (allClass.get(i).getKcdm().equals(addClassInfo.getKcdm())) {
-				codeHave = true;
-				break;
-			}
 		}
 
 		// 不存在则往数据库新增课程
-		if (!codeHave && !codeHave) {
+		if (!nameHave) {
 			String newClassStatus = "noStatus";
+			String kcdm ="eduKC"+utils.getUUID(6);
 			long currentTimeStamp = System.currentTimeMillis();
+			addClassInfo.setKcdm(kcdm);
 			addClassInfo.setLrsj(currentTimeStamp);
 			addClassInfo.setZt(newClassStatus);
 			administrationPageService.addNewClass(addClassInfo);
 			Long id = addClassInfo.getBF200_ID();
 			returnMap.put("newId", id);
+			returnMap.put("kcdm", kcdm);
 			returnMap.put("lrsj", currentTimeStamp);
 			returnMap.put("zt", newClassStatus);
 		}
 		returnMap.put("result", true);
 		returnMap.put("nameHave", nameHave);
-		returnMap.put("codeHave", codeHave);
 		return returnMap;
 	}
 
@@ -546,14 +542,7 @@ public class AdministrationController {
 		List<Edu200> allClass = administrationPageService.queryAllClass();
 		// 判断课程名称和代码是否已存在
 		boolean nameHave = false;
-		boolean codeHave = false;
 		for (int i = 0; i < allClass.size(); i++) {
-			if (!allClass.get(i).getBF200_ID().equals(edu200.getBF200_ID())
-					&& allClass.get(i).getKcdm().equals(edu200.getKcdm())) {
-				codeHave = true;
-				break;
-			}
-
 			if (!allClass.get(i).getBF200_ID().equals(edu200.getBF200_ID())
 					&& allClass.get(i).getKcmc().equals(edu200.getKcmc())) {
 				nameHave = true;
@@ -561,9 +550,8 @@ public class AdministrationController {
 			}
 		}
 		returnMap.put("nameHave", nameHave);
-		returnMap.put("codeHave", codeHave);
 		// 不存在则修改数据
-		if (!codeHave && !codeHave) {
+		if (!nameHave) {
 			long currentTimeStamp = System.currentTimeMillis();
 			edu200.setLrsj(currentTimeStamp);
 			edu200.setZt("noStatus");
@@ -934,7 +922,7 @@ public class AdministrationController {
 		
 		if (!namehave) {
 			String yxbz = "1";
-			String pcyybm ="eduPYCC"+(currentAllLevel.size()+1);
+			String pcyybm ="eduPYCC"+utils.getUUID(6);
 			edu103.setYxbz(yxbz);
 			edu103.setPyccbm(pcyybm);
 			administrationPageService.addNewLevel(edu103);
@@ -1042,7 +1030,7 @@ public class AdministrationController {
 
 		if (!namehave) {
 			String yxbz = "1";
-			String xbbm ="eduXB"+(currentAllDeaparment.size()+1);
+			String xbbm ="eduXB"+utils.getUUID(6);
 			edu104.setYxbz(yxbz);
 			edu104.setXbbm(xbbm);
 			administrationPageService.addNewDeaparment(edu104);
@@ -1150,7 +1138,7 @@ public class AdministrationController {
 
 		if (!namehave) {
 			String yxbz = "1";
-			String njbm ="eduNJ"+(currentAllGrade.size()+1);
+			String njbm ="eduNJ"+utils.getUUID(6);
 			edu105.setYxbz(yxbz);
 			edu105.setNjbm(njbm);
 			administrationPageService.addNewGrade(edu105);
@@ -1260,7 +1248,7 @@ public class AdministrationController {
 		if (!namehave) {
 			String yxbz = "1";
 			edu106.setYxbz(yxbz);
-			String zybm ="eduZY"+(currentAllMajor.size()+1);
+			String zybm ="eduZY"+utils.getUUID(6);
 			edu106.setZybm(zybm);
 			administrationPageService.addNewMajor(edu106);
 			Long id = edu106.getEdu106_ID();
