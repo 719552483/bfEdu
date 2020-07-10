@@ -230,6 +230,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格多个操作*/
+#courseLibraryTable td:last-child,
 #administrationClassTable td:last-child,
 #studentBaseInfoTable td:last-child,
 #majorTrainingTable td:last-child,
@@ -240,7 +241,6 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格2个操作 按钮字数不超过2个*/
-#courseLibraryTable td:last-child,
 #putOutTaskTable td:last-child
 {
 	min-width: 165px;

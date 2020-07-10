@@ -22,6 +22,9 @@ function stuffCourseLibraryTable(tableInfo){
 			},
 			'click #courseLibraryInfo' : function(e, value, row, index) {
 				courseLibraryInfo(row);
+			},
+			'click #removeCourse' : function(e, value, row, index) {
+				removeCourse(row);
 			}	
 		};
 
@@ -150,6 +153,7 @@ function stuffCourseLibraryTable(tableInfo){
 			return [ '<ul class="toolbar tabletoolbar">'
 			        + '<li class="queryBtn" id="courseLibraryInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
 					+ '<li class="modifyBtn" id="modifyCourseLibrary"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
+					+ '<li class="deleteBtn" id="removeCourse"><span><img src="images/t03.png"></span>删除</li>'
 					+ '</ul>' ].join('');
 		}
 		
@@ -638,7 +642,15 @@ function classDetailsConfirmBtnAction(){
 	return newClassObject;
 }
 
-//课程库课程删除
+
+//单个删除课程
+function removeCourse(row){
+	var idArray=new Array();
+	idArray.push(row.bf200_ID);
+	removeClassesCheckCrouseIsInPlan(idArray);
+}
+
+//多选删除课程
 function removeClasses(){
 	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
 	if(choosedClass.length==0){
