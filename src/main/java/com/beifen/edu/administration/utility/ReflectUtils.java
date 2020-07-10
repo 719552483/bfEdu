@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2071,6 +2072,20 @@ public class ReflectUtils {
 		return str.toString().toUpperCase();
 	}
 
+	/**
+	 *
+	 * (获取指定长度随机数)
+	 * 
+	 * @return
+	 */
+	public static String getRandom(int len) {
+        Random r = new Random();
+        StringBuilder rs = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            rs.append(r.nextInt(10));
+        }
+        return rs.toString();
+    }
 }
 	
 	
