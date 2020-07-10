@@ -321,6 +321,8 @@ function reDrawSelect(ID, value, text) {
 
 // 渲染分页信息样式
 function drawPagination(tableAreaClass, paginationTxt) {
+	$(tableAreaClass).find("table").find("thead").find("input").attr("title","全选当前页");
+	$(tableAreaClass).find("table").find("thead").find("input").tooltipify({offsetLeft:-30,offsetTop:-15,position:"top",displayAware:false});
 	//分页信息样式
 	var numInfo =Trim($(tableAreaClass).find(".fixed-table-pagination").find(".pagination-detail").find("span:eq(0)")[0].innerText,":g") ;
 	var a = numInfo.indexOf(" ");
