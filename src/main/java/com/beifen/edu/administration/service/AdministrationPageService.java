@@ -95,8 +95,13 @@ public class AdministrationPageService {
 	public List<Edu103> queryAllLevelByPcccbm(String pcccbm) {
 		return edu103DAO.queryAllLevelByPcccbm(pcccbm);
 	}
+	
+	//按名称查培养层次编码
+	public String queryLevelCodeByLevelName(String pyccmc) {
+		return edu103DAO.queryLevelCodeByLevelName(pyccmc);
+	}
 
-	// 查询所有系部//
+	// 查询所有系部
 	public List<Edu104> queryAllDepartment() {
 		return edu104DAO.queryAllDepartment();
 	}
@@ -104,6 +109,11 @@ public class AdministrationPageService {
 	//按系部编码查询系部
 	public List<Edu104> queryAllDepartmentByXbbm(String xbbm) {
 		return edu104DAO.queryAllDepartmentByXbbm(xbbm);
+	}
+	
+	//按名称查系部编码
+	public String queryXbCodeByXbName(String xbmc) {
+		return edu104DAO.queryXbCodeByXbName(xbmc);
 	}
 	
 	// 查询所有年级
@@ -115,6 +125,11 @@ public class AdministrationPageService {
 	public List<Edu105> queryAllGradeByNjbm(String njbm) {
 		return edu105DAO.queryAllGradeByNjbm(njbm);
 	}
+	
+	//按年级名称查年级编码
+	public String queryNjCodeByNjName(String njmc) {
+		return edu105DAO.queryNjCodeByNjName(njmc);
+	}
 
 	// 查询所有专业
 	public List<Edu106> queryAllMajor() {
@@ -124,6 +139,11 @@ public class AdministrationPageService {
 	//按专业编码查专业
 	public List<Edu106> queryAllMajorByZybm(String zybm) {
 		return edu106DAO.queryAllMajorByZybm(zybm);
+	}
+	
+	//按专业名称查专业编码
+	public String queryZyCodeByZyName(String zymc) {
+		return edu106DAO.queryZyCodeByZyName(zymc);
 	}
 
 	// 查询所有层次关系管理信息
@@ -375,6 +395,11 @@ public class AdministrationPageService {
 	public List<Edu300> queryXzbByEdu300ID(String edu300_ID) {
 		return edu300DAO.queryXzbByEdu300ID(edu300_ID);
 	}
+	
+	//根据300名称查询300id
+		public long queryEdu300IdByEdu300Name(String edu300Name) {
+			return edu300DAO.queryEdu300IdByEdu300Name(edu300Name);
+		}
 
 	// 查询培养计划下的行政班
 	public List<Edu300> queryCulturePlanAdministrationClasses(String levelCode, String departmentCode, String gradeCode,
@@ -858,6 +883,10 @@ public class AdministrationPageService {
 	// 根据二级代码关联字段和值获取二级代码
 	public List<Edu000> queryEjdmByGroupAndValue(String groupName, String value) {
 		return edu000DAO.queryEjdmByGroupAndValue(groupName, value);
+	}
+	
+	public String queryEjdmByEjdmZ(String ejdmz,String ejdmGlzd){
+		return edu000DAO.queryEjdmByEjdmZ(ejdmz,ejdmGlzd);
 	}
 	
 	// 根据二级代码获取二级代码值

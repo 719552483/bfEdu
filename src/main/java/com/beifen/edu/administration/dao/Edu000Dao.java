@@ -22,6 +22,10 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	@Query(value = "select e.ejdmz from edu000 e where e.ejdm=?1 and e.ejdmmc=?2", nativeQuery = true)
 	public String queryEjdmZByEjdm(String ejdm,String ejdmmc);
 	
+	// 根据二级代码值获取二级代码
+	@Query(value = "select e.ejdm from edu000 e where e.ejdmz=?1 and e.ejdmGlzd=?2", nativeQuery = true)
+	public String queryEjdmByEjdmZ(String ejdmz,String ejdmGlzd);
+	
 	@Query(value = "select * from edu000", nativeQuery = true)
 	public List<Edu000> queryejdm();
 

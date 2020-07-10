@@ -25,6 +25,10 @@ public interface Edu103Dao extends JpaRepository<Edu103, Long>, JpaSpecification
 	// 查询所有培养层次
 	@Query(value = "select * from edu103 e where e.pyccbm=?1", nativeQuery = true)
 	public List<Edu103> queryAllLevelByPcccbm(String edu300id);
+	
+	// 根据名称查培养层次id
+	@Query(value = "select e.pyccbm from edu103 e where e.pyccmc=?1", nativeQuery = true)
+	public String queryLevelCodeByLevelName(String edu300id);
 
 	// 查询所有培养层次
 	@Query(value = "select * from edu103 e where e.Edu103_ID=?1", nativeQuery = true)

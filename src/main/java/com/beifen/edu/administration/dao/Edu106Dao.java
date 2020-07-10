@@ -25,6 +25,10 @@ public interface Edu106Dao extends JpaRepository<Edu106, Long>, JpaSpecification
 	//按专业id查专业
 	@Query(value = "select * from edu106 where zybm =?1", nativeQuery = true)
 	public List<Edu106> queryAllMajorByZybm(String zybm);
+	
+	//按专业名称查专业编码
+	@Query(value = "select e.zybm from edu106 e where e.zymc =?1", nativeQuery = true)
+	public String queryZyCodeByZyName(String zymc);
 
 	@Query(value = "select * from edu106 where Edu106_ID =?1", nativeQuery = true)
 	public Edu106 query105BYID(String edu106id);

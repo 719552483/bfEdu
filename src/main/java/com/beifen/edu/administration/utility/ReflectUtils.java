@@ -628,14 +628,14 @@ public class ReflectUtils {
 				break;
 			}else{
 				if(edu001.getSfyxj()!=null){
-					if(!edu001.getSfyxj().equals("有")&&!edu001.getSfyxj().equals("无")){
+					if(!edu001.getSfyxj().equals("是")&&!edu001.getSfyxj().equals("否")){
 						chaeckPass=false;
-						checkTxt= "第"+(i+1)+"行-是否有学籍只接受(有)或(无)";
+						checkTxt= "第"+(i+1)+"行-是否有学籍只接受(是)或(否)";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt",checkTxt);
 						break;
-					}else if(edu001.getSfyxj().equals("有")||edu001.getSfyxj().equals("无")){
-						if(edu001.getSfyxj().equals("有")){
+					}else if(edu001.getSfyxj().equals("是")||edu001.getSfyxj().equals("否")){
+						if(edu001.getSfyxj().equals("是")){
 							edu001.setSfyxj("T");
 						}else{
 							edu001.setSfyxj("F");
@@ -763,42 +763,54 @@ public class ReflectUtils {
 				
 				
 				//培养层次编码是否存在
-				pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(edu001.getPycc());
+				String currentPyccCode=reflectUtils.administrationPageService.queryLevelCodeByLevelName(edu001.getPycc());
+				pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(currentPyccCode);
 				if(pcyys.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-培养层次编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setPycc(currentPyccCode);
 				}
 				//系部编码是否存在
-				xbs = reflectUtils.administrationPageService.queryAllDepartmentByXbbm(edu001.getSzxb());
+				String currentXbCode=reflectUtils.administrationPageService.queryXbCodeByXbName(edu001.getSzxb());
+				xbs = reflectUtils.administrationPageService.queryAllDepartmentByXbbm(currentXbCode);
 				if(xbs.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-系部编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setSzxb(currentXbCode);
 				}
 				
 				//年级编码是否存在
-				njs = reflectUtils.administrationPageService.queryAllGradeByNjbm(edu001.getNj());
+				String currentNjCode=reflectUtils.administrationPageService.queryNjCodeByNjName(edu001.getNj());
+				njs = reflectUtils.administrationPageService.queryAllGradeByNjbm(currentNjCode);
 				if(njs.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-年级编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setNj(currentNjCode);
 				}
 				
 				//专业编码是否存在
-				zys = reflectUtils.administrationPageService.queryAllMajorByZybm(edu001.getZybm());
+				String currentZyCode=reflectUtils.administrationPageService.queryZyCodeByZyName(edu001.getZybm());
+				zys = reflectUtils.administrationPageService.queryAllMajorByZybm(currentZyCode);
 				if(zys.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-专业编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setZybm(currentZyCode);
 				}
 				
 				//培养计划是否能对应
@@ -812,13 +824,16 @@ public class ReflectUtils {
 				}
 				
 				//行政班编码是否存在
-				xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(edu001.getEdu300_ID());
+				String currentXzbCode= Long.toString(reflectUtils.administrationPageService.queryEdu300IdByEdu300Name(edu001.getEdu300_ID()));
+				xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(currentXzbCode);
 				if(xzbs.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-行政班不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setEdu300_ID(currentXzbCode);
 				}
 				
 				
@@ -833,57 +848,75 @@ public class ReflectUtils {
 				}
 				
 				//状态编码是否存在
-				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",edu001.getZtCode());
+				String currentZtbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZtCode(),"xszt");
+				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",currentZtbmCode);
 				if(ztbms.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-学生状态编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setZtCode(currentZtbmCode);
 				}
+				
 				//民族编码是否存在
-				mzs = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("mz",edu001.getMzbm());
+				String currentMzbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getMzbm(),"mz");
+				mzs = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("mz",currentMzbmCode);
 				if(mzs.size()==0){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-民族编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu001.setMzbm(currentMzbmCode);
 				}
 				
 				//政治面貌编码是否存在
+				String currentZzmmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZzmmbm(),"zzmm");
 				if(edu001.getZzmmbm()!=null){
-					zzmms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zzmm",edu001.getZzmmbm());
+					zzmms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zzmm",currentZzmmCode);
 					if(zzmms.size()==0){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-政治面貌不存在";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
+					}else{
+						edu001.setZzmmbm(currentZzmmCode);
 					}
 				}
 				
 				//文化程度编码是否存在
+				String currentWHCDCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getWhcdbm(),"whcd");
 				if(edu001.getWhcdbm()!=null){
-					whcds = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("whcd",edu001.getWhcdbm());
+					whcds = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("whcd",currentWHCDCode);
 					if(whcds.size()==0){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-文化程度不存在";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
+					}else{
+						edu001.setWhcdbm(currentWHCDCode);
 					}
 				}
 				
 				//招生方式编码是否存在
+				String currentZsfsCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZsfscode(),"zsfs");
+				if(edu001.getWhcdbm()!=null){
 				if(edu001.getZsfscode()!=null){
-					zsfss = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zsfs",edu001.getZsfscode());
+					zsfss = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zsfs",currentZsfsCode);
 					if(zsfss.size()==0){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-招生方式不存在";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
+					}else{
+						edu001.setZsfscode(currentZsfsCode);
+						}
 					}
 				}
 			}
@@ -1346,10 +1379,10 @@ public class ReflectUtils {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"*培养层次编码", "*所在系部编码", "*年级编码", "*专业编码", "*行政班ID", "*学号", "*学生ID", "*学生姓名",
-				"曾用名", "*性别", "*状态编码", "*出生日期", "*身份证号 ", "*民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
-				"文化程度编码", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
-				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+		String[] titles = new String[] {"*培养层次", "*所在系部", "*年级", "*专业", "*行政班ID", "*学号", "*学生ID", "*学生姓名",
+				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
+				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+				"身高", "体重", "婚否 ", "来自军队", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
@@ -1450,11 +1483,10 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"*培养层次编码", "*系部编码", "*年级编码", "*专业编"
-				+ "码", "*行政班ID", "*学号", "*学生姓名",
-				"曾用名", "*性别", "*状态编码", "*出生日期", "*身份证号 ", "*民族编码", "是否有学籍 ", "学籍号", "政治面貌编码", "生源地 ",
-				"文化程度编码", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
-				"身高", "体重", "婚否 ", "来自军队", "招生方式编码 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+		String[] titles = new String[] {"*培养层次", "*系部", "*年级", "*专业", "*行政班ID", "*学号", "*学生姓名",
+				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
+				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+				"身高", "体重", "婚否 ", "来自军队", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
