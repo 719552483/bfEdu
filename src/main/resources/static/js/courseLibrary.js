@@ -55,18 +55,17 @@ function stuffCourseLibraryTable(tableInfo){
 				title: '唯一标识',
 				align : 'center',
 				visible : false
-			},{
-				field : 'kcdm',
-				title : '课程代码',
-				align : 'left',
-				formatter : paramsMatter
-
 			}, {
 				field : 'kcmc',
 				title : '课程名称',
 				align : 'left',
 				formatter : paramsMatter
 			}, {
+				field : 'kcdm',
+				title : '课程代码',
+				align : 'left',
+				formatter : paramsMatter
+			},{
 				field : 'xf',
 				title : '学分',
 				align : 'left',
@@ -100,7 +99,8 @@ function stuffCourseLibraryTable(tableInfo){
 				field : 'bzzymc',
 				title : '标志专业名称',
 				align : 'left',
-				formatter : paramsMatter
+				formatter : paramsMatter,
+				visible : false
 			}, {
 				field : 'kcfzr',
 				title : '课程负责人',

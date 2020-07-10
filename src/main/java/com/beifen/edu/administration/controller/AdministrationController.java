@@ -509,7 +509,7 @@ public class AdministrationController {
 		// 不存在则往数据库新增课程
 		if (!nameHave) {
 			String newClassStatus = "noStatus";
-			String kcdm ="eduKC"+utils.getUUID(6);
+			String kcdm ="EDU_KC"+utils.getUUID(6);
 			long currentTimeStamp = System.currentTimeMillis();
 			addClassInfo.setKcdm(kcdm);
 			addClassInfo.setLrsj(currentTimeStamp);
@@ -922,7 +922,7 @@ public class AdministrationController {
 		
 		if (!namehave) {
 			String yxbz = "1";
-			String pcyybm ="eduPYCC"+utils.getUUID(6);
+			String pcyybm ="EDU_PYCC"+utils.getUUID(6);
 			edu103.setYxbz(yxbz);
 			edu103.setPyccbm(pcyybm);
 			administrationPageService.addNewLevel(edu103);
@@ -1030,7 +1030,7 @@ public class AdministrationController {
 
 		if (!namehave) {
 			String yxbz = "1";
-			String xbbm ="eduXB"+utils.getUUID(6);
+			String xbbm ="EDU_XB"+utils.getUUID(6);
 			edu104.setYxbz(yxbz);
 			edu104.setXbbm(xbbm);
 			administrationPageService.addNewDeaparment(edu104);
@@ -1138,7 +1138,7 @@ public class AdministrationController {
 
 		if (!namehave) {
 			String yxbz = "1";
-			String njbm ="eduNJ"+utils.getUUID(6);
+			String njbm ="EDU_NJ"+utils.getUUID(6);
 			edu105.setYxbz(yxbz);
 			edu105.setNjbm(njbm);
 			administrationPageService.addNewGrade(edu105);
@@ -1248,7 +1248,7 @@ public class AdministrationController {
 		if (!namehave) {
 			String yxbz = "1";
 			edu106.setYxbz(yxbz);
-			String zybm ="eduZY"+utils.getUUID(6);
+			String zybm ="EDU_ZY"+utils.getUUID(6);
 			edu106.setZybm(zybm);
 			administrationPageService.addNewMajor(edu106);
 			Long id = edu106.getEdu106_ID();
