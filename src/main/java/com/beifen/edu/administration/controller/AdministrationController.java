@@ -925,29 +925,26 @@ public class AdministrationController {
 		List<Edu103> currentAllLevel = administrationPageService.queryAllLevel();
 		// 判断层次是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllLevel.size(); i++) {
 			if (currentAllLevel.get(i).getPyccmc().equals(edu103.getPyccmc())) {
 				namehave = true;
 				break;
 			}
-			if (currentAllLevel.get(i).getPyccbm().equals(edu103.getPyccbm())) {
-				codehave = true;
-				break;
-			}
 		}
-
-		if (!namehave && !codehave) {
+		
+		if (!namehave) {
 			String yxbz = "1";
+			String pcyybm ="eduPYCC"+(currentAllLevel.size()+1);
 			edu103.setYxbz(yxbz);
+			edu103.setPyccbm(pcyybm);
 			administrationPageService.addNewLevel(edu103);
 			Long id = edu103.getEdu103_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
+			returnMap.put("pcyybm", pcyybm);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -968,8 +965,6 @@ public class AdministrationController {
 		List<Edu103> currentAllLevel = administrationPageService.queryAllLevel();
 		// 判断层次是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
-
 		for (int i = 0; i < currentAllLevel.size(); i++) {
 			if (!currentAllLevel.get(i).getEdu103_ID().equals(edu103.getEdu103_ID())
 					&& currentAllLevel.get(i).getPyccmc().equals(edu103.getPyccmc())) {
@@ -977,20 +972,13 @@ public class AdministrationController {
 				break;
 			}
 
-			if (!currentAllLevel.get(i).getEdu103_ID().equals(edu103.getEdu103_ID())
-					&& currentAllLevel.get(i).getPyccbm().equals(edu103.getPyccbm())) {
-				codehave = true;
-				break;
-			}
-
 		}
 		// 不存在则修改关系
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			administrationPageService.updateLevel(edu103);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1045,29 +1033,26 @@ public class AdministrationController {
 		List<Edu104> currentAllDeaparment = administrationPageService.queryAllDepartment();
 		// 判断层次是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllDeaparment.size(); i++) {
 			if (currentAllDeaparment.get(i).getXbmc().equals(edu104.getXbmc())) {
 				namehave = true;
 				break;
 			}
-			if (currentAllDeaparment.get(i).getXbbm().equals(edu104.getXbbm())) {
-				codehave = true;
-				break;
-			}
 		}
 
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			String yxbz = "1";
+			String xbbm ="eduXB"+(currentAllDeaparment.size()+1);
 			edu104.setYxbz(yxbz);
+			edu104.setXbbm(xbbm);
 			administrationPageService.addNewDeaparment(edu104);
 			Long id = edu104.getEdu104_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
+			returnMap.put("xbbm", xbbm);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1088,7 +1073,6 @@ public class AdministrationController {
 		List<Edu104> currentAllDeaparment = administrationPageService.queryAllDepartment();
 		// 判断系部是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllDeaparment.size(); i++) {
 			if (!currentAllDeaparment.get(i).getEdu104_ID().equals(edu104.getEdu104_ID())
 					&& currentAllDeaparment.get(i).getXbmc().equals(edu104.getXbmc())) {
@@ -1096,20 +1080,13 @@ public class AdministrationController {
 				break;
 			}
 
-			if (!currentAllDeaparment.get(i).getEdu104_ID().equals(edu104.getEdu104_ID())
-					&& currentAllDeaparment.get(i).getXbbm().equals(edu104.getXbbm())) {
-				codehave = true;
-				break;
-			}
-
 		}
 		// 不存在则修改关系
-		if (!namehave && !codehave) {
+		if (!namehave ) {
 			administrationPageService.updateDeaparment(edu104);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1164,29 +1141,26 @@ public class AdministrationController {
 		List<Edu105> currentAllGrade = administrationPageService.queryAllGrade();
 		// 判断层次是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllGrade.size(); i++) {
 			if (currentAllGrade.get(i).getNjmc().equals(edu105.getNjmc())) {
 				namehave = true;
 				break;
 			}
-			if (currentAllGrade.get(i).getNjbm().equals(edu105.getNjbm())) {
-				codehave = true;
-				break;
-			}
 		}
 
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			String yxbz = "1";
+			String njbm ="eduNJ"+(currentAllGrade.size()+1);
 			edu105.setYxbz(yxbz);
+			edu105.setNjbm(njbm);
 			administrationPageService.addNewGrade(edu105);
 			Long id = edu105.getEdu105_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
+			returnMap.put("njbm", njbm);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1207,7 +1181,6 @@ public class AdministrationController {
 		List<Edu105> currentAllGrade = administrationPageService.queryAllGrade();
 		// 判断系部是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllGrade.size(); i++) {
 			if (!currentAllGrade.get(i).getEdu105_ID().equals(edu105.getEdu105_ID())
 					&& currentAllGrade.get(i).getNjmc().equals(edu105.getNjmc())) {
@@ -1215,20 +1188,13 @@ public class AdministrationController {
 				break;
 			}
 
-			if (!currentAllGrade.get(i).getEdu105_ID().equals(edu105.getEdu105_ID())
-					&& currentAllGrade.get(i).getNjbm().equals(edu105.getNjbm())) {
-				codehave = true;
-				break;
-			}
-
 		}
 		// 不存在则修改关系
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			administrationPageService.updateGrade(edu105);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1284,29 +1250,26 @@ public class AdministrationController {
 		List<Edu106> currentAllMajor = administrationPageService.queryAllMajor();
 		// 判断层次是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllMajor.size(); i++) {
 			if (currentAllMajor.get(i).getZymc().equals(edu106.getZymc())) {
 				namehave = true;
 				break;
 			}
-			if (currentAllMajor.get(i).getZybm().equals(edu106.getZybm())) {
-				codehave = true;
-				break;
-			}
 		}
 
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			String yxbz = "1";
 			edu106.setYxbz(yxbz);
+			String zybm ="eduZY"+(currentAllMajor.size()+1);
+			edu106.setZybm(zybm);
 			administrationPageService.addNewMajor(edu106);
 			Long id = edu106.getEdu106_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
+			returnMap.put("zybm", zybm);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -1327,7 +1290,6 @@ public class AdministrationController {
 		List<Edu106> currentAllMajor = administrationPageService.queryAllMajor();
 		// 判断系部是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllMajor.size(); i++) {
 			if (!currentAllMajor.get(i).getEdu106_ID().equals(edu106.getEdu106_ID())
 					&& currentAllMajor.get(i).getZymc().equals(edu106.getZymc())) {
@@ -1335,20 +1297,13 @@ public class AdministrationController {
 				break;
 			}
 
-			if (!currentAllMajor.get(i).getEdu106_ID().equals(edu106.getEdu106_ID())
-					&& currentAllMajor.get(i).getZybm().equals(edu106.getZybm())) {
-				codehave = true;
-				break;
-			}
-
 		}
 		// 不存在则修改关系
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			administrationPageService.updateMajor(edu106);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
