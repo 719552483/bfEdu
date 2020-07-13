@@ -1248,7 +1248,7 @@ public class AdministrationController {
 		if (!namehave) {
 			String yxbz = "1";
 			edu106.setYxbz(yxbz);
-			String zybm ="LNVCZY"+utils.getUUID(6)+utils.getRandom(2);;
+			String zybm ="LNVCZY"+utils.getUUID(6)+utils.getRandom(2);
 			edu106.setZybm(zybm);
 			administrationPageService.addNewMajor(edu106);
 			Long id = edu106.getEdu106_ID();
@@ -1650,33 +1650,29 @@ public class AdministrationController {
 
 		// 判断行政班名称和编码是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
 			if (currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())) {
 				namehave = true;
 				break;
 			}
-			if (currentAllAdministrationClasses.get(i).getXzbbm() != null
-					&& currentAllAdministrationClasses.get(i).getXzbbm().equals(edu300.getXzbbm())) {
-				codehave = true;
-				break;
-			}
 		}
 
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			String yxbz = "1"; // 有效标志
+			String xzbbm ="LNVCXZB"+utils.getUUID(6)+utils.getRandom(2);;
 			String configTheCulturePlan = "F";// 初始化的是否生成开课计划
 			edu300.setYxbz(yxbz);
+			edu300.setXzbbm(xzbbm);
 			edu300.setSfsckkjh(configTheCulturePlan);
 			administrationPageService.addAdministrationClass(edu300);
 			Long id = edu300.getEdu300_ID();
 			returnMap.put("yxbz", yxbz);
+			returnMap.put("xzbbm", xzbbm);
 			returnMap.put("id", id);
 			returnMap.put("sfsckkjh", configTheCulturePlan);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}

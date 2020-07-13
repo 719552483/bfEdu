@@ -185,12 +185,14 @@ function stuffCourseLibraryTable(tableInfo){
 //课程详情
 function courseLibraryInfo(row){
 	stuffclassDetailsArea(row);
+	$(".addNewClass_calssCodeArae").show();
 	$.showModal("#addNewClassModal",false);
 	$("#addNewClassModal").find(".moadalTitle").html("课程-"+row.kcmc+" 详细信息");
 }
 
 //修改课程
 function modifyCourseLibrary(row){
+	$(".addNewClass_calssCodeArae").hide();
 	var idArray=new Array();
 	idArray.push(row.bf200_ID);
 	modifyClassesCheckCrouseIsInPlan(idArray,row);
@@ -264,7 +266,7 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 //填充课程详情tip内容
 function stuffclassDetailsArea(row){
 	$("#addNewClass_calssName").val(row.kcmc);//填充默认课程名称
-//	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
+	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
 //	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
 	$("#addNewClass_calssManger").val(row.kcfzr);//填充默认课程负责人
 	stuffManiaSelectWithDeafult("#addNewClass_classNature",row.kcxz);  //填充默认课程性质
@@ -358,6 +360,7 @@ function comfirmmodifyCourseInfo(row){
 
 //新增课程
 function wantAddClass() {
+	$(".addNewClass_calssCodeArae").hide();
 	emptyClassDetailsArea();
 	$.showModal("#addNewClassModal",true);
 	$("#addNewClassModal").find(".moadalTitle").html("录入新课");
