@@ -979,8 +979,10 @@ public class ReflectUtils {
 					//判断是否改变行政班
 					String oldXzb=reflectUtils.administrationPageService.queryStudentXzbCode(edu001.getEdu001_ID().toString());
 					String newXzb=edu001.getEdu300_ID().toString();
-					if(oldXzb.equals(newXzb)){
-						needCheckXzb=false;
+					if(oldXzb!=null){
+						if(oldXzb.equals(newXzb)){
+							needCheckXzb=false;
+						}
 					}
 				}
                 if(needCheckXzb){
