@@ -476,7 +476,7 @@ function modifyLevel(row){
 //确认修改培养层次
 function confimModifyNewLevel(row){
 	var newLevelObject=getLevelInfo();
-	
+	newLevelObject.pyccbm=row.pyccbm;
 	if(typeof newLevelObject ==='undefined'){
 		return;
 	}
@@ -543,7 +543,6 @@ function emptyLevelChooseArea(){
 function getLevelInfo(){
 	var schoolLocation = getNormalSelectValue("addNewLevel_schoolLocation");
 	var levelName = $("#addNewLevel_levelName").val();
-//	var levelCode = $("#addNewLevel_levelCode").val();
 	var enterSeason = getNormalSelectValue("addNewLevel_enterSeason");
 	var academicStructure = $("#addNewLevel_academicStructure").val();
 	
@@ -555,11 +554,6 @@ function getLevelInfo(){
 		toastr.warning('请输入培养层次名称');
 		return;
 	}
-	
-//	if(levelCode===""){
-//		toastr.warning('请输入培养层次编码');
-//		return;
-//	}
 	if(enterSeason===""){
 		toastr.warning('请选择入学季节');
 		return;
@@ -577,7 +571,6 @@ function getLevelInfo(){
 	var newRelationObject=new Object();
 	newRelationObject.xq=schoolLocation;
 	newRelationObject.pyccmc=levelName;
-//	newRelationObject.pyccbm=levelCode;
 	newRelationObject.rxjj=enterSeason;
 	newRelationObject.xz=academicStructure;
 	return newRelationObject;
@@ -732,7 +725,7 @@ function modifyDepartment(row){
 //确认修改系部
 function confimModifyDeaparment(row){
 	var newDeaparmentObject=getDeaparmentInfo();
-	
+	newDeaparmentObject.xbbm=row.xbbm;
 	if(typeof newDeaparmentObject ==='undefined'){
 		return;
 	}
@@ -961,7 +954,7 @@ function modifyGrade(row){
 //确认修改年级
 function confimModifyGrade(row){
 	var newGradeObject=getGradeInfo();
-	
+	newGradeObject.njbm=row.njbm;
 	if(typeof newGradeObject ==='undefined'){
 		return;
 	}
@@ -1191,7 +1184,7 @@ function modifyMajor(row){
 //确认修改专业
 function confimModifyMajor(row){
 	var newMajorObject=getMajorInfo();
-	
+	newMajorObject.zybm=row.zybm;
 	if(typeof newMajorObject ==='undefined'){
 		return;
 	}

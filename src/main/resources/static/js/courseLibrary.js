@@ -303,6 +303,7 @@ function stuffclassDetailsArea(row){
 //确认修改课程
 function comfirmmodifyCourseInfo(row){
 	var newClassObject=classDetailsConfirmBtnAction();
+	newClassObject.kcdm=row.kcdm;
 	if(typeof newClassObject ==='undefined'){
 		return;
 	}

@@ -226,6 +226,7 @@ function confirmModifyAdministrationClass(row){
 	var newAdministrationClassObject=getAdministrationClassDetails();
 	newAdministrationClassObject.edu300_ID=row.edu300_ID;
 	newAdministrationClassObject.yxbz=row.yxbz;
+	newAdministrationClassObject.xzbbm=row.xzbbm;
 	if(typeof newAdministrationClassObject ==='undefined'){
 		return;
 	}
