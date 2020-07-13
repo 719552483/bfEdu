@@ -22,7 +22,7 @@ function stuffCourseLibraryTable(tableInfo){
 			}
 		};
 
-		$('#courseLibraryTable').bootstrapTable('destroy').bootstrapTable({
+		$('#courseLibraryApprovalTable').bootstrapTable('destroy').bootstrapTable({
 			data : tableInfo,
 			pagination : true,
 			pageNumber : 1,
@@ -226,7 +226,7 @@ function emptyClassDetailsArea(){
 
 //课程库课程通过审核
 function passClass(){
-	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
+	var choosedClass = $("#courseLibraryApprovalTable").bootstrapTable("getSelections");
 	if(choosedClass.length==0){
 		toastr.warning('请选择课程');
 		return;
@@ -253,7 +253,7 @@ function passClass(){
 
 //课程库课程不通过审核
 function cannotPass(){
-	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
+	var choosedClass = $("#courseLibraryApprovalTable").bootstrapTable("getSelections");
 	if(choosedClass.length==0){
 		toastr.warning('请选择课程');
 		return;
@@ -280,7 +280,7 @@ function cannotPass(){
 
 //课程库课程取消审核
 function cancelPass(){
-	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
+	var choosedClass = $("#courseLibraryApprovalTable").bootstrapTable("getSelections");
 	if(choosedClass.length==0){
 		toastr.warning('请选择课程');
 		return;
@@ -304,7 +304,7 @@ function cancelPass(){
 
 //课程库课程停用
 function stopClass(){
-	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
+	var choosedClass = $("#courseLibraryApprovalTable").bootstrapTable("getSelections");
 	if(choosedClass.length==0){
 		toastr.warning('请选择课程');
 		return;
@@ -487,7 +487,7 @@ function tableAction(isPass,notInPlan,choosedClass,approvalTime,modifyInfo){
 		choosedClass[i].shsj=approvalTime;
 		choosedClass[i].shr=modifyInfo.approvalPerson;
 		choosedClass[i].shrID=modifyInfo.approvalPerson;
-		$("#courseLibraryTable").bootstrapTable('updateByUniqueId', {
+		$("#courseLibraryApprovalTable").bootstrapTable('updateByUniqueId', {
 			id: choosedClass[i].bf200_ID,
 			row: choosedClass[i]
 		});
