@@ -186,6 +186,7 @@ function stuffCourseLibraryTable(tableInfo){
 function courseLibraryInfo(row){
 	stuffclassDetailsArea(row);
 	$(".addNewClass_calssCodeArae").show();
+	$('#addNewClassModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 	$.showModal("#addNewClassModal",false);
 	$("#addNewClassModal").find(".moadalTitle").html("课程-"+row.kcmc+" 详细信息");
 }
@@ -193,6 +194,7 @@ function courseLibraryInfo(row){
 //修改课程
 function modifyCourseLibrary(row){
 	$(".addNewClass_calssCodeArae").hide();
+	$('#addNewClassModal').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	var idArray=new Array();
 	idArray.push(row.bf200_ID);
 	modifyClassesCheckCrouseIsInPlan(idArray,row);
