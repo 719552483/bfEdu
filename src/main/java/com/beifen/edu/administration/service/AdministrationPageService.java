@@ -397,7 +397,7 @@ public class AdministrationPageService {
 	}
 	
 	//根据300名称查询300id
-		public long queryEdu300IdByEdu300Name(String edu300Name) {
+		public Object queryEdu300IdByEdu300Name(String edu300Name) {
 			return edu300DAO.queryEdu300IdByEdu300Name(edu300Name);
 		}
 

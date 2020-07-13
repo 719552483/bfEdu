@@ -815,18 +815,26 @@ public class ReflectUtils {
 				}
 				
 				//行政班编码是否存在
-				String currentXzbCode= Long.toString(reflectUtils.administrationPageService.queryEdu300IdByEdu300Name(edu001.getEdu300_ID()));
-				xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(currentXzbCode);
-				if(xzbs.size()==0){
+				Object currentXzbCode_Ob=reflectUtils.administrationPageService.queryEdu300IdByEdu300Name(edu001.getEdu300_ID());
+				if(currentXzbCode_Ob!=null){
+					String currentXzbCode= Long.toString(Long.valueOf(String.valueOf(currentXzbCode_Ob)).longValue());
+					xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(currentXzbCode);
+					if(xzbs.size()==0){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-行政班不存在";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}else{
+						edu001.setEdu300_ID(currentXzbCode);
+					}
+				}else{
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-行政班不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
-				}else{
-					edu001.setEdu300_ID(currentXzbCode);
 				}
-				
 				
 				//行政班编码是否和填写的培养计划对应
 				boolean classMatchCultruePaln=reflectUtils.administrationPageService.classMatchCultruePaln(edu001.getEdu300_ID(),edu001.getPycc(),edu001.getSzxb(),edu001.getNj(),edu001.getZybm());
