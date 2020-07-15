@@ -1111,19 +1111,35 @@ function toolTipUp(className) {
 
 
 // 日期选择初始化
-function drawCalenr(id) {
-	$(id).datetimepicker({
-		  format : 'yyyy-mm-dd',
-		  language:'zh-CN',
-		  initialDate:new Date(),
-		  weekStart: 1,
-		  autoclose :true,
-		  minView :2,
-		  todayHighlight:true,
-		  startView:2,
-		  endDate:new Date(),
-          todayBtn: "linked",
-	});
+function drawCalenr(id,isSplitToday) {
+	var endDateParams;
+	if (typeof(isSplitToday) === "undefined") {
+		$(id).datetimepicker({
+			  format : 'yyyy-mm-dd',
+			  language:'zh-CN',
+			  initialDate:new Date(),
+			  weekStart: 1,
+			  autoclose :true,
+			  minView :2,
+			  todayHighlight:true,
+			  startView:2,
+			  endDate:new Date(),
+	          todayBtn: "linked",
+		});
+	}else{
+		$(id).datetimepicker({
+			  format : 'yyyy-mm-dd',
+			  language:'zh-CN',
+			  initialDate:new Date(),
+			  weekStart: 1,
+			  autoclose :true,
+			  minView :2,
+			  todayHighlight:true,
+			  startView:2,
+			  startDate:new Date(),
+	          todayBtn: "linked",
+		});
+	}
 }
 
 // 数据库时间转化

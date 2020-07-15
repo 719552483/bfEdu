@@ -33,6 +33,10 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	@Query(value = "select * from edu301 e where e.bhxzbid like %?1%", nativeQuery = true)
 	List<Edu301> queryTeachingClassByXzbCode(String xzbcode);
 
+	// 根据301ID查询教学班
+	@Query(value = "select * from edu301 where Edu301_ID =?1", nativeQuery = true)
+	Edu301 queryJXBByEdu301ID(String edu301id);
+
 	// 根据学生查询教学班
 	@Query(value = "select * from edu301 e where e.bhxs_Code like %?1%", nativeQuery = true)
 	public List<Edu301> queryTeachingClassByXSCode(String edu001Id);
@@ -47,7 +51,7 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE edu301 SET bhxs_Code=?1 WHERE Edu301_ID =?2", nativeQuery = true)
-	public void updateJXBbhxsInfo(String newBhxsid,long jxbid);
+	public void updateJXBbhxsInfo(String newBhxsid, long jxbid);
 
 	// 根据教学班查询行人数
 	@Query(value = "select e.jxbrs from edu301 e where e.Edu301_ID =?1", nativeQuery = true)

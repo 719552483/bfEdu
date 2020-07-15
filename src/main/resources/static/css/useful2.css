@@ -224,10 +224,13 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格单个操作*/
+#xnTable td:last-child,
+#taskApprovalTable td:last-child,
 #courseLibraryApprovalTable td:last-child,
 #generatCourseTable td:last-child,
 #culturePlanVerifyTable td:last-child {
-	min-width: 100px;
+	width: 110px;
+	min-width: 110px;
 }
 
 /*表格多个操作*/
@@ -242,11 +245,13 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格2个操作 按钮字数不超过2个*/
-#putOutTaskTable td:last-child
+/*
 {
 	min-width: 165px;
 }
 
+*/
+#putOutTaskTable td:last-child,
 #teachingClassTable td:last-child
 #relationTable td:last-child,
 #allMajorTable td:last-child,
@@ -257,7 +262,9 @@ padding:1.6em 0em 0.6em 31px !important
 	width: 165px;
 }
 
-
+#putOutTaskTable td:last-child{
+	min-width: 175px;
+}
 
 @media screen and (max-width:1458px) {
 	#teachingClassTable td:last-child {
@@ -500,6 +507,10 @@ float: left;
    relationNameHave
  }
 
+.allMajorTableArea .search,
+.allGradeTableArea .search,
+.allDepartmentTableArea .search,
+.xnTableArea .search,
 .allMajorTable .search,
 .allGradeTable .search,
 .allLevlTableArea .search,

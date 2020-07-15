@@ -47,6 +47,7 @@ import com.beifen.edu.administration.domian.Edu200;
 import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
+import com.beifen.edu.administration.domian.Edu400;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu993;
@@ -719,6 +720,48 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
+	
+	/**
+	 * 获得教学相关公共代码信息
+	 */
+	@RequestMapping("/getJxPublicCodes")
+	@ResponseBody
+	public Object getJxPublicCodes() {
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("allXn", administrationPageService.queryAllXn());
+	
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	/**
+	 * 新增学年
+	 */
+	@RequestMapping("/addNewXn")
+	@ResponseBody
+	public Object addNewXn(@RequestParam String xninfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(xninfo);
+		Edu400 edu400 = (Edu400) JSONObject.toBean(jsonObject, Edu400.class);
+		List<Edu400> allXn=administrationPageService.queryAllXn();
+		boolean nameHave = false;
+		for (int i = 0; i < allXn.size(); i++) {
+			if(allXn.get(i).getXnmc().equals(edu400.getXnmc())){
+				nameHave=true;
+				break;
+			}
+		}
+		
+		if(!nameHave){
+			administrationPageService.addNewXn(edu400);
+			returnMap.put("id", edu400.getEdu400_ID());
+		}
+		returnMap.put("nameHave", nameHave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
 
 	/**
 	 * 获得教务相关公共代码信息
@@ -734,6 +777,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
+	
 
 	/**
 	 * 获得所有层次关系管理信息
@@ -3099,6 +3143,7 @@ public class AdministrationController {
 			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
 			edu201.setSszt("noStatus");
 			administrationPageService.putOutTask(edu201);
+			administrationPageService.putOutTaskAction(edu201.getEdu301_ID(),edu201.getEdu201_ID());
 		}
 		returnMap.put("result", true);
 		return returnMap;

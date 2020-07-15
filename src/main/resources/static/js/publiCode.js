@@ -5,7 +5,6 @@ $(function() {
 	pageGPS("#publicCodeModel");
 	pageGPS("#publicCodeModel_jw");
 	$('.isSowIndex').selectMania(); // 初始化下拉框
-	stuffYearSearchElement("input[type='number']");
 	getJiaoWuInfo();
 	btnbind();
 	stuffEJDElement(EJDMElementInfo);
@@ -1343,6 +1342,9 @@ function sendMajorRemoveInfo(removeArray){
 
 
 
+/**
+ * tab2
+ * */
 
 
 
@@ -1350,18 +1352,268 @@ function sendMajorRemoveInfo(removeArray){
 
 
 
+/**
+ * tab2 end
+ * */
+//判断是否首次点击tab2
+function judgmentIsFristTimeLoadTab2(){
+	var isFirstShowTab2 = $(".isFirstShowTab2")[0].innerText;
+	if (isFirstShowTab2 === "T") {
+		$(".isFirstShowTab2").html("F");
+		getAllStuffTab2Info();
+		tab2BtnBind();
+	}
+}
 
+//获取tab2所有默认填充的信息
+function getAllStuffTab2Info(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getJxPublicCodes",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				stuffAllXnTable(backjson.allXn);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
+//填充学年表
+function stuffAllXnTable(allRelationInfo){
+	window.releaseNewsEvents = {
+			'click #modifyRelation': function(e, value, row, index) {
+				modifyRelation(row);
+			}
+		};
 
+		$('#xnTable').bootstrapTable('destroy').bootstrapTable({
+			data: allRelationInfo,
+			pagination: true,
+			pageNumber: 1,
+			pageSize: 5,
+			pageList: [5],
+			showToggle: false,
+			showFooter: false,
+			clickToSelect: true,
+			search: true,
+			editable: false,
+			striped: true,
+			toolbar: '#toolbar',
+			showColumns: false,
+			onPageChange: function() {
+				drawPagination(".xnTableArea", "学年");
+			},
+			columns: [{
+					field: 'edu400_ID',
+					title: 'edu400_ID',
+					align: 'center',
+					visible: false
+				}, 
+				{
+					field: 'xnmc',
+					title: '学年名称',
+					align: 'left',
+					formatter: paramsMatter
+				}, 
+				{
+					field: 'kssj',
+					title: '开始时间',
+					align: 'left',
+					formatter: paramsMatter
+				}, 
+				{
+					field: 'jssj',
+					title: '结束时间',
+					align: 'left',
+					formatter: paramsMatter
+				},{
+					field: 'zzs',
+					title: '总周数',
+					align: 'left',
+					formatter: zzsMatter
+				},{
+					field: 'action',
+					title: '操作',
+					align: 'center',
+					clickToSelect: false,
+					formatter: releaseNewsFormatter,
+					events: releaseNewsEvents,
+				}
+			]
+		});
 
+		function releaseNewsFormatter(value, row, index) {
+			return [
+					'<ul class="toolbar tabletoolbar">' +
+					'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'</ul>'
+				]
+				.join('');
+		}
+		
+		function zzsMatter(value, row, index) {
+			return [
+					'<div class="myTooltip" title="'+row.zzs+'周">'+row.zzs+'周</div>'
+				]
+				.join('');
+		}
+		drawSearchInput(".xnTableArea");
+		drawPagination(".xnTableArea", "学年");
+		toolTipUp(".myTooltip");
+		btnControl();
+}
 
+//预备新增学年
+function addXn(){
+	$("#addXnModal").find(".moadalTitle").html("新增学年");
+	$.showModal("#addXnModal",true);
+	drawCalenr("#addXn_startTime",true);
+	drawCalenr("#addXn_endTime",true);
+	//新增学年
+	$('.addXn_confimBtn').unbind('click');
+	$('.addXn_confimBtn').bind('click', function(e) {
+		confimAddXn();
+		e.stopPropagation();
+	});
+}
 
+//确认新增学年
+function confimAddXn(){
+	var xnmc=$("#addXnName").val();
+	var startTime=$("#addXn_startTime").val();
+	var endTime=$("#addXn_endTime").val();
+	if(xnmc===""){
+		toastr.warning('学年名称不能为空');
+		return;
+	}
+	
+	if(startTime===""){
+		toastr.warning('请选择学年开始时间');
+		return;
+	}
+	
+	if(endTime===""){
+		toastr.warning('请选择学年结束时间');
+		return;
+	}
+	
+	if(!checkTime(startTime,endTime)){
+		toastr.warning("结束时间必须晚于开始时间");
+		return;
+	}
+	
+	if(dayssBetw(startTime,endTime)<7){
+		toastr.warning("学年时长不足7天");
+		return;
+	}
+	
+	if(dayssBetw(startTime,endTime)<7){
+		toastr.warning("学年时长不足7天");
+		return;
+	}
+	
+	var xnObject=new Object();
+	xnObject.xnmc=xnmc;
+	xnObject.kssj=startTime;
+	xnObject.jssj=endTime;
+	xnObject.zzs=WeeksBetw(startTime,endTime);
+	sendNewXnInfo(xnObject);
+}
 
+//发送新学年信息
+function sendNewXnInfo(xnObject){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addNewXn",
+		dataType : 'json',
+		data: {
+            "xninfo":JSON.stringify(xnObject) 
+        },
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.nameHave) {
+					toastr.warning('学年名称已存在');
+					return;
+				}
+				
+				xnObject.edu400_ID=backjson.id;
+				$('#xnTable').bootstrapTable("prepend", xnObject);
+				$.hideModal("#addXnModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
+//判断开始结束时间大小
+function checkTime(startTime,endTime){
+	var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+	var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+	if(end<start){
+	 	return false;
+	}
+	return true;
+}
 
+// 判断时间是否够一周
+function dayssBetw(date1, date2) {
+	var _dt1 = new Date(date1);
+	var _dt2 = new Date(date2);
+	var dt1 = _dt1.getTime();
+	var dt2 = _dt2.getTime();
+	return parseInt(Math.abs(dt1 - dt2) / 1000 / 60 / 60 / 24);
+}
 
+//获得周数  不足一周按一周算
+function WeeksBetw(date1, date2) {
+	var _dt1 = new Date(date1);
+	var _dt2 = new Date(date2);
+	var dt1 = _dt1.getTime();
+	var dt2 = _dt2.getTime();
+	var zzs=parseInt(Math.abs(dt1 - dt2) / 1000 / 60 / 60 / 24)/7;
+	
+	var r = /^[0-9]*[1-9][0-9]*$/　　// 正整数
+	if(!r.test(zzs)){
+		zzs=parseInt(zzs.toString().split('.')[0])+1;
+	}
+	return parseInt(zzs);
+}
 
-
+// tab2按钮事件绑定
+function tab2BtnBind(){
+	//新增学年
+	$('#addXn').unbind('click');
+	$('#addXn').bind('click', function(e) {
+		addXn();
+		e.stopPropagation();
+	});
+}
 
 
 

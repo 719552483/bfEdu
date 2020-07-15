@@ -89,13 +89,13 @@ function stuffTaskInfoTable(tableInfo) {
 				field: 'bhzymc',
 				title: '专业',
 				align: 'left',
-				formatter: bhxzbmcMatter
+				formatter: bhzymcMatter
 
 			},	{
 				field: 'bhxzbmc',
 				title: '行政班',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: bhxzbmcMatter
 
 			},	{
 				field: 'jxbrs',
@@ -103,12 +103,6 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'left',
 				formatter: paramsMatter
 
-			},	{
-				field: 'ls',
-				title: '老师',
-				clickToSelect: false,
-				align: 'left',
-				formatter: pointTeacherMatter
 			},{
 				field: 'zyls',
 				title: '主要老师',
@@ -116,7 +110,13 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'left',
 				formatter: pointTeacherMatter
 
-			},	{
+			},{
+				field: 'ls',
+				title: '老师',
+				clickToSelect: false,
+				align: 'left',
+				formatter: pointTeacherMatter
+			},{
 				field: 'sfxylcj',
 				title: '是否需要录成绩',
 				align: 'left',
@@ -166,7 +166,11 @@ function stuffTaskInfoTable(tableInfo) {
 	}
 	
 	function bhxzbmcMatter(value, row, index) {
-		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.bhzymc)+'">'+$.uniqueArray(row.bhzymc)+'</span>' ].join('');
+		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.bhxzbmc)+'">'+$.uniqueArray(row.bhxzbmc)+'</span>' ].join('');
+	}
+	
+	function bhzymcMatter(value, row, index) {
+		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.bhzymc).slice(0, -1)+'">'+$.uniqueArray(row.bhzymc).slice(0, -1)+'</span>' ].join('');
 	}
 	
 	function pkbmMatter(value, row, index) {
@@ -830,7 +834,7 @@ function stuffPutOutTaskTable(tableInfo) {
 				field: 'xzbmc',
 				title: '行政班',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: xzbmcMatter
 
 			},	{
 				field: 'jxbrs',
@@ -910,6 +914,10 @@ function stuffPutOutTaskTable(tableInfo) {
 				'</ul>'
 			]
 			.join('');
+	}
+	
+	function xzbmcMatter(value, row, index) {
+		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.xzbmc)+'">'+$.uniqueArray(row.xzbmc)+'</span>' ].join('');
 	}
 	
 	function putOutTaskpkbmMatter(value, row, index) {

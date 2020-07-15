@@ -29,6 +29,7 @@ import com.beifen.edu.administration.dao.Edu200Dao;
 import com.beifen.edu.administration.dao.Edu201Dao;
 import com.beifen.edu.administration.dao.Edu300Dao;
 import com.beifen.edu.administration.dao.Edu301Dao;
+import com.beifen.edu.administration.dao.Edu400Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
 import com.beifen.edu.administration.dao.Edu991Dao;
 import com.beifen.edu.administration.dao.Edu993Dao;
@@ -48,6 +49,7 @@ import com.beifen.edu.administration.domian.Edu200;
 import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
+import com.beifen.edu.administration.domian.Edu400;
 
 @Configuration
 @Service
@@ -85,6 +87,8 @@ public class AdministrationPageService {
 	private Edu300Dao edu300DAO;
 	@Autowired
 	private Edu301Dao edu301DAO;
+	@Autowired
+	private Edu400Dao edu400DAO;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -984,6 +988,14 @@ public class AdministrationPageService {
 		 edu201DAO.save(edu201);
 	}
 	
+	//发布教学任务书时更改108的信息
+	public void putOutTaskAction(Long edu301_ID,Long edu201_ID) {
+		Edu301 edu301=edu301DAO.queryJXBByEdu301ID(edu301_ID.toString());
+		edu301.setSffbjxrws("T");
+		edu301.setEdu201_ID(edu201_ID);
+		edu301DAO.save(edu301);
+	}
+	
 	//查询已发布任务书
 	public List<Edu201> queryPutedTasks() {
 		return edu201DAO.findAll();
@@ -1013,6 +1025,32 @@ public class AdministrationPageService {
 	public Edu201 queryWaitTaskByEud301ID(String edu301ID) {
 		return edu201DAO.queryWaitTaskByEud301ID(edu301ID);
 	}
+	
+	
+	
+	
+	//查询所有学年
+	public List<Edu400> queryAllXn() {
+		return edu400DAO.findAll();
+	}
+	
+	//新增学年
+	public void addNewXn(Edu400 edu400) {
+		edu400DAO.save(edu400);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	// 课程库搜索课程
@@ -1329,6 +1367,12 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
 
 
 

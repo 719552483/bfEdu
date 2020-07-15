@@ -17,7 +17,7 @@ function stuffCourseLibraryTable(tableInfo){
 			}
 		};
 
-		$('#putOutTaskTable').bootstrapTable('destroy').bootstrapTable({
+		$('#taskApprovalTable').bootstrapTable('destroy').bootstrapTable({
 			data: tableInfo,
 			pagination: true,
 			pageNumber: 1,
@@ -61,6 +61,13 @@ function stuffCourseLibraryTable(tableInfo){
 					field: 'xzbmc',
 					title: '行政班',
 					align: 'left',
+					formatter: xzbmcMatter
+
+				},{
+					field: 'zylsmc',
+					title: '主要老师',
+					clickToSelect: false,
+					align: 'left',
 					formatter: paramsMatter
 
 				},{
@@ -69,13 +76,6 @@ function stuffCourseLibraryTable(tableInfo){
 					clickToSelect: false,
 					align: 'left',
 					formatter: paramsMatter
-				},{
-					field: 'zylsmc',
-					title: '主要老师',
-					clickToSelect: false,
-					align: 'left',
-					formatter: paramsMatter
-
 				},{
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
@@ -129,6 +129,11 @@ function stuffCourseLibraryTable(tableInfo){
 						.join('');
 			}
 		}
+		
+		function xzbmcMatter(value, row, index) {
+			return [ '<span class="myTooltip" title="'+$.uniqueArray(row.xzbmc)+'">'+$.uniqueArray(row.xzbmc)+'</span>' ].join('');
+		}
+		
 		
 		function ztMatter(value, row, index) {
 			if (row.sszt==="pass") {
@@ -185,7 +190,7 @@ function givFfkyj(row,index){
 					dataType : 'json',
 					success : function(backjson) {
 						if (backjson.result) {
-							$("#putOutTaskTable").bootstrapTable('updateCell',{
+							$("#taskApprovalTable").bootstrapTable('updateCell',{
 								index:index,
 								field:"fkyj",
 								value:$("#taskInfo_fkyj").val()
@@ -216,13 +221,13 @@ function  cancelTask(){
 
 //审批二次确认
 function changeTaskStatus(status){
-	if(!tableIsChecked("#putOutTaskTable", "任务书")){
+	if(!tableIsChecked("#taskApprovalTable", "任务书")){
 		return;
 	}
-	var tableChoosed = $("#putOutTaskTable").bootstrapTable("getSelections");
+	var tableChoosed = $("#taskApprovalTable").bootstrapTable("getSelections");
 	for (var i = 0; i < tableChoosed.length; i++) {
 		if(tableChoosed[i].sfypk==="T"){
-			toastr.warning('不能修改已排课的教学任务书');
+			toastr.warning('有教学任务书已排课');
 			return;
 		}
 	}
@@ -265,13 +270,13 @@ function sendChangeStatus(choosedArray,status){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				var tableChoosed = $("#putOutTaskTable").bootstrapTable("getSelections");
+				var tableChoosed = $("#taskApprovalTable").bootstrapTable("getSelections");
 				for (var t = 0; t < tableChoosed.length; t++) {
 					for (var c = 0; c < choosedArray.length; c++) {
 						if(tableChoosed[t].edu201_ID===choosedArray[c]){
 							var row=tableChoosed[t];
 							row.sszt=status;
-							$("#putOutTaskTable").bootstrapTable("updateByUniqueId", {edu201_ID:choosedArray[c], row: row}); 
+							$("#taskApprovalTable").bootstrapTable("updateByUniqueId", {edu201_ID:choosedArray[c], row: row}); 
 						}
 					}
 				}
