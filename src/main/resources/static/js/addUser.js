@@ -257,7 +257,7 @@ function stuffTable(tableInfo) {
 
 	function userNameFormatter(value, row, index) {
 		return [
-				'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable" value="' + row.yhm +
+				'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable Mydfinput" value="' + row.yhm +
 				'"><span title="'+row.yhm+'" class="myTooltip blockName' +
 				row.bf990_ID + '">' + row.yhm + '</span>'
 			]

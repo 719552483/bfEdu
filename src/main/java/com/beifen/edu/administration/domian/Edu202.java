@@ -12,6 +12,10 @@ import javax.persistence.Table;
 //	private Long xnid; //学年id
 //	private Long ksz; //开始周
 //	private Long jsz; //结束周
+//private Long jsz; //授课地点名称
+//private Long jsz; //授课地点ID 
+//private Long jsz; //课节id 可以有多个
+//private Long jsz; //课节名称
 //
 //
 //}

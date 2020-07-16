@@ -5,6 +5,7 @@ $(function() {
 	pageGPS("#publicCodeModel");
 	pageGPS("#publicCodeModel_jw");
 	$('.isSowIndex').selectMania(); // 初始化下拉框
+	stuffYearSearchElement("input[type='number']");
 	getJiaoWuInfo();
 	btnbind();
 	stuffEJDElement(EJDMElementInfo);
@@ -1345,16 +1346,6 @@ function sendMajorRemoveInfo(removeArray){
 /**
  * tab2
  * */
-
-
-
-
-
-
-
-/**
- * tab2 end
- * */
 //判断是否首次点击tab2
 function judgmentIsFristTimeLoadTab2(){
 	var isFirstShowTab2 = $(".isFirstShowTab2")[0].innerText;
@@ -1395,8 +1386,14 @@ function getAllStuffTab2Info(){
 //填充学年表
 function stuffAllXnTable(allRelationInfo){
 	window.releaseNewsEvents = {
-			'click #modifyRelation': function(e, value, row, index) {
-				modifyRelation(row);
+			'click #modifyXn': function(e, value, row, index) {
+				modifyXn(row,index);
+			},
+			'click #confriModifyXn': function(e, value, row, index) {
+				confrimModifyXn(row,index);
+			},
+			'click #cancelModifyXn': function(e, value, row, index) {
+				cancelModifyXn(row,index);
 			}
 		};
 
@@ -1427,19 +1424,19 @@ function stuffAllXnTable(allRelationInfo){
 					field: 'xnmc',
 					title: '学年名称',
 					align: 'left',
-					formatter: paramsMatter
+					formatter: xnmcMatter
 				}, 
 				{
 					field: 'kssj',
 					title: '开始时间',
 					align: 'left',
-					formatter: paramsMatter
+					formatter: kssjMatter
 				}, 
 				{
 					field: 'jssj',
 					title: '结束时间',
 					align: 'left',
-					formatter: paramsMatter
+					formatter: jssjMatter
 				},{
 					field: 'zzs',
 					title: '总周数',
@@ -1459,8 +1456,31 @@ function stuffAllXnTable(allRelationInfo){
 		function releaseNewsFormatter(value, row, index) {
 			return [
 					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li id="modifyXn" class="modifyBtn modifyXn'+index+'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li id="confriModifyXn" class="noneStart confrim'+index+'"><span><img src="img/right.png" style="width:24px"></span>确定</li>' +
+					'<li id="cancelModifyXn" class="noneStart cancel'+index+'"><span><img src="images/t03.png" style="width:24px"></span>取消</li>' +
 					'</ul>'
+				]
+				.join('');
+		}
+		
+		function xnmcMatter(value, row, index) {
+			return [
+					'<div class="myTooltip xnmcTxt'+index+'" title="'+row.xnmc+'">'+row.xnmc+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifyXn_name'+index+'" spellcheck="false">'
+				]
+				.join('');
+		}
+		
+		function kssjMatter(value, row, index) {
+			return [
+					'<div class="myTooltip kssjTxt'+index+'" title="'+row.kssj+'">'+row.kssj+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifyXn_startTime'+index+'" spellcheck="false">'
+				]
+				.join('');
+		}
+		
+		function jssjMatter(value, row, index) {
+			return [
+					'<div class="myTooltip jssjTxt'+index+'" title="'+row.jssj+'">'+row.jssj+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifyXn_endTime'+index+'" spellcheck="false">'
 				]
 				.join('');
 		}
@@ -1475,6 +1495,136 @@ function stuffAllXnTable(allRelationInfo){
 		drawPagination(".xnTableArea", "学年");
 		toolTipUp(".myTooltip");
 		btnControl();
+}
+
+//预备修改学年
+function modifyXn(row,index){
+	$("#modifyXn_startTime"+index).val(row.kssj);
+	$("#modifyXn_endTime"+index).val(row.jssj);
+	$("#modifyXn_name"+index).val(row.xnmc);
+	$("#modifyXn_startTime"+index).show();
+	$("#modifyXn_endTime"+index).show();
+	$("#modifyXn_name"+index).show();
+	$(".confrim"+index).show();
+	$(".cancel"+index).show();
+	$(".modifyXn"+index).hide();
+	$(".kssjTxt"+index).hide();
+	$(".jssjTxt"+index).hide();
+	$(".xnmcTxt"+index).hide();
+	drawCalenr("#modifyXn_startTime"+index,true);
+	drawCalenr("#modifyXn_endTime"+index,true);
+	$("#xnTable td:last-child").addClass("actionChangeLastTD");
+}
+
+//取消修改学年
+function cancelModifyXn(row,index){
+	$("#modifyXn_startTime"+index).hide();
+	$("#modifyXn_endTime"+index).hide();
+	$("#modifyXn_name"+index).hide();
+	$(".confrim"+index).hide();
+	$(".cancel"+index).hide();
+	$(".modifyXn"+index).show();
+	$(".kssjTxt"+index).show();
+	$(".jssjTxt"+index).show();
+	$(".xnmcTxt"+index).show();
+	$("#xnTable td:last-child").removeClass("actionChangeLastTD");
+}
+
+//确认修改学年
+function confrimModifyXn(row,index){
+	var modifyXn_name=$("#modifyXn_name"+index).val();
+	var modifyXn_startTime=$("#modifyXn_startTime"+index).val();
+	var modifyXn_endTime=$("#modifyXn_endTime"+index).val();
+	if(modifyXn_name===row.xnmc&&modifyXn_startTime===row.kssj&&modifyXn_endTime===row.jssj){
+		cancelModifyXn(row,index);
+	}else{
+		if(modifyXn_name===""){
+			toastr.warning('学年名称不能为空');
+			return;
+		}
+		
+		if(modifyXn_startTime===""){
+			toastr.warning('请选择学年开始时间');
+			return;
+		}
+		
+		if(modifyXn_endTime===""){
+			toastr.warning('请选择学年结束时间');
+			return;
+		}
+		
+		if(!checkTime(modifyXn_startTime,modifyXn_endTime)){
+			toastr.warning("结束时间必须晚于开始时间");
+			return;
+		}
+		
+		if(dayssBetw(modifyXn_startTime,modifyXn_endTime)<7){
+			toastr.warning("学年时长不足7天");
+			return;
+		}
+		
+		if(dayssBetw(modifyXn_startTime,modifyXn_endTime)<7){
+			toastr.warning("学年时长不足7天");
+			return;
+		}
+		
+		var xnObject=new Object();
+		xnObject.edu400_ID=row.edu400_ID;
+		xnObject.xnmc=modifyXn_name;
+		xnObject.kssj=modifyXn_startTime;
+		xnObject.jssj=modifyXn_endTime;
+		xnObject.zzs=WeeksBetw(modifyXn_startTime,modifyXn_endTime);
+		
+		$("#remindModal").find(".remindType").html("学年");
+		$("#remindModal").find(".remindActionType").html("修改");
+		$.showModal("#remindModal",true);
+		//二次确认修改学年
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
+			sendModifyXnInfo(xnObject);
+			e.stopPropagation();
+		});
+	}
+}
+
+//发送修改学年请求
+function sendModifyXnInfo(xnObject){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/modifyXn",
+		dataType : 'json',
+		data: {
+            "xninfo":JSON.stringify(xnObject) 
+        },
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.nameHave) {
+					toastr.warning('学年名称已存在');
+					return;
+				}
+				$("#xnTable").bootstrapTable('updateByUniqueId', {
+					id: xnObject.edu400_ID,
+					row: xnObject
+				});
+				toolTipUp(".myTooltip");
+				toastr.success('修改成功');
+				$.hideModal("#remindModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //预备新增学年
@@ -1534,6 +1684,7 @@ function confimAddXn(){
 	sendNewXnInfo(xnObject);
 }
 
+//发送新增学年请求
 //发送新学年信息
 function sendNewXnInfo(xnObject){
 	$.ajax({
@@ -1614,6 +1765,12 @@ function tab2BtnBind(){
 		e.stopPropagation();
 	});
 }
+/**
+ * tab2 end
+ * */
+
+
+
 
 
 
@@ -2187,10 +2344,7 @@ function relationReloadSearchs(){
 
 //填充年份选择器
 function stuffYearSearchElement(eve){
-	var myDate = new Date();
-	var year = myDate.getFullYear();//获取当前年
-	$(eve).attr("value",year);
-	$(eve).attr("max",year);
+	$(eve).attr("value",45);
 	$(eve).InputSpinner();
 }
 

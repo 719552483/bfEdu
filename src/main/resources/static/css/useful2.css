@@ -251,6 +251,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 */
+.actionChangeLastTD,
 #putOutTaskTable td:last-child,
 #teachingClassTable td:last-child
 #relationTable td:last-child,
@@ -260,6 +261,10 @@ padding:1.6em 0em 0.6em 31px !important
 #allLevlTable td:last-child ,
 #allRoleTable td:last-child{
 	width: 165px;
+}
+
+.actionChangeLastTD{
+	width: 165px!important;
 }
 
 #putOutTaskTable td:last-child{
@@ -377,6 +382,10 @@ float: left;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
+}
+
+.Mydfinput{
+	width: 80% !important;
 }
 
 .tableInput {
