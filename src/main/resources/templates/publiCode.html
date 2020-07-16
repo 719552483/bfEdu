@@ -202,14 +202,16 @@
 								<ul class="forminfo">
 									<div style="margin-top: -8px;">
 										<label class="selectName" style="margin-top: 14px;">学年</label>
-										<select id="xnForSelect" class="isSowIndex classTimePart_forXN">
+										<select id="classTimePart_forXN" class="isSowIndex xnForSelect">
 											<option value="seleceConfigTip">请选择</option>
 										</select>
 									</div>
 								</ul>
 							</div>
 						</div>
-
+					</div>
+					<div class="kjTableArea searchGivePaddingR">
+							<table class="tablelist myTableStyle" id="kjTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>
 					</div>
 				</div>
 			</div>
@@ -232,7 +234,7 @@
 								<ul class="forminfo">
 									<div style="margin-top: -8px;">
 										<label class="selectName" style="margin-top: 14px;">学年</label>
-										<select id="xnForSelect" class="isSowIndex otherTimePart_forXN">
+										<select id="otherTimePart_forXN" class="isSowIndex xnForSelect">
 											<option value="seleceConfigTip">请选择</option>
 										</select>
 									</div>
@@ -770,6 +772,50 @@
 				</div>
 				<div class="modal-footer tipbtn">
 					<input name="" type="button" class="sure addXn_confimBtn" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- 课节年Modal -->
+	<div class="modal fade bs-example-modal-lg" id="classTimePartModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课节名称</label>
+									<input name="" type="text" class="myInput colInput"
+										id="addKjName" placeholder="请输入课节名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">上下午(晚)</label>
+									<select class="isSowIndex" id="addKjsjd">
+										<option value="seleceConfigTip">请选择</option>
+										<option value="forenoon">上午</option>
+										<option value="afternoon">下午</option>
+										<option value="eveing">晚上</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+						
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure classTimePart_confimBtn" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
 			</div>

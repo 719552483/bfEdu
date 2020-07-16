@@ -27,9 +27,11 @@ import com.beifen.edu.administration.dao.Edu107Dao;
 import com.beifen.edu.administration.dao.Edu108Dao;
 import com.beifen.edu.administration.dao.Edu200Dao;
 import com.beifen.edu.administration.dao.Edu201Dao;
+import com.beifen.edu.administration.dao.Edu202Dao;
 import com.beifen.edu.administration.dao.Edu300Dao;
 import com.beifen.edu.administration.dao.Edu301Dao;
 import com.beifen.edu.administration.dao.Edu400Dao;
+import com.beifen.edu.administration.dao.Edu401Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
 import com.beifen.edu.administration.dao.Edu991Dao;
 import com.beifen.edu.administration.dao.Edu993Dao;
@@ -47,9 +49,11 @@ import com.beifen.edu.administration.domian.Edu107;
 import com.beifen.edu.administration.domian.Edu108;
 import com.beifen.edu.administration.domian.Edu200;
 import com.beifen.edu.administration.domian.Edu201;
+import com.beifen.edu.administration.domian.Edu202;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
 import com.beifen.edu.administration.domian.Edu400;
+import com.beifen.edu.administration.domian.Edu401;
 
 @Configuration
 @Service
@@ -70,6 +74,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu201Dao edu201DAO;
 	@Autowired
+	private Edu202Dao edu202DAO;
+	@Autowired
 	private Edu101Dao edu101DAO;
 	@Autowired
 	private Edu103Dao edu103DAO;
@@ -89,6 +95,8 @@ public class AdministrationPageService {
 	private Edu301Dao edu301DAO;
 	@Autowired
 	private Edu400Dao edu400DAO;
+	@Autowired
+	private Edu401Dao edu401DAO;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -1039,20 +1047,78 @@ public class AdministrationPageService {
 		edu400DAO.save(edu400);
 	}
 	
+	//查询默认课节设置
+	public List<Edu401> queryDefaultkjsz() {
+		return edu401DAO.queryDefaultkjsz();
+	}
+
+	//查询所有课节 包含指定了学年的
+	public List<Edu401> queryAllKj() {
+		return edu401DAO.findAll();
+	}
+	
+	//新增课节
+	public void addNewKj(Edu401 edu401) {
+		edu401DAO.save(edu401);
+	}
+	
+	//新增课节时获得课节顺序
+	public String getNewKjsh(Edu401 edu401) {
+		List<Edu401> currentKjLenth=null;
+		//课节是否指定了学年
+		if(edu401.getXnid()!=null){
+			currentKjLenth=edu401DAO.findKjPonitXnAndSjd(edu401.getXnid().toString(),edu401.getSjd());
+		}else{
+			currentKjLenth=edu401DAO.findKjPonitSjd(edu401.getSjd());
+		}
+		
+		return String.valueOf(currentKjLenth.size()+1);
+	}
 	
 	
 	
+	//验证是否有排课表正在使用该课节
+	public boolean verifyKj(String kjId) {
+		boolean rs=true;
+		List<Edu202> useThisEdu202=edu202DAO.verifyKj(kjId);
+		if(useThisEdu202.size()>0){
+			rs=false;
+		}
+		return rs;
+	}
 	
+	//删除课节
+	public void removeKj(String deleteId) {
+		edu401DAO.removeTasks(deleteId);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
+	//删除课节时将所在时段其后所有课节的顺序加一  需要考虑是否选择了学年
+	public void addKjsxAterThisKj(String kjId) {
+		Edu401 remove401=edu401DAO.queryKjById(kjId);
+		String sjd=remove401.getSjd();
+		int kjsx=Integer.parseInt(remove401.getKjsx());
+		List<Edu401> allEdu401=null;
+		if(remove401.getXnid()!=null){
+			allEdu401=edu401DAO.findKjPonitXnAndSjd(remove401.getXnid().toString(), sjd);
+		}else{
+			allEdu401=edu401DAO.queryDefaultkjsz();
+		}
+		
+		//课节顺序大于删除课节的课节顺序的   可接顺序减一
+		for (int i = 0; i < allEdu401.size(); i++) {
+			if(Integer.parseInt(allEdu401.get(i).getKjsx())>kjsx){
+				AdministrationPageService.this.czkjsx(allEdu401.get(i).getEdu401_ID().toString(),(Integer.parseInt(allEdu401.get(i).getKjsx())-1));
+			}
+		}
+	}
 
 	
+	// 重置课节顺序
+	private void czkjsx(String kjId, int kjsfAsInt) {
+		String kjsx=String.valueOf(kjsfAsInt);
+		edu401DAO.kjsxjy(kjId,kjsx);
+	}
+
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
 		Specification<Edu200> specification = new Specification<Edu200>() {
@@ -1367,6 +1433,19 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

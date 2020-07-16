@@ -1375,7 +1375,16 @@ function getAllStuffTab2Info(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
+				//学年下拉框
+				if(backjson.allXn!==0){
+					var str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < backjson.allXn.length; i++) {
+						str += '<option value="' + backjson.allXn[i].edu400_ID + '">' + backjson.allXn[i].xnmc + '</option>';
+					}
+					stuffManiaSelect(".xnForSelect", str);
+				}
 				stuffAllXnTable(backjson.allXn);
+				stuffAllKjTable(backjson.allkj);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1620,6 +1629,14 @@ function sendModifyXnInfo(xnObject){
 				toolTipUp(".myTooltip");
 				toastr.success('修改成功');
 				$.hideModal("#remindModal");
+				
+				//更新学年下拉框
+				var currentAllXn=backjson.currentAllXn;
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < currentAllXn.length; i++) {
+					str += '<option value="' + currentAllXn[i].edu400_ID + '">' + currentAllXn[i].xnmc + '</option>';
+				}
+				stuffManiaSelect(".xnForSelect", str);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1715,6 +1732,15 @@ function sendNewXnInfo(xnObject){
 				xnObject.edu400_ID=backjson.id;
 				$('#xnTable').bootstrapTable("prepend", xnObject);
 				$.hideModal("#addXnModal");
+				toolTipUp(".myTooltip");
+				
+				//更新学年下拉框
+				var currentAllXn=backjson.currentAllXn;
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < currentAllXn.length; i++) {
+					str += '<option value="' + currentAllXn[i].edu400_ID + '">' + currentAllXn[i].xnmc + '</option>';
+				}
+				stuffManiaSelect(".xnForSelect", str);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1722,6 +1748,7 @@ function sendNewXnInfo(xnObject){
 	});
 }
 
+//判断两个日期的大小
 //判断开始结束时间大小
 function checkTime(startTime,endTime){
 	var start=new Date(startTime.replace("-", "/").replace("-", "/"));
@@ -1756,12 +1783,308 @@ function WeeksBetw(date1, date2) {
 	return parseInt(zzs);
 }
 
+
+
+//填充课节表
+function stuffAllKjTable(allkj){
+	allkj=sortKjInfo(allkj);
+	window.releaseNewsEvents = {
+			'click #modifyKj': function(e, value, row, index) {
+				modifyKj(row,index);
+			},
+			'click #removeKj': function(e, value, row, index) {
+				removeKj(row,index);
+			},
+			'click #confrimModifyKj': function(e, value, row, index) {
+				confrimModifyKj(row,index);
+			},
+			'click #cancelModifyKj': function(e, value, row, index) {
+				cancelModifyKj(row,index);
+			}
+		};
+
+		$('#kjTable').bootstrapTable('destroy').bootstrapTable({
+			data: allkj,
+			pagination: true,
+			pageNumber: 1,
+			pageSize: 5,
+			pageList: [5],
+			showToggle: false,
+			showFooter: false,
+			clickToSelect: true,
+			search: true,
+			editable: false,
+			striped: true,
+			toolbar: '#toolbar',
+			showColumns: false,
+			onPageChange: function() {
+				drawPagination(".kjTableArea", "课节");
+			},
+			columns: [{
+					field: 'edu401_ID',
+					title: 'edu401_ID',
+					align: 'center',
+					visible: false
+				}, 
+				{
+					field: 'kjsx',
+					title: '课节顺序',
+					align: 'left',
+					formatter: paramsMatter
+				}, 
+				{
+					field: 'kjmc',
+					title: '课节名称',
+					align: 'left',
+					formatter: paramsMatter
+				}, 
+				{
+					field: 'sjd',
+					title: '上下午(晚)',
+					align: 'left',
+					formatter: sjdMatter
+				},{
+					field: 'kjsc',
+					title: '课节时长(分钟)',
+					align: 'left',
+					formatter: paramsMatter
+				},{
+					field: 'action',
+					title: '操作',
+					align: 'center',
+					clickToSelect: false,
+					formatter: releaseNewsFormatter,
+					events: releaseNewsEvents,
+				}
+			]
+		});
+
+		function releaseNewsFormatter(value, row, index) {
+			return [
+					'<ul class="toolbar tabletoolbar">' +
+					'<li id="modifyKj" class="modifyBtn modifyKj'+index+'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+					'<li id="removeKj" class="modifyBtn removeKj'+index+'"><span><img src="images/t03.png" style="width:24px"></span>删除</li>' +
+					'<li id="confrimModifyKj" class="noneStart confrimKj'+index+'"><span><img src="img/right.png" style="width:24px"></span>确定</li>' +
+					'<li id="cancelModifyKj" class="noneStart cancelKj'+index+'"><span><img src="images/t03.png" style="width:24px"></span>取消</li>' +
+					'</ul>'
+				]
+				.join('');
+		}
+		
+		function sjdMatter(value, row, index) {
+			var str="";
+			if(row.sjd==="forenoon"){
+				str="上午";
+			}else if(row.sjd==="afternoon"){
+				str="下午";
+			}else{
+				str="晚上";
+			}
+			
+			return [
+					'<div class="myTooltip" title="'+str+'">'+str+'</div>'
+				]
+				.join('');
+		}
+	
+		drawSearchInput(".kjTableArea");
+		drawPagination(".kjTableArea", "课节");
+		toolTipUp(".myTooltip");
+		btnControl();
+}
+
+//课节排序
+function sortKjInfo(kjinfo){
+	var returnArray=new Array();
+	var forenoonArray=new Array();
+	var afternoonArray=new Array();
+	var eveingArray=new Array();
+	for (var i = 0; i < kjinfo.length; i++) {
+		if(kjinfo[i].sjd==="forenoon"){
+			forenoonArray.push(kjinfo[i]);
+		}else if(kjinfo[i].sjd==="afternoon"){
+			afternoonArray.push(kjinfo[i]);
+		}else{
+			eveingArray.push(kjinfo[i]);
+		}
+	}
+	forenoonArray.sort(function (a,b){return a.kjsx-b.kjsx;});
+	afternoonArray.sort(function (a,b){return a.kjsx-b.kjsx;});
+	eveingArray.sort(function (a,b){return a.kjsx-b.kjsx;});
+	for (var i = 0; i < forenoonArray.length; i++) {
+		returnArray.push(forenoonArray[i]);
+	}
+	for (var i = 0; i < afternoonArray.length; i++) {
+		returnArray.push(afternoonArray[i]);
+	}
+	for (var i = 0; i < eveingArray.length; i++) {
+		returnArray.push(eveingArray[i]);
+	}
+	return returnArray;
+}
+
+
+//预备修改课节
+function modifyKj(row,index){
+	
+}
+
+//预备删除课节
+function removeKj(row,index){
+	$.showModal("#remindModal",true);
+	$(".remindType").html("课节");
+	$(".remindActionType").html("删除");
+	//确认新增关系按钮
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendRemoveKjInfo(row.edu401_ID);
+		e.stopPropagation();
+	});
+}
+
+//确认删除课节
+function sendRemoveKjInfo(removeid){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/rmoveKj",
+		data: {
+             "deleteId":JSON.stringify(removeid) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.canRemove) {
+					var removeArray=new Array();
+					removeArray.push(removeid);
+					tableRemoveAction("#kjTable", removeArray, ".kjTableArea", "课节");
+					var all = $("#kjTable").bootstrapTable("getData");
+					stuffAllKjTable(all);
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的课节');
+				}
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+
+//确认修改课节
+function confrimModifyKj(row,index){
+	
+}
+
+//取消修改课节
+function cancelModifyKj(row,index){
+	
+}
+
+
+
+//预备新增课节
+function addClassTimePart(){
+	$("#classTimePartModal").find(".moadalTitle").html("新增课节");
+	$.showModal("#classTimePartModal",true);
+	//新增学年
+	$('.classTimePart_confimBtn').unbind('click');
+	$('.classTimePart_confimBtn').bind('click', function(e) {
+		confimAddClassTimePart();
+		e.stopPropagation();
+	});
+}
+
+//确认新增课节
+function confimAddClassTimePart(){
+	var classTimePart_forXN = getNormalSelectValue("classTimePart_forXN");
+	var addKjsjd = getNormalSelectValue("addKjsjd");
+	var kjmc = $("#addKjName").val();
+	if(addKjsjd===""){
+		toastr.warning('请选择课节时间段');
+		return;
+	}
+	
+	if(kjmc===""){
+		toastr.warning('课节名称不能为空');
+		return;
+	}
+	
+	var kjObject=new Object();
+	classTimePart_forXN===""?kjObject.xnid=null:kjObject.xnid=classTimePart_forXN;
+	kjObject.kjmc=kjmc;
+	kjObject.sjd=addKjsjd;
+	kjObject.kjsc=$("#classTimePart_kjsc").val();
+	kjObject.sfwewkj="F";
+	sendNewKjInfo(kjObject);
+}
+
+//发送新课节信息
+function sendNewKjInfo(kjObject){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addNewKj",
+		dataType : 'json',
+		data: {
+            "kjinfo":JSON.stringify(kjObject) 
+        },
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.nameHave) {
+					toastr.warning('课节名称已存在');
+					return;
+				}
+				
+				kjObject.edu401_ID=backjson.id;
+				kjObject.kjsx=backjson.kjsx;
+				$('#kjTable').bootstrapTable("prepend", kjObject);
+				var all = $("#kjTable").bootstrapTable("getData");
+				stuffAllKjTable(all);
+				$.hideModal("#classTimePartModal");
+				toolTipUp(".myTooltip");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
 // tab2按钮事件绑定
 function tab2BtnBind(){
 	//新增学年
 	$('#addXn').unbind('click');
 	$('#addXn').bind('click', function(e) {
 		addXn();
+		e.stopPropagation();
+	});
+	
+	//新增课节
+	$('#addClassTimePart').unbind('click');
+	$('#addClassTimePart').bind('click', function(e) {
+		addClassTimePart();
 		e.stopPropagation();
 	});
 }

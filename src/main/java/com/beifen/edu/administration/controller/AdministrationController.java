@@ -48,6 +48,7 @@ import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.domian.Edu301;
 import com.beifen.edu.administration.domian.Edu400;
+import com.beifen.edu.administration.domian.Edu401;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu993;
@@ -729,7 +730,8 @@ public class AdministrationController {
 	public Object getJxPublicCodes() {
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("allXn", administrationPageService.queryAllXn());
-	
+		returnMap.put("allkj", administrationPageService.queryDefaultkjsz());
+		
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -756,6 +758,7 @@ public class AdministrationController {
 		if(!nameHave){
 			administrationPageService.addNewXn(edu400);
 			returnMap.put("id", edu400.getEdu400_ID());
+			returnMap.put("currentAllXn", administrationPageService.queryAllXn());
 		}
 		returnMap.put("nameHave", nameHave);
 		returnMap.put("result", true);
@@ -784,9 +787,69 @@ public class AdministrationController {
 		
 		if(!nameHave){
 			administrationPageService.addNewXn(edu400);
+			returnMap.put("currentAllXn", administrationPageService.queryAllXn());
 		}
 		returnMap.put("nameHave", nameHave);
 		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 新增课节
+	 */
+	@RequestMapping("/addNewKj")
+	@ResponseBody
+	public Object addNewKj(@RequestParam String kjinfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(kjinfo);
+		Edu401 edu401 = (Edu401) JSONObject.toBean(jsonObject, Edu401.class);
+		List<Edu401> allKj=administrationPageService.queryAllKj();
+		boolean nameHave = false;
+		for (int i = 0; i < allKj.size(); i++) {
+			if(allKj.get(i).getKjmc().equals(edu401.getKjmc())){
+				nameHave=true;
+				break;
+			}
+		}
+		
+		if(!nameHave){
+			//获得新课节的顺序
+			String kjsx=administrationPageService.getNewKjsh(edu401);
+			edu401.setKjsx(kjsx);
+			administrationPageService.addNewKj(edu401);
+			returnMap.put("id", edu401.getEdu401_ID());
+			returnMap.put("kjsx",kjsx);
+		}
+		returnMap.put("nameHave", nameHave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+	/**
+	 * 删除课节  
+	 * 课节id唯一  所以不需要考虑是否选择了学年
+	 */
+	@RequestMapping("/rmoveKj")
+	@ResponseBody
+	public Object rmoveKj(@RequestParam String deleteId) {
+		Map<String, Object> returnMap = new HashMap();
+		
+		boolean canRemove=true;
+		//判断是否有课表正在使用该课节
+		boolean verifyRelation= administrationPageService.verifyKj(deleteId);
+		
+		if(canRemove){
+			//删除课节应该将所在时段其后所有课节的顺序加一  需要考虑是否选择了学年
+			administrationPageService.addKjsxAterThisKj(deleteId);
+			
+			//删除课节
+			administrationPageService.removeKj(deleteId);
+		}
+		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
 	
