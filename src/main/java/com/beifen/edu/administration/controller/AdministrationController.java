@@ -14,15 +14,11 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -3384,7 +3380,7 @@ public class AdministrationController {
 	
 	
 	/**
-	 * 根据层次关系查询待排课程
+	 * 根据层次关系查询待排课程列表
 	 * @return returnMap
 	 */
 	@RequestMapping("getTaskByCulturePlan")
@@ -3396,19 +3392,14 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		//所有教学班
-		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode, departmentCode,gradeCode, majorCode);
 		List<Edu201> taskInfo = new ArrayList<Edu201>();
+		//培养计划下所有教学班
+		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode, departmentCode,gradeCode, majorCode);
 		// 如果层次关系下有教学班查询所有教学班待排课程
 		if (calssInfo.size() > 0) {
-			for (int i = 0; i < calssInfo.size(); i++) {
-				Edu201 edu201=administrationPageService.queryWaitTaskByEud301ID(calssInfo.get(i).getEdu301_ID().toString());
-				if(edu201!=null){
-					taskInfo.add(edu201);
-				}
-			}
+			taskInfo= administrationPageService.getTaskByCulturePlan(levelCode, departmentCode,gradeCode, majorCode);
 		}
-		
+
 		returnMap.put("calssInfo", calssInfo);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
@@ -3418,22 +3409,42 @@ public class AdministrationController {
 	
 	
 	/**
-	 * 
+	 *  课程性质按钮获取待排课程列表
 	 * @return returnMap
 	 */
-//	@RequestMapping("filterTaskByKcxz")
+	@RequestMapping("kcxzBtnGetTask")
+	@ResponseBody
+	public Object kcxzBtnGetTask(@RequestParam("SearchObject") String SearchObject) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(SearchObject);
+		String levelCode = searchObject.getString("level");
+		String departmentCode = searchObject.getString("department");
+		String gradeCode = searchObject.getString("grade");
+		String majorCode = searchObject.getString("major");
+		String jxbID = searchObject.getString("jxbID");
+		String kcxz = searchObject.getString("kcxz");
+		List<Edu201> taskInfo = new ArrayList<Edu201>();
+		if(jxbID.equals("")||jxbID==null){
+			taskInfo= administrationPageService.kcxzBtnGetTask(levelCode, departmentCode,gradeCode, majorCode,kcxz);
+		}else{
+			taskInfo= administrationPageService.kcxzBtnGetTaskWithJxb(levelCode, departmentCode,gradeCode, majorCode,kcxz,jxbID);
+		}
+		returnMap.put("taskInfo", taskInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+//	/**
+//	 *  排课页面开始检索按钮
+//	 * @return returnMap
+//	 */
+//	@RequestMapping("startSearchSchedule")
 //	@ResponseBody
-//	public Object filterTaskByKcxz(@RequestParam("taskIDs") String taskIDs,@RequestParam("kcxz") String kcxz) {
+//	public Object startSearchSchedule(@RequestParam("SearchObject") String SearchObject) {
 //		Map<String, Object> returnMap = new HashMap();
-//		JSONArray choosedIdArray = JSONArray.fromObject(taskIDs); // 解析json字符
-//		List
-//		for (int i = 0; i< choosedIdArray.size(); i++) {
-//			boolean isQualified=administrationPageService.filterTaskByKcxz(choosedIdArray.get(i).toString(), kcxz);
-//			
-//			administrationPageService.filterTaskByKcxz(choosedIdArray.get(i).toString(), kcxz);
-//		}
+//		List<Edu201> taskInfo = administrationPageService.startSearchSchedule(SearchObject);
+//		returnMap.put("taskInfo", taskInfo);
 //		returnMap.put("result", true);
-//		returnMap.put("qualifiedTask", qualifiedTask);
 //		return returnMap;
 //	}
 

@@ -1,5 +1,7 @@
 package com.beifen.edu.administration.dao;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +36,7 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "UPDATE edu201 SET sszt =?2 WHERE Edu201_ID =?1", nativeQuery = true)
 	void changeTaskStatus(String id, String status);
 
-	//根据301ID查询待排任务书
-	@Query(value = "select * from edu201 e where e.Edu301_ID=?1 and e.sszt='pass'", nativeQuery = true)
-	Edu201 queryWaitTaskByEud301ID(String edu301id);
+	//根据108ID查询待排任务书
+	@Query(value = "select * from edu201 e where e.Edu108_ID=?1 and e.sszt='pass'", nativeQuery = true)
+	Edu201 getTaskByEdu108Id(String edu108id);
 }

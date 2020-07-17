@@ -38,6 +38,9 @@ import com.beifen.edu.administration.dao.Edu993Dao;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu993;
+
+import net.sf.json.JSONObject;
+
 import com.beifen.edu.administration.domian.Edu000;
 import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu101;
@@ -1028,13 +1031,70 @@ public class AdministrationPageService {
 	public void changeTaskStatus(String id, String status) {
 		edu201DAO.changeTaskStatus(id,status);
 	}
-
-	//根据301ID查询待排任务书
-	public Edu201 queryWaitTaskByEud301ID(String edu301ID) {
-		return edu201DAO.queryWaitTaskByEud301ID(edu301ID);
+	
+	//根据培养计划检索待排课程列表
+	public List getTaskByCulturePlan(String levelCode, String departmentCode, String gradeCode, String majorCode) {
+		long edu107id=edu107DAO.queryEdu107ID(levelCode,departmentCode,gradeCode,majorCode);
+		 List<Edu108> current108s=edu108DAO.queryCulturePlanCouses(edu107id);
+		 List<Edu201>  retrunList=new ArrayList();
+		 for (int i = 0; i< current108s.size(); i++) {
+			 Edu201 edu201=edu201DAO.getTaskByEdu108Id(current108s.get(i).getEdu108_ID().toString());
+			 if(edu201!=null){
+				 retrunList.add(edu201);
+			 }
+		 }
+		return retrunList;
 	}
 	
+	//课程性质按钮检索待排课程列表
+	public List<Edu201> kcxzBtnGetTask(String levelCode, String departmentCode, String gradeCode, String majorCode,String kcxz) {
+		List<Edu201>  retrunList=new ArrayList();
+		List<Edu201> currentEdu201=	AdministrationPageService.this.getTaskByCulturePlan(levelCode,departmentCode,gradeCode,majorCode);
+		for (int i = 0; i< currentEdu201.size(); i++) {
+			Edu108 edu108=edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
+			if(edu108.getKcxzCode().equals(kcxz)){
+				retrunList.add(currentEdu201.get(i));
+			}
+		}
+		return retrunList;
+	}
 	
+	//课程性质按钮检索待排课程列表  并且有教学班
+	public List<Edu201> kcxzBtnGetTaskWithJxb(String levelCode, String departmentCode, String gradeCode,String majorCode, String kcxz, String jxbID) {
+		List<Edu201>  retrunList=new ArrayList();
+		List<Edu201> currentEdu201=	AdministrationPageService.this.getTaskByCulturePlan(levelCode,departmentCode,gradeCode,majorCode);
+		for (int i = 0; i< currentEdu201.size(); i++) {
+			Edu108 edu108=edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
+			if(edu108.getKcxzCode().equals(kcxz)&& currentEdu201.get(i).getEdu301_ID().toString().equals(jxbID)){
+				retrunList.add(currentEdu201.get(i));
+			}
+		}
+		return retrunList;
+	}
+	
+//	//排课页面开始检索按钮
+//	public List<Edu201> startSearchSchedule(String searchObject) {
+//		JSONObject SearchObject = JSONObject.fromObject(searchObject);
+//		String levelCode = SearchObject.getString("level");
+//		String departmentCode = SearchObject.getString("department");
+//		String gradeCode = SearchObject.getString("grade");
+//		String majorCode = SearchObject.getString("major");
+//		String jxbID = SearchObject.getString("jxbID");
+//		String kcxz = SearchObject.getString("kcxz");
+//		String kcmc = SearchObject.getString("kcmc");
+//		List<Edu201> currentEdu201=	AdministrationPageService.this.getTaskByCulturePlan(levelCode,departmentCode,gradeCode,majorCode);
+//		List<Edu201>  retrunList=new ArrayList();
+//		for (int i = 0; i< currentEdu201.size(); i++) {
+//			Edu108 edu108=edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
+//			if(!jxbID.equals("")){
+//
+//			}
+//		}
+//		
+//		
+//		return null;
+//	}
+
 	
 	
 	//查询所有学年
@@ -1454,6 +1514,12 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
 
 
 

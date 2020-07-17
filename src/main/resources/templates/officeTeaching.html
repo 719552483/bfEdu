@@ -55,14 +55,19 @@
 				<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="puttedSchedule"><span><img src="images/leaderSchedule.png" style="width: 24px;"/></span>已排课表</li>
-						    <li class="click" id="startSearchSchedule"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
 						<ul class="toolbar1">
 							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
 						</ul>
 				</div>
 				
-				<div class="searchArea searchAreaWitheSelect">
+			
+	
+	           <div class="WaitTaskArea">
+					<div class="formtitle" style="clear:both;margin-bottom: unset;">
+						<span>待排课程列表</span>
+					</div>
+	<div class="searchArea searchAreaWitheSelect" style="margin-top: 15px;">
 						<div class="col4 giveBottom levelSelectArea">
 							<ul class="forminfo">
 								<div class="">
@@ -133,28 +138,14 @@
 								</div>
 							</ul>
 						</div>
-	
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">课程名字</label>
-									<input name="" type="text" class="myInput searchInput"
-										id="coursesName" placeholder="请输入课程名字..." />
-								</div>
-							</ul>
-						</div>
 					</div>
-	
-	           <div class="WaitTaskArea">
-					<div class="formtitle" style="clear:both;margin-bottom: unset;">
-						<span>待排课程列表</span>
-					</div>
-
 					<div class="tools">
 						<ul class="toolbar" style="padding-top: 12px;">
 			            	<li class="click insertBtn" id="startSchedule"><span><img src="images/t01.png" style="width: 24px;"/></span>开始排课</li>
 						</ul>
 					</div>
+					
+					
 					
 					<div class="WaitTaskTableArea columnsStyle searchGivePaddingR">
 						<table class="tablelist myTableStyle" id="WaitTaskTable" data-unique-id="edu201_ID" style="margin-top: 10px;"></table>

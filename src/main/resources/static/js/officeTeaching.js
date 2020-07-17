@@ -5,6 +5,8 @@ $(function() {
 	stuffEJDElement(EJDMElementInfo);
 	getTaskSelectInfo();
 	drawWaitTaskEmptyTable();
+	btnControl();
+	binBind();
 });
 
 //获取-专业培养计划- 有逻辑关系select信息
@@ -56,25 +58,29 @@ function getTaskSelectInfo() {
 	});
 	
 	$("#jxb").change(function() {
-		contorlWaitTaskTable(getNormalSelectText("jxb"));
+		if(getNormalSelectValue("jxb")==""){
+			return;
+		}
+		contorlWaitTaskTableByJxb(getNormalSelectText("jxb"));
 	});
 	
 	$("#kcxz").change(function() {
-		var all=getShowTableRow();
-		var showRowsID=new Array();
-		for (var i = 0; i < all.length; i++) {
-			showRowsID.push(all[i].edu201_ID);
-		}
-		if(showRowsID.length===0){
+		if(getNormalSelectValue("kcxz")==""){
 			return;
 		}
+		var SearchObject=getNotNullSearchs();
+		if(typeof(SearchObject) === "undefined"){
+			return;
+		}
+		SearchObject.jxbID=getNormalSelectValue("jxb");
+		SearchObject.kcxz=getNormalSelectValue("kcxz");
+		
 		$.ajax({
 			method : 'get',
 			cache : false,
-			url : "/filterTaskByKcxz",
+			url : "/kcxzBtnGetTask",
 			data: {
-	             "taskIDs":JSON.stringify(showRowsID),
-	             "kcxz":getNormalSelectValue("kcxz")
+	             "SearchObject":JSON.stringify(SearchObject)
 	        },
 			dataType : 'json',
 			beforeSend: function(xhr) {
@@ -89,7 +95,11 @@ function getTaskSelectInfo() {
 			success : function(backjson) {
 				hideloding();
 				if (backjson.result) {
-					
+					if(backjson.taskInfo.length===0){
+						drawWaitTaskEmptyTable();
+					}else{
+						stuffWaitTaskTable(backjson.taskInfo);
+					}
 				} else {
 					toastr.warning('操作失败，请重试');
 				}
@@ -99,7 +109,7 @@ function getTaskSelectInfo() {
 }
 
 //根据教学班名称过滤表格
-function contorlWaitTaskTable(choosedJxbMc){
+function contorlWaitTaskTableByJxb(choosedJxbMc){
 	var all = $("#WaitTaskTable").bootstrapTable("getData");
 	if(choosedJxbMc===""){
 		for (var i = 0; i < all.length; i++) {
@@ -113,6 +123,32 @@ function contorlWaitTaskTable(choosedJxbMc){
 		if(choosedJxbMc===all[i].jxbmc){
 			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
 		}else if(choosedJxbMc!==all[i].jxbmc){
+			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").hide();
+			hideNum++;
+		}
+	}
+	
+	if(hideNum===all.length){
+		if($(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").length<=0){
+			$(".WaitTaskTableArea").find("table").find("tbody").append('<tr class="no-records-found"><td colspan="8">暂无数据.....</td></tr>');
+		}
+	}else{
+		$(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").remove();
+	}
+}
+
+//根据课程名称过滤表格
+function contorlWaitTaskTableBykcmc(choosedkcmc){
+	var all = $("#WaitTaskTable").bootstrapTable("getData");
+	if(choosedkcmc===""){
+		return;
+	}
+	
+	var hideNum=0;
+	for (var i = 0; i < all.length; i++) {
+		if(choosedkcmc===all[i].kcmc){
+			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
+		}else if(choosedkcmc!==all[i].jxbmc){
 			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").hide();
 			hideNum++;
 		}
@@ -175,16 +211,16 @@ function stuffWaitTaskTable(tableInfo){
 					formatter: paramsMatter
 
 				},{
-					field: 'lsmc',
-					title: '老师',
-					align: 'left',
-					formatter: paramsMatter
-				},{
 					field: 'zylsmc',
 					title: '主要老师',
 					align: 'left',
 					formatter: paramsMatter
 
+				},{
+					field: 'lsmc',
+					title: '老师',
+					align: 'left',
+					formatter: paramsMatter
 				},{
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
@@ -280,4 +316,12 @@ function getNotNullSearchs() {
 	returnObject.gradeTxt = gradeText;
 	returnObject.majorTxt = majorText;
 	return returnObject;
+}
+
+
+
+//初始化页面按钮绑定事件
+function binBind(){
+
+	
 }
