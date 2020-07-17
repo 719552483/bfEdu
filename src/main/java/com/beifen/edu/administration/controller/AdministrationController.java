@@ -842,7 +842,7 @@ public class AdministrationController {
 		boolean verifyRelation= administrationPageService.verifyKj(deleteId);
 		
 		if(canRemove){
-			//删除课节应该将所在时段其后所有课节的顺序加一  需要考虑是否选择了学年
+			//删除课节应该将所在时段其后所有课节的顺序减一  需要考虑是否选择了学年
 			administrationPageService.addKjsxAterThisKj(deleteId);
 			
 			//删除课节
@@ -850,6 +850,32 @@ public class AdministrationController {
 		}
 		returnMap.put("result", true);
 		returnMap.put("canRemove", canRemove);
+		return returnMap;
+	}
+	
+	/**
+	 * 修改课节名称
+	 */
+	@RequestMapping("/modifyKjMc")
+	@ResponseBody
+	public Object modifyKjMc(@RequestParam String newKjMc,@RequestParam String kjId) {
+		Map<String, Object> returnMap = new HashMap();
+		
+		boolean nameHave=false;
+		List<Edu401> allKj=administrationPageService.queryAllKj();
+		for (int i = 0; i < allKj.size(); i++) {
+			if(allKj.get(i).getKjmc().equals(newKjMc)&&
+				!allKj.get(i).getKjmc().toString().equals(kjId)){
+				nameHave=true;
+				break;
+			}
+		}
+		
+		if(!nameHave){
+			administrationPageService.modifyKjMc(newKjMc,kjId);
+		}
+		returnMap.put("result", true);
+		returnMap.put("nameHave", nameHave);
 		return returnMap;
 	}
 	

@@ -1118,6 +1118,27 @@ public class AdministrationPageService {
 		String kjsx=String.valueOf(kjsfAsInt);
 		edu401DAO.kjsxjy(kjId,kjsx);
 	}
+	
+	//修改课节名称
+	public void modifyKjMc(String newKjMc, String kjId) {
+		edu401DAO.modifyKjMc(newKjMc,kjId);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// 课程库搜索课程
 	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
@@ -1433,6 +1454,8 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

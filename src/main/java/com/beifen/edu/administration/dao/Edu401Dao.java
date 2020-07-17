@@ -41,5 +41,11 @@ public interface Edu401Dao extends JpaRepository<Edu401, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "UPDATE edu401 SET kjsx =?2 WHERE Edu401_ID =?1", nativeQuery = true)
 	void kjsxjy(String kjId, String kjsx);
+	
+	//修改课节名称
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE edu401 SET kjmc =?1 WHERE Edu401_ID =?2", nativeQuery = true)
+	void modifyKjMc(String newKjMc, String kjId);
 
 }
