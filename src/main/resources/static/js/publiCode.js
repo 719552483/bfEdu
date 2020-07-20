@@ -404,6 +404,8 @@ function stuffAllMajorTable(allMajor){
 function addNewLevel(){
 	$.showModal("#addNewLevelModal",true);
 	$("#addNewLevelModal").find(".moadalTitle").html("新增层次");
+	$('#addNewLevel_levelCode').attr("disabled", false) // 编码可修改
+	$('#addNewLevel_levelCode').val("");
 	emptyLevelChooseArea();
 	//确认新增层次
 	$('.confimAddNewLevel').unbind('click');
@@ -444,10 +446,13 @@ function confimAddNewLevel(){
 					toastr.warning('培养层次名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('培养层次编码已存在');
+					return;
+				}
 				
 				newLevelObject.edu103_ID=backjson.id;
 				newLevelObject.yxbz=backjson.yxbz;
-				newLevelObject.pyccbm=backjson.pcyybm;
 				$('#allLevlTable').bootstrapTable('prepend', newLevelObject);
 				toastr.success('新增培养层次成功');
 				$.hideModal("#addNewLevelModal");
@@ -465,6 +470,7 @@ function modifyLevel(row){
 	stufDeadultLevekInfo(row);
 	$.showModal("#addNewLevelModal",true);
 	$("#addNewLevelModal").find(".moadalTitle").html("修改层次");
+	$('#addNewLevel_levelCode').attr("disabled", true) // 编码不可修改
 	//确认修改培养层次
 	$('.confimAddNewLevel').unbind('click');
 	$('.confimAddNewLevel').bind('click', function(e) {
@@ -476,7 +482,6 @@ function modifyLevel(row){
 //确认修改培养层次
 function confimModifyNewLevel(row){
 	var newLevelObject=getLevelInfo();
-	newLevelObject.pyccbm=row.pyccbm;
 	if(typeof newLevelObject ==='undefined'){
 		return;
 	}
@@ -507,6 +512,10 @@ function confimModifyNewLevel(row){
 					toastr.warning('培养层次名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('培养层次编码已存在');
+					return;
+				}
 				$("#allLevlTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu103_ID,
 					row: newLevelObject
@@ -526,7 +535,7 @@ function confimModifyNewLevel(row){
 function stufDeadultLevekInfo(row){
 	stuffManiaSelectWithDeafult("#addNewLevel_schoolLocation",row.xq);  //填充默认培养层次
 	$("#addNewLevel_levelName").val(row.pyccmc);//填充默认培养层次名称
-//	$("#addNewLevel_levelCode").val(row.pyccbm);//填充默认培养层次编码
+	$("#addNewLevel_levelCode").val(row.pyccbm);//填充默认培养层次编码
 	stuffManiaSelectWithDeafult("#addNewLevel_enterSeason",row.rxjj);  //填充默认入学季节
 	$("#addNewLevel_academicStructure").val(row.xz);//填充默认培养层次编码
 }
@@ -543,6 +552,7 @@ function emptyLevelChooseArea(){
 function getLevelInfo(){
 	var schoolLocation = getNormalSelectValue("addNewLevel_schoolLocation");
 	var levelName = $("#addNewLevel_levelName").val();
+	var levelCode = $("#addNewLevel_levelCode").val();
 	var enterSeason = getNormalSelectValue("addNewLevel_enterSeason");
 	var academicStructure = $("#addNewLevel_academicStructure").val();
 	
@@ -552,6 +562,10 @@ function getLevelInfo(){
 	}
 	if(levelName===""){
 		toastr.warning('请输入培养层次名称');
+		return;
+	}
+	if(levelCode===""){
+		toastr.warning('请输入培养层次编码');
 		return;
 	}
 	if(enterSeason===""){
@@ -571,6 +585,7 @@ function getLevelInfo(){
 	var newRelationObject=new Object();
 	newRelationObject.xq=schoolLocation;
 	newRelationObject.pyccmc=levelName;
+	newRelationObject.pyccbm=levelCode;
 	newRelationObject.rxjj=enterSeason;
 	newRelationObject.xz=academicStructure;
 	return newRelationObject;
@@ -653,6 +668,8 @@ function sendLvelRemoveInfo(removeArray){
 function addNewDepartment(){
 	$.showModal("#addNewDeaparmentModal",true);
 	$("#addNewDeaparmentModal").find(".moadalTitle").html("新增系部");
+	$('#addNewDeaparment_deaparmentCode').attr("disabled", false) // 编码可修改
+	$('#addNewDeaparment_deaparmentCode').val("");
 	emptyDepartmentChooseArea();
 	//确认新增系部
 	$('.confimaddNewDeaparment').unbind('click');
@@ -693,10 +710,13 @@ function confimAddNewDeaparment(){
 					toastr.warning('系部名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('系部编码已存在');
+					return;
+				}
 				
 				newDeaparmentObject.edu104_ID=backjson.id;
 				newDeaparmentObject.yxbz=backjson.yxbz;
-				newDeaparmentObject.xbbm=backjson.xbbm;
 				$('#allDepartmentTable').bootstrapTable('prepend', newDeaparmentObject);
 				toastr.success('新增系部成功');
 				$.hideModal("#addNewDeaparmentModal");
@@ -713,6 +733,7 @@ function confimAddNewDeaparment(){
 function modifyDepartment(row){
 	$.showModal("#addNewDeaparmentModal",true);
 	$("#addNewDeaparmentModal").find(".moadalTitle").html("修改系部");
+	$('#addNewDeaparment_deaparmentCode').attr("disabled", true) // 编码不可修改
 	stufDeadultDepartmentInfo(row);
 	//确认修改系部
 	$('.confimaddNewDeaparment').unbind('click');
@@ -725,7 +746,6 @@ function modifyDepartment(row){
 //确认修改系部
 function confimModifyDeaparment(row){
 	var newDeaparmentObject=getDeaparmentInfo();
-	newDeaparmentObject.xbbm=row.xbbm;
 	if(typeof newDeaparmentObject ==='undefined'){
 		return;
 	}
@@ -756,6 +776,10 @@ function confimModifyDeaparment(row){
 					toastr.warning('系部名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('系部编码已存在');
+					return;
+				}
 				$("#allDepartmentTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu104_ID,
 					row: newDeaparmentObject
@@ -774,7 +798,7 @@ function confimModifyDeaparment(row){
 //修改时填充该行信息到培养层次选择区
 function stufDeadultDepartmentInfo(row){
 	$("#addNewDeaparment_deaparmentName").val(row.xbmc);
-//	$("#addNewDeaparment_deaparmentCode").val(row.xbbm);
+	$("#addNewDeaparment_deaparmentCode").val(row.xbbm);
 }
 
 //清空系部模态框中的值
@@ -787,21 +811,21 @@ function  emptyDepartmentChooseArea(){
 //获取系部信息
 function getDeaparmentInfo(){
 	var deaparmentName = $("#addNewDeaparment_deaparmentName").val();
-//	var deaparmentCode = $("#addNewDeaparment_deaparmentCode").val();
+	var deaparmentCode = $("#addNewDeaparment_deaparmentCode").val();
 	
 	if(deaparmentName===""){
 		toastr.warning('请输入系部名称');
 		return;
 	}
-//	if(deaparmentCode===""){
-//		toastr.warning('请输入系部编码');
-//		return;
-//	}
+	if(deaparmentCode===""){
+		toastr.warning('请输入系部编码');
+		return;
+	}
 
 	
 	var newDeaparmentObject=new Object();
 	newDeaparmentObject.xbmc=deaparmentName;
-//	newDeaparmentObject.xbbm=deaparmentCode;
+	newDeaparmentObject.xbbm=deaparmentCode;
 	return newDeaparmentObject;
 }
 
@@ -882,6 +906,8 @@ function sendDeaparmentRemoveInfo(removeArray){
 function addNewGrade(){
 	$.showModal("#addNewGradeModal",true);
 	$("#addNewGradeModal").find(".moadalTitle").html("新增年级");
+	$('#addNewGrade_gradeCode').attr("disabled", false) // 编码可修改
+	$('#addNewGrade_gradeCode').val("");
 	emptyGradeChooseArea();
 	//确认新增年级
 	$('.confimaddNewGrade').unbind('click');
@@ -922,10 +948,13 @@ function confimaddNewGrade(){
 					toastr.warning('年级名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('年级编码已存在');
+					return;
+				}
 				
 				newGradeObject.edu105_ID=backjson.id;
 				newGradeObject.yxbz=backjson.yxbz;
-				newGradeObject.njbm=backjson.njbm;
 				$('#allGradeTable').bootstrapTable('prepend', newGradeObject);
 				toastr.success('新增年级成功');
 				$.hideModal("#addNewGradeModal");
@@ -942,6 +971,7 @@ function confimaddNewGrade(){
 function modifyGrade(row){
 	$.showModal("#addNewGradeModal",true);
 	$("#addNewGradeModal").find(".moadalTitle").html("修改年级");
+	$('#addNewGrade_gradeCode').attr("disabled", true); // 编码不可修改
 	stufDeadultGradeInfo(row);
 	//确认修改系部
 	$('.confimaddNewGrade').unbind('click');
@@ -954,7 +984,6 @@ function modifyGrade(row){
 //确认修改年级
 function confimModifyGrade(row){
 	var newGradeObject=getGradeInfo();
-	newGradeObject.njbm=row.njbm;
 	if(typeof newGradeObject ==='undefined'){
 		return;
 	}
@@ -985,6 +1014,10 @@ function confimModifyGrade(row){
 					toastr.warning('年级名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('年级编码已存在');
+					return;
+				}
 				
 				$("#allGradeTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu105_ID,
@@ -1004,7 +1037,7 @@ function confimModifyGrade(row){
 //修改时填充该行信息到培养年级选择区
 function stufDeadultGradeInfo(row){
 	$("#addNewGrade_gradeName").val(row.njmc);
-//	$("#addNewGrade_gradeCode").val(row.njbm);
+	$("#addNewGrade_gradeCode").val(row.njbm);
 }
 
 //清空年级模态框中的值
@@ -1017,21 +1050,21 @@ function  emptyGradeChooseArea(){
 //获取年级信息
 function getGradeInfo(){
 	var gradeName = $("#addNewGrade_gradeName").val();
-//	var gradeCode = $("#addNewGrade_gradeCode").val();
+	var gradeCode = $("#addNewGrade_gradeCode").val();
 	
 	if(gradeName===""){
 		toastr.warning('请输入年级名称');
 		return;
 	}
-//	if(gradeCode===""){
-//		toastr.warning('请输入年级编码');
-//		return;
-//	}
+	if(gradeCode===""){
+		toastr.warning('请输入年级编码');
+		return;
+	}
 
 	
 	var newGradeObject=new Object();
 	newGradeObject.njmc=gradeName;
-//	newGradeObject.njbm=gradeCode;
+	newGradeObject.njbm=gradeCode;
 	return newGradeObject;
 }
 
@@ -1112,6 +1145,8 @@ function sendGradeRemoveInfo(removeArray){
 function addNewMajor(){
 	$.showModal("#addNewMajorModal",true);
 	$("#addNewMajorModal").find(".moadalTitle").html("新增专业");
+	$('#addNewMajor_majorCode').attr("disabled", false) // 编码可修改
+	$('#addNewMajor_majorCode').val("");
 	emptyMajorChooseArea();
 	//确认新增专业
 	$('.confimaddNewMajor').unbind('click');
@@ -1152,10 +1187,13 @@ function confimaddNewMajor(){
 					toastr.warning('专业名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('专业编码已存在');
+					return;
+				}
 				
 				newMajorObject.edu106_ID=backjson.id;
 				newMajorObject.yxbz=backjson.yxbz;
-				newMajorObject.zybm=backjson.zybm;
 				$('#allMajorTable').bootstrapTable('prepend', newMajorObject);
 				toastr.success('新增专业成功');
 				$.hideModal("#addNewMajorModal");
@@ -1172,6 +1210,7 @@ function confimaddNewMajor(){
 function modifyMajor(row){
 	$.showModal("#addNewMajorModal",true);
 	$("#addNewMajorModal").find(".moadalTitle").html("修改专业");
+	$('#addNewMajor_majorCode').attr("disabled", true) // 编码不可修改
 	stufDeadultMajorInfo(row);
 	//确认修改系部
 	$('.confimaddNewMajor').unbind('click');
@@ -1184,7 +1223,6 @@ function modifyMajor(row){
 //确认修改专业
 function confimModifyMajor(row){
 	var newMajorObject=getMajorInfo();
-	newMajorObject.zybm=row.zybm;
 	if(typeof newMajorObject ==='undefined'){
 		return;
 	}
@@ -1215,6 +1253,10 @@ function confimModifyMajor(row){
 					toastr.warning('专业名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('专业编码已存在');
+					return;
+				}
 				$("#allMajorTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu106_ID,
 					row: newMajorObject
@@ -1233,21 +1275,21 @@ function confimModifyMajor(row){
 //获取专业信息
 function getMajorInfo(){
 	var majorName = $("#addNewMajor_mjorName").val();
-//	var majorCode = $("#addNewMajor_majorCode").val();
+	var majorCode = $("#addNewMajor_majorCode").val();
 	
 	if(majorName===""){
 		toastr.warning('请输入专业名称');
 		return;
 	}
-//	if(majorCode===""){
-//		toastr.warning('请输入专业编码');
-//		return;
-//	}
+	if(majorCode===""){
+		toastr.warning('请输入专业编码');
+		return;
+	}
 
 	
 	var newMajorObject=new Object();
 	newMajorObject.zymc=majorName;
-//	newMajorObject.zybm=majorCode;
+	newMajorObject.zybm=majorCode;
 	return newMajorObject;
 }
 
@@ -1261,7 +1303,7 @@ function emptyMajorChooseArea(){
 //修改时填充该行信息到专业选择区
 function stufDeadultMajorInfo(row){
 	$("#addNewMajor_mjorName").val(row.zymc);
-//	$("#addNewMajor_majorCode").val(row.zybm);
+	$("#addNewMajor_majorCode").val(row.zybm);
 }
 
 //单个删除年级
