@@ -123,6 +123,11 @@ function stuffAdministrationClassTable(tableInfo){
 				align : 'left',
 				formatter : paramsMatter
 			},{
+				field : 'xzbbh',
+				title : '行政班班号',
+				align : 'left',
+				formatter : paramsMatter
+			},{
 				field : 'xzbbm',
 				title : '行政班编码',
 				align : 'left',
@@ -131,7 +136,8 @@ function stuffAdministrationClassTable(tableInfo){
 				field : 'xqmc',
 				title : '校区',
 				align : 'left',
-				formatter : paramsMatter
+				formatter : paramsMatter,
+				visible : false
 			},{
 				field : 'zxrs',
 				title : '在校人数',
@@ -190,12 +196,12 @@ function administrationClassInfo(row){
 
 //填充行政班详情
 function stuffAdministrationClassDetails(row){
-	actionStuffManiaSelectWithDeafult("#addAdministrationClass_campus",row.xqbm,row.xqmc);  //校区
+//	actionStuffManiaSelectWithDeafult("#addAdministrationClass_campus",row.xqbm,row.xqmc);  //校区
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_level",row.pyccbm,row.pyccmc); //层次
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_department",row.xbbm,row.xbmc); //系部
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_garde",row.njbm,row.njmc); //年级
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_major",row.zybm,row.zymc); //专业
-	$("#addAdministrationClass_classCode").val(row.xzbbm);
+	$("#addAdministrationClass_classCode").val(row.xzbbh);
 	$("#addAdministrationClass_className").val(row.xzbmc);
 	$("#addAdministrationClass_houldNum").val(row.rnrs);
 }
@@ -280,7 +286,8 @@ function confirmModifyAdministrationClass(row){
 function wantAddAdministrationClass(){
 	$(".addAdministrationClassTip").find(".canNotModifythings").remove();
 	emptyAdministrationClassDetailsArea();
-	$(".canNotModifythings,.addAdministrationClass_classCodeArea").hide();
+	$(".canNotModifythings").hide();
+	$("#addAdministrationClass_classCode").val("");
 	$.showModal("#addAdministrationClassModal",true);
 	$("#addAdministrationClassModal").find(".moadalTitle").html("新增行政班");
 	//确认新增行政班
@@ -322,10 +329,16 @@ function confirmAddAdministrationClass(){
 					toastr.warning('班级名称已存在');
 					return;
 				}
+				if(backjson.codehave){
+					toastr.warning('班号已存在');
+					return;
+				}
 				newAdministrationClassObject.edu300_ID=backjson.id;
 				newAdministrationClassObject.xzbbm=backjson.xzbbm;
 				newAdministrationClassObject.yxbz=backjson.yxbz;
 				newAdministrationClassObject.sfsckkjh=backjson.sfsckkjh;
+				newAdministrationClassObject.xqmc=backjson.xqmc;
+				newAdministrationClassObject.xqbm=backjson.xqbm;
 				$('#administrationClassTable').bootstrapTable("prepend", newAdministrationClassObject);
 				$.hideModal("#addAdministrationClassModal");
 				toolTipUp(".myTooltip");
@@ -340,10 +353,10 @@ function confirmAddAdministrationClass(){
 
 //获取新增行政班信息
 function getAdministrationClassDetails(){
-	if(getNormalSelectValue("addAdministrationClass_campus") === ""){
-		toastr.warning('校区不能为空');
-		return;
-	}
+//	if(getNormalSelectValue("addAdministrationClass_campus") === ""){
+//		toastr.warning('校区不能为空');
+//		return;
+//	}
 	if(getNormalSelectValue("addAdministrationClass_level") === ""){
 		toastr.warning('层次不能为空');
 		return;
@@ -360,10 +373,10 @@ function getAdministrationClassDetails(){
 		toastr.warning('专业不能为空');
 		return;
 	}
-//	if($("#addAdministrationClass_classCode").val() === ""){
-//		toastr.warning('班级代码不能为空');
-//		return;
-//	}
+	if($("#addAdministrationClass_classCode").val() === ""){
+		toastr.warning('班号不能为空');
+		return;
+	}
 	if($("#addAdministrationClass_className").val() === ""){
 		toastr.warning('班级名称不能为空');
 		return;
@@ -375,7 +388,7 @@ function getAdministrationClassDetails(){
 	
 	var newClassObject=new Object();
 	newClassObject.xzbmc=$("#addAdministrationClass_className").val();
-//	newClassObject.xzbbm=$("#addAdministrationClass_classCode").val();
+	newClassObject.xzbbh=$("#addAdministrationClass_classCode").val();
 	newClassObject.pyccmc=getNormalSelectText("addAdministrationClass_level");
 	newClassObject.pyccbm=getNormalSelectValue("addAdministrationClass_level");
 	newClassObject.xbmc=getNormalSelectText("addAdministrationClass_department");
@@ -384,8 +397,8 @@ function getAdministrationClassDetails(){
 	newClassObject.njmc=getNormalSelectText("addAdministrationClass_garde");
 	newClassObject.zybm=getNormalSelectValue("addAdministrationClass_major");
 	newClassObject.zymc=getNormalSelectText("addAdministrationClass_major");
-	newClassObject.xqmc=getNormalSelectText("addAdministrationClass_campus");
-	newClassObject.xqbm=getNormalSelectValue("addAdministrationClass_campus");
+//	newClassObject.xqmc=getNormalSelectText("addAdministrationClass_campus");
+//	newClassObject.xqbm=getNormalSelectValue("addAdministrationClass_campus");
 	newClassObject.zxrs=0;
 	$("#addAdministrationClass_houldNum").val()===""?newClassObject.rnrs=0:newClassObject.rnrs=parseInt($("#addAdministrationClass_houldNum").val());
 	return newClassObject;

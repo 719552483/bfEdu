@@ -115,6 +115,22 @@ public class AdministrationPageService {
 	public String queryLevelCodeByLevelName(String pyccmc) {
 		return edu103DAO.queryLevelCodeByLevelName(pyccmc);
 	}
+	
+	//根据培养层次查校区信息
+	public String queryXqByPyccbm(int queryType, String pyccbm) {
+		String returnStr ="";
+		if(queryType==1){
+			returnStr=edu000DAO.queryXqmcByPyccbm(edu103DAO.queryXqbmByPyccbm(pyccbm));
+		}else{
+			returnStr=edu103DAO.queryXqbmByPyccbm(pyccbm);
+		}
+		return returnStr;
+	}
+	
+	//根据培养层次查学制
+	public String queryXzByPyccbm(String pyccbm) {
+		return edu103DAO.queryXzByPyccbm(edu103DAO.queryXqbmByPyccbm(pyccbm));
+	}
 
 	// 查询所有系部
 	public List<Edu104> queryAllDepartment() {
@@ -1514,6 +1530,12 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
+
+
 
 
 

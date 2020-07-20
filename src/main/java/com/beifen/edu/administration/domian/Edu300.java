@@ -15,6 +15,7 @@ public class Edu300 {
 	private Long Edu300_ID;
 	private String xzbmc;  //行政班名称
 	private String xzbbm;  //行政班编码
+	private  String xzbbh;//行政班班号
 	private  String pyccmc;//培养层次名称 
 	private  String pyccbm;//培养层次编码
 	private  String xbmc;//系部名称
@@ -162,6 +163,12 @@ public String getSfsckkjh() {
 	}
 	public void setYxbz(String yxbz) {
 		this.yxbz = yxbz;
+	}
+	public String getXzbbh() {
+		return xzbbh;
+	}
+	public void setXzbbh(String xzbbh) {
+		this.xzbbh = xzbbh;
 	}
 	
 	

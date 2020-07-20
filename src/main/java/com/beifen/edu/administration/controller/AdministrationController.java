@@ -1831,21 +1831,42 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(addInfo);
 		Edu300 edu300 = (Edu300) JSONObject.toBean(jsonObject, Edu300.class);
 		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
+		String bh =edu300.getXzbbh();// 原始班号
 
 		// 判断行政班名称和编码是否已存在
 		boolean namehave = false;
+		boolean codehave = false;
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
 			if (currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())) {
 				namehave = true;
 				break;
 			}
+			if (currentAllAdministrationClasses.get(i).getPyccbm().equals(edu300.getPyccbm())
+					&&currentAllAdministrationClasses.get(i).getXbbm().equals(edu300.getXbbm())
+					&&currentAllAdministrationClasses.get(i).getNjbm().equals(edu300.getNjbm())
+					&&currentAllAdministrationClasses.get(i).getZybm().equals(edu300.getZybm())
+					&&currentAllAdministrationClasses.get(i).getXzbbh().equals(edu300.getXzbbh())
+					) {
+				codehave = true;
+				break;
+			}
 		}
 
-		if (!namehave) {
+		if (!namehave&&!codehave) {
+			String xqmc =administrationPageService.queryXqByPyccbm(1,edu300.getPyccbm()); // 校区名称
+			String xqbm = administrationPageService.queryXqByPyccbm(2,edu300.getPyccbm()); // 校区编码
 			String yxbz = "1"; // 有效标志
-			String xzbbm ="LNVCXZB"+utils.getUUID(6)+utils.getRandom(2);;
 			String configTheCulturePlan = "F";// 初始化的是否生成开课计划
+			String xz =administrationPageService.queryXzByPyccbm(edu300.getPyccbm()); // 学制
+			String xzbbm ="";
+			edu300.setXqmc(xqmc);
+			edu300.setXqbm(xqbm);
 			edu300.setYxbz(yxbz);
+			if(bh.length()<=1){
+				xzbbm=xz+"0"+bh;
+			}else{
+				xzbbm=xz+bh;
+			}
 			edu300.setXzbbm(xzbbm);
 			edu300.setSfsckkjh(configTheCulturePlan);
 			administrationPageService.addAdministrationClass(edu300);
@@ -1853,9 +1874,11 @@ public class AdministrationController {
 			returnMap.put("yxbz", yxbz);
 			returnMap.put("xzbbm", xzbbm);
 			returnMap.put("id", id);
+			returnMap.put("xqmc", xqmc);
+			returnMap.put("xqbm", xqbm);
 			returnMap.put("sfsckkjh", configTheCulturePlan);
 		}
-
+		returnMap.put("codehave", codehave);
 		returnMap.put("namehave", namehave);
 		returnMap.put("result", true);
 		return returnMap;
@@ -2119,8 +2142,8 @@ public class AdministrationController {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
 				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
-				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
-				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+//				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+//				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
 				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
 				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
@@ -2176,8 +2199,8 @@ public class AdministrationController {
 				administrationClassesWithcrouseInfo.put("njbm", allAdministrationClasses.get(i).getNjbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
 				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
-				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
-				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+//				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+//				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
 				administrationClassesWithcrouseInfo.put("xzbbm", allAdministrationClasses.get(i).getXzbbm());
 				administrationClassesWithcrouseInfo.put("kcmc", palnInfos.get(p).getKcmc());
@@ -2571,8 +2594,8 @@ public class AdministrationController {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
 				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
-				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
-				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+//				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+//				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
 				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
 				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
