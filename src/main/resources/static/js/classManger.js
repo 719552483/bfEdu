@@ -339,8 +339,8 @@ function confirmAddAdministrationClass(){
 					toastr.warning('班级名称已存在');
 					return;
 				}
-				if(backjson.codehave){
-					toastr.warning('班号已存在');
+				if(backjson.numhave){
+					toastr.warning('自已顶班级序号已存在');
 					return;
 				}
 				newAdministrationClassObject.edu300_ID=backjson.id;

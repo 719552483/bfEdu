@@ -1859,7 +1859,7 @@ public class AdministrationController {
 //			samePlanClassNum=Integer.parseInt(removeStr);
 //		}
 
-		if (!namehave) {
+		if (!namehave&&!numhave) {
 			String xz =administrationPageService.queryXzByPyccbm(edu300.getPyccbm()); // 学制
 			String currntNum=edu300.getZdybjxh(); //当前要是用的数字尾缀
 			if(Integer.parseInt(edu300.getZdybjxh())<=9){
@@ -1901,6 +1901,7 @@ public class AdministrationController {
 			returnMap.put("xzbdm", bjdm);
 			returnMap.put("xzbbm", bjbm);
 		}
+		returnMap.put("numhave", numhave);
 		returnMap.put("namehave", namehave);
 		returnMap.put("result", true);
 		return returnMap;
