@@ -129,7 +129,7 @@ public class AdministrationPageService {
 	
 	//根据培养层次查学制
 	public String queryXzByPyccbm(String pyccbm) {
-		return edu103DAO.queryXzByPyccbm(edu103DAO.queryXqbmByPyccbm(pyccbm));
+		return edu103DAO.queryXzByPyccbm(pyccbm);
 	}
 
 	// 查询所有系部
