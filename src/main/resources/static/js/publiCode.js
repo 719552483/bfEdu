@@ -1187,11 +1187,6 @@ function confimaddNewMajor(){
 					toastr.warning('专业名称已存在');
 					return;
 				}
-				if(backjson.codehave){
-					toastr.warning('专业编码已存在');
-					return;
-				}
-				
 				newMajorObject.edu106_ID=backjson.id;
 				newMajorObject.yxbz=backjson.yxbz;
 				$('#allMajorTable').bootstrapTable('prepend', newMajorObject);

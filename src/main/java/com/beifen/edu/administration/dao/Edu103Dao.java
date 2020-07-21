@@ -22,7 +22,7 @@ public interface Edu103Dao extends JpaRepository<Edu103, Long>, JpaSpecification
 	@Query(value = "delete from edu103 where Edu103_ID =?1", nativeQuery = true)
 	public void removeLevel(String edu103ID);
 
-	// 查询所有培养层次
+	// 根据id查询培养层次
 	@Query(value = "select * from edu103 e where e.pyccbm=?1", nativeQuery = true)
 	public List<Edu103> queryAllLevelByPcccbm(String edu300id);
 	

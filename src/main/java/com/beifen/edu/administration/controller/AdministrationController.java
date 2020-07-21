@@ -1433,13 +1433,10 @@ public class AdministrationController {
 		if (!namehave) {
 			String yxbz = "1";
 			edu106.setYxbz(yxbz);
-			String zybm ="LNVCZY"+utils.getUUID(6)+utils.getRandom(2);
-			edu106.setZybm(zybm);
 			administrationPageService.addNewMajor(edu106);
 			Long id = edu106.getEdu106_ID();
 			returnMap.put("id", id);
 			returnMap.put("yxbz", yxbz);
-			returnMap.put("zybm", zybm);
 		}
 
 		returnMap.put("namehave", namehave);
@@ -1835,14 +1832,18 @@ public class AdministrationController {
 
 		// 判断行政班名称和编码是否已存在
 		boolean namehave = false;
+		boolean numhave = false;
 		List<Integer> samePlanUseNums=new ArrayList<Integer>();
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
 			if (currentAllAdministrationClasses.get(i).getPyccbm().equals(edu300.getPyccbm())
 					&&currentAllAdministrationClasses.get(i).getXbbm().equals(edu300.getXbbm())
 					&&currentAllAdministrationClasses.get(i).getNjbm().equals(edu300.getNjbm())
-					&&currentAllAdministrationClasses.get(i).getZybm().equals(edu300.getZybm()))
+					&&currentAllAdministrationClasses.get(i).getZybm().equals(edu300.getZybm())
+					&&currentAllAdministrationClasses.get(i).getZdybjxh().equals(edu300.getZdybjxh())
+					)
 				{
-				samePlanUseNums.add(Integer.parseInt(currentAllAdministrationClasses.get(i).getXzbbh()));
+				numhave=true;
+				break;
 			}
 			if (currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())) {
 				namehave = true;
@@ -1850,21 +1851,21 @@ public class AdministrationController {
 			}
 		}
 		
-		int samePlanClassNum=0;
-		if(samePlanUseNums.size()!=0){
-			String removeStr= edu300.getNjbm();
-			String samePlanClassStr=String.valueOf(Collections.max(samePlanUseNums));
-			removeStr = samePlanClassStr.replace(removeStr,"");
-			samePlanClassNum=Integer.parseInt(removeStr);
-		}
+//		int samePlanClassNum=0;
+//		if(samePlanUseNums.size()!=0){
+//			String removeStr= edu300.getNjbm();
+//			String samePlanClassStr=String.valueOf(Collections.max(samePlanUseNums));
+//			removeStr = samePlanClassStr.replace(removeStr,"");
+//			samePlanClassNum=Integer.parseInt(removeStr);
+//		}
 
 		if (!namehave) {
 			String xz =administrationPageService.queryXzByPyccbm(edu300.getPyccbm()); // 学制
-			String currntNum=""; //当前要是用的数字尾缀
-			if(samePlanClassNum<=9){
-				currntNum =String.valueOf("0"+(samePlanClassNum+1));
+			String currntNum=edu300.getZdybjxh(); //当前要是用的数字尾缀
+			if(Integer.parseInt(edu300.getZdybjxh())<=9){
+				currntNum =String.valueOf("0"+currntNum);
 			}else{
-				currntNum =String.valueOf(samePlanClassNum+1);
+				currntNum =String.valueOf(currntNum);
 			}
 			
 			String yxbz = "1"; // 有效标志
