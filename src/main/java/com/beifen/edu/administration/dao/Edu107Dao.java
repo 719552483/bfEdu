@@ -35,7 +35,7 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	public List<Edu107> gradeMatchMajor(String gradeCode);
 	
 	// 根据专业编码查培养计划
-	@Query(value = "select * from edu107 e where e.zybm=?1", nativeQuery = true)
+	@Query(value = "select * from edu107 e where e.edu106=?1", nativeQuery = true)
 	public List<Edu107> query107ByMajorCode(String zybm);
 
 	//根据层次 系部 年级 专业定位培养计划  返回id
