@@ -1297,20 +1297,20 @@ public class AdministrationPageService {
 		Specification<Edu107> specification = new Specification<Edu107>() {
 			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu107.getPyccmc() != null && !"".equals(edu107.getPyccmc())) {
-					predicates.add(cb.like(root.<String> get("pyccmc"), '%' + edu107.getPyccmc() + '%'));
+				if (edu107.getEdu103mc() != null && !"".equals(edu107.getEdu103mc())) {
+					predicates.add(cb.like(root.<String> get("edu103mc"), '%' + edu107.getEdu103mc() + '%'));
 				}
 				if (edu107.getPyjhmc() != null && !"".equals(edu107.getPyjhmc())) {
 					predicates.add(cb.like(root.<String> get("pyjhmc"), '%' + edu107.getPyjhmc() + '%'));
 				}
-				if (edu107.getXbmc() != null && !"".equals(edu107.getXbmc())) {
-					predicates.add(cb.like(root.<String> get("xbmc"), '%' + edu107.getXbmc() + '%'));
+				if (edu107.getEdu104mc() != null && !"".equals(edu107.getEdu104mc())) {
+					predicates.add(cb.like(root.<String> get("edu104mc"), '%' + edu107.getEdu104mc() + '%'));
 				}
-				if (edu107.getNjmc() != null && !"".equals(edu107.getNjmc())) {
-					predicates.add(cb.like(root.<String> get("njmc"), '%' + edu107.getNjmc() + '%'));
+				if (edu107.getEdu105mc() != null && !"".equals(edu107.getEdu105mc())) {
+					predicates.add(cb.like(root.<String> get("edu105mc"), '%' + edu107.getEdu105mc() + '%'));
 				}
-				if (edu107.getZymc() != null && !"".equals(edu107.getZymc())) {
-					predicates.add(cb.like(root.<String> get("zymc"), '%' + edu107.getZymc() + '%'));
+				if (edu107.getEdu106mc() != null && !"".equals(edu107.getEdu106mc())) {
+					predicates.add(cb.like(root.<String> get("edu106mc"), '%' + edu107.getEdu106mc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}

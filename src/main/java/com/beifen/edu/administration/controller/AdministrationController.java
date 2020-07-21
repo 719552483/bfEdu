@@ -929,10 +929,10 @@ public class AdministrationController {
 				break;
 			}
 
-			if (currentAllRelation.get(i).getPyccbm().equals(edu107.getPyccbm())
-					&& currentAllRelation.get(i).getXbbm().equals(edu107.getXbbm())
-					&& currentAllRelation.get(i).getNjbm().equals(edu107.getNjbm())
-					&& currentAllRelation.get(i).getZybm().equals(edu107.getZybm())) {
+			if (currentAllRelation.get(i).getEdu103().equals(edu107.getEdu103())
+					&& currentAllRelation.get(i).getEdu104().equals(edu107.getEdu104())
+					&& currentAllRelation.get(i).getEdu105().equals(edu107.getEdu105())
+					&& currentAllRelation.get(i).getEdu106().equals(edu107.getEdu106())) {
 				have = true;
 				break;
 			}
@@ -979,10 +979,10 @@ public class AdministrationController {
 			}
 
 			if (!currentAllRelation.get(i).getEdu107_ID().equals(edu107.getEdu107_ID())
-					&& currentAllRelation.get(i).getPyccbm().equals(edu107.getPyccbm())
-					&& currentAllRelation.get(i).getXbbm().equals(edu107.getXbbm())
-					&& currentAllRelation.get(i).getNjbm().equals(edu107.getNjbm())
-					&& currentAllRelation.get(i).getZybm().equals(edu107.getZybm())) {
+					&& currentAllRelation.get(i).getEdu103().equals(edu107.getEdu103())
+					&& currentAllRelation.get(i).getEdu104().equals(edu107.getEdu104())
+					&& currentAllRelation.get(i).getEdu105().equals(edu107.getEdu105())
+					&& currentAllRelation.get(i).getEdu106().equals(edu107.getEdu106())) {
 				have = true;
 				break;
 			}
@@ -1044,10 +1044,10 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
 		Edu107 edu107 = new Edu107();
-		edu107.setPyccmc(jsonObject.getString("lvelName"));
-		edu107.setXbmc(jsonObject.getString("deaparmentName"));
-		edu107.setNjmc(jsonObject.getString("gradeName"));
-		edu107.setZymc(jsonObject.getString("majorName"));
+		edu107.setEdu103mc(jsonObject.getString("lvelName"));
+		edu107.setEdu104mc(jsonObject.getString("deaparmentName"));
+		edu107.setEdu105mc(jsonObject.getString("gradeName"));
+		edu107.setEdu106mc(jsonObject.getString("majorName"));
 		List<Edu107> relationList = administrationPageService.seacchRelation(edu107);
 		returnMap.put("relationList", relationList);
 		returnMap.put("result", true);

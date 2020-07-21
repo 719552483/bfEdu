@@ -17,14 +17,14 @@ public class Edu107 {
 	//层次关系维护表
 	private  Long Edu107_ID; 	
 	private  String pyjhmc;//培养计划名称 
-	private  String pyccmc;//培养层次名称 
-	private  String pyccbm;//培养层次编码
-	private  String xbmc;//系部名称
-	private  String xbbm;//系部编码
-	private  String njbm;//年级编码
-	private  String njmc;//年级名称
-	private  String zybm;//专业编码
-	private  String zymc;//专业名称
+	private  String edu103mc;//培养层次名称 
+	private  String edu103;//培养层次id
+	private  String edu104mc;//系部名称
+	private  String edu104;//系部id
+	private  String edu105;//年级id
+	private  String edu105mc;//年级名称
+	private  String edu106;//专业id
+	private  String edu106mc;//专业名称
 	private  String yxbz;//有效标志
 	
 	@Id
@@ -37,53 +37,61 @@ public class Edu107 {
 	public void setEdu107_ID(Long edu107_ID) {
 		Edu107_ID = edu107_ID;
 	}
-	public String getPyccmc() {
-		return pyccmc;
+	public String getEdu103() {
+		return edu103;
 	}
-	public void setPyccmc(String pyccmc) {
-		this.pyccmc = pyccmc;
+	public void setEdu103(String edu103) {
+		this.edu103 = edu103;
 	}
-	public String getPyccbm() {
-		return pyccbm;
+	public String getEdu103mc() {
+		return edu103mc;
 	}
-	public void setPyccbm(String pyccbm) {
-		this.pyccbm = pyccbm;
+	public void setEdu103mc(String edu103mc) {
+		this.edu103mc = edu103mc;
 	}
-	public String getXbmc() {
-		return xbmc;
+	public String getEdu104() {
+		return edu104;
 	}
-	public void setXbmc(String xbmc) {
-		this.xbmc = xbmc;
+	public void setEdu104(String edu104) {
+		this.edu104 = edu104;
 	}
-	public String getXbbm() {
-		return xbbm;
+	public String getEdu104mc() {
+		return edu104mc;
 	}
-	public void setXbbm(String xbbm) {
-		this.xbbm = xbbm;
+	public void setEdu104mc(String edu104mc) {
+		this.edu104mc = edu104mc;
 	}
-	public String getNjbm() {
-		return njbm;
+	public String getEdu105() {
+		return edu105;
 	}
-	public void setNjbm(String njbm) {
-		this.njbm = njbm;
+	public void setEdu105(String edu105) {
+		this.edu105 = edu105;
 	}
-	public String getNjmc() {
-		return njmc;
+	public String getEdu105mc() {
+		return edu105mc;
 	}
-	public void setNjmc(String njmc) {
-		this.njmc = njmc;
+	public void setEdu105mc(String edu105mc) {
+		this.edu105mc = edu105mc;
 	}
-	public String getZybm() {
-		return zybm;
+	public String getEdu106() {
+		return edu106;
 	}
-	public void setZybm(String zybm) {
-		this.zybm = zybm;
+	public void setEdu106(String edu106) {
+		this.edu106 = edu106;
 	}
-	public String getZymc() {
-		return zymc;
+
+
+	public String getPyjhmc() {
+		return pyjhmc;
 	}
-	public void setZymc(String zymc) {
-		this.zymc = zymc;
+	public void setPyjhmc(String pyjhmc) {
+		this.pyjhmc = pyjhmc;
+	}
+	public String getEdu106mc() {
+		return edu106mc;
+	}
+	public void setEdu106mc(String edu106mc) {
+		this.edu106mc = edu106mc;
 	}
 	public String getYxbz() {
 		return yxbz;
@@ -91,12 +99,7 @@ public class Edu107 {
 	public void setYxbz(String yxbz) {
 		this.yxbz = yxbz;
 	}
-	public String getPyjhmc() {
-		return pyjhmc;
-	}
-	public void setPyjhmc(String pyjhmc) {
-		this.pyjhmc = pyjhmc;
-	}
+
 	
 	
 	

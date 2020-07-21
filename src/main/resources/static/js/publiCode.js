@@ -2328,48 +2328,48 @@ function stuffAllRelationInfoTable(allRelationInfo){
 
 				}, 
 				{
-					field: 'pyccmc',
+					field: 'edu103mc',
 					title: '培养层次名称',
 					align: 'left',
 					formatter: paramsMatter
 
 				}, 
 				{
-					field: 'pyccbm',
+					field: 'edu103',
 					title: '培养层次代码',
 					align: 'left',
 					visible: false
 				},
 				{
-					field: 'xbmc',
+					field: 'edu104mc',
 					title: '系部名称',
 					align: 'left',
 					formatter: paramsMatter
 
 				},{
-					field: 'xbbm',
+					field: 'edu104',
 					title: '系部编码',
 					align: 'left',
 					visible: false
 				},{
-					field: 'njmc',
+					field: 'edu105mc',
 					title: '年级名称',
 					align: 'left',
 					formatter: paramsMatter
 
 				},{
-					field: 'njbm',
+					field: 'edu105',
 					title: '年级编码',
 					align: 'left',
 					visible: false
 				},{
-					field: 'zymc',
+					field: 'edu106mc',
 					title: '专业名称',
 					align: 'left',
 					formatter: paramsMatter
 
 				},{
-					field: 'zybm',
+					field: 'edu106',
 					title: '专业编码',
 					align: 'left',
 					visible: false
@@ -2573,14 +2573,14 @@ function getRelationSelectInfo(){
 	}
 	
 	var newRelationObject=new Object();
-	newRelationObject.pyccmc=relationlLevelText;
-	newRelationObject.xbmc=relationDepartmentText;
-	newRelationObject.njmc=relationGardeText;
-	newRelationObject.zymc=relationMmajorText;
-	newRelationObject.pyccbm=relationlLevelValue;
-	newRelationObject.xbbm=relationDepartmentValue;
-	newRelationObject.njbm=relationGardeValue;
-	newRelationObject.zybm=relationMmajorValue;
+	newRelationObject.edu103mc=relationlLevelText;
+	newRelationObject.edu104mc=relationDepartmentText;
+	newRelationObject.edu105mc=relationGardeText;
+	newRelationObject.edu106mc=relationMmajorText;
+	newRelationObject.edu103=relationlLevelValue;
+	newRelationObject.edu104=relationDepartmentValue;
+	newRelationObject.edu105=relationGardeValue;
+	newRelationObject.edu106=relationMmajorValue;
 	newRelationObject.pyjhmc=relationName;
 	return newRelationObject;
 }
@@ -2605,7 +2605,7 @@ function stuffRelationTipSelect(){
 	if(allLevls.length!==0){
 		var str = '<option value="seleceConfigTip">请选择</option>';
 		for (var i = 0; i < allLevls.length; i++) {
-			str += '<option value="' + allLevls[i].pyccbm + '">' + allLevls[i].pyccmc + '</option>';
+			str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
 		}
 		stuffManiaSelect("#addNewRelation_level", str);
 	}
@@ -2614,7 +2614,7 @@ function stuffRelationTipSelect(){
 	if(allDepartments.length!==0){
 		var str = '<option value="seleceConfigTip">请选择</option>';
 		for (var i = 0; i < allDepartments.length; i++) {
-			str += '<option value="' + allDepartments[i].xbbm + '">' + allDepartments[i].xbmc + '</option>';
+			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc + '</option>';
 		}
 		stuffManiaSelect("#addNewRelation_department", str);
 	}
@@ -2623,7 +2623,7 @@ function stuffRelationTipSelect(){
 	if(allGrades.length!==0){
 		var str = '<option value="seleceConfigTip">请选择</option>';
 		for (var i = 0; i < allGrades.length; i++) {
-			str += '<option value="' + allGrades[i].njbm + '">' + allGrades[i].njmc + '</option>';
+			str += '<option value="' + allGrades[i].edu105_ID + '">' + allGrades[i].njmc + '</option>';
 		}
 		stuffManiaSelect("#addNewRelation_garde", str);
 	}
@@ -2632,7 +2632,7 @@ function stuffRelationTipSelect(){
 	if(allMajors.length!==0){
 		var str = '<option value="seleceConfigTip">请选择</option>';
 		for (var i = 0; i < allMajors.length; i++) {
-			str += '<option value="' + allMajors[i].zybm + '">' + allMajors[i].zymc + '</option>';
+			str += '<option value="' + allMajors[i].edu106_ID + '">' + allMajors[i].zymc + '</option>';
 		}
 		stuffManiaSelect("#addNewRelation_major", str);
 	}
