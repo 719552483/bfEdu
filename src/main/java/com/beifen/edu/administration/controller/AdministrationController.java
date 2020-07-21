@@ -1860,25 +1860,27 @@ public class AdministrationController {
 //		}
 
 		if (!namehave&&!numhave) {
+			String yxbz = "1"; // 有效标志
+			String configTheCulturePlan = "F";// 初始化的是否生成开课计划
 			String xz =administrationPageService.queryXzByPyccbm(edu300.getPyccbm()); // 学制
 			String currntNum=edu300.getZdybjxh(); //当前要是用的数字尾缀
+			String  njbm=administrationPageService.query105BYID(edu300.getNjbm()).getNjbm();
+			String  xbbm=administrationPageService.query104BYID(edu300.getXbbm()).getXbbm();
+			String  zybm=administrationPageService.query106BYID(edu300.getZybm()).getZybm();
 			if(Integer.parseInt(edu300.getZdybjxh())<=9){
 				currntNum =String.valueOf("0"+currntNum);
 			}else{
 				currntNum =String.valueOf(currntNum);
 			}
 			
-			String yxbz = "1"; // 有效标志
-			String configTheCulturePlan = "F";// 初始化的是否生成开课计划
-			
-			//班号  年级编码+（班级数+1）
-			String bh =edu300.getNjbm()+currntNum;
+			//班号  年级编码+（自定义序号）
+			String bh =njbm+currntNum;
 		
 			//班级代码
 			String bjdm =xz+currntNum;
 			
 			//班级编码
-			String bjbm =edu300.getNjbm()+edu300.getXbbm()+edu300.getZybm()+bjdm;
+			String bjbm =njbm+xbbm+zybm+bjdm;
 			
 			String xqmc =administrationPageService.queryXqByPyccbm(1,edu300.getPyccbm()); // 校区名称
 			String xqbm = administrationPageService.queryXqByPyccbm(2,edu300.getPyccbm()); // 校区编码
@@ -1965,8 +1967,7 @@ public class AdministrationController {
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
 
-		List<Edu300> currentAllAdministrationClasses = administrationPageService
-				.queryCulturePlanAdministrationClasses(levelCode, departmentCode, gradeCode, majorCode);
+		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode, departmentCode, gradeCode, majorCode);
 		returnMap.put("classesInfo", currentAllAdministrationClasses);
 		returnMap.put("result", true);
 		return returnMap;

@@ -31,6 +31,6 @@ public interface Edu106Dao extends JpaRepository<Edu106, Long>, JpaSpecification
 	public String queryZyCodeByZyName(String zymc);
 
 	@Query(value = "select * from edu106 where Edu106_ID =?1", nativeQuery = true)
-	public Edu106 query105BYID(String edu106id);
+	public Edu106 query106BYID(String edu106id);
 
 }

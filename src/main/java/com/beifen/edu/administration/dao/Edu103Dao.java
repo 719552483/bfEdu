@@ -23,11 +23,11 @@ public interface Edu103Dao extends JpaRepository<Edu103, Long>, JpaSpecification
 	public void removeLevel(String edu103ID);
 
 	// 根据id查询培养层次
-	@Query(value = "select * from edu103 e where e.pyccbm=?1", nativeQuery = true)
+	@Query(value = "select * from edu103 e where e.Edu103_ID=?1", nativeQuery = true)
 	public List<Edu103> queryAllLevelByPcccbm(String edu300id);
 	
 	// 根据名称查培养层次id
-	@Query(value = "select e.pyccbm from edu103 e where e.pyccmc=?1", nativeQuery = true)
+	@Query(value = "select e.Edu103_ID from edu103 e where e.pyccmc=?1", nativeQuery = true)
 	public String queryLevelCodeByLevelName(String edu300id);
 
 	// 查询所有培养层次
@@ -35,10 +35,10 @@ public interface Edu103Dao extends JpaRepository<Edu103, Long>, JpaSpecification
 	public Edu103 query103BYID(String edu300id);
 
 	//根据培养层次查学制
-	@Query(value = "select e.xz from edu103 e where e.pyccbm=?1", nativeQuery = true)
+	@Query(value = "select e.xz from edu103 e where e.Edu103_ID=?1", nativeQuery = true)
 	public String queryXzByPyccbm(String queryXqbmByPyccbm);
 	
 	//根据培养层次查校区编码
-	@Query(value = "select e.xq from edu103 e where e.pyccbm=?1", nativeQuery = true)
+	@Query(value = "select e.xq from edu103 e where e.Edu103_ID=?1", nativeQuery = true)
 	public String queryXqbmByPyccbm(String pyccbm);
 }
