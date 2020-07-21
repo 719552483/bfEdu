@@ -2908,6 +2908,7 @@ public class AdministrationController {
     		for (int i = 0; i < importStudent.size(); i++) {
     			Edu001 edu001 = importStudent.get(i);
     			edu001.setYxbz(yxbz);
+    			edu001.setXh(administrationPageService.getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
     			administrationPageService.addStudent(edu001); // 新增学生
     			List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
     			String xzbid = edu001.getEdu300_ID();

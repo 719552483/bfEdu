@@ -1305,6 +1305,7 @@ function confirmImportStudentInfo() {
     				$('#studentBaseInfoTable').bootstrapTable("prepend", importStudents[i]);
         		}
 				toastr.success('导入成功');
+				toolTipUp(".myTooltip");
 				$.hideModal("#importStudentInfoModal");
 	        },beforeSend: function(xhr) {
 	           $(".fileLoadingArea").show();
