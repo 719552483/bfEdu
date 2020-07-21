@@ -23,15 +23,15 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	void removeRelation(String id);
 
 	// 查询某层次下的系部
-	@Query(value = "select * from edu107 e where e.pyccbm=?1", nativeQuery = true)
+	@Query(value = "select * from edu107 e where e.edu103=?1", nativeQuery = true)
 	public List<Edu107> levelMatchDepartment(String leveCode);
 
 	// 查询某系部下的年级
-	@Query(value = "select * from edu107 e where e.xbbm=?1", nativeQuery = true)
+	@Query(value = "select * from edu107 e where e.edu104=?1", nativeQuery = true)
 	public List<Edu107> departmentMatchGrade(String departmentCode);
 
 	//查询某年级下的专业
-	@Query(value = "select * from edu107 e where e.njbm=?1", nativeQuery = true)
+	@Query(value = "select * from edu107 e where e.edu105=?1", nativeQuery = true)
 	public List<Edu107> gradeMatchMajor(String gradeCode);
 	
 	// 根据专业编码查培养计划

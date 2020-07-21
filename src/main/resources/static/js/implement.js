@@ -140,7 +140,7 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				}else{
 					for (var i = 0; i < backjson.allLevel.length; i++) {
 						if (backjson.allLevel[i].pyccbm===configValue) {
-							str = '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc+ '</option>';
+							str = '<option value="' + backjson.allLevel[i].edu103_ID + '">' + backjson.allLevel[i].pyccmc+ '</option>';
 						}
 					}
 				}
@@ -148,13 +148,13 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				
 				if (typeof(configValue) === "undefined") {
 					for (var i = 0; i < backjson.allLevel.length; i++) {
-						str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
+						str += '<option value="' + backjson.allLevel[i].edu103_ID + '">' + backjson.allLevel[i].pyccmc
 								+ '</option>';
 					}
 				}else{
 					for (var i = 0; i < backjson.allLevel.length; i++) {
 						if (backjson.allLevel[i].pyccbm!==configValue) {
-							str += '<option value="' + backjson.allLevel[i].pyccbm + '">' + backjson.allLevel[i].pyccmc
+							str += '<option value="' + backjson.allLevel[i].edu103_ID + '">' + backjson.allLevel[i].pyccmc
 							+ '</option>';
 						}
 					}
@@ -193,8 +193,8 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 					var departments=new Array();
 					for (var i = 0; i < backjson.department.length; i++) {
 						var departmentObject=new Object();
-						departmentObject.name=backjson.department[i].xbmc;
-						departmentObject.value=backjson.department[i].xbbm;
+						departmentObject.name=backjson.department[i].edu104mc;
+						departmentObject.value=backjson.department[i].edu104;
 						departments.push(departmentObject);
 					}
 					drawNextSelect(levelInputId, departments, departmentInputId);
@@ -231,8 +231,8 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 					var grades=new Array();
 					for (var i = 0; i < backjson.grade.length; i++) {
 						var gradeObject=new Object();
-						gradeObject.name=backjson.grade[i].njmc;
-						gradeObject.value=backjson.grade[i].njbm;
+						gradeObject.name=backjson.grade[i].edu105mc;
+						gradeObject.value=backjson.grade[i].edu105;
 						grades.push(gradeObject);
 					}
 					drawNextSelect(departmentInputId, grades,gradeInputId);
@@ -269,8 +269,8 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 					var majors=new Array();
 					for (var i = 0; i < backjson.major.length; i++) {
 						var majorObject=new Object();
-						majorObject.name=backjson.major[i].zymc;
-						majorObject.value=backjson.major[i].zybm;
+						majorObject.name=backjson.major[i].edu106mc;
+						majorObject.value=backjson.major[i].edu106;
 						majors.push(majorObject);
 					}
 					drawNextSelect(gradeInputId, majors, majorInputId);
