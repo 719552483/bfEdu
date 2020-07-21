@@ -16,6 +16,7 @@ public class Edu300 {
 	private String xzbmc;  //行政班名称
 	private String xzbbm;  //行政班编码
 	private  String xzbbh;//行政班班号
+	private  String xzbdm;//行政班代码
 	private  String pyccmc;//培养层次名称 
 	private  String pyccbm;//培养层次编码
 	private  String xbmc;//系部名称
@@ -169,6 +170,12 @@ public String getSfsckkjh() {
 	}
 	public void setXzbbh(String xzbbh) {
 		this.xzbbh = xzbbh;
+	}
+	public String getXzbdm() {
+		return xzbdm;
+	}
+	public void setXzbdm(String xzbdm) {
+		this.xzbdm = xzbdm;
 	}
 	
 	

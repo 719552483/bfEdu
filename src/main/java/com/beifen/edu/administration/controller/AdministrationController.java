@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1831,54 +1832,74 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(addInfo);
 		Edu300 edu300 = (Edu300) JSONObject.toBean(jsonObject, Edu300.class);
 		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
-		String bh =edu300.getXzbbh();// 原始班号
 
 		// 判断行政班名称和编码是否已存在
 		boolean namehave = false;
-		boolean codehave = false;
+		List<Integer> samePlanUseNums=new ArrayList<Integer>();
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
+			if (currentAllAdministrationClasses.get(i).getPyccbm().equals(edu300.getPyccbm())
+					&&currentAllAdministrationClasses.get(i).getXbbm().equals(edu300.getXbbm())
+					&&currentAllAdministrationClasses.get(i).getNjbm().equals(edu300.getNjbm())
+					&&currentAllAdministrationClasses.get(i).getZybm().equals(edu300.getZybm()))
+				{
+				samePlanUseNums.add(Integer.parseInt(currentAllAdministrationClasses.get(i).getXzbbh()));
+			}
 			if (currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())) {
 				namehave = true;
 				break;
 			}
-			if (currentAllAdministrationClasses.get(i).getPyccbm().equals(edu300.getPyccbm())
-					&&currentAllAdministrationClasses.get(i).getXbbm().equals(edu300.getXbbm())
-					&&currentAllAdministrationClasses.get(i).getNjbm().equals(edu300.getNjbm())
-					&&currentAllAdministrationClasses.get(i).getZybm().equals(edu300.getZybm())
-					&&currentAllAdministrationClasses.get(i).getXzbbh().equals(edu300.getXzbbh())
-					) {
-				codehave = true;
-				break;
-			}
+		}
+		
+		int samePlanClassNum=0;
+		if(samePlanUseNums.size()!=0){
+			String removeStr= edu300.getNjbm();
+			String samePlanClassStr=String.valueOf(Collections.max(samePlanUseNums));
+			removeStr = samePlanClassStr.replace(removeStr,"");
+			samePlanClassNum=Integer.parseInt(removeStr);
 		}
 
-		if (!namehave&&!codehave) {
-			String xqmc =administrationPageService.queryXqByPyccbm(1,edu300.getPyccbm()); // 校区名称
-			String xqbm = administrationPageService.queryXqByPyccbm(2,edu300.getPyccbm()); // 校区编码
+		if (!namehave) {
+			String xz =administrationPageService.queryXzByPyccbm(edu300.getPyccbm()); // 学制
+			String currntNum=""; //当前要是用的数字尾缀
+			if(samePlanClassNum<=9){
+				currntNum =String.valueOf("0"+(samePlanClassNum+1));
+			}else{
+				currntNum =String.valueOf(samePlanClassNum+1);
+			}
+			
 			String yxbz = "1"; // 有效标志
 			String configTheCulturePlan = "F";// 初始化的是否生成开课计划
-			String xz =administrationPageService.queryXzByPyccbm(edu300.getPyccbm()); // 学制
-			String xzbbm ="";
+			
+			//班号  年级编码+（班级数+1）
+			String bh =edu300.getNjbm()+currntNum;
+		
+			//班级代码
+			String bjdm =xz+currntNum;
+			
+			//班级编码
+			String bjbm =edu300.getNjbm()+edu300.getXbbm()+edu300.getZybm()+bjdm;
+			
+			String xqmc =administrationPageService.queryXqByPyccbm(1,edu300.getPyccbm()); // 校区名称
+			String xqbm = administrationPageService.queryXqByPyccbm(2,edu300.getPyccbm()); // 校区编码
+			
+			edu300.setYxbz(yxbz);
+			edu300.setSfsckkjh(configTheCulturePlan);
 			edu300.setXqmc(xqmc);
 			edu300.setXqbm(xqbm);
-			edu300.setYxbz(yxbz);
-			if(bh.length()<=1){
-				xzbbm=xz+"0"+bh;
-			}else{
-				xzbbm=xz+bh;
-			}
-			edu300.setXzbbm(xzbbm);
-			edu300.setSfsckkjh(configTheCulturePlan);
+			edu300.setXzbbh(bh);
+			edu300.setXzbdm(bjdm);
+			edu300.setXzbbm(bjbm);
 			administrationPageService.addAdministrationClass(edu300);
 			Long id = edu300.getEdu300_ID();
 			returnMap.put("yxbz", yxbz);
-			returnMap.put("xzbbm", xzbbm);
 			returnMap.put("id", id);
 			returnMap.put("xqmc", xqmc);
 			returnMap.put("xqbm", xqbm);
 			returnMap.put("sfsckkjh", configTheCulturePlan);
+			returnMap.put("xzbbh", bh);
+			returnMap.put("xzbdm", bjdm);
+			returnMap.put("xzbbm", bjbm);
 		}
-		returnMap.put("codehave", codehave);
 		returnMap.put("namehave", namehave);
 		returnMap.put("result", true);
 		return returnMap;
@@ -1902,7 +1923,7 @@ public class AdministrationController {
 		Edu300 edu300 = (Edu300) JSONObject.toBean(newCrouseInfo, Edu300.class);
 		// 判断是否冲突
 		boolean namehave = false;
-		boolean codehave = false;
+//		boolean codehave = false;
 
 		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
 			if (!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())
@@ -1911,20 +1932,20 @@ public class AdministrationController {
 				break;
 			}
 
-			if (!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())
-					&& currentAllAdministrationClasses.get(i).getXzbbm().equals(edu300.getXzbbm())) {
-				codehave = true;
-				break;
-			}
+//			if (!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())
+//					&& currentAllAdministrationClasses.get(i).getXzbbm().equals(edu300.getXzbbm())) {
+//				codehave = true;
+//				break;
+//			}
 
 		}
 		// 不存在则修改
-		if (!namehave && !codehave) {
+		if (!namehave) {
 			administrationPageService.updateAdministrationClass(edu300);
 		}
 
 		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
+//		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
