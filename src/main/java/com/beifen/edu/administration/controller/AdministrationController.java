@@ -2765,14 +2765,14 @@ public class AdministrationController {
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
 
 		// 判断学号是否已存在
-		boolean xhhave = false;
-		for (int i = 0; i < currentAllStudent.size(); i++) {
-			if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
-					&& currentAllStudent.get(i).getXh().equals(edu001.getXh())) {
-				xhhave = true;
-				break;
-			}
-		}
+//		boolean xhhave = false;
+//		for (int i = 0; i < currentAllStudent.size(); i++) {
+//			if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
+//					&& currentAllStudent.get(i).getXh().equals(edu001.getXh())) {
+//				xhhave = true;
+//				break;
+//			}
+//		}
 		
 		// 判断身份证是否存在
 		boolean IdcardHave= false;
@@ -2804,7 +2804,7 @@ public class AdministrationController {
 		
 		boolean studentSpill=false;
 		// 不存在则修改学生
-		if (!xhhave&&!IdcardHave) {
+		if (!IdcardHave) {
 			if (!isChangeXZB) {
 				// 没有修改行政班的情况
 				administrationPageService.addStudent(edu001);
@@ -2818,7 +2818,7 @@ public class AdministrationController {
 		}
 
 		returnMap.put("studentSpill", studentSpill);
-		returnMap.put("xhhave", xhhave);
+//		returnMap.put("xhhave", xhhave);
 		returnMap.put("IdcardHave", IdcardHave);
 		returnMap.put("result", true);
 		return returnMap;

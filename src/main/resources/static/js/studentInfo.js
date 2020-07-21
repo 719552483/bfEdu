@@ -445,6 +445,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
+	$(".XhArea").show();
 	//清空模态框中元素原始值
 	emptyStudentBaseInfoArea();
 	$(".addStudentTip").show();
@@ -455,7 +456,7 @@ function studentDetails(row,index){
 
 //填充学生信息
 function stuffStudentDetails(row){
-//	$("#addStudentNum").val(row.xh);
+	$("#addStudentNum").val(row.xh);
 	$("#addStudentName").val(row.xm);
 	$("#addStudentUsedName").val(row.zym);
 	stuffManiaSelectWithDeafult("#addStudentSex", row.xb);
@@ -498,6 +499,7 @@ function stuffStudentDetails(row){
 function modifyStudent(row,index){
 	$.showModal("#addStudentModal",true);
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
+	$(".XhArea").hide();
 	//清空模态框中元素原始值
 	emptyStudentBaseInfoArea();
 	$(".addStudentTip").show();
@@ -600,6 +602,7 @@ function confirmModifyStudent(row){
 		return;
 	}
 	modifyStudentInfo.edu001_ID=row.edu001_ID;
+	modifyStudentInfo.xh=row.xh;
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -626,11 +629,11 @@ function confirmModifyStudent(row){
 					$.showModal("#addStudentModal",true);
 					return;
 				}
-				if (backjson.xhhave) {
-					toastr.warning('学号已存在');
-					$.showModal("#addStudentModal",true);
-					return;
-				}
+//				if (backjson.xhhave) {
+//					toastr.warning('学号已存在');
+//					$.showModal("#addStudentModal",true);
+//					return;
+//				}
 				if (backjson.IdcardHave) {
 					toastr.warning('身份证号已存在');
 					$.showModal("#addStudentModal",true);
@@ -733,6 +736,7 @@ function wantAddStudent() {
 	//显示模态框
 	$.showModal("#addStudentModal",true);
 	$("#addStudentModal").find(".moadalTitle").html("新增学生");
+	$(".XhArea").hide();
 	//清空模态框中元素原始值
 	emptyStudentBaseInfoArea();
 	//为模态框联动select绑定事件
