@@ -2,6 +2,7 @@ package com.beifen.edu.administration.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -595,6 +596,33 @@ public class AdministrationPageService {
 			if(IDcards.size()>0) isHave=true;
 		}
 		return isHave;
+	}
+	
+	//为新生生成学号
+	public String getNewStudentXh(String edu300_ID) {
+		String newXh="";
+		String xzbBm=edu300DAO.queryXzbByEdu300ID(edu300_ID).get(0).getXzbbm();
+		List<Edu001> thisClassAllStudents=edu001DAO.queryStudentInfoByAdministrationClass(edu300_ID);
+		if(thisClassAllStudents.size()!=0){
+			List<Long> currentXhs=new ArrayList<Long>();
+			for (int i = 0; i < thisClassAllStudents.size(); i++) {
+				currentXhs.add(Long.parseLong(thisClassAllStudents.get(i).getXh()));
+			}
+			int newXhSuffix=0;
+			String maxXh=String.valueOf(Collections.max(currentXhs));
+			maxXh = maxXh.replace(xzbBm,"");
+			newXhSuffix=Integer.parseInt(maxXh)+1;
+			if(newXhSuffix<=9){
+				newXh= String.valueOf(xzbBm+"00"+newXhSuffix);
+			}else if(newXhSuffix>9&&newXhSuffix<=99){
+				newXh= String.valueOf(xzbBm+"0"+newXhSuffix);
+			}else{
+				newXh= String.valueOf(xzbBm+newXhSuffix);
+			}
+		}else{
+			newXh= xzbBm+"001";
+		}
+		return newXh;
 	}
 	
 	//批量发放毕业证
@@ -1530,6 +1558,8 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

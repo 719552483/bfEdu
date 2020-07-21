@@ -2685,21 +2685,23 @@ public class AdministrationController {
 		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
 		// 判断学号是否已存在
-		boolean xhhave = false;
+//		boolean xhhave = false;
 		// 判断新增学生是否会超过行政班容纳人数
 		boolean studentSpill = administrationPageService.administrationClassesIsSpill(edu001.getEdu300_ID());
-		for (int i = 0; i < currentAllStudent.size(); i++) {
-			if (currentAllStudent.get(i).getXh().equals(edu001.getXh())) {
-				xhhave = true;
-				break;
-			}
-		}
+//		for (int i = 0; i < currentAllStudent.size(); i++) {
+//			if (currentAllStudent.get(i).getXh().equals(edu001.getXh())) {
+//				xhhave = true;
+//				break;
+//			}
+//		}
 		// 判断身份证是否存在
 		boolean IDcardIshave = administrationPageService.IDcardIshave(edu001.getSfzh());
-
-		if (!xhhave && !studentSpill && !IDcardIshave) {
+		String newNh="";
+		if (!studentSpill && !IDcardIshave) {
+			newNh = administrationPageService.getNewStudentXh(edu001.getEdu300_ID()); //新生的学号
 			String yxbz = "1";
 			edu001.setYxbz(yxbz);
+			edu001.setXh(newNh);
 			administrationPageService.addStudent(edu001); // 新增学生
 			Long newStudentid = edu001.getEdu001_ID();
 
@@ -2712,7 +2714,7 @@ public class AdministrationController {
 		}
 
 		returnMap.put("IDcardIshave", IDcardIshave);
-		returnMap.put("xhhave", xhhave);
+		returnMap.put("newNh", newNh);
 		returnMap.put("studentSpill", studentSpill);
 		returnMap.put("result", true);
 		return returnMap;

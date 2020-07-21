@@ -455,7 +455,7 @@ function studentDetails(row,index){
 
 //填充学生信息
 function stuffStudentDetails(row){
-	$("#addStudentNum").val(row.xh);
+//	$("#addStudentNum").val(row.xh);
 	$("#addStudentName").val(row.xm);
 	$("#addStudentUsedName").val(row.zym);
 	stuffManiaSelectWithDeafult("#addStudentSex", row.xb);
@@ -822,15 +822,16 @@ function confirmAddStudent(){
 					toastr.warning('身份证号码已存在');
 					return;
 				}
-				if (backjson.xhhave) {
-					toastr.warning('学号已存在');
-					return;
-				}
+//				if (backjson.xhhave) {
+//					toastr.warning('学号已存在');
+//					return;
+//				}
 				if (backjson.studentSpill) {
 					toastr.warning('班级人数超过上限');
 					return;
 				}
 				addStudentInfo.edu001_ID=backjson.id;
+				addStudentInfo.xh=backjson.newNh;
 				$('#studentBaseInfoTable').bootstrapTable("prepend", addStudentInfo);
 				$(".myTooltip").tooltipify();
 				toastr.success('新增成功');
@@ -844,7 +845,7 @@ function confirmAddStudent(){
 
 //获取新增学生的信息
 function getAddStudentInfo(){
-	var xh=$("#addStudentNum").val();
+//	var xh=$("#addStudentNum").val();
 	var xm=$("#addStudentName").val();
 	var zym=$("#addStudentUsedName").val();
 	var xb= getNormalSelectValue("addStudentSex");
@@ -896,10 +897,10 @@ function getAddStudentInfo(){
 	var bz=$("#addStudentbz").val();
 	
 	
-	if(xh===""){
-		toastr.warning('学号不能为空');
-		return;
-	}
+//	if(xh===""){
+//		toastr.warning('学号不能为空');
+//		return;
+//	}
 	
 	if(xm===""){
 		toastr.warning('姓名不能为空');
@@ -1007,7 +1008,7 @@ function getAddStudentInfo(){
 	}
 	
 	var returnObject=new Object();
-	returnObject.xh=xh;
+//	returnObject.xh=xh;
 	returnObject.xm=xm;
 	returnObject.zym=zym;
 	returnObject.xb=xb;
@@ -1376,7 +1377,7 @@ function emptyStudentBaseInfoArea() {
 	var reObject = new Object();
 	reObject.fristSelectId ="#addStudentpycc";
 	reObject.actionSelectIds ="#addStudentxb,#addStudentnj,#addStudentzy,#addStudentxzb";
-	reObject.InputIds = "#addStudentNum,#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentIDNum,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
+	reObject.InputIds = "#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentIDNum,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
 	reObject.normalSelectIds = "#addStudentSex,#addStudentStatus,#addStudentNation,#addStudentIsHaveStatus,#addStudentzzmm,#addStudentwhcd,#addStudentIsMarried,#addStudentIsFromArmy,#addStudentzsfs,#addStudentIsDxpy,#addStudentIsPoorFamily";
 	reReloadSearchsWithSelect(reObject);
 }
