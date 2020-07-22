@@ -191,11 +191,16 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				if (backjson.result) {
 					hideloding();
 					var departments=new Array();
+					var all=new Array();
 					for (var i = 0; i < backjson.department.length; i++) {
 						var departmentObject=new Object();
 						departmentObject.name=backjson.department[i].edu104mc;
 						departmentObject.value=backjson.department[i].edu104;
-						departments.push(departmentObject);
+						var isHave=all.indexOf(backjson.department[i].edu104);
+						if(isHave===-1){
+							departments.push(departmentObject);
+							all.push(backjson.department[i].edu104);
+						}
 					}
 					drawNextSelect(levelInputId, departments, departmentInputId);
 				} else {
@@ -229,11 +234,16 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				if (backjson.result) {
 					hideloding();
 					var grades=new Array();
+					var all=new Array();
 					for (var i = 0; i < backjson.grade.length; i++) {
 						var gradeObject=new Object();
 						gradeObject.name=backjson.grade[i].edu105mc;
 						gradeObject.value=backjson.grade[i].edu105;
-						grades.push(gradeObject);
+						var isHave=all.indexOf(backjson.grade[i].edu105);
+						if(isHave===-1){
+							grades.push(gradeObject);
+							all.push(backjson.grade[i].edu105);
+						}
 					}
 					drawNextSelect(departmentInputId, grades,gradeInputId);
 				} else {
@@ -267,11 +277,16 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				if (backjson.result) {
 					hideloding();
 					var majors=new Array();
+					var all=new Array();
 					for (var i = 0; i < backjson.major.length; i++) {
 						var majorObject=new Object();
 						majorObject.name=backjson.major[i].edu106mc;
 						majorObject.value=backjson.major[i].edu106;
-						majors.push(majorObject);
+						var isHave=all.indexOf(backjson.major[i].edu106);
+						if(isHave===-1){
+							majors.push(majorObject);
+							all.push(backjson.major[i].edu106);
+						}
 					}
 					drawNextSelect(gradeInputId, majors, majorInputId);
 				} else {
