@@ -867,7 +867,7 @@ function stuffClassManagementTable(tableInfo) {
 
 //生成教学班名称
 function generateClassName(row,index,showToastr){
-	if(row.zdrs>row.rnrs){
+	if(row.zdrs>row.rnrs&&row.rnrs>0){
 		if(showToastr){
 			toastr.warning('行政班在读人数大于容纳人数');
 		}

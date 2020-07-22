@@ -46,6 +46,7 @@ function getTaskSelectInfo() {
 					}
 					
 					if(backjson.taskInfo.length===0){
+						toastr.info('暂无可排课程');
 						drawWaitTaskEmptyTable();
 					}else{
 						stuffWaitTaskTable(backjson.taskInfo);
@@ -270,8 +271,56 @@ function getShowTableRow(){
 	return returnArray;
 }
 
-
-
+//开始排课
+function startSchedule(){
+	var culturePlanInfo=getNotNullSearchs();
+	if(typeof culturePlanInfo ==='undefined'){
+		return;
+	}
+	var choosedTask=$('#WaitTaskTable').bootstrapTable('getSelections');
+	if(choosedTask.length===0){
+		toastr.warning('请选择排课课程');
+		return;
+	}
+//	$.ajax({
+//		method : 'get',
+//		cache : false,
+//		url : "/modifyCultureCrose",
+//		dataType : 'json',
+//		data: {
+//		     "culturePlanInfo":JSON.stringify(culturePlanInfo) ,
+//            "modifyInfo":JSON.stringify(crouseModifyInfo)  
+//       },
+//		beforeSend: function(xhr) {
+//			requestErrorbeforeSend();
+//		},
+//		error: function(textStatus) {
+//			requestError();
+//		},
+//		complete: function(xhr, status) {
+//			requestComplete();
+//		},
+//		success : function(backjson) {
+//			if (backjson.result) {
+//				hideloding();
+//				crouseModifyInfo.xbsp="noStatus";
+//				$("#majorTrainingTable").bootstrapTable('updateByUniqueId', {
+//					id : row.edu108_ID,
+//					row : crouseModifyInfo
+//				});
+//				toolTipUp(".myTooltip");
+//				$.hideModal("#majorTrainingModal");
+//				drawPagination(".majorTrainingTableArea", "培养计划");
+//			} else {
+//				toastr.warning('操作失败，请重试');
+//			}
+//		}
+//	});
+	
+	$(".scheduleClassesMainArea").hide();
+	$(".scheduleSingleClassArea").show();
+	$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc);
+}
 
 
 
@@ -322,6 +371,18 @@ function getNotNullSearchs() {
 
 //初始化页面按钮绑定事件
 function binBind(){
-
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+	
+	//开始排课按钮
+	$('#startSchedule').unbind('click');
+	$('#startSchedule').bind('click', function(e) {
+		startSchedule();
+		e.stopPropagation();
+	});
 	
 }

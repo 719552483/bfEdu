@@ -2166,8 +2166,8 @@ public class AdministrationController {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
 				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
-//				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
-//				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
 				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
 				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
