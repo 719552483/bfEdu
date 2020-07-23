@@ -1573,7 +1573,6 @@ public class ReflectUtils {
 		List<Edu000> ztbms = reflectUtils.administrationPageService.queryEjdm("xszt");
 		for (int i = 0; i < ztbms.size(); i++) {
 			ztlist.add(ztbms.get(i).getEjdmz());
-			ztlist.add(ztbms.get(i).getEjdmz());
 		}
 		needCreatHiddenSheetNum++;
 		String[]ztArrays = ztlist.toArray(new String[ztlist.size()]);
