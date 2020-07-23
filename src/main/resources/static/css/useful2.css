@@ -1452,6 +1452,9 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.teacherBaseInfoTableArea .bootstrap4 .search{
+       margin-top: 12px;
+ }
 .administrationClassTableArea  .bootstrap4 .search{
         margin-top: 6px;
  }

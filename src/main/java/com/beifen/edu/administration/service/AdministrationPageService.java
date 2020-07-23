@@ -1284,25 +1284,25 @@ public class AdministrationPageService {
 	}
 
 	// 搜索教师
-	public List<Edu101> searchTeacher(Edu101 edu101) {
-		Specification<Edu101> specification = new Specification<Edu101>() {
-			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu101.getSsyx() != null && !"".equals(edu101.getSsyx())) {
-					predicates.add(cb.like(root.<String> get("ssyx"), '%' + edu101.getSsyx() + '%'));
-				}
-				if (edu101.getJsxm() != null && !"".equals(edu101.getJsxm())) {
-					predicates.add(cb.like(root.<String> get("jsxm"), '%' + edu101.getJsxm() + '%'));
-				}
-				if (edu101.getJgh() != null && !"".equals(edu101.getJgh())) {
-					predicates.add(cb.like(root.<String> get("jgh"), '%' + edu101.getJgh() + '%'));
-				}
-				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-			}
-		};
-		List<Edu101> teacherEntities = edu101DAO.findAll(specification);
-		return teacherEntities;
-	}
+//	public List<Edu101> searchTeacher(Edu101 edu101) {
+//		Specification<Edu101> specification = new Specification<Edu101>() {
+//			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//				List<Predicate> predicates = new ArrayList<Predicate>();
+//				if (edu101.getSsyx() != null && !"".equals(edu101.getSsyx())) {
+//					predicates.add(cb.like(root.<String> get("ssyx"), '%' + edu101.getSsyx() + '%'));
+//				}
+//				if (edu101.getJsxm() != null && !"".equals(edu101.getJsxm())) {
+//					predicates.add(cb.like(root.<String> get("jsxm"), '%' + edu101.getJsxm() + '%'));
+//				}
+//				if (edu101.getJgh() != null && !"".equals(edu101.getJgh())) {
+//					predicates.add(cb.like(root.<String> get("jgh"), '%' + edu101.getJgh() + '%'));
+//				}
+//				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+//			}
+//		};
+//		List<Edu101> teacherEntities = edu101DAO.findAll(specification);
+//		return teacherEntities;
+//	}
 
 	// 搜索关系
 	public List<Edu107> seacchRelation(Edu107 edu107) {

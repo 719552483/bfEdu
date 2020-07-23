@@ -186,7 +186,12 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				title: '姓名',
 				align: 'left',
 				formatter: paramsMatter
-			}, {
+			},{
+				field: 'sylx',
+				title: '生源类型',
+				align: 'left',
+				formatter: paramsMatter
+			},  {
 				field: 'xb',
 				title: '性别',
 				align: 'left',
@@ -227,7 +232,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				title: '学籍号',
 				align: 'left',
 				formatter: paramsMatter
-			}, {
+			},{
 				field: 'zym',
 				title: '曾用名',
 				align: 'left',
@@ -322,13 +327,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
-			}, {
-				field: 'lzjd',
-				title: '来自军队',
-				align: 'left',
-				formatter: isOrNotisMatter,
-				visible: false
-			}, {
+			},  {
 				field: 'zsfs',
 				title: '招生方式',
 				align: 'left',
@@ -389,6 +388,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				.join('');
 		}
 	}
+	
 
 	function marriageMatter(value, row, index) {
 		if (value==="T") {
@@ -486,7 +486,7 @@ function stuffStudentDetails(row){
 	$("#addStudentsg").val(row.sg);
 	$("#addStudenttz").val(row.tz);
 	stuffManiaSelectWithDeafult("#addStudentIsMarried", row.hf);
-	stuffManiaSelectWithDeafult("#addStudentIsFromArmy", row.lzjd);
+	stuffManiaSelectWithDeafult("#addStudentType", row.sylx);
 	stuffManiaSelectWithDeafult("#addStudentzsfs", row.zsfscode);
 	stuffManiaSelectWithDeafult("#addStudentIsDxpy", row.dxpy);
 	stuffManiaSelectWithDeafult("#addStudentIsPoorFamily", row.pkjt);
@@ -849,7 +849,6 @@ function confirmAddStudent(){
 
 //获取新增学生的信息
 function getAddStudentInfo(){
-//	var xh=$("#addStudentNum").val();
 	var xm=$("#addStudentName").val();
 	var zym=$("#addStudentUsedName").val();
 	var xb= getNormalSelectValue("addStudentSex");
@@ -867,6 +866,8 @@ function getAddStudentInfo(){
 	var njmc= getNormalSelectText("addStudentnj");
 	var zybm= getNormalSelectValue("addStudentzy");
 	var zymc= getNormalSelectText("addStudentzy");
+	var sylxbm= getNormalSelectValue("addStudentType");
+	var xylx= getNormalSelectText("addStudentType");
 	var Edu300_ID= getNormalSelectValue("addStudentxzb");
 	var xzbname= getNormalSelectText("addStudentxzb");
 	var sfzh=$("#addStudentIDNum").val();
@@ -891,7 +892,7 @@ function getAddStudentInfo(){
 	var sg=$("#addStudentsg").val();
 	var tz=$("#addStudenttz").val();
 	var hf= getNormalSelectValue("addStudentIsMarried");
-	var lzjd= getNormalSelectValue("addStudentIsFromArmy");
+	var lzjd= getNormalSelectValue("addStudentType");
 	var zsfs= getNormalSelectText("addStudentzsfs");
 	var zsfscode= getNormalSelectValue("addStudentzsfs");
 	var dxpy= getNormalSelectValue("addStudentIsDxpy");
@@ -908,6 +909,10 @@ function getAddStudentInfo(){
 	
 	if(xm===""){
 		toastr.warning('姓名不能为空');
+		return;
+	}
+	if(sylxbm===""){
+		toastr.warning('生源类型不能为空');
 		return;
 	}
 	
@@ -1060,6 +1065,8 @@ function getAddStudentInfo(){
 	returnObject.jtzz=jtzz;
 	returnObject.zjxy=zjxy;
 	returnObject.bz=bz;
+	returnObject.xylx=xylx;
+	returnObject.sylxbm=sylxbm;
 	return returnObject;
 }
 
@@ -1383,7 +1390,7 @@ function emptyStudentBaseInfoArea() {
 	reObject.fristSelectId ="#addStudentpycc";
 	reObject.actionSelectIds ="#addStudentxb,#addStudentnj,#addStudentzy,#addStudentxzb";
 	reObject.InputIds = "#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentIDNum,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
-	reObject.normalSelectIds = "#addStudentSex,#addStudentStatus,#addStudentNation,#addStudentIsHaveStatus,#addStudentzzmm,#addStudentwhcd,#addStudentIsMarried,#addStudentIsFromArmy,#addStudentzsfs,#addStudentIsDxpy,#addStudentIsPoorFamily";
+	reObject.normalSelectIds = "#addStudentSex,#addStudentStatus,#addStudentNation,#addStudentIsHaveStatus,#addStudentzzmm,#addStudentwhcd,#addStudentIsMarried,#addStudentType,#addStudentzsfs,#addStudentIsDxpy,#addStudentIsPoorFamily";
 	reReloadSearchsWithSelect(reObject);
 }
 

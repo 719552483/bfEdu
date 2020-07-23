@@ -45,6 +45,8 @@ public class Edu001 {
 	private  String syd;//生源地
 	private  String whcd;//文化程度
 	private  String whcdbm;//文化程度编码
+	private  String sylx;//生源类型
+	private  String sylxbm;//生源类型编码
 	private  String ksh;//考生号
 	private  String rxzf;//入学总分
 	private  String rxsj;//入学时间
@@ -56,7 +58,6 @@ public class Edu001 {
 	private  String sg;//身高
 	private  String tz;//体重
 	private  String hf;//婚否
-	private  String lzjd;//来自军队
 	private  String zsfs;//招生方式
 	private  String zsfscode;//招生方式编码
 	private  String dxpy;//定向培养
@@ -336,11 +337,18 @@ public class Edu001 {
 	public void setTz(String tz) {
 		this.tz = tz;
 	}
-	public String getLzjd() {
-		return lzjd;
+	
+	public String getSylx() {
+		return sylx;
 	}
-	public void setLzjd(String lzjd) {
-		this.lzjd = lzjd;
+	public void setSylx(String sylx) {
+		this.sylx = sylx;
+	}
+	public String getSylxbm() {
+		return sylxbm;
+	}
+	public void setSylxbm(String sylxbm) {
+		this.sylxbm = sylxbm;
 	}
 	public String getZsfs() {
 		return zsfs;

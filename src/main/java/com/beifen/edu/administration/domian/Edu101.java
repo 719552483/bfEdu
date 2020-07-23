@@ -14,27 +14,23 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Edu101")
 public class Edu101 {
- //教师基本信息表
-	
-	
+ //教职工基本信息表
 	private  long Edu101_ID; 	
-	private  String jgh; //教工号
-	private  String jsxm; //教师姓名
-	private  String sfzh; //身份证号
-	private  String xb;//教师性别  M男F女
-	private  String bjnd;//班级年度
+	private  String szxb; //系部
+	private  String zy; //专业
+	private  String xm; //姓名
+	private  String xb;//性别
+	private  String nl; //年龄
+	private  String sfzh;//身份证号
+	private  String jzgh;//教职工号
 	private  String csrq;//出生日期
-	private  String nl;//年龄
-	private  String hf;//婚否 T已婚 F未婚
+	private  String hf;//婚否
 	private  String mz;//民族
+	private  String zc;//职称
 	private  String xl;//学历
-	private  String xw;//学位
 	private  String dxsj;//到校时间
 	private  String lxfs;//联系方式
-	private  String ssyx; //所属院系，指该教师属于哪个学院的
-	private  String yxbz;
-	
-	
+	private  String jzglx;//教职工类型  专任教师 兼职教师 教辅人员 外聘教师
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -45,23 +41,23 @@ public class Edu101 {
 	public void setEdu101_ID(long edu101_ID) {
 		Edu101_ID = edu101_ID;
 	}
-	public String getJgh() {
-		return jgh;
+	public String getSzxb() {
+		return szxb;
 	}
-	public void setJgh(String jgh) {
-		this.jgh = jgh;
+	public void setSzxb(String szxb) {
+		this.szxb = szxb;
 	}
-	public String getJsxm() {
-		return jsxm;
+	public String getZy() {
+		return zy;
 	}
-	public void setJsxm(String jsxm) {
-		this.jsxm = jsxm;
+	public void setZy(String zy) {
+		this.zy = zy;
 	}
-	public String getSfzh() {
-		return sfzh;
+	public String getXm() {
+		return xm;
 	}
-	public void setSfzh(String sfzh) {
-		this.sfzh = sfzh;
+	public void setXm(String xm) {
+		this.xm = xm;
 	}
 	public String getXb() {
 		return xb;
@@ -69,23 +65,29 @@ public class Edu101 {
 	public void setXb(String xb) {
 		this.xb = xb;
 	}
-	public String getBjnd() {
-		return bjnd;
+	public String getNl() {
+		return nl;
 	}
-	public void setBjnd(String bjnd) {
-		this.bjnd = bjnd;
+	public void setNl(String nl) {
+		this.nl = nl;
+	}
+	public String getSfzh() {
+		return sfzh;
+	}
+	public void setSfzh(String sfzh) {
+		this.sfzh = sfzh;
+	}
+	public String getJzgh() {
+		return jzgh;
+	}
+	public void setJzgh(String jzgh) {
+		this.jzgh = jzgh;
 	}
 	public String getCsrq() {
 		return csrq;
 	}
 	public void setCsrq(String csrq) {
 		this.csrq = csrq;
-	}
-	public String getNl() {
-		return nl;
-	}
-	public void setNl(String nl) {
-		this.nl = nl;
 	}
 	public String getHf() {
 		return hf;
@@ -99,17 +101,17 @@ public class Edu101 {
 	public void setMz(String mz) {
 		this.mz = mz;
 	}
+	public String getZc() {
+		return zc;
+	}
+	public void setZc(String zc) {
+		this.zc = zc;
+	}
 	public String getXl() {
 		return xl;
 	}
 	public void setXl(String xl) {
 		this.xl = xl;
-	}
-	public String getXw() {
-		return xw;
-	}
-	public void setXw(String xw) {
-		this.xw = xw;
 	}
 	public String getDxsj() {
 		return dxsj;
@@ -123,23 +125,15 @@ public class Edu101 {
 	public void setLxfs(String lxfs) {
 		this.lxfs = lxfs;
 	}
-	public String getSsyx() {
-		return ssyx;
+	public String getJzglx() {
+		return jzglx;
 	}
-	public void setSsyx(String ssyx) {
-		this.ssyx = ssyx;
+	public void setJzglx(String jzglx) {
+		this.jzglx = jzglx;
 	}
-	public String getYxbz() {
-		return yxbz;
-	}
-	public void setYxbz(String yxbz) {
-		this.yxbz = yxbz;
-	}//有效标志
-	
 	
 	
 
-	
 
 	
 	

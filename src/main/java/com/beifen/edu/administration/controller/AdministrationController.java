@@ -704,20 +704,20 @@ public class AdministrationController {
 	 *            搜索条件
 	 * @return returnMap
 	 */
-	@RequestMapping("searchTeacher")
-	@ResponseBody
-	public Object SeacchTeacher(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
-		Edu101 edu101 = new Edu101();
-		edu101.setSsyx(jsonObject.getString("departmentName"));
-		edu101.setJsxm(jsonObject.getString("mangerName"));
-		edu101.setJgh(jsonObject.getString("mangerNumber"));
-		List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
-		returnMap.put("techerList", techerList);
-		returnMap.put("result", true);
-		return returnMap;
-	}
+//	@RequestMapping("searchTeacher")
+//	@ResponseBody
+//	public Object SeacchTeacher(@RequestParam String SearchCriteria) {
+//		Map<String, Object> returnMap = new HashMap();
+//		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+//		Edu101 edu101 = new Edu101();
+//		edu101.setSsyx(jsonObject.getString("departmentName"));
+//		edu101.setJsxm(jsonObject.getString("mangerName"));
+//		edu101.setJgh(jsonObject.getString("mangerNumber"));
+//		List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
+//		returnMap.put("techerList", techerList);
+//		returnMap.put("result", true);
+//		return returnMap;
+//	}
 	
 	/**
 	 * 获得教学相关公共代码信息

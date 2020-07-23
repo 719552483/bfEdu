@@ -445,16 +445,16 @@ public class ReflectUtils {
 		for (int i = 0; i < importStudent.size(); i++) {
 			Edu001 edu001 = importStudent.get(i);
 			//非空验证
-//			if(isNull(edu001.getXh())){
-//				chaeckPass=false;
-//				checkTxt="第"+(i+1)+"行-学号不能为空";
-//				returnMap.put("chaeckPass", chaeckPass);
-//				returnMap.put("checkTxt", "第"+(i+1)+"行-学号不能为空");
-//				break;
-//			}
 			if(isNull(edu001.getXm())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-学生姓名不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu001.getSylx())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-生源类型不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt", checkTxt);
 				break;
@@ -681,24 +681,6 @@ public class ReflectUtils {
 				}
 			}
 			
-			//验证来自军队格式
-			if(!chaeckPass){
-				break;
-			}else{
-				if(edu001.getLzjd()!=null&&!edu001.getLzjd().equals("是")&&!edu001.getLzjd().equals("否")){
-					chaeckPass=false;
-					checkTxt= "第"+(i+1)+"行-来自军队只接受(是)或(否)";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt",checkTxt);
-					break;
-				}else if(edu001.getLzjd()!=null&&(edu001.getLzjd().equals("是")||edu001.getLzjd().equals("否"))){
-					if(edu001.getLzjd().equals("是")){
-						edu001.setLzjd("T");
-					}else{
-						edu001.setLzjd("F");
-					}
-				}
-			}
 			
 			//验证定向培养格式
 			if (!chaeckPass) {
@@ -755,6 +737,16 @@ public class ReflectUtils {
 					}
 				}
 				
+				String currentsSylxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getSylx(),"sylx");
+				if(currentsSylxCode==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-生源类型不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					edu001.setSylxbm(currentsSylxCode);
+				}
 				
 				//培养层次编码是否存在
 				String currentPyccCode=reflectUtils.administrationPageService.queryLevelCodeByLevelName(edu001.getPycc());
@@ -928,28 +920,6 @@ public class ReflectUtils {
 			}
 			
 			List<Edu001> databaseAllStudent=reflectUtils.administrationPageService.queryAllStudent();
-//			//判断学号在数据库是否存在
-//			if(!chaeckPass){
-//				break;
-//			}else{
-//				databaseAllStudent = reflectUtils.administrationPageService.queryAllStudent();
-//				if(isModify){
-//					for (int d = 0;d < databaseAllStudent.size(); d++) {
-//						if(databaseAllStudent.get(d).getEdu001_ID().equals(edu001.getEdu001_ID())){
-//							databaseAllStudent.remove(d);
-//						}
-//					}
-//				}
-//				for (int d = 0;d < databaseAllStudent.size(); d++) {
-//					if(importStudent.get(i).getXh().equals(databaseAllStudent.get(d).getXh())){
-//						chaeckPass=false;
-//						checkTxt="第"+(i+1)+"行- 学号已存在";
-//						returnMap.put("chaeckPass", chaeckPass);
-//						returnMap.put("checkTxt", checkTxt);
-//						break allforOver;
-//					}
-//				}
-//			}
 			
 			//判断身份证号在数据库是否存在
 			if(!chaeckPass){
@@ -1119,142 +1089,23 @@ public class ReflectUtils {
 	private String getImportantEdu001KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
-        case 0:
-            result="pycc";
+		case 0:
+            result="sylx";
             break;
         case 1:
-            result="szxb";
-            break;
-        case 2:
-            result="nj";
-            break;
-        case 3:
-            result="zybm";
-            break;
-        case 4:
-            result="Edu300_ID";
-            break;
-        case 5:
-            result="xm";
-            break;
-        case 6:
-            result="zym";
-            break;
-        case 7:
-            result="xb";
-            break;
-        case 8:
-            result="ztCode";
-            break;
-        case 9:
-            result="csrq";
-            break;
-        case 10:
-            result="sfzh";
-            break;
-        case 11:
-            result="mzbm";
-            break;
-        case 12:
-            result="sfyxj";
-            break;
-        case 13:
-            result="xjh";
-            break;
-        case 14:
-            result="zzmmbm";
-            break;
-        case 15:
-            result="syd";
-            break;
-        case 16:
-            result="whcdbm";
-            break;
-        case 17:
-            result="ksh";
-            break;
-        case 18:
-            result="rxzf";
-            break;
-        case 19:
-            result="rxsj";
-            break;
-        case 20:
-            result="byzh";
-            break;
-        case 21:
-            result="zkzh";
-            break;
-        case 22:
-            result="sjhm";
-            break;
-        case 23:
-            result="email";
-            break;
-        case 24:
-            result="jg";
-            break;
-        case 25:
-            result="zy";
-            break;
-        case 26:
-            result="sg";
-            break;
-        case 27:
-            result="tz";
-            break;
-        case 28:
-            result="hf";
-            break;
-        case 29:
-            result="lzjd";
-            break;
-        case 30:
-            result="zsfscode";
-            break;
-        case 31:
-            result="dxpy";
-            break;
-        case 32:
-            result="pkjt";
-            break;
-        case 33:
-            result="jtzz";
-            break;
-        case 34:
-            result="zjxy";
-            break;
-        case 35:
-            result="bz";
-            break;
-        default:
-        	result="ycTxt";
-            break;
-        }
-		return result;
-	}
-
-	//获取批量修改学生Excel的Key值
-	private String getModifyEdu001KeyName(int columnIndex) {
-		String result = null;
-		switch (columnIndex) {
-        case 0:
             result="pycc";
             break;
-        case 1:
+        case 2:
             result="szxb";
             break;
-        case 2:
+        case 3:
             result="nj";
             break;
-        case 3:
+        case 4:
             result="zybm";
             break;
-        case 4:
-            result="Edu300_ID";
-            break;
         case 5:
-            result="Edu001_ID";
+            result="Edu300_ID";
             break;
         case 6:
             result="xm";
@@ -1355,6 +1206,131 @@ public class ReflectUtils {
         }
 		return result;
 	}
+
+	//获取批量修改学生Excel的Key值
+	private String getModifyEdu001KeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+		case 0:
+            result="sylx";
+            break;
+        case 1:
+            result="pycc";
+            break;
+        case 2:
+            result="szxb";
+            break;
+        case 3:
+            result="nj";
+            break;
+        case 4:
+            result="zybm";
+            break;
+        case 5:
+            result="Edu300_ID";
+            break;
+        case 6:
+            result="Edu001_ID";
+            break;
+        case 7:
+            result="xm";
+            break;
+        case 8:
+            result="zym";
+            break;
+        case 9:
+            result="xb";
+            break;
+        case 10:
+            result="ztCode";
+            break;
+        case 11:
+            result="csrq";
+            break;
+        case 12:
+            result="sfzh";
+            break;
+        case 13:
+            result="mzbm";
+            break;
+        case 14:
+            result="sfyxj";
+            break;
+        case 15:
+            result="xjh";
+            break;
+        case 16:
+            result="zzmmbm";
+            break;
+        case 17:
+            result="syd";
+            break;
+        case 18:
+            result="whcdbm";
+            break;
+        case 19:
+            result="ksh";
+            break;
+        case 20:
+            result="rxzf";
+            break;
+        case 21:
+            result="rxsj";
+            break;
+        case 22:
+            result="byzh";
+            break;
+        case 23:
+            result="zkzh";
+            break;
+        case 24:
+            result="sjhm";
+            break;
+        case 25:
+            result="email";
+            break;
+        case 26:
+            result="jg";
+            break;
+        case 27:
+            result="zy";
+            break;
+        case 28:
+            result="sg";
+            break;
+        case 29:
+            result="tz";
+            break;
+        case 30:
+            result="hf";
+            break;
+        case 31:
+            result="lzjd";
+            break;
+        case 32:
+            result="zsfscode";
+            break;
+        case 33:
+            result="dxpy";
+            break;
+        case 34:
+            result="pkjt";
+            break;
+        case 35:
+            result="jtzz";
+            break;
+        case 36:
+            result="zjxy";
+            break;
+        case 37:
+            result="bz";
+            break;
+        default:
+        	result="ycTxt";
+            break;
+        }
+		return result;
+	}
 	
 	/*处理空行*/
 	@SuppressWarnings("deprecation")
@@ -1387,7 +1363,7 @@ public class ReflectUtils {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"*培养层次", "*所在系部", "*年级", "*专业", "*行政班ID", "*学生ID", "*学生姓名",
+		String[] titles = new String[] {"*生源类型","*培养层次", "*所在系部", "*年级", "*专业", "*行政班", "*学生ID", "*学生姓名",
 				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "来自军队", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
@@ -1400,87 +1376,82 @@ public class ReflectUtils {
     	
 		//循环填充数据
 		for (int i = 0; i < chosedStudents.size(); i++) {
-			appendCell(sheet,i,"",chosedStudents.get(i).getPyccmc(),-1,0,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSzxbmc(),-1,1,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getNjmc(),-1,2,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZymc(),-1,3,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXzbname(),-1,4,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSylx(),-1,0,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getPyccmc(),-1,1,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSzxbmc(),-1,2,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getNjmc(),-1,3,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZymc(),-1,4,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXzbname(),-1,5,false);
 //			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,5,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,6,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,7,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
 			if(chosedStudents.get(i).getXb().equals("M")){
-				appendCell(sheet,i,"","男",-1,8,false);
+				appendCell(sheet,i,"","男",-1,9,false);
 			}else{
-				appendCell(sheet,i,"","女",-1,8,false);
+				appendCell(sheet,i,"","女",-1,9,false);
 			}
 			String ztTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZtCode(),"学生状态");
-			appendCell(sheet,i,"",ztTxt,-1,9,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,10,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,11,false);
+			appendCell(sheet,i,"",ztTxt,-1,10,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
 			String mzTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getMzbm(),"民族");
-			appendCell(sheet,i,"",mzTxt,-1,12,false);
+			appendCell(sheet,i,"",mzTxt,-1,13,false);
 			if(chosedStudents.get(i).getSfyxj()!=null){
 				if(chosedStudents.get(i).getSfyxj().equals("T")){
-					appendCell(sheet,i,"","是",-1,13,false);
+					appendCell(sheet,i,"","是",-1,14,false);
 				}else{
-					appendCell(sheet,i,"","否",-1,13,false);
+					appendCell(sheet,i,"","否",-1,14,false);
 				}
 			}
-			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,14,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,15,false);
 			String zzmmTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZzmmbm(),"政治面貌");
-			appendCell(sheet,i,"",zzmmTxt,-1,15,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,16,false);
+			appendCell(sheet,i,"",zzmmTxt,-1,16,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,17,false);
 			String whcdTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getWhcdbm(),"文化程度");
-			appendCell(sheet,i,"",whcdTxt,-1,17,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,18,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,19,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,20,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getByzh(),-1,21,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZkzh(),-1,22,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSjhm(),-1,23,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEmail(),-1,24,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getJg(),-1,25,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,26,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,27,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,28,false);
+			appendCell(sheet,i,"",whcdTxt,-1,18,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,19,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,20,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,21,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getByzh(),-1,22,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZkzh(),-1,23,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSjhm(),-1,24,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEmail(),-1,25,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getJg(),-1,26,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,27,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,28,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,29,false);
 			if(chosedStudents.get(i).getHf()!=null){
 				if(chosedStudents.get(i).getHf().equals("T")){
-					appendCell(sheet,i,"","已婚",-1,29,false);
+					appendCell(sheet,i,"","已婚",-1,31,false);
 				}else{
-					appendCell(sheet,i,"","未婚",-1,29,false);
+					appendCell(sheet,i,"","未婚",-1,31,false);
 				}
 			}
-			if(chosedStudents.get(i).getLzjd()!=null){
-				if(chosedStudents.get(i).getLzjd().equals("T")){
-					appendCell(sheet,i,"","是",-1,30,false);
-				}else{
-					appendCell(sheet,i,"","否",-1,30,false);
-				}
-			}
+	
 			if(chosedStudents.get(i).getZsfscode()!=null){
 				String zsfsTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZsfscode(),"招生方式");
-				appendCell(sheet,i,"",zsfsTxt,-1,31,false);
+				appendCell(sheet,i,"",zsfsTxt,-1,32,false);
 			}
 			if(chosedStudents.get(i).getDxpy()!=null){
 				if(chosedStudents.get(i).getDxpy().equals("T")){
-					appendCell(sheet,i,"","是",-1,32,false);
-				}else{
-					appendCell(sheet,i,"","否",-1,32,false);
-				}
-			}
-			
-			if(chosedStudents.get(i).getPkjt()!=null){
-				if(chosedStudents.get(i).getPkjt().equals("T")){
 					appendCell(sheet,i,"","是",-1,33,false);
 				}else{
 					appendCell(sheet,i,"","否",-1,33,false);
 				}
 			}
 			
-			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,34,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,35,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,36,false);
+			if(chosedStudents.get(i).getPkjt()!=null){
+				if(chosedStudents.get(i).getPkjt().equals("T")){
+					appendCell(sheet,i,"","是",-1,34,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,34,false);
+				}
+			}
+			
+			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,35,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,36,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,37,false);
 		}
 	}
 	
@@ -1491,7 +1462,7 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"*培养层次", "*系部", "*年级", "*专业", "*行政班ID","*学生姓名",
+		String[] titles = new String[] {"*生源类型","*培养层次", "*系部", "*年级", "*专业", "*行政班","*学生姓名",
 				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "来自军队", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
@@ -1572,7 +1543,15 @@ public class ReflectUtils {
 		needCreatHiddenSheetNum++;
 		String[]marrayOrNotArrays = marrayOrNotlist.toArray(new String[marrayOrNotlist.size()]);
 		
-
+		List < String > sxlxlist = new ArrayList < String > ();
+		List<Edu000> sxlxbms = reflectUtils.administrationPageService.queryEjdm("sylx");
+		for (int i = 0; i < sxlxbms.size(); i++) {
+			sxlxlist.add(sxlxbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]sxlxArrays = sxlxlist.toArray(new String[sxlxlist.size()]);
+		
+		
 		List < String > ztlist = new ArrayList < String > ();
 		List<Edu000> ztbms = reflectUtils.administrationPageService.queryEjdm("xszt");
 		for (int i = 0; i < ztbms.size(); i++) {
@@ -1662,49 +1641,52 @@ public class ReflectUtils {
 		needCreatHiddenSheetNum++;
 		String[]xzbArrays = xzblist.toArray(new String[xzblist.size()]);
 		
-		int[] pyccIndex={0};
-		int[] xbIndex={1};
-		int[] njIndex={2};
-		int[] zyIndex={3};
-		int[] xzbIndex={4};
-		int[] sexNeedIndex={7};
-		int[] ztNeedIndex={8};
-		int[] mzNeedIndex={11};
-		int[] zzmmIndex={14};
-		int[]  whcdIndex={16};
-		int[]  marrayOrNotIndex={28};
-		int[] isOrNOTNeedIndex={12,29,31,32};
-		int[]  zsfsIndex={30};
+		int[] sylxIndex={0};
+		int[] pyccIndex={1};
+		int[] xbIndex={2};
+		int[] njIndex={3};
+		int[] zyIndex={4};
+		int[] xzbIndex={5};
+		int[] sexNeedIndex={8};
+		int[] ztNeedIndex={9};
+		int[] mzNeedIndex={12};
+		int[] zzmmIndex={15};
+		int[]  whcdIndex={17};
+		int[]  marrayOrNotIndex={29};
+		int[] isOrNOTNeedIndex={13,30,32,33};
+		int[]  zsfsIndex={31};
 		String hiddenSheetName = "typelist";
 		
 		if(filename.equals("ImportStudent")||filename.equals("导入学生模板")){
 			for (int i = 0; i < needCreatHiddenSheetNum; i++) {
 				hiddenSheetName = hiddenSheetName+(i+1);
 				if(i==0){
-					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,false);
+					cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,false);
 				}else if(i==1){
-					cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,false);
+					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,false);
 				}else if(i==2){
-					cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,false);
+					cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,false);
 				}else if(i==3){
-					cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,false);
+					cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,false);
 				}else if(i==4){
-					cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,false);
+					cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,false);
 				}else if(i==5){
-					cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,false);
+					cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,false);
 				}else if(i==6){
-					cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
+					cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,false);
 				}else if(i==7){
-					cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,false);
+					cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
 				}else if(i==8){
-					cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
+					cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,false);
 				}else if(i==9){
-					cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
+					cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
 				}else if(i==10){
-					cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
+					cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
 				}else if(i==11){
-					cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+					cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
 				}else if(i==12){
+					cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+				}else if(i==13){
 					cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
 				}
 			}
@@ -1712,30 +1694,32 @@ public class ReflectUtils {
 			for (int i = 0; i < needCreatHiddenSheetNum; i++) {
 				hiddenSheetName = hiddenSheetName+(i+1);
 				if(i==0){
-					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,true);
+					cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,true);
 				}else if(i==1){
-					cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,true);
+					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,true);
 				}else if(i==2){
-					cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,true);
+					cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,true);
 				}else if(i==3){
-					cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,true);
+					cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,true);
 				}else if(i==4){
-					cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,true);
+					cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,true);
 				}else if(i==5){
-					cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,true);
+					cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,true);
 				}else if(i==6){
-					cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,true);
+					cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,true);
 				}else if(i==7){
-					cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,true);
+					cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,true);
 				}else if(i==8){
-					cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
+					cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,true);
 				}else if(i==9){
-					cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
+					cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
 				}else if(i==10){
-					cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
+					cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
 				}else if(i==11){
-					cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+					cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
 				}else if(i==12){
+					cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+				}else if(i==13){
 					cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
 				}
 			}
@@ -1745,6 +1729,7 @@ public class ReflectUtils {
 	
 	//单元格变为下拉框
     public static void cell2Select(XSSFWorkbook workbook,String hiddenShhetName,String[] useArrays,int[] useIndex,boolean useIndexNeedAdd){
+    	int  maxRoeNum=1048575;
 		// 如：typelist!$A$1:$A$59 表示A列1-59行作为下拉列表来源数据
 		String formula = hiddenShhetName+"!$A$1:$A$" ;
 		genearteOtherSheet(workbook, useArrays, hiddenShhetName);
@@ -1753,7 +1738,7 @@ public class ReflectUtils {
 			if(useIndexNeedAdd){
 				finaluseIndex=finaluseIndex+1;
 			}
-			workbook.getSheetAt(0).addValidationData(SetDataValidation(workbook, formula + useArrays.length, 1,finaluseIndex, useArrays.length, finaluseIndex));
+			workbook.getSheetAt(0).addValidationData(SetDataValidation(workbook, formula + useArrays.length, 1,finaluseIndex, maxRoeNum, finaluseIndex));
 		}
 		workbook.setSheetHidden(workbook.getSheetIndex(hiddenShhetName), 1);
 	}
