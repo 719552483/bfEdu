@@ -1049,6 +1049,7 @@ function showImportErrorInfo(AreaClass,errorInfo){
 	$(AreaClass).find(".fileErrorTxTArea").show();
 	$(AreaClass).find(".fileSuccessTxTArea").hide();
 	$(AreaClass).find(".fileErrorTxTArea").find("b").html("Error:"+errorInfo);
+	$(AreaClass).find("form").find("input").val("");
 }
 
 //上传文件成功渲染
