@@ -32,7 +32,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -1533,8 +1536,35 @@ public class ReflectUtils {
 	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
 		setEXCELstyle(workbook);
 		setEXCELformatter(workbook);
-		ExcelStuffSelect(workbook,filename);
+//		ExcelStuffSelect(workbook,filename);
+		
+		// 如：typelist!$A$1:$A$59 表示A列1-59行作为下拉列表来源数据
+	    String formula = "typelist!$A$1:$A$" ;
+	    String formula2 = "typelist2!$A$1:$A$" ;
+		
+		List < String > typelist = new ArrayList < String > ();
+	    for (int i = 0; i < 200; i++) {
+	        typelist.add("T" + (0 + i));
+	    }
+	    String[]typeArrays = typelist.toArray(new String[typelist.size()]);
+	    
+	    List < String > typelist2 = new ArrayList < String > ();
+	    for (int i = 0; i < 200; i++) {
+	    	typelist2.add("A" + (0 + i));
+	    }
+	    String[]typeArrays2 = typelist2.toArray(new String[typelist2.size()]);
+	    
+	    genearteOtherSheet(workbook, typeArrays,"typelist");
+	    genearteOtherSheet(workbook, typeArrays2,"typelist2");
+	    
+	    workbook.getSheetAt(0).addValidationData(SetDataValidation(workbook, formula + typeArrays.length, 1, 1, typeArrays.length, 1));
+		workbook.setSheetHidden(workbook.getSheetIndex("typelist"), 1);
 	
+		 workbook.getSheetAt(0).addValidationData(SetDataValidation(workbook, formula2 + typeArrays2.length, 1, 0, typeArrays2.length, 0));
+		 workbook.setSheetHidden(workbook.getSheetIndex("typelist2"), 1);
+		
+		
+		
         // 解决导出文件名中文乱码
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
@@ -1632,57 +1662,57 @@ public class ReflectUtils {
 		int[]  zsfsIndex={30};
 		
 		if(filename.equals("ImportStudent")||filename.equals("导入学生模板")){
-			for (int i = 0; i < pyccIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, pyccIndex[i], pyccIndex[i], pyccMap);
-			}
-			
-			for (int i = 0; i < xbIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xbIndex[i], xbIndex[i], xbMap);
-			}
-			
-			for (int i = 0; i < njIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, njIndex[i], njIndex[i], njMap);
-			}
-			
-			for (int i = 0; i < zyIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zyIndex[i], zyIndex[i], zyMap);
-			}
-			
-			for (int i = 0; i < xzbIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xzbIndex[i], xzbIndex[i], xzbMap);
-			}
-			
-			for (int i = 0; i < sexNeedIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, sexNeedIndex[i], sexNeedIndex[i], sexMap);
-			}
-			
-			for (int i = 0; i < ztNeedIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, ztNeedIndex[i], ztNeedIndex[i], ztMap);
-			}
-			
-			for (int i = 0; i < mzNeedIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, mzNeedIndex[i], mzNeedIndex[i], mzMap);
-			}
-			
-			for (int i = 0; i < zzmmIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zzmmIndex[i], zzmmIndex[i], zzmmMap);
-			}
-			
-			for (int i = 0; i < whcdIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, whcdIndex[i], whcdIndex[i], whcdMap);
-			}
-			
-			for (int i = 0; i < marrayOrNotIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, marrayOrNotIndex[i], marrayOrNotIndex[i], marrayOrNotMap);
-			}
-			
-			for (int i = 0; i < isOrNOTNeedIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, isOrNOTNeedIndex[i], isOrNOTNeedIndex[i], isOrNotMap);
-			}
-			
-			for (int i = 0; i < zsfsIndex.length; i++) {
-				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zsfsIndex[i], zsfsIndex[i], zsfsMap);
-			}
+//			for (int i = 0; i < pyccIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, pyccIndex[i], pyccIndex[i], pyccMap);
+//			}
+//			
+//			for (int i = 0; i < xbIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xbIndex[i], xbIndex[i], xbMap);
+//			}
+//			
+//			for (int i = 0; i < njIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, njIndex[i], njIndex[i], njMap);
+//			}
+//			
+//			for (int i = 0; i < zyIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zyIndex[i], zyIndex[i], zyMap);
+//			}
+//			
+//			for (int i = 0; i < xzbIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, xzbIndex[i], xzbIndex[i], xzbMap);
+//			}
+//			
+//			for (int i = 0; i < sexNeedIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, sexNeedIndex[i], sexNeedIndex[i], sexMap);
+//			}
+//			
+//			for (int i = 0; i < ztNeedIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, ztNeedIndex[i], ztNeedIndex[i], ztMap);
+//			}
+//			
+//			for (int i = 0; i < mzNeedIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, mzNeedIndex[i], mzNeedIndex[i], mzMap);
+//			}
+//			
+//			for (int i = 0; i < zzmmIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zzmmIndex[i], zzmmIndex[i], zzmmMap);
+//			}
+//			
+//			for (int i = 0; i < whcdIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, whcdIndex[i], whcdIndex[i], whcdMap);
+//			}
+//			
+//			for (int i = 0; i < marrayOrNotIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, marrayOrNotIndex[i], marrayOrNotIndex[i], marrayOrNotMap);
+//			}
+//			
+//			for (int i = 0; i < isOrNOTNeedIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, isOrNOTNeedIndex[i], isOrNOTNeedIndex[i], isOrNotMap);
+//			}
+//			
+//			for (int i = 0; i < zsfsIndex.length; i++) {
+//				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, zsfsIndex[i], zsfsIndex[i], zsfsMap);
+//			}
 		}else if(filename.equals("modifyStudents")||filename.equals("批量更新学生模板")){
 			for (int i = 0; i < pyccIndex.length; i++) {
 				addValidate2Cell(workbook.getSheetAt(0), 1,maxRoeNum, pyccIndex[i], pyccIndex[i], pyccMap);
@@ -1764,10 +1794,55 @@ public class ReflectUtils {
 				sheet.addValidationData(validation); 
 			}
 		} catch (Exception e) {
-			//log.error("下拉框的选项过多导致出错：java.lang.IllegalArgumentException:String literals in formulas can't be bigger than 255 characters ASCII");
+//			log.error("下拉框的选项过多导致出错：java.lang.IllegalArgumentException:String literals in formulas can't be bigger than 255 characters ASCII");
             e.printStackTrace();
 		}
 	}
+	
+	
+	
+	// 设置并引用其他Sheet作为绑定下拉列表数据
+	public static DataValidation SetDataValidation(Workbook wb, String strFormula, int firstRow, int firstCol, int endRow, int endCol) {
+	    // 原顺序为 起始行 起始列 终止行 终止列
+	    CellRangeAddressList regions = new CellRangeAddressList(firstRow, endRow, firstCol, endCol);
+	    DataValidationHelper dvHelper = new XSSFDataValidationHelper((XSSFSheet)wb.getSheet("typelist"));
+	    DataValidationConstraint formulaListConstraint = dvHelper.createFormulaListConstraint(strFormula);
+	    DataValidation dataValidation = dvHelper.createValidation(formulaListConstraint, regions);
+
+	    return dataValidation;
+	}
+
+	// 创建下拉列表值存储工作表并设置值
+	public static void genearteOtherSheet(Workbook wb, String[]typeArrays,String newSheetName) {
+	    // 创建下拉列表值存储工作表
+	    Sheet sheet = wb.createSheet(newSheetName);
+	    // 循环往该sheet中设置添加下拉列表的值
+	    for (int i = 0; i < typeArrays.length; i++) {
+	        Row row = sheet.createRow(i);
+	        Cell cell = row.createCell((int)0);
+	        cell.setCellValue(typeArrays[i]);
+	    }
+	}
+	
+	// 设置隐藏sheet列信息样式
+	public static void setStyle(Workbook wb, Sheet sheet, int colNum) {
+	    CellStyle cellStyle = wb.createCellStyle();
+	    cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+	    DataFormat format = wb.createDataFormat();
+	    cellStyle.setDataFormat(format.getFormat("@"));
+
+	    sheet.setDefaultColumnStyle(colNum, cellStyle);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	//设置模title样式
 	private void setEXCELstyle(XSSFWorkbook workbook) throws ParseException {
