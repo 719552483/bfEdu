@@ -646,6 +646,11 @@ public class AdministrationPageService {
 		}
 		return newXh;
 	}
+	
+	//根据id查学生学号
+	public String queryXhBy001ID(String edu001_ID) {
+		return edu001DAO.queryXhBy001ID(edu001_ID);
+	}
 
 	// 批量发放毕业证
 	public void graduationStudents(String edu001Id) {
@@ -1565,6 +1570,8 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

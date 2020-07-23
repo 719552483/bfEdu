@@ -922,6 +922,10 @@ public class ReflectUtils {
 					}
 				}
 			}
+			if(isModify){
+				String correctXh=reflectUtils.administrationPageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
+				edu001.setXh(correctXh);
+			}
 			
 			List<Edu001> databaseAllStudent=reflectUtils.administrationPageService.queryAllStudent();
 //			//判断学号在数据库是否存在
