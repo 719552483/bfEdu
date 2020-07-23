@@ -544,22 +544,20 @@ public class ReflectUtils {
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}
-//			if(isNull(edu001.getRxsj())){
-//				chaeckPass=false;
-//				checkTxt="第"+(i+1)+"行-入学时间不能为空";
-//				returnMap.put("chaeckPass", chaeckPass);
-//				returnMap.put("checkTxt", checkTxt);
-//				break;
-//			}
 			
-			boolean strCanChnageDate= isValidDate(edu001.getRxsj().toString());
-			if(!strCanChnageDate){
-				chaeckPass = false;
-				checkTxt = "第" + (i + 1) + "行-入校时间格式不正确(正确格式:1990-01-01)";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				return returnMap;
+			//入学时间不为空则验证格式
+			if(!isNull(edu001.getRxsj())){
+				boolean strCanChnageDate= isValidDate(edu001.getRxsj().toString());
+				if(!strCanChnageDate){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-入校时间格式不正确(正确格式:1990-01-01)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					return returnMap;
+				}
 			}
+			
+		
 			
 			//验证数字列内容
 			//入学总分
