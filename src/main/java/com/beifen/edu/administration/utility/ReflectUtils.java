@@ -1178,24 +1178,21 @@ public class ReflectUtils {
             result="hf";
             break;
         case 30:
-            result="lzjd";
-            break;
-        case 31:
             result="zsfscode";
             break;
-        case 32:
+        case 31:
             result="dxpy";
             break;
-        case 33:
+        case 32:
             result="pkjt";
             break;
-        case 34:
+        case 33:
             result="jtzz";
             break;
-        case 35:
+        case 34:
             result="zjxy";
             break;
-        case 36:
+        case 35:
             result="bz";
             break;
         default:
@@ -1303,24 +1300,21 @@ public class ReflectUtils {
             result="hf";
             break;
         case 31:
-            result="lzjd";
-            break;
-        case 32:
             result="zsfscode";
             break;
-        case 33:
+        case 32:
             result="dxpy";
             break;
-        case 34:
+        case 33:
             result="pkjt";
             break;
-        case 35:
+        case 34:
             result="jtzz";
             break;
-        case 36:
+        case 35:
             result="zjxy";
             break;
-        case 37:
+        case 36:
             result="bz";
             break;
         default:
@@ -1364,7 +1358,7 @@ public class ReflectUtils {
 		String[] titles = new String[] {"*生源类型","*培养层次", "*所在系部", "*年级", "*专业", "*行政班", "*学生ID", "*学生姓名",
 				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
-				"身高", "体重", "婚否 ", "来自军队", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
@@ -1429,7 +1423,7 @@ public class ReflectUtils {
 	
 			if(chosedStudents.get(i).getZsfscode()!=null){
 				String zsfsTxt=reflectUtils.administrationPageService.queryEjdmZByEjdm(chosedStudents.get(i).getZsfscode(),"招生方式");
-				appendCell(sheet,i,"",zsfsTxt,-1,32,false);
+				appendCell(sheet,i,"",zsfsTxt,-1,31,false);
 			}
 			if(chosedStudents.get(i).getDxpy()!=null){
 				if(chosedStudents.get(i).getDxpy().equals("T")){
@@ -1463,7 +1457,7 @@ public class ReflectUtils {
 		String[] titles = new String[] {"*生源类型","*培养层次", "*系部", "*年级", "*专业", "*行政班","*学生姓名",
 				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
-				"身高", "体重", "婚否 ", "来自军队", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
@@ -1651,8 +1645,8 @@ public class ReflectUtils {
 		int[] zzmmIndex={15};
 		int[]  whcdIndex={17};
 		int[]  marrayOrNotIndex={29};
-		int[] isOrNOTNeedIndex={13,30,32,33};
-		int[]  zsfsIndex={31};
+		int[] isOrNOTNeedIndex={13,31,32};
+		int[]  zsfsIndex={30};
 		String hiddenSheetName = "typelist";
 		
 		if(filename.equals("ImportStudent")||filename.equals("导入学生模板")){
