@@ -544,13 +544,13 @@ public class ReflectUtils {
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}
-			if(isNull(edu001.getRxsj())){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-入学时间不能为空";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}
+//			if(isNull(edu001.getRxsj())){
+//				chaeckPass=false;
+//				checkTxt="第"+(i+1)+"行-入学时间不能为空";
+//				returnMap.put("chaeckPass", chaeckPass);
+//				returnMap.put("checkTxt", checkTxt);
+//				break;
+//			}
 			
 			boolean strCanChnageDate= isValidDate(edu001.getRxsj().toString());
 			if(!strCanChnageDate){
@@ -1694,7 +1694,7 @@ public class ReflectUtils {
 			for (int i = 0; i < needCreatHiddenSheetNum; i++) {
 				hiddenSheetName = hiddenSheetName+(i+1);
 				if(i==0){
-					cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,true);
+					cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,false);
 				}else if(i==1){
 					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,true);
 				}else if(i==2){

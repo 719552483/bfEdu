@@ -486,7 +486,7 @@ function stuffStudentDetails(row){
 	$("#addStudentsg").val(row.sg);
 	$("#addStudenttz").val(row.tz);
 	stuffManiaSelectWithDeafult("#addStudentIsMarried", row.hf);
-	stuffManiaSelectWithDeafult("#addStudentType", row.sylx);
+	stuffManiaSelectWithDeafult("#addStudentType", row.sylxbm);
 	stuffManiaSelectWithDeafult("#addStudentzsfs", row.zsfscode);
 	stuffManiaSelectWithDeafult("#addStudentIsDxpy", row.dxpy);
 	stuffManiaSelectWithDeafult("#addStudentIsPoorFamily", row.pkjt);
@@ -892,7 +892,6 @@ function getAddStudentInfo(){
 	var sg=$("#addStudentsg").val();
 	var tz=$("#addStudenttz").val();
 	var hf= getNormalSelectValue("addStudentIsMarried");
-	var lzjd= getNormalSelectValue("addStudentType");
 	var zsfs= getNormalSelectText("addStudentzsfs");
 	var zsfscode= getNormalSelectValue("addStudentzsfs");
 	var dxpy= getNormalSelectValue("addStudentIsDxpy");
@@ -976,10 +975,10 @@ function getAddStudentInfo(){
 		return;
 	}
 	
-	if(rxsj===""){
-		toastr.warning('入学时间不能为空');
-		return;
-	}
+//	if(rxsj===""){
+//		toastr.warning('入学时间不能为空');
+//		return;
+//	}
 	
 	if(!isCardNo(sfzh)&&sfzh!==""){
 		toastr.warning('身份证号格式不正确');
@@ -1057,7 +1056,6 @@ function getAddStudentInfo(){
 	returnObject.sg=sg;
 	returnObject.tz=tz;
 	returnObject.hf=hf;
-	returnObject.lzjd=lzjd;
 	returnObject.zsfs=zsfs;
 	returnObject.zsfscode=zsfscode;
 	returnObject.dxpy=dxpy;
@@ -1065,7 +1063,7 @@ function getAddStudentInfo(){
 	returnObject.jtzz=jtzz;
 	returnObject.zjxy=zjxy;
 	returnObject.bz=bz;
-	returnObject.xylx=xylx;
+	returnObject.sylx=xylx;
 	returnObject.sylxbm=sylxbm;
 	return returnObject;
 }
