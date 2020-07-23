@@ -1537,34 +1537,6 @@ public class ReflectUtils {
 		setEXCELstyle(workbook);
 		setEXCELformatter(workbook);
 		ExcelStuffSelect(workbook,filename);
-		
-//		// 如：typelist!$A$1:$A$59 表示A列1-59行作为下拉列表来源数据
-//	    String formula = "typelist!$A$1:$A$" ;
-//	    String formula2 = "typelist2!$A$1:$A$" ;
-//		
-//		List < String > typelist = new ArrayList < String > ();
-//	    for (int i = 0; i < 200; i++) {
-//	        typelist.add("T" + (0 + i));
-//	    }
-//	    String[]typeArrays = typelist.toArray(new String[typelist.size()]);
-//	    
-//	    List < String > typelist2 = new ArrayList < String > ();
-//	    for (int i = 0; i < 200; i++) {
-//	    	typelist2.add("A" + (0 + i));
-//	    }
-//	    String[]typeArrays2 = typelist2.toArray(new String[typelist2.size()]);
-//	    
-//	    genearteOtherSheet(workbook, typeArrays,"typelist");
-//	    genearteOtherSheet(workbook, typeArrays2,"typelist2");
-//	    
-//	    workbook.getSheetAt(0).addValidationData(SetDataValidation(workbook, formula + typeArrays.length, 1, 1, typeArrays.length, 1));
-//		workbook.setSheetHidden(workbook.getSheetIndex("typelist"), 1);
-//	
-//		 workbook.getSheetAt(0).addValidationData(SetDataValidation(workbook, formula2 + typeArrays2.length, 1, 0, typeArrays2.length, 0));
-//		 workbook.setSheetHidden(workbook.getSheetIndex("typelist2"), 1);
-		
-		
-		
         // 解决导出文件名中文乱码
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
@@ -1776,7 +1748,9 @@ public class ReflectUtils {
 		}
 	}
     
-	public static void cell2Select(XSSFWorkbook workbook,String hiddenShhetName,String[] useArrays,int[] useIndex,boolean useIndexNeedAdd){
+	
+	//单元格变为下拉框
+    public static void cell2Select(XSSFWorkbook workbook,String hiddenShhetName,String[] useArrays,int[] useIndex,boolean useIndexNeedAdd){
 		// 如：typelist!$A$1:$A$59 表示A列1-59行作为下拉列表来源数据
 		String formula = hiddenShhetName+"!$A$1:$A$" ;
 		genearteOtherSheet(workbook, useArrays, hiddenShhetName);
@@ -1824,16 +1798,6 @@ public class ReflectUtils {
 
 	    sheet.setDefaultColumnStyle(colNum, cellStyle);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	//设置模title样式
 	private void setEXCELstyle(XSSFWorkbook workbook) throws ParseException {
