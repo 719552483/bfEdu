@@ -1583,7 +1583,6 @@ public class ReflectUtils {
 		List<Edu000> mzbms = reflectUtils.administrationPageService.queryEjdm("mz");
 		for (int i = 0; i < mzbms.size(); i++) {
 			mzlist.add(mzbms.get(i).getEjdmz());
-			mzlist.add(mzbms.get(i).getEjdmz());
 		}
 		needCreatHiddenSheetNum++;
 		String[]mzArrays = mzlist.toArray(new String[mzlist.size()]);
@@ -1592,7 +1591,6 @@ public class ReflectUtils {
 		List < String > zsfslist = new ArrayList < String > ();
 		List<Edu000> zsfss = reflectUtils.administrationPageService.queryEjdm("zsfs");
 		for (int i = 0; i < zsfss.size(); i++) {
-			zsfslist.add(zsfss.get(i).getEjdmz());
 			zsfslist.add(zsfss.get(i).getEjdmz());
 		}
 		needCreatHiddenSheetNum++;
@@ -1603,7 +1601,6 @@ public class ReflectUtils {
 		List<Edu000> whcds = reflectUtils.administrationPageService.queryEjdm("whcd");
 		for (int i = 0; i < whcds.size(); i++) {
 			whcdlist.add(whcds.get(i).getEjdmz());
-			whcdlist.add(whcds.get(i).getEjdmz());
 		}
 		needCreatHiddenSheetNum++;
 		String[]whcdArrays = whcdlist.toArray(new String[whcdlist.size()]);
@@ -1612,7 +1609,6 @@ public class ReflectUtils {
 		List < String > zzmmlist = new ArrayList < String > ();
 		List<Edu000> zzmms = reflectUtils.administrationPageService.queryEjdm("zzmm");
 		for (int i = 0; i < zzmms.size(); i++) {
-			zzmmlist.add(zzmms.get(i).getEjdmz());
 			zzmmlist.add(zzmms.get(i).getEjdmz());
 		}
 		needCreatHiddenSheetNum++;
@@ -1623,7 +1619,6 @@ public class ReflectUtils {
 		List<Edu103> pyccs = reflectUtils.administrationPageService.queryAllLevel();
 		for (int i = 0; i < pyccs.size(); i++) {
 			pycclist.add(pyccs.get(i).getPyccmc());
-			pycclist.add(pyccs.get(i).getPyccmc());
 		}
 		needCreatHiddenSheetNum++;
 		String[]pyccArrays = pycclist.toArray(new String[pycclist.size()]);
@@ -1632,7 +1627,6 @@ public class ReflectUtils {
 		List < String > xblist = new ArrayList < String > ();
 		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
 		for (int i = 0; i < xbs.size(); i++) {
-			xblist.add(xbs.get(i).getXbmc());
 			xblist.add(xbs.get(i).getXbmc());
 		}
 		needCreatHiddenSheetNum++;
@@ -1643,7 +1637,6 @@ public class ReflectUtils {
 		List<Edu105> njs = reflectUtils.administrationPageService.queryAllGrade();
 		for (int i = 0; i < njs.size(); i++) {
 			njlist.add(njs.get(i).getNjmc());
-			njlist.add(njs.get(i).getNjmc());
 		}
 		needCreatHiddenSheetNum++;
 		String[]njArrays = njlist.toArray(new String[njlist.size()]);
@@ -1653,7 +1646,6 @@ public class ReflectUtils {
 		List<Edu106> zys = reflectUtils.administrationPageService.queryAllMajor();
 		for (int i = 0; i < zys.size(); i++) {
 			zylist.add(zys.get(i).getZymc());
-			zylist.add(zys.get(i).getZymc());
 		}
 		needCreatHiddenSheetNum++;
 		String[]zyArrays = zylist.toArray(new String[zylist.size()]);
@@ -1662,7 +1654,6 @@ public class ReflectUtils {
 		List < String > xzblist = new ArrayList < String > ();
 		List<Edu300> xzbs = reflectUtils.administrationPageService.queryAllAdministrationClasses();
 		for (int i = 0; i < xzbs.size(); i++) {
-			xzblist.add(xzbs.get(i).getXzbmc());
 			xzblist.add(xzbs.get(i).getXzbmc());
 		}
 		needCreatHiddenSheetNum++;
