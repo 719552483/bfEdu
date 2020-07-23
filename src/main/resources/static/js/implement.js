@@ -97,7 +97,7 @@ function drawEJDMselect(EJDMInfo){
 	if(typeof(EJDMInfo) != "undefined"){
 		var allEvement=$("label"); //获取所有下拉select
 		for (var i = 0; i < allEvement.length; i++) {
-			if(allEvement[i].innerText.replace("*", "")===EJDMInfo[0].ejdmmc){
+			if(allEvement[i].innerText.replace("*", "").trim().replace(/\s/g,"")===EJDMInfo[0].ejdmmc){
 				//判断是否是seclect
 				if(allEvement[i].parentElement.parentNode.childNodes[1].childNodes[3].classList[0]!=="select-mania"){
 					break;

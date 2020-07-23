@@ -56,6 +56,11 @@ public class PageRelatedController {
 		return "accountSetup";
 	}
 	
+	@RequestMapping("teacherBaseInfo")
+	public String teacherBaseInfoPage() {
+		return "teacherBaseInfo";
+	}
+	
 	@RequestMapping("officeClassesSchedule")
 	public String officeClassesSchedulePage() {
 		return "officeClassesSchedule";
