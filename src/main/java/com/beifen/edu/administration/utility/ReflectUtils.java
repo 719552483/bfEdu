@@ -723,15 +723,17 @@ public class ReflectUtils {
 			if(!chaeckPass){
 				break;
 			}else{
-				//如果是更新操作判断学生id是否存在
+				//如果是修改学生判断学生id是否存在   填充学生学号
 				if(isModify){
-					Edu001 haveThisStudent=reflectUtils.administrationPageService.queryStudentBy001ID(edu001.getEdu001_ID().toString());
-					if(haveThisStudent==null){
+					String correctXh=reflectUtils.administrationPageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
+					if(correctXh==null){
 						chaeckPass=false;
-						checkTxt="第"+(i+1)+"行-学生ID不存在";
+						checkTxt="第"+(i+1)+"行-可能修改了学生ID(学生ID不允许更改)";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
+					}else{
+						edu001.setXh(correctXh);
 					}
 				}
 				
@@ -906,19 +908,7 @@ public class ReflectUtils {
 				}
 			}
 			
-			//如果是修改学生 填充学生学号
-			if(isModify){
-				String correctXh=reflectUtils.administrationPageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
-				if(correctXh==null){
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-可能修改了学生ID(学生ID不允许更改)";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
-				}else{
-					edu001.setXh(correctXh);
-				}
-			}
+
 			
 			
 			List<Edu001> databaseAllStudent=reflectUtils.administrationPageService.queryAllStudent();
@@ -1225,7 +1215,7 @@ public class ReflectUtils {
             result="zymc";
             break;
         case 5:
-            result="Edu300_ID";
+            result="xzbname";
             break;
         case 6:
             result="Edu001_ID";
