@@ -864,7 +864,7 @@ public class ReflectUtils {
 				//政治面貌编码是否存在
 				if(edu001.getZzmm()!=null){
 					String currentZzmmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZzmm(),"zzmm");
-					if(edu001.getZzmmbm()==null){
+					if(currentZzmmCode==null){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-政治面貌不存在";
 						returnMap.put("chaeckPass", chaeckPass);
