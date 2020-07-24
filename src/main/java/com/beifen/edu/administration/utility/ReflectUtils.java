@@ -431,16 +431,16 @@ public class ReflectUtils {
 			importStudent.add(edu001);
 		}
 		
-		List<Edu103> pcyys=null;
-		List<Edu104> xbs=null;
-		List<Edu105> njs=null;
-		List<Edu106> zys=null;
-		List<Edu300> xzbs=null;
-		List<Edu000> ztbms =null;
-		List<Edu000> mzs =null;
-		List<Edu000> zzmms=null;
-		List<Edu000> whcds=null;
-		List<Edu000> zsfss=null;
+//		List<Edu103> pcyys=null;
+//		List<Edu104> xbs=null;
+//		List<Edu105> njs=null;
+//		List<Edu106> zys=null;
+//		List<Edu300> xzbs=null;
+//		List<Edu000> ztbms =null;
+//		List<Edu000> mzs =null;
+//		List<Edu000> zzmms=null;
+//		List<Edu000> whcds=null;
+//		List<Edu000> zsfss=null;
 		allforOver:
 		for (int i = 0; i < importStudent.size(); i++) {
 			Edu001 edu001 = importStudent.get(i);
@@ -481,7 +481,7 @@ public class ReflectUtils {
 				}
 			}
 			
-			if(isNull(edu001.getZtCode())){
+			if(isNull(edu001.getZt())){
 				chaeckPass=false;
 				checkTxt= "第"+(i+1)+"行-学生状态不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -495,37 +495,37 @@ public class ReflectUtils {
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}
-			if(isNull(edu001.getPycc())){
+			if(isNull(edu001.getPyccmc())){
 				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-培养层次编码不能为空";
+				checkTxt="第"+(i+1)+"行-培养层次不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}
-			if(isNull(edu001.getSzxb())){
+			if(isNull(edu001.getSzxbmc())){
 				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-系部编码不能为空";
+				checkTxt="第"+(i+1)+"行-系部不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt",checkTxt );
 				break;
 			}
-			if(isNull(edu001.getNj())){
+			if(isNull(edu001.getNjmc())){
 				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-年级编码不能为空";
+				checkTxt= "第"+(i+1)+"行-年级不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
-			if(isNull(edu001.getZybm())){
+			if(isNull(edu001.getZymc())){
 				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-专业编码不能为空";
+				checkTxt="第"+(i+1)+"行-专业不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
-			if(isNull(edu001.getEdu300_ID())){
+			if(isNull(edu001.getXzbname())){
 				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-行政班ID不能为空";
+				checkTxt="第"+(i+1)+"行-行政班不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt", checkTxt);
 				break;
@@ -537,7 +537,7 @@ public class ReflectUtils {
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}
-			if(isNull(edu001.getMzbm())){
+			if(isNull(edu001.getMz())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-民族不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -735,6 +735,7 @@ public class ReflectUtils {
 					}
 				}
 				
+				//生源类型是否存在
 				String currentsSylxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getSylx(),"sylx");
 				if(currentsSylxCode==null){
 					chaeckPass=false;
@@ -746,54 +747,55 @@ public class ReflectUtils {
 					edu001.setSylxbm(currentsSylxCode);
 				}
 				
-				//培养层次编码是否存在
-				String currentPyccCode=reflectUtils.administrationPageService.queryLevelCodeByLevelName(edu001.getPycc());
-				pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(currentPyccCode);
-				if(pcyys.size()==0){
+				//培养层次是否存在
+				String currentPyccCode=reflectUtils.administrationPageService.queryLevelCodeByLevelName(edu001.getPyccmc());
+				if(currentPyccCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-培养层次编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
+//					pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(currentPyccCode);
 					edu001.setPycc(currentPyccCode);
 				}
+				
 				//系部编码是否存在
-				String currentXbCode=reflectUtils.administrationPageService.queryXbCodeByXbName(edu001.getSzxb());
-				xbs = reflectUtils.administrationPageService.queryAllDepartmentByXbbm(currentXbCode);
-				if(xbs.size()==0){
+				String currentXbCode=reflectUtils.administrationPageService.queryXbCodeByXbName(edu001.getSzxbmc());
+				if(currentXbCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-系部编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
+//					xbs = reflectUtils.administrationPageService.queryAllDepartmentByXbbm(currentXbCode);
 					edu001.setSzxb(currentXbCode);
 				}
 				
 				//年级编码是否存在
-				String currentNjCode=reflectUtils.administrationPageService.queryNjCodeByNjName(edu001.getNj());
-				njs = reflectUtils.administrationPageService.queryAllGradeByNjbm(currentNjCode);
-				if(njs.size()==0){
+				String currentNjCode=reflectUtils.administrationPageService.queryNjCodeByNjName(edu001.getNjmc());
+				if(currentNjCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-年级编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
+//					njs = reflectUtils.administrationPageService.queryAllGradeByNjbm(currentNjCode);
 					edu001.setNj(currentNjCode);
 				}
 				
 				//专业编码是否存在
-				String currentZyCode=reflectUtils.administrationPageService.queryZyCodeByZyName(edu001.getZybm());
-				zys = reflectUtils.administrationPageService.queryAllMajorByZybm(currentZyCode);
-				if(zys.size()==0){
+				String currentZyCode=reflectUtils.administrationPageService.queryZyCodeByZyName(edu001.getZymc());
+				if(currentZyCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-专业编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
+//					zys = reflectUtils.administrationPageService.queryAllMajorByZybm(currentZyCode);
 					edu001.setZybm(currentZyCode);
 				}
 				
@@ -808,25 +810,17 @@ public class ReflectUtils {
 				}
 				
 				//行政班编码是否存在
-				Object currentXzbCode_Ob=reflectUtils.administrationPageService.queryEdu300IdByEdu300Name(edu001.getEdu300_ID());
-				if(currentXzbCode_Ob!=null){
-					String currentXzbCode= Long.toString(Long.valueOf(String.valueOf(currentXzbCode_Ob)).longValue());
-					xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(currentXzbCode);
-					if(xzbs.size()==0){
-						chaeckPass=false;
-						checkTxt="第"+(i+1)+"行-行政班不存在";
-						returnMap.put("chaeckPass", chaeckPass);
-						returnMap.put("checkTxt", checkTxt);
-						break;
-					}else{
-						edu001.setEdu300_ID(currentXzbCode);
-					}
-				}else{
+				Object currentXzbCode_Ob=reflectUtils.administrationPageService.queryEdu300IdByEdu300Name(edu001.getXzbname());
+				if(currentXzbCode_Ob==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-行政班不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+//					xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(currentXzbCode);
+				}else{
+					String currentXzbCode= Long.toString(Long.valueOf(String.valueOf(currentXzbCode_Ob)).longValue());
+					edu001.setEdu300_ID(currentXzbCode);
 				}
 				
 				//行政班编码是否和填写的培养计划对应
@@ -840,9 +834,9 @@ public class ReflectUtils {
 				}
 				
 				//状态编码是否存在
-				String currentZtbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZtCode(),"xszt");
-				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",currentZtbmCode);
-				if(ztbms.size()==0){
+				String currentZtbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZt(),"xszt");
+//				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",currentZtbmCode);
+				if(currentZtbmCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-学生状态编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
@@ -853,9 +847,9 @@ public class ReflectUtils {
 				}
 				
 				//民族编码是否存在
-				String currentMzbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getMzbm(),"mz");
-				mzs = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("mz",currentMzbmCode);
-				if(mzs.size()==0){
+				String currentMzbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getMz(),"mz");
+//				mzs = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("mz",currentMzbmCode);
+				if(currentMzbmCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-民族编码不存在";
 					returnMap.put("chaeckPass", chaeckPass);
@@ -866,41 +860,41 @@ public class ReflectUtils {
 				}
 				
 				//政治面貌编码是否存在
-				String currentZzmmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZzmmbm(),"zzmm");
-				if(edu001.getZzmmbm()!=null){
-					zzmms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zzmm",currentZzmmCode);
-					if(zzmms.size()==0){
+				if(edu001.getZzmm()!=null){
+					String currentZzmmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZzmm(),"zzmm");
+					if(edu001.getZzmmbm()==null){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-政治面貌不存在";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
+//						zzmms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zzmm",currentZzmmCode);
 					}else{
 						edu001.setZzmmbm(currentZzmmCode);
 					}
 				}
+
 				
 				//文化程度编码是否存在
-				String currentWHCDCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getWhcdbm(),"whcd");
-				if(edu001.getWhcdbm()!=null){
-					whcds = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("whcd",currentWHCDCode);
-					if(whcds.size()==0){
+				if(edu001.getWhcd()!=null){
+					String currentWHCDCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getWhcd(),"whcd");
+					if(currentWHCDCode==null){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-文化程度不存在";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
+//						whcds = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("whcd",currentWHCDCode);
 					}else{
 						edu001.setWhcdbm(currentWHCDCode);
 					}
 				}
+
 				
 				//招生方式编码是否存在
-				String currentZsfsCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZsfscode(),"zsfs");
-				if(edu001.getWhcdbm()!=null){
-				if(edu001.getZsfscode()!=null){
-					zsfss = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zsfs",currentZsfsCode);
-					if(zsfss.size()==0){
+				if(edu001.getZsfs()!=null){
+					String currentZsfsCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZsfs(),"zsfs");
+					if(currentZsfsCode==null){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-招生方式不存在";
 						returnMap.put("chaeckPass", chaeckPass);
@@ -908,17 +902,26 @@ public class ReflectUtils {
 						break;
 					}else{
 						edu001.setZsfscode(currentZsfsCode);
-						}
 					}
 				}
 			}
+			
+			//如果是修改学生 填充学生学号
 			if(isModify){
 				String correctXh=reflectUtils.administrationPageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
-				edu001.setXh(correctXh);
+				if(correctXh==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-可能修改了学生ID(学生ID不允许更改)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					edu001.setXh(correctXh);
+				}
 			}
 			
-			List<Edu001> databaseAllStudent=reflectUtils.administrationPageService.queryAllStudent();
 			
+			List<Edu001> databaseAllStudent=reflectUtils.administrationPageService.queryAllStudent();
 			//判断身份证号在数据库是否存在
 			if(!chaeckPass){
 				break;
@@ -980,45 +983,45 @@ public class ReflectUtils {
 			}
 			
 			//所有验证通过  填充各种编码的名称
-			if(pcyys!=null){
-				edu001.setPyccmc(pcyys.get(0).getPyccmc());
-			}
-			
-			if(xbs!=null){
-				edu001.setSzxbmc(xbs.get(0).getXbmc());
-			}
-			
-			if(njs!=null){
-				edu001.setNjmc(njs.get(0).getNjmc());
-			}
-			
-			if(zys!=null){
-				edu001.setZymc(zys.get(0).getZymc());
-			}
-			
-			if(xzbs!=null){
-				edu001.setXzbname(xzbs.get(0).getXzbmc());
-			}
-			
-			if(ztbms!=null){
-				edu001.setZt(ztbms.get(0).getEjdmz());
-			}
-			
-			if(mzs!=null){
-				edu001.setMz(mzs.get(0).getEjdmz());
-			}
-		    
-			if(zzmms!=null){
-				edu001.setZzmm(zzmms.get(0).getEjdmz());
-			}
-		    
-			if(whcds!=null){
-				edu001.setWhcd(whcds.get(0).getEjdmz());
-			}
-		    
-			if(zsfss!=null){
-				 edu001.setZsfs(zsfss.get(0).getEjdmz());
-			}
+//			if(pcyys!=null){
+//				edu001.setPyccmc(pcyys.get(0).getPyccmc());
+//			}
+//			
+//			if(xbs!=null){
+//				edu001.setSzxbmc(xbs.get(0).getXbmc());
+//			}
+//			
+//			if(njs!=null){
+//				edu001.setNjmc(njs.get(0).getNjmc());
+//			}
+//			
+//			if(zys!=null){
+//				edu001.setZymc(zys.get(0).getZymc());
+//			}
+//			
+//			if(xzbs!=null){
+//				edu001.setXzbname(xzbs.get(0).getXzbmc());
+//			}
+//			
+//			if(ztbms!=null){
+//				edu001.setZt(ztbms.get(0).getEjdmz());
+//			}
+//			
+//			if(mzs!=null){
+//				edu001.setMz(mzs.get(0).getEjdmz());
+//			}
+//		    
+//			if(zzmms!=null){
+//				edu001.setZzmm(zzmms.get(0).getEjdmz());
+//			}
+//		    
+//			if(whcds!=null){
+//				edu001.setWhcd(whcds.get(0).getEjdmz());
+//			}
+//		    
+//			if(zsfss!=null){
+//				 edu001.setZsfs(zsfss.get(0).getEjdmz());
+//			}
 		}
 		
 		if(chaeckPass){
@@ -1091,19 +1094,19 @@ public class ReflectUtils {
             result="sylx";
             break;
         case 1:
-            result="pycc";
+            result="pyccmc";
             break;
         case 2:
-            result="szxb";
+            result="szxbmc";
             break;
         case 3:
-            result="nj";
+            result="njmc";
             break;
         case 4:
-            result="zybm";
+            result="zymc";
             break;
         case 5:
-            result="Edu300_ID";
+            result="xzbname";
             break;
         case 6:
             result="xm";
@@ -1115,7 +1118,7 @@ public class ReflectUtils {
             result="xb";
             break;
         case 9:
-            result="ztCode";
+            result="zt";
             break;
         case 10:
             result="csrq";
@@ -1124,7 +1127,7 @@ public class ReflectUtils {
             result="sfzh";
             break;
         case 12:
-            result="mzbm";
+            result="mz";
             break;
         case 13:
             result="sfyxj";
@@ -1133,13 +1136,13 @@ public class ReflectUtils {
             result="xjh";
             break;
         case 15:
-            result="zzmmbm";
+            result="zzmm";
             break;
         case 16:
             result="syd";
             break;
         case 17:
-            result="whcdbm";
+            result="whcd";
             break;
         case 18:
             result="ksh";
@@ -1178,7 +1181,7 @@ public class ReflectUtils {
             result="hf";
             break;
         case 30:
-            result="zsfscode";
+            result="zsfs";
             break;
         case 31:
             result="dxpy";
@@ -1210,16 +1213,16 @@ public class ReflectUtils {
             result="sylx";
             break;
         case 1:
-            result="pycc";
+            result="pyccmc";
             break;
         case 2:
-            result="szxb";
+            result="szxbmc";
             break;
         case 3:
-            result="nj";
+            result="njmc";
             break;
         case 4:
-            result="zybm";
+            result="zymc";
             break;
         case 5:
             result="Edu300_ID";
@@ -1237,7 +1240,7 @@ public class ReflectUtils {
             result="xb";
             break;
         case 10:
-            result="ztCode";
+            result="zt";
             break;
         case 11:
             result="csrq";
@@ -1246,7 +1249,7 @@ public class ReflectUtils {
             result="sfzh";
             break;
         case 13:
-            result="mzbm";
+            result="mz";
             break;
         case 14:
             result="sfyxj";
@@ -1255,13 +1258,13 @@ public class ReflectUtils {
             result="xjh";
             break;
         case 16:
-            result="zzmmbm";
+            result="zzmm";
             break;
         case 17:
             result="syd";
             break;
         case 18:
-            result="whcdbm";
+            result="whcd";
             break;
         case 19:
             result="ksh";
@@ -1300,7 +1303,7 @@ public class ReflectUtils {
             result="hf";
             break;
         case 31:
-            result="zsfscode";
+            result="zsfs";
             break;
         case 32:
             result="dxpy";
@@ -1961,7 +1964,6 @@ public class ReflectUtils {
         }
         return convertSuccess;
     }
-
 
 	//由出生日期获得年龄
 	public int getAge(Date birthDay) throws Exception {
