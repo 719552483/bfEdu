@@ -206,7 +206,8 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'sfyxj',
 				title: '是否有学籍',
 				align: 'left',
-				formatter: isrollMatter
+				formatter: isrollMatter,
+				visible: false
 			},
 			{
 				field: 'zkzh',
@@ -231,12 +232,14 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'xjh',
 				title: '学籍号',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: paramsMatter,
+				visible: false
 			},{
 				field: 'zym',
 				title: '曾用名',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: paramsMatter,
+				visible: false
 			}, {
 				field: 'csrq',
 				title: '出生日期',
@@ -331,8 +334,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'zsfs',
 				title: '招生方式',
 				align: 'left',
-				formatter: paramsMatter,
-				visible: false
+				formatter: paramsMatter
 			}, {
 				field: 'dxpy',
 				title: '是否订单',
@@ -405,12 +407,22 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 	
 	function ztMatter(value, row, index) {
-		if (row.zt==="毕业") {
+		if (row.zt==="在读") {
 			return [
-					'<div class="myTooltip greenTxt" title="毕业">毕业</div>'
+					'<div class="myTooltip greenTxt" title="在读">在读</div>'
 				]
 				.join('');
-		} else {
+		} else if(row.zt==="毕业"){
+			return [
+					'<div class="myTooltip normalTxt" title="'+row.zt+'">'+row.zt+'</div>'
+				]
+				.join('');
+		}else if(row.zt==="其他"){
+			return [
+					'<div class="myTooltip" title="'+row.zt+'">'+row.zt+'</div>'
+				]
+				.join('');
+		}else{
 			return [
 					'<div class="myTooltip redTxt" title="'+row.zt+'">'+row.zt+'</div>'
 				]

@@ -1021,8 +1021,8 @@ function paramsMatter(value, row, index) {
 	// '<div class="myTooltip" title="' + values + '">' + value + '</div>'
 	// ]
 	// .join('');
-	if(typeof value === 'undefined'||value==null){
-		return [ '' ]
+	if(typeof value === 'undefined'||value==null||value===""){
+		return [ '<div class="myTooltip normalTxt" title="暂无">暂无</div>' ]
 		.join('');
 	}else{
 		return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]

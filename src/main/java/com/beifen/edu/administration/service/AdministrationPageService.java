@@ -39,6 +39,7 @@ import com.beifen.edu.administration.dao.Edu993Dao;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu991;
 import com.beifen.edu.administration.domian.Edu993;
+import com.beifen.edu.administration.utility.ReflectUtils;
 
 import net.sf.json.JSONObject;
 
@@ -62,6 +63,7 @@ import com.beifen.edu.administration.domian.Edu401;
 @Configuration
 @Service
 public class AdministrationPageService {
+	ReflectUtils utils = new ReflectUtils();
 
 	@Autowired
 	private Edu001Dao edu001DAO;
@@ -647,6 +649,32 @@ public class AdministrationPageService {
 		return newXh;
 	}
 	
+	// 为新生生成学号
+	public String getNewTeacher() {
+		String jzgh_before =utils.getRandom(2);
+		String newXh = "";
+		List<Edu101> allTeacher = edu101DAO.findAll();
+		if (allTeacher.size() != 0) {
+			List<Long> currentjzghs = new ArrayList<Long>();
+			for (int i = 0; i < allTeacher.size(); i++) {
+				currentjzghs.add(Long.parseLong(allTeacher.get(i).getJzgh()));
+			}
+			int newXhSuffix = 0;
+			String maxjzgh = String.valueOf(Collections.max(currentjzghs));
+			newXhSuffix = Integer.parseInt(maxjzgh) + 1;
+			if (newXhSuffix <= 9) {
+				newXh = jzgh_before + "00" +  newXhSuffix;
+			} else if (newXhSuffix > 9 && newXhSuffix <= 99) {
+				newXh = jzgh_before + "0" +  newXhSuffix;
+			} else {
+				newXh = jzgh_before + newXhSuffix;
+			}
+		} else {
+			newXh = jzgh_before + "001";
+		}
+		return newXh;
+	}
+	
 	//根据id查学生学号
 	public String queryXhBy001ID(String edu001_ID) {
 		return edu001DAO.queryXhBy001ID(edu001_ID);
@@ -1026,6 +1054,11 @@ public class AdministrationPageService {
 		edu200DAO.removeLibraryClassById(id);
 	}
 
+	//新增教师
+	public void addTeacher(Edu101 edu101) {
+		edu101DAO.save(edu101);
+	}
+	
 	// 根据id查询教师姓名
 	public String queryTecaherNameById(Long techerId) {
 		return edu101DAO.queryTeacherById(techerId);
@@ -1284,25 +1317,31 @@ public class AdministrationPageService {
 	}
 
 	// 搜索教师
-//	public List<Edu101> searchTeacher(Edu101 edu101) {
-//		Specification<Edu101> specification = new Specification<Edu101>() {
-//			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//				List<Predicate> predicates = new ArrayList<Predicate>();
-//				if (edu101.getSsyx() != null && !"".equals(edu101.getSsyx())) {
-//					predicates.add(cb.like(root.<String> get("ssyx"), '%' + edu101.getSsyx() + '%'));
-//				}
-//				if (edu101.getJsxm() != null && !"".equals(edu101.getJsxm())) {
-//					predicates.add(cb.like(root.<String> get("jsxm"), '%' + edu101.getJsxm() + '%'));
-//				}
-//				if (edu101.getJgh() != null && !"".equals(edu101.getJgh())) {
-//					predicates.add(cb.like(root.<String> get("jgh"), '%' + edu101.getJgh() + '%'));
-//				}
-//				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-//			}
-//		};
-//		List<Edu101> teacherEntities = edu101DAO.findAll(specification);
-//		return teacherEntities;
-//	}
+	public List<Edu101> searchTeacher(Edu101 edu101) {
+		Specification<Edu101> specification = new Specification<Edu101>() {
+			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu101.getSzxb() != null && !"".equals(edu101.getSzxb())) {
+					predicates.add(cb.equal(root.<String> get("szxb"),edu101.getSzxb()));
+				}
+				if (edu101.getZy() != null && !"".equals(edu101.getZy())) {
+					predicates.add(cb.equal(root.<String> get("zy"),edu101.getZy()));
+				}
+				if (edu101.getXm() != null && !"".equals(edu101.getXm())) {
+					predicates.add(cb.like(root.<String> get("xm"), '%' + edu101.getXm() + '%'));
+				}
+				if (edu101.getJzgh() != null && !"".equals(edu101.getJzgh())) {
+					predicates.add(cb.like(root.<String> get("jzgh"), '%' + edu101.getJzgh() + '%'));
+				}
+				if (edu101.getZc() != null && !"".equals(edu101.getZc())) {
+					predicates.add(cb.equal(root.<String> get("zc"),edu101.getZc()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu101> teacherEntities = edu101DAO.findAll(specification);
+		return teacherEntities;
+	}
 
 	// 搜索关系
 	public List<Edu107> seacchRelation(Edu107 edu107) {
@@ -1570,6 +1609,8 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 

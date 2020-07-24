@@ -682,6 +682,48 @@ public class AdministrationController {
 		return returnMap;
 	}
 
+	
+	/**
+	 * 新增教师
+	 * 
+	 * @param newTeacherInfo新增信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("addTeacher")
+	@ResponseBody
+	public Object addTeacher(@RequestParam("addInfo") String newTeacherInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(newTeacherInfo);
+		Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+		List<Edu101> allTeacher = administrationPageService.queryAllTeacher();
+		// 判断身份证是否存在
+		boolean IDcardIshave = false;
+		for (int i = 0; i < allTeacher.size(); i++) {
+			if(allTeacher.get(i).getSfzh()!=null){
+				if(allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
+					IDcardIshave=true;
+					break;
+				}
+			}
+		}
+		
+		if (!IDcardIshave) {
+			String jzgh =administrationPageService.getNewTeacher();
+			edu101.setJzgh(jzgh);
+			administrationPageService.addTeacher(edu101); 
+			returnMap.put("newId", edu101.getEdu101_ID());
+			returnMap.put("jzgh", jzgh);
+		}
+		
+		returnMap.put("IDcardIshave", IDcardIshave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+	
+	
 	/**
 	 * 查询所有教师
 	 * 
@@ -704,20 +746,44 @@ public class AdministrationController {
 	 *            搜索条件
 	 * @return returnMap
 	 */
-//	@RequestMapping("searchTeacher")
-//	@ResponseBody
-//	public Object SeacchTeacher(@RequestParam String SearchCriteria) {
-//		Map<String, Object> returnMap = new HashMap();
-//		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
-//		Edu101 edu101 = new Edu101();
-//		edu101.setSsyx(jsonObject.getString("departmentName"));
-//		edu101.setJsxm(jsonObject.getString("mangerName"));
-//		edu101.setJgh(jsonObject.getString("mangerNumber"));
-//		List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
-//		returnMap.put("techerList", techerList);
-//		returnMap.put("result", true);
-//		return returnMap;
-//	}
+	@RequestMapping("searchTeacher")
+	@ResponseBody
+	public Object SeacchTeacher(@RequestParam String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+		String szxb ="";
+		String zy = "";
+		String zc = "";
+		String xm ="";
+		String jzgh = "";
+		
+		if (jsonObject.has("szxb")){
+			szxb = jsonObject.getString("szxb");
+	    }
+		if (jsonObject.has("zy")){
+			zy = jsonObject.getString("zy");
+	    }
+		if (jsonObject.has("zc")){
+			zc = jsonObject.getString("zc");
+	    }
+		if (jsonObject.has("xm")){
+			xm = jsonObject.getString("xm");
+	    }
+		if (jsonObject.has("jzgh")){
+			jzgh = jsonObject.getString("jzgh");
+	    }
+		
+		Edu101 edu101 = new Edu101();
+		edu101.setSzxb(szxb);
+		edu101.setZy(zy);
+		edu101.setZc(zc);
+		edu101.setXm(xm);
+		edu101.setJzgh(jzgh);
+		List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
+		returnMap.put("techerList", techerList);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	/**
 	 * 获得教学相关公共代码信息
