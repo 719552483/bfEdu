@@ -430,18 +430,6 @@ public class ReflectUtils {
 			}
 			importStudent.add(edu001);
 		}
-		
-//		List<Edu103> pcyys=null;
-//		List<Edu104> xbs=null;
-//		List<Edu105> njs=null;
-//		List<Edu106> zys=null;
-//		List<Edu300> xzbs=null;
-//		List<Edu000> ztbms =null;
-//		List<Edu000> mzs =null;
-//		List<Edu000> zzmms=null;
-//		List<Edu000> whcds=null;
-//		List<Edu000> zsfss=null;
-		allforOver:
 		for (int i = 0; i < importStudent.size(); i++) {
 			Edu001 edu001 = importStudent.get(i);
 			//非空验证
@@ -556,8 +544,6 @@ public class ReflectUtils {
 					return returnMap;
 				}
 			}
-			
-		
 			
 			//验证数字列内容
 			//入学总分
@@ -758,7 +744,6 @@ public class ReflectUtils {
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
-//					pcyys = reflectUtils.administrationPageService.queryAllLevelByPcccbm(currentPyccCode);
 					edu001.setPycc(currentPyccCode);
 				}
 				
@@ -771,7 +756,6 @@ public class ReflectUtils {
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
-//					xbs = reflectUtils.administrationPageService.queryAllDepartmentByXbbm(currentXbCode);
 					edu001.setSzxb(currentXbCode);
 				}
 				
@@ -784,7 +768,6 @@ public class ReflectUtils {
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
-//					njs = reflectUtils.administrationPageService.queryAllGradeByNjbm(currentNjCode);
 					edu001.setNj(currentNjCode);
 				}
 				
@@ -797,7 +780,6 @@ public class ReflectUtils {
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}else{
-//					zys = reflectUtils.administrationPageService.queryAllMajorByZybm(currentZyCode);
 					edu001.setZybm(currentZyCode);
 				}
 				
@@ -819,7 +801,6 @@ public class ReflectUtils {
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
-//					xzbs = reflectUtils.administrationPageService.queryXzbByEdu300ID(currentXzbCode);
 				}else{
 					String currentXzbCode= Long.toString(Long.valueOf(String.valueOf(currentXzbCode_Ob)).longValue());
 					edu001.setEdu300_ID(currentXzbCode);
@@ -837,7 +818,6 @@ public class ReflectUtils {
 				
 				//状态编码是否存在
 				String currentZtbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getZt(),"xszt");
-//				ztbms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("xszt",currentZtbmCode);
 				if(currentZtbmCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-学生状态编码不存在";
@@ -850,7 +830,6 @@ public class ReflectUtils {
 				
 				//民族编码是否存在
 				String currentMzbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getMz(),"mz");
-//				mzs = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("mz",currentMzbmCode);
 				if(currentMzbmCode==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-民族编码不存在";
@@ -870,7 +849,6 @@ public class ReflectUtils {
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
-//						zzmms = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("zzmm",currentZzmmCode);
 					}else{
 						edu001.setZzmmbm(currentZzmmCode);
 					}
@@ -886,7 +864,6 @@ public class ReflectUtils {
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
-//						whcds = reflectUtils.administrationPageService.queryEjdmByGroupAndValue("whcd",currentWHCDCode);
 					}else{
 						edu001.setWhcdbm(currentWHCDCode);
 					}
@@ -971,47 +948,6 @@ public class ReflectUtils {
     				}
                 }				
 			}
-			
-			//所有验证通过  填充各种编码的名称
-//			if(pcyys!=null){
-//				edu001.setPyccmc(pcyys.get(0).getPyccmc());
-//			}
-//			
-//			if(xbs!=null){
-//				edu001.setSzxbmc(xbs.get(0).getXbmc());
-//			}
-//			
-//			if(njs!=null){
-//				edu001.setNjmc(njs.get(0).getNjmc());
-//			}
-//			
-//			if(zys!=null){
-//				edu001.setZymc(zys.get(0).getZymc());
-//			}
-//			
-//			if(xzbs!=null){
-//				edu001.setXzbname(xzbs.get(0).getXzbmc());
-//			}
-//			
-//			if(ztbms!=null){
-//				edu001.setZt(ztbms.get(0).getEjdmz());
-//			}
-//			
-//			if(mzs!=null){
-//				edu001.setMz(mzs.get(0).getEjdmz());
-//			}
-//		    
-//			if(zzmms!=null){
-//				edu001.setZzmm(zzmms.get(0).getEjdmz());
-//			}
-//		    
-//			if(whcds!=null){
-//				edu001.setWhcd(whcds.get(0).getEjdmz());
-//			}
-//		    
-//			if(zsfss!=null){
-//				 edu001.setZsfs(zsfss.get(0).getEjdmz());
-//			}
 		}
 		
 		if(chaeckPass){

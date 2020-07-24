@@ -1370,6 +1370,7 @@ function confirmModifyStudentInfo() {
         		}
 				toastr.success('批量更新成功');
 		        $.hideModal("#modifyStudentsModal");
+		        toolTipUp(".myTooltip");
 	        },beforeSend: function(xhr) {
 	           $(".fileLoadingArea").show();
 			},
@@ -1445,6 +1446,7 @@ function confirmGraduationStudents(choosendStudents){
 					$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
 				}
 				 $.hideModal("#remindModal");
+				 toolTipUp(".myTooltip");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
