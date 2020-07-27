@@ -1256,6 +1256,10 @@ margin-left: 4px !important;
     }
     
     
+.fileLoadingArea{
+	    margin-left: -50px;
+}    
+    
 .fileLoadingArea .spinner-box{
 	    height: 45px;
 	    width: 370px;

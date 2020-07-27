@@ -1174,7 +1174,7 @@ function checkStudentInfoFile() {
         url:'/verifiyImportStudentFile',
         dataType:'json',
         type:'POST',
-        async: false,
+        async: true,
         data: formData,
         processData : false, // 使数据不做处理
         contentType : false, // 不要设置Content-Type请求头
@@ -1232,7 +1232,7 @@ function checkModifyStudentsFile(){
         url:'/verifiyModifyStudentFile',
         dataType:'json',
         type:'POST',
-        async: false,
+        async: true,
         data: formData,
         processData : false, // 使数据不做处理
         contentType : false, // 不要设置Content-Type请求头
@@ -1290,7 +1290,7 @@ function confirmImportStudentInfo() {
 	        url:'/importStudent',
 	        dataType:'json',
 	        type:'POST',
-	        async: false,
+	        async: true,
 	        data: formData,
 	        processData : false, // 使数据不做处理
 	        contentType : false, // 不要设置Content-Type请求头
@@ -1350,7 +1350,7 @@ function confirmModifyStudentInfo() {
 	        url:'/modifyStudents',
 	        dataType:'json',
 	        type:'POST',
-	        async: false,
+	        async: true,
 	        data: formData,
 	        processData : false, // 使数据不做处理
 	        contentType : false, // 不要设置Content-Type请求头

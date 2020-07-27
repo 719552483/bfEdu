@@ -97,7 +97,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 		exportDataType: "all",  
 		showExport: true,      //是否显示导出
 		exportOptions:{  
-		    fileName: '学生信息导出'  //文件名称
+		    fileName: '辅导员/班主任导出'  //文件名称
 		},
 		striped: true,
 	    sidePagination: "client",   
@@ -113,7 +113,8 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 			},{
 				field: 'edu101_ID',
 				title: '唯一标识',
-				align: 'center'
+				align: 'center',
+				visible: false
 			},
 			 {
 				field: 'szxbmc',
