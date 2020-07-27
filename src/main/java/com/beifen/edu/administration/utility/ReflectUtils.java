@@ -1271,6 +1271,13 @@ public class ReflectUtils {
 		this.stuffStudentInfoSheet1(sheet1);
 	}
 	
+	// 导入教师模板
+	public void createImportTeacherModal(XSSFWorkbook workbook) {
+		// 创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("导入教师信息");
+		this.stuffTeacherInfoSheet1(sheet1);
+	}
+	
 	// 批量更新学生模板
 	public void createModifyStudentModal(XSSFWorkbook workbook,List<Edu001> chosedStudents) {
 		//创建创建sheet1
@@ -1395,6 +1402,24 @@ public class ReflectUtils {
 		}
 	}
     
+    //填充导入教师模板的Sheet1
+    private void stuffTeacherInfoSheet1(XSSFSheet sheet) {
+		// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		
+		// 所有标题数组
+		String[] titles = new String[] {"*姓名","*性别", "*教职工类型", "*出生日期", "身份证号", "所属系部","所属专业",
+				"婚否", "民族", "职称", "文化程度 ", "到校时间", "政治面貌 ", "联系方式" };
+		
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+	}
+    
+    
     /**
      * 向Excel 追加数据
      * @param sheet  当前sheet
@@ -1429,7 +1454,7 @@ public class ReflectUtils {
 	}
 
 	// 下载模板
-	public void loadImportStudentModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
+	public void loadModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
 		setEXCELstyle(workbook);
 		setEXCELformatter(workbook);
 		ExcelStuffSelect(workbook,filename);
@@ -1442,6 +1467,18 @@ public class ReflectUtils {
 	
 	//为Excel填充下拉框
 	public void ExcelStuffSelect(XSSFWorkbook workbook,String filename){
+		String hiddenSheetName = "typelist";
+		if(filename.equals("ImportStudent")||filename.equals("导入学生模板")){
+			ImportStudentSeclect(hiddenSheetName,workbook);
+		}else if(filename.equals("modifyStudents")||filename.equals("批量更新学生模板")){
+			ModifyStudentSeclect(hiddenSheetName,workbook);
+		}else if(filename.equals("ImportTeacher")||filename.equals("导入教职工模板")){
+			ImportTeacherSeclect(hiddenSheetName,workbook);
+		}
+	}
+	
+	//为导入学生文件填充需要的下拉框
+	public static void ImportStudentSeclect(String hiddenSheetName,XSSFWorkbook workbook){
 		int needCreatHiddenSheetNum=0;
 		
 		List < String > sexlist = new ArrayList < String > ();
@@ -1576,77 +1613,315 @@ public class ReflectUtils {
 		int[]  marrayOrNotIndex={29};
 		int[] isOrNOTNeedIndex={13,31,32};
 		int[]  zsfsIndex={30};
-		String hiddenSheetName = "typelist";
-		
-		if(filename.equals("ImportStudent")||filename.equals("导入学生模板")){
-			for (int i = 0; i < needCreatHiddenSheetNum; i++) {
-				hiddenSheetName = hiddenSheetName+(i+1);
-				if(i==0){
-					cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,false);
-				}else if(i==1){
-					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,false);
-				}else if(i==2){
-					cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,false);
-				}else if(i==3){
-					cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,false);
-				}else if(i==4){
-					cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,false);
-				}else if(i==5){
-					cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,false);
-				}else if(i==6){
-					cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,false);
-				}else if(i==7){
-					cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
-				}else if(i==8){
-					cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,false);
-				}else if(i==9){
-					cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
-				}else if(i==10){
-					cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
-				}else if(i==11){
-					cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
-				}else if(i==12){
-					cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
-				}else if(i==13){
-					cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
-				}
-			}
-		}else if(filename.equals("modifyStudents")||filename.equals("批量更新学生模板")){
-			for (int i = 0; i < needCreatHiddenSheetNum; i++) {
-				hiddenSheetName = hiddenSheetName+(i+1);
-				if(i==0){
-					cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,false);
-				}else if(i==1){
-					cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,true);
-				}else if(i==2){
-					cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,true);
-				}else if(i==3){
-					cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,true);
-				}else if(i==4){
-					cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,true);
-				}else if(i==5){
-					cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,true);
-				}else if(i==6){
-					cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,true);
-				}else if(i==7){
-					cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,true);
-				}else if(i==8){
-					cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,true);
-				}else if(i==9){
-					cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
-				}else if(i==10){
-					cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
-				}else if(i==11){
-					cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
-				}else if(i==12){
-					cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
-				}else if(i==13){
-					cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
-				}
+		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
+			hiddenSheetName = hiddenSheetName+(i+1);
+			if(i==0){
+				cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,false);
+			}else if(i==1){
+				cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,false);
+			}else if(i==2){
+				cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,false);
+			}else if(i==3){
+				cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,false);
+			}else if(i==4){
+				cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,false);
+			}else if(i==5){
+				cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,false);
+			}else if(i==6){
+				cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,false);
+			}else if(i==7){
+				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
+			}else if(i==8){
+				cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,false);
+			}else if(i==9){
+				cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
+			}else if(i==10){
+				cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
+			}else if(i==11){
+				cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
+			}else if(i==12){
+				cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+			}else if(i==13){
+				cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
 			}
 		}
 	}
     
+	//为修改学生文件填充需要的下拉框
+	public static void ModifyStudentSeclect(String hiddenSheetName,XSSFWorkbook workbook){
+		int needCreatHiddenSheetNum=0;
+		
+		List < String > sexlist = new ArrayList < String > ();
+		sexlist.add("男");
+		sexlist.add("女");
+		needCreatHiddenSheetNum++;
+		String[]sexArrays = sexlist.toArray(new String[sexlist.size()]);
+		
+
+		List < String > isOrNotlist = new ArrayList < String > ();
+		isOrNotlist.add("是");
+		isOrNotlist.add("否");
+		needCreatHiddenSheetNum++;
+		String[]isOrNotArrays = isOrNotlist.toArray(new String[isOrNotlist.size()]);
+		
+
+		List < String > marrayOrNotlist = new ArrayList < String > ();
+		marrayOrNotlist.add("未婚");
+		marrayOrNotlist.add("已婚");
+		needCreatHiddenSheetNum++;
+		String[]marrayOrNotArrays = marrayOrNotlist.toArray(new String[marrayOrNotlist.size()]);
+		
+		List < String > sxlxlist = new ArrayList < String > ();
+		List<Edu000> sxlxbms = reflectUtils.administrationPageService.queryEjdm("sylx");
+		for (int i = 0; i < sxlxbms.size(); i++) {
+			sxlxlist.add(sxlxbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]sxlxArrays = sxlxlist.toArray(new String[sxlxlist.size()]);
+		
+		
+		List < String > ztlist = new ArrayList < String > ();
+		List<Edu000> ztbms = reflectUtils.administrationPageService.queryEjdm("xszt");
+		for (int i = 0; i < ztbms.size(); i++) {
+			ztlist.add(ztbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]ztArrays = ztlist.toArray(new String[ztlist.size()]);
+		
+
+		List < String > mzlist = new ArrayList < String > ();
+		List<Edu000> mzbms = reflectUtils.administrationPageService.queryEjdm("mz");
+		for (int i = 0; i < mzbms.size(); i++) {
+			mzlist.add(mzbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]mzArrays = mzlist.toArray(new String[mzlist.size()]);
+		
+
+		List < String > zsfslist = new ArrayList < String > ();
+		List<Edu000> zsfss = reflectUtils.administrationPageService.queryEjdm("zsfs");
+		for (int i = 0; i < zsfss.size(); i++) {
+			zsfslist.add(zsfss.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zsfsArrays = zsfslist.toArray(new String[zsfslist.size()]);
+		
+
+		List < String > whcdlist = new ArrayList < String > ();
+		List<Edu000> whcds = reflectUtils.administrationPageService.queryEjdm("whcd");
+		for (int i = 0; i < whcds.size(); i++) {
+			whcdlist.add(whcds.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]whcdArrays = whcdlist.toArray(new String[whcdlist.size()]);
+		
+
+		List < String > zzmmlist = new ArrayList < String > ();
+		List<Edu000> zzmms = reflectUtils.administrationPageService.queryEjdm("zzmm");
+		for (int i = 0; i < zzmms.size(); i++) {
+			zzmmlist.add(zzmms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zzmmArrays = zzmmlist.toArray(new String[zzmmlist.size()]);
+		
+
+		List < String > pycclist = new ArrayList < String > ();
+		List<Edu103> pyccs = reflectUtils.administrationPageService.queryAllLevel();
+		for (int i = 0; i < pyccs.size(); i++) {
+			pycclist.add(pyccs.get(i).getPyccmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]pyccArrays = pycclist.toArray(new String[pycclist.size()]);
+		
+
+		List < String > xblist = new ArrayList < String > ();
+		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
+		for (int i = 0; i < xbs.size(); i++) {
+			xblist.add(xbs.get(i).getXbmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]xbArrays = xblist.toArray(new String[xblist.size()]);
+		
+
+		List < String > njlist = new ArrayList < String > ();
+		List<Edu105> njs = reflectUtils.administrationPageService.queryAllGrade();
+		for (int i = 0; i < njs.size(); i++) {
+			njlist.add(njs.get(i).getNjmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]njArrays = njlist.toArray(new String[njlist.size()]);
+		
+
+		List < String > zylist = new ArrayList < String > ();
+		List<Edu106> zys = reflectUtils.administrationPageService.queryAllMajor();
+		for (int i = 0; i < zys.size(); i++) {
+			zylist.add(zys.get(i).getZymc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zyArrays = zylist.toArray(new String[zylist.size()]);
+		
+
+		List < String > xzblist = new ArrayList < String > ();
+		List<Edu300> xzbs = reflectUtils.administrationPageService.queryAllAdministrationClasses();
+		for (int i = 0; i < xzbs.size(); i++) {
+			xzblist.add(xzbs.get(i).getXzbmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]xzbArrays = xzblist.toArray(new String[xzblist.size()]);
+		
+		int[] sylxIndex={0};
+		int[] pyccIndex={1};
+		int[] xbIndex={2};
+		int[] njIndex={3};
+		int[] zyIndex={4};
+		int[] xzbIndex={5};
+		int[] sexNeedIndex={8};
+		int[] ztNeedIndex={9};
+		int[] mzNeedIndex={12};
+		int[] zzmmIndex={15};
+		int[]  whcdIndex={17};
+		int[]  marrayOrNotIndex={29};
+		int[] isOrNOTNeedIndex={13,31,32};
+		int[]  zsfsIndex={30};
+
+		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
+			hiddenSheetName = hiddenSheetName+(i+1);
+			if(i==0){
+				cell2Select(workbook,hiddenSheetName,sxlxArrays,sylxIndex,false);
+			}else if(i==1){
+				cell2Select(workbook,hiddenSheetName,sexArrays,sexNeedIndex,true);
+			}else if(i==2){
+				cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,true);
+			}else if(i==3){
+				cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,marrayOrNotIndex,true);
+			}else if(i==4){
+				cell2Select(workbook,hiddenSheetName,ztArrays,ztNeedIndex,true);
+			}else if(i==5){
+				cell2Select(workbook,hiddenSheetName,mzArrays,mzNeedIndex,true);
+			}else if(i==6){
+				cell2Select(workbook,hiddenSheetName,zsfsArrays,zsfsIndex,true);
+			}else if(i==7){
+				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,true);
+			}else if(i==8){
+				cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,true);
+			}else if(i==9){
+				cell2Select(workbook,hiddenSheetName,pyccArrays,pyccIndex,false);
+			}else if(i==10){
+				cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
+			}else if(i==11){
+				cell2Select(workbook,hiddenSheetName,njArrays,njIndex,false);
+			}else if(i==12){
+				cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+			}else if(i==13){
+				cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
+			}
+		}
+	}
+	
+	//为导入教师文件填充需要的下拉框
+	public static void ImportTeacherSeclect(String hiddenSheetName,XSSFWorkbook workbook){
+		int needCreatHiddenSheetNum=0;
+		List < String > sexlist = new ArrayList < String > ();
+		sexlist.add("男");
+		sexlist.add("女");
+		needCreatHiddenSheetNum++;
+		String[]sexArrays = sexlist.toArray(new String[sexlist.size()]);
+		
+		List < String > jzglxlist = new ArrayList < String > ();
+		List<Edu000> jzglxbms = reflectUtils.administrationPageService.queryEjdm("jzglx");
+		for (int i = 0; i < jzglxbms.size(); i++) {
+			jzglxlist.add(jzglxbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]ztArrays = jzglxlist.toArray(new String[jzglxlist.size()]);
+		
+		List < String > xblist = new ArrayList < String > ();
+		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
+		for (int i = 0; i < xbs.size(); i++) {
+			xblist.add(xbs.get(i).getXbmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]xbArrays = xblist.toArray(new String[xblist.size()]);
+		
+		List < String > zylist = new ArrayList < String > ();
+		List<Edu106> zys = reflectUtils.administrationPageService.queryAllMajor();
+		for (int i = 0; i < zys.size(); i++) {
+			zylist.add(zys.get(i).getZymc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zyArrays = zylist.toArray(new String[zylist.size()]);
+		
+		List < String > marrayOrNotlist = new ArrayList < String > ();
+		marrayOrNotlist.add("未婚");
+		marrayOrNotlist.add("已婚");
+		needCreatHiddenSheetNum++;
+		String[]marrayOrNotArrays = marrayOrNotlist.toArray(new String[marrayOrNotlist.size()]);
+		
+		List < String > mzlist = new ArrayList < String > ();
+		List<Edu000> mzbms = reflectUtils.administrationPageService.queryEjdm("mz");
+		for (int i = 0; i < mzbms.size(); i++) {
+			mzlist.add(mzbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]mzArrays = mzlist.toArray(new String[mzlist.size()]);
+		
+		List < String > zclist = new ArrayList < String > ();
+		List<Edu000> zcbms = reflectUtils.administrationPageService.queryEjdm("zc");
+		for (int i = 0; i < zcbms.size(); i++) {
+			zclist.add(zcbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zcArrays = zclist.toArray(new String[zclist.size()]);
+		
+		List < String > whcdlist = new ArrayList < String > ();
+		List<Edu000> whcds = reflectUtils.administrationPageService.queryEjdm("whcd");
+		for (int i = 0; i < whcds.size(); i++) {
+			whcdlist.add(whcds.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]whcdArrays = whcdlist.toArray(new String[whcdlist.size()]);
+		
+		List < String > zzmmlist = new ArrayList < String > ();
+		List<Edu000> zzmms = reflectUtils.administrationPageService.queryEjdm("zzmm");
+		for (int i = 0; i < zzmms.size(); i++) {
+			zzmmlist.add(zzmms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zzmmArrays = zzmmlist.toArray(new String[zzmmlist.size()]);
+		
+		int[] xbIndex={1};
+		int[] jcglxIndex={2};
+		int[] shxbIndex={5};
+		int[] zyIndex={6};
+		int[] hfIndex={7};
+		int[] mzIndex={8};
+		int[] zcIndex={9};
+		int[] whcdIndex={10};
+		int[] zzmmIndex={12};
+		
+		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
+			hiddenSheetName = hiddenSheetName+(i+1);
+			if(i==0){
+				cell2Select(workbook,hiddenSheetName,sexArrays,xbIndex,false);
+			}else if(i==1){
+				cell2Select(workbook,hiddenSheetName,ztArrays,jcglxIndex,false);
+			}else if(i==2){
+				cell2Select(workbook,hiddenSheetName,xbArrays,shxbIndex,false);
+			}else if(i==3){
+				cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
+			}else if(i==4){
+				cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,hfIndex,false);
+			}else if(i==5){
+				cell2Select(workbook,hiddenSheetName,mzArrays,mzIndex,false);
+			}else if(i==6){
+				cell2Select(workbook,hiddenSheetName,zcArrays,zcIndex,false);
+			}else if(i==7){
+				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
+			}else if(i==8){
+				cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,false);
+			}
+		}
+	}
 	
 	//单元格变为下拉框
     public static void cell2Select(XSSFWorkbook workbook,String hiddenShhetName,String[] useArrays,int[] useIndex,boolean useIndexNeedAdd){
@@ -1663,8 +1938,6 @@ public class ReflectUtils {
 		}
 		workbook.setSheetHidden(workbook.getSheetIndex(hiddenShhetName), 1);
 	}
-
-	
 	
 	// 设置并引用其他Sheet作为绑定下拉列表数据
 	public static DataValidation SetDataValidation(Workbook wb, String strFormula, int firstRow, int firstCol, int endRow, int endCol) {
@@ -1867,7 +2140,7 @@ public class ReflectUtils {
 	}
 	
 	
-	//出生日期字符串转化成Date对象
+	//日期字符串转化成Date对象
     public static  Date parse(String strDate) throws java.text.ParseException  {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.parse(strDate);
@@ -2025,6 +2298,9 @@ public class ReflectUtils {
         }
         return rs.toString();
     }
+
+
+
 }
 	
 	

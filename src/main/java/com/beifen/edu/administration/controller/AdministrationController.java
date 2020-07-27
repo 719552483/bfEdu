@@ -790,6 +790,33 @@ public class AdministrationController {
 		return returnMap;
 	}
 	
+	
+	
+	
+	/**
+	 * 下载教师导入模板
+	 * 
+	 * @return returnMap
+	 * @throws IOException
+	 * @throws ParseException 
+	 */
+	@RequestMapping("downloadTeacherModal")
+	@ResponseBody
+	public void downloadTeacherModal(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createImportTeacherModal(workbook);
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="ImportTeacher";
+		}else{
+			fileName="导入教职工模板";
+		}
+        utils.loadModal(response,fileName, workbook);
+	}
+	
+	
 	/**
 	 * 查询所有教师
 	 * 
@@ -2982,7 +3009,7 @@ public class AdministrationController {
 		}else{
 			fileName="导入学生模板";
 		}
-        utils.loadImportStudentModal(response,fileName, workbook);
+        utils.loadModal(response,fileName, workbook);
 	}
 	
 	/**
@@ -3012,7 +3039,7 @@ public class AdministrationController {
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyStudentModal(workbook,chosedStudents);
-        utils.loadImportStudentModal(response,fileName, workbook);
+        utils.loadModal(response,fileName, workbook);
 	}
 	
 	/**

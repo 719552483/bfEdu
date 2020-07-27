@@ -504,6 +504,49 @@ function sednRemoveInfo(removeArray){
 	});
 }
 
+//批量导入学生
+function importTeacherInfo() {
+	$.showModal("#importTeacherInfoModal",true);
+	$("#teacherInfoFile,#showFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#teacherInfoFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#teacherInfoFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#teacherInfoFile").val("");
+			return
+		}
+		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//下载导入模板
+	$('#loadTeacherInfoModel').unbind('click');
+	$('#loadTeacherInfoModel').bind('click', function(e) {
+		loadTeacherInfoModel();
+		e.stopPropagation();
+	});
+}
+
+//下载导入教师模板
+function loadTeacherInfoModel() {
+	var $eleForm = $("<form method='get'></form>");
+	$eleForm.attr("action", "/downloadTeacherModal"); //下载文件接口
+	$(document.body).append($eleForm);
+	//提交表单，实现下载
+	$eleForm.submit();
+}
+
+//检验导入模板
+function checkTeacherInfoFile(){
+	if ($("#teacherInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+}
+
+
 
 
 //重置教师信息模态框
@@ -751,5 +794,24 @@ function binBind() {
 		e.stopPropagation();
 	});
 	
+	//批量导入教师
+	$('#importTeacherInfo').unbind('click');
+	$('#importTeacherInfo').bind('click', function(e) {
+		importTeacherInfo();
+		e.stopPropagation();
+	});
 	
+	//检验教师文件
+	$('#checkTeacherInfoFile').unbind('click');
+	$('#checkTeacherInfoFile').bind('click', function(e) {
+		checkTeacherInfoFile();
+		e.stopPropagation();
+	});
+	
+	//下载教师文件
+	$('#loadTeacherInfoModel').unbind('click');
+	$('#loadTeacherInfoModel').bind('click', function(e) {
+		loadTeacherInfoModel();
+		e.stopPropagation();
+	});
 }
