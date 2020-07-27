@@ -818,6 +818,25 @@ public class AdministrationController {
 	
 	
 	/**
+	 * 检验导入教师的文件
+	 * 
+	 * 
+	 * @return returnMap
+	 * @throws ParseException
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("verifiyImportTeacherFile")
+	@ResponseBody
+	public Object verifiyImportTeacherFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, Object> checkRS = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
+		checkRS.put("result", true);
+		return checkRS;
+	}
+	
+	
+	/**
 	 * 查询所有教师
 	 * 
 	 * @return returnMap
@@ -3054,7 +3073,7 @@ public class AdministrationController {
 	@RequestMapping("importStudent")
 	@ResponseBody
 	public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
-		Map<String, Object> returnMap = utils.checkFile(file, "ImportEdu001", "导入学生信息");
+		Map<String, Object> returnMap = utils.checkStudentFile(file, "ImportEdu001", "导入学生信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
 			return returnMap;
@@ -3095,7 +3114,7 @@ public class AdministrationController {
 	@RequestMapping("modifyStudents")
 	@ResponseBody
 	public Object modifyStudents(@RequestParam("file") MultipartFile file) throws Exception {
-		Map<String, Object> returnMap = utils.checkFile(file, "ModifyEdu001", "已选学生信息");
+		Map<String, Object> returnMap = utils.checkStudentFile(file, "ModifyEdu001", "已选学生信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
 			return returnMap;
@@ -3131,7 +3150,7 @@ public class AdministrationController {
 	@ResponseBody
 	public Object verifiyImportStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
-		Map<String, Object> checkRS = utils.checkFile(file, "ImportEdu001", "导入学生信息");
+		Map<String, Object> checkRS = utils.checkStudentFile(file, "ImportEdu001", "导入学生信息");
 		checkRS.put("result", true);
 		return checkRS;
 	}
@@ -3149,7 +3168,7 @@ public class AdministrationController {
 	@ResponseBody
 	public Object verifiyModifyStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
-		Map<String, Object> checkRS = utils.checkFile(file, "ModifyEdu001", "已选学生信息");
+		Map<String, Object> checkRS = utils.checkStudentFile(file, "ModifyEdu001", "已选学生信息");
 		checkRS.put("result", true);
 		return checkRS;
 	}

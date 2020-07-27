@@ -544,6 +544,55 @@ function checkTeacherInfoFile(){
 		toastr.warning('请选择文件');
 		return;
 	}
+	 var formData = new FormData();
+	    formData.append("file",$('#teacherInfoFile')[0].files[0]);
+
+	    $.ajax({
+	        url:'/verifiyImportTeacherFile',
+	        dataType:'json',
+	        type:'POST',
+	        async: true,
+	        data: formData,
+	        processData : false, // 使数据不做处理
+	        contentType : false, // 不要设置Content-Type请求头
+	        success: function(backjosn){
+	        	if(backjosn.result){
+	        		$(".fileLoadingArea").hide();
+	        		if(!backjosn.isExcel){
+	        			showImportErrorInfo("#importTeacherInfoModal","请上传xls或xlsx类型的文件");
+	        		   return
+	        		}
+	        		if(!backjosn.sheetCountPass){
+	        			showImportErrorInfo("#importTeacherInfoModal","上传文件的标签页个数不正确");
+	        		   return
+	        		}
+	        		if(!backjosn.modalPass){
+	        			showImportErrorInfo("#importTeacherInfoModal","模板格式与原始模板不对应");
+	        		   return
+	        		}
+	        		if(!backjosn.haveData){
+	        			showImportErrorInfo("#importTeacherInfoModal","文件暂无数据");
+	        		   return
+	        		}
+	        		if(!backjosn.dataCheck){
+	        			showImportErrorInfo("#importTeacherInfoModal",backjosn.checkTxt);
+	        		   return
+	        		}
+	        		
+	        		showImportSuccessInfo("#importTeacherInfoModal",backjosn.checkTxt);
+	        	}else{
+	        	  toastr.warning('操作失败，请重试');
+	        	}
+	        },beforeSend: function(xhr) {
+				$(".fileLoadingArea").show();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+	    });
 }
 
 
