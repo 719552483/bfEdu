@@ -608,6 +608,7 @@ public class ReflectUtils {
 				}
 			}
 			
+			//到校时间是否正确
 			boolean dxsjStrCanChnageDate= isValidDate(edu101.getDxsj());
 			if(!dxsjStrCanChnageDate){
 				chaeckPass = false;
@@ -1620,12 +1621,17 @@ public class ReflectUtils {
 	/*处理空行*/
 	@SuppressWarnings("deprecation")
 	public static boolean isRowEmpty(Row row) {
-		for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
-		Cell cell = row.getCell(c);
-		if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK&&!cell.equals(""))
-		return false;
+		if(row==null){
+			return true;
+		}else{
+			for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+				Cell cell = row.getCell(c);
+				if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK&&!cell.equals(""))
+				return false;
+				}
+				return true;
 		}
-		return true;
+		
     }
 
 	// 导入学生模板
