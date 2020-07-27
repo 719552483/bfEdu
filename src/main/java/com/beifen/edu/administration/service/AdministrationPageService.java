@@ -650,14 +650,14 @@ public class AdministrationPageService {
 	}
 	
 	// 为新生生成学号
-	public String getNewTeacher() {
+	public String getNewTeacherJzgh() {
 		String jzgh_before =utils.getRandom(2);
 		String newXh = "";
 		List<Edu101> allTeacher = edu101DAO.findAll();
 		if (allTeacher.size() != 0) {
 			List<Long> currentjzghs = new ArrayList<Long>();
 			for (int i = 0; i < allTeacher.size(); i++) {
-				currentjzghs.add(Long.parseLong(allTeacher.get(i).getJzgh()));
+				currentjzghs.add(Long.parseLong(allTeacher.get(i).getJzgh().substring(2, allTeacher.get(i).getJzgh().length())));
 			}
 			int newXhSuffix = 0;
 			String maxjzgh = String.valueOf(Collections.max(currentjzghs));

@@ -710,7 +710,7 @@ public class AdministrationController {
 		}
 		
 		if (!IDcardIshave) {
-			String jzgh =administrationPageService.getNewTeacher();
+			String jzgh =administrationPageService.getNewTeacherJzgh();
 			edu101.setJzgh(jzgh);
 			administrationPageService.addTeacher(edu101); 
 			returnMap.put("newId", edu101.getEdu101_ID());
