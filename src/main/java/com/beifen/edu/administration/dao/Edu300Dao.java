@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.beifen.edu.administration.domian.Edu001;
 import com.beifen.edu.administration.domian.Edu300;
 
 public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecificationExecutor<Edu300> {

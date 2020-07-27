@@ -28,8 +28,8 @@ public class Edu101 {
 	private String mzbm;// 民族编码
 	private String zc;// 职称
 	private String zcbm;// 职称编码
-	private String zzmm;// 职称
-	private String zzmmbm;// 职称编码
+	private String zzmm;// 政治面貌
+	private String zzmmbm;// 政治面貌编码
 	private String whcd;// 文化程度
 	private String whcdbm;// 文化程度编码
 	private String dxsj;// 到校时间

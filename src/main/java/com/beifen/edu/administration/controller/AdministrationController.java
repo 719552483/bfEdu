@@ -721,8 +721,74 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-
 	
+	/**
+     * 修改教师
+	 * 
+	 * @param modifyInfo修改信息
+	 * 
+	 * @return returnMap
+	 */
+	@RequestMapping("modifyTeacher")
+	@ResponseBody
+	public Object modifyTeacher(@RequestParam String modifyInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
+		Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+		List<Edu101> allTeacher = administrationPageService.queryAllTeacher();
+		// 判断身份证是否存在
+		boolean IDcardIshave = false;
+		for (int i = 0; i < allTeacher.size(); i++) {
+			if(allTeacher.get(i).getSfzh()!=null){
+				if(!(allTeacher.get(i).getEdu101_ID()==(edu101.getEdu101_ID()))
+						&&allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
+					IDcardIshave=true;
+					break;
+				}
+			}
+		}
+		
+		if (!IDcardIshave) {
+			administrationPageService.addTeacher(edu101); 
+		}
+		
+		returnMap.put("IDcardIshave", IDcardIshave);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+	
+	
+
+	/**
+	 * 删除教师  
+	 * 课节id唯一  所以不需要考虑是否选择了学年
+	 */
+	@RequestMapping("/removeTeacher")
+	@ResponseBody
+	public Object removeTeacher(@RequestParam String removeIDs) {
+		Map<String, Object> returnMap = new HashMap();
+		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(removeIDs);
+		boolean canRemove=true;
+		for (int i = 0; i < deleteArray.size(); i++) {
+			//查询教师是否有任务书
+			canRemove=administrationPageService.checkTeacherTasks(deleteArray.get(i).toString());
+			if(!canRemove){
+				break;
+			}
+		}
+		
+		
+		if(canRemove){
+			//删除教师
+			for (int i = 0; i < deleteArray.size(); i++) {
+				administrationPageService.removeTeacher(deleteArray.get(i).toString());
+			}
+		}
+		returnMap.put("result", true);
+		returnMap.put("canRemove", canRemove);
+		return returnMap;
+	}
 	
 	/**
 	 * 查询所有教师
@@ -756,6 +822,7 @@ public class AdministrationController {
 		String zc = "";
 		String xm ="";
 		String jzgh = "";
+		String szxbmc = "";
 		
 		if (jsonObject.has("szxb")){
 			szxb = jsonObject.getString("szxb");
@@ -772,6 +839,9 @@ public class AdministrationController {
 		if (jsonObject.has("jzgh")){
 			jzgh = jsonObject.getString("jzgh");
 	    }
+		if (jsonObject.has("szxbmc")){
+			szxbmc = jsonObject.getString("szxbmc");
+	    }
 		
 		Edu101 edu101 = new Edu101();
 		edu101.setSzxb(szxb);
@@ -779,6 +849,7 @@ public class AdministrationController {
 		edu101.setZc(zc);
 		edu101.setXm(xm);
 		edu101.setJzgh(jzgh);
+		edu101.setSzxbmc(szxbmc);
 		List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
 		returnMap.put("techerList", techerList);
 		returnMap.put("result", true);

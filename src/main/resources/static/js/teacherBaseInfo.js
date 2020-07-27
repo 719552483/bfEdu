@@ -73,13 +73,13 @@ function drawTeacherBaseInfoEmptyTable() {
 function stuffTeacherBaseInfoTable(tableInfo) {
 	window.releaseNewsEvents = {
 		'click #teacherDetails': function(e, value, row, index) {
-//			studentDetails(row,index);
+			teacherDetails(row,index);
 		},
 		'click #modifyTeacher': function(e, value, row, index) {
-//			modifyStudent(row,index);
+			modifyTeacher(row,index);
 		},
 		'click #removeTeacher': function(e, value, row, index) {
-//			removeStudent(row);
+			removeTeacher(row);
 		}
 	};
 
@@ -111,10 +111,9 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				field: 'check',
 				checkbox: true
 			},{
-				field: 'edu001_ID',
+				field: 'edu101_ID',
 				title: '唯一标识',
-				align: 'center',
-				visible: false
+				align: 'center'
 			},
 			 {
 				field: 'szxbmc',
@@ -253,17 +252,120 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 	btnControl();
 }
 
+//展示教师详情
+function teacherDetails(row,index){
+	$.showModal("#addTeacherModal",false);
+	$("#addTeacherModal").find(".moadalTitle").html(row.xm+"-详细信息");
+	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
+	//清空模态框中元素原始值
+	rebackTeacherInfo();
+	drawCalenr("#addTeacherCsrq");
+	drawCalenr("#addTeacherDxsj");
+	stuffTeacherDetails(row);
+}
 
+//填充教师信息
+function stuffTeacherDetails(row){
+	$("#addTeacherName").val(row.xm);
+	stuffManiaSelectWithDeafult("#addTeacherSex", row.xb);
+	stuffManiaSelectWithDeafult("#addTeacherType", row.jzglxbm);
+	$("#addTeacherCsrq").val(row.csrq);
+	$("#addTeacherSfzh").val(row.sfzh);
+	stuffManiaSelectWithDeafult("#addTeacherXb", row.szxb);
+	stuffManiaSelectWithDeafult("#addTeacherZY", row.zy);
+	stuffManiaSelectWithDeafult("#addTeacherHf", row.hf);
+	stuffManiaSelectWithDeafult("#addTeacherMz", row.mzbm);
+	stuffManiaSelectWithDeafult("#addTeacherZc", row.zcbm);
+	stuffManiaSelectWithDeafult("#addTeacherWhcd", row.whcdbm);
+	$("#addTeacherDxsj").val(row.dxsj);
+	stuffManiaSelectWithDeafult("#addTeacherZzmm", row.zzmmbm);
+	$("#addTeacherLxfs").val(row.lxfs);
+}
 
+//预备修改教师
+function modifyTeacher(row,index){
+	$.showModal("#addTeacherModal",true);
+	$("#addTeacherModal").find(".moadalTitle").html("修改教职工-"+row.xm);
+	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
+	//清空模态框中元素原始值
+	rebackTeacherInfo();
+	drawCalenr("#addTeacherCsrq");
+	drawCalenr("#addTeacherDxsj");
+	stuffTeacherDetails(row);
+	//确认按钮绑定事件
+	$('.confirmaddTeacherBtn').unbind('click');
+	$('.confirmaddTeacherBtn').bind('click', function(e) {
+		confirmModifyTeacher(row,index);
+		e.stopPropagation();
+	});
+}
 
+//确认修改教师
+function confirmModifyTeacher(row,index){
+	var modifyTeacherInfo=getnewTeacherInfo();
+	if(typeof modifyTeacherInfo ==='undefined'){
+		return;
+	}
+	$.hideModal("#addTeacherModal",false);
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.xm);
+	$(".remindActionType").html("修改");
+	
+	//确认按钮绑定事件
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendModifyTeacher(row,modifyTeacherInfo);
+		e.stopPropagation();
+	});
+}
 
-
-
-
+//发送修改教师请求
+function sendModifyTeacher(row,modifyTeacherInfo){
+	modifyTeacherInfo.jzgh=row.jzgh;
+	modifyTeacherInfo.edu101_ID=row.edu101_ID;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/modifyTeacher",
+		data: {
+             "modifyInfo":JSON.stringify(modifyTeacherInfo) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if (backjson.IDcardIshave) {
+					toastr.warning('身份证号码已存在');
+					return;
+				}
+				$("#teacherBaseInfoTable").bootstrapTable('updateByUniqueId', {
+					id: modifyTeacherInfo.edu101_ID,
+					row: modifyTeacherInfo
+				});
+				$(".myTooltip").tooltipify();
+				toastr.success('修改成功');
+				$.hideModal("#remindModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
 //预备添加教师
 function wantAddTeacher(){
 	rebackTeacherInfo();
+	$("#addTeacherModal").find(".moadalTitle").html("新增辅导员/班主任");
+	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
 	$.showModal("#addTeacherModal",true);
 	drawCalenr("#addTeacherCsrq");
 	drawCalenr("#addTeacherDxsj");
@@ -322,6 +424,85 @@ function sendNewTeacherInfo(newTeacherInfo){
 		}
 	});
 }
+
+//单个删除教师
+function removeTeacher(row){
+	$.showModal("#remindModal",true);
+	$(".remindType").html('辅导员/班主任- '+row.xm+' ');
+	$(".remindActionType").html("删除");
+	
+	//确认删除学生
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var removeArray = new Array;
+		removeArray.push(row.edu101_ID);
+		sednRemoveInfo(removeArray);
+		e.stopPropagation();
+	});
+}
+
+//批量删除教师
+function removeTeachers(){
+	var chosenTeachers = $('#teacherBaseInfoTable').bootstrapTable('getAllSelections');
+	if (chosenTeachers.length === 0) {
+		toastr.warning('暂未选择任何数据');
+	} else {
+		$.showModal("#remindModal",true);
+		$(".remindType").html("所选辅导员/班主任");
+		$(".remindActionType").html("删除");
+		
+		//确认删除学生
+		$('.confirmRemind').unbind('click');
+		$('.confirmRemind').bind('click', function(e) {
+			var removeArray = new Array;
+			for (var i = 0; i < chosenTeachers.length; i++) {
+				removeArray.push(chosenTeachers[i].edu101_ID);
+			}
+			sednRemoveInfo(removeArray);
+			e.stopPropagation();
+		});
+	}
+}
+
+//发送删除请求
+function sednRemoveInfo(removeArray){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/removeTeacher",
+		data: {
+             "removeIDs":JSON.stringify(removeArray) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if (!backjson.canRemove) {
+					toastr.warning('不能删除有任务书的辅导员/班主任');
+					return;
+				}
+				for (var i = 0; i < removeArray.length; i++) {
+					$('#teacherBaseInfoTable').bootstrapTable('removeByUniqueId', removeArray[i]);
+				}
+				$(".myTooltip").tooltipify();
+				toastr.success('删除成功');
+				$.hideModal("#remindModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
 
 
 //重置教师信息模态框
@@ -561,4 +742,13 @@ function binBind() {
 		wantAddTeacher();
 		e.stopPropagation();
 	});
+	
+	//批量删除教师
+	$('#removeTeachers').unbind('click');
+	$('#removeTeachers').bind('click', function(e) {
+		removeTeachers();
+		e.stopPropagation();
+	});
+	
+	
 }

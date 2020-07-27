@@ -1068,6 +1068,22 @@ public class AdministrationPageService {
 	public List<Edu101> queryAllTeacher() {
 		return edu101DAO.findAll();
 	}
+	
+	//查询教师任务书
+	public boolean checkTeacherTasks(String edu101Id) {
+		boolean canRemove=true;
+		List<Edu201> teacherTasks =edu201DAO.queryTaskByTeacherID(edu101Id);
+		List<Edu201> mainTeacherTasks =edu201DAO.queryMainTaskByTeacherID(edu101Id);
+		if(teacherTasks.size()>0||mainTeacherTasks.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
+	
+	//删除教师
+	public void removeTeacher(String edu101Id) {
+		edu101DAO.removeTeacher(edu101Id);
+	}
 
 	// 根据教学班组装任务书信息
 	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {
@@ -1332,6 +1348,9 @@ public class AdministrationPageService {
 				}
 				if (edu101.getJzgh() != null && !"".equals(edu101.getJzgh())) {
 					predicates.add(cb.like(root.<String> get("jzgh"), '%' + edu101.getJzgh() + '%'));
+				}
+				if (edu101.getSzxbmc() != null && !"".equals(edu101.getSzxbmc())) {
+					predicates.add(cb.like(root.<String> get("szxbmc"), '%' + edu101.getSzxbmc() + '%'));
 				}
 				if (edu101.getZc() != null && !"".equals(edu101.getZc())) {
 					predicates.add(cb.equal(root.<String> get("zc"),edu101.getZc()));
@@ -1609,6 +1628,10 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
+
 
 
 

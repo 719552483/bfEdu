@@ -23,6 +23,15 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	//根据ID查询任务书
 	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)
 	public Edu201 queryTaskByID(String iD);
+	
+	
+	// 根据教师id 查询教师id为主要老师的任务书
+	@Query(value = "select * from edu201 e where e.zyls like %?1%", nativeQuery = true)
+	public List<Edu201> queryMainTaskByTeacherID(String teacherId);
+
+	// 根据教师id 查询教师id为老师的任务书
+	@Query(value = "select * from edu201 e where e.ls like %?1%", nativeQuery = true)
+	public List<Edu201> queryTaskByTeacherID(String teacherId);
 
 	//任务书反馈意见
 	@Modifying
