@@ -95,14 +95,28 @@ function stuffEJDElement(rs){
 //根据二级代码内容填充相关元素
 function drawEJDMselect(EJDMInfo){
 	if(typeof(EJDMInfo) != "undefined"){
-		var allEvement=$("label"); //获取所有下拉select
+//		var allEvement=$("label"); //获取所有下拉select
+//		for (var i = 0; i < allEvement.length; i++) {
+//			if(allEvement[i].innerText.replace("*", "").trim().replace(/\s/g,"")===EJDMInfo[0].ejdmmc||allEvement[i].innerText.replace("*", "")===EJDMInfo[0].ejdmmc){
+//				//判断是否是seclect
+//				if(allEvement[i].parentElement.parentNode.childNodes[1].childNodes[3].classList[0]!=="select-mania"){
+//					break;
+//				}
+//				var dorwEvementId=allEvement[i].parentElement.parentNode.childNodes[1].childNodes[3].childNodes[2].id;
+//				var str = '<option value="seleceConfigTip">请选择</option>';
+//				for (var g = 0; g < EJDMInfo.length; g++) {
+//					str += '<option value="' + EJDMInfo[g].ejdm + '">' + EJDMInfo[g].ejdmz
+//							+ '</option>';
+//				}
+//				stuffManiaSelect("#"+dorwEvementId, str);
+//			}
+//		}
+		
+		var allEvement=$(".isSowIndex "); //获取所有下拉select
 		for (var i = 0; i < allEvement.length; i++) {
-			if(allEvement[i].innerText.replace("*", "").trim().replace(/\s/g,"")===EJDMInfo[0].ejdmmc){
-				//判断是否是seclect
-				if(allEvement[i].parentElement.parentNode.childNodes[1].childNodes[3].classList[0]!=="select-mania"){
-					break;
-				}
-				var dorwEvementId=allEvement[i].parentElement.parentNode.childNodes[1].childNodes[3].childNodes[2].id;
+			var dorwEvementId=allEvement[i].id;
+			var currentTxt=allEvement[i].parentNode.previousElementSibling.innerText.replace("*", "").trim().replace(/\s/g,"");
+			if(EJDMInfo[0].ejdmmc===currentTxt){
 				var str = '<option value="seleceConfigTip">请选择</option>';
 				for (var g = 0; g < EJDMInfo.length; g++) {
 					str += '<option value="' + EJDMInfo[g].ejdm + '">' + EJDMInfo[g].ejdmz
@@ -110,6 +124,7 @@ function drawEJDMselect(EJDMInfo){
 				}
 				stuffManiaSelect("#"+dorwEvementId, str);
 			}
+	
 		}
 	}
 }
