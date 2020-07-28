@@ -430,6 +430,21 @@ public class ReflectUtils {
 		
 		for (int i = 0; i < importTeacher.size(); i++) {
 			Edu101 edu101 = importTeacher.get(i);
+			//如果是修改操作 判断是否改变了教师edu101ID
+			if(isModify){
+				String correctjzgh=reflectUtils.administrationPageService.queryJzghBy101ID(String.valueOf(edu101.getEdu101_ID()));
+				if(correctjzgh==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-可能修改了教职工ID(教职工ID不允许更改)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					edu101.setJzgh(correctjzgh);
+				}
+			}
+			
+			
 			//非空验证
 			if(isNull(edu101.getXm())){
 				chaeckPass=false;
@@ -1344,6 +1359,9 @@ public class ReflectUtils {
 							if(keyType.equals("ImportEdu101")){
 							    keyName = getImportantEdu101KeyName(cell.getColumnIndex()); //获取列名
 							}
+							if(keyType.equals("ModifyEdu101")){
+							    keyName = getModifyEdu101KeyName(cell.getColumnIndex()); //获取列名
+							}
 							//行数据不为空 放入返回集
 							if(getCellData(cell)!=null&&!getCellData(cell).equals("")){
 								String Value=getCellData(cell);
@@ -1652,6 +1670,62 @@ public class ReflectUtils {
 		return result;
 	}
 	
+	//获取批量修改教师Excel的Key值
+	private String getModifyEdu101KeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+		case 0:
+            result="Edu101_ID";
+            break;
+		case 1:
+            result="xm";
+            break;
+        case 2:
+            result="xb";
+            break;
+        case 3:
+            result="jzglx";
+            break;
+        case 4:
+            result="csrq";
+            break;
+        case 5:
+            result="sfzh";
+            break;
+        case 6:
+            result="szxbmc";
+            break;
+        case 7:
+            result="zymc";
+            break;
+        case 8:
+            result="hf";
+            break;
+        case 9:
+            result="mz";
+            break;
+        case 10:
+            result="zc";
+            break;
+        case 11:
+            result="whcd";
+            break;
+        case 12:
+            result="dxsj";
+            break;
+        case 13:
+            result="zzmm";
+            break;
+        case 14:
+            result="lxfs";
+            break;
+        default:
+        	result="ycTxt";
+            break;
+        }
+		return result;
+	}
+	
 	/*处理空行*/
 	@SuppressWarnings("deprecation")
 	public static boolean isRowEmpty(Row row) {
@@ -1687,6 +1761,13 @@ public class ReflectUtils {
 		//创建创建sheet1
 		XSSFSheet sheet1 = workbook.createSheet("已选学生信息");
 		this.stuffStudentInfoSheet1(sheet1,chosedStudents);
+	}
+	
+	// 批量更新教师模板
+	public void createModifyTeacherModal(XSSFWorkbook workbook, List<Edu101> chosedTeachers) {
+		// 创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("已选教职工信息");
+		this.stuffTeacherInfoSheet1(sheet1, chosedTeachers);
 	}
 	
 	//填充更新学生模板的Sheet1
@@ -1787,6 +1868,49 @@ public class ReflectUtils {
 		}
 	}
 	
+    //填充更新教职工模板的Sheet1
+    private void stuffTeacherInfoSheet1(XSSFSheet sheet,List<Edu101> chosedTeachers){
+    	// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"*教职工ID","*姓名","*性别", "*教职工类型", "*出生日期", "身份证号", "所属系部","所属专业",
+				"婚否", "民族", "职称", "文化程度 ", "到校时间", "政治面貌 ", "联系方式" };
+		
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+		
+		
+		for (int i = 0; i < chosedTeachers.size(); i++) {
+			appendCell(sheet,i,"",String.valueOf(chosedTeachers.get(i).getEdu101_ID()),-1,0,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getXm(),-1,1,false);
+			if(chosedTeachers.get(i).getXb().equals("M")){
+				appendCell(sheet,i,"","男",-1,2,false);
+			}else{
+				appendCell(sheet,i,"","女",-1,2,false);
+			}
+			appendCell(sheet,i,"",chosedTeachers.get(i).getJzglx(),-1,3,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getCsrq(),-1,4,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getSfzh(),-1,5,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getSzxbmc(),-1,6,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getZymc(),-1,7,false);
+			if(chosedTeachers.get(i).getHf().equals("T")){
+				appendCell(sheet,i,"","已婚",-1,8,false);
+			}else{
+				appendCell(sheet,i,"","未婚",-1,8,false);
+			}
+			appendCell(sheet,i,"",chosedTeachers.get(i).getMz(),-1,9,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getZc(),-1,10,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getWhcd(),-1,11,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getDxsj(),-1,12,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getZzmm(),-1,13,false);
+			appendCell(sheet,i,"",chosedTeachers.get(i).getLxfs(),-1,14,false);
+		}
+    }
+    
     //填充导入学生模板的Sheet1
     private void stuffStudentInfoSheet1(XSSFSheet sheet) {
 		// 设置标题
@@ -1822,6 +1946,8 @@ public class ReflectUtils {
 			cells[0].setCellValue(titles[i]);
 		}
 	}
+    
+    
     
     
     /**
@@ -1878,9 +2004,11 @@ public class ReflectUtils {
 			ModifyStudentSeclect(hiddenSheetName,workbook);
 		}else if(filename.equals("ImportTeacher")||filename.equals("导入教职工模板")){
 			ImportTeacherSeclect(hiddenSheetName,workbook);
+		}else if(filename.equals("modifyStudents")||filename.equals("批量更新教职工模板")){
+			ModifyTeacherSeclect(hiddenSheetName,workbook);
 		}
 	}
-	
+
 	//为导入学生文件填充需要的下拉框
 	public static void ImportStudentSeclect(String hiddenSheetName,XSSFWorkbook workbook){
 		int needCreatHiddenSheetNum=0;
@@ -2218,6 +2346,110 @@ public class ReflectUtils {
 				cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,false);
 			}else if(i==13){
 				cell2Select(workbook,hiddenSheetName,xzbArrays,xzbIndex,false);
+			}
+		}
+	}
+	
+	//为修改教师文件填充需要的下拉框
+	private void ModifyTeacherSeclect(String hiddenSheetName, XSSFWorkbook workbook) {
+		int needCreatHiddenSheetNum=0;
+		List < String > sexlist = new ArrayList < String > ();
+		sexlist.add("男");
+		sexlist.add("女");
+		needCreatHiddenSheetNum++;
+		String[]sexArrays = sexlist.toArray(new String[sexlist.size()]);
+		
+		List < String > jzglxlist = new ArrayList < String > ();
+		List<Edu000> jzglxbms = reflectUtils.administrationPageService.queryEjdm("jzglx");
+		for (int i = 0; i < jzglxbms.size(); i++) {
+			jzglxlist.add(jzglxbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]ztArrays = jzglxlist.toArray(new String[jzglxlist.size()]);
+		
+		List < String > xblist = new ArrayList < String > ();
+		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
+		for (int i = 0; i < xbs.size(); i++) {
+			xblist.add(xbs.get(i).getXbmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]xbArrays = xblist.toArray(new String[xblist.size()]);
+		
+		List < String > zylist = new ArrayList < String > ();
+		List<Edu106> zys = reflectUtils.administrationPageService.queryAllMajor();
+		for (int i = 0; i < zys.size(); i++) {
+			zylist.add(zys.get(i).getZymc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zyArrays = zylist.toArray(new String[zylist.size()]);
+		
+		List < String > marrayOrNotlist = new ArrayList < String > ();
+		marrayOrNotlist.add("未婚");
+		marrayOrNotlist.add("已婚");
+		needCreatHiddenSheetNum++;
+		String[]marrayOrNotArrays = marrayOrNotlist.toArray(new String[marrayOrNotlist.size()]);
+		
+		List < String > mzlist = new ArrayList < String > ();
+		List<Edu000> mzbms = reflectUtils.administrationPageService.queryEjdm("mz");
+		for (int i = 0; i < mzbms.size(); i++) {
+			mzlist.add(mzbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]mzArrays = mzlist.toArray(new String[mzlist.size()]);
+		
+		List < String > zclist = new ArrayList < String > ();
+		List<Edu000> zcbms = reflectUtils.administrationPageService.queryEjdm("zc");
+		for (int i = 0; i < zcbms.size(); i++) {
+			zclist.add(zcbms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zcArrays = zclist.toArray(new String[zclist.size()]);
+		
+		List < String > whcdlist = new ArrayList < String > ();
+		List<Edu000> whcds = reflectUtils.administrationPageService.queryEjdm("whcd");
+		for (int i = 0; i < whcds.size(); i++) {
+			whcdlist.add(whcds.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]whcdArrays = whcdlist.toArray(new String[whcdlist.size()]);
+		
+		List < String > zzmmlist = new ArrayList < String > ();
+		List<Edu000> zzmms = reflectUtils.administrationPageService.queryEjdm("zzmm");
+		for (int i = 0; i < zzmms.size(); i++) {
+			zzmmlist.add(zzmms.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]zzmmArrays = zzmmlist.toArray(new String[zzmmlist.size()]);
+		
+		int[] xbIndex={1};
+		int[] jcglxIndex={2};
+		int[] shxbIndex={5};
+		int[] zyIndex={6};
+		int[] hfIndex={7};
+		int[] mzIndex={8};
+		int[] zcIndex={9};
+		int[] whcdIndex={10};
+		int[] zzmmIndex={12};
+		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
+			hiddenSheetName = hiddenSheetName+(i+1);
+			if(i==0){
+				cell2Select(workbook,hiddenSheetName,sexArrays,xbIndex,true);
+			}else if(i==1){
+				cell2Select(workbook,hiddenSheetName,ztArrays,jcglxIndex,true);
+			}else if(i==2){
+				cell2Select(workbook,hiddenSheetName,xbArrays,shxbIndex,true);
+			}else if(i==3){
+				cell2Select(workbook,hiddenSheetName,zyArrays,zyIndex,true);
+			}else if(i==4){
+				cell2Select(workbook,hiddenSheetName,marrayOrNotArrays,hfIndex,true);
+			}else if(i==5){
+				cell2Select(workbook,hiddenSheetName,mzArrays,mzIndex,true);
+			}else if(i==6){
+				cell2Select(workbook,hiddenSheetName,zcArrays,zcIndex,true);
+			}else if(i==7){
+				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,true);
+			}else if(i==8){
+				cell2Select(workbook,hiddenSheetName,zzmmArrays,zzmmIndex,true);
 			}
 		}
 	}
@@ -2702,6 +2934,8 @@ public class ReflectUtils {
         }
         return rs.toString();
     }
+
+
 
 
 

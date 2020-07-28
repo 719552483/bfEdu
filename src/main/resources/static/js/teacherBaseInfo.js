@@ -113,7 +113,8 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 			},{
 				field: 'edu101_ID',
 				title: '唯一标识',
-				align: 'center'
+				align: 'center',
+				visible: false
 			},
 			 {
 				field: 'szxbmc',
@@ -655,6 +656,167 @@ function confirmImportTeacherInfo(){
 }
 
 
+//预备批量更新教师
+function modifyTeachers(){
+	var choosendTeachers = $("#teacherBaseInfoTable").bootstrapTable("getSelections");
+	if(choosendTeachers.length===0){
+		toastr.warning('暂未选择教职工');
+		return;
+	}
+	$.showModal("#modifyTeachersModal",true);
+	$("#ModifyTeachersFile,#showModifyFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#ModifyTeachersFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#ModifyTeachersFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#ModifyStudentsFile").val("");
+			return
+		}
+		$("#showModifyFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	
+	//下载更新模板
+	$('#loadModifyTeachersModal').unbind('click');
+	$('#loadModifyTeachersModal').bind('click', function(e) {
+		loadModifyTeachersModal(choosendTeachers);
+		e.stopPropagation();
+	});
+}
+
+//下载更新模板
+function loadModifyTeachersModal(choosendTeachers){
+	var choosendTeachersId=new Array();
+	for (var i = 0; i < choosendTeachers.length; i++) {
+		choosendTeachersId.push(choosendTeachers[i].edu101_ID);
+	}
+
+	 var url = "/downloadModifyTeachersModal";
+     var modifyTeacherIDs = JSON.stringify(choosendTeachersId) ;
+     var form = $("<form></form>").attr("action", url).attr("method", "post");
+     form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyTeacherIDs").attr("value", modifyTeacherIDs));
+     form.appendTo('body').submit().remove();
+}
+
+//检验修改教师文件
+function checkModifyTeachersFile(){
+	if ($("#ModifyTeachersFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	
+	var formData = new FormData();
+	formData.append("file",$('#ModifyTeachersFile')[0].files[0]);
+	
+    $.ajax({
+        url:'/verifiyModifyTeacherFile',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	if(backjosn.result){
+        		$(".fileLoadingArea").hide();
+        		if(!backjosn.isExcel){
+        			showImportErrorInfo("#modifyTeachersModal","请上传xls或xlsx类型的文件");
+        		   return
+        		}
+        		if(!backjosn.sheetCountPass){
+        			showImportErrorInfo("#modifyTeachersModal","上传文件的标签页个数不正确");
+        		   return
+        		}
+        		if(!backjosn.modalPass){
+        			showImportErrorInfo("#modifyTeachersModal","模板格式与原始模板不对应");
+        		   return
+        		}
+        		if(!backjosn.haveData){
+        			showImportErrorInfo("#modifyTeachersModal","文件暂无数据");
+        		   return
+        		}
+        		if(!backjosn.dataCheck){
+        			showImportErrorInfo("#modifyTeachersModal",backjosn.checkTxt);
+        		   return
+        		}
+        		
+        		showImportSuccessInfo("#modifyTeachersModal",backjosn.checkTxt);
+        	}else{
+        	  toastr.warning('操作失败，请重试');
+        	}
+        },beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
+}
+
+//确认提交修改教师文件
+function confirmModifyTeacherInfo() {
+		if ($("#ModifyTeachersFile").val() === "") {
+			toastr.warning('请选择文件');
+			return;
+		}
+	
+	    var formData = new FormData();
+	    formData.append("file",$('#ModifyTeachersFile')[0].files[0]);
+
+	    $.ajax({
+	        url:'/modifyTeachers',
+	        dataType:'json',
+	        type:'POST',
+	        async: true,
+	        data: formData,
+	        processData : false, // 使数据不做处理
+	        contentType : false, // 不要设置Content-Type请求头
+	        success: function(backjosn){
+	        	$(".fileLoadingArea").hide();
+        		if(!backjosn.isExcel){
+        			showImportErrorInfo("#modifyTeachersModal","请上传xls或xlsx类型的文件");
+        		   return
+        		}
+        		if(!backjosn.sheetCountPass){
+        			showImportErrorInfo("#modifyTeachersModal","上传文件的标签页个数不正确");
+        		   return
+        		}
+        		if(!backjosn.modalPass){
+        			showImportErrorInfo("#modifyTeachersModal","模板格式与原始模板不对应");
+        		   return
+        		}
+        		if(!backjosn.haveData){
+        			showImportErrorInfo("#modifyTeachersModal","文件暂无数据");
+        		   return
+        		}
+        		if(!backjosn.dataCheck){
+        			showImportErrorInfo("#modifyTeachersModal",backjosn.checkTxt);
+        		   return
+        		}
+        		var choosendTeachers = backjosn.modifyTeachersInfo;
+        		for (var i = 0; i < choosendTeachers.length; i++) {
+        			$("#teacherBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendTeachers[i].edu101_ID, row: choosendTeachers[i]});
+        		}
+				toastr.success('批量更新成功');
+		        $.hideModal("#modifyTeachersModal");
+		        toolTipUp(".myTooltip");
+	        },beforeSend: function(xhr) {
+	           $(".fileLoadingArea").show();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+	    });
+}
 
 //重置教师信息模态框
 function rebackTeacherInfo(){
@@ -927,6 +1089,27 @@ function binBind() {
 	$('.confirmImportTeacherInfo').unbind('click');
 	$('.confirmImportTeacherInfo').bind('click', function(e) {
 		confirmImportTeacherInfo();
+		e.stopPropagation();
+	});
+	
+	//批量修改教师
+	$('#modifyTeachers').unbind('click');
+	$('#modifyTeachers').bind('click', function(e) {
+		modifyTeachers();
+		e.stopPropagation();
+	});
+	
+	//检验修改教师文件
+	$('#checkModifyTeachersFile').unbind('click');
+	$('#checkModifyTeachersFile').bind('click', function(e) {
+		checkModifyTeachersFile();
+		e.stopPropagation();
+	});
+	
+	//确认导入教师
+	$('.confirmModifyTeachers').unbind('click');
+	$('.confirmModifyTeachers').bind('click', function(e) {
+		confirmModifyTeacherInfo();
 		e.stopPropagation();
 	});
 }

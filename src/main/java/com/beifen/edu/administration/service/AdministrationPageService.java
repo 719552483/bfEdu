@@ -649,7 +649,7 @@ public class AdministrationPageService {
 		return newXh;
 	}
 	
-	// 为新生生成学号
+	// 为教师生成学号
 	public String getNewTeacherJzgh() {
 		String jzgh_before =utils.getRandom(2);
 		String newXh = "";
@@ -1063,7 +1063,17 @@ public class AdministrationPageService {
 	public String queryTecaherNameById(Long techerId) {
 		return edu101DAO.queryTeacherById(techerId);
 	}
-
+	
+	// 根据id查询教师所有信息
+	public Edu101 queryTeacherBy101ID(String techerId) {
+		return edu101DAO.queryTeacherBy101ID(techerId);
+	}
+	
+	// 根据id查询教职工号
+	public String queryJzghBy101ID(String techerId) {
+		return edu101DAO.queryJzghBy101ID(techerId);
+	}
+	
 	// 查询所有教师
 	public List<Edu101> queryAllTeacher() {
 		return edu101DAO.findAll();
@@ -1639,6 +1649,9 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
+
 
 
 

@@ -873,7 +873,93 @@ public class AdministrationController {
         }
 		return returnMap;
 	}
+
+
+	/**
+	 * 下载教师更新模板
+	 * 
+	 * @return returnMap
+	 * @throws ParseException 
+	 * @throws Exception 
+	 */
+	@RequestMapping("downloadModifyTeachersModal")
+	@ResponseBody
+	public void downloadModifyTeachersModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyTeacherIDs") String modifyTeacherIDs) throws IOException, ParseException {
+		// 根据ID查询已选学生信息
+		com.alibaba.fastjson.JSONArray modifyTeacherArray = JSON.parseArray(modifyTeacherIDs);
+		List<Edu101> chosedTeachers=new ArrayList<Edu101>();
+		for (int i = 0; i < modifyTeacherArray.size(); i++) {
+			Edu101 edu101=administrationPageService.queryTeacherBy101ID(modifyTeacherArray.get(i).toString());
+			chosedTeachers.add(edu101);
+		}
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="modifyTeachers";
+		}else{
+			fileName="批量更新教职工模板";
+		}
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createModifyTeacherModal(workbook,chosedTeachers);
+        utils.loadModal(response,fileName, workbook);
+	}
+
 	
+	/**
+	 * 检验修改教师的文件
+	 * 
+	 * 
+	 * @return returnMap
+	 * @throws ParseException
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("verifiyModifyTeacherFile")
+	@ResponseBody
+	public Object verifiyModifyTeacherFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, Object> checkRS = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
+		checkRS.put("result", true);
+		return checkRS;
+	}
+
+	
+	
+	/**
+	 * 批量修改教师
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("modifyTeachers")
+	@ResponseBody
+	public Object modifyTeachers(@RequestParam("file") MultipartFile file) throws Exception {
+		Map<String, Object> returnMap = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			return returnMap;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				return returnMap;
+			}
+		}
+		
+        if(!returnMap.get("importTeacher").equals("")){
+        	List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
+        	for (int i = 0; i < modifyTeachers.size(); i++) {
+        		administrationPageService.addTeacher(modifyTeachers.get(i)); //修改学生
+        	}
+        	returnMap.put("modifyTeachersInfo", modifyTeachers);
+        }
+		return returnMap;
+	}
 	
 	
 	/**
