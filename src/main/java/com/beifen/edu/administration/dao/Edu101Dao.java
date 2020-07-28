@@ -1,5 +1,7 @@
 package com.beifen.edu.administration.dao;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -20,4 +22,8 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "delete from edu101 where Edu101_ID =?1", nativeQuery = true)
 	void removeTeacher(String edu101id);
+
+	//查询教师身份证号是否已存在
+	@Query(value = "select * from edu101 e where e.sfzh=?1", nativeQuery = true)
+	public List<Edu101> teacherIDcardIshave(String sfzh);
 }

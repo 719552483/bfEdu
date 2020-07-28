@@ -487,8 +487,42 @@ public class ReflectUtils {
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					//判断身份证号在数据库是否存在
+					List<Edu101> databaseAllTeacher=reflectUtils.administrationPageService.queryAllTeacher();
+					if(!chaeckPass){
+						break;
+					}else{
+						if(isModify){
+							for (int d = 0; d < databaseAllTeacher.size(); d++) {
+								if (databaseAllTeacher.get(d).getEdu101_ID()==edu101.getEdu101_ID()) {
+									databaseAllTeacher.remove(d);
+								}
+							}
+							
+							for (int d = 0;d < databaseAllTeacher.size(); d++) {
+								if(databaseAllTeacher.get(d).getSfzh().equals(edu101.getSfzh())){
+									chaeckPass=false;
+									checkTxt="第"+(i+1)+"行- 身份证号已存在";
+									returnMap.put("chaeckPass", chaeckPass);
+									returnMap.put("checkTxt", checkTxt);
+									break;
+								}
+							}
+						}else{
+							boolean IDcardIshave = reflectUtils.administrationPageService.teacherIDcardIshave(edu101.getSfzh());
+							if(IDcardIshave){
+								chaeckPass=false;
+								checkTxt="第"+(i+1)+"行- 身份证号已存在";
+								returnMap.put("chaeckPass", chaeckPass);
+								returnMap.put("checkTxt", checkTxt);
+								break;
+							}
+						}
+					}
 				}
 			}
+			
 			
 			//验证性别格式
 			if(!edu101.getXb().equals("男")&&!edu101.getXb().equals("女")){

@@ -837,6 +837,46 @@ public class AdministrationController {
 	
 	
 	/**
+	 * 导入教师
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("importTeacher")
+	@ResponseBody
+	public Object importTeacher(@RequestParam("file") MultipartFile file) throws Exception {
+		Map<String, Object> returnMap = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			return returnMap;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				return returnMap;
+			}
+		}
+		
+        if(!returnMap.get("importTeacher").equals("")){
+        	List<Edu101> importTeacher = (List<Edu101>) returnMap.get("importTeacher");
+        	String yxbz = "1";
+    		for (int i = 0; i < importTeacher.size(); i++) {
+    			Edu101 edu101 = importTeacher.get(i);
+    			String jzgh =administrationPageService.getNewTeacherJzgh(); //新教师的教职工号
+    			edu101.setJzgh(jzgh);
+    			administrationPageService.addTeacher(edu101); // 新增教师
+    		}
+        }
+		return returnMap;
+	}
+	
+	
+	
+	/**
 	 * 查询所有教师
 	 * 
 	 * @return returnMap

@@ -113,8 +113,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 			},{
 				field: 'edu101_ID',
 				title: '唯一标识',
-				align: 'center',
-				visible: false
+				align: 'center'
 			},
 			 {
 				field: 'szxbmc',
@@ -595,6 +594,65 @@ function checkTeacherInfoFile(){
 	    });
 }
 
+//确认导入教师
+function confirmImportTeacherInfo(){
+	if ($("#teacherInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+
+    var formData = new FormData();
+    formData.append("file",$('#teacherInfoFile')[0].files[0]);
+
+    $.ajax({
+        url:'/importTeacher',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	$(".fileLoadingArea").hide();
+    		if(!backjosn.isExcel){
+    			showImportErrorInfo("#importTeacherInfoModal","请上传xls或xlsx类型的文件");
+    		   return
+    		}
+    		if(!backjosn.sheetCountPass){
+    			showImportErrorInfo("#importTeacherInfoModal","上传文件的标签页个数不正确");
+    		   return
+    		}
+    		if(!backjosn.modalPass){
+    			showImportErrorInfo("#importTeacherInfoModal","模板格式与原始模板不对应");
+    		   return
+    		}
+    		if(!backjosn.haveData){
+    			showImportErrorInfo("#importTeacherInfoModal","文件暂无数据");
+    		   return
+    		}
+    		if(!backjosn.dataCheck){
+    			showImportErrorInfo("#importTeacherInfoModal",backjosn.checkTxt);
+    		   return
+    		}
+    		
+    		var importTeachers=backjosn.importTeacher;
+    		for (var i = 0; i <importTeachers.length; i++) {
+				$('#teacherBaseInfoTable').bootstrapTable("prepend", importTeachers[i]);
+    		}
+			toastr.success('导入成功');
+			toolTipUp(".myTooltip");
+			$.hideModal("#importTeacherInfoModal");
+        },beforeSend: function(xhr) {
+           $(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
+}
 
 
 
@@ -861,6 +919,14 @@ function binBind() {
 	$('#loadTeacherInfoModel').unbind('click');
 	$('#loadTeacherInfoModel').bind('click', function(e) {
 		loadTeacherInfoModel();
+		e.stopPropagation();
+	});
+	
+
+	//确认导入教师
+	$('.confirmImportTeacherInfo').unbind('click');
+	$('.confirmImportTeacherInfo').bind('click', function(e) {
+		confirmImportTeacherInfo();
 		e.stopPropagation();
 	});
 }

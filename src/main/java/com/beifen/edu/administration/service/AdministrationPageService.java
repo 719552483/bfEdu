@@ -611,7 +611,7 @@ public class AdministrationPageService {
 		return edu001DAO.queryStudentXzbCode(edu001Id);
 	}
 
-	// 查询身份证号是否存在
+	// 查询学生身份证号是否存在
 	public boolean IDcardIshave(String sfzh) {
 		boolean isHave = false;
 		if (sfzh != null) {
@@ -1085,6 +1085,17 @@ public class AdministrationPageService {
 		edu101DAO.removeTeacher(edu101Id);
 	}
 
+	//查询教师身份证号是否已存在
+	public boolean teacherIDcardIshave(String sfzh) {
+		boolean isHave = false;
+		if (sfzh != null) {
+			List<Edu101> IDcards = edu101DAO.teacherIDcardIshave(sfzh);
+			if (IDcards.size() > 0)
+				isHave = true;
+		}
+		return isHave;
+	}
+	
 	// 根据教学班组装任务书信息
 	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {
 		List<Object> sendTaskList = new ArrayList();
@@ -1628,6 +1639,8 @@ public class AdministrationPageService {
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}
+
+
 
 
 
