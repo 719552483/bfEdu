@@ -97,7 +97,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 		exportDataType: "all",  
 		showExport: true,      //是否显示导出
 		exportOptions:{  
-		    fileName: '辅导员/班主任导出'  //文件名称
+		    fileName: '教职工导出'  //文件名称
 		},
 		striped: true,
 	    sidePagination: "client",   
@@ -365,7 +365,7 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 //预备添加教师
 function wantAddTeacher(){
 	rebackTeacherInfo();
-	$("#addTeacherModal").find(".moadalTitle").html("新增辅导员/班主任");
+	$("#addTeacherModal").find(".moadalTitle").html("新增教职工");
 	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
 	$.showModal("#addTeacherModal",true);
 	drawCalenr("#addTeacherCsrq");
@@ -429,7 +429,7 @@ function sendNewTeacherInfo(newTeacherInfo){
 //单个删除教师
 function removeTeacher(row){
 	$.showModal("#remindModal",true);
-	$(".remindType").html('辅导员/班主任- '+row.xm+' ');
+	$(".remindType").html('教职工- '+row.xm+' ');
 	$(".remindActionType").html("删除");
 	
 	//确认删除学生
@@ -449,7 +449,7 @@ function removeTeachers(){
 		toastr.warning('暂未选择任何数据');
 	} else {
 		$.showModal("#remindModal",true);
-		$(".remindType").html("所选辅导员/班主任");
+		$(".remindType").html("所选教职工");
 		$(".remindActionType").html("删除");
 		
 		//确认删除学生
@@ -488,7 +488,7 @@ function sednRemoveInfo(removeArray){
 			if (backjson.result) {
 				hideloding();
 				if (!backjson.canRemove) {
-					toastr.warning('不能删除有任务书的辅导员/班主任');
+					toastr.warning('不能删除有任务书的教职工');
 					return;
 				}
 				for (var i = 0; i < removeArray.length; i++) {
