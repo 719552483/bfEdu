@@ -986,10 +986,10 @@ function getnewTeacherInfo(){
 		return;
 	}
 	
-	if(dxsj===""){
-		toastr.warning('到校时间不能为空');
-		return;
-	}
+//	if(dxsj===""){
+//		toastr.warning('到校时间不能为空');
+//		return;
+//	}
 	
 	if(!isCardNo(sfzh)&&sfzh!==""){
 		toastr.warning('身份证号格式不正确');
