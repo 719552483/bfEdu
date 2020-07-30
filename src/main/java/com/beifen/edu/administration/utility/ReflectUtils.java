@@ -2469,7 +2469,7 @@ public class ReflectUtils {
 			jzglxlist.add(jzglxbms.get(i).getEjdmz());
 		}
 		needCreatHiddenSheetNum++;
-		String[]ztArrays = jzglxlist.toArray(new String[jzglxlist.size()]);
+		String[]jzglxArrays = jzglxlist.toArray(new String[jzglxlist.size()]);
 		
 		List < String > xblist = new ArrayList < String > ();
 		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
@@ -2540,7 +2540,7 @@ public class ReflectUtils {
 			if(i==0){
 				cell2Select(workbook,hiddenSheetName,sexArrays,xbIndex,false);
 			}else if(i==1){
-				cell2Select(workbook,hiddenSheetName,ztArrays,jcglxIndex,false);
+				cell2Select(workbook,hiddenSheetName,jzglxArrays,jcglxIndex,false);
 			}else if(i==2){
 				cell2Select(workbook,hiddenSheetName,xbArrays,shxbIndex,false);
 			}else if(i==3){
