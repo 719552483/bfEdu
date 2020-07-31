@@ -1031,6 +1031,15 @@ function getnewTeacherInfo(){
 	return returnObject;
 }
 
+//重置检索
+function researchTeachers(){
+	var reObject = new Object();
+	reObject.InputIds = "#teacherName,#teacherJzgh";
+	reObject.normalSelectIds = "#department,#major,#teacherZc";
+	reReloadSearchsWithSelect(reObject);
+	drawTeacherBaseInfoEmptyTable();
+}
+
 
 //初始化页面按钮绑定事件
 function binBind() {
@@ -1110,6 +1119,13 @@ function binBind() {
 	$('.confirmModifyTeachers').unbind('click');
 	$('.confirmModifyTeachers').bind('click', function(e) {
 		confirmModifyTeacherInfo();
+		e.stopPropagation();
+	});
+	
+	//重置检索
+	$('#researchTeachers').unbind('click');
+	$('#researchTeachers').bind('click', function(e) {
+		researchTeachers();
 		e.stopPropagation();
 	});
 }
