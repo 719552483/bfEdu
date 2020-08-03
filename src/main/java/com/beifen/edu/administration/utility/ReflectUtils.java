@@ -474,13 +474,13 @@ public class ReflectUtils {
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
-            if(isNull(edu101.getDxsj())){
-            	chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-到校时间不能为空";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;
-			}
+//            if(isNull(edu101.getDxsj())){
+//            	chaeckPass=false;
+//				checkTxt= "第"+(i+1)+"行-到校时间不能为空";
+//				returnMap.put("chaeckPass", chaeckPass);
+//				returnMap.put("checkTxt",checkTxt);
+//				break;
+//			}
 			
 			//教职工类型是否存在
 			String currentJzglxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu101.getJzglx(),"jzglx");
@@ -657,14 +657,16 @@ public class ReflectUtils {
 				}
 			}
 			
-			//到校时间是否正确
-			boolean dxsjStrCanChnageDate= isValidDate(edu101.getDxsj());
-			if(!dxsjStrCanChnageDate){
-				chaeckPass = false;
-				checkTxt = "第" + (i + 1) + "行-到校时间格式不正确(正确格式:1990-01-01)";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				return returnMap;
+			if(edu101.getDxsj()!=null){
+				//到校时间是否正确
+				boolean dxsjStrCanChnageDate= isValidDate(edu101.getDxsj());
+				if(!dxsjStrCanChnageDate){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-到校时间格式不正确(正确格式:1990-01-01)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					return returnMap;
+				}
 			}
 		}
 		
