@@ -101,7 +101,7 @@ public class AdministrationController {
 		administrationPageService.newUser(edu990);
 
 		// 生成系统用户权限
-		//aaaa
+	
 		
 		Edu991 edu991 = new Edu991();
 		edu991.setJs(sysRole);
