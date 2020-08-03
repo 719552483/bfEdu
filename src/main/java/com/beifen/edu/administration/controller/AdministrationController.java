@@ -173,6 +173,14 @@ public class AdministrationController {
 		Edu990 checkIsHaveUser = administrationPageService.checkIsHaveUser(username);
 		String datebasePwd = administrationPageService.checkPwd(username);
 		String ErroeTxt = "";
+		
+		
+		//判断sys用户是否存在
+		
+		
+		
+		
+		
 		// 用户不存在
 		if (checkIsHaveUser == null) {
 			result = false;

@@ -1,8 +1,5 @@
 $(function() {
 	checkHaveSysUser();
-	
-	
-	
 	//登录
 	$('#confrimLogin').unbind('click');
 	$('#confrimLogin').bind('click', function(e) {
