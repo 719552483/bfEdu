@@ -564,6 +564,60 @@
 		</div>
 	</div>
 	
+	
+	
+	<!-- 导入课程Modal -->
+	<div class="modal fade bs-example-modal-lg" id="importNewClassModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">批量导入课程</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="loadNewClassModel"><span><img src="images/icon05.png" style="width: 24px;"/></span>下载导入模板</li>
+							<li class="click" id="checkNewClassFile"><span><img src="images/ico05.png" style="width: 24px;"/></span>检验文件</li>
+						</ul>
+					</div>
+					<form enctype="multipart/form-data" id="NewClassForm" method="get">
+						<div class="col1 giveBottom">
+							<div class="fileContainer">
+								<a class="file">选择文件
+									<input type="file" id="NewClassFile" uploadSuccess="false"/>
+								</a>
+								<input type="text" readonly="readonly" class="myInput combinedClassTipInput" id="showFileName" placeholder="请选择上传文件..."/>
+							</div>
+						</div>
+						<div class="fileErrorTxTArea noneStart">
+							<div class="formtext myformtext"><img class="msgErrorbg" src="images/msg.png"/><b></b></div>
+						</div>
+						<div class="fileSuccessTxTArea noneStart">
+							<div class="formtext myformtext"><img class="msgSuccessbg" src="images/cbg.png"/><b></b></div>
+						</div>
+						<div class="fileLoadingArea noneStart">
+							<div class="spinner-box">
+								<div class="pulse-container">
+									<div class="pulse-bubble pulse-bubble-1"></div>
+									<div class="pulse-bubble pulse-bubble-2"></div>
+									<div class="pulse-bubble pulse-bubble-3"></div>
+								</div>
+								<div class="loadingtxt">文件解析中，请稍后...</div>
+						   </div>
+						</div>
+			       </form>
+					
+					
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" actionType="import" class="sure confirmImportNewClass" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
 
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">

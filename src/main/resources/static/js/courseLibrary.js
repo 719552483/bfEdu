@@ -874,12 +874,54 @@ function reReloadSearchs(){
 	drawCourseLibraryEmptyTable();
 }
 
+//批量导入课程
+function importClasses(){
+	$.showModal("#importNewClassModal",true);
+	$("#NewClassFile,#showFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#NewClassFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#NewClassFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#NewClassFile").val("");
+			return
+		}
+		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//下载导入模板
+	$('#loadNewClassModel').unbind('click');
+	$('#loadNewClassModel').bind('click', function(e) {
+		loadNewClassModel();
+		e.stopPropagation();
+	});
+}
+
+//下载导入模板
+function loadNewClassModel(){
+	var $eleForm = $("<form method='get'></form>");
+	$eleForm.attr("action", "/downloadNewClassModel"); //下载文件接口
+	$(document.body).append($eleForm);
+	//提交表单，实现下载
+	$eleForm.submit();
+}
+
+
 //页面初始化时按钮事件绑定
 function binBind(){
 	// 新增课程
 	$('#wantAddClass').unbind('click');
 	$('#wantAddClass').bind('click', function(e) {
 		wantAddClass();
+		e.stopPropagation();
+	});
+	
+	//批量导入课程
+	$('#importClasses').unbind('click');
+	$('#importClasses').bind('click', function(e) {
+		importClasses();
 		e.stopPropagation();
 	});
 	
