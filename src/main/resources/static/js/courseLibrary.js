@@ -874,12 +874,118 @@ function reReloadSearchs(){
 	drawCourseLibraryEmptyTable();
 }
 
+//批量导入课程
+function importClasses(){
+	$.showModal("#importNewClassModal",true);
+	$("#NewClassFile,#showFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#NewClassFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#NewClassFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#NewClassFile").val("");
+			return
+		}
+		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//下载导入模板
+	$('#loadNewClassModel').unbind('click');
+	$('#loadNewClassModel').bind('click', function(e) {
+		loadNewClassModel();
+		e.stopPropagation();
+	});
+}
+
+//下载导入模板
+function loadNewClassModel(){
+	var $eleForm = $("<form method='get'></form>");
+	$eleForm.attr("action", "/downloadNewClassModel"); //下载文件接口
+	$(document.body).append($eleForm);
+	//提交表单，实现下载
+	$eleForm.submit();
+}
+
+//检验导入模板
+function checkNewClassFile(){
+	if ($("#NewClassFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	 var formData = new FormData();
+	    formData.append("file",$('#NewClassFile')[0].files[0]);
+
+	    $.ajax({
+	        url:'/verifiyImportNewClassFile',
+	        dataType:'json',
+	        type:'POST',
+	        async: true,
+	        data: formData,
+	        processData : false, // 使数据不做处理
+	        contentType : false, // 不要设置Content-Type请求头
+	        success: function(backjosn){
+	        	if(backjosn.result){
+	        		$(".fileLoadingArea").hide();
+	        		if(!backjosn.isExcel){
+	        			showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
+	        		   return
+	        		}
+	        		if(!backjosn.sheetCountPass){
+	        			showImportErrorInfo("#importNewClassModal","上传文件的标签页个数不正确");
+	        		   return
+	        		}
+	        		if(!backjosn.modalPass){
+	        			showImportErrorInfo("#importNewClassModal","模板格式与原始模板不对应");
+	        		   return
+	        		}
+	        		if(!backjosn.haveData){
+	        			showImportErrorInfo("#importNewClassModal","文件暂无数据");
+	        		   return
+	        		}
+	        		if(!backjosn.dataCheck){
+	        			showImportErrorInfo("#importNewClassModal",backjosn.checkTxt);
+	        		   return
+	        		}
+	        		
+	        		showImportSuccessInfo("#importNewClassModal",backjosn.checkTxt);
+	        	}else{
+	        	  toastr.warning('操作失败，请重试');
+	        	}
+	        },beforeSend: function(xhr) {
+				$(".fileLoadingArea").show();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+	    });
+}
+
+
 //页面初始化时按钮事件绑定
 function binBind(){
 	// 新增课程
 	$('#wantAddClass').unbind('click');
 	$('#wantAddClass').bind('click', function(e) {
 		wantAddClass();
+		e.stopPropagation();
+	});
+	
+	//批量导入课程
+	$('#importClasses').unbind('click');
+	$('#importClasses').bind('click', function(e) {
+		importClasses();
+		e.stopPropagation();
+	});
+	
+	//检验导入文件
+	$('#checkNewClassFile').unbind('click');
+	$('#checkNewClassFile').bind('click', function(e) {
+		checkNewClassFile();
 		e.stopPropagation();
 	});
 	

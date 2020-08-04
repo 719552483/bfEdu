@@ -801,6 +801,48 @@ public class AdministrationController {
 	}
 	
 	
+	/**
+	 * 下载课程导入模板
+	 * 
+	 * @return returnMap
+	 * @throws IOException
+	 * @throws ParseException 
+	 */
+	@RequestMapping("downloadNewClassModel")
+	@ResponseBody
+	public void downloadNewClassModel(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createImportNewClassModel(workbook);
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="ImportClass";
+		}else{
+			fileName="导入课程模板";
+		}
+        utils.loadModal(response,fileName, workbook);
+	}
+	
+	
+	/**
+	 * 检验课程导入的文件
+	 * 
+	 * 
+	 * @return returnMap
+	 * @throws ParseException
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("verifiyImportNewClassFile")
+	@ResponseBody
+	public Object verifiyImportNewClassFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, Object> checkRS = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
+		checkRS.put("result", true);
+		return checkRS;
+	}
+	
 	
 	
 	/**

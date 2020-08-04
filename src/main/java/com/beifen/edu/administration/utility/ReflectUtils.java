@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ import com.beifen.edu.administration.domian.Edu104;
 import com.beifen.edu.administration.domian.Edu105;
 import com.beifen.edu.administration.domian.Edu106;
 import com.beifen.edu.administration.domian.Edu107;
+import com.beifen.edu.administration.domian.Edu200;
 import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.service.AdministrationPageService;
 
@@ -302,10 +304,482 @@ public class ReflectUtils {
 	
 	
 	
+	/**
+	 * 检验课程文件
+	 * @param suffix文件后缀名
+	 * @return checkPass 验证结果
+	 * @throws Exception 
+	 * @throws java.text.ParseException 
+	 * */
+	public Map<String, Object> checkNewClassFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		boolean isExcel=false;
+		boolean sheetCountPass=false;
+		boolean modalPass=false;
+		boolean haveData=false;
+		Object dataCheck="";
+		Object checkTxt="";
+		Object importTeacher="";
+		// 判断读取的文件是否为Excel文件
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xlsx".equals(suffix) || "xls".equals(suffix)) {
+			isExcel = true;
+		}
+		
+		if(isExcel){
+			//获取Excel工作簿
+			InputStream in=file.getInputStream();
+			Workbook workBook = WorkbookFactory.create(in);
+			int sheetCount = workBook.getNumberOfSheets();// 获取sheet个数
+			
+			//验证sheet个数
+			if(sheetCount > 0){
+				sheetCountPass=true;
+			}
+			
+			//验证sheet名字
+			String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
+			if (sheetCountPass&&checkType.equals("ImportClass")&&sheetName.equals(hopeSheetName)) {
+				modalPass=true;
+			}else if(sheetCountPass&&checkType.equals("ModifyEdu101")&&sheetName.equals(hopeSheetName)){
+				modalPass=true;
+			}
+			
+			//验证是否有数据
+			List<Map<String,Object>> importClassess = this.getImportData(file.getInputStream(),checkType);
+			if(sheetCountPass&&modalPass&&importClassess.size()>0){
+				haveData=true;
+			}
+			
+			//验证数据正确性
+			if(sheetCountPass&&modalPass&&haveData){
+				if(checkType.equals("ImportClass")||checkType.equals("ModifyEdu101")){
+					boolean isModify;
+					if (checkType.equals("ImportEdu101"))
+						isModify=false;
+					else
+						 isModify=true;
+					Map<String, Object> datacheckInfo=this.checkClassInfo(importClassess,isModify);
+					dataCheck=datacheckInfo.get("chaeckPass");
+					checkTxt=datacheckInfo.get("checkTxt");
+					importTeacher=datacheckInfo.get("importTeacher");
+				}
+			}
+		}
+		
+		returnMap.put("isExcel",isExcel);
+		returnMap.put("sheetCountPass",sheetCountPass);
+		returnMap.put("modalPass",modalPass);
+		returnMap.put("haveData",haveData);
+		returnMap.put("dataCheck",dataCheck );
+		returnMap.put("checkTxt", checkTxt);
+		returnMap.put("importTeacher",importTeacher);
+		return returnMap;
+	}
 	
 	
-	
-	
+	/**
+	 * 验证导入的课程数据
+	 * @throws Exception 
+	 * @throws java.text.ParseException 
+	 * */
+	private Map<String, Object> checkClassInfo(List<Map<String, Object>> importClassess, boolean isModify) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu200> importClasses=new ArrayList<Edu200>();
+		boolean chaeckPass=true;
+		String checkTxt="";
+		//组装上传课程对象
+		for (int i = 0; i < importClassess.size(); i++) {
+			//获取课程负责人ID
+			String kcfzrIDStr=(String) importClassess.get(i).get("kcfzrID");
+			String[] kcfzrIDStrs=kcfzrIDStr.split("-");
+			if(kcfzrIDStrs.length<=1){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-课程负责人格式不正确";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			long kcfzrID=Long.parseLong(kcfzrIDStrs[1]);
+			String teacherName=reflectUtils.administrationPageService.queryTecaherNameById(kcfzrID);
+			if(teacherName==null){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}else{
+				if(!teacherName.equals(kcfzrIDStrs[0])){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-可能修改了课程负责人姓名(课程负责人姓名不允许更改)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+			
+			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("llxs")))){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-理论学时只接受数字参数";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;	
+			}
+			
+			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("sjxs")))){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-实践学时只接受数字参数";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;	
+			}
+			
+			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("fsxs")))){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-分散学时只接受数字参数";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;	
+			}
+			
+			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("jzxs")))){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-集中学时只接受数字参数";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;	
+			}
+			
+			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("zxs")))){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-总学时只接受数字参数";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;	
+			}
+			
+			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("xf")))){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-学分只接受数字参数";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;	
+			}
+			
+			//判断课程负责人ID是否存在
+			importClassess.get(i).remove("kcfzrID");
+			
+			Edu200 edu200 = JSON.parseObject(JSON.toJSONString(importClassess.get(i)), Edu200.class); // mapToBean
+			edu200.setKcfzrID(kcfzrID);
+			importClasses.add(edu200);
+		}
+		
+		for (int i = 0; i < importClasses.size(); i++) {
+			Edu200 edu200 = importClasses.get(i);
+//			//如果是修改操作 判断是否改变了课程ID
+//			if(isModify){
+//				String correctClassId=reflectUtils.administrationPageService.queryJzghBy101ID(String.valueOf(edu101.getEdu101_ID()));
+//				if(correctjzgh==null){
+//					chaeckPass=false;
+//					checkTxt="第"+(i+1)+"行-可能修改了教职工ID(教职工ID不允许更改)";
+//					returnMap.put("chaeckPass", chaeckPass);
+//					returnMap.put("checkTxt", checkTxt);
+//					break;
+//				}else{
+//					edu101.setJzgh(correctjzgh);
+//				}
+//			}
+			
+			
+			//非空验证
+			if(isNull(edu200.getKcmc())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-课程名称不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			Long KcfzrID=edu200.getKcfzrID();
+			if(KcfzrID==null){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-课程负责人不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			if(isNull(edu200.getKclx())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-课程类型不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			if(isNull(edu200.getKcxz())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-课程性质不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+		
+		
+			if(edu200.getLlxs()+edu200.getSjxs()==0){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-理论学时实践学时之和不能为0";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			if(edu200.getJzxs()+edu200.getFsxs()==0){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-分散学时集中学时之和不能为0";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			if((edu200.getLlxs()+edu200.getSjxs())!=(edu200.getJzxs()+edu200.getFsxs())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-（理论学时+实践学时）不等于（分散学时+集中学时）";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			//通过验证赋值总学时
+			edu200.setZxs(edu200.getLlxs()+edu200.getSjxs());
+			
+			if(isNull(edu200.getKsfs())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-考试方式不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			if(isNullFordouble(edu200.getXf())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-学分不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
+			
+			//判断课程类型是否存在
+			String kclxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKclx(),"cklx");
+			if (kclxCode == null) {
+				chaeckPass = false;
+				checkTxt = "第" + (i + 1) + "行-课程类型不存在";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			} else {
+				edu200.setKclxCode(kclxCode);
+			}
+			
+			//判断课程性质是否存在
+			String kcxzCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKcxz(),"ckxz");
+			if (kcxzCode == null) {
+				chaeckPass = false;
+				checkTxt = "第" + (i + 1) + "行-课程性质不存在";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			} else {
+				edu200.setKcxzCode(kcxzCode);
+			}
+			
+			//判断考试方式是否存在  不需要填充code
+			String ksfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKsfs(),"ksfs");
+			if (ksfsCode == null) {
+				chaeckPass = false;
+				checkTxt = "第" + (i + 1) + "行-考试方式不存在";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			
+			//判断模块类别是否存在  不需要填充code
+			if(edu200.getMklb()!=null){
+				String mklbCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getMklb(),"mklb");
+				if (mklbCode == null) {
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-模块类别不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+			//判断课程属性是否存在  不需要填充code
+			if(edu200.getKcsx()!=null){
+				String kcsxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKcsx(),"kcsx");
+				if (kcsxCode == null) {
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-课程属性不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+			//判断校企合作
+			if(edu200.getXqhz()!=null){
+				if(!edu200.getXqhz().equals("是")||!edu200.getXqhz().equals("否")){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-校企合作只接受(是)或(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(edu200.getXqhz().equals("是")){
+						edu200.setXqhz("T");
+					}else{
+						edu200.setXqhz("F");
+					}
+				}
+			}
+			
+			//判断授课方式是否存在  不需要填充code
+			if(edu200.getSkfs()!=null){
+				String skfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getSkfs(),"skfs");
+				if (skfsCode == null) {
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-授课方式不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+//			//判断授课地点是否存在  不需要填充code   todo
+//			if(edu200.getJpkcdj()!=null){
+//				String jpkcdjCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getJpkcdj(),"jpkcdj");
+//				if (jpkcdjCode == null) {
+//					chaeckPass = false;
+//					checkTxt = "第" + (i + 1) + "行-精品课程等级不存在";
+//					returnMap.put("chaeckPass", chaeckPass);
+//					returnMap.put("checkTxt", checkTxt);
+//					break;
+//				}
+//			}
+			
+			//判断精品课程是否存在  不需要填充code
+			if(edu200.getJpkcdj()!=null){
+				String jpkcdjCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getJpkcdj(),"jpkcdj");
+				if (jpkcdjCode == null) {
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-精品课程等级不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			
+			//判断核心课程
+			if(edu200.getZyhxkc()!=null){
+				if(!edu200.getZyhxkc().equals("是")||!edu200.getZyhxkc().equals("否")){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-专业核心课程只接受(是)或(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(edu200.getZyhxkc().equals("是")){
+						edu200.setZyhxkc("T");
+					}else{
+						edu200.setZyhxkc("F");
+					}
+				}
+			}
+			
+			//判断职业资格考证课程
+			if(edu200.getZyzgkzkc()!=null){
+				if(!edu200.getZyzgkzkc().equals("是")||!edu200.getZyzgkzkc().equals("否")){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-职业资格考证课程只接受(是)或(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(edu200.getZyzgkzkc().equals("是")){
+						edu200.setZyzgkzkc("T");
+					}else{
+						edu200.setZyzgkzkc("F");
+					}
+				}
+			}
+			
+			//判断是否新课
+			if(edu200.getSfxk()!=null){
+				if(!edu200.getSfxk().equals("是")||!edu200.getSfxk().equals("否")){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-是否新课只接受(是)或(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(edu200.getSfxk().equals("是")){
+						edu200.setSfxk("T");
+					}else{
+						edu200.setSfxk("F");
+					}
+				}
+			}
+			
+			//判断课证通融课程
+			if(edu200.getKztrkc()!=null){
+				if(!edu200.getKztrkc().equals("是")||!edu200.getKztrkc().equals("否")){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-课证通融课程只接受(是)或(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(edu200.getKztrkc().equals("是")){
+						edu200.setKztrkc("T");
+					}else{
+						edu200.setKztrkc("F");
+					}
+				}
+			}
+			
+			//判断教学改革立项课程
+			if(edu200.getJxgglxkc()!=null){
+				if(!edu200.getJxgglxkc().equals("是")||!edu200.getJxgglxkc().equals("否")){
+					chaeckPass = false;
+					checkTxt = "第" + (i + 1) + "行-教学改革立项课程只接受(是)或(否)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(edu200.getJxgglxkc().equals("是")){
+						edu200.setJxgglxkc("T");
+					}else{
+						edu200.setJxgglxkc("F");
+					}
+				}
+			}
+			
+			//判断课程负责人是否存在
+			
+		}
+		
+		if(chaeckPass){
+			checkTxt="上传文件格式/数据正确";
+		} 
+		returnMap.put("chaeckPass", chaeckPass);
+		returnMap.put("checkTxt", checkTxt);
+		returnMap.put("importClassess", importClassess);
+		return returnMap;
+	}
 	
 	
 	
@@ -1364,6 +1838,10 @@ public class ReflectUtils {
 							if(keyType.equals("ModifyEdu101")){
 							    keyName = getModifyEdu101KeyName(cell.getColumnIndex()); //获取列名
 							}
+							if(keyType.equals("ImportClass")){
+							    keyName = getModifyEdu200KeyName(cell.getColumnIndex()); //获取列名
+							}
+							
 							//行数据不为空 放入返回集
 							if(getCellData(cell)!=null&&!getCellData(cell).equals("")){
 								String Value=getCellData(cell);
@@ -1376,6 +1854,104 @@ public class ReflectUtils {
 			}
 		}
 		return dataList;
+	}
+	
+	//获取导入课程Excel的Key值
+	private String getModifyEdu200KeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+		case 0:
+            result="kcmc";
+            break;
+        case 1:
+            result="kcfzrID";
+            break;
+        case 2:
+            result="kclx";
+            break;
+        case 3:
+            result="kcxz";
+            break;
+        case 4:
+            result="llxs";
+            break;
+        case 5:
+            result="sjxs";
+            break;
+        case 6:
+            result="fsxs";
+            break;
+        case 7:
+            result="jzxs";
+            break;
+        case 8:
+            result="ksfs";
+            break;
+        case 9:
+            result="xf";
+            break;
+        case 10:
+            result="mklb";
+            break;
+        case 11:
+            result="kcsx";
+            break;
+        case 12:
+            result="bzzymc";
+            break;
+        case 13:
+            result="xqhz";
+            break;
+        case 14:
+            result="skfs";
+            break;
+        case 15:
+            result="skdd";
+            break;
+        case 16:
+            result="jpkcdj";
+            break;
+        case 17:
+            result="zyhxkc";
+            break;
+        case 18:
+            result="zyzgkzkc";
+            break;
+        case 19:
+            result="sfxk";
+            break;
+        case 20:
+            result="kztrkc";
+            break;
+        case 21:
+            result="jxgglxkc";
+            break;
+        case 22:
+            result="kcjj";
+            break;
+        case 23:
+            result="kcmb";
+            break;
+        case 24:
+            result="sjsl";
+            break;
+        case 25:
+            result="jxnrjyq";
+            break;
+        case 26:
+            result="kcssjy";
+            break;
+        case 27:
+            result="jsyqsm";
+            break;
+        case 28:
+            result="bz";
+            break;
+        default:
+        	result="ycTxt";
+            break;
+        }
+		return result;
 	}
 	
 	//获取导入教师Excel的Key值
@@ -1758,6 +2334,13 @@ public class ReflectUtils {
 		this.stuffTeacherInfoSheet1(sheet1);
 	}
 	
+	// 导入课程模板
+	public void createImportNewClassModel(XSSFWorkbook workbook) {
+		// 创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("导入课程信息");
+		this.stuffNewClassSheet1(sheet1);
+	}
+	
 	// 批量更新学生模板
 	public void createModifyStudentModal(XSSFWorkbook workbook,List<Edu001> chosedStudents) {
 		//创建创建sheet1
@@ -1949,6 +2532,24 @@ public class ReflectUtils {
 		}
 	}
     
+    //填充导入课程模板的Sheet1
+    private void stuffNewClassSheet1(XSSFSheet sheet) {
+		// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		
+		// 所有标题数组
+		String[] titles = new String[] {"*课程名字","*课程负责人", "*课程类型", "*课程性质", "*理论学时", "*实践学时","*分散学时",
+				"*集中学时", "*考试方式", "*学分", "模块类别 ", "课程属性", "标志专业名称 ", "校企合作",
+				"授课方式", "授课地点", "精品课程等级", "专业核心课程 ", "职业资格考证课程", "是否新课 ", "课证通融课程",
+				"教学改革立项课程", "课程简介", "课程目标", "设计思路 ", "教学内容及要求", "课程实施建议 ", "教师要求说明","备注"};
+		
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+	}
     
     
     
@@ -2008,6 +2609,8 @@ public class ReflectUtils {
 			ImportTeacherSeclect(hiddenSheetName,workbook);
 		}else if(filename.equals("modifyStudents")||filename.equals("批量更新教职工模板")){
 			ModifyTeacherSeclect(hiddenSheetName,workbook);
+		}else if(filename.equals("ImportClass")||filename.equals("导入课程模板")){
+			ImportNewClassSeclect(hiddenSheetName,workbook);
 		}
 	}
 
@@ -2560,6 +3163,126 @@ public class ReflectUtils {
 			}
 		}
 	}
+
+	//为导入课程文件填充需要的下拉框
+	public static void ImportNewClassSeclect(String hiddenSheetName,XSSFWorkbook workbook){
+		int needCreatHiddenSheetNum=0;
+		List < String > kcfzrlist = new ArrayList < String > ();
+		List<Edu101> kcfzrs = reflectUtils.administrationPageService.queryAllTeacher();
+		for (int i = 0; i < kcfzrs.size(); i++) {
+			kcfzrlist.add(kcfzrs.get(i).getXm()+'-'+kcfzrs.get(i).getEdu101_ID());
+		}
+		needCreatHiddenSheetNum++;
+		String[]kcfzrArrays = kcfzrlist.toArray(new String[kcfzrlist.size()]);
+		
+		List < String > kclxlist = new ArrayList < String > ();
+		List<Edu000> kclxs = reflectUtils.administrationPageService.queryEjdm("cklx");
+		for (int i = 0; i < kclxs.size(); i++) {
+			kclxlist.add(kclxs.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]kclxArrays = kclxlist.toArray(new String[kclxlist.size()]);
+		
+		List < String > kcxzlist = new ArrayList < String > ();
+		List<Edu000> kcxzs = reflectUtils.administrationPageService.queryEjdm("cklx");
+		for (int i = 0; i < kcxzs.size(); i++) {
+			kcxzlist.add(kcxzs.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]kcxzArrays = kcxzlist.toArray(new String[kcxzlist.size()]);
+		
+		List < String > ksfslist = new ArrayList < String > ();
+		List<Edu000> ksfss = reflectUtils.administrationPageService.queryEjdm("ksfs");
+		for (int i = 0; i < ksfss.size(); i++) {
+			ksfslist.add(ksfss.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]ksfsArrays = ksfslist.toArray(new String[ksfslist.size()]);
+		
+		List < String > mklblist = new ArrayList < String > ();
+		List<Edu000> mklbs = reflectUtils.administrationPageService.queryEjdm("mklb");
+		for (int i = 0; i < mklbs.size(); i++) {
+			mklblist.add(mklbs.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]mklbArrays = mklblist.toArray(new String[mklblist.size()]);
+		
+		List < String > kcsxlist = new ArrayList < String > ();
+		List<Edu000> kcsxs = reflectUtils.administrationPageService.queryEjdm("kcsx");
+		for (int i = 0; i < kcsxs.size(); i++) {
+			kcsxlist.add(kcsxs.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]kcsxArrays = kcsxlist.toArray(new String[kcsxlist.size()]);
+		
+		List < String > isOrNotlist = new ArrayList < String > ();
+		isOrNotlist.add("是");
+		isOrNotlist.add("否");
+		needCreatHiddenSheetNum++;
+		String[]isOrNotArrays = isOrNotlist.toArray(new String[isOrNotlist.size()]);
+		
+		List < String > skfslist = new ArrayList < String > ();
+		List<Edu000> skfss = reflectUtils.administrationPageService.queryEjdm("skfs");
+		for (int i = 0; i < skfss.size(); i++) {
+			skfslist.add(skfss.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]skfsArrays = skfslist.toArray(new String[skfslist.size()]);
+		
+		//授课地点todo
+//		List < String > kcfzrlist = new ArrayList < String > ();
+//		List<Edu101> kcfzrs = reflectUtils.administrationPageService.queryAllTeacher();
+//		for (int i = 0; i < kcfzrs.size(); i++) {
+//			kcfzrlist.add(kcfzrs.get(i).getXm());
+//		}
+//		needCreatHiddenSheetNum++;
+//		String[]kcfzrArrays = kcfzrlist.toArray(new String[kcfzrlist.size()]);
+		
+		List < String > jpkcdjlist = new ArrayList < String > ();
+		List<Edu000> jpkcdjs = reflectUtils.administrationPageService.queryEjdm("jpkcdj");
+		for (int i = 0; i < jpkcdjs.size(); i++) {
+			jpkcdjlist.add(jpkcdjs.get(i).getEjdmz());
+		}
+		needCreatHiddenSheetNum++;
+		String[]jpkcdjArrays = jpkcdjlist.toArray(new String[jpkcdjlist.size()]);
+		
+		int[] kcfzrIndex={1};
+		int[] kclxIndex={2};
+		int[] kcxzIndex={3};
+		int[] ksfsIndex={8};
+		int[] mklbIndex={10};
+		int[] kcsxIndex={11};
+		int[] isOrNOTNeedIndex={13,17,18,19,20,21};
+		int[] skfsIndex={14};
+		int[] jpkcdjIndex={16};
+		
+		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
+			hiddenSheetName = hiddenSheetName+(i+1);
+			if(i==0){
+				cell2Select(workbook,hiddenSheetName,kcfzrArrays,kcfzrIndex,false);
+			}else if(i==1){
+				cell2Select(workbook,hiddenSheetName,kclxArrays,kclxIndex,false);
+			}else if(i==2){
+				cell2Select(workbook,hiddenSheetName,kcxzArrays,kcxzIndex,false);
+			}else if(i==3){
+				cell2Select(workbook,hiddenSheetName,ksfsArrays,ksfsIndex,false);
+			}else if(i==4){
+				cell2Select(workbook,hiddenSheetName,mklbArrays,mklbIndex,false);
+			}else if(i==5){
+				cell2Select(workbook,hiddenSheetName,kcsxArrays,kcsxIndex,false);
+			}else if(i==6){
+				cell2Select(workbook,hiddenSheetName,isOrNotArrays,isOrNOTNeedIndex,false);
+			}else if(i==7){
+				cell2Select(workbook,hiddenSheetName,skfsArrays,skfsIndex,false);
+			}else if(i==8){
+				cell2Select(workbook,hiddenSheetName,jpkcdjArrays,jpkcdjIndex,false);
+			}
+//			else if(i==7){
+//				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
+//			}
+		}
+	}
+	
 	
 	//单元格变为下拉框
     public static void cell2Select(XSSFWorkbook workbook,String hiddenShhetName,String[] useArrays,int[] useIndex,boolean useIndexNeedAdd){
@@ -2674,6 +3397,14 @@ public class ReflectUtils {
 		return false;
 	}
 	
+	//非空验证
+	private boolean isNullFordouble(double notNullCell) {
+		if(notNullCell==999.00){
+			return true;
+		}
+		return false;
+	}
+	
 	//判断变量是否能转为数字
 	public boolean isNumeric(String str){
 		boolean canChangeNumber;
@@ -2690,10 +3421,29 @@ public class ReflectUtils {
 		}
 		
 		return canChangeNumber;
-       
-        
-        
- }
+    }
+	
+	//判断变量是否为正整数或正整数
+	public boolean isDoubleOrInt(String str){
+		boolean canChangeNumber;
+		if(str!=null&&!str.equals("")){
+			 Pattern intCompile = Pattern.compile("[0-9]*");
+			 Pattern doubleCompile = Pattern.compile("([0-9]\\d*\\.?\\d*)|((-)?[0-9]\\d*\\.?\\d*)");
+			 
+			 Matcher intMatcher = intCompile.matcher(str);
+			 Matcher doubleMatcher = doubleCompile.matcher(str);
+			 
+			 if( intMatcher.matches() | doubleMatcher.matches()){
+				 canChangeNumber=true;
+		     }else{
+		    	 canChangeNumber=false;
+		     }
+		}else{
+			canChangeNumber=true;
+		}
+		
+		return canChangeNumber;
+    }
 
 	//手机号码验证
 	public boolean isPhone(String phone) {

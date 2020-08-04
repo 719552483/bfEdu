@@ -14,7 +14,7 @@ import com.beifen.edu.administration.domian.Edu101;
 @Configuration
 public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecificationExecutor<Edu101> {
 	// 根据id查询教师姓名
-	@Query(value = "select b.jsxm from edu101 b where b.Edu101_ID=?1", nativeQuery = true)
+	@Query(value = "select b.xm from edu101 b where b.Edu101_ID=?1", nativeQuery = true)
 	public String queryTeacherById(Long techerId);
 
 	// 根据id删除教师
