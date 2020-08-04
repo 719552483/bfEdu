@@ -145,4 +145,9 @@ public class PageRelatedController {
 	public String courseLibraryPage() {
 		return "courseLibrary";
 	}
+	
+	@RequestMapping("localInfo")
+	public String localInfoPage() {
+		return "localInfo";
+	}
 }
