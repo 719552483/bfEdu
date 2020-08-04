@@ -908,6 +908,63 @@ function loadNewClassModel(){
 	$eleForm.submit();
 }
 
+//检验导入模板
+function checkNewClassFile(){
+	if ($("#NewClassFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	 var formData = new FormData();
+	    formData.append("file",$('#NewClassFile')[0].files[0]);
+
+	    $.ajax({
+	        url:'/verifiyImportNewClassFile',
+	        dataType:'json',
+	        type:'POST',
+	        async: true,
+	        data: formData,
+	        processData : false, // 使数据不做处理
+	        contentType : false, // 不要设置Content-Type请求头
+	        success: function(backjosn){
+	        	if(backjosn.result){
+	        		$(".fileLoadingArea").hide();
+	        		if(!backjosn.isExcel){
+	        			showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
+	        		   return
+	        		}
+	        		if(!backjosn.sheetCountPass){
+	        			showImportErrorInfo("#importNewClassModal","上传文件的标签页个数不正确");
+	        		   return
+	        		}
+	        		if(!backjosn.modalPass){
+	        			showImportErrorInfo("#importNewClassModal","模板格式与原始模板不对应");
+	        		   return
+	        		}
+	        		if(!backjosn.haveData){
+	        			showImportErrorInfo("#importNewClassModal","文件暂无数据");
+	        		   return
+	        		}
+	        		if(!backjosn.dataCheck){
+	        			showImportErrorInfo("#importNewClassModal",backjosn.checkTxt);
+	        		   return
+	        		}
+	        		
+	        		showImportSuccessInfo("#importNewClassModal",backjosn.checkTxt);
+	        	}else{
+	        	  toastr.warning('操作失败，请重试');
+	        	}
+	        },beforeSend: function(xhr) {
+				$(".fileLoadingArea").show();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+	    });
+}
+
 
 //页面初始化时按钮事件绑定
 function binBind(){
@@ -922,6 +979,13 @@ function binBind(){
 	$('#importClasses').unbind('click');
 	$('#importClasses').bind('click', function(e) {
 		importClasses();
+		e.stopPropagation();
+	});
+	
+	//检验导入文件
+	$('#checkNewClassFile').unbind('click');
+	$('#checkNewClassFile').bind('click', function(e) {
+		checkNewClassFile();
 		e.stopPropagation();
 	});
 	
