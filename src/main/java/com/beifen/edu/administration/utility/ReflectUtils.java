@@ -319,7 +319,7 @@ public class ReflectUtils {
 		boolean haveData=false;
 		Object dataCheck="";
 		Object checkTxt="";
-		Object importTeacher="";
+		Object importClasses="";
 		// 判断读取的文件是否为Excel文件
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -363,7 +363,7 @@ public class ReflectUtils {
 					Map<String, Object> datacheckInfo=this.checkClassInfo(importClassess,isModify);
 					dataCheck=datacheckInfo.get("chaeckPass");
 					checkTxt=datacheckInfo.get("checkTxt");
-					importTeacher=datacheckInfo.get("importTeacher");
+					importClasses=datacheckInfo.get("importClassess");
 				}
 			}
 		}
@@ -374,7 +374,7 @@ public class ReflectUtils {
 		returnMap.put("haveData",haveData);
 		returnMap.put("dataCheck",dataCheck );
 		returnMap.put("checkTxt", checkTxt);
-		returnMap.put("importTeacher",importTeacher);
+		returnMap.put("importClasses",importClasses);
 		return returnMap;
 	}
 	
@@ -386,99 +386,125 @@ public class ReflectUtils {
 	 * */
 	private Map<String, Object> checkClassInfo(List<Map<String, Object>> importClassess, boolean isModify) throws ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu200> importClasses=new ArrayList<Edu200>();
+		List<Edu200> importClasse=new ArrayList<Edu200>();
+		List<Edu200> dataBaseClasses=reflectUtils.administrationPageService.queryAllClass();
 		boolean chaeckPass=true;
 		String checkTxt="";
-		//组装上传课程对象
-		for (int i = 0; i < importClassess.size(); i++) {
-			//获取课程负责人ID
-			String kcfzrIDStr=(String) importClassess.get(i).get("kcfzrID");
-			String[] kcfzrIDStrs=kcfzrIDStr.split("-");
-			if(kcfzrIDStrs.length<=1){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-课程负责人格式不正确";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}
-			
-			long kcfzrID=Long.parseLong(kcfzrIDStrs[1]);
-			String teacherName=reflectUtils.administrationPageService.queryTecaherNameById(kcfzrID);
-			if(teacherName==null){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}else{
-				if(!teacherName.equals(kcfzrIDStrs[0])){
+		//判断课程名称是否存在
+		for (int d = 0; d < dataBaseClasses.size(); d++) {
+			for (int i = 0; i < importClassess.size(); i++) {
+				if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))){
 					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-可能修改了课程负责人姓名(课程负责人姓名不允许更改)";
+					checkTxt="第"+(i+1)+"行-课程名称已存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+				}
+			}
+		}
+		
+		if(chaeckPass){
+			//组装上传课程对象
+			for (int i = 0; i < importClassess.size(); i++) {
+				//获取课程负责人ID
+				String kcfzrIDStr=(String) importClassess.get(i).get("kcfzrID");
+				String[] kcfzrIDStrs=kcfzrIDStr.split("-");
+				if(kcfzrIDStrs.length<=1){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-课程负责人格式不正确";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
 				}
+				
+				long kcfzrID=Long.parseLong(kcfzrIDStrs[1]);
+				String teacherName=reflectUtils.administrationPageService.queryTecaherNameById(kcfzrID);
+				if(teacherName==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					if(!teacherName.equals(kcfzrIDStrs[0])){
+						chaeckPass=false;
+						checkTxt="第"+(i+1)+"行-可能修改了课程负责人姓名(课程负责人姓名不允许更改)";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt", checkTxt);
+						break;
+					}
+				}
+				
+				if(importClassess.get(i).get("llxs")!=null){
+					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("llxs")))){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-理论学时只接受数字参数";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;	
+					}
+				}
+
+				if(importClassess.get(i).get("sjxs")!=null){
+					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("sjxs")))){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-实践学时只接受数字参数";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;	
+					}
+				}
+
+				if(importClassess.get(i).get("fsxs")!=null){
+					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("fsxs")))){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-分散学时只接受数字参数";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;	
+					}
+				}
+
+				if(importClassess.get(i).get("jzxs")!=null){
+					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("jzxs")))){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-集中学时只接受数字参数";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;	
+					}
+				}
+
+				if(importClassess.get(i).get("zxs")!=null){
+					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("zxs")))){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-总学时只接受数字参数";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;	
+					}
+				}
+
+				if(importClassess.get(i).get("xf")!=null){
+					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("xf")))){
+						chaeckPass=false;
+						checkTxt= "第"+(i+1)+"行-学分只接受数字参数";
+						returnMap.put("chaeckPass", chaeckPass);
+						returnMap.put("checkTxt",checkTxt);
+						break;	
+					}
+				}
+
+				//判断课程负责人ID是否存在
+				importClassess.get(i).remove("kcfzrID");
+				
+				Edu200 edu200 = JSON.parseObject(JSON.toJSONString(importClassess.get(i)), Edu200.class); // mapToBean
+				edu200.setKcfzrID(kcfzrID);
+				importClasse.add(edu200);
 			}
-			
-			
-			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("llxs")))){
-				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-理论学时只接受数字参数";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;	
-			}
-			
-			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("sjxs")))){
-				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-实践学时只接受数字参数";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;	
-			}
-			
-			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("fsxs")))){
-				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-分散学时只接受数字参数";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;	
-			}
-			
-			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("jzxs")))){
-				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-集中学时只接受数字参数";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;	
-			}
-			
-			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("zxs")))){
-				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-总学时只接受数字参数";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;	
-			}
-			
-			if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("xf")))){
-				chaeckPass=false;
-				checkTxt= "第"+(i+1)+"行-学分只接受数字参数";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt",checkTxt);
-				break;	
-			}
-			
-			//判断课程负责人ID是否存在
-			importClassess.get(i).remove("kcfzrID");
-			
-			Edu200 edu200 = JSON.parseObject(JSON.toJSONString(importClassess.get(i)), Edu200.class); // mapToBean
-			edu200.setKcfzrID(kcfzrID);
-			importClasses.add(edu200);
 		}
 		
-		for (int i = 0; i < importClasses.size(); i++) {
-			Edu200 edu200 = importClasses.get(i);
+		for (int i = 0; i < importClasse.size(); i++) {
+			Edu200 edu200 = importClasse.get(i);
 //			//如果是修改操作 判断是否改变了课程ID
 //			if(isModify){
 //				String correctClassId=reflectUtils.administrationPageService.queryJzghBy101ID(String.valueOf(edu101.getEdu101_ID()));
@@ -552,7 +578,7 @@ public class ReflectUtils {
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
-			
+		
 			//通过验证赋值总学时
 			edu200.setZxs(edu200.getLlxs()+edu200.getSjxs());
 			
@@ -564,7 +590,7 @@ public class ReflectUtils {
 				break;
 			}
 			
-			if(isNullFordouble(edu200.getXf())){
+			if(edu200.getXf()==0.0||edu200.getXf()==0){
 				chaeckPass=false;
 				checkTxt= "第"+(i+1)+"行-学分不能为空";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -768,8 +794,6 @@ public class ReflectUtils {
 				}
 			}
 			
-			//判断课程负责人是否存在
-			
 		}
 		
 		if(chaeckPass){
@@ -777,7 +801,7 @@ public class ReflectUtils {
 		} 
 		returnMap.put("chaeckPass", chaeckPass);
 		returnMap.put("checkTxt", checkTxt);
-		returnMap.put("importClassess", importClassess);
+		returnMap.put("importClassess", importClasse);
 		return returnMap;
 	}
 	
@@ -1150,7 +1174,7 @@ public class ReflectUtils {
 		} 
 		returnMap.put("chaeckPass", chaeckPass);
 		returnMap.put("checkTxt", checkTxt);
-		returnMap.put("importTeacher", importTeacher);
+		returnMap.put("importClasses", importTeacher);
 		return returnMap;
 	}
 
@@ -3184,7 +3208,7 @@ public class ReflectUtils {
 		String[]kclxArrays = kclxlist.toArray(new String[kclxlist.size()]);
 		
 		List < String > kcxzlist = new ArrayList < String > ();
-		List<Edu000> kcxzs = reflectUtils.administrationPageService.queryEjdm("cklx");
+		List<Edu000> kcxzs = reflectUtils.administrationPageService.queryEjdm("ckxz");
 		for (int i = 0; i < kcxzs.size(); i++) {
 			kcxzlist.add(kcxzs.get(i).getEjdmz());
 		}
@@ -3397,13 +3421,6 @@ public class ReflectUtils {
 		return false;
 	}
 	
-	//非空验证
-	private boolean isNullFordouble(double notNullCell) {
-		if(notNullCell==999.00){
-			return true;
-		}
-		return false;
-	}
 	
 	//判断变量是否能转为数字
 	public boolean isNumeric(String str){

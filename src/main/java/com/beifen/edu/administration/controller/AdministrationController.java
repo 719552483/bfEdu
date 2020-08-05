@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.domian.Edu000;
@@ -842,6 +843,59 @@ public class AdministrationController {
 		checkRS.put("result", true);
 		return checkRS;
 	}
+	
+	/**
+	 * 导入课程
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("importNewClass")
+	@ResponseBody
+	public Object importNewClass(HttpServletRequest request) throws Exception {
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+	    MultipartFile file = multipartRequest.getFile("file");
+		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的参数
+		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+		String lrrmc=jsonObject.getString("lrr");
+		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		
+		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
+		
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			return returnMap;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				return returnMap;
+			}
+		}
+		
+        if(!returnMap.get("importClasses").equals("")){
+        	List<Edu200> importTeacher = (List<Edu200>) returnMap.get("importClasses");
+        	String newClassStatus = "noStatus";
+    		for (int i = 0; i < importTeacher.size(); i++) {
+    			Edu200 edu200 = importTeacher.get(i);
+    			String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
+    			long currentTimeStamp = System.currentTimeMillis();
+    			
+    			edu200.setKcdm(kcdm);
+    			edu200.setLrsj(currentTimeStamp);
+    			edu200.setZt(newClassStatus);
+    			edu200.setLrr(lrrmc);
+    			edu200.setLrrID(lrrId);
+    			administrationPageService.addNewClass(edu200);
+    		}
+        }
+		return returnMap;
+	}
+
 	
 	
 	

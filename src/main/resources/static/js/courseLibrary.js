@@ -965,6 +965,70 @@ function checkNewClassFile(){
 	    });
 }
 
+//确认导入课程
+function confirmImportNewClass(){
+	if ($("#NewClassFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	
+    var lrrInfo=new Object();
+    lrrInfo.lrrID=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span").attr("userId");
+    lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
+
+    var formData = new FormData();
+    formData.append("file",$('#NewClassFile')[0].files[0]);
+    formData.append("lrrInfo",JSON.stringify(lrrInfo));
+    
+    $.ajax({
+        url:'/importNewClass',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	$(".fileLoadingArea").hide();
+    		if(!backjosn.isExcel){
+    			showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
+    		   return
+    		}
+    		if(!backjosn.sheetCountPass){
+    			showImportErrorInfo("#importNewClassModal","上传文件的标签页个数不正确");
+    		   return
+    		}
+    		if(!backjosn.modalPass){
+    			showImportErrorInfo("#importNewClassModal","模板格式与原始模板不对应");
+    		   return
+    		}
+    		if(!backjosn.haveData){
+    			showImportErrorInfo("#importNewClassModal","文件暂无数据");
+    		   return
+    		}
+    		if(!backjosn.dataCheck){
+    			showImportErrorInfo("#importNewClassModal",backjosn.checkTxt);
+    		   return
+    		}
+    		
+    		var importClasses=backjosn.importClasses;
+    		for (var i = 0; i <importClasses.length; i++) {
+				$('#courseLibraryTable').bootstrapTable("prepend", importClasses[i]);
+    		}
+			toastr.success('导入成功');
+			toolTipUp(".myTooltip");
+			$.hideModal("#importNewClassModal");
+        },beforeSend: function(xhr) {
+           $(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
+}
 
 //页面初始化时按钮事件绑定
 function binBind(){
@@ -986,6 +1050,13 @@ function binBind(){
 	$('#checkNewClassFile').unbind('click');
 	$('#checkNewClassFile').bind('click', function(e) {
 		checkNewClassFile();
+		e.stopPropagation();
+	});
+	
+	//确认导入课程
+	$('.confirmImportNewClass').unbind('click');
+	$('.confirmImportNewClass').bind('click', function(e) {
+		confirmImportNewClass();
 		e.stopPropagation();
 	});
 	
