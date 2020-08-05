@@ -1030,6 +1030,108 @@ function confirmImportNewClass(){
     });
 }
 
+//预备批量更新课程
+function modifyClasses(){
+	var choosendClasses = $("#courseLibraryTable").bootstrapTable("getSelections");
+	if(choosendClasses.length===0){
+		toastr.warning('暂未选择课程');
+		return;
+	}
+	
+	var checkIdArray=new Array();
+	for (var i = 0; i < choosendClasses.length; i++) {
+		checkIdArray.push(choosendClasses[i].bf200_ID);
+	}
+	
+	 var checkIds=new Object();
+	 checkIds.deleteIdArray=checkIdArray;
+	 
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/checkCrouseIsInPlan",
+		data: {
+          "deleteIds":JSON.stringify(checkIds) 
+        },
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if(backjson.isInPlan){
+					$.showModal("#actionModal",true);
+					$("#actionModal").find(".actionTxt").html("有课程存在培养计划,是否还要修改？");
+					
+					//事件绑定
+					$('.confirmAction').unbind('click');
+					$('.confirmAction').bind('click', function(e) {
+						$.hideModal("#actionModal",false);
+						modifyClassesSecondStep(checkIdArray);
+						e.stopPropagation();
+					});
+				}else{
+					modifyClassesSecondStep(checkIdArray);
+				}
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//批量修改课程二次确认
+function modifyClassesSecondStep(checkIdArray){
+	$.showModal("#modifyClassesModal",true);
+	//检验更新文件
+	$('#checkModifyClassesFile').unbind('click');
+	$('#checkModifyClassesFile').bind('click', function(e) {
+		checkModifyClassesFile();
+		e.stopPropagation();
+	});
+	
+	//下载更新模板
+	$('#loadModifyClassesModal').unbind('click');
+	$('#loadModifyClassesModal').bind('click', function(e) {
+		loadModifyClassesModal(checkIdArray);
+		e.stopPropagation();
+	});
+	
+	//提交批量修改课程
+	$('.confirmModifyClasses').unbind('click');
+	$('.confirmModifyClasses').bind('click', function(e) {
+		confirmModifyClasses();
+		e.stopPropagation();
+	});
+}
+
+//下载更新模板
+function loadModifyClassesModal(checkIdArray){
+	 var url = "/downloadModifyClassesModal";
+     var modifyTeacherIDs = JSON.stringify(checkIdArray) ;
+     var form = $("<form></form>").attr("action", url).attr("method", "post");
+     form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyClassesIDs").attr("value", modifyTeacherIDs));
+     form.appendTo('body').submit().remove();
+}
+
+//检验更新文件
+function checkModifyClassesFile(){
+	
+}
+
+//提交批量修改课程
+function confirmModifyClasses(){
+	
+}
+
+
 //页面初始化时按钮事件绑定
 function binBind(){
 	// 新增课程
@@ -1057,6 +1159,13 @@ function binBind(){
 	$('.confirmImportNewClass').unbind('click');
 	$('.confirmImportNewClass').bind('click', function(e) {
 		confirmImportNewClass();
+		e.stopPropagation();
+	});
+	
+	//批量更新课程
+	$('#modifyClasses').unbind('click');
+	$('#modifyClasses').bind('click', function(e) {
+		modifyClasses();
 		e.stopPropagation();
 	});
 	

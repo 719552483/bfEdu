@@ -17,17 +17,21 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	@Query(value = "select * from edu200 e where e.zt='pass'", nativeQuery = true)
 	public List<Edu200> queryAllPassCrouse();
 
-	//根据id修改课程状态
+	// 根据id修改课程状态
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE edu200 SET zt =?2,shr=?3,shrID =?4,shsj=?5 WHERE bf200_ID =?1", nativeQuery = true)
-	public void modifyClassById(String id,String status,String approvalPerson,long approvalPersonId,long approvalTime);
+	public void modifyClassById(String id, String status, String approvalPerson, long approvalPersonId,
+			long approvalTime);
 
-	//根据id删除课程
+	// 根据id删除课程
 	@Transactional
 	@Modifying
 	@Query(value = "delete from edu200 where bf200_ID =?1", nativeQuery = true)
 	void removeLibraryClassById(String id);
 
+	// 根据id码查询课程
+	@Query(value = "select * from edu200 e where e.bf200_ID=?1", nativeQuery = true)
+	public Edu200 queryClassById(String edu200id);
 
 }

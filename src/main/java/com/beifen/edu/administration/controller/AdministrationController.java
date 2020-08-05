@@ -899,6 +899,40 @@ public class AdministrationController {
 	
 	
 	
+	
+	/**
+	 * 下载课程更新模板
+	 * 
+	 * @return returnMap
+	 * @throws ParseException 
+	 * @throws Exception 
+	 */
+	@RequestMapping("downloadModifyClassesModal")
+	@ResponseBody
+	public void downloadModifyClassesModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyClassesIDs") String modifyClassesIDs) throws IOException, ParseException {
+		// 根据ID查询已选学生信息
+		com.alibaba.fastjson.JSONArray modifyTeacherArray = JSON.parseArray(modifyClassesIDs);
+		List<Edu200> chosedClasses=new ArrayList<Edu200>();
+		for (int i = 0; i < modifyTeacherArray.size(); i++) {
+			Edu200 edu200=administrationPageService.queryClassById(modifyTeacherArray.get(i).toString());
+			chosedClasses.add(edu200);
+		}
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="modifyClasses";
+		}else{
+			fileName="批量更新课程模板";
+		}
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createModifyClassesModal(workbook,chosedClasses);
+        utils.loadModal(response,fileName, workbook);
+	}
+	
+	
+	
+	
 	/**
 	 * 下载教师导入模板
 	 * 

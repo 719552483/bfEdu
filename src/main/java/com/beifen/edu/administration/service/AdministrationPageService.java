@@ -1033,10 +1033,10 @@ public class AdministrationPageService {
 		return edu200DAO.save(du200);
 	}
 
-	// // 根据名称查询课程
-	// public List<Edu200> queryClassByName(String calssName) {
-	// return edu200DAO.queryClassByName(calssName);
-	// }
+	 // 根据Id查询课程
+	 public Edu200 queryClassById(String edu200id) {
+	      return edu200DAO.queryClassById(edu200id);
+	 }
 	//
 	// // 根据代码查询课程
 	// public List<Edu200> queryClassByCode(String calssCode) {
