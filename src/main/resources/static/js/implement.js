@@ -953,7 +953,8 @@ function timeFormatter(value, row, index) {
 					+ stampToDatetimeString(value, true) + '">'
 					+ stampToDatetimeString(value, true) + '</div>' ].join('');
 	}else{
-		return [ '' ].join('');
+		return [ '<div class="myTooltip normalTxt" title="暂无">暂无</div>' ]
+		.join('');
 	}
 }
 

@@ -934,6 +934,77 @@ public class AdministrationController {
 	
 	
 	/**
+	 * 检验修改课程的文件
+	 * 
+	 * 
+	 * @return returnMap
+	 * @throws ParseException
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("verifiyModifyClassesFile")
+	@ResponseBody
+	public Object verifiyModifyClassesFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		Map<String, Object> checkRS = utils.checkNewClassFile(file, "ModifyEdu200", "已选课程信息");
+		checkRS.put("result", true);
+		return checkRS;
+	}
+	
+	
+	
+	/**
+	 * 批量修改课程
+	 * 
+	 * @param deleteIds删除ID
+	 * 
+	 * @return returnMap
+	 * @throws Exception
+	 * @throws ServletException
+	 */
+	@RequestMapping("modifyClassess")
+	@ResponseBody
+	public Object modifyClassess(HttpServletRequest request) throws Exception {
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+		MultipartFile file = multipartRequest.getFile("file");
+		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的参数
+		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+		String lrrmc=jsonObject.getString("lrr");
+		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		
+		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ModifyEdu200", "已选课程信息");
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			return returnMap;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				return returnMap;
+			}
+		}
+		List<Edu200> importClasses=new ArrayList<Edu200>();
+        if(!returnMap.get("importClasses").equals("")){
+        	importClasses= (List<Edu200>) returnMap.get("importClasses");
+        	for (int i = 0; i < importClasses.size(); i++) {
+        		Edu200 edu200 =importClasses.get(i);
+        		long currentTimeStamp = System.currentTimeMillis();
+    			edu200.setLrsj(currentTimeStamp);
+    			edu200.setZt("noStatus");
+    			edu200.setLrr(lrrmc);
+    			edu200.setLrrID(lrrId);
+    			edu200.setShr(null);
+    			edu200.setShrID(null);
+    			administrationPageService.updateClass(edu200);
+        	}
+        	returnMap.put("modifyClassesInfo", importClasses);
+        }
+		return returnMap;
+	}
+	
+	
+	/**
 	 * 下载教师导入模板
 	 * 
 	 * @return returnMap
@@ -1064,7 +1135,6 @@ public class AdministrationController {
 		return checkRS;
 	}
 
-	
 	
 	/**
 	 * 批量修改教师

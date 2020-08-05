@@ -342,7 +342,7 @@ public class ReflectUtils {
 			String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
 			if (sheetCountPass&&checkType.equals("ImportClass")&&sheetName.equals(hopeSheetName)) {
 				modalPass=true;
-			}else if(sheetCountPass&&checkType.equals("ModifyEdu101")&&sheetName.equals(hopeSheetName)){
+			}else if(sheetCountPass&&checkType.equals("ModifyEdu200")&&sheetName.equals(hopeSheetName)){
 				modalPass=true;
 			}
 			
@@ -354,9 +354,9 @@ public class ReflectUtils {
 			
 			//验证数据正确性
 			if(sheetCountPass&&modalPass&&haveData){
-				if(checkType.equals("ImportClass")||checkType.equals("ModifyEdu101")){
+				if(checkType.equals("ImportClass")||checkType.equals("ModifyEdu200")){
 					boolean isModify;
-					if (checkType.equals("ImportEdu101"))
+					if (checkType.equals("ImportClass"))
 						isModify=false;
 					else
 						 isModify=true;
@@ -390,17 +390,47 @@ public class ReflectUtils {
 		List<Edu200> dataBaseClasses=reflectUtils.administrationPageService.queryAllClass();
 		boolean chaeckPass=true;
 		String checkTxt="";
-		//判断课程名称是否存在
-		for (int d = 0; d < dataBaseClasses.size(); d++) {
-			for (int i = 0; i < importClassess.size(); i++) {
-				if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))){
+		for (int i = 0; i < importClassess.size(); i++) {
+			//如果是修改操作 判断是否改变了课程ID
+			if(isModify){
+				Edu200 ClassById=reflectUtils.administrationPageService.queryClassById(String.valueOf(importClassess.get(i).get("BF200_ID")));
+				if(ClassById==null){
 					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-课程名称已存在";
+					checkTxt="第"+(i+1)+"行-可能修改了课程ID(课程ID不允许更改)";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
+					break;
+				}else{
+					importClassess.get(i).put("kcdm", ClassById.getKcdm());
 				}
 			}
 		}
+		
+		if(chaeckPass){
+			//判断课程名称是否存在
+			for (int d = 0; d < dataBaseClasses.size(); d++) {
+				for (int i = 0; i < importClassess.size(); i++) {
+					if(isModify){
+						if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))
+								&&!String.valueOf(dataBaseClasses.get(d).getBF200_ID()).equals(importClassess.get(i).get("BF200_ID"))){
+							chaeckPass=false;
+							checkTxt="第"+(i+1)+"行-课程名称已存在";
+							returnMap.put("chaeckPass", chaeckPass);
+							returnMap.put("checkTxt", checkTxt);
+						}
+					}else{
+						if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))){
+							chaeckPass=false;
+							checkTxt="第"+(i+1)+"行-课程名称已存在";
+							returnMap.put("chaeckPass", chaeckPass);
+							returnMap.put("checkTxt", checkTxt);
+						}
+					}
+				}
+			}
+		}
+		
+		
 		
 		if(chaeckPass){
 			//组装上传课程对象
@@ -505,20 +535,6 @@ public class ReflectUtils {
 		
 		for (int i = 0; i < importClasse.size(); i++) {
 			Edu200 edu200 = importClasse.get(i);
-//			//如果是修改操作 判断是否改变了课程ID
-//			if(isModify){
-//				String correctClassId=reflectUtils.administrationPageService.queryJzghBy101ID(String.valueOf(edu101.getEdu101_ID()));
-//				if(correctjzgh==null){
-//					chaeckPass=false;
-//					checkTxt="第"+(i+1)+"行-可能修改了教职工ID(教职工ID不允许更改)";
-//					returnMap.put("chaeckPass", chaeckPass);
-//					returnMap.put("checkTxt", checkTxt);
-//					break;
-//				}else{
-//					edu101.setJzgh(correctjzgh);
-//				}
-//			}
-			
 			
 			//非空验证
 			if(isNull(edu200.getKcmc())){
@@ -804,15 +820,6 @@ public class ReflectUtils {
 		returnMap.put("importClassess", importClasse);
 		return returnMap;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -1863,6 +1870,9 @@ public class ReflectUtils {
 							    keyName = getModifyEdu101KeyName(cell.getColumnIndex()); //获取列名
 							}
 							if(keyType.equals("ImportClass")){
+							    keyName = getImportantEdu200KeyName(cell.getColumnIndex()); //获取列名
+							}
+							if(keyType.equals("ModifyEdu200")){
 							    keyName = getModifyEdu200KeyName(cell.getColumnIndex()); //获取列名
 							}
 							
@@ -1881,7 +1891,7 @@ public class ReflectUtils {
 	}
 	
 	//获取导入课程Excel的Key值
-	private String getModifyEdu200KeyName(int columnIndex) {
+	private String getImportantEdu200KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
 		case 0:
@@ -2149,7 +2159,108 @@ public class ReflectUtils {
         }
 		return result;
 	}
-
+	
+	//获取修改课程Excel的Key值
+	private String getModifyEdu200KeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+		case 0:
+            result="BF200_ID";
+            break;
+		case 1:
+            result="kcmc";
+            break;
+        case 2:
+            result="kcfzrID";
+            break;
+        case 3:
+            result="kclx";
+            break;
+        case 4:
+            result="kcxz";
+            break;
+        case 5:
+            result="llxs";
+            break;
+        case 6:
+            result="sjxs";
+            break;
+        case 7:
+            result="fsxs";
+            break;
+        case 8:
+            result="jzxs";
+            break;
+        case 9:
+            result="ksfs";
+            break;
+        case 10:
+            result="xf";
+            break;
+        case 11:
+            result="mklb";
+            break;
+        case 12:
+            result="kcsx";
+            break;
+        case 13:
+            result="bzzymc";
+            break;
+        case 14:
+            result="xqhz";
+            break;
+        case 15:
+            result="skfs";
+            break;
+        case 16:
+            result="skdd";
+            break;
+        case 17:
+            result="jpkcdj";
+            break;
+        case 18:
+            result="zyhxkc";
+            break;
+        case 19:
+            result="zyzgkzkc";
+            break;
+        case 20:
+            result="sfxk";
+            break;
+        case 21:
+            result="kztrkc";
+            break;
+        case 22:
+            result="jxgglxkc";
+            break;
+        case 23:
+            result="kcjj";
+            break;
+        case 24:
+            result="kcmb";
+            break;
+        case 25:
+            result="sjsl";
+            break;
+        case 26:
+            result="jxnrjyq";
+            break;
+        case 27:
+            result="kcssjy";
+            break;
+        case 28:
+            result="jsyqsm";
+            break;
+        case 29:
+            result="bz";
+            break;
+        default:
+        	result="ycTxt";
+            break;
+        }
+		return result;
+	}
+	
 	//获取批量修改学生Excel的Key值
 	private String getModifyEdu001KeyName(int columnIndex) {
 		String result = null;
@@ -2547,55 +2658,73 @@ public class ReflectUtils {
 		for (int i = 0; i < chosedClasses.size(); i++) {
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getBF200_ID()),-1,0,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getKcmc(),-1,1,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcfzr(),-1,2,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcfzr()+'-'+chosedClasses.get(i).getKcfzrID(),-1,2,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getKclx(),-1,3,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getKcxz(),-1,4,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getLlxs()),-1,5,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getSjxs()),-1,6,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getFsxs()),-1,7,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getJzxs()),-1,8,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKsfs(),-1,9,false);
+			String skfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(chosedClasses.get(i).getKsfs(),"ksfs");
+			String ksfs=reflectUtils.administrationPageService.queryEjdmZByEjdm(skfsCode,"考试方式");
+			
+			
+			appendCell(sheet,i,"",ksfs,-1,9,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getXf()),-1,10,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getMklb(),-1,11,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getKcsx(),-1,12,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getBzzymc(),-1,13,false);
-			if(chosedClasses.get(i).getXqhz().equals("T")){
-				appendCell(sheet,i,"","是",-1,14,false);
-			}else{
-				appendCell(sheet,i,"","否",-1,14,false);
+			if(chosedClasses.get(i).getXqhz()!=null){
+				if(chosedClasses.get(i).getXqhz().equals("T")){
+					appendCell(sheet,i,"","是",-1,14,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,14,false);
+				}
 			}
+	
 			appendCell(sheet,i,"",chosedClasses.get(i).getSkfs(),-1,15,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getSkdd(),-1,16,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getJpkcdj(),-1,17,false);
-			if(chosedClasses.get(i).getZyhxkc().equals("T")){
-				appendCell(sheet,i,"","是",-1,18,false);
-			}else{
-				appendCell(sheet,i,"","否",-1,18,false);
+			if(chosedClasses.get(i).getZyhxkc()!=null){
+				if(chosedClasses.get(i).getZyhxkc().equals("T")){
+					appendCell(sheet,i,"","是",-1,18,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,18,false);
+				}
 			}
-			
-			if(chosedClasses.get(i).getZyzgkzkc().equals("T")){
-				appendCell(sheet,i,"","是",-1,19,false);
-			}else{
-				appendCell(sheet,i,"","否",-1,19,false);
+		
+			if(chosedClasses.get(i).getZyzgkzkc()!=null){
+				if(chosedClasses.get(i).getZyzgkzkc().equals("T")){
+					appendCell(sheet,i,"","是",-1,19,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,19,false);
+				}
 			}
-			
-			if(chosedClasses.get(i).getSfxk().equals("T")){
-				appendCell(sheet,i,"","是",-1,20,false);
-			}else{
-				appendCell(sheet,i,"","否",-1,20,false);
+		
+			if(chosedClasses.get(i).getSfxk()!=null){
+				if(chosedClasses.get(i).getSfxk().equals("T")){
+					appendCell(sheet,i,"","是",-1,20,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,20,false);
+				}
 			}
-			
-			if(chosedClasses.get(i).getKztrkc().equals("T")){
-				appendCell(sheet,i,"","是",-1,21,false);
-			}else{
-				appendCell(sheet,i,"","否",-1,21,false);
+		
+			if(chosedClasses.get(i).getKztrkc()!=null){
+				if(chosedClasses.get(i).getKztrkc().equals("T")){
+					appendCell(sheet,i,"","是",-1,21,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,21,false);
+				}
 			}
-			
-			if(chosedClasses.get(i).getJxgglxkc().equals("T")){
-				appendCell(sheet,i,"","是",-1,22,false);
-			}else{
-				appendCell(sheet,i,"","否",-1,22,false);
+		
+			if(chosedClasses.get(i).getJxgglxkc()!=null){
+				if(chosedClasses.get(i).getJxgglxkc().equals("T")){
+					appendCell(sheet,i,"","是",-1,22,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,22,false);
+				}
 			}
+		
 			
 			appendCell(sheet,i,"",chosedClasses.get(i).getKcjj(),-1,23,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getKcmb(),-1,24,false);

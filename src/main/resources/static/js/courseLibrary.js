@@ -1090,6 +1090,21 @@ function modifyClasses(){
 //批量修改课程二次确认
 function modifyClassesSecondStep(checkIdArray){
 	$.showModal("#modifyClassesModal",true);
+	$("#ModifyClassesFile,#showModifyFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#ModifyClassesFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#ModifyClassesFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#ModifyClassesFile").val("");
+			return
+		}
+		$("#showModifyFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	
 	//检验更新文件
 	$('#checkModifyClassesFile').unbind('click');
 	$('#checkModifyClassesFile').bind('click', function(e) {
@@ -1123,12 +1138,124 @@ function loadModifyClassesModal(checkIdArray){
 
 //检验更新文件
 function checkModifyClassesFile(){
+	if ($("#ModifyClassesFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
 	
+	var formData = new FormData();
+	formData.append("file",$('#ModifyClassesFile')[0].files[0]);
+	
+    $.ajax({
+        url:'/verifiyModifyClassesFile',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	if(backjosn.result){
+        		$(".fileLoadingArea").hide();
+        		if(!backjosn.isExcel){
+        			showImportErrorInfo("#modifyClassesModal","请上传xls或xlsx类型的文件");
+        		   return
+        		}
+        		if(!backjosn.sheetCountPass){
+        			showImportErrorInfo("#modifyClassesModal","上传文件的标签页个数不正确");
+        		   return
+        		}
+        		if(!backjosn.modalPass){
+        			showImportErrorInfo("#modifyClassesModal","模板格式与原始模板不对应");
+        		   return
+        		}
+        		if(!backjosn.haveData){
+        			showImportErrorInfo("#modifyClassesModal","文件暂无数据");
+        		   return
+        		}
+        		if(!backjosn.dataCheck){
+        			showImportErrorInfo("#modifyClassesModal",backjosn.checkTxt);
+        		   return
+        		}
+        		
+        		showImportSuccessInfo("#modifyClassesModal",backjosn.checkTxt);
+        	}else{
+        	  toastr.warning('操作失败，请重试');
+        	}
+        },beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
 }
 
 //提交批量修改课程
 function confirmModifyClasses(){
+	if ($("#ModifyClassesFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+
+	var lrrInfo=new Object();
+	lrrInfo.lrrID=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span").attr("userId");
+	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
 	
+    var formData = new FormData();
+    formData.append("file",$('#ModifyClassesFile')[0].files[0]);
+    formData.append("lrrInfo",JSON.stringify(lrrInfo));
+
+    $.ajax({
+        url:'/modifyClassess',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+        	$(".fileLoadingArea").hide();
+    		if(!backjosn.isExcel){
+    			showImportErrorInfo("#modifyClassesModal","请上传xls或xlsx类型的文件");
+    		   return
+    		}
+    		if(!backjosn.sheetCountPass){
+    			showImportErrorInfo("#modifyClassesModal","上传文件的标签页个数不正确");
+    		   return
+    		}
+    		if(!backjosn.modalPass){
+    			showImportErrorInfo("#modifyClassesModal","模板格式与原始模板不对应");
+    		   return
+    		}
+    		if(!backjosn.haveData){
+    			showImportErrorInfo("#modifyClassesModal","文件暂无数据");
+    		   return
+    		}
+    		if(!backjosn.dataCheck){
+    			showImportErrorInfo("#modifyClassesModal",backjosn.checkTxt);
+    		   return
+    		}
+    		var choosendClasses = backjosn.modifyClassesInfo;
+    		for (var i = 0; i < choosendClasses.length; i++) {
+    			$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosendClasses[i].bf200_ID, row: choosendClasses[i]});
+    		}
+			toastr.success('批量更新成功');
+	        $.hideModal("#modifyClassesModal");
+	        toolTipUp(".myTooltip");
+        },beforeSend: function(xhr) {
+           $(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+    });
 }
 
 
