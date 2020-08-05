@@ -494,11 +494,11 @@ public class ReflectUtils {
 					}
 				}
 
-				//判断课程负责人ID是否存在
+				//判断课程负责人信息
 				importClassess.get(i).remove("kcfzrID");
-				
 				Edu200 edu200 = JSON.parseObject(JSON.toJSONString(importClassess.get(i)), Edu200.class); // mapToBean
 				edu200.setKcfzrID(kcfzrID);
+				edu200.setKcfzr(teacherName);
 				importClasse.add(edu200);
 			}
 		}
