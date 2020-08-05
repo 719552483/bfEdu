@@ -31,6 +31,7 @@ function getSearchAreaSelectInfo(){
             if (backjson.result) {
                 var showstr="暂无选择";
                 var allDepartmentStr="";
+                var allTeacherStr="";
                 if (backjson.allDepartment.length>0) {
                     showstr="请选择";
                     allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
@@ -43,6 +44,22 @@ function getSearchAreaSelectInfo(){
                 }
                 stuffManiaSelect("#addPasternType", allDepartmentStr);
                 stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
+                stuffManiaSelect("#employDepartment", allDepartmentStr);
+
+                var showstr="暂无选择";
+                if (backjson.allTeacher.length>0) {
+                    showstr="请选择";
+                    allTeacherStr= '<option value="seleceConfigTip">'+showstr+'</option>';
+                    for (var i = 0; i < backjson.allTeacher.length; i++) {
+                        allTeacherStr += '<option value="' + backjson.allTeacher[i].edu101_ID + '">' + backjson.allTeacher[i].xm
+                            + '</option>';
+                    }
+                }else{
+                    allTeacherStr= '<option value="seleceConfigTip">'+showstr+'</option>';
+                }
+                stuffManiaSelect("#addSiteManager", allTeacherStr);
+
+
             } else {
                 toastr.warning('操作失败，请重试');
             }
@@ -58,7 +75,7 @@ function drawlocalInfoTableEmptyTable() {
 //渲染教学点表
 function stufflocalInfoTable(tableInfo) {
     window.releaseNewsEvents = {
-        'click #SiteDetails': function(e, value, row, index) {
+        'click #localInfoDetails': function(e, value, row, index) {
             localInfoDetails(row,index);
         },
         'click #modifySite': function(e, value, row, index) {
@@ -97,10 +114,9 @@ function stufflocalInfoTable(tableInfo) {
                 field: 'check',
                 checkbox: true
             },{
-                field: 'edu500_ID',
+                field: 'edu500Id',
                 title: '唯一标识',
-                align: 'center',
-                visible: false
+                align: 'center'
             },
             {
                 field: 'jxdmc',
@@ -113,7 +129,7 @@ function stufflocalInfoTable(tableInfo) {
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'pkzyxb',
+                field: 'pkzyx',
                 title: '排课占用系部',
                 align: 'left',
                 formatter: paramsMatter
@@ -201,23 +217,86 @@ function stufflocalInfoTable(tableInfo) {
 //单个删除教学点
 function removeSite(row){
     $.showModal("#remindModal",true);
-    $(".remindType").html('教学点- '+row.xm+' ');
+    $(".remindType").html('教学点- '+row.jxdmc+' ');
     $(".remindActionType").html("删除");
 
-    //确认删除学生
+    //确认删除教学点
     $('.confirmRemind').unbind('click');
     $('.confirmRemind').bind('click', function(e) {
         var removeArray = new Array;
-        removeArray.push(row.edu101_ID);
-        sednRemoveInfo(removeArray);
+        removeArray.push(row.edu500Id);
+        sendRemoveInfo(removeArray);
         e.stopPropagation();
     });
 }
 
+//批量删除教学点
+function removeSites(){
+    var chosenSites = $('#localInfoTable').bootstrapTable('getAllSelections');
+    if (chosenSites.length === 0) {
+        toastr.warning('暂未选择任何数据');
+    } else {
+        $.showModal("#remindModal",true);
+        $(".remindType").html("所选教学点");
+        $(".remindActionType").html("删除");
+
+        //确认删除教学点
+        $('.confirmRemind').unbind('click');
+        $('.confirmRemind').bind('click', function(e) {
+            var removeArray = new Array;
+            for (var i = 0; i < chosenSites.length; i++) {
+                removeArray.push(chosenSites[i].edu500Id);
+            }
+            sendRemoveInfo(removeArray);
+            e.stopPropagation();
+        });
+    }
+}
+
+//发送删除请求
+function sendRemoveInfo(removeArray){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/removeSite",
+        data: {
+            "removeIDs":JSON.stringify(removeArray)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            if (backjson.result) {
+                hideloding();
+                if (!backjson.canRemove) {
+                    toastr.warning('不能删除被占用的教室');
+                    return;
+                }
+                for (var i = 0; i < removeArray.length; i++) {
+                    $('#localInfoTable').bootstrapTable('removeByUniqueId', removeArray[i]);
+                }
+                $(".myTooltip").tooltipify();
+                toastr.success('删除成功');
+                $.hideModal("#remindModal");
+            } else {
+                toastr.warning('操作失败，请重试');
+            }
+        }
+    });
+}
+
+
 //展示教学点详情
 function localInfoDetails(row,index){
     $.showModal("#addSiteModal",false);
-    $("#addSiteModal").find(".moadalTitle").html(row.xm+"-详细信息");
+    $("#addSiteModal").find(".moadalTitle").html(row.jxdmc+"-详细信息");
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
     //清空模态框中元素原始值
     rebackSiteInfo();
@@ -227,40 +306,38 @@ function localInfoDetails(row,index){
 //重置教学点信息模态框
 function rebackSiteInfo(){
     var reObject = new Object();
-    reObject.normalSelectIds = "#addTeacherSex,#addTeacherType,#addTeacherXb,#addTeacherZY,#addTeacherHf,#addTeacherMz,#addTeacherZc,#addTeacherWhcd,#addTeacherZzmm";
-    reObject.InputIds = "#addTeachingPointName,#addTeacherCsrq,#addTeacherSfzh,#addTeacherDxsj,#addTeacherLxfs";
+    reObject.InputIds = "#addTeachingPointName,#addCapacity,#addRemarks";
+    reObject.normalSelectIds = "#addSchool,#addPasternType,#addManagementDepartment,#addSiteType,#addSiteNature,#addBuilding,#addStorey,#addSiteManager,#addSiteStatus";
     reReloadSearchsWithSelect(reObject);
 }
 
 //填充教学点信息
 function stufflocalInfoDetails(row){
-    $("#addTeacherName").val(row.xm);
-    stuffManiaSelectWithDeafult("#addTeacherSex", row.xb);
-    stuffManiaSelectWithDeafult("#addTeacherType", row.jzglxbm);
-    $("#addTeacherCsrq").val(row.csrq);
-    $("#addTeacherSfzh").val(row.sfzh);
-    stuffManiaSelectWithDeafult("#addTeacherXb", row.szxb);
-    stuffManiaSelectWithDeafult("#addTeacherZY", row.zy);
-    stuffManiaSelectWithDeafult("#addTeacherHf", row.hf);
-    stuffManiaSelectWithDeafult("#addTeacherMz", row.mzbm);
-    stuffManiaSelectWithDeafult("#addTeacherZc", row.zcbm);
-    stuffManiaSelectWithDeafult("#addTeacherWhcd", row.whcdbm);
-    $("#addTeacherDxsj").val(row.dxsj);
-    stuffManiaSelectWithDeafult("#addTeacherZzmm", row.zzmmbm);
-    $("#addTeacherLxfs").val(row.lxfs);
+    $("#addTeachingPointName").val(row.jxdmc);
+    stuffManiaSelectWithDeafult("#addSchool", row.ssxqCode);
+    stuffManiaSelectWithDeafult("#addPasternType", row.pkzyxCode);
+    stuffManiaSelectWithDeafult("#addManagementDepartment", row.glxbCode);
+    stuffManiaSelectWithDeafult("#addSiteType", row.cdlxCode);
+    stuffManiaSelectWithDeafult("#addSiteNature", row.cdxzCode);
+    stuffManiaSelectWithDeafult("#addBuilding", row.lfCode);
+    stuffManiaSelectWithDeafult("#addStorey", row.lcCode);
+    stuffManiaSelectWithDeafult("#addSiteManager", row.cdfzrCode);
+    stuffManiaSelectWithDeafult("#addSiteStatus", row.cdztCode);
+    $("#addRemarks").val(row.bz);
+    $("#addCapacity").val(row.rnrs);
 }
 
 //预备修改教学点
 function modifySite(row,index){
-    $.showModal("#addTeacherModal",true);
-    $("#addTeacherModal").find(".moadalTitle").html("修改教职工-"+row.xm);
-    $('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
+    $.showModal("#addSiteModal",true);
+    $("#addSiteModal").find(".moadalTitle").html("修改教学点-"+row.jxdmc);
+    $('#addSiteModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
     //清空模态框中元素原始值
-    rebackTeacherInfo();
+    rebackSiteInfo();
     stufflocalInfoDetails(row);
     //确认按钮绑定事件
-    $('.confirmaddTeacherBtn').unbind('click');
-    $('.confirmaddTeacherBtn').bind('click', function(e) {
+    $('.confirmaddSiteBtn').unbind('click');
+    $('.confirmaddSiteBtn').bind('click', function(e) {
         confirmmodifySite(row,index);
         e.stopPropagation();
     });
@@ -274,7 +351,7 @@ function confirmmodifySite(row,index){
     }
     $.hideModal("#addSiteModal",false);
     $.showModal("#remindModal",true);
-    $(".remindType").html(row.xm);
+    $(".remindType").html(row.jxdmc);
     $(".remindActionType").html("修改");
 
     //确认按钮绑定事件
@@ -287,11 +364,11 @@ function confirmmodifySite(row,index){
 
 //发送修改教学点请求
 function sendModifySite(row,modifylocalInfo){
-    modifylocalInfo.edu500_ID=row.edu500_ID;
+    modifylocalInfo.edu500Id=row.edu500Id;
     $.ajax({
         method : 'get',
         cache : false,
-        url : "/modifyTeacher",
+        url : "/modifySite",
         data: {
             "modifyInfo":JSON.stringify(modifylocalInfo)
         },
@@ -308,12 +385,8 @@ function sendModifySite(row,modifylocalInfo){
         success : function(backjson) {
             if (backjson.result) {
                 hideloding();
-                if (backjson.IDcardIshave) {
-                    toastr.warning('身份证号码已存在');
-                    return;
-                }
-                $("#teacherBaseInfoTable").bootstrapTable('updateByUniqueId', {
-                    id: modifylocalInfo.edu500_ID,
+                $("#localInfoTable").bootstrapTable('updateByUniqueId', {
+                    id: modifylocalInfo.edu500Id,
                     row: modifylocalInfo
                 });
                 $(".myTooltip").tooltipify();
@@ -328,71 +401,53 @@ function sendModifySite(row,modifylocalInfo){
 
 //获得新增教学点的信息
 function getnewlocalInfo(){
-    var xb = getNormalSelectValue("addTeacherSex");
-    var jzglxbm = getNormalSelectValue("addTeacherType");
-    var jzglx = getNormalSelectText("addTeacherType");
-    var szxb = getNormalSelectValue("addTeacherXb");
-    var szxbmc = getNormalSelectText("addTeacherXb");
-    var zy = getNormalSelectValue("addTeacherZY");
-    var zymc = getNormalSelectText("addTeacherZY");
-    var hf= getNormalSelectValue("addTeacherHf");
-    var mzbm = getNormalSelectValue("addTeacherMz");
-    var mz = getNormalSelectText("addTeacherMz");
-    var zcbm = getNormalSelectValue("addTeacherZc");
-    var zc = getNormalSelectText("addTeacherZc");
-    var whcdbm = getNormalSelectValue("addTeacherWhcd");
-    var whcd = getNormalSelectText("addTeacherWhcd");
-    var zzmmbm = getNormalSelectValue("addTeacherZzmm");
-    var zzmm = getNormalSelectText("addTeacherZzmm");
-    var xm=$("#addTeacherName").val();
-    var csrq=$("#addTeacherCsrq").val();
-    var sfzh=$("#addTeacherSfzh").val();
-    var dxsj=$("#addTeacherDxsj").val();
-    var lxfs=$("#addTeacherLxfs").val();
-
-    if(xm===""){
-        toastr.warning('姓名不能为空');
-        return;
-    }
-
-    if(xb===""){
-        toastr.warning('性别不能为空');
-        return;
-    }
-
-    if(jzglxbm===""){
-        toastr.warning('教职工类型不能为空');
-        return;
-    }
-
-    if(csrq===""){
-        toastr.warning('出生日期不能为空');
-        return;
-    }
+    var jxdmc= $("#addTeachingPointName").val();
+    var ssxq = getNormalSelectText("addSchool");
+    var ssxqCode = getNormalSelectValue("addSchool");
+    var pkzyx = getNormalSelectText("addPasternType");
+    var pkzyxCode = getNormalSelectValue("addPasternType");
+    var rnrs = $("#addCapacity").val();
+    var glxb = getNormalSelectText("addManagementDepartment");
+    var glxbCode = getNormalSelectValue("addManagementDepartment");
+    var cdlx = getNormalSelectText("addSiteType");
+    var cdlxCode = getNormalSelectValue("addSiteType");
+    var cdxz = getNormalSelectText("addSiteNature");
+    var cdxzCode = getNormalSelectValue("addSiteNature");
+    var lf= getNormalSelectText("addSiteNature");
+    var lfCode = getNormalSelectValue("addSiteNature");
+    var lc = getNormalSelectText("addStorey");
+    var lcCode = getNormalSelectValue("addStorey");
+    var cdfzr = getNormalSelectText("addSiteManager");
+    var cdfzrCode = getNormalSelectValue("addSiteManager");
+    var bz = $("#addRemarks").val();
 
     var returnObject = new Object();
-    returnObject.xb=xb;
-    returnObject.jzglx=jzglx;
-    returnObject.jzglxbm=jzglxbm;
-    returnObject.szxb=szxb;
-    returnObject.szxbmc=szxbmc;
-    returnObject.zy=zy;
-    returnObject.zymc=zymc;
-    returnObject.hf=hf;
-    returnObject.mzbm=mzbm;
-    returnObject.mz=mz;
-    returnObject.zcbm=zcbm;
-    returnObject.zc=zc;
-    returnObject.whcdbm=whcdbm;
-    returnObject.whcd=whcd;
-    returnObject.zzmmbm=zzmmbm;
-    returnObject.zzmm=zzmm;
-    returnObject.xm=xm;
-    returnObject.csrq=csrq;
-    returnObject.sfzh=sfzh;
-    returnObject.dxsj=dxsj;
-    returnObject.lxfs=lxfs;
-    returnObject.nl=nl;
+    if(jxdmc == "" || rnrs == 0 || cdlx == "" || cdxz == "") {
+        return undefined;
+    }
+
+
+    returnObject.jxdmc=jxdmc;
+    returnObject.ssxq=ssxq;
+    returnObject.pkzyx=pkzyx;
+    returnObject.rnrs=rnrs;
+    returnObject.glxb=glxb;
+    returnObject.cdlx=cdlx;
+    returnObject.cdxz=cdxz;
+    returnObject.lf=lf;
+    returnObject.lc=lc;
+    returnObject.cdfzr=cdfzr;
+    returnObject.cdzt="空闲";
+    returnObject.bz=bz;
+    returnObject.ssxqCode=ssxqCode;
+    returnObject.pkzyxCode=pkzyxCode;
+    returnObject.glxbCode=glxbCode;
+    returnObject.cdlxCode=cdlxCode;
+    returnObject.cdxzCode=cdxzCode;
+    returnObject.lfCode=lfCode;
+    returnObject.lcCode=lcCode;
+    returnObject.cdfzrCode=cdfzrCode;
+    returnObject.cdztCode="0";
     return returnObject;
 }
 //预备添加教学点
@@ -413,11 +468,190 @@ function wantAddSite(){
 function confirmaddSite(){
     var newSiteInfo=getnewlocalInfo();
     if(typeof newSiteInfo ==='undefined'){
+        toastr.warning('请检查必填项');
         return;
     }
-    sendNewTeacherInfo(newSiteInfo);
+    sendNewSiteInfo(newSiteInfo);
 }
 
+//发送添加教学点请求
+function sendNewSiteInfo(newSiteInfo){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/addSiteInfo",
+        data: {
+            "newSiteInfo":JSON.stringify(newSiteInfo)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            if (backjson.result) {
+                hideloding();
+                if (backjson.siteHave) {
+                    toastr.warning('该校区已存在此教学点');
+                    return;
+                }
+                newSiteInfo.edu500Id=backjson.id;
+                $('#localInfoTable').bootstrapTable("prepend", newSiteInfo);
+                $(".myTooltip").tooltipify();
+                toastr.success('新增成功');
+                $.hideModal("#addSiteModal");
+            } else {
+                toastr.warning('操作失败，请重试');
+            }
+        }
+    });
+}
+
+//开始检索教学点
+function startSearch(){
+    var searchObject = getSearchValue();
+    if ($.isEmptyObject(searchObject)) {
+        searchAllSite();
+    }else{
+        searchAllSiteBy(searchObject);
+    }
+}
+
+//获得检索区域的值
+function getSearchValue(){
+    var jxdmc= $("#TeachingPointName").val();
+    var ssxq = getNormalSelectText("school");
+    var ssxqCode = getNormalSelectValue("school");
+    var pkzyx = getNormalSelectText("employDepartment");
+    var pkzyxCode = getNormalSelectValue("employDepartment");
+    var cdlx = getNormalSelectText("siteStype");
+    var cdlxCode = getNormalSelectValue("siteStype");
+    var cdxz = getNormalSelectText("siteNature");
+    var cdxzCode = getNormalSelectValue("siteNature");
+    var lf= getNormalSelectText("building");
+    var lfCode = getNormalSelectValue("building");
+    var lc = getNormalSelectText("storey");
+    var lcCode = getNormalSelectValue("storey");
+
+
+    var returnObject = new Object();
+    if(jxdmc!==""){
+        returnObject.jxdmc = jxdmc;
+    }
+
+    if(ssxq!==""){
+        returnObject.ssxq = ssxq;
+        returnObject.ssxqCode = ssxqCode;
+    }
+
+    if(pkzyx!==""){
+        returnObject.pkzyx = pkzyx;
+        returnObject.pkzyxCode = pkzyxCode;
+    }
+
+    if(cdlx!==""){
+        returnObject.cdlx = cdlx;
+        returnObject.cdlxCode = cdlxCode;
+    }
+
+    if(cdxz!==""){
+        returnObject.cdxz = cdxz;
+        returnObject.cdxzCode = cdxzCode;
+    }
+
+    if(lf!==""){
+        returnObject.lf = lf;
+        returnObject.lfCode = lfCode;
+    }
+
+    if(lc!==""){
+        returnObject.lc = lc;
+        returnObject.lcCode = lcCode;
+    }
+
+    return returnObject;
+}
+
+//检索所有教学点
+function searchAllSite(){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/queryAllSite",
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.result) {
+                if(backjson.siteList.length===0){
+                    toastr.warning('暂无教学点信息');
+                    drawlocalInfoTableEmptyTable();
+                }else{
+                    stufflocalInfoTable(backjson.siteList);
+                }
+            } else {
+                toastr.warning('操作失败，请重试');
+            }
+        }
+    });
+}
+
+//按条件检索教学点
+function searchAllSiteBy(searchObject){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchSite",
+        data: {
+            "SearchCriteria":JSON.stringify(searchObject)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.result) {
+                if(backjson.siteList.length===0){
+                    toastr.warning('暂无教学点信息');
+                    drawlocalInfoTableEmptyTable();
+                }else{
+                    stufflocalInfoTable(backjson.siteList);
+                }
+            } else {
+                toastr.warning('操作失败，请重试');
+            }
+        }
+    });
+}
+
+//重置检索
+function researchSites(){
+    var reObject = new Object();
+    reObject.InputIds = "#SiteName";
+    reObject.normalSelectIds = "#school,#siteStype,#building,#storey,#siteNature,#employDepartment";
+    reReloadSearchsWithSelect(reObject);
+    drawlocalInfoTableEmptyTable();
+}
 
 //初始化页面按钮绑定事件
 function binBind() {
@@ -427,7 +661,6 @@ function binBind() {
         $.hideModal();
         e.stopPropagation();
     });
-
 
     //开始检索
     $('#startSearch').unbind('click');
@@ -444,23 +677,9 @@ function binBind() {
     });
 
     //批量删除教学点
-    $('#removeTeachers').unbind('click');
-    $('#removeTeachers').bind('click', function(e) {
-        removeTeachers();
-        e.stopPropagation();
-    });
-
-    //下载教师文件
-    $('#loadTeacherInfoModel').unbind('click');
-    $('#loadTeacherInfoModel').bind('click', function(e) {
-        loadTeacherInfoModel();
-        e.stopPropagation();
-    });
-
-    //检验修改教师文件
-    $('#checkModifyTeachersFile').unbind('click');
-    $('#checkModifyTeachersFile').bind('click', function(e) {
-        checkModifyTeachersFile();
+    $('#removeSites').unbind('click');
+    $('#removeSites').bind('click', function(e) {
+        removeSites();
         e.stopPropagation();
     });
 
@@ -468,7 +687,7 @@ function binBind() {
     //重置检索
     $('#researchSites').unbind('click');
     $('#researchSites').bind('click', function(e) {
-        researchTeachers();
+        researchSites();
         e.stopPropagation();
     });
 }

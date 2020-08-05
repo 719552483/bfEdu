@@ -67,7 +67,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">校&#12288;&#8197;区</label>
-                        <select id="department" class="isSowIndex">
+                        <select id="school" class="isSowIndex">
                             <option value="seleceConfigTip">暂不可选</option>
                         </select>
                     </div>
@@ -78,7 +78,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">场地类型</label>
-                        <select id="major" class="isSowIndex">
+                        <select id="siteStype" class="isSowIndex">
                             <option value="seleceConfigTip">暂不可选</option>
                         </select>
                     </div>
@@ -89,7 +89,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">楼&#12288;&#8197;房</label>
-                        <select id="major" class="isSowIndex">
+                        <select id="building" class="isSowIndex">
                             <option value="seleceConfigTip">暂不可选</option>
                         </select>
                     </div>
@@ -100,7 +100,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">楼&#12288;&#8197;层</label>
-                        <select id="major" class="isSowIndex">
+                        <select id="storey" class="isSowIndex">
                             <option value="seleceConfigTip">暂不可选</option>
                         </select>
                     </div>
@@ -111,8 +111,8 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">场地性质</label>
-                        <select id="major" class="isSowIndex">
-                            <option value="seleceConfigTip">暂不可选</option>
+                        <select id="siteNature" class="isSowIndex">
+                            <option value="siteNature">暂不可选</option>
                         </select>
                     </div>
                 </ul>
@@ -122,7 +122,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">排课占用系部</label>
-                        <select id="major" class="isSowIndex">
+                        <select id="employDepartment" class="isSowIndex">
                             <option value="seleceConfigTip">暂不可选</option>
                         </select>
                     </div>
@@ -133,7 +133,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">场地名称</label>
-                        <input name="" type="text" class="myInput searchInput" id="teacherName" placeholder="请填写名称..."/>
+                        <input name="" type="text" class="myInput searchInput" id="SiteName" placeholder="请填写名称..."/>
                     </div>
                 </ul>
             </div>
@@ -141,7 +141,7 @@
         </div>
 
         <div class="localInfoTableArea columnsStyle searchGivePaddingR">
-            <table class="tablelist myTableStyle" id="localInfoTable" data-unique-id="edu101_ID" style="margin-top: 10px;"></table>
+            <table class="tablelist myTableStyle" id="localInfoTable" data-unique-id="edu500Id" style="margin-top: 10px;"></table>
         </div>
     </div>
 </div>
@@ -238,7 +238,7 @@
                             <ul class="forminfo">
                                 <div class="">
                                     <label class="selectName" style="margin-top: 14px;">楼房</label>
-                                    <select class="isSowIndex" id="addTeacherZY">
+                                    <select class="isSowIndex" id="addBuilding">
                                         <option value="seleceConfigTip">请选择</option>
                                     </select>
                                 </div>
@@ -249,7 +249,7 @@
                             <ul class="forminfo">
                                 <div class="">
                                     <label class="selectName" style="margin-top: 14px;">楼层</label>
-                                    <select class="isSowIndex" id="addTeacherZY">
+                                    <select class="isSowIndex" id="addStorey">
                                         <option value="seleceConfigTip">请选择</option>
                                     </select>
                                 </div>
@@ -260,18 +260,7 @@
                             <ul class="forminfo">
                                 <div class="">
                                     <label class="selectName" style="margin-top: 14px;">场地负责人</label>
-                                    <select class="isSowIndex isOrNotIsEvement" id="addSiteManager">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">场地状态</label>
-                                    <select readonly="readonly" class="isSowIndex" id="addTeacherMz">
+                                    <select class="isSowIndex" id="addSiteManager">
                                         <option value="seleceConfigTip">请选择</option>
                                     </select>
                                 </div>
@@ -282,7 +271,7 @@
                             <ul class="forminfo">
                                 <div class="">
                                     <label class="selectName" style="margin-top: 14px;">备注</label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addTeacherLxfs" placeholder="请填写备注..."/>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addRemarks" placeholder="请填写备注..."/>
                                 </div>
                             </ul>
                         </div>

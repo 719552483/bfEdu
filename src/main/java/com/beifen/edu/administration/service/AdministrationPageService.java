@@ -12,53 +12,16 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.beifen.edu.administration.dao.*;
+import com.beifen.edu.administration.domian.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.beifen.edu.administration.dao.Edu000Dao;
-import com.beifen.edu.administration.dao.Edu001Dao;
-import com.beifen.edu.administration.dao.Edu101Dao;
-import com.beifen.edu.administration.dao.Edu103Dao;
-import com.beifen.edu.administration.dao.Edu104Dao;
-import com.beifen.edu.administration.dao.Edu105Dao;
-import com.beifen.edu.administration.dao.Edu106Dao;
-import com.beifen.edu.administration.dao.Edu107Dao;
-import com.beifen.edu.administration.dao.Edu108Dao;
-import com.beifen.edu.administration.dao.Edu200Dao;
-import com.beifen.edu.administration.dao.Edu201Dao;
-import com.beifen.edu.administration.dao.Edu202Dao;
-import com.beifen.edu.administration.dao.Edu300Dao;
-import com.beifen.edu.administration.dao.Edu301Dao;
-import com.beifen.edu.administration.dao.Edu400Dao;
-import com.beifen.edu.administration.dao.Edu401Dao;
-import com.beifen.edu.administration.dao.Edu990Dao;
-import com.beifen.edu.administration.dao.Edu991Dao;
-import com.beifen.edu.administration.dao.Edu993Dao;
-import com.beifen.edu.administration.domian.Edu990;
-import com.beifen.edu.administration.domian.Edu991;
-import com.beifen.edu.administration.domian.Edu993;
 import com.beifen.edu.administration.utility.ReflectUtils;
 
 import net.sf.json.JSONObject;
-
-import com.beifen.edu.administration.domian.Edu000;
-import com.beifen.edu.administration.domian.Edu001;
-import com.beifen.edu.administration.domian.Edu101;
-import com.beifen.edu.administration.domian.Edu103;
-import com.beifen.edu.administration.domian.Edu104;
-import com.beifen.edu.administration.domian.Edu105;
-import com.beifen.edu.administration.domian.Edu106;
-import com.beifen.edu.administration.domian.Edu107;
-import com.beifen.edu.administration.domian.Edu108;
-import com.beifen.edu.administration.domian.Edu200;
-import com.beifen.edu.administration.domian.Edu201;
-import com.beifen.edu.administration.domian.Edu202;
-import com.beifen.edu.administration.domian.Edu300;
-import com.beifen.edu.administration.domian.Edu301;
-import com.beifen.edu.administration.domian.Edu400;
-import com.beifen.edu.administration.domian.Edu401;
 
 @Configuration
 @Service
@@ -103,6 +66,8 @@ public class AdministrationPageService {
 	private Edu400Dao edu400DAO;
 	@Autowired
 	private Edu401Dao edu401DAO;
+	@Autowired
+	private Edu500Dao edu500DAO;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -1650,19 +1615,85 @@ public class AdministrationPageService {
 		return entities;
 	}
 
+	/**
+	 * 检查同校区是否有重复教学点
+	 * @param ssxq
+	 * @param jxdmc
+	 * @return
+	 */
+    public Edu500 getSchoolInfo(String ssxq, String jxdmc) {
+		Edu500 site = edu500DAO.checkPointInSchool(ssxq,jxdmc);
+		return site;
+    }
+
+	/**
+	 *新增教学点
+	 * @param newSite
+	 */
+	public void addSite(Edu500 newSite) {
+    	edu500DAO.save(newSite);
+	}
+
+	/**
+	 * 查询所有教学点
+	 * @return
+	 */
+	public List<Edu500> queryAllSite() {
+		List<Edu500> sitelist = edu500DAO.findAll();
+		return  sitelist;
+	}
 
 
+	/**
+	 * 按条件检索教学点
+	 * @param edu500
+	 * @return
+	 */
+	public List<Edu500> searchSite(Edu500 edu500) {
+		Specification<Edu500> specification = new Specification<Edu500>() {
+			public Predicate toPredicate(Root<Edu500> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu500.getJxdmc() != null && !"".equals(edu500.getJxdmc())) {
+					predicates.add(cb.equal(root.<String> get("jxdmc"),'%' + edu500.getJxdmc() + '%'));
+				}
+				if (edu500.getSsxq() != null && !"".equals(edu500.getSsxq())) {
+					predicates.add(cb.equal(root.<String> get("ssxq"),edu500.getSsxq()));
+				}
+				if (edu500.getPkzyx() != null && !"".equals(edu500.getPkzyx())) {
+					predicates.add(cb.equal(root.<String> get("pkzyx"),edu500.getPkzyx()));
+				}
+				if (edu500.getCdlx() != null && !"".equals(edu500.getCdlx())) {
+					predicates.add(cb.equal(root.<String> get("cdlx"),edu500.getCdlx()));
+				}
+				if (edu500.getCdxz() != null && !"".equals(edu500.getCdxz())) {
+					predicates.add(cb.equal(root.<String> get("cdxz"),edu500.getCdxz()));
+				}
+				if (edu500.getLc() != null && !"".equals(edu500.getLc())) {
+					predicates.add(cb.equal(root.<String> get("lc"),edu500.getLc()));
+				}
+				if (edu500.getLf() != null && !"".equals(edu500.getLf())) {
+					predicates.add(cb.equal(root.<String> get("lf"),edu500.getLf()));
+				}
 
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu500> teacherEntities = edu500DAO.findAll(specification);
+		return teacherEntities;
+	}
 
+	//查询教学点是否被占用
+	public boolean checkIsUsed(String edu500Id) {
+		boolean canRemove=true;
+		List<Edu500> siteList =edu500DAO.checkIsUsed(edu500Id);
+		if(siteList.size()>0){
+			canRemove=false;
+		}
+		return canRemove;
+	}
 
-
-
-
-
-
-
-
-
-
-
+	//删除教学点
+	public void removeSite(String edu500Id) {
+		edu500DAO.removeSite(edu500Id);
+	}
 }
