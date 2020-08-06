@@ -112,11 +112,12 @@ function stufflocalInfoTable(tableInfo) {
         columns: [
             {
                 field: 'check',
-                checkbox: true
+                checkbox: true,
             },{
                 field: 'edu500Id',
                 title: '唯一标识',
-                align: 'center'
+                align: 'center',
+                visible: false
             },
             {
                 field: 'jxdmc',
@@ -183,6 +184,12 @@ function stufflocalInfoTable(tableInfo) {
                 align: 'left',
                 formatter: paramsMatter,
                 visible: false
+            },
+            {
+                field: 'xxdz',
+                title: '详细地址',
+                align: 'left',
+                formatter: paramsMatter
             },
             {
                 field: 'action',
@@ -306,7 +313,7 @@ function localInfoDetails(row,index){
 //重置教学点信息模态框
 function rebackSiteInfo(){
     var reObject = new Object();
-    reObject.InputIds = "#addTeachingPointName,#addCapacity,#addRemarks";
+    reObject.InputIds = "#addTeachingPointName,#addCapacity,#addRemarks,#addAddress";
     reObject.normalSelectIds = "#addSchool,#addPasternType,#addManagementDepartment,#addSiteType,#addSiteNature,#addBuilding,#addStorey,#addSiteManager,#addSiteStatus";
     reReloadSearchsWithSelect(reObject);
 }
@@ -314,6 +321,7 @@ function rebackSiteInfo(){
 //填充教学点信息
 function stufflocalInfoDetails(row){
     $("#addTeachingPointName").val(row.jxdmc);
+    $("#addAddress").val(row.xxdz);
     stuffManiaSelectWithDeafult("#addSchool", row.ssxqCode);
     stuffManiaSelectWithDeafult("#addPasternType", row.pkzyxCode);
     stuffManiaSelectWithDeafult("#addManagementDepartment", row.glxbCode);
@@ -402,6 +410,7 @@ function sendModifySite(row,modifylocalInfo){
 //获得新增教学点的信息
 function getnewlocalInfo(){
     var jxdmc= $("#addTeachingPointName").val();
+    var xxdz= $("#addAddress").val();
     var ssxq = getNormalSelectText("addSchool");
     var ssxqCode = getNormalSelectValue("addSchool");
     var pkzyx = getNormalSelectText("addPasternType");
@@ -428,6 +437,7 @@ function getnewlocalInfo(){
 
 
     returnObject.jxdmc=jxdmc;
+    returnObject.xxdz=xxdz;
     returnObject.ssxq=ssxq;
     returnObject.pkzyx=pkzyx;
     returnObject.rnrs=rnrs;
@@ -524,7 +534,7 @@ function startSearch(){
 
 //获得检索区域的值
 function getSearchValue(){
-    var jxdmc= $("#TeachingPointName").val();
+    var jxdmc= $("#SiteName").val();
     var ssxq = getNormalSelectText("school");
     var ssxqCode = getNormalSelectValue("school");
     var pkzyx = getNormalSelectText("employDepartment");

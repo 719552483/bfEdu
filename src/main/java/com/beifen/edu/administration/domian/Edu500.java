@@ -29,11 +29,16 @@ public class Edu500 {
   private String bz;
   private String cdzt;
   private String cdztCode;
+  private String xxdz;
+
+
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
   @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
   @Column(name = "Edu500_ID")
+
+
 
   public Long getEdu500Id() {
     return edu500Id;
@@ -221,5 +226,13 @@ public class Edu500 {
 
   public void setCdztCode(String cdztCode) {
     this.cdztCode = cdztCode;
+  }
+
+  public String getXxdz() {
+    return xxdz;
+  }
+
+  public void setXxdz(String xxdz) {
+    this.xxdz = xxdz;
   }
 }

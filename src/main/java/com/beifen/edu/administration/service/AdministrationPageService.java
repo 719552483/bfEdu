@@ -1654,7 +1654,7 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu500> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu500.getJxdmc() != null && !"".equals(edu500.getJxdmc())) {
-					predicates.add(cb.equal(root.<String> get("jxdmc"),'%' + edu500.getJxdmc() + '%'));
+					predicates.add(cb.like(root.<String> get("jxdmc"),'%' + edu500.getJxdmc() + '%'));
 				}
 				if (edu500.getSsxq() != null && !"".equals(edu500.getSsxq())) {
 					predicates.add(cb.equal(root.<String> get("ssxq"),edu500.getSsxq()));
