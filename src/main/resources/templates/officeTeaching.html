@@ -152,17 +152,88 @@
 			
 			
 			<div class="scheduleSingleClassArea noneStart">
+				<div class="tools scheduleToolsArea">
+					<ul class="toolbar" style="padding-top: 12px;">
+						<li class="click" id="returnStartSchedule"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+					</ul>
+				</div>
+
 				<div class="formtext myformtext">
 					当前排课 - <b class="scheduleInfo"></b>
 				</div>
-				<div class="tools scheduleToolsArea">
-						<ul class="toolbar" style="padding-top: 12px;">
-			            	<li class="click" id="returnStartSchedule"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
-						</ul>
-				</div>
-				
+
 				<div class="scheduleMainArea">
-					
+					<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+						<span>一、选择学年</span>
+					</div>
+					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+						<div class="col4 giveBottom departmentSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年<b>*</b></label>
+									<select class="isSowIndex" id="term">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+
+					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
+						<span>三、选择上课地点</span>
+					</div>
+					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+						<div class="col4 giveBottom departmentSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">授课地点</label>
+									<select class="isSowIndex" id="skdd">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+
+					<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+						<span>二、选择课节</span>
+					</div>
+					<div class="kjArea">
+						<div class="kjForForenoonArea">
+							<div class="formtext kjformtext">
+								上午课节安排：
+							</div>
+							<div class="kjForForenoonTableArea">
+								<table class="tablelist myTableStyle" id="kjForForenoonTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>
+							</div>
+						</div>
+
+						<div class="kjFoAfternoonArea">
+							<div class="formtext kjformtext">
+								下午课节安排：
+							</div>
+							<div class="kjFoAfternoonTableArea">
+								<table class="tablelist myTableStyle" id="kjFoAfternoonTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>
+							</div>
+						</div>
+
+						<div class="kjForEveingArea">
+							<div class="formtext kjformtext">
+								晚上课节安排：
+							</div>
+							<div class="kjForEveingTableArea">
+								<table class="tablelist myTableStyle" id="kjForEveingTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>
+							</div>
+						</div>
+
+					</div>
+					<div class="clear"></div>
+
+					<div class="formtitle noneStart" style="clear:both;margin-bottom: 25px;">
+						<span>四、排课结果</span>
+					</div>
 				</div>
 			</div>
        </div>

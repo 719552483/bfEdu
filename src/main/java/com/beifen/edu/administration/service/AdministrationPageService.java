@@ -1221,9 +1221,19 @@ public class AdministrationPageService {
 		return edu401DAO.queryDefaultkjsz();
 	}
 
-	// 查询所有课节 包含指定了学年的
+	// 查询所有课节
 	public List<Edu401> queryAllKj() {
 		return edu401DAO.findAll();
+	}
+
+    //根据学年获取课节信息
+	public List<Edu401> getKjInfoByXn(String termId) {
+		return edu401DAO.getKjInfoByXn(termId);
+	}
+
+	//获取所有默认课节
+	public List<Edu401>  queryAllDeafultKj() {
+		return edu401DAO.queryAllDeafultKj();
 	}
 
 	// 新增课节
@@ -1696,4 +1706,12 @@ public class AdministrationPageService {
 	public void removeSite(String edu500Id) {
 		edu500DAO.removeSite(edu500Id);
 	}
+
+	//根据校区编码查询教学点
+	public List<Edu500> querySiteBySsxqCode(String xqCode) {
+		return edu500DAO.querySiteBySsxqCode(xqCode);
+	}
+
+
+
 }

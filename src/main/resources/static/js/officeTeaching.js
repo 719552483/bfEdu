@@ -230,6 +230,7 @@ function stuffWaitTaskTable(tableInfo){
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
 					align: 'center',
+					width:'15%',
 					formatter: sfxylcjMatter
 				},{
 					field: 'kkbm',
@@ -286,45 +287,307 @@ function startSchedule(){
 		toastr.warning('请选择排课课程');
 		return;
 	}
-//	$.ajax({
-//		method : 'get',
-//		cache : false,
-//		url : "/modifyCultureCrose",
-//		dataType : 'json',
-//		data: {
-//		     "culturePlanInfo":JSON.stringify(culturePlanInfo) ,
-//            "modifyInfo":JSON.stringify(crouseModifyInfo)  
-//       },
-//		beforeSend: function(xhr) {
-//			requestErrorbeforeSend();
-//		},
-//		error: function(textStatus) {
-//			requestError();
-//		},
-//		complete: function(xhr, status) {
-//			requestComplete();
-//		},
-//		success : function(backjson) {
-//			if (backjson.result) {
-//				hideloding();
-//				crouseModifyInfo.xbsp="noStatus";
-//				$("#majorTrainingTable").bootstrapTable('updateByUniqueId', {
-//					id : row.edu108_ID,
-//					row : crouseModifyInfo
-//				});
-//				toolTipUp(".myTooltip");
-//				$.hideModal("#majorTrainingModal");
-//				drawPagination(".majorTrainingTableArea", "培养计划");
-//			} else {
-//				toastr.warning('操作失败，请重试');
-//			}
-//		}
-//	});
-	
-	$(".scheduleClassesMainArea").hide();
-	$(".scheduleSingleClassArea").show();
-	$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc);
+
+	showStartScheduleArea(culturePlanInfo,choosedTask);
 }
+
+//展示开始排课区域
+function  showStartScheduleArea(culturePlanInfo,choosedTask){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/dealScheduleClassInfo",
+		data:{
+			"edu103Id":culturePlanInfo.level
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+                if(backjson.termInfo.length<=0){
+					toastr.warning('暂无学年信息');
+					return;
+				}
+				if(backjson.kjInfo.length<=0){
+					toastr.warning('暂无默认课节信息');
+					return;
+				}
+				if(backjson.jxdInfo.length<=0){
+					toastr.warning('暂无可选教学点场地信息');
+					return;
+				}
+
+				var configSelectTxt="请选择";
+				var termStr='<option value="seleceConfigTip">'+configSelectTxt+'</option>';
+				var siteStr='<option value="seleceConfigTip">'+configSelectTxt+'</option>';
+
+				for (var i = 0; i < backjson.termInfo.length; i++) {
+					termStr += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#term", termStr);
+				//为学年绑定change事件 重载课节信息
+				$("#term").change(function() {
+                  reloadKjInfo();
+				});
+
+				for (var i = 0; i < backjson.jxdInfo.length; i++) {
+					siteStr += '<option value="' + backjson.jxdInfo[i].edu500Id + '">' + backjson.jxdInfo[i].jxdmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#skdd", siteStr);
+
+				stuffKjTables(backjson.kjInfo);
+
+				$(".scheduleClassesMainArea").hide();
+				$(".scheduleSingleClassArea").show();
+				$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc);
+				//返回按钮事件绑定
+				$('#returnStartSchedule').unbind('click');
+				$('#returnStartSchedule').bind('click', function(e) {
+					returnStartSchedule();
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//学年改变事件
+function reloadKjInfo(){
+	var currentXn=getNormalSelectValue("term");
+	if(currentXn===""){
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryAllDeafultKj",
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.result) {
+					stuffKjTables(backjson.kjInfo);
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	}else{
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/getKjInfoByXn",
+			data: {
+				"termId":currentXn
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.result) {
+					stuffKjTables(backjson.currentKj);
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	}
+
+}
+
+
+//填充课节信息的三个表
+function stuffKjTables(kjInfo){
+	var ForenoonArray=new Array();
+	var AfternoonArray=new Array();
+	var EveingArray=new Array();
+	for (var i = 0; i < kjInfo.length; i++) {
+        if(kjInfo[i].sjd==="forenoon"){
+			ForenoonArray.push(kjInfo[i]);
+		}else if(kjInfo[i].sjd==="afternoon"){
+			AfternoonArray.push(kjInfo[i]);
+		}else{
+			EveingArray.push(kjInfo[i]);
+		}
+	}
+
+	//上午表
+	$('#kjForForenoonTable').bootstrapTable('destroy').bootstrapTable({
+		data: ForenoonArray,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: false,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".kjForForenoonArea", "上午课节");
+		},
+		columns: [
+			{
+				field : 'check',
+				checkbox : true
+			},{
+				field: 'edu401_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
+			},
+			{
+				field: 'kjsx',
+				title: '课节顺序',
+				align: 'left',
+				formatter: paramsMatter
+			}, 	{
+				field: 'kjmc',
+				title: '课节名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			}
+		]
+	});
+	drawPagination(".kjForForenoonArea", "上午课节");
+	toolTipUp(".myTooltip");
+
+	//下午表
+	$('#kjFoAfternoonTable').bootstrapTable('destroy').bootstrapTable({
+		data: AfternoonArray,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: false,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".kjFoAfternoonArea", "下午课节");
+		},
+		columns: [
+			{
+				field : 'check',
+				checkbox : true
+			},{
+				field: 'edu401_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
+			},
+			{
+				field: 'kjsx',
+				title: '课节顺序',
+				align: 'left',
+				formatter: paramsMatter
+			}, 	{
+				field: 'kjmc',
+				title: '课节名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			}
+		]
+	});
+	drawPagination(".kjFoAfternoonArea", "下午课节");
+	toolTipUp(".myTooltip");
+
+
+	//晚上表
+	$('#kjForEveingTable').bootstrapTable('destroy').bootstrapTable({
+		data: EveingArray,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: false,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".kjForEveingTableArea", "晚上课节");
+		},
+		columns: [
+			{
+				field : 'check',
+				checkbox : true
+			},{
+				field: 'edu401_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
+			},
+			{
+				field: 'kjsx',
+				title: '课节顺序',
+				align: 'left',
+				formatter: paramsMatter
+			}, 	{
+				field: 'kjmc',
+				title: '课节名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			}
+		]
+	});
+	drawPagination(".kjForEveingTableArea", "晚上课节");
+	toolTipUp(".myTooltip");
+}
+
+//返回待排课程区域
+function returnStartSchedule(){
+	$(".scheduleClassesMainArea").show();
+	$(".scheduleSingleClassArea").hide();
+	// var reObject = new Object();
+	// reObject.normalSelectIds = "#addTeacherSex,#addTeacherType,#addTeacherXb,#addTeacherZY,#addTeacherHf,#addTeacherMz,#addTeacherZc,#addTeacherWhcd,#addTeacherZzmm";
+	// reReloadSearchsWithSelect(reObject);
+}
+
+
 
 
 

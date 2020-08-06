@@ -16,6 +16,7 @@ public interface Edu500Dao extends JpaRepository<Edu500, Long>, JpaSpecification
     @Query(value = "select * from edu500 e where e.ssxq = ?1 and e.jxdmc = ?2", nativeQuery = true)
     Edu500 checkPointInSchool(String ssxq, String jxdmc);
 
+    //查看教学点是否被占用
     @Query(value = "select * from edu500 e where e.edu500_id = ?1 and e.cdzt_code = '1'", nativeQuery = true)
     List<Edu500> checkIsUsed(String edu500Id);
 
@@ -24,4 +25,8 @@ public interface Edu500Dao extends JpaRepository<Edu500, Long>, JpaSpecification
     @Modifying
     @Query(value = "delete from edu500 where Edu500_ID =?1", nativeQuery = true)
     void removeSite(String edu500id);
+
+    //根据校区编码查询教学点
+    @Query(value = "select * from edu500 e where e.SSXQ_CODE = ?1", nativeQuery = true)
+    List<Edu500> querySiteBySsxqCode(String ssxqCode);
 }

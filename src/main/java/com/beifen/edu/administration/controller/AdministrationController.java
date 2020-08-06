@@ -1271,7 +1271,49 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
+	/**
+	 *预备开始排课时 处理相关信息
+	 */
+	@RequestMapping("/dealScheduleClassInfo")
+	@ResponseBody
+	public Object getScheduleClassMustInfo(@RequestParam String edu103Id) {
+		Map<String, Object> returnMap = new HashMap();
+
+		//获取学年
+		returnMap.put("termInfo", administrationPageService.queryAllXn());
+		//获取课节
+		returnMap.put("kjInfo", administrationPageService.queryAllDeafultKj());
+		//过滤可选的教室  校区要一致
+		String current103Xq=administrationPageService.queryXqByPyccbm(2, edu103Id);
+		boolean havePlan=true;
+		if(current103Xq==null||current103Xq.equals("")){
+			havePlan=false;
+		}
+
+		if(havePlan){
+			returnMap.put("jxdInfo", administrationPageService.querySiteBySsxqCode(current103Xq));
+		}
+
+		returnMap.put("havePlan", havePlan);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+	/**
+	 * 根据学年获取课节信息
+	 * @param termId
+	 * @return
+	 */
+	@RequestMapping("/getKjInfoByXn")
+	@ResponseBody
+	public Object getKjInfoByXn(@RequestParam String termId) {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu401> currentKj=administrationPageService.getKjInfoByXn(termId);
+		returnMap.put("currentKj", currentKj);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 	
 	/**
 	 * 新增课节
@@ -1356,7 +1398,19 @@ public class AdministrationController {
 		returnMap.put("nameHave", nameHave);
 		return returnMap;
 	}
-	
+
+
+	/**
+	 * 查询所有默认课节
+	 */
+	@RequestMapping("/queryAllDeafultKj")
+	@ResponseBody
+	public Object queryAllDeafultKj() {
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("kjInfo", administrationPageService.queryAllDeafultKj());
+		returnMap.put("result", true);
+		return returnMap;
+	}
 
 	/**
 	 * 获得教务相关公共代码信息

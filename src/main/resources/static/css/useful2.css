@@ -1545,8 +1545,27 @@ margin: 0px 0px -14px -15px!important;
 	    text-align: left;
 }
 
+.kjArea{
+	margin-left: -2.5%;
+}
 
+.kjArea .searchAreaWitheSelect .select-mania{
+	margin-left:-5%!important;
+}
 
+.kjForForenoonArea,.kjFoAfternoonArea,.kjForEveingArea{
+	width: 26.3333%;
+	float: left;
+	margin-left: 57px;
+	margin-right: 16px;
+}
+
+.kjformtext{
+	margin-bottom: -7%;
+	color: rgb(7 84 130);
+	font-weight: 500;
+	font-size: 13px;
+}
 
 @keyframes serachAnimation {
 	10% {
