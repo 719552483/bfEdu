@@ -52,10 +52,7 @@ public class AdministrationController {
 
 	/**
 	 * 检查有没有系统用户
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @return
 	 */
 	@RequestMapping("/checkHaveSysUser")
 	@ResponseBody
@@ -67,10 +64,9 @@ public class AdministrationController {
 
 	/**
 	 * 注册系统用户
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param username
+	 * @param password
+	 * @return
 	 */
 	@RequestMapping("/registerUser")
 	@ResponseBody
@@ -111,10 +107,7 @@ public class AdministrationController {
 
 	/**
 	 * 查询二级代码信息
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @return
 	 */
 	@RequestMapping("getEJDM")
 	@ResponseBody
@@ -144,12 +137,9 @@ public class AdministrationController {
 
 	/**
 	 * 用户登录查询
-	 * 
-	 * @param username用户名
-	 * 
-	 * @param password密码
-	 * 
-	 * @return returnMap
+	 * @param username
+	 * @param password
+	 * @return
 	 */
 	@RequestMapping("/verifyUser")
 	@ResponseBody
@@ -204,12 +194,9 @@ public class AdministrationController {
 
 	/**
 	 * 修改首页快捷方式
-	 * 
-	 * @param username用户名
-	 * 
-	 * @param password密码
-	 * 
-	 * @return returnMap
+	 * @param userId
+	 * @param newShortcut
+	 * @return
 	 */
 	@RequestMapping("/newShortcut")
 	@ResponseBody
@@ -223,10 +210,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增角色
-	 * 
-	 * @param newRoleInfo角色信息
-	 * 
-	 * @return returnMap
+	 * @param newRoleInfo
+	 * @return
 	 */
 	@RequestMapping("/addRole")
 	@ResponseBody
@@ -251,10 +236,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改角色
-	 * 
-	 * @param updateInfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateInfo
+	 * @return
 	 */
 	@RequestMapping("/modifyRole")
 	@ResponseBody
@@ -417,10 +400,8 @@ public class AdministrationController {
 
 	/**
 	 * 账号设置
-	 * 
-	 * @param newRoleInfo角色信息
-	 * 
-	 * @return returnMap
+	 * @param accountSetupInfo
+	 * @return
 	 */
 	@RequestMapping("/userSetup")
 	@ResponseBody
