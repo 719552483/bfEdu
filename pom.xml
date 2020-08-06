@@ -137,6 +137,13 @@
         </dependency>
         <!-- 富文本 end -->
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- 热部署 end -->
+
 	</dependencies>
 
 
