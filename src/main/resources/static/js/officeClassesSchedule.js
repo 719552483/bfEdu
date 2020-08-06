@@ -305,18 +305,18 @@ function stuffTaecherTable(tableInfo){
 				field: 'check',
 				checkbox: true
 			},{
-				field : 'ssyx',
+				field : 'szxb',
 				title : '系部',
 				align : 'left',
 				formatter : paramsMatter
 
 			}, {
-				field : 'jsxm',
+				field : 'xm',
 				title : '姓名',
 				align : 'left',
 				formatter : paramsMatter
 			}, {
-				field : 'jgh',
+				field : 'jzgh',
 				title : '教工号',
 				align : 'left',
 				formatter : paramsMatter
@@ -551,7 +551,7 @@ function confirmChoosedTeacher(tableId,index,cellName){
 		$(tableId).bootstrapTable('updateCell', {
 			index: index,
 			field: fieldName1,
-			value: choosedTeacher[0].jsxm
+			value: choosedTeacher[0].xm
 		});
 		
 		$(tableId).bootstrapTable('updateCell', {
@@ -565,7 +565,7 @@ function confirmChoosedTeacher(tableId,index,cellName){
 				$(tableId).bootstrapTable('updateCell', {
 					index: i,
 					field: fieldName1,
-					value: choosedTeacher[0].jsxm
+					value: choosedTeacher[0].xm
 				});
 				
 				$(tableId).bootstrapTable('updateCell', {

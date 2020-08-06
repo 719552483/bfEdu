@@ -49,7 +49,6 @@ public class AdministrationController {
 	@Autowired
 	private AdministrationPageService administrationPageService;
 	ReflectUtils utils = new ReflectUtils();
-
 	/**
 	 * 检查有没有系统用户
 	 * @return
@@ -81,8 +80,7 @@ public class AdministrationController {
 		administrationPageService.newUser(edu990);
 
 		// 生成系统用户权限
-	
-		
+
 		Edu991 edu991 = new Edu991();
 		edu991.setJs(sysRole);
 		edu991.setAnqx(sysRole);
