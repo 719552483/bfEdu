@@ -4,7 +4,7 @@ $(function() {
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
 	drawApprovalMangerEmptyTable();
-	getProposerInfo();
+	// getProposerInfo();
 	btnBind();
 });
 
@@ -151,7 +151,7 @@ function stuffApprovalMangerTable(tableInfo){
 function startSearch(){
       var searchObjet=new Object();
 	  searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
-	  searchObjet.proposerID=getNormalSelectValue("sqrID");
+	  searchObjet.proposerKey=getNormalSelectValue("sqrID");
 	  searchObjet.businessKey=getNormalSelectValue("splx");
 
 		$.ajax({
@@ -159,7 +159,7 @@ function startSearch(){
 			cache: false,
 			url: "/searchApproval",
 			data: {
-				"searchApprovalObject":searchObjet
+				"approvalText":JSON.stringify(searchObjet)
 			},
 			dataType: 'json',
 			beforeSend: function (xhr) {

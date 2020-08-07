@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.sun.istack.internal.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,7 +48,8 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	public List<Edu990> useThisRoleEdu990s(String js);
 
 	//根据用户id查询用户信息
-	@Query(value = "select * from edu990 b where b.BF990_ID=?1", nativeQuery = true)
+	@Query(value = "select b.* from edu990 b where b.BF990_ID=?1", nativeQuery = true)
+	@Nullable
 	public Edu990 queryUserById(String userId);
 
 }

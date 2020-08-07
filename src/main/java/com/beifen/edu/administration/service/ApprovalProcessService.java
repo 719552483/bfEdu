@@ -74,7 +74,6 @@ public class ApprovalProcessService {
         if(edu602 == null) {
             isSuccess =  false;
         } else {
-            edu600.setLastRole(edu600.getCurrentRole());
             edu600.setCurrentRole(edu602.getNextRole());
             edu600.setLastRole(edu602.getCurrentRole());
             edu600.setApprovalState("1");
@@ -106,13 +105,13 @@ public class ApprovalProcessService {
                 public Predicate toPredicate(Root<Edu600> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                     List<Predicate> predicates = new ArrayList<Predicate>();
                     if (edu600.getCurrentRole() != null && !"".equals(edu600.getCurrentRole())) {
-                        predicates.add(cb.equal(root.<String> get("pycc"), edu600.getCurrentRole()));
+                        predicates.add(cb.equal(root.<String> get("currentRole"), edu600.getCurrentRole()));
                     }
                     if (edu600.getBusinessType() != null && !"".equals(edu600.getBusinessType())) {
-                        predicates.add(cb.equal(root.<String> get("szxb"), edu600.getBusinessType()));
+                        predicates.add(cb.equal(root.<String> get("businessType"), edu600.getBusinessType()));
                     }
                     if (edu600.getProposerKey() != null && !"".equals(edu600.getProposerKey())) {
-                        predicates.add(cb.equal(root.<String> get("szxb"), edu600.getProposerKey()));
+                        predicates.add(cb.equal(root.<String> get("proposerKey"), edu600.getProposerKey()));
                     }
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
@@ -128,10 +127,14 @@ public class ApprovalProcessService {
                 Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
                 approvalEx.setProposerName(proposer.getYhm());
                 //获取上一步审批人信息
-                Edu990 lastPerson = edu990Dao.queryUserById(e.getLastExaminerKey().toString());
-                approvalEx.setLastPersonName(lastPerson.getYhm());
+                if(e.getLastExaminerKey() == null || "".equals(e.getExaminerkey())) {
+                    approvalEx.setLastPersonName("");
+                }else {
+                    Edu990 lastPerson = edu990Dao.queryUserById(e.getLastExaminerKey().toString());
+                    approvalEx.setLastPersonName(lastPerson.getYhm());
+                }
                 //获取业务类型信息
-                String splx = edu000Dao.queryEjdmByEjdmZ(e.getBusinessType(), "splx");
+                String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
                 approvalEx.setBusinessName(splx);
                 //将封装数据加入数组
                 approvalExList.add(approvalEx);

@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.sun.istack.internal.Nullable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -24,7 +25,13 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	
 	// 根据二级代码值获取二级代码
 	@Query(value = "select e.ejdm from edu000 e where e.ejdmz=?1 and e.ejdmGlzd=?2", nativeQuery = true)
+	@Nullable
 	public String queryEjdmByEjdmZ(String ejdmz,String ejdmGlzd);
+
+	// 根据二级代码和关联字段获取二级代码值
+	@Query(value = "select e.ejdmz from edu000 e where ejdm=?1 and e.ejdmglzd=?2", nativeQuery = true)
+	@Nullable
+	public String queryEjdmMcByEjdmZ(String ejdm,String ejdmGlzd);
 	
 	@Query(value = "select * from edu000", nativeQuery = true)
 	public List<Edu000> queryejdm();
