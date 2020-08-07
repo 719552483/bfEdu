@@ -31,7 +31,7 @@ function getProposerInfo(){
 				if (backjson.proposerList.length === 0) {
 				    return;
 				}
-				var str = '<option>请选择</option>';
+				var str = '<option value="seleceConfigTip">请选择</option>';
 				for (var i = 0; i < backjson.proposerList.length; i++) {
 					str += '<option value="' + backjson.proposerList[i].bf990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
 				}
@@ -52,7 +52,7 @@ function drawApprovalMangerEmptyTable(){
 function stuffApprovalMangerTable(tableInfo){
 	window.releaseNewsEvents = {
 		'click #approvalInfo' : function(e, value, row, index) {
-			approvalInfo(row)
+			approvalInfo(row);
 		},
 		'click #agree' : function(e, value, row, index) {
 			agree(row);
@@ -85,10 +85,7 @@ function stuffApprovalMangerTable(tableInfo){
 			drawPagination(".approvalMangerTableArea", "审批信息");
 		},
 		columns : [ {
-			field : 'check',
-			checkbox : true
-		}, {
-			field : 'edu600_ID',
+			field : 'edu600Id',
 			title: '唯一标识',
 			align : 'center',
 			visible : false
@@ -152,12 +149,76 @@ function stuffApprovalMangerTable(tableInfo){
 	changeColumnsStyle(".approvalMangerTableArea", "审批信息");
 }
 
+//查看审批详情
+function approvalInfo(row) {
+	$.showModal("#approvalDetailsModal",false);
+}
+
+//审批通过
+function agree(row){
+	$.showModal("#remindModal",true);
+	$(".remindType").html("该条审批记录");
+	$(".remindActionType").html("审核通过");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		approvaAction(row,"1");
+		e.stopPropagation();
+	});
+}
+
+//审批不通过
+function disagree(row){
+	$.showModal("#remindModal",true);
+	$(".remindType").html("该条审批记录");
+	$(".remindActionType").html("审核不通过");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		approvaAction(row,"2");
+		e.stopPropagation();
+	});
+}
+
+//审核的确认操作
+function approvaAction(row,approvalText){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/approvalFlag",
+		data: {
+			"approvalText":approvalText
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				var removeArray=new Array();
+				removeArray.push(row.edu600Id);
+				tableRemoveAction("#approvalMangerTable", removeArray, ".approvalMangerTableArea", "审批信息");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+
+
+
 //审批管理开始检索
 function startSearch(){
       var searchObjet=new Object();
 	  searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
 	  searchObjet.proposerKey=getNormalSelectValue("sqrID");
-	  searchObjet.businessKey=getNormalSelectValue("splx");
+	  searchObjet.businessType=getNormalSelectValue("splx");
 
 		$.ajax({
 			method: 'get',
@@ -205,6 +266,13 @@ function judgmentIsFristTimeLoadTab2(){
 
 //页面按钮时间绑定
 function btnBind(){
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+
 	// 开始检索
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
