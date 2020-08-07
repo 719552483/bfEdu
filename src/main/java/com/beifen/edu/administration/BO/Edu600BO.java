@@ -7,8 +7,16 @@ public class Edu600BO extends Edu600 {
     private String businessName;//业务类型名称
     private String lastPersonName;//上一步审批人姓名
     private Long currentUserRole;//当前用户角色
+    private String approvalFlag;//操作表示（1同意，2不同意）
 
 
+    public String getApprovalFlag() {
+        return approvalFlag;
+    }
+
+    public void setApprovalFlag(String approvalFlag) {
+        this.approvalFlag = approvalFlag;
+    }
 
     public String getProposerName() {
         return proposerName;

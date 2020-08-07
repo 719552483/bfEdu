@@ -42,20 +42,19 @@ public class ApprovalProcessService {
         //保存审批信息
         Edu600 newEdu600 = edu600DAO.save(edu600);
         //开始流转
-        isSuccess = processFlow(newEdu600);
+        isSuccess = processFlow(newEdu600, "1");
 
         return isSuccess;
 
     }
 
-    private boolean processFlow(Edu600 edu600) {
+    private boolean processFlow(Edu600 edu600, String approvalFlag) {
         //准备审批历史记录类和成功标识
         Edu601 edu601 = new Edu601();
         boolean isSuccess = true;
         //获取审批信息
         String businessType = edu600.getBusinessType();//业务类型
         Long lastRole = edu600.getLastRole();//上一步审批人
-
         //复制属性
         try {
             BeanUtils.copyProperties(edu601, edu600);
@@ -67,21 +66,36 @@ public class ApprovalProcessService {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
-
-        //根据审批信息查找流转节点
-        Edu602 edu602 = edu602Dao.selectNextRole(businessType, lastRole.toString());
-        if(edu602 == null) {
-            isSuccess =  false;
+        if("1".equals(approvalFlag)){
+            //根据审批信息查找流转节点
+            Edu602 edu602 = edu602Dao.selectNextRole(businessType, lastRole.toString());
+            if(edu602 == null) {
+                isSuccess =  false;
+            } else {
+                //更新审批信息
+                edu600.setCurrentRole(edu602.getNextRole());
+                edu600.setLastRole(edu602.getCurrentRole());
+                edu600.setApprovalState("1");
+                edu600.setLastApprovalOpinions(edu600.getApprovalOpinions());
+                edu600.setApprovalOpinions("");
+                edu600.setUpdateDate(new Date());
+                Edu600 save = edu600DAO.save(edu600);
+                if(save == null){
+                    isSuccess = false;
+                }
+            }
         } else {
             //更新审批信息
-            edu600.setCurrentRole(edu602.getNextRole());
-            edu600.setLastRole(edu602.getCurrentRole());
-            edu600.setApprovalState("1");
+            edu600.setCurrentRole(edu600.getProposerType());
+            edu600.setLastRole(edu600.getCurrentRole());
+            edu600.setApprovalState("2");
             edu600.setLastApprovalOpinions(edu600.getApprovalOpinions());
             edu600.setApprovalOpinions("");
             edu600.setUpdateDate(new Date());
-            edu600DAO.save(edu600);
+            Edu600 save = edu600DAO.save(edu600);
+            if(save == null){
+                isSuccess = false;
+            }
         }
 
         return isSuccess;
@@ -150,9 +164,33 @@ public class ApprovalProcessService {
 
     }
 
+    /**
+     * 搜索审批人
+     * @return
+     */
     public List<Edu990> getProposerList() {
         //查找申请表中涉及到的审批人
         List<Edu990> proposerList = edu990Dao.selectProposer();
         return proposerList;
     }
+
+    /**
+     * 审批操作
+     * @param edu600BO
+     * @return
+     */
+    public boolean approvalOperation(Edu600BO edu600BO) {
+        boolean isSuccess = true;
+        Edu600 edu600 = new Edu600();
+        try {
+            BeanUtils.copyProperties(edu600,edu600BO);
+            isSuccess = processFlow(edu600,edu600BO.getApprovalFlag());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return isSuccess;
+    }
+
 }
