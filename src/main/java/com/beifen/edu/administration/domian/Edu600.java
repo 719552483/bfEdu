@@ -16,6 +16,7 @@ public class Edu600 {
     private Long proposerKey;//申请人主键
     private Long examinerRole;//当前审批人类型
     private Long examinerkey;//当前审批人主键
+    private Long lastExaminerKey;//上一部审批人主键
     private String lastApprovalOpinions;//上一步审批意见
     private String approvalOpinions;//审批意见
     private String approvalState;//审批状态
@@ -35,6 +36,14 @@ public class Edu600 {
 
     public void setEdu600Id(Long edu600Id) {
         this.edu600Id = edu600Id;
+    }
+
+    public Long getLastExaminerKey() {
+        return lastExaminerKey;
+    }
+
+    public void setLastExaminerKey(Long lastExaminerKey) {
+        this.lastExaminerKey = lastExaminerKey;
     }
 
     public String getBusinessType() {
