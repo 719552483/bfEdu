@@ -57,7 +57,7 @@ function stuffApprovalMangerTable(tableInfo){
 		'click #agree' : function(e, value, row, index) {
 			agree(row);
 		},
-		'click #modifyMajorTraining' : function(e, value, row, index) {
+		'click #disagree' : function(e, value, row, index) {
 			disagree(row);
 		}
 	};
@@ -131,9 +131,9 @@ function stuffApprovalMangerTable(tableInfo){
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
-		+ '<li class="queryBtn" id="approvalInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
-		+ '<li class="modifyBtn" id="agree"><span><img src="img/right.png" style="width:24px"></span>同意</li>'
-		+ '<li class="deleteBtn" id="disagree"><span><img src="images/close1.png"></span>不同意</li>'
+		+ '<li id="approvalInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+		+ '<li id="agree"><span><img src="img/right.png" style="width:24px"></span>同意</li>'
+		+ '<li id="disagree"><span><img src="images/close1.png"></span>不同意</li>'
 		+ '</ul>' ].join('');
 	}
 
@@ -180,12 +180,14 @@ function disagree(row){
 
 //审核的确认操作
 function approvaAction(row,approvalText){
+	row.approvalFlag=approvalText;
+	
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/approvalFlag",
+		url: "/approvalOperation",
 		data: {
-			"approvalText":approvalText
+			"approvalText":JSON.stringify(row)
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -200,11 +202,14 @@ function approvaAction(row,approvalText){
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-				var removeArray=new Array();
-				removeArray.push(row.edu600Id);
-				tableRemoveAction("#approvalMangerTable", removeArray, ".approvalMangerTableArea", "审批信息");
+				$("#approvalMangerTable").bootstrapTable('removeByUniqueId',row.edu600Id);
+				drawPagination(".approvalMangerTableArea", "审批信息");
+				drawSearchInput(".approvalMangerTableArea");
+				toastr.success('审批流转成功');
+				$(".myTooltip").tooltipify();
+				$.hideModal("#remindModal");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning('审批流转失败，请重试');
 			}
 		}
 	});

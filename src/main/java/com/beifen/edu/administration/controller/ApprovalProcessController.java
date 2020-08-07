@@ -34,10 +34,10 @@ public class ApprovalProcessController {
      */
     @RequestMapping(value = "startApproval",method = RequestMethod.GET)
     @ResponseBody
-    public Object startApproval(@RequestParam("approvalText") String approvalText) {
+    public Object startApproval(@RequestBody Edu600 edu600) {
         boolean result;
-        JSONObject jsonObject = JSONObject.fromObject(approvalText);
-        Edu600 edu600 = (Edu600BO) JSONObject.toBean(jsonObject, Edu600.class);
+//        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+//        Edu600 edu600 = (Edu600BO) JSONObject.toBean(jsonObject, Edu600.class);
 
         Map<String, Object> returnMap = new HashMap();
         edu600.setExaminerRole(edu600.getProposerType());
@@ -92,6 +92,8 @@ public class ApprovalProcessController {
         Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(approvalText);
         Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
+        //进入流转将当前节点变为上一节点
+        edu600BO.setLastRole(edu600BO.getCurrentRole());
         boolean result = approvalProcessService.approvalOperation(edu600BO);
         returnMap.put("result", result);
         return returnMap;

@@ -9,7 +9,7 @@ public class Edu602 {
 
     private Long edu602Id;//审批流转主键
     private String approvalIndex;//流转序列
-    private Long businessType;//业务主键
+    private String businessType;//业务主键
     private Long lastRole;//上一步审批角色
     private Long currentRole;//当前审批角色
     private Long nextRole;//下一步审批角色
@@ -35,11 +35,11 @@ public class Edu602 {
         this.approvalIndex = approvalIndex;
     }
 
-    public Long getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(Long businessType) {
+    public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
 
