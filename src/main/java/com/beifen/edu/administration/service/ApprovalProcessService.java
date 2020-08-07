@@ -74,11 +74,13 @@ public class ApprovalProcessService {
         if(edu602 == null) {
             isSuccess =  false;
         } else {
+            //更新审批信息
             edu600.setCurrentRole(edu602.getNextRole());
             edu600.setLastRole(edu602.getCurrentRole());
             edu600.setApprovalState("1");
+            edu600.setLastApprovalOpinions(edu600.getApprovalOpinions());
+            edu600.setApprovalOpinions("");
             edu600.setUpdateDate(new Date());
-            //更新审批信息
             edu600DAO.save(edu600);
         }
 
@@ -146,5 +148,11 @@ public class ApprovalProcessService {
         }
         return approvalExList;
 
+    }
+
+    public List<Edu990> getProposerList() {
+        //查找申请表中涉及到的审批人
+        List<Edu990> proposerList = edu990Dao.selectProposer();
+        return proposerList;
     }
 }

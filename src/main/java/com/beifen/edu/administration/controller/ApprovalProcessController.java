@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.beifen.edu.administration.BO.Edu600BO;
 import com.beifen.edu.administration.domian.Edu400;
 import com.beifen.edu.administration.domian.Edu600;
+import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONObject;
@@ -33,8 +34,10 @@ public class ApprovalProcessController {
      */
     @RequestMapping(value = "startApproval",method = RequestMethod.GET)
     @ResponseBody
-    public Object startApproval(@RequestBody Edu600 edu600) {
+    public Object startApproval(@RequestParam("approvalText") String approvalText) {
         boolean result;
+        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+        Edu600 edu600 = (Edu600BO) JSONObject.toBean(jsonObject, Edu600.class);
 
         Map<String, Object> returnMap = new HashMap();
         edu600.setExaminerRole(edu600.getProposerType());
@@ -67,5 +70,16 @@ public class ApprovalProcessController {
         returnMap.put("result", true);
         return returnMap;
     }
+
+    @RequestMapping(value = "getProposerList",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getProposerList() {
+        Map<String, Object> returnMap = new HashMap();
+        List<Edu990> proposerList = approvalProcessService.getProposerList();
+        returnMap.put("proposerList", proposerList);
+        returnMap.put("result", true);
+        return returnMap;
+    }
+
 
 }

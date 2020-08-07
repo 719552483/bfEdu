@@ -26,6 +26,8 @@ public class Edu600 {
     private Date creatDate;//发起时间
     private Date updateDate;//修改时间
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")

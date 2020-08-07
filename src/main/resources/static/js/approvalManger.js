@@ -4,7 +4,7 @@ $(function() {
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
 	drawApprovalMangerEmptyTable();
-	// getProposerInfo();
+	getProposerInfo();
 	btnBind();
 });
 

@@ -1,12 +1,6 @@
 package com.beifen.edu.administration.domian;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 //用戶表
 @Entity
@@ -18,6 +12,10 @@ public class Edu990 {
 	private String yhm; // 用户名
 	private String scdlsj; // 上次登录时间
 	private String yxkjfs; //已选快捷方式
+
+	//关联Edu600
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Edu600 edu600;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
