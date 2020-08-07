@@ -30,7 +30,7 @@ function getProposerInfo(){
 				if (backjson.proposerList.length === 0) {
 				    return;
 				}
-
+				backjson.proposerList=uniqueJsonByID(backjson.proposerList);
 				var str = '';
 				for (var i = 0; i < backjson.proposerList.length; i++) {
 					str = '<option value="' + backjson.proposerList[i].edu990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
@@ -192,6 +192,21 @@ function startSearch(){
 //判断是否首次点击标签页2
 function judgmentIsFristTimeLoadTab2(){
 
+}
+
+//json去重
+function uniqueJsonByID(jsonList){
+	var returnArray=new Array();
+	for (var i = 0; i < jsonList.length; i++) {
+		for (var j = i+1; j < jsonList.length; j++) {
+			if(arr[i].edu990_ID==arr[j].edu990_ID){
+				returnArray.splice(j,1);
+			}else{
+				j++
+			}
+		}
+	}
+	return returnArray;
 }
 
 //页面按钮时间绑定
