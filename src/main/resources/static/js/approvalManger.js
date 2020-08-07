@@ -4,8 +4,44 @@ $(function() {
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
 	drawApprovalMangerEmptyTable();
+	getProposerInfo();
 	btnBind();
 });
+
+//获取声请人下拉框信息
+function getProposerInfo(){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getProposerList",
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.proposerList.length === 0) {
+				    return;
+				}
+
+				var str = '';
+				for (var i = 0; i < backjson.proposerList.length; i++) {
+					str = '<option value="' + backjson.proposerList[i].edu990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
+				}
+				stuffManiaSelect("#sqrID", str);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
 //填充空的审批管理表
 function drawApprovalMangerEmptyTable(){
@@ -115,7 +151,7 @@ function stuffApprovalMangerTable(tableInfo){
 function startSearch(){
       var searchObjet=new Object();
 	  searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
-	  searchObjet.proposerName=$("#sqrXm").val();
+	  searchObjet.proposerID=getNormalSelectValue("sqrID");
 	  searchObjet.businessKey=getNormalSelectValue("splx");
 
 		$.ajax({
