@@ -31,10 +31,9 @@ function getProposerInfo(){
 				if (backjson.proposerList.length === 0) {
 				    return;
 				}
-				backjson.proposerList=uniqueJsonByID(backjson.proposerList);
-				var str = '';
+				var str = '<option>请选择</option>';
 				for (var i = 0; i < backjson.proposerList.length; i++) {
-					str = '<option value="' + backjson.proposerList[i].edu990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
+					str += '<option value="' + backjson.proposerList[i].bf990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
 				}
 				stuffManiaSelect("#sqrID", str);
 			} else {
@@ -203,21 +202,6 @@ function judgmentIsFristTimeLoadTab2(){
 
 
 /*tab2 end*/
-
-//json去重
-function uniqueJsonByID(jsonList){
-	var returnArray=new Array();
-	for (var i = 0; i < jsonList.length; i++) {
-		for (var j = i+1; j < jsonList.length; j++) {
-			if(arr[i].edu990_ID==arr[j].edu990_ID){
-				returnArray.splice(j,1);
-			}else{
-				j++
-			}
-		}
-	}
-	return returnArray;
-}
 
 //页面按钮时间绑定
 function btnBind(){
