@@ -1,11 +1,9 @@
 package com.beifen.edu.administration.controller;
 
-import com.beifen.edu.administration.BO.EDU600BO;
-import com.beifen.edu.administration.domian.Edu101;
+import com.beifen.edu.administration.BO.Edu600BO;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.utility.ReflectUtils;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -57,9 +55,9 @@ public class ApprovalProcessController {
      */
     @RequestMapping(value = "searchApproval",method = RequestMethod.POST)
     @ResponseBody
-    public Object searchApproval(@RequestBody EDU600BO edu600BO) {
+    public Object searchApproval(@RequestBody Edu600BO edu600BO) {
         Map<String, Object> returnMap = new HashMap();
-        List<EDU600BO> approvalList = approvalProcessService.searchApproval(edu600BO);
+        List<Edu600BO> approvalList = approvalProcessService.searchApproval(edu600BO);
         returnMap.put("approvalList", approvalList);
         returnMap.put("result", true);
         return returnMap;

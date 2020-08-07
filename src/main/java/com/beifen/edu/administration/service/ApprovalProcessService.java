@@ -1,6 +1,6 @@
 package com.beifen.edu.administration.service;
 
-import com.beifen.edu.administration.BO.EDU600BO;
+import com.beifen.edu.administration.BO.Edu600BO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import org.apache.commons.beanutils.BeanUtils;
@@ -91,9 +91,9 @@ public class ApprovalProcessService {
      * @param edu600BO
      * @return
      */
-    public List<EDU600BO> searchApproval(EDU600BO edu600BO) {
+    public List<Edu600BO> searchApproval(Edu600BO edu600BO) {
         Edu600 edu600 = new Edu600();
-        List<EDU600BO> approvalExList = new ArrayList<>();
+        List<Edu600BO> approvalExList = new ArrayList<>();
 
         try {
             //复制属性并赋值新属性
@@ -121,7 +121,7 @@ public class ApprovalProcessService {
             List<Edu600> aprovalList = edu600DAO.findAll(specification);
 
             for (Edu600 e :  aprovalList) {
-                EDU600BO approvalEx = new EDU600BO();
+                Edu600BO approvalEx = new Edu600BO();
                 //赋值已有属性
                 BeanUtils.copyProperties(approvalEx,e);
                 //查询申请人信息
