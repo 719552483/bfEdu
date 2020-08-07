@@ -8,6 +8,7 @@ $(function() {
 	btnBind();
 });
 
+/*tab1 start*/
 //获取声请人下拉框信息
 function getProposerInfo(){
 	$.ajax({
@@ -51,14 +52,14 @@ function drawApprovalMangerEmptyTable(){
 //渲染审批管理表
 function stuffApprovalMangerTable(tableInfo){
 	window.releaseNewsEvents = {
-		'click #removeMajorTraining' : function(e, value, row, index) {
-			removeMajorTraining(row)
+		'click #approvalInfo' : function(e, value, row, index) {
+			approvalInfo(row)
 		},
-		'click #majorTrainingInfo' : function(e, value, row, index) {
-			majorTrainingInfo(row);
+		'click #agree' : function(e, value, row, index) {
+			agree(row);
 		},
 		'click #modifyMajorTraining' : function(e, value, row, index) {
-			modifyMajorTraining(row);
+			disagree(row);
 		}
 	};
 
@@ -95,7 +96,7 @@ function stuffApprovalMangerTable(tableInfo){
 		}, {
 			field : 'businessName',
 			title : '审批业务类型',
-			align : 'center',
+			align : 'left',
 			formatter :paramsMatter
 		}, {
 			field : 'proposerName',
@@ -106,7 +107,7 @@ function stuffApprovalMangerTable(tableInfo){
 			field : 'creatDate',
 			title : '发起时间',
 			align : 'left',
-			formatter : paramsMatter
+			formatter : creatDateMatter
 		},{
 			field : 'lastPersonName',
 			title : '上一步审批人',
@@ -134,10 +135,15 @@ function stuffApprovalMangerTable(tableInfo){
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
-		+ '<li class="queryBtn" id="majorTrainingInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
-		+ '<li class="modifyBtn" id="modifyMajorTraining"><span><img src="images/t02.png" style="width:24px"></span>同意</li>'
-		+ '<li class="deleteBtn" id="removeMajorTraining"><span><img src="images/t03.png"></span>不同意</li>'
+		+ '<li class="queryBtn" id="approvalInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+		+ '<li class="modifyBtn" id="agree"><span><img src="img/right.png" style="width:24px"></span>同意</li>'
+		+ '<li class="deleteBtn" id="disagree"><span><img src="images/close1.png"></span>不同意</li>'
 		+ '</ul>' ].join('');
+	}
+
+	function creatDateMatter(value, row, index) {
+		return [ '<div class="myTooltip" title="'+timeStamp2String(value)+'">'+timeStamp2String(value)+'</div>' ]
+			.join('');
 	}
 
 	drawPagination(".approvalMangerTableArea", "审批信息");
@@ -186,13 +192,17 @@ function startSearch(){
 			}
 		});
 }
+/*tab1 end*/
 
-
-
+/*tab2 start*/
 //判断是否首次点击标签页2
 function judgmentIsFristTimeLoadTab2(){
 
 }
+
+
+
+/*tab2 end*/
 
 //json去重
 function uniqueJsonByID(jsonList){
