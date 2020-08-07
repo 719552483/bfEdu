@@ -106,6 +106,16 @@ public class PageRelatedController {
 		return "releaseNews";
 	}
 
+	@RequestMapping("approvalManger")
+	public String approvalMangerPage() {
+		return "approvalManger";
+	}
+
+	@RequestMapping("approvalQuery")
+	public String approvalQueryPage() {
+		return "approvalQuery";
+	}
+
 	@RequestMapping("roleManger")
 	public String roleMangerPage() {
 		return "roleManger";

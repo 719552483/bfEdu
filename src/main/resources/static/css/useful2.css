@@ -509,12 +509,6 @@ float: left;
 	color: #fff;
 }
 
-
-
-.relationTableArea .search{
-   relationNameHave
- }
-
 .kjTableArea .search,
 .allMajorTableArea .search,
 .allGradeTableArea .search,
@@ -1455,6 +1449,7 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.approvalMangerTableArea .bootstrap4 .search,
 .teacherBaseInfoTableArea .bootstrap4 .search{
        margin-top: 12px;
  }
@@ -1558,6 +1553,12 @@ margin: 0px 0px -14px -15px!important;
 	float: left;
 	margin-left: 57px;
 	margin-right: 16px;
+}
+
+@media screen and (max-width:1205px) {
+	.kjForForenoonArea,.kjFoAfternoonArea,.kjForEveingArea{
+		width: 41%;
+	}
 }
 
 .kjformtext{
