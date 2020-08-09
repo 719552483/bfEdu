@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.service.ApprovalProcessService;
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -47,6 +48,8 @@ public class AdministrationController {
 
 	@Autowired
 	private AdministrationPageService administrationPageService;
+	@Autowired
+	private ApprovalProcessService approvalProcessService;
 	ReflectUtils utils = new ReflectUtils();
 	/**
 	 * 检查有没有系统用户
@@ -455,18 +458,19 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 课程库新增课程
-	 * 
-	 * @param addinfo新增信息
-	 * 
-	 * @return returnMap
+	 * 新增课程
+	 * @param addinfo
+	 * @param approvalobect
+	 * @return
 	 */
 	@RequestMapping("addNewClass")
 	@ResponseBody
-	public Object addNewClass(@RequestParam("newClassInfo") String addinfo) {
+	public Object addNewClass(@RequestParam("newClassInfo") String addinfo,@RequestParam("approvalobect") String approvalobect) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(addinfo);
+		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
 		Edu200 addClassInfo = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.class);
 		List<Edu200> allClass = administrationPageService.queryAllClass();
 		// 判断课程名称和代码是否已存在
 		boolean nameHave = false;
@@ -486,6 +490,8 @@ public class AdministrationController {
 			addClassInfo.setLrsj(currentTimeStamp);
 			addClassInfo.setZt(newClassStatus);
 			administrationPageService.addNewClass(addClassInfo);
+			edu600.setBusinessKey(addClassInfo.getBF200_ID());
+			approvalProcessService.initiationProcess(edu600);
 			Long id = addClassInfo.getBF200_ID();
 			returnMap.put("newId", id);
 			returnMap.put("kcdm", kcdm);

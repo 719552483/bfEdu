@@ -402,18 +402,21 @@ function emptyClassDetailsArea(){
 
 //确认新增课程
 function comfirmAddNewClass(){
+	//课程信息对象
 	var newClassObject=classDetailsConfirmBtnAction();
 	if(typeof newClassObject ==='undefined'){
 		return;
 	}
+
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/addNewClass",
 		data: {
-             "newClassInfo":JSON.stringify(newClassObject) 
-        },
+             "newClassInfo":JSON.stringify(newClassObject),
+			 "approvalobect":JSON.stringify(getApprovalobect())
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -648,6 +651,16 @@ function classDetailsConfirmBtnAction(){
 	return newClassObject;
 }
 
+//获得审批流对象
+function getApprovalobect(){
+	//课程审批流对象
+	var approvalObject=new Object();
+	approvalObject.businessType="01";
+	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
+}
 
 //单个删除课程
 function removeCourse(row){
@@ -1257,6 +1270,7 @@ function confirmModifyClasses(){
 		},
     });
 }
+
 
 
 //页面初始化时按钮事件绑定
