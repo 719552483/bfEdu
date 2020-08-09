@@ -51,7 +51,7 @@
 			<div class="itab">
 				<ul>
 					<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">审批管理</a></li>
-					<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">审批追回</a></li>
+					<li><a href="#tab2" onclick="drawBreadPilot(this),configTAB2()">审批追回</a></li>
 				</ul>
 			</div>
 
@@ -99,126 +99,57 @@
 
 
 			<div id="tab2" class="tabson myTabson">
-				<span class="isFirstShowTab2 noneStart">T</span> <span
-					class="isFirstShowAddTeachingArea noneStart">T</span>
-				<div class="addTeachingClassArea">
-					<div class="searchArea searchAreaWitheSelect">
-						<div class="col4 giveBottom levelSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次<b>*</b></label>
-									<select class="isSowIndex" id="classManagement_level">
-										<option value="seleceConfigTip">请选择</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom departmentSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">系&#12288;&#8197;部<b>*</b></label>
-									<select class="isSowIndex" id="classManagement_department">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom gradeSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级<b>*</b></label>
-									<select class="isSowIndex" id="classManagement_grade">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom majorSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业<b>*</b></label>
-									<select class="isSowIndex" id="classManagement_major">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
-									<input name="" type="text" class="myInput searchInput"
-										id="classManagement_className" placeholder="请输入行政班名称..." />
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">课程名字</label>
-									<input name="" type="text" class="myInput searchInput"
-										id="classManagement_coursesName" placeholder="请输入课程名字..." />
-								</div>
-							</ul>
-						</div>
-					</div>
-
-					<div class="classManagementTableArea searchGivePaddingR columnsStyle">
-						<table class="tablelist myTableStyle" id="classManagementTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>
-					</div>
+				<div class="tools">
+					<ul class="toolbar">
+						<li class="click" id="startSearchTab2"><span><img
+								src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+					</ul>
+					<ul class="toolbar1">
+						<li class="click" id="reReloadSearchsTab2"><span><img
+								src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+					</ul>
 				</div>
 
-				<div class="allteachingClassArea noneStart">
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id="addTeachingClass"><span><img
-									src="img/back.png" style="width: 24px;" /></span>返回行政班级库</li>
-							<li class="click" id="removeTeachingClasses"><span><img
-									src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
-							<li class="click" id="allteachingClassArea_startSearch"><span><img
-									src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
-						</ul>
-
-						<ul class="toolbar1">
-							<li class="click" id="allteachingClassArea_reSearch"><span><img
-									src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+				<div class="searchArea searchAreaWitheSelect">
+					<div class="col4 giveBottom levelSelectArea">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">申请人</label>
+								<select id="fqrID" class="isSowIndex">
+									<option value="seleceConfigTip">暂无选择</option>
+								</select>
+							</div>
 						</ul>
 					</div>
 
-					<div class="searchArea searchAreaWitheSelect">
-						<div class="formtitle" style="margin-bottom: 6px;">
-							<span>教学班列表</span>
-						</div>
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
-									<input name="" type="text" class="myInput searchInput"
-										id="allteachingClass_className" placeholder="请输入行政班名称..." />
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">课程名字</label>
-									<input name="" type="text" class="myInput searchInput"
-										id="allteachingClass_coursesName" placeholder="请输入课程名字..." />
-								</div>
-							</ul>
-						</div>
+					<div class="col4 giveBottom levelSelectArea">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">下一步审批人</label>
+								<select id="xybsprID" class="isSowIndex">
+									<option value="seleceConfigTip">暂无选择</option>
+								</select>
+							</div>
+						</ul>
 					</div>
 
-					<div class="teachingClassTableArea searchGivePaddingR columnsStyle">
-						<table class="tablelist myTableStyle" id="teachingClassTable" data-unique-id="edu301_ID" style="margin-top: 10px;"></table>
+					<div class="col4 giveBottom levelSelectArea">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">审批类型</label>
+								<select id="splxForTab2" class="isSowIndex">
+									<option value="seleceConfigTip">请选择</option>
+								</select>
+							</div>
+						</ul>
 					</div>
 				</div>
+
+
+				<div class="approvalBackTableArea searchGivePaddingR columnsStyle">
+					<table class="tablelist myTableStyle" id="approvalBackTable" data-unique-id="edu600Id" style="margin-top: 10px;"></table>
+				</div>
+
 
 			</div>
 		</div>
