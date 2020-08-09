@@ -40,9 +40,10 @@ public class ApprovalProcessController {
 //        Edu600 edu600 = (Edu600BO) JSONObject.toBean(jsonObject, Edu600.class);
 
         Map<String, Object> returnMap = new HashMap();
-        edu600.setExaminerRole(edu600.getProposerType());
+        edu600.setCurrentRole(edu600.getProposerType());
         edu600.setExaminerkey(edu600.getProposerKey());
-        edu600.setLastRole(edu600.getProposerType());
+        approvalProcessService.saveApprovalHistory(edu600,"0");
+
         edu600.setApprovalState("0");
         edu600.setCreatDate(new Date());
         edu600.setUpdateDate(new Date());
@@ -82,6 +83,23 @@ public class ApprovalProcessController {
     }
 
     /**
+     * 搜索可追回审批信息
+     * @param approvalText
+     * @return
+     */
+    @RequestMapping(value = "searchCanBackApproval",method = RequestMethod.GET)
+    @ResponseBody
+    public Object searchCanBackApproval(@RequestParam("approvalText") String approvalText) {
+        Map<String, Object> returnMap = new HashMap();
+        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+        Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
+        List<Edu600BO> approvalList = approvalProcessService.searchCanBackApproval(edu600BO);
+        returnMap.put("approvalList", approvalList);
+        returnMap.put("result", true);
+        return returnMap;
+    }
+
+    /**
      *审批操作
      * @param approvalText
      * @return
@@ -92,8 +110,6 @@ public class ApprovalProcessController {
         Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(approvalText);
         Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
-        //进入流转将当前节点变为上一节点
-        edu600BO.setLastRole(edu600BO.getCurrentRole());
         boolean result = approvalProcessService.approvalOperation(edu600BO);
         returnMap.put("result", result);
         return returnMap;

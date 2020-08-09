@@ -14,15 +14,14 @@ public class Edu600 {
     private Long businessKey;//业务主键
     private Long proposerType;//申请人类型
     private Long proposerKey;//申请人主键
-    private Long examinerRole;//当前审批人类型
+    private Long currentRole;//当前审批角色
     private Long examinerkey;//当前审批人主键
-    private Long lastExaminerKey;//上一部审批人主键
+    private Long lastRole;//上一步审批角色
+    private Long lastExaminerKey;//上一步审批人主键
     private String lastApprovalOpinions;//上一步审批意见
     private String approvalOpinions;//审批意见
     private String approvalState;//审批状态
     private String approvalStyl;//审批类型
-    private Long lastRole;//上一步审批角色
-    private Long currentRole;//当前审批角色
     private Date creatDate;//发起时间
     private Date updateDate;//修改时间
 
@@ -143,15 +142,6 @@ public class Edu600 {
     public void setLastApprovalOpinions(String lastApprovalOpinions) {
         this.lastApprovalOpinions = lastApprovalOpinions;
     }
-
-    public Long getExaminerRole() {
-        return examinerRole;
-    }
-
-    public void setExaminerRole(Long examinerRole) {
-        this.examinerRole = examinerRole;
-    }
-
     public Long getExaminerkey() {
         return examinerkey;
     }

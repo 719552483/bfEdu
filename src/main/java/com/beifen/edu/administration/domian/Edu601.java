@@ -12,10 +12,16 @@ public class Edu601 {
     private Long edu600Id;//审批流主键
     private String businessType;//业务类型
     private Long businessKey;//业务主键
-    private String proposerType;//申请人类型
+    private Long proposerType;//申请人类型
     private Long proposerKey;//申请人主键
-    private Long CurrentPeople;//当前操作人
+    private Long currentRole;//当前审批角色
+    private Long examinerkey;//当前审批人主键
+    private Long lastRole;//上一步审批角色
+    private Long lastExaminerKey;//上一部审批人主键
+    private String lastApprovalOpinions;//上一步审批意见
     private String approvalOpinions;//审批意见
+    private String approvalState;//审批状态
+    private String approvalStyl;//审批类型
     private String approvalResult;//审批结果
     private Date creatDate;//发起时间
     private Date updateDate;//修改时间
@@ -57,11 +63,11 @@ public class Edu601 {
         this.businessKey = businessKey;
     }
 
-    public String getProposerType() {
+    public Long getProposerType() {
         return proposerType;
     }
 
-    public void setProposerType(String proposerType) {
+    public void setProposerType(Long proposerType) {
         this.proposerType = proposerType;
     }
 
@@ -73,12 +79,60 @@ public class Edu601 {
         this.proposerKey = proposerKey;
     }
 
+    public Long getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(Long currentRole) {
+        this.currentRole = currentRole;
+    }
+
+    public Long getExaminerkey() {
+        return examinerkey;
+    }
+
+    public void setExaminerkey(Long examinerkey) {
+        this.examinerkey = examinerkey;
+    }
+
+    public Long getLastRole() {
+        return lastRole;
+    }
+
+    public void setLastRole(Long lastRole) {
+        this.lastRole = lastRole;
+    }
+
+    public Long getLastExaminerKey() {
+        return lastExaminerKey;
+    }
+
+    public void setLastExaminerKey(Long lastExaminerKey) {
+        this.lastExaminerKey = lastExaminerKey;
+    }
+
     public String getApprovalOpinions() {
         return approvalOpinions;
     }
 
     public void setApprovalOpinions(String approvalOpinions) {
         this.approvalOpinions = approvalOpinions;
+    }
+
+    public String getApprovalState() {
+        return approvalState;
+    }
+
+    public void setApprovalState(String approvalState) {
+        this.approvalState = approvalState;
+    }
+
+    public String getApprovalStyl() {
+        return approvalStyl;
+    }
+
+    public void setApprovalStyl(String approvalStyl) {
+        this.approvalStyl = approvalStyl;
     }
 
     public String getApprovalResult() {
@@ -105,11 +159,11 @@ public class Edu601 {
         this.updateDate = updateDate;
     }
 
-    public Long getCurrentPeople() {
-        return CurrentPeople;
+    public String getLastApprovalOpinions() {
+        return lastApprovalOpinions;
     }
 
-    public void setCurrentPeople(Long currentPeople) {
-        CurrentPeople = currentPeople;
+    public void setLastApprovalOpinions(String lastApprovalOpinions) {
+        this.lastApprovalOpinions = lastApprovalOpinions;
     }
 }

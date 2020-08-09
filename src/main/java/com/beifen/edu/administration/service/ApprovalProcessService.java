@@ -37,10 +37,20 @@ public class ApprovalProcessService {
     @Autowired
     private Edu000Dao edu000Dao;
 
+    /**
+     * 发起审批流程
+     * @param edu600
+     * @return
+     */
     public boolean initiationProcess(Edu600 edu600) {
-        boolean isSuccess = false;
+        boolean isSuccess;
         //保存审批信息
         Edu600 newEdu600 = edu600DAO.save(edu600);
+        //保存历史审批记录
+        saveApprovalHistory(edu600, "0");
+        //进入流转将当前节点变为下一节点
+        edu600.setLastRole(edu600.getProposerType());
+        edu600.setLastExaminerKey(edu600.getProposerKey());
         //开始流转
         isSuccess = processFlow(newEdu600, "1");
 
@@ -48,31 +58,56 @@ public class ApprovalProcessService {
 
     }
 
-    private boolean processFlow(Edu600 edu600, String approvalFlag) {
-        //准备审批历史记录类和成功标识
-        Edu601 edu601 = new Edu601();
+    /**
+     *
+     * @param edu600
+     * @param approvalFlag
+     * @return
+     */
+    public boolean saveApprovalHistory(Edu600 edu600,String approvalFlag) {
+        //初始化成功标识和审批历史记录实体类
         boolean isSuccess = true;
-        //获取审批信息
-        String businessType = edu600.getBusinessType();//业务类型
-        Long lastRole = edu600.getLastRole();//上一步审批人
-        //复制属性
+        Edu601 edu601 = new Edu601();
+
+        //复制属性并存储历史审批记录
         try {
             BeanUtils.copyProperties(edu601, edu600);
             edu601.setUpdateDate(new Date());
-            edu601.setCurrentPeople(edu600.getExaminerkey());
-            edu601Dao.save(edu601);
+            edu601.setApprovalResult(approvalFlag);
+            Edu601 save = edu601Dao.save(edu601);
+            if(save == null) {
+                isSuccess = false;
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        if("1".equals(approvalFlag)){
+
+        return isSuccess;
+
+    }
+
+    /**
+     * 审批流转控制
+     * @param edu600
+     * @param approvalFlag
+     * @return
+     */
+    private boolean processFlow(Edu600 edu600, String approvalFlag) {
+        //初始化成功标识
+        boolean isSuccess = false;
+        //获取审批信息
+        String businessType = edu600.getBusinessType();//业务类型
+        Long lastRole = edu600.getLastRole();//上一步审批人
+
+       if("1".equals(approvalFlag)){
             //根据审批信息查找流转节点
             Edu602 edu602 = edu602Dao.selectNextRole(businessType, lastRole.toString());
             if(edu602 == null) {
                 isSuccess =  false;
             } else {
-                //更新审批信息
+                //更新同意审批信息
                 edu600.setCurrentRole(edu602.getNextRole());
                 edu600.setLastRole(edu602.getCurrentRole());
                 edu600.setApprovalState("1");
@@ -84,8 +119,8 @@ public class ApprovalProcessService {
                     isSuccess = false;
                 }
             }
-        } else {
-            //更新审批信息
+        } else if("2".equals(approvalFlag)) {
+            //更新不同意审批信息
             edu600.setCurrentRole(edu600.getProposerType());
             edu600.setLastRole(edu600.getCurrentRole());
             edu600.setApprovalState("2");
@@ -96,10 +131,44 @@ public class ApprovalProcessService {
             if(save == null){
                 isSuccess = false;
             }
-        }
+        } else if("3".equals(approvalFlag)){
+           //更新追回审批信息
+           Specification<Edu601> specification = new Specification<Edu601>() {
+               public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                   List<Predicate> predicates = new ArrayList<Predicate>();
+                   if (edu600.getBusinessKey() != null && !"".equals(edu600.getBusinessKey())) {
+                       predicates.add(cb.equal(root.<String> get("businessKey"), edu600.getBusinessKey()));
+                   }
+                   if (edu600.getExaminerkey() != null && !"".equals(edu600.getExaminerkey())) {
+                       predicates.add(cb.equal(root.<String> get("lastExaminerKey"), edu600.getExaminerkey()));
+                   }
+                   return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+               }
+           };
+
+           List<Edu601> edu601List = edu601Dao.findAll(specification);
+
+           try {
+               //复制属性
+               BeanUtils.copyProperties(edu600,edu601List.get(0));
+           } catch (IllegalAccessException e) {
+               e.printStackTrace();
+           } catch (InvocationTargetException e) {
+               e.printStackTrace();
+           }
+
+           edu600.setUpdateDate(new Date());
+           Edu600 save = edu600DAO.save(edu600);
+           if(save == null){
+               isSuccess = false;
+           }
+       } else {
+           isSuccess = false;
+       }
 
         return isSuccess;
     }
+
 
     /**
      * 搜索审批信息
@@ -182,8 +251,14 @@ public class ApprovalProcessService {
     public boolean approvalOperation(Edu600BO edu600BO) {
         boolean isSuccess = true;
         Edu600 edu600 = new Edu600();
+
         try {
             BeanUtils.copyProperties(edu600,edu600BO);
+            //流转前保存审批记录
+            saveApprovalHistory(edu600,edu600BO.getApprovalFlag());
+            //进入流转将当前节点变为上一节点
+            edu600.setLastRole(edu600BO.getCurrentRole());
+            edu600.setLastExaminerKey(edu600BO.getExaminerkey());
             isSuccess = processFlow(edu600,edu600BO.getApprovalFlag());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -192,5 +267,70 @@ public class ApprovalProcessService {
         }
         return isSuccess;
     }
+
+    /**
+     * 搜索可追回审批记录
+     * @param edu600BO
+     * @return
+     */
+    public List<Edu600BO> searchCanBackApproval(Edu600BO edu600BO) {
+        Edu600 edu600 = new Edu600();
+        List<Edu600BO> approvalExList = new ArrayList<>();
+
+        try {
+            //复制属性并赋值新属性
+            BeanUtils.copyProperties(edu600,edu600BO);
+
+            //赋值查询条件
+            edu600.setCurrentRole(edu600BO.getCurrentUserRole());
+
+            Specification<Edu600> specification = new Specification<Edu600>() {
+                public Predicate toPredicate(Root<Edu600> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    if (edu600.getLastRole() != null && !"".equals(edu600.getCurrentRole())) {
+                        predicates.add(cb.equal(root.<String> get("currentRole"), edu600.getCurrentRole()));
+                    }
+                    if (edu600.getBusinessType() != null && !"".equals(edu600.getBusinessType())) {
+                        predicates.add(cb.equal(root.<String> get("businessType"), edu600.getBusinessType()));
+                    }
+                    if (edu600.getProposerKey() != null && !"".equals(edu600.getProposerKey())) {
+                        predicates.add(cb.equal(root.<String> get("proposerKey"), edu600.getProposerKey()));
+                    }
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                }
+            };
+
+            List<Edu600> aprovalList = edu600DAO.findAll(specification);
+
+            for (Edu600 e :  aprovalList) {
+                Edu600BO approvalEx = new Edu600BO();
+                //赋值已有属性
+                BeanUtils.copyProperties(approvalEx,e);
+                //查询申请人信息
+                Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
+                approvalEx.setProposerName(proposer.getYhm());
+                //获取上一步审批人信息
+                if(e.getLastExaminerKey() == null || "".equals(e.getExaminerkey())) {
+                    approvalEx.setLastPersonName("");
+                }else {
+                    Edu990 lastPerson = edu990Dao.queryUserById(e.getLastExaminerKey().toString());
+                    approvalEx.setLastPersonName(lastPerson.getYhm());
+                }
+                //获取业务类型信息
+                String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
+                approvalEx.setBusinessName(splx);
+                //将封装数据加入数组
+                approvalExList.add(approvalEx);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return approvalExList;
+    }
+
+
+
 
 }
