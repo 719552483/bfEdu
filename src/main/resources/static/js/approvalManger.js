@@ -36,6 +36,7 @@ function getProposerInfo(){
 					str += '<option value="' + backjson.proposerList[i].bf990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
 				}
 				stuffManiaSelect("#sqrID", str);
+				stuffManiaSelect("#fqrID", str);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
