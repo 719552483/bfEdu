@@ -40,13 +40,6 @@ public class ApprovalProcessController {
 //        Edu600 edu600 = (Edu600BO) JSONObject.toBean(jsonObject, Edu600.class);
 
         Map<String, Object> returnMap = new HashMap();
-        edu600.setCurrentRole(edu600.getProposerType());
-        edu600.setExaminerkey(edu600.getProposerKey());
-        approvalProcessService.saveApprovalHistory(edu600,"0");
-
-        edu600.setApprovalState("0");
-        edu600.setCreatDate(new Date());
-        edu600.setUpdateDate(new Date());
 
         result = approvalProcessService.initiationProcess(edu600);
 

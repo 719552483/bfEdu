@@ -44,6 +44,12 @@ public class ApprovalProcessService {
      */
     public boolean initiationProcess(Edu600 edu600) {
         boolean isSuccess;
+        edu600.setCurrentRole(edu600.getProposerType());
+        edu600.setExaminerkey(edu600.getProposerKey());
+        edu600.setApprovalState("0");
+        edu600.setCreatDate(new Date());
+        edu600.setUpdateDate(new Date());
+
         //保存审批信息
         Edu600 newEdu600 = edu600DAO.save(edu600);
         //保存历史审批记录
@@ -96,7 +102,7 @@ public class ApprovalProcessService {
      */
     private boolean processFlow(Edu600 edu600, String approvalFlag) {
         //初始化成功标识
-        boolean isSuccess = false;
+        boolean isSuccess = true;
         //获取审批信息
         String businessType = edu600.getBusinessType();//业务类型
         Long lastRole = edu600.getLastRole();//上一步审批人
@@ -133,24 +139,29 @@ public class ApprovalProcessService {
             }
         } else if("3".equals(approvalFlag)){
            //更新追回审批信息
+           Edu600 eud600select = new Edu600();
+           eud600select.setLastExaminerKey(edu600.getExaminerkey());
+           eud600select.setBusinessKey(eud600select.getBusinessKey());
            Specification<Edu601> specification = new Specification<Edu601>() {
                public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                    List<Predicate> predicates = new ArrayList<Predicate>();
-                   if (edu600.getBusinessKey() != null && !"".equals(edu600.getBusinessKey())) {
+                   if (eud600select.getBusinessKey() != null && !"".equals(eud600select.getBusinessKey())) {
                        predicates.add(cb.equal(root.<String> get("businessKey"), edu600.getBusinessKey()));
                    }
-                   if (edu600.getExaminerkey() != null && !"".equals(edu600.getExaminerkey())) {
-                       predicates.add(cb.equal(root.<String> get("lastExaminerKey"), edu600.getExaminerkey()));
+                   if (eud600select.getLastExaminerKey() != null && !"".equals(eud600select.getLastExaminerKey())) {
+                       predicates.add(cb.equal(root.<String> get("lastExaminerKey"), eud600select.getLastExaminerKey()));
                    }
                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                }
            };
-
            List<Edu601> edu601List = edu601Dao.findAll(specification);
-
+           Edu601 edu601 = edu601List.get(0);
            try {
                //复制属性
-               BeanUtils.copyProperties(edu600,edu601List.get(0));
+               BeanUtils.copyProperties(edu600, edu601);
+               edu600.setCurrentRole(edu601.getLastRole());
+               Edu602 edu602 = edu602Dao.selectNextRole(businessType, edu600.getCurrentRole().toString());
+               edu600.setLastRole(edu602.getLastRole());
            } catch (IllegalAccessException e) {
                e.printStackTrace();
            } catch (InvocationTargetException e) {
@@ -251,15 +262,16 @@ public class ApprovalProcessService {
     public boolean approvalOperation(Edu600BO edu600BO) {
         boolean isSuccess = true;
         Edu600 edu600 = new Edu600();
+        String approvalFlag = edu600BO.getApprovalFlag();
 
         try {
             BeanUtils.copyProperties(edu600,edu600BO);
             //流转前保存审批记录
-            saveApprovalHistory(edu600,edu600BO.getApprovalFlag());
+            saveApprovalHistory(edu600, approvalFlag);
             //进入流转将当前节点变为上一节点
             edu600.setLastRole(edu600BO.getCurrentRole());
             edu600.setLastExaminerKey(edu600BO.getExaminerkey());
-            isSuccess = processFlow(edu600,edu600BO.getApprovalFlag());
+            isSuccess = processFlow(edu600, approvalFlag);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -274,27 +286,25 @@ public class ApprovalProcessService {
      * @return
      */
     public List<Edu600BO> searchCanBackApproval(Edu600BO edu600BO) {
-        Edu600 edu600 = new Edu600();
         List<Edu600BO> approvalExList = new ArrayList<>();
-
         try {
-            //复制属性并赋值新属性
-            BeanUtils.copyProperties(edu600,edu600BO);
-
             //赋值查询条件
-            edu600.setCurrentRole(edu600BO.getCurrentUserRole());
+            Edu600 edu600 = new Edu600();
+            edu600.setProposerKey(edu600BO.getProposerKey());
+            edu600.setBusinessType(edu600BO.getBusinessType());
+            edu600.setLastExaminerKey(edu600BO.getExaminerkey());
 
             Specification<Edu600> specification = new Specification<Edu600>() {
                 public Predicate toPredicate(Root<Edu600> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                     List<Predicate> predicates = new ArrayList<Predicate>();
-                    if (edu600.getLastRole() != null && !"".equals(edu600.getCurrentRole())) {
-                        predicates.add(cb.equal(root.<String> get("currentRole"), edu600.getCurrentRole()));
-                    }
                     if (edu600.getBusinessType() != null && !"".equals(edu600.getBusinessType())) {
                         predicates.add(cb.equal(root.<String> get("businessType"), edu600.getBusinessType()));
                     }
                     if (edu600.getProposerKey() != null && !"".equals(edu600.getProposerKey())) {
                         predicates.add(cb.equal(root.<String> get("proposerKey"), edu600.getProposerKey()));
+                    }
+                    if (edu600.getLastExaminerKey() != null && !"".equals(edu600.getLastExaminerKey())) {
+                        predicates.add(cb.equal(root.<String> get("lastExaminerKey"), edu600.getLastExaminerKey()));
                     }
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }

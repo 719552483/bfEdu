@@ -240,39 +240,40 @@ function startSearchTab2(){
 	searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
 	searchObjet.proposerKey=getNormalSelectValue("fqrID");
 	searchObjet.businessType=getNormalSelectValue("splxForTab2");
-	searchObjet.examinerkey=getNormalSelectValue("xybsprID");
 
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "/searchCanBackApproval",
-	// 	data: {
-	// 		"approvalText":JSON.stringify(searchObjet)
-	// 	},
-	// 	dataType: 'json',
-	// 	beforeSend: function (xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function (textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function (xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success: function (backjson) {
-	// 		hideloding();
-	// 		if (backjson.result) {
-	// 			if (backjson.approvalList.length === 0) {
-	//              drawApprovalBackEmptyTable();
-	// 				toastr.warning('暂无数据');
-	// 				return;
-	// 			}
-	// 			stuffApprovalMangerTable(backjson.approvalList);
-	// 		} else {
-	// 			toastr.warning('操作失败，请重试');
-	// 		}
-	// 	}
-	// });
+	searchObjet.examinerkey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/searchCanBackApproval",
+		data: {
+			"approvalText":JSON.stringify(searchObjet)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.approvalList.length === 0) {
+	             drawApprovalBackEmptyTable();
+					toastr.warning('暂无数据');
+					return;
+				}
+				stuffApprovalBackTable(backjson.approvalList);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //填充空的追回表
@@ -397,7 +398,7 @@ function approvalBack(row){
 // 追回重置检索
 function reReloadSearchsTab2(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#fqrID,#xybsprID,#splxForTab2";
+	reObject.normalSelectIds = "#fqrID,#splxForTab2";
 	reReloadSearchsWithSelect(reObject);
 	drawApprovalBackEmptyTable();
 }
@@ -407,7 +408,7 @@ function reReloadSearchsTab2(){
 //审核的操作
 function approvaAction(row,approvalText,tableID){
 	row.approvalFlag=approvalText;
-	row.examinerkey=$(parent.frames["topFrame"].document).find(".userName").innerText;
+	row.examinerkey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	$.ajax({
 		method: 'get',
 		cache: false,
