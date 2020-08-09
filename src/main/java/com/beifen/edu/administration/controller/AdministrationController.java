@@ -270,10 +270,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除角色
-	 * 
-	 * @param deleteIds删除id
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("/removeRole")
 	@ResponseBody
@@ -305,10 +303,7 @@ public class AdministrationController {
 
 	/**
 	 * 获取所有角色（不包括系统用户角色）
-	 * 
-	 * @param newRoleInfo角色信息
-	 * 
-	 * @return returnMap
+	 * @return
 	 */
 	@RequestMapping("/getAllRole")
 	@ResponseBody
@@ -331,10 +326,7 @@ public class AdministrationController {
 
 	/**
 	 * 获取所有用户（不包括系统用户）
-	 * 
-	 * @param newRoleInfo角色信息
-	 * 
-	 * @return returnMap
+	 * @return
 	 */
 	@RequestMapping("/getAllUser")
 	@ResponseBody
@@ -356,10 +348,8 @@ public class AdministrationController {
 
 	/**
 	 * 根据用户id查询用户信息
-	 * 
-	 * @param newRoleInfo角色信息
-	 * 
-	 * @return returnMap
+	 * @param userId
+	 * @return
 	 */
 	@RequestMapping("/queryUserById")
 	@ResponseBody
@@ -372,11 +362,9 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 新增用户
-	 * 
-	 * @param newRoleInfo角色信息
-	 * 
-	 * @return returnMap
+	 *  新增用户
+	 * @param newUserInfo
+	 * @return
 	 */
 	@RequestMapping("/newUser")
 	@ResponseBody
@@ -439,11 +427,9 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 删除用户
-	 * 
-	 * @param deleteIds删除id
-	 * 
-	 * @return returnMap
+	 *  删除用户
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("/removeUser")
 	@ResponseBody
@@ -483,7 +469,7 @@ public class AdministrationController {
 
 		// 不存在则往数据库新增课程
 		if (!nameHave) {
-			String newClassStatus = "noStatus";
+			String newClassStatus = "passing";
 			String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
 			long currentTimeStamp = System.currentTimeMillis();
 			addClassInfo.setKcdm(kcdm);
@@ -505,10 +491,8 @@ public class AdministrationController {
 
 	/**
 	 * 课程库修改课程
-	 * 
-	 * @param addinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
 	@RequestMapping("updateClass")
 	@ResponseBody
@@ -541,9 +525,8 @@ public class AdministrationController {
 
 	/**
 	 * 课程库搜索课程
-	 * 
-	 * @param SearchCriteria搜索条件
-	 * @return returnMap
+	 * @param SearchCriteria
+	 * @return
 	 */
 	@RequestMapping("librarySeacchClass")
 	@ResponseBody
@@ -564,10 +547,8 @@ public class AdministrationController {
 
 	/**
 	 * 课程库课程更改状态
-	 * 
-	 * @param modifyInfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param modifyInfo
+	 * @return
 	 */
 	@RequestMapping("librarymodifyClassByID")
 	@ResponseBody
@@ -609,10 +590,8 @@ public class AdministrationController {
 
 	/**
 	 * 检查删除课程是否有存在培养计划
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("checkCrouseIsInPlan")
 	@ResponseBody
@@ -638,10 +617,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除课程库课程
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("libraryReomveClassByID")
 	@ResponseBody
@@ -660,13 +637,11 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-	
+
 	/**
 	 * 新增教师
-	 * 
-	 * @param newTeacherInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param newTeacherInfo
+	 * @return
 	 */
 	@RequestMapping("addTeacher")
 	@ResponseBody
@@ -699,13 +674,11 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
-     * 修改教师
-	 * 
-	 * @param modifyInfo修改信息
-	 * 
-	 * @return returnMap
+	 * 修改教师
+	 * @param modifyInfo
+	 * @return
 	 */
 	@RequestMapping("modifyTeacher")
 	@ResponseBody
@@ -810,15 +783,12 @@ public class AdministrationController {
 		checkRS.put("result", true);
 		return checkRS;
 	}
-	
+
 	/**
 	 * 导入课程
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param request
+	 * @return
 	 * @throws Exception
-	 * @throws ServletException
 	 */
 	@RequestMapping("importNewClass")
 	@ResponseBody
@@ -917,17 +887,13 @@ public class AdministrationController {
 		checkRS.put("result", true);
 		return checkRS;
 	}
-	
-	
-	
+
+
 	/**
 	 * 批量修改课程
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param request
+	 * @return
 	 * @throws Exception
-	 * @throws ServletException
 	 */
 	@RequestMapping("modifyClassess")
 	@ResponseBody
@@ -1012,16 +978,13 @@ public class AdministrationController {
 		checkRS.put("result", true);
 		return checkRS;
 	}
-	
-	
+
+
 	/**
 	 * 导入教师
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param file
+	 * @return
 	 * @throws Exception
-	 * @throws ServletException
 	 */
 	@RequestMapping("importTeacher")
 	@ResponseBody
@@ -1102,15 +1065,12 @@ public class AdministrationController {
 		return checkRS;
 	}
 
-	
+
 	/**
 	 * 批量修改教师
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param file
+	 * @return
 	 * @throws Exception
-	 * @throws ServletException
 	 */
 	@RequestMapping("modifyTeachers")
 	@ResponseBody
@@ -1448,10 +1408,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增层次关系
-	 * 
-	 * @param newRelationInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param newRelationInfo
+	 * @return
 	 */
 	@RequestMapping("addNewRelation")
 	@ResponseBody
@@ -1497,10 +1455,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改层次关系
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
 	@RequestMapping("updateRelation")
 	@ResponseBody
@@ -1541,10 +1497,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除层次关系
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeRelation")
 	@ResponseBody
@@ -1597,10 +1551,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增层次
-	 * 
-	 * @param newRelationInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param newLevelInfo
+	 * @return
 	 */
 	@RequestMapping("addNewLevel")
 	@ResponseBody
@@ -1640,10 +1592,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改层次
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
 	@RequestMapping("updateLvel")
 	@ResponseBody
@@ -1682,10 +1632,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除层次
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeLevel")
 	@ResponseBody
@@ -1715,10 +1663,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增系部
-	 * 
-	 * @param newRelationInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param newDeaparment
+	 * @return
 	 */
 	@RequestMapping("addNewDeaparment")
 	@ResponseBody
@@ -1758,10 +1704,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改系部
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
 	@RequestMapping("updateDeaparment")
 	@ResponseBody
@@ -1797,10 +1741,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除系部
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeDeaparment")
 	@ResponseBody
@@ -1830,10 +1772,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增年级
-	 * 
-	 * @param newRelationInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param newGrade
+	 * @return
 	 */
 	@RequestMapping("addNewGrade")
 	@ResponseBody
@@ -1874,10 +1814,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改年级
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
 	@RequestMapping("updateGrade")
 	@ResponseBody
@@ -1915,10 +1853,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除年级
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeGrade")
 	@ResponseBody
@@ -1949,10 +1885,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增专业
-	 * 
-	 * @param newRelationInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param newMajor
+	 * @return
 	 */
 	@RequestMapping("addNewMajor")
 	@ResponseBody
@@ -1987,10 +1921,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改专业
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
 	@RequestMapping("updateMajor")
 	@ResponseBody
@@ -2021,8 +1953,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除专业
-	 * @param deleteIds删除ID
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeMajor")
 	@ResponseBody
@@ -2169,10 +2101,9 @@ public class AdministrationController {
 
 	/**
 	 * 修改培养计划下的专业课程
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param culturePlanInfo
+	 * @param modifyInfo
+	 * @return
 	 */
 	@RequestMapping("modifyCultureCrose")
 	@ResponseBody
@@ -2225,10 +2156,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除培养计划下的专业课程
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeCultureCrose")
 	@ResponseBody
@@ -2307,10 +2236,8 @@ public class AdministrationController {
 
 	/**
 	 * 培养计划审核
-	 * 
-	 * @param modifyInfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param modifyInfo
+	 * @return
 	 */
 	@RequestMapping("chengeCulturePlanCrouseStatus")
 	@ResponseBody
@@ -2340,10 +2267,9 @@ public class AdministrationController {
 
 	/**
 	 * 培养计划审核 -改变培养计划反馈意见
-	 * 
-	 * @param modifyInfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param id
+	 * @param feedBack
+	 * @return
 	 */
 	@RequestMapping("chengeCulturePlanCrouseFeedBack")
 	@ResponseBody
@@ -2357,10 +2283,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增行政班
-	 * 
-	 * @param newRelationInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param addInfo
+	 * @return
 	 */
 	@RequestMapping("addAdministrationClass")
 	@ResponseBody
@@ -2452,10 +2376,9 @@ public class AdministrationController {
 
 	/**
 	 * 修改行政班
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param culturePlanInfo
+	 * @param modifyInfo
+	 * @return
 	 */
 	@RequestMapping("modifyAdministrationClass")
 	@ResponseBody
@@ -2516,10 +2439,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除培养计划下的行政班
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeAdministrationClass")
 	@ResponseBody
@@ -2786,14 +2707,12 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 
 	/**
 	 * 教学班管理 -验证行政班信息
-	 * 
-	 * @param combinedInfo合班信息
-	 * 
-	 * @return returnMap
+	 * @param verifyInfo
+	 * @return
 	 */
 	@RequestMapping("verifyClassInfo")
 	@ResponseBody
@@ -2875,10 +2794,8 @@ public class AdministrationController {
 
 	/**
 	 * 教学班管理 -确认班级操作
-	 * 
-	 * @param combinedInfo合班信息
-	 * 
-	 * @return returnMap
+	 * @param classInfo
+	 * @return
 	 */
 	@RequestMapping("confirmClassAction")
 	@ResponseBody
@@ -2987,10 +2904,8 @@ public class AdministrationController {
 
 	/**
 	 * 查询所有教学班(指定培养计划)
-	 * 
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
+	 * @param culturePlanInfo
+	 * @return
 	 */
 	@RequestMapping("getAllTeachingClasses")
 	@ResponseBody
@@ -3007,13 +2922,10 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 查询所有教学班(不指定培养计划)
-	 * 
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
+	 * @return
 	 */
 	@RequestMapping("getAllTeachingClasses2")
 	@ResponseBody
@@ -3027,10 +2939,8 @@ public class AdministrationController {
 
 	/**
 	 * 修改教学班名称
-	 * 
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
+	 * @param modifyObject
+	 * @return
 	 */
 	@RequestMapping("modifyTeachingClassName")
 	@ResponseBody
@@ -3060,10 +2970,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除教学班
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param deleteIds
+	 * @return
 	 */
 	@RequestMapping("removeTeachingClass")
 	@ResponseBody
@@ -3186,10 +3094,8 @@ public class AdministrationController {
 
 	/**
 	 * 查询培养计划下所有学生
-	 * 
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
+	 * @param culturePlanInfo
+	 * @return
 	 */
 	@RequestMapping("queryCulturePlanStudent")
 	@ResponseBody
@@ -3213,10 +3119,8 @@ public class AdministrationController {
 
 	/**
 	 * 新增学生
-	 * 
-	 * @param addInfo新增信息
-	 * 
-	 * @return returnMap
+	 * @param addInfo
+	 * @return
 	 */
 	@RequestMapping("addStudent")
 	@ResponseBody
@@ -3264,10 +3168,8 @@ public class AdministrationController {
 
 	/**
 	 * 删除学生
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param removeInfo
+	 * @return
 	 */
 	@RequestMapping("removeStudents")
 	@ResponseBody
@@ -3292,12 +3194,9 @@ public class AdministrationController {
 
 	/**
 	 * 修改学生
-	 * 
-	 * @param updateinfo修改信息
-	 * 
-	 * @return returnMap
+	 * @param updateinfo
+	 * @return
 	 */
-
 	@RequestMapping("modifyStudent")
 	@ResponseBody
 	public Object modifyStudent(@RequestParam("updateinfo") String updateinfo) {
@@ -3418,15 +3317,12 @@ public class AdministrationController {
 		utils.createModifyStudentModal(workbook,chosedStudents);
         utils.loadModal(response,fileName, workbook);
 	}
-	
+
 	/**
 	 * 导入学生
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 * @param file
+	 * @return
 	 * @throws Exception
-	 * @throws ServletException
 	 */
 	@RequestMapping("importStudent")
 	@ResponseBody
@@ -3459,15 +3355,12 @@ public class AdministrationController {
         }
 		return returnMap;
 	}
-	
+
 	/**
-	 * 批量修改学生
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
+	 *  批量修改学生
+	 * @param file
+	 * @return
 	 * @throws Exception
-	 * @throws ServletException
 	 */
 	@RequestMapping("modifyStudents")
 	@ResponseBody
@@ -3531,15 +3424,11 @@ public class AdministrationController {
 		return checkRS;
 	}
 
-	
-	
-	
+
 	/**
 	 * 批量发放毕业证
-	 * 
-	 * @param deleteIds删除id
-	 * 
-	 * @return returnMap
+	 * @param choosendStudents
+	 * @return
 	 */
 	@RequestMapping("/graduationStudents")
 	@ResponseBody
@@ -3734,16 +3623,13 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 发布通知
-	 * 
-	 * @param deleteIds删除ID
-	 * 
-	 * @return returnMap
-	 * @throws ParseException
-	 * @throws Exception
-	 * @throws ServletException
+	 * @param noticeInfo
+	 * @param request
+	 * @return
+	 * @throws java.lang.IllegalArgumentException
 	 */
 	@RequestMapping("issueNotice")
 	@ResponseBody
