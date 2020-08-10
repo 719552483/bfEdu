@@ -285,6 +285,10 @@ function stuffTeacherDetails(row){
 
 //预备修改教师
 function modifyTeacher(row,index){
+	if(row.wpjzgspzt==="passing"){
+		toastr.warning('该教职工暂不可进行此操作');
+		return ;
+	}
 	$.showModal("#addTeacherModal",true);
 	$("#addTeacherModal").find(".moadalTitle").html("修改教职工-"+row.xm);
 	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
@@ -329,7 +333,8 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 		cache : false,
 		url : "/modifyTeacher",
 		data: {
-             "modifyInfo":JSON.stringify(modifyTeacherInfo) 
+             "modifyInfo":JSON.stringify(modifyTeacherInfo) ,
+			"approvalInfo":JSON.stringify(getApprovalobect())
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -381,20 +386,22 @@ function wantAddTeacher(){
 //确认添加教师
 function confirmaddTeacher(){
 	var newTeacherInfo=getnewTeacherInfo();
+	var approvalobect=getApprovalobect();
 	if(typeof newTeacherInfo ==='undefined'){
 		return;
 	}
-	sendNewTeacherInfo(newTeacherInfo);
+	sendNewTeacherInfo(newTeacherInfo,approvalobect);
 }
 
 //发送添加教师请求
-function sendNewTeacherInfo(newTeacherInfo){
+function sendNewTeacherInfo(newTeacherInfo,approvalobect){
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/addTeacher",
 		data: {
-             "addInfo":JSON.stringify(newTeacherInfo) 
+             "addInfo":JSON.stringify(newTeacherInfo) ,
+			"approvalInfo":JSON.stringify(approvalobect)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -428,6 +435,10 @@ function sendNewTeacherInfo(newTeacherInfo){
 
 //单个删除教师
 function removeTeacher(row){
+	if(row.wpjzgspzt==="passing"){
+		toastr.warning('该教职工暂不可进行此操作');
+		return ;
+	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html('教职工- '+row.xm+' ');
 	$(".remindActionType").html("删除");
@@ -448,10 +459,17 @@ function removeTeachers(){
 	if (chosenTeachers.length === 0) {
 		toastr.warning('暂未选择任何数据');
 	} else {
+		for (var i = 0; i < chosenTeachers.length; i++) {
+			if(chosenTeachers[i].wpjzgspzt==="passing"){
+				toastr.warning('该教职工暂不可进行此操作');
+				return ;
+			}
+		}
+
 		$.showModal("#remindModal",true);
 		$(".remindType").html("所选教职工");
 		$(".remindActionType").html("删除");
-		
+
 		//确认删除学生
 		$('.confirmRemind').unbind('click');
 		$('.confirmRemind').bind('click', function(e) {
@@ -504,7 +522,7 @@ function sednRemoveInfo(removeArray){
 	});
 }
 
-//批量导入学生
+//批量导入教师
 function importTeacherInfo() {
 	$.showModal("#importTeacherInfoModal",true);
 	$("#teacherInfoFile,#showFileName").val("");
@@ -604,6 +622,7 @@ function confirmImportTeacherInfo(){
 
     var formData = new FormData();
     formData.append("file",$('#teacherInfoFile')[0].files[0]);
+	formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
 
     $.ajax({
         url:'/importTeacher',
@@ -655,7 +674,6 @@ function confirmImportTeacherInfo(){
     });
 }
 
-
 //预备批量更新教师
 function modifyTeachers(){
 	var choosendTeachers = $("#teacherBaseInfoTable").bootstrapTable("getSelections");
@@ -663,6 +681,13 @@ function modifyTeachers(){
 		toastr.warning('暂未选择教职工');
 		return;
 	}
+	for (var i = 0; i < choosendTeachers.length; i++) {
+		if(choosendTeachers[i].wpjzgspzt==="passing"){
+			toastr.warning('有教职工暂不可进行此操作');
+			return ;
+		}
+	}
+
 	$.showModal("#modifyTeachersModal",true);
 	$("#ModifyTeachersFile,#showModifyFileName").val("");
 	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
@@ -768,6 +793,7 @@ function confirmModifyTeacherInfo() {
 	
 	    var formData = new FormData();
 	    formData.append("file",$('#ModifyTeachersFile')[0].files[0]);
+	    formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
 
 	    $.ajax({
 	        url:'/modifyTeachers',
@@ -1038,6 +1064,16 @@ function researchTeachers(){
 	reObject.normalSelectIds = "#department,#major,#teacherZc";
 	reReloadSearchsWithSelect(reObject);
 	drawTeacherBaseInfoEmptyTable();
+}
+
+//外聘教师审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="07";
+	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
 }
 
 

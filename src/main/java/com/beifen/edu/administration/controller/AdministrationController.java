@@ -649,11 +649,13 @@ public class AdministrationController {
 	 */
 	@RequestMapping("addTeacher")
 	@ResponseBody
-	public Object addTeacher(@RequestParam("addInfo") String newTeacherInfo) {
+	public Object addTeacher(@RequestParam("addInfo") String newTeacherInfo,@RequestParam("approvalInfo") String approvalInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(newTeacherInfo);
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 		List<Edu101> allTeacher = administrationPageService.queryAllTeacher();
 		// 判断身份证是否存在
 		boolean IDcardIshave = false;
@@ -669,7 +671,13 @@ public class AdministrationController {
 		if (!IDcardIshave) {
 			String jzgh =administrationPageService.getNewTeacherJzgh();
 			edu101.setJzgh(jzgh);
-			administrationPageService.addTeacher(edu101); 
+			//如果新增教师是外聘教师 发起审批流
+			if(edu101.getJzglxbm().equals("004")){
+				edu101.setWpjzgspzt("passing");
+				edu600.setBusinessKey(edu101.getEdu101_ID());
+				approvalProcessService.initiationProcess(edu600);
+			}
+			administrationPageService.addTeacher(edu101);
 			returnMap.put("newId", edu101.getEdu101_ID());
 			returnMap.put("jzgh", jzgh);
 		}
@@ -686,11 +694,13 @@ public class AdministrationController {
 	 */
 	@RequestMapping("modifyTeacher")
 	@ResponseBody
-	public Object modifyTeacher(@RequestParam String modifyInfo) {
+	public Object modifyTeacher(@RequestParam String modifyInfo,@RequestParam("approvalInfo") String approvalInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 		List<Edu101> allTeacher = administrationPageService.queryAllTeacher();
 		// 判断身份证是否存在
 		boolean IDcardIshave = false;
@@ -705,7 +715,13 @@ public class AdministrationController {
 		}
 		
 		if (!IDcardIshave) {
-			administrationPageService.addTeacher(edu101); 
+			//如果修改是将教师改为外聘教师 发起审批流
+			if(edu101.getJzglxbm().equals("004")){
+				edu101.setWpjzgspzt("passing");
+				edu600.setBusinessKey(edu101.getEdu101_ID());
+				approvalProcessService.initiationProcess(edu600);
+			}
+			administrationPageService.addTeacher(edu101);
 		}
 		
 		returnMap.put("IDcardIshave", IDcardIshave);
@@ -807,7 +823,7 @@ public class AdministrationController {
 		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 
 		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
 		
@@ -844,10 +860,6 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-	
-	
-	
-	
 	/**
 	 * 下载课程更新模板
 	 * 
@@ -998,13 +1010,20 @@ public class AdministrationController {
 
 	/**
 	 * 导入教师
-	 * @param file
+ 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("importTeacher")
 	@ResponseBody
-	public Object importTeacher(@RequestParam("file") MultipartFile file) throws Exception {
+	public Object importTeacher(HttpServletRequest request) throws Exception {
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+
 		Map<String, Object> returnMap = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
@@ -1025,7 +1044,12 @@ public class AdministrationController {
     			Edu101 edu101 = importTeacher.get(i);
     			String jzgh =administrationPageService.getNewTeacherJzgh(); //新教师的教职工号
     			edu101.setJzgh(jzgh);
-    			administrationPageService.addTeacher(edu101); // 新增教师
+				if(edu101.getJzglxbm().equals("004")){
+					edu101.setWpjzgspzt("passing");
+					edu600.setBusinessKey(importTeacher.get(i).getEdu101_ID());
+					approvalProcessService.initiationProcess(edu600);
+				}
+				administrationPageService.addTeacher(edu101); // 新增教师
     		}
         }
 		return returnMap;
@@ -1084,14 +1108,21 @@ public class AdministrationController {
 
 	/**
 	 * 批量修改教师
-	 * @param file
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("modifyTeachers")
 	@ResponseBody
-	public Object modifyTeachers(@RequestParam("file") MultipartFile file) throws Exception {
+	public Object modifyTeachers(HttpServletRequest request) throws Exception {
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 		Map<String, Object> returnMap = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
+
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
 			return returnMap;
@@ -1107,6 +1138,11 @@ public class AdministrationController {
         if(!returnMap.get("importTeacher").equals("")){
         	List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
         	for (int i = 0; i < modifyTeachers.size(); i++) {
+				if(modifyTeachers.get(i).getJzglxbm().equals("004")){
+					modifyTeachers.get(i).setWpjzgspzt("passing");
+					edu600.setBusinessKey(modifyTeachers.get(i).getEdu101_ID());
+					approvalProcessService.initiationProcess(edu600);
+				}
         		administrationPageService.addTeacher(modifyTeachers.get(i)); //修改学生
         	}
         	returnMap.put("modifyTeachersInfo", modifyTeachers);

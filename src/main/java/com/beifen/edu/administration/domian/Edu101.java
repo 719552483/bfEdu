@@ -36,6 +36,7 @@ public class Edu101 {
 	private String lxfs;// 联系方式
 	private String jzglx;// 教职工类型 专任教师 兼职教师 教辅人员 外聘教师
 	private String jzglxbm;// 教职工类型编码
+	private String wpjzgspzt;// 外聘教职工审批状态
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -233,4 +234,10 @@ public class Edu101 {
 		this.zzmmbm = zzmmbm;
 	}
 
+	public void setWpjzgspzt(String wpjzgspzt) {
+		this.wpjzgspzt = wpjzgspzt;
+	}
+	public String getWpjzgspzt() {
+		return wpjzgspzt;
+	}
 }
