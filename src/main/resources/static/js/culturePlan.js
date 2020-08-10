@@ -217,6 +217,7 @@ function modifyMajorTraining(row) {
 function confirmModifyMajorTraining(row) {
 	var culturePlanInfo=getNotNullSearchs();
 	var crouseModifyInfo=getCrouseModifyInfo(row);
+	var approvalInfo=getApprovalobect();
 	if(typeof crouseModifyInfo ==='undefined'){
 		return;
 	}
@@ -227,7 +228,8 @@ function confirmModifyMajorTraining(row) {
 		dataType : 'json',
 		data: {
 		     "culturePlanInfo":JSON.stringify(culturePlanInfo) ,
-            "modifyInfo":JSON.stringify(crouseModifyInfo)  
+             "modifyInfo":JSON.stringify(crouseModifyInfo),
+			 "approvalInfo":JSON.stringify(approvalInfo)
        },
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();

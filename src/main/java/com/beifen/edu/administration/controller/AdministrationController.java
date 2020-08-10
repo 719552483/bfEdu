@@ -2129,8 +2129,12 @@ public class AdministrationController {
 	@RequestMapping("modifyCultureCrose")
 	@ResponseBody
 	public Object modifyCultureCrose(@RequestParam("culturePlanInfo") String culturePlanInfo,
-			@RequestParam("modifyInfo") String modifyInfo) {
+			@RequestParam("modifyInfo") String modifyInfo ,
+									 @RequestParam("approvalInfo") String approvalObject) {
 		Map<String, Object> returnMap = new HashMap();
+		JSONObject approvalInfo = JSONObject.fromObject(approvalObject);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalInfo, Edu600.class);
+
 		// 根据层次等信息查出培养计划id
 		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
 		String levelCode = culturePlan.getString("level");
@@ -2166,7 +2170,10 @@ public class AdministrationController {
 		// 不存在则修改关系
 		if (!namehave && !codehave) {
 			administrationPageService.updateCultureCrouse(edu108);
-			administrationPageService.chengeCulturePlanCrouseStatus(edu108.getEdu108_ID().toString(), "noStatus");
+			administrationPageService.chengeCulturePlanCrouseStatus(edu108.getEdu108_ID().toString(), "passing");
+			edu600.setBusinessKey(edu108.getEdu108_ID());
+			approvalProcessService.initiationProcess(edu600);
+
 		}
 
 		returnMap.put("namehave", namehave);
