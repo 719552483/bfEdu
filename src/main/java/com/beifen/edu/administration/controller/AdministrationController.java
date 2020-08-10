@@ -3215,10 +3215,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("modifyStudent")
 	@ResponseBody
-	public Object modifyStudent(@RequestParam("updateinfo") String updateinfo) {
+	public Object modifyStudent(@RequestParam("updateinfo") String updateinfo,@RequestParam("approvalobect") String approvalobect) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
+		JSONObject apprvalObject = JSONObject.fromObject(approvalobect);
 		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(apprvalObject, Edu600.class);
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
 
 		// 判断身份证是否存在
@@ -3263,7 +3265,8 @@ public class AdministrationController {
 			}
 			//如果修改操作为修改学生状态为休学 发送审批流对象
 			if(edu001.getZtCode().equals("007")){
-			Edu600 edu600=new Edu600();
+				edu600.setBusinessKey(edu001.getEdu001_ID());
+				approvalProcessService.initiationProcess(edu600);
 			}
 		}
 
@@ -3366,14 +3369,21 @@ public class AdministrationController {
 	}
 
 	/**
-	 *  批量修改学生
-	 * @param file
+	 * 批量修改学生
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("modifyStudents")
 	@ResponseBody
-	public Object modifyStudents(@RequestParam("file") MultipartFile file) throws Exception {
+	public Object modifyStudents(HttpServletRequest request) throws Exception {
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+
 		Map<String, Object> returnMap = utils.checkStudentFile(file, "ModifyEdu001", "已选学生信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
@@ -3391,6 +3401,11 @@ public class AdministrationController {
         	List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
         	for (int i = 0; i < modifyStudents.size(); i++) {
         		administrationPageService.updateStudent(modifyStudents.get(i)); //修改学生
+				//如果修改学生是状态改为休学  发送审批流
+				if(modifyStudents.get(i).getZtCode().equals("007")){
+					edu600.setBusinessKey(modifyStudents.get(i).getEdu001_ID());
+					approvalProcessService.initiationProcess(edu600);
+				}
         	}
         	returnMap.put("modifyStudentsInfo", modifyStudents);
         }

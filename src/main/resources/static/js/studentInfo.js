@@ -628,7 +628,8 @@ function confirmModifyStudent(row){
 		cache : false,
 		url : "/modifyStudent",
 		data: {
-             "updateinfo":JSON.stringify(modifyStudentInfo) 
+             "updateinfo":JSON.stringify(modifyStudentInfo),
+			 "approvalobect":JSON.stringify(getApprovalobect())
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1376,6 +1377,7 @@ function confirmModifyStudentInfo() {
 	
 	    var formData = new FormData();
 	    formData.append("file",$('#ModifyStudentsFile')[0].files[0]);
+	    formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
 
 	    $.ajax({
 	        url:'/modifyStudents',
@@ -1617,6 +1619,16 @@ function researchStudents(){
 	reObject.InputIds = "#studentNumber,#studentName,#studentRollNumber,#className";
 	reReloadSearchsWithSelect(reObject);
 	drawStudentBaseInfoEmptyTable();
+}
+
+//学生审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="05";
+	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
 }
 
 //初始化页面按钮绑定事件
