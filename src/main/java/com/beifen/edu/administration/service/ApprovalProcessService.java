@@ -36,6 +36,8 @@ public class ApprovalProcessService {
     private Edu990Dao edu990Dao;
     @Autowired
     private Edu000Dao edu000Dao;
+    @Autowired
+    private Edu200Dao edu200Dao;
 
     /**
      * 发起审批流程
@@ -114,6 +116,9 @@ public class ApprovalProcessService {
                 isSuccess =  false;
             } else {
                 //更新同意审批信息
+                if("0".equals(edu602.getNextRole())){
+                    edu600.setApprovalState("1");
+                }
                 edu600.setCurrentRole(edu602.getNextRole());
                 edu600.setLastRole(edu602.getCurrentRole());
                 edu600.setApprovalState("1");
@@ -127,6 +132,7 @@ public class ApprovalProcessService {
             }
         } else if("2".equals(approvalFlag)) {
             //更新不同意审批信息
+            edu600.setApprovalState("2");
             edu600.setCurrentRole(edu600.getProposerType());
             edu600.setLastRole(edu600.getCurrentRole());
             edu600.setApprovalState("2");
@@ -159,13 +165,17 @@ public class ApprovalProcessService {
            try {
                //复制属性
                BeanUtils.copyProperties(edu600, edu601);
-               edu600.setCurrentRole(edu601.getLastRole());
-               Edu602 edu602 = edu602Dao.selectNextRole(businessType, edu600.getCurrentRole().toString());
+               Edu602 edu602 = edu602Dao.selectNextRole(businessType, edu600.getLastRole().toString());
+               edu600.setCurrentRole(edu602.getCurrentRole());
                edu600.setLastRole(edu602.getLastRole());
            } catch (IllegalAccessException e) {
                e.printStackTrace();
            } catch (InvocationTargetException e) {
                e.printStackTrace();
+           }
+
+           if(edu600.getCurrentRole() == edu600.getProposerType()){
+              edu600.setApprovalState("2");
            }
 
            edu600.setUpdateDate(new Date());
@@ -176,6 +186,92 @@ public class ApprovalProcessService {
        } else {
            isSuccess = false;
        }
+
+       if ("0".equals(edu600.getCurrentRole())){
+           isSuccess=writeBackData(edu600,approvalFlag);
+       }
+
+        return isSuccess;
+    }
+
+    /**
+     * 最后一个节点的数据审批
+     * @param edu600
+     * @param approvalFlag
+     * @return
+     */
+    private boolean writeBackData(Edu600 edu600, String approvalFlag) {
+        boolean isSuccess = true;
+        String businessKey = edu600.getBusinessKey().toString();
+        //根据审批结果回写业务状态,1同意2不同意3追回
+        if("1".equals(approvalFlag)) {
+            switch(businessKey) {
+                case"01":
+                    edu200Dao.updateState(businessKey, "passing");
+                    break;
+                case"02":
+                    break;
+                case"03":
+                    break;
+                case"04":
+                    break;
+                case"05":
+                    break;
+                case"06":
+                    break;
+                case"07":
+                    break;
+                default:
+                    isSuccess = false;
+                    break;
+
+            }
+        } else if("2".equals(approvalFlag)) {
+            switch(businessKey) {
+                case"01":
+                    edu200Dao.updateState(businessKey, "nopass");
+                    break;
+                case"02":
+                    break;
+                case"03":
+                    break;
+                case"04":
+                    break;
+                case"05":
+                    break;
+                case"06":
+                    break;
+                case"07":
+                    break;
+                default:
+                    isSuccess = false;
+                    break;
+            }
+        } else if("3".equals(approvalFlag) || edu600.getCurrentRole() == edu600.getProposerType()){
+            switch(businessKey) {
+                case"01":
+                    edu200Dao.updateState(businessKey, "nopass");
+                    break;
+                case"02":
+                    break;
+                case"03":
+                    break;
+                case"04":
+                    break;
+                case"05":
+                    break;
+                case"06":
+                    break;
+                case"07":
+                    break;
+                default:
+                    isSuccess = false;
+                    break;
+            }
+        } else {
+                isSuccess =false;
+        }
+
 
         return isSuccess;
     }
@@ -290,6 +386,7 @@ public class ApprovalProcessService {
         try {
             //赋值查询条件
             Edu600 edu600 = new Edu600();
+            edu600.setLastRole(edu600BO.getCurrentUserRole());
             edu600.setProposerKey(edu600BO.getProposerKey());
             edu600.setBusinessType(edu600BO.getBusinessType());
             edu600.setLastExaminerKey(edu600BO.getExaminerkey());
@@ -305,6 +402,9 @@ public class ApprovalProcessService {
                     }
                     if (edu600.getLastExaminerKey() != null && !"".equals(edu600.getLastExaminerKey())) {
                         predicates.add(cb.equal(root.<String> get("lastExaminerKey"), edu600.getLastExaminerKey()));
+                    }
+                    if (edu600.getLastRole() != null && !"".equals(edu600.getLastRole())) {
+                        predicates.add(cb.equal(root.<String> get("lastRole"), edu600.getLastRole()));
                     }
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
