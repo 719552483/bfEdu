@@ -52,4 +52,9 @@ public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecification
 	@Query(value = "select * from edu108 e where e.Edu300_ID like %?1%", nativeQuery = true)
 	public List<Edu108> queryAdministrationClassesCrouse(String xzbCode);
 
+	//审批结束后回写培养计划状态
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE edu108 SET sszt = ?2 WHERE Edu108_ID =?1", nativeQuery = true)
+    void updateState(String businessKey, String state);
 }

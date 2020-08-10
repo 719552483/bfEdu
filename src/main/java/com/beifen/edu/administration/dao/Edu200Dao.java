@@ -35,6 +35,8 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	public Edu200 queryClassById(String edu200id);
 
 	//审批结束回写课程状态
-	@Query(value = "update edu200 e set zx = ?2 where e.bf200_ID=?1", nativeQuery = true)
-	void updateState(String businessKey, String passing);
+	@Transactional
+	@Modifying
+	@Query(value = "update edu200 e set zt = ?2 where e.bf200_ID=?1", nativeQuery = true)
+	void updateState(String businessKey, String state);
 }

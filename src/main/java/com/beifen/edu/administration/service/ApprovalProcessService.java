@@ -38,6 +38,14 @@ public class ApprovalProcessService {
     private Edu000Dao edu000Dao;
     @Autowired
     private Edu200Dao edu200Dao;
+    @Autowired
+    private Edu108Dao edu108Dao;
+    @Autowired
+    private Edu201Dao edu201Dao;
+    @Autowired
+    private Edu001Dao edu001Dao;
+    @Autowired
+    private Edu101Dao edu101Dao;
 
     /**
      * 发起审批流程
@@ -187,7 +195,8 @@ public class ApprovalProcessService {
            isSuccess = false;
        }
 
-       if ("0".equals(edu600.getCurrentRole())){
+
+       if ("0".equals(edu600.getCurrentRole().toString()) || approvalFlag != "1"){
            isSuccess=writeBackData(edu600,approvalFlag);
        }
 
@@ -203,23 +212,29 @@ public class ApprovalProcessService {
     private boolean writeBackData(Edu600 edu600, String approvalFlag) {
         boolean isSuccess = true;
         String businessKey = edu600.getBusinessKey().toString();
+        String bussinessType = edu600.getBusinessType();
         //根据审批结果回写业务状态,1同意2不同意3追回
         if("1".equals(approvalFlag)) {
-            switch(businessKey) {
+            switch(bussinessType) {
                 case"01":
-                    edu200Dao.updateState(businessKey, "passing");
+                    edu200Dao.updateState(businessKey, "pass");
                     break;
                 case"02":
+                    edu200Dao.updateState(businessKey, "stop");
                     break;
                 case"03":
+                    edu108Dao.updateState(businessKey, "pass");
                     break;
                 case"04":
+                    edu201Dao.updateState(businessKey, "pass");
                     break;
                 case"05":
+                    edu001Dao.updateState(businessKey, "002", "休学");
                     break;
                 case"06":
                     break;
                 case"07":
+                    edu101Dao.updateState(businessKey, "pass");
                     break;
                 default:
                     isSuccess = false;
@@ -227,42 +242,53 @@ public class ApprovalProcessService {
 
             }
         } else if("2".equals(approvalFlag)) {
-            switch(businessKey) {
+            switch(bussinessType) {
                 case"01":
                     edu200Dao.updateState(businessKey, "nopass");
                     break;
                 case"02":
+                    edu200Dao.updateState(businessKey, "pass");
                     break;
                 case"03":
+                    edu108Dao.updateState(businessKey, "nopass");
                     break;
                 case"04":
+                    edu201Dao.updateState(businessKey, "nopass");
                     break;
                 case"05":
+                    edu001Dao.updateState(businessKey, "001", "在读");
                     break;
                 case"06":
                     break;
                 case"07":
+                    edu101Dao.updateState(businessKey, "nopass");
                     break;
                 default:
                     isSuccess = false;
                     break;
             }
         } else if("3".equals(approvalFlag) || edu600.getCurrentRole() == edu600.getProposerType()){
-            switch(businessKey) {
+            switch(bussinessType) {
                 case"01":
                     edu200Dao.updateState(businessKey, "nopass");
                     break;
                 case"02":
+                    edu200Dao.updateState(businessKey, "pass");
                     break;
                 case"03":
+                    edu108Dao.updateState(businessKey, "nopass");
                     break;
                 case"04":
+                    edu201Dao.updateState(businessKey, "nopass");
                     break;
                 case"05":
+                    edu001Dao.updateState(businessKey, "001", "在读");
                     break;
                 case"06":
+
                     break;
                 case"07":
+                    edu101Dao.updateState(businessKey, "nopass");
                     break;
                 default:
                     isSuccess = false;

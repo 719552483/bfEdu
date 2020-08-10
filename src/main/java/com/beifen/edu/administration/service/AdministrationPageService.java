@@ -1315,8 +1315,8 @@ public class AdministrationPageService {
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
 					predicates.add(cb.like(root.<String> get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
 				}
-				if (edu200.getKcxz() != null && !"".equals(edu200.getKcxz())) {
-					predicates.add(cb.like(root.<String> get("kcxz"), '%' + edu200.getKcxz() + '%'));
+				if (edu200.getKcxzCode() != null && !"".equals(edu200.getKcxzCode())) {
+					predicates.add(cb.equal(root.<String> get("kcxzCode"), edu200.getKcxzCode() ));
 				}
 				if (edu200.getZt() != null && !"".equals(edu200.getZt())) {
 					predicates.add(cb.equal(root.<String> get("zt"), edu200.getZt()));

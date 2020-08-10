@@ -69,4 +69,10 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//根据id查学生学号
 	@Query(value = "select e.xh from edu001 e where e.Edu001_ID =?1", nativeQuery = true)
 	public String queryXhBy001ID(String edu001_ID);
+
+	//审批结束后回写状态
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE edu001 set zt_code =?2, zt=?3  WHERE Edu001_ID =?1", nativeQuery = true)
+    void updateState(String businessKey, String state, String stateName);
 }

@@ -561,7 +561,7 @@ public class AdministrationController {
 		edu200.setKcdm(jsonObject.getString("courseCode"));
 		edu200.setKcmc(jsonObject.getString("courseName"));
 		edu200.setBzzymc(jsonObject.getString("markName"));
-		edu200.setKcxz(jsonObject.getString("coursesNature"));
+		edu200.setKcxzCode(jsonObject.getString("coursesNature"));
 		edu200.setZt(jsonObject.getString("status"));
 		List<Edu200> classList = administrationPageService.librarySeacchClass(edu200);
 		returnMap.put("result", true);
