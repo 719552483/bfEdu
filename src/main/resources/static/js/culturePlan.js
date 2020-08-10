@@ -197,6 +197,10 @@ function modifyMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
+	if(row.xbsp==="passing"){
+		toastr.warning('该培养计划暂不可进行此操作');
+		return;
+	}
 	showAndStuffDetails(row,true);
 	$('.majorTrainingTableActionArea').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	$('#majorTrainingDetails_feedback').attr("disabled", true) // 反馈意见不可修改
@@ -350,6 +354,10 @@ function removeMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
+	if(row.xbsp==="passing"){
+		toastr.warning('该培养计划暂不可进行此操作');
+		return;
+	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html("培养计划");
 	$(".remindActionType").html("删除");
@@ -372,6 +380,10 @@ function removeChoosedMajorTraining() {
 	for (var i = 0; i < chosenCrouse.length; i++) {
 		if(chosenCrouse[i].sfsckkjh==="T"){
 			toastr.warning('不能删除已生成开课计划的课程');
+			return;
+		}
+		if(chosenCrouse[i].xbsp==="passing"){
+			toastr.warning('有培养计划暂不可进行此操作');
 			return;
 		}
 	}
@@ -635,6 +647,7 @@ function addCulturePlan(){
 	
 	var culturePlanInfo=getNotNullSearchs();
 	var crouseInfo=getNewCulturePlanInfo(currentchoosedCroese[0].bf200_ID);
+	var approvalInfo=getApprovalobect();
 	if(typeof crouseInfo ==='undefined'){
 		return;
 	}
@@ -645,7 +658,8 @@ function addCulturePlan(){
 		url : "/culturePlanAddCrouse",
 		data: {
             "culturePlanInfo":JSON.stringify(culturePlanInfo) ,
-            "crouseInfo":JSON.stringify(crouseInfo) 
+            "crouseInfo":JSON.stringify(crouseInfo),
+			"approvalInfo":JSON.stringify(approvalInfo)
        },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1517,8 +1531,15 @@ function confirmGeneratAllClassAllCourse(generatObject) {
 	});
 }
 
-
-
+//培养计划审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="03";
+	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
+}
 
 // 初始化页面按钮绑定事件
 function binBind() {
