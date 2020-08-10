@@ -705,8 +705,8 @@ function sendPutOutInfo(putOutArray){
 		cache : false,
 		url : "/putOutTask",
 		data: {
-          "taskInfo":JSON.stringify(putOutArray) 
-        },
+          "taskInfo":JSON.stringify(putOutArray) , "approvalInfo":JSON.stringify(getApprovalobect())
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -1092,11 +1092,16 @@ function modifyTask(row,index){
 
 //确认修改任务书
 function comfirmModifyTask(row,index){
+	if(row.sszt==="passing"){
+		toastr.warning('该任务书暂不可进行操作');
+		return ;
+	}
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选任务书");
 	$(".remindActionType").html("修改");
 	
-	//确认删除学生
+	//确认修改任务书
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		$.ajax({
@@ -1179,6 +1184,16 @@ function mainAreaControl(){
 	var reObject = new Object();
 	reObject.InputIds = "#xzbmc,#kcmc";
 	reReloadSearchsWithSelect(reObject);
+}
+
+//任务书审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="04";
+	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
 }
 
 //选择教师模态框按钮绑定事件

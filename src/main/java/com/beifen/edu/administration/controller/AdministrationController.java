@@ -3771,9 +3771,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("putOutTask")
 	@ResponseBody
-	public Object putOutTask(@RequestParam("taskInfo") String taskInfo) {
+	public Object putOutTask(@RequestParam("taskInfo") String taskInfo,@RequestParam("approvalInfo") String approvalInfo) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONArray array = JSONArray.fromObject(taskInfo); // 解析json字符
+		JSONArray array = JSONArray.fromObject(taskInfo); // 解析任务书json字符
+		JSONObject apprvalObject = JSONObject.fromObject(approvalInfo); // 解析审批流json字符
+		Edu600 edu600 = (Edu600) JSONObject.toBean(apprvalObject, Edu600.class);
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			Edu201 edu201 = new Edu201();
@@ -3794,9 +3796,11 @@ public class AdministrationController {
 			edu201.setKkbm(jsonObject.getString("kkbm"));
 			edu201.setKkbmCode(jsonObject.getString("kkbmCode"));
 			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
-			edu201.setSszt("noStatus");
+			edu201.setSszt("passing");
 			administrationPageService.putOutTask(edu201);
 			administrationPageService.putOutTaskAction(edu201.getEdu301_ID(),edu201.getEdu201_ID());
+			edu600.setBusinessKey(edu201.getEdu201_ID());
+			approvalProcessService.initiationProcess(edu600);
 		}
 		returnMap.put("result", true);
 		return returnMap;
