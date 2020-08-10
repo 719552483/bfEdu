@@ -527,6 +527,26 @@ public class AdministrationController {
 		return returnMap;
 	}
 
+
+	/**
+	 * 课程库停用课程
+	 * @param choosedCrouse
+	 * @return
+	 */
+	@RequestMapping("stopClass")
+	@ResponseBody
+	public Object stopClass(@RequestParam("choosedCrouse") String choosedCrouse) {
+		Map<String, Object> returnMap = new HashMap();
+		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(choosedCrouse);
+		for (int i = 0; i < deleteArray.size(); i++) {
+			administrationPageService.stopClass(deleteArray.get(i).toString());
+		}
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+
+
 	/**
 	 * 课程库搜索课程
 	 * @param SearchCriteria

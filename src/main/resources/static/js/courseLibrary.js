@@ -322,7 +322,7 @@ function comfirmmodifyCourseInfo(row){
 		url : "/updateClass",
 		data: {
              "updateinfo":JSON.stringify(newClassObject),
-			 "approvalobect":JSON.stringify(getApprovalobect())
+			 "approvalobect":JSON.stringify(getApprovalobect("01"))
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -420,7 +420,7 @@ function comfirmAddNewClass(){
 		url : "/addNewClass",
 		data: {
              "newClassInfo":JSON.stringify(newClassObject),
-			 "approvalobect":JSON.stringify(getApprovalobect())
+			 "approvalobect":JSON.stringify(getApprovalobect("01"))
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -657,10 +657,10 @@ function classDetailsConfirmBtnAction(){
 }
 
 //获得审批流对象
-function getApprovalobect(){
+function getApprovalobect(type){
 	//课程审批流对象
 	var approvalObject=new Object();
-	approvalObject.businessType="01";
+	approvalObject.businessType=type;
 	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
 	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	approvalObject.approvalStyl="1";
@@ -1008,7 +1008,7 @@ function confirmImportNewClass(){
     var formData = new FormData();
     formData.append("file",$('#NewClassFile')[0].files[0]);
     formData.append("lrrInfo",JSON.stringify(lrrInfo));
-	formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
+	formData.append("approvalInfo",JSON.stringify(getApprovalobect("01")));
     
     $.ajax({
         url:'/importNewClass',
@@ -1238,7 +1238,7 @@ function confirmModifyClasses(){
     var formData = new FormData();
     formData.append("file",$('#ModifyClassesFile')[0].files[0]);
     formData.append("lrrInfo",JSON.stringify(lrrInfo));
-	formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
+	formData.append("approvalInfo",JSON.stringify(getApprovalobect("01")));
 
     $.ajax({
         url:'/modifyClassess',
@@ -1289,7 +1289,68 @@ function confirmModifyClasses(){
     });
 }
 
+//预备停用课程
+function stopClass(){
+	var choosedCrouse=$("#courseLibraryTable").bootstrapTable("getSelections");
+	if(choosedCrouse.length===0){
+		toastr.warning('请选择课程');
+		return ;
+	}
+	for (var i = 0; i < choosedCrouse.length; i++) {
+		if(choosedCrouse[i].zt==="passing"||choosedCrouse[i].zt==="stop"||choosedCrouse[i].zt==="nopass"){
+			toastr.warning('有课程不可进行此操作');
+			return;
+		}
+	}
 
+	$.showModal("#remindModal",true);
+	$(".remindType").html("课程");
+	$(".remindActionType").html("停用");
+	// 确认按钮改变事件
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var choosedCrouseArray=new Array();
+		for (var i = 0; i < choosedCrouse.length; i++) {
+			choosedCrouseArray.push(choosedCrouse[i].bf200_ID);
+		}
+		confirmStopClass(choosedCrouseArray,choosedCrouse);
+		e.stopPropagation();
+	});
+}
+
+//确认停课操作
+function confirmStopClass(choosedCrouseArray,choosedCrouse){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/stopClass",
+		data: {
+			"choosedCrouse":JSON.stringify(choosedCrouseArray)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				for (var i = 0; i < choosedCrouse.length; i++) {
+					$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosedCrouse[i], row: choosedCrouse[i]});
+				}
+				$.hideModal("#remindModal");
+				toastr.success('课程停用流转成功');
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
 //页面初始化时按钮事件绑定
 function binBind(){
@@ -1376,6 +1437,14 @@ function binBind(){
 	$('#confirmChoosedManger').unbind('click');
 	$('#confirmChoosedManger').bind('click', function(e) {
 		confirmChoosedManger();
+		e.stopPropagation();
+	});
+
+
+	// 停用课程
+	$('#stopClass').unbind('click');
+	$('#stopClass').bind('click', function(e) {
+		stopClass();
 		e.stopPropagation();
 	});
 }

@@ -1712,6 +1712,8 @@ public class AdministrationPageService {
 		return edu500DAO.querySiteBySsxqCode(xqCode);
 	}
 
-
-
+	//停用课程
+	public void stopClass(String Edu200id) {
+		edu200DAO.updateState(Edu200id,"stop");
+	}
 }
