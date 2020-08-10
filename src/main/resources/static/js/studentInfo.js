@@ -410,6 +410,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 	
 	function ztMatter(value, row, index) {
+		EJDMElementInfo;
 		if (row.zt==="在读") {
 			return [
 					'<div class="myTooltip greenTxt" title="在读">在读</div>'
@@ -512,6 +513,10 @@ function stuffStudentDetails(row){
 
 //修改学生信息
 function modifyStudent(row,index){
+	if(row.ztCode==='007'){
+		toastr.warning('此学生暂不可操作');
+		return;
+	}
 	$.showModal("#addStudentModal",true);
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$(".XhArea").hide();
@@ -667,6 +672,10 @@ function confirmModifyStudent(row){
 
 //单个删除学生
 function removeStudent(row) {
+	if(row.ztCode==='007'){
+		toastr.warning('此学生暂不可操作');
+		return;
+	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html('- '+row.xm+' ');
 	$(".remindActionType").html("删除");
@@ -687,6 +696,13 @@ function removeStudent(row) {
 //多选删除学生
 function removeStudents() {
 	var chosenStudents = $('#studentBaseInfoTable').bootstrapTable('getAllSelections');
+	for (var i = 0; i < chosenStudents.length; i++) {
+		if(chosenStudents[i].ztCode==="007"){
+			toastr.warning('有学生暂不可进行此操作');
+			return;
+		}
+	}
+
 	if (chosenStudents.length === 0) {
 		toastr.warning('暂未选择任何数据');
 	} else {
@@ -1115,6 +1131,12 @@ function modifyStudents(){
 		toastr.warning('暂未选择学生');
 		return;
 	}
+	for (var i = 0; i < choosendStudents.length; i++) {
+		if(choosendStudents[i].zt==="007"){
+			toastr.warning('有学生暂不可进行此操作');
+			return;
+		}
+	}
 	$.showModal("#modifyStudentsModal",true);
 	$("#ModifyStudentsFile,#showModifyFileName").val("");
 	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
@@ -1142,6 +1164,12 @@ function modifyStudents(){
 //预备批量发放毕业证
 function graduationStudents(){
 	var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+	for (var i = 0; i < choosendStudents.length; i++) {
+		if(choosendStudents[i].zt==="007"){
+			toastr.warning('有学生暂不可进行此操作');
+			return;
+		}
+	}
 	if(choosendStudents.length===0){
 		toastr.warning('暂未选择学生');
 		return;

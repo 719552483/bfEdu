@@ -496,10 +496,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("updateClass")
 	@ResponseBody
-	public Object updateClass(@RequestParam("updateinfo") String updateinfo) {
+	public Object updateClass(@RequestParam("updateinfo") String updateinfo,@RequestParam("updateinfo") String approvalobect) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
+		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
 		Edu200 edu200 = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.class);
 		List<Edu200> allClass = administrationPageService.queryAllClass();
 		// 判断课程名称和代码是否已存在
 		boolean nameHave = false;
@@ -515,8 +517,10 @@ public class AdministrationController {
 		if (!nameHave) {
 			long currentTimeStamp = System.currentTimeMillis();
 			edu200.setLrsj(currentTimeStamp);
-			edu200.setZt("noStatus");
+			edu200.setZt("passing");
 			administrationPageService.updateClass(edu200);
+			edu600.setBusinessKey(edu200.getBF200_ID());
+			approvalProcessService.initiationProcess(edu600);
 			returnMap.put("currentTimeStamp", currentTimeStamp);
 		}
 		returnMap.put("result", true);
@@ -546,7 +550,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 课程库课程更改状态
+	 * 修改课程库课程是判断是否存在培养计划
 	 * @param modifyInfo
 	 * @return
 	 */
@@ -589,7 +593,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 检查删除课程是否有存在培养计划
+	 * 课程是否有存在培养计划
 	 * @param deleteIds
 	 * @return
 	 */
@@ -794,12 +798,17 @@ public class AdministrationController {
 	@ResponseBody
 	public Object importNewClass(HttpServletRequest request) throws Exception {
 		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-	    MultipartFile file = multipartRequest.getFile("file");
-		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的参数
+	    MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc=jsonObject.getString("lrr");
 		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
-		
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
+
 		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
 		
 		boolean modalPass = (boolean) returnMap.get("modalPass");
@@ -815,10 +824,10 @@ public class AdministrationController {
 		}
 		
         if(!returnMap.get("importClasses").equals("")){
-        	List<Edu200> importTeacher = (List<Edu200>) returnMap.get("importClasses");
-        	String newClassStatus = "noStatus";
-    		for (int i = 0; i < importTeacher.size(); i++) {
-    			Edu200 edu200 = importTeacher.get(i);
+        	List<Edu200> importClasses = (List<Edu200>) returnMap.get("importClasses");
+        	String newClassStatus = "passing";
+    		for (int i = 0; i < importClasses.size(); i++) {
+    			Edu200 edu200 = importClasses.get(i);
     			String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
     			long currentTimeStamp = System.currentTimeMillis();
     			
@@ -828,6 +837,8 @@ public class AdministrationController {
     			edu200.setLrr(lrrmc);
     			edu200.setLrrID(lrrId);
     			administrationPageService.addNewClass(edu200);
+				edu600.setBusinessKey(importClasses.get(i).getBF200_ID());
+				approvalProcessService.initiationProcess(edu600);
     		}
         }
 		return returnMap;
@@ -866,9 +877,7 @@ public class AdministrationController {
 		utils.createModifyClassesModal(workbook,chosedClasses);
         utils.loadModal(response,fileName, workbook);
 	}
-	
-	
-	
+
 	
 	/**
 	 * 检验修改课程的文件
@@ -899,11 +908,16 @@ public class AdministrationController {
 	@ResponseBody
 	public Object modifyClassess(HttpServletRequest request) throws Exception {
 		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-		MultipartFile file = multipartRequest.getFile("file");
-		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的参数
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc=jsonObject.getString("lrr");
 		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
 		
 		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ModifyEdu200", "已选课程信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
@@ -917,21 +931,23 @@ public class AdministrationController {
 				return returnMap;
 			}
 		}
-		List<Edu200> importClasses=new ArrayList<Edu200>();
+		List<Edu200> updateClasses=new ArrayList<Edu200>();
         if(!returnMap.get("importClasses").equals("")){
-        	importClasses= (List<Edu200>) returnMap.get("importClasses");
-        	for (int i = 0; i < importClasses.size(); i++) {
-        		Edu200 edu200 =importClasses.get(i);
+			updateClasses= (List<Edu200>) returnMap.get("importClasses");
+        	for (int i = 0; i < updateClasses.size(); i++) {
+        		Edu200 edu200 =updateClasses.get(i);
         		long currentTimeStamp = System.currentTimeMillis();
     			edu200.setLrsj(currentTimeStamp);
-    			edu200.setZt("noStatus");
+    			edu200.setZt("passing");
     			edu200.setLrr(lrrmc);
     			edu200.setLrrID(lrrId);
     			edu200.setShr(null);
     			edu200.setShrID(null);
     			administrationPageService.updateClass(edu200);
+				edu600.setBusinessKey(updateClasses.get(i).getBF200_ID());
+				approvalProcessService.initiationProcess(edu600);
         	}
-        	returnMap.put("modifyClassesInfo", importClasses);
+        	returnMap.put("modifyClassesInfo", updateClasses);
         }
 		return returnMap;
 	}
@@ -3205,16 +3221,6 @@ public class AdministrationController {
 		Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
 		List<Edu001> currentAllStudent = administrationPageService.queryAllStudent();
 
-		// 判断学号是否已存在
-//		boolean xhhave = false;
-//		for (int i = 0; i < currentAllStudent.size(); i++) {
-//			if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
-//					&& currentAllStudent.get(i).getXh().equals(edu001.getXh())) {
-//				xhhave = true;
-//				break;
-//			}
-//		}
-		
 		// 判断身份证是否存在
 		boolean IdcardHave= false;
 		for (int i = 0; i < currentAllStudent.size(); i++) {
@@ -3224,7 +3230,6 @@ public class AdministrationController {
 				break;
 			}
 		}
-	
 
 		// 判断是否改变行政班
 		boolean isChangeXZB = false;
@@ -3255,6 +3260,10 @@ public class AdministrationController {
 			    if(!studentSpill){
 			    	administrationPageService.updateStudent(edu001);
 			    }
+			}
+			//如果修改操作为修改学生状态为休学 发送审批流对象
+			if(edu001.getZtCode().equals("007")){
+			Edu600 edu600=new Edu600();
 			}
 		}
 

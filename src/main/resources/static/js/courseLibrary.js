@@ -193,6 +193,10 @@ function courseLibraryInfo(row){
 
 //修改课程
 function modifyCourseLibrary(row){
+	if(row.zt==="passing"){
+		toastr.warning('该课程暂不可进行此操作');
+		return;
+	}
 	$(".addNewClass_calssCodeArae").hide();
 	$('#addNewClassModal').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	var idArray=new Array();
@@ -317,7 +321,8 @@ function comfirmmodifyCourseInfo(row){
 		cache : false,
 		url : "/updateClass",
 		data: {
-             "updateinfo":JSON.stringify(newClassObject) 
+             "updateinfo":JSON.stringify(newClassObject),
+			 "approvalobect":JSON.stringify(getApprovalobect())
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -664,6 +669,10 @@ function getApprovalobect(){
 
 //单个删除课程
 function removeCourse(row){
+	if(row.zt==="passing"){
+		toastr.warning('该课程暂不可进行此操作');
+		return;
+	}
 	var idArray=new Array();
 	idArray.push(row.bf200_ID);
 	removeClassesCheckCrouseIsInPlan(idArray);
@@ -676,7 +685,14 @@ function removeClasses(){
 		toastr.warning('请选择课程');
 		return;
 	}
-	
+
+	for (var i = 0; i < choosedClass.length; i++) {
+		if(choosedClass[i].zt==="passing"){
+			toastr.warning('有课程不可进行此操作');
+			return;
+		}
+	}
+
 	var idArray=new Array();
 	for (var i = 0; i < choosedClass.length; i++) {
 		idArray.push(choosedClass[i].bf200_ID);
@@ -992,6 +1008,7 @@ function confirmImportNewClass(){
     var formData = new FormData();
     formData.append("file",$('#NewClassFile')[0].files[0]);
     formData.append("lrrInfo",JSON.stringify(lrrInfo));
+	formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
     
     $.ajax({
         url:'/importNewClass',
@@ -1221,6 +1238,7 @@ function confirmModifyClasses(){
     var formData = new FormData();
     formData.append("file",$('#ModifyClassesFile')[0].files[0]);
     formData.append("lrrInfo",JSON.stringify(lrrInfo));
+	formData.append("approvalInfo",JSON.stringify(getApprovalobect()));
 
     $.ajax({
         url:'/modifyClassess',
