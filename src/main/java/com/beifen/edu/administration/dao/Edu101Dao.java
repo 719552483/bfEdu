@@ -39,5 +39,5 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	@Transactional
 	@Modifying
 	@Query(value = "update edu101 set wpjzgspzt=?2 where Edu101_ID =?1", nativeQuery = true)
-    void updateState(String businessKey, String pass);
+    void updateState(String businessKey, String state);
 }

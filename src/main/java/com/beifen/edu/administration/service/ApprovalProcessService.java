@@ -64,6 +64,11 @@ public class ApprovalProcessService {
         Edu600 newEdu600 = edu600DAO.save(edu600);
         //保存历史审批记录
         saveApprovalHistory(edu600, "0");
+
+//        if("05".equals(edu600.getBusinessType())) {
+//            edu001Dao.updateState(edu600.getBusinessKey().toString(),"007", "休学申请中");
+//        }
+
         //进入流转将当前节点变为下一节点
         edu600.setLastRole(edu600.getProposerType());
         edu600.setLastExaminerKey(edu600.getProposerKey());
@@ -155,7 +160,7 @@ public class ApprovalProcessService {
            //更新追回审批信息
            Edu600 eud600select = new Edu600();
            eud600select.setLastExaminerKey(edu600.getExaminerkey());
-           eud600select.setBusinessKey(eud600select.getBusinessKey());
+           eud600select.setBusinessKey(edu600.getBusinessKey());
            Specification<Edu601> specification = new Specification<Edu601>() {
                public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                    List<Predicate> predicates = new ArrayList<Predicate>();
@@ -196,7 +201,7 @@ public class ApprovalProcessService {
        }
 
 
-       if ("0".equals(edu600.getCurrentRole().toString()) || approvalFlag != "1"){
+       if ("0".equals(edu600.getCurrentRole().toString()) || !"1".equals(approvalFlag)){
            isSuccess=writeBackData(edu600,approvalFlag);
        }
 
@@ -267,7 +272,7 @@ public class ApprovalProcessService {
                     isSuccess = false;
                     break;
             }
-        } else if("3".equals(approvalFlag) || edu600.getCurrentRole() == edu600.getProposerType()){
+        } else if("3".equals(approvalFlag) && edu600.getCurrentRole() == edu600.getProposerType()){
             switch(bussinessType) {
                 case"01":
                     edu200Dao.updateState(businessKey, "nopass");
@@ -294,10 +299,7 @@ public class ApprovalProcessService {
                     isSuccess = false;
                     break;
             }
-        } else {
-                isSuccess =false;
         }
-
 
         return isSuccess;
     }

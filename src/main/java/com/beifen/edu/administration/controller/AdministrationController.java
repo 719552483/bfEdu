@@ -691,13 +691,13 @@ public class AdministrationController {
 		if (!IDcardIshave) {
 			String jzgh =administrationPageService.getNewTeacherJzgh();
 			edu101.setJzgh(jzgh);
+			administrationPageService.addTeacher(edu101);
 			//如果新增教师是外聘教师 发起审批流
 			if(edu101.getJzglxbm().equals("004")){
 				edu101.setWpjzgspzt("passing");
 				edu600.setBusinessKey(edu101.getEdu101_ID());
 				approvalProcessService.initiationProcess(edu600);
 			}
-			administrationPageService.addTeacher(edu101);
 			returnMap.put("newId", edu101.getEdu101_ID());
 			returnMap.put("jzgh", jzgh);
 		}
@@ -1012,7 +1012,6 @@ public class AdministrationController {
 	/**
 	 * 检验导入教师的文件
 	 * 
-	 * 
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -1064,12 +1063,12 @@ public class AdministrationController {
     			Edu101 edu101 = importTeacher.get(i);
     			String jzgh =administrationPageService.getNewTeacherJzgh(); //新教师的教职工号
     			edu101.setJzgh(jzgh);
+				administrationPageService.addTeacher(edu101); // 新增教师
 				if(edu101.getJzglxbm().equals("004")){
 					edu101.setWpjzgspzt("passing");
 					edu600.setBusinessKey(importTeacher.get(i).getEdu101_ID());
 					approvalProcessService.initiationProcess(edu600);
 				}
-				administrationPageService.addTeacher(edu101); // 新增教师
     		}
         }
 		return returnMap;
@@ -1158,12 +1157,12 @@ public class AdministrationController {
         if(!returnMap.get("importTeacher").equals("")){
         	List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
         	for (int i = 0; i < modifyTeachers.size(); i++) {
+        		administrationPageService.addTeacher(modifyTeachers.get(i)); //修改教师
 				if(modifyTeachers.get(i).getJzglxbm().equals("004")){
 					modifyTeachers.get(i).setWpjzgspzt("passing");
 					edu600.setBusinessKey(modifyTeachers.get(i).getEdu101_ID());
 					approvalProcessService.initiationProcess(edu600);
 				}
-        		administrationPageService.addTeacher(modifyTeachers.get(i)); //修改学生
         	}
         	returnMap.put("modifyTeachersInfo", modifyTeachers);
         }
@@ -3321,6 +3320,13 @@ public class AdministrationController {
 		boolean studentSpill=false;
 		// 不存在则修改学生
 		if (!IdcardHave) {
+			//如果修改操作为修改学生状态为休学 发送审批流对象
+			Edu001 oldEdu001 = administrationPageService.queryStudentBy001ID(edu001.getEdu001_ID().toString());
+			if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
+				edu001.setZtCode("007");
+				edu001.setZt("休学申请中");
+				edu600.setBusinessKey(edu001.getEdu001_ID());
+			}
 			if (!isChangeXZB) {
 				// 没有修改行政班的情况
 				administrationPageService.addStudent(edu001);
@@ -3331,13 +3337,10 @@ public class AdministrationController {
 			    	administrationPageService.updateStudent(edu001);
 			    }
 			}
-			//如果修改操作为修改学生状态为休学 发送审批流对象
-			if(edu001.getZtCode().equals("007")){
-				edu600.setBusinessKey(edu001.getEdu001_ID());
-				approvalProcessService.initiationProcess(edu600);
-			}
+			approvalProcessService.initiationProcess(edu600);
 		}
 
+		returnMap.put("newStudentInfo", edu001);
 		returnMap.put("studentSpill", studentSpill);
 //		returnMap.put("xhhave", xhhave);
 		returnMap.put("IdcardHave", IdcardHave);
@@ -3468,12 +3471,15 @@ public class AdministrationController {
         if(!returnMap.get("importStudent").equals("")){
         	List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
         	for (int i = 0; i < modifyStudents.size(); i++) {
-        		administrationPageService.updateStudent(modifyStudents.get(i)); //修改学生
-				//如果修改学生是状态改为休学  发送审批流
-				if(modifyStudents.get(i).getZtCode().equals("007")){
+				//如果修改操作为修改学生状态为休学 发送审批流对象
+				Edu001 oldEdu001 = administrationPageService.queryStudentBy001ID(modifyStudents.get(i).getEdu001_ID().toString());
+				if(modifyStudents.get(i).getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
+					modifyStudents.get(i).setZtCode("007");
+					modifyStudents.get(i).setZt("休学申请中");
 					edu600.setBusinessKey(modifyStudents.get(i).getEdu001_ID());
-					approvalProcessService.initiationProcess(edu600);
 				}
+        		administrationPageService.updateStudent(modifyStudents.get(i)); //修改学生
+				approvalProcessService.initiationProcess(edu600);
         	}
         	returnMap.put("modifyStudentsInfo", modifyStudents);
         }

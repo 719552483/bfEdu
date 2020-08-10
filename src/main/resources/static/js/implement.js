@@ -922,8 +922,8 @@ function approvalMatter(value, row, index) {
 	} else if (value==="nopass"){
 		return [ '<div class="myTooltip redTxt" title="不通过"><i class="iconfont icon-chacha redTxt"></i>不通过</div>' ]
 				.join('');
-	} else if (value==="noStatus"){
-		return [ '<div class="myTooltip normalTxt" title="未审批">未审批</div>' ]
+	} else if (value==="passing"){
+		return [ '<div class="myTooltip normalTxt" title="审批中">审批中</div>' ]
 		.join('');
     }
 }

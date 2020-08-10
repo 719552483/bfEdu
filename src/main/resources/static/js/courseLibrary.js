@@ -167,8 +167,8 @@ function stuffCourseLibraryTable(tableInfo){
 			} else if (row.zt==="stop"){
 				return [ '<div class="myTooltip redTxt" title="已停用">已停用</div>' ]
 				.join('');
-	        }else if (row.zt==="noStatus"){
-				return [ '<div class="myTooltip normalTxt" title="未审批">未审批</div>' ]
+	        }else if (row.zt==="passing"){
+				return [ '<div class="myTooltip normalTxt" title="审批中">审批中</div>' ]
 				.join('');
 	        }
 		}

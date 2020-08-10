@@ -660,7 +660,9 @@ function confirmModifyStudent(row){
 					$.showModal("#addStudentModal",true);
 					return;
 				}
-				$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: row.edu001_ID, row: modifyStudentInfo});
+
+
+				$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: row.edu001_ID, row: backjson.newStudentInfo});
 				$.hideModal("#addStudentModal");
 				toastr.success('修改成功');
 				toolTipUp(".myTooltip");

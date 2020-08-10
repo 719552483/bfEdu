@@ -414,7 +414,6 @@ function approvaAction(row,approvalText,tableID){
 		cache: false,
 		url: "/approvalOperation",
 		data: {
-
 			"approvalText":JSON.stringify(row)
 		},
 		dataType: 'json',

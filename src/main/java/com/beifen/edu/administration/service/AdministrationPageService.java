@@ -1119,6 +1119,9 @@ public class AdministrationPageService {
 
 	// 删除教学任务书
 	public void removeTasks(String edu201id) {
+		//更改教学班是否发布教学任务书字段
+
+		//删除任务书
 		edu201DAO.removeTasks(edu201id);
 	}
 

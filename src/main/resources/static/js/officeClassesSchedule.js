@@ -936,8 +936,8 @@ function stuffPutOutTaskTable(tableInfo) {
 		} else if (row.sszt==="nopass"){
 			return [ '<div class="myTooltip" title="不通过"><i class="iconfont icon-chacha redTxt"></i></div>' ]
 					.join('');
-		} else if (row.sszt==="noStatus"){
-			return [ '<div class="myTooltip normalTxt" title="未审批">未审批</div>' ]
+		} else if (row.sszt==="passing"){
+			return [ '<div class="myTooltip normalTxt" title="审批中">审批中</div>' ]
 			.join('');
         }
 	}
