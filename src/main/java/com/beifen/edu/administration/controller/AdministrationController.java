@@ -2085,11 +2085,14 @@ public class AdministrationController {
 	@RequestMapping("/culturePlanAddCrouse")
 	@ResponseBody
 	public Object culturePlanAddCrouse(@RequestParam("culturePlanInfo") String culturePlanInfo,
-			@RequestParam("crouseInfo") String crouseInfo) {
+			@RequestParam("crouseInfo") String crouseInfo,
+										   @RequestParam("approvalInfo") String approvalObject) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject crouse = JSONObject.fromObject(crouseInfo);
 		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
+		JSONObject approvalInfo = JSONObject.fromObject(approvalObject);
 		Edu108 edu108 = (Edu108) JSONObject.toBean(crouse, Edu108.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalInfo, Edu600.class);
 
 		// 通过 层次 系部 年级 专业定位培养计划
 		// 获得培养计划ID
@@ -2100,12 +2103,14 @@ public class AdministrationController {
 		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		String configTheCulturePlan = "F";// 初始化的是否生成开课计划
-		String xbspTxt = "noStatus";// 初始化的系部审批
+		String xbspTxt = "passing";// 初始化的系部审批
 		edu108.setEdu107_ID(edu107ID);
 		edu108.setSfsckkjh(configTheCulturePlan);
 		edu108.setXbsp(xbspTxt);
 		administrationPageService.culturePlanAddCrouse(edu108);
 		Long id = edu108.getEdu108_ID();
+		edu600.setBusinessKey(edu108.getEdu108_ID());
+		approvalProcessService.initiationProcess(edu600);
 
 		returnMap.put("crouseID", id);
 		returnMap.put("culturePlanID", edu107ID);
