@@ -392,6 +392,7 @@ public class ApprovalProcessService {
         try {
             BeanUtils.copyProperties(edu600,edu600BO);
             //流转前保存审批记录
+            edu600.setUpdateDate(new Date());
             saveApprovalHistory(edu600, approvalFlag);
             //进入流转将当前节点变为上一节点
             edu600.setLastRole(edu600BO.getCurrentRole());
@@ -540,7 +541,8 @@ public class ApprovalProcessService {
 
         historyList = edu601Dao.findAll(specification);
         //根据edu600Id去重
-        historyList = historyList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Edu601 :: getEdu600Id))), ArrayList::new));
+        historyList = historyList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(()
+                -> new TreeSet<>(Comparator.comparing(Edu601 :: getEdu600Id))), ArrayList::new));
         try {
                 for (Edu601 e :  historyList) {
                     Edu601PO approvalEx = new Edu601PO();
