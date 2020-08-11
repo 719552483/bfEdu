@@ -1576,20 +1576,53 @@ margin: 0px 0px -14px -15px!important;
 	font-size: 13px;
 }
 
-.spiltImg{
+.historyArea{
+	background-color: rgb(199 208 214 / 15%);
+	border-radius: 4px;
+	box-shadow: inset 0px 3px 5px 0px #d5dee2;
+	margin-bottom: 13px;
+	padding: 13px;
+	width: 94%;
+	margin: 0 auto;
+}
+
+.historyArea:last-child{
+	margin-bottom: 10px;
+}
+
+.historyArea span{
+	font-size: 12px;
+	margin-bottom: 3px;
+	margin-left: 39%;
 	width: 100%;
-	background-image: url(../images/leftico.png);
-	background-repeat: no-repeat;
-	background-position-x: right;
-	transform: rotate(0deg);
-	-webkit-transform: rotate(0deg);
+}
+
+.historyArea cite{
+ color: rgb(43 71 84 / 86%);
+}
+
+.historyArea b{
+    color: rgb(22 56 72 / 92%);
+}
+
+.spiltImg{
+    margin-left: 48%;
+}
+
+.Historystep{
+    float: left;
+    font-family: revert;
+    color: #37555a;
+    text-decoration: underline;
+    text-decoration-color: black;
+	font-weight: 600;
 }
 
 @keyframes serachAnimation {
-	10% {
-		transform: translateX(-3px) rotate(-2deg);
-		-ms-transform: translateX(-3px) rotate(-2deg);
-		/* IE 9 */
+    10% {
+        transform: translateX(-3px) rotate(-2deg);
+        -ms-transform: translateX(-3px) rotate(-2deg);
+        /* IE 9 */
 		-webkit-transform: translateX(-3px) rotate(-2deg);
 		/* Safari and Chrome */
 		-o-transform: translateX(-3px) rotate(-2deg);

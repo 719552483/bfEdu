@@ -153,11 +153,23 @@ function approvalHistory(row){
 			hideloding();
 			if (backjson.result) {
 				$.showModal("#historyModal",false);
+				$("#historyModal").find(".moadalTitle").html(backjson.approvalHistory[0].businessName+"历史审批信息");
 				$(".historyInfo").empty();
 				var historyTxt="";
 				for (var i = 0; i < backjson.approvalHistory.length; i++) {
 					var currentHistory= backjson.approvalHistory[i];
-					historyTxt+='<div class="historyArea">'+currentHistory.businessName+'</div><img src="images/leftico.png"></img>';
+					historyTxt+='<div class="historyArea"><p class="Historystep">Step'+(i+1)+'</p><div>' +
+						'<span><cite>业务类型：</cite><b>'+nullMatter(currentHistory.businessName)+'</b></span>'+
+						'<span><cite>创建时间：</cite><b>'+nullMatter(timeStamp2String(currentHistory.creatDate))+'</b></span>'+
+						'<span><cite>发起人：</cite><b>'+nullMatter(currentHistory.proposerName)+'</b></span>'+
+						'<span><cite>操作人：</cite><b>'+nullMatter(currentHistory.examinerName)+'</b></span>'+
+						'<span><cite>审批意见：</cite><b>'+nullMatter(currentHistory.approvalOpinions)+'</b></span>'+
+						'<span><cite>审批结果：</cite><b>'+nullMatter(currentHistory.approvalState)+'</b></span>'+
+						'<span><cite>操作时间：</cite><b>'+nullMatter(timeStamp2String(currentHistory.updateDate))+'</b></span>'+
+						'</div></div>' ;
+					if((i+1)!=backjson.approvalHistory.length){
+						historyTxt+='<img class="spiltImg" src="images/uew_icon_hover.png"></img>';
+					}
 				}
 				$(".historyInfo").append(historyTxt);
 			} else {
@@ -165,6 +177,11 @@ function approvalHistory(row){
 			}
 		}
 	});
+}
+
+function nullMatter(str){
+	str==null||str===""?str="暂无":str=str;
+	return str;
 }
 
 //查看审批详情
