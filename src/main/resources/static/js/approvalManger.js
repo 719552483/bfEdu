@@ -205,7 +205,7 @@ function judgmentBusinessShowArea(businessType,businessInfo){
    }else if(businessType==="05"){//学生审批
 	   stuffStudentInfoArea(businessInfo);
    }else if(businessType==="06"||businessType==="07"){//教师审批
-
+	   stuffTeacherInfoArea(businessInfo);
    }
 }
 
@@ -240,7 +240,7 @@ function stuffClassInfoArea(businessInfo){
 function stuffCulturePlanInfoArea(businessInfo){
 	var culturePlanInfo=businessInfo.edu108;
 	var relationInfo=businessInfo.edu107;
-	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
+	$("#approvalDetailsModal").find(".moadalTitle").html("培养计划审批详情");
 	$(".classApprovalArea,.studentStopApprovalArea,.taskApprovalArea,.teacherApprovalArea").hide();
 	$(".culturePlanApprovalArea").show();
 	$("#culturePlan_cc").val(relationInfo.edu103mc);
@@ -263,9 +263,17 @@ function stuffCulturePlanInfoArea(businessInfo){
 
 //教学任务书审批信息区域
 function stuffTaskInfoArea(businessInfo){
-	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
+	$("#approvalDetailsModal").find(".moadalTitle").html("教学任务书审批详情");
 	$(".classApprovalArea,.culturePlanApprovalArea,.studentStopApprovalArea,.teacherApprovalArea").hide();
 	$(".taskApprovalArea").show();
+	$("#task_jxbmc").val(businessInfo.jxbmc);
+	$("#task_kcmc").val(businessInfo.kcmc);
+	$("#task_jxbrs").val(businessInfo.jxbrs);
+	$("#task_ls").val(businessInfo.lsmc);
+	$("#task_zyls").val(businessInfo.zylsmc);
+	$("#task_kkbm").val(businessInfo.kkbm);
+	$("#task_pkbm").val(businessInfo.pkbm);
+	businessInfo.sfxylcj==="T"?$("#task_sfxylcj").val("是"):$("#task_sfxylcj").val("否");
 }
 
 //填充学生信息区域
@@ -286,6 +294,29 @@ function stuffStudentInfoArea(businessInfo){
 	$("#studentClass").val(businessInfo.xzbname);
 	$("#studentIDcard").val(businessInfo.sfzh);
 	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+}
+
+//填充教师信息区域
+function stuffTeacherInfoArea(businessInfo){
+	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
+	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.studentStopApprovalArea").hide();
+	$(".teacherApprovalArea").show();
+	$("#teacherName").val(businessInfo.xm);
+	$("#teacherJzgh").val(businessInfo.jzgh);
+	businessInfo.xb==="M"?$("#teachetSex").val("男"):$("#teachetSex").val("女");
+	$("#teacherAge").val(businessInfo.nl);
+	$("#teacherType").val(businessInfo.jzglx);
+	$("#teacherBrithdate").val(businessInfo.csrq);
+	$("#teacherIDcard").val(businessInfo.sfzh);
+	$("#teacherDeapartment").val(businessInfo.szxbmc);
+	$("#teacherMajor").val(businessInfo.zymc);
+	businessInfo.hf==="T"?$("#teacherMajor").val("已婚"):$("#teacherMajor").val("未婚");
+	$("#teacherNation").val(businessInfo.mz);
+	$("#teacherZc").val(businessInfo.zc);
+	$("#teacherWhcd").val(businessInfo.whcd);
+	$("#teacherDxsj").val(businessInfo.dxsj);
+	$("#teacherZzmm").val(businessInfo.zzmm);
+	$("#teacherLxfs").val(businessInfo.lxfs);
 }
 
 //审批通过
@@ -513,7 +544,7 @@ function stuffApprovalBackTable(tableInfo){
 
 //追回详情
 function approvalBackInfo(row){
-	$.showModal("#approvalDetailsModal",false);
+	approvalInfo(row);
 }
 
 //预备追回审批
