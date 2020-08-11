@@ -272,7 +272,7 @@ public class ApprovalProcessService {
                     isSuccess = false;
                     break;
             }
-        } else if("3".equals(approvalFlag) && edu600.getCurrentRole() == edu600.getProposerType()){
+        } else if("3".equals(approvalFlag) && edu600.getCurrentRole().equals(edu600.getProposerType())){
             switch(bussinessType) {
                 case"01":
                     edu200Dao.updateState(businessKey, "nopass");
@@ -333,6 +333,7 @@ public class ApprovalProcessService {
                     if (edu600.getProposerKey() != null && !"".equals(edu600.getProposerKey())) {
                         predicates.add(cb.equal(root.<String> get("proposerKey"), edu600.getProposerKey()));
                     }
+                    predicates.add(cb.notEqual(root.<String> get("currentRole"),root.<String> get("proposerType")));
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
             };
@@ -469,6 +470,33 @@ public class ApprovalProcessService {
     }
 
 
+    public Object getApprovalDeatils(Edu600BO edu600BO) {
+        String businessType = edu600BO.getBusinessType();
+        String businessKey = edu600BO.getBusinessKey().toString();
+        Object object = new Object();
+        switch (businessType) {
+            case"01":
+            case"02":
+                object = edu200Dao.queryClassById(businessKey);
+                break;
+            case"03":
+                object = edu108Dao.queryPlanByEdu108ID(businessKey);
+                break;
+            case"04":
+                object = edu201Dao.getTaskByEdu108Id(businessKey);
+                break;
+            case"05":
+                object = edu001Dao.queryStudentBy001ID(businessKey);
+                break;
+            case"06":
 
-
+                break;
+            case"07":
+                object = edu101Dao.queryJzghBy101ID(businessKey);
+                break;
+            default:
+                break;
+        }
+        return object;
+    }
 }

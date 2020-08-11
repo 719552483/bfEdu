@@ -29,7 +29,7 @@ public class ApprovalProcessController {
 
     /**
      * 流程发起入口
-     * @param approvalText
+     * @param Edu600
      * @return
      */
     @RequestMapping(value = "startApproval",method = RequestMethod.GET)
@@ -109,7 +109,23 @@ public class ApprovalProcessController {
         return returnMap;
     }
 
-
+    /**
+     *
+     * @param approvalText
+     * @return
+     */
+    @RequestMapping(value = "getApprovalDeatils",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getApprovalDeatils(@RequestParam("getApprovalDeatils") String approvalText) {
+        boolean result = true;
+        Map<String, Object> returnMap = new HashMap();
+        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+        Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
+        Object businessInfo = approvalProcessService.getApprovalDeatils(edu600BO);
+        returnMap.put("businessInfo", businessInfo);
+        returnMap.put("result", result);
+        return returnMap;
+    }
 
 
 
