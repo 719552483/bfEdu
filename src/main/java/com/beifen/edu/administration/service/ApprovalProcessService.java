@@ -579,21 +579,10 @@ public class ApprovalProcessService {
      * @return
      */
     public List<Edu601PO> getHistoryDetail(Edu600BO edu600BO) {
-        List<Edu601> historyList = new ArrayList<>();
+        List<Edu601> historyList;
         List<Edu601PO> historyListEx = new ArrayList<>();
 
-        Specification<Edu601> specification = new Specification<Edu601>() {
-            public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<Predicate>();
-                if (edu600BO.getEdu600Id() != null && !"".equals(edu600BO.getEdu600Id())) {
-                    predicates.add(cb.equal(root.<String> get("edu600Id"), edu600BO.getEdu600Id()));
-                }
-                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        };
-
-        historyList = edu601Dao.findAll(specification);
-
+        historyList = edu601Dao.getHistoryDetailByEdu600Id(edu600BO.getEdu600Id().toString());
 
         try {
             for (Edu601 e :  historyList) {
