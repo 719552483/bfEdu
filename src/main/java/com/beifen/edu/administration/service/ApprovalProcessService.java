@@ -16,9 +16,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -535,12 +534,13 @@ public class ApprovalProcessService {
                 if (edu600BO.getExaminerkey() != null && !"".equals(edu600BO.getExaminerkey())) {
                     predicates.add(cb.equal(root.<String> get("examinerkey"), edu600BO.getExaminerkey()));
                 }
-//                query.groupBy(root.get("edu600Id,edu601Id,businessType,businessKey"));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
 
         historyList = edu601Dao.findAll(specification);
+        //根据edu600Id去重
+        historyList = historyList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Edu601 :: getEdu600Id))), ArrayList::new));
         try {
                 for (Edu601 e :  historyList) {
                     Edu601PO approvalEx = new Edu601PO();
@@ -591,6 +591,7 @@ public class ApprovalProcessService {
         };
 
         historyList = edu601Dao.findAll(specification);
+
 
         try {
             for (Edu601 e :  historyList) {
