@@ -392,6 +392,7 @@ public class ApprovalProcessService {
         try {
             BeanUtils.copyProperties(edu600,edu600BO);
             //流转前保存审批记录
+            edu600.setApprovalState(approvalFlag);
             edu600.setUpdateDate(new Date());
             saveApprovalHistory(edu600, approvalFlag);
             //进入流转将当前节点变为上一节点
