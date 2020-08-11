@@ -129,9 +129,6 @@ public class ApprovalProcessService {
                 isSuccess =  false;
             } else {
                 //更新同意审批信息
-                if("0".equals(edu602.getNextRole())){
-                    edu600.setApprovalState("1");
-                }
                 edu600.setCurrentRole(edu602.getNextRole());
                 edu600.setLastRole(edu602.getCurrentRole());
                 edu600.setApprovalState("1");
@@ -435,6 +432,9 @@ public class ApprovalProcessService {
                     if (edu600.getLastRole() != null && !"".equals(edu600.getLastRole())) {
                         predicates.add(cb.equal(root.<String> get("lastRole"), edu600.getLastRole()));
                     }
+                    predicates.add(cb.notEqual(root.<String> get("currentRole"),"0"));
+                    predicates.add(cb.notEqual(root.<String> get("currentRole"),root.<String> get("proposerType")));
+
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
             };
