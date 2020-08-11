@@ -60,6 +60,12 @@ function stuffApprovalMangerTable(tableInfo){
 		},
 		'click #disagree' : function(e, value, row, index) {
 			disagree(row);
+		},
+		'click #confirmOption' : function(e, value, row, index) {
+			confirmOption(row,index);
+		},
+		'click #cancelOption' : function(e, value, row, index) {
+			cancelOption(row,index);
 		}
 	};
 
@@ -82,6 +88,9 @@ function stuffApprovalMangerTable(tableInfo){
 		striped : true,
 		toolbar : '#toolbar',
 		showColumns : true,
+		onDblClickRow : function(row, $element, field) {
+			changeOpinions(row, $element, field);
+		},
 		onPageChange : function() {
 			drawPagination(".approvalMangerTableArea", "审批信息");
 		},
@@ -119,7 +128,7 @@ function stuffApprovalMangerTable(tableInfo){
 			field : 'approvalOpinions',
 			title : '审批意见(双击修改)',
 			align : 'left',
-			formatter : paramsMatter
+			formatter : approvalOpinionsMatter
 		}, {
 			field : 'action',
 			title : '操作',
@@ -132,9 +141,11 @@ function stuffApprovalMangerTable(tableInfo){
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
-		+ '<li id="approvalInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
-		+ '<li id="agree"><span><img src="img/right.png" style="width:24px"></span>同意</li>'
-		+ '<li id="disagree"><span><img src="images/close1.png"></span>不同意</li>'
+		+ '<li id="approvalInfo" class="btnxq'+index+'"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+		+ '<li id="agree" class="btnty'+index+'"><span><img src="img/right.png" style="width:24px"></span>同意</li>'
+		+ '<li id="disagree" class="btnbty'+index+'"><span><img src="images/close1.png"></span>不同意</li>'
+		+ '<li id="confirmOption" class="noneStart btnqr'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>'
+		+ '<li id="cancelOption" class="noneStart btnqx'+index+'"><span><img src="images/t03.png" style="width:24px"></span>取消</li>'
 		+ '</ul>' ].join('');
 	}
 
@@ -143,11 +154,61 @@ function stuffApprovalMangerTable(tableInfo){
 			.join('');
 	}
 
+	//审批意见格式化渲染
+	function approvalOpinionsMatter(value, row, index,tableId){
+		var configTxt="";
+		row.approvalOpinions==null||row.approvalOpinions===""?configTxt="暂无":configTxt=row.approvalOpinions;
+		return [ '<div class="approvalOpinionArea">' +
+		'<div class="normalTxt myTooltip showOption'+index+'" title="'+configTxt+'">'+configTxt+'</div>'+
+		'<input name="" type="text" class="myInput manyInfoInput noneStart '+tableId+'Opinion'+index+'" id="optionInput'+index+'" placeholder="请填写审批意见..."/>' +
+		'</div>' ]
+			.join('');
+	}
+
 	drawPagination(".approvalMangerTableArea", "审批信息");
 	drawSearchInput(".approvalMangerTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".approvalMangerTableArea", "审批信息");
+}
+
+//双击事件  改变审批意见
+function changeOpinions(row, $element, field){
+	var index =parseInt($element[0].dataset.index);
+	if(field!=="approvalOpinions"){
+		return;
+	}
+	$(".showOption"+index).hide();
+	$("#optionInput"+index).show().focus();
+	$(".btnxq"+index).hide();
+	$(".btnty"+index).hide();
+	$(".btnbty"+index).hide();
+	$(".btnqr"+index).show();
+	$(".btnqx"+index).show();
+}
+
+//确认修改审批意见
+function confirmOption(row,index){
+	var changeOptin=$("#optionInput"+index).val();
+	if(changeOptin!==row.approvalOpinions){
+		row.approvalOpinions=changeOptin;
+		$('#approvalMangerTable').bootstrapTable('updateRow', {
+			index: index,
+			row: row
+		});
+	}
+	cancelOption(row,index);
+}
+
+//取消修改审批意见
+function cancelOption(row,index){
+	$(".showOption"+index).show();
+	$("#optionInput"+index).hide();
+	$(".btnxq"+index).show();
+	$(".btnty"+index).show();
+	$(".btnbty"+index).show();
+	$(".btnqr"+index).hide();
+	$(".btnqx"+index).hide();
 }
 
 //查看审批详情
@@ -475,6 +536,9 @@ function stuffApprovalBackTable(tableInfo){
 		striped : true,
 		toolbar : '#toolbar',
 		showColumns : true,
+		onDblClickRow : function(row, $element, field) {
+			changeOpinions(row, $element, field,'#approvalBackTable');
+		},
 		onPageChange : function() {
 			drawPagination(".approvalBackTableArea", "审批信息");
 		},
@@ -508,12 +572,7 @@ function stuffApprovalBackTable(tableInfo){
 			title : '上一步审批意见',
 			align : 'left',
 			formatter : paramsMatter
-		}, {
-			field : 'approvalOpinions',
-			title : '审批意见(双击修改)',
-			align : 'left',
-			formatter : paramsMatter
-		}, {
+		},  {
 			field : 'action',
 			title : '操作',
 			align : 'center',
@@ -567,7 +626,6 @@ function reReloadSearchsTab2(){
 	drawApprovalBackEmptyTable();
 }
 /*tab2 end*/
-
 
 //审核的操作
 function approvaAction(row,approvalText,tableID){
