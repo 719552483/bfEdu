@@ -220,7 +220,6 @@ function approvalInfo(row) {
 			hideloding();
 			if (backjson.result) {
 				$.showModal("#approvalDetailsModal",false);
-				stuffApprovalInfoArea(row);
 				judgmentBusinessShowArea(row.businessType,backjson.businessInfo);
 			} else {
 				toastr.warning('操作，请重试');
@@ -229,19 +228,9 @@ function approvalInfo(row) {
 	});
 }
 
-//填充详情模态框中审批详情
-function stuffApprovalInfoArea(row){
-	$("#splxlx_forDetails").val(row.businessName);
-	$("#sqr_forDetails").val(row.proposerName);
-	$("#fqsj_forDetails").val(timeStamp2String(row.creatDate));
-	$("#sybsqr_forDetails").val(row.lastPersonName);
-	$("#sybspyj_forDetails").val(row.lastApprovalOpinions);
-	$("#spyj_forDetails").val(row.approvalOpinions);
-	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
-}
-
 //根据业务类型展示相应的业务详情区域
 function judgmentBusinessShowArea(businessType,businessInfo){
+	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
    if(businessType==="01"||businessType==="002"){//课程审批
 	   stuffClassInfoArea(businessInfo);
    }else if(businessType==="03"){//培养计划审批

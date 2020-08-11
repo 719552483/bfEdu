@@ -92,8 +92,57 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 		return;
 	}
 
-	//规则检查   todo
-	
+
+	//用户名只能为长度为25
+	if (username.length>25) {
+		toastr.warning('用户名只长度超过25');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	//由数字和26个英文字母组成的字符串
+	var userNameTest = /^[A-Za-z0-9]+$/;
+	if (!userNameTest.test(username)) {
+		toastr.warning('用户名只由数字和26个英文字母组成');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	//密码长度验证
+	if (pwd.length>10) {
+		toastr.warning('密码长度超过10');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	//密码组成验证
+	if (!pwd.test(username)) {
+		toastr.warning('密码只由数字和26个英文字母组成');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	var patter_special_char = /[,;；，《》]+/;
+	//用户名特殊字符验证
+	if (!username.test(patter_special_char)) {
+		toastr.warning('用户名不允许包含特殊字符');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	//密码特殊字符验证
+	if (!pwd.test(patter_special_char)) {
+		toastr.warning('密码不允许包含特殊字符');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("用户"+username);
 	$(".remindActionType").html("生成");
