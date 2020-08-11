@@ -505,7 +505,7 @@ public class ApprovalProcessService {
 
                 break;
             case"07":
-                object = edu101Dao.queryJzghBy101ID(businessKey);
+                object = edu101Dao.queryTeacherBy101ID(businessKey);
                 break;
             default:
                 break;
@@ -513,7 +513,13 @@ public class ApprovalProcessService {
         return object;
     }
 
+    /**
+     * 获取审批历史记录分组
+     * @param edu600BO
+     * @return
+     */
     public List<Edu601> getApprovalHistory(Edu600BO edu600BO) {
+        List<Edu601> historyList = new ArrayList<>();
         return null;
     }
 }
