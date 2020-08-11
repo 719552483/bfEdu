@@ -49,8 +49,8 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "select * from edu201 e where e.Edu108_ID=?1 and e.sszt='pass'", nativeQuery = true)
 	Edu201 getTaskByEdu108Id(String edu108id);
 
-	//根据108ID查询任务书
-	@Query(value = "select * from edu201 e where e.Edu108_ID=?1", nativeQuery = true)
+	//根据201ID查询任务书
+	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)
 	Edu201 getTaskById(String edu108id);
 
 	//审批结束后回写状态
