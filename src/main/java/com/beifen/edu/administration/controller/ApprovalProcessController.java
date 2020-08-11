@@ -148,4 +148,22 @@ public class ApprovalProcessController {
         return returnMap;
     }
 
+    /**
+     *获取审批记录分组信息
+     * @param approvalText
+     * @return
+     */
+    @RequestMapping(value = "getHistoryDetail",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getHistoryDetail(@RequestParam("approvalText") String approvalText) {
+        boolean result = true;
+        Map<String, Object> returnMap = new HashMap();
+        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+        Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
+        List<Edu601> approvalHistory = approvalProcessService.getHistoryDetail(edu600BO);
+        returnMap.put("approvalHistory", approvalHistory);
+        returnMap.put("result", result);
+        return returnMap;
+    }
+
 }

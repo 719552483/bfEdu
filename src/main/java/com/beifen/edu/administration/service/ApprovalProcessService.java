@@ -520,6 +520,49 @@ public class ApprovalProcessService {
      */
     public List<Edu601> getApprovalHistory(Edu600BO edu600BO) {
         List<Edu601> historyList = new ArrayList<>();
-        return null;
+
+        Specification<Edu601> specification = new Specification<Edu601>() {
+            public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu600BO.getBusinessType() != null && !"".equals(edu600BO.getBusinessType())) {
+                    predicates.add(cb.equal(root.<String> get("businessType"), edu600BO.getBusinessType()));
+                }
+                if (edu600BO.getProposerKey() != null && !"".equals(edu600BO.getProposerKey())) {
+                    predicates.add(cb.equal(root.<String> get("proposerKey"), edu600BO.getProposerKey()));
+                }
+                if (edu600BO.getExaminerkey() != null && !"".equals(edu600BO.getExaminerkey())) {
+                    predicates.add(cb.equal(root.<String> get("examinerKey"), edu600BO.getExaminerkey()));
+                }
+                query.groupBy(root.<String> get("edu600Id"));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        historyList = edu601Dao.findAll(specification);
+
+        return historyList;
+    }
+
+    /**
+     * 获取审批历史记录分组
+     * @param edu600BO
+     * @return
+     */
+    public List<Edu601> getHistoryDetail(Edu600BO edu600BO) {
+        List<Edu601> historyList = new ArrayList<>();
+
+        Specification<Edu601> specification = new Specification<Edu601>() {
+            public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu600BO.getEdu600Id() != null && !"".equals(edu600BO.getEdu600Id())) {
+                    predicates.add(cb.equal(root.<String> get("edu600Id"), edu600BO.getEdu600Id()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        historyList = edu601Dao.findAll(specification);
+
+        return historyList;
     }
 }
