@@ -152,7 +152,140 @@ function stuffApprovalMangerTable(tableInfo){
 
 //查看审批详情
 function approvalInfo(row) {
-	$.showModal("#approvalDetailsModal",false);
+	var sendObject=new Object();
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getApprovalDeatils",
+		data: {
+			"approvalText":JSON.stringify(row),
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				$.showModal("#approvalDetailsModal",false);
+				stuffApprovalInfoArea(row);
+				judgmentBusinessShowArea(row.businessType,backjson.businessInfo);
+			} else {
+				toastr.warning('操作，请重试');
+			}
+		}
+	});
+}
+
+//填充详情模态框中审批详情
+function stuffApprovalInfoArea(row){
+	$("#splxlx_forDetails").val(row.businessName);
+	$("#sqr_forDetails").val(row.proposerName);
+	$("#fqsj_forDetails").val(timeStamp2String(row.creatDate));
+	$("#sybsqr_forDetails").val(row.lastPersonName);
+	$("#sybspyj_forDetails").val(row.lastApprovalOpinions);
+	$("#spyj_forDetails").val(row.approvalOpinions);
+	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+}
+
+//根据业务类型展示相应的业务详情区域
+function judgmentBusinessShowArea(businessType,businessInfo){
+   if(businessType==="01"||businessType==="002"){//课程审批
+	   stuffClassInfoArea(businessInfo);
+   }else if(businessType==="03"){//培养计划审批
+	   stuffCulturePlanInfoArea(businessInfo);
+   }else if(businessType==="04"){//教学任务书审批
+	   stuffTaskInfoArea(businessInfo);
+   }else if(businessType==="05"){//学生审批
+	   stuffStudentInfoArea(businessInfo);
+   }else if(businessType==="06"||businessType==="07"){//教师审批
+
+   }
+}
+
+//填充课程审批信息区域
+function stuffClassInfoArea(businessInfo){
+	$("#approvalDetailsModal").find(".moadalTitle").html("课程审批详情");
+	$(".studentStopApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.teacherApprovalArea").hide();
+	$(".classApprovalArea").show();
+	$("#className").val(businessInfo.kcmc);
+	$("#classCode").val(businessInfo.kcdm);
+	$("#calssFzr").val(businessInfo.kcfzr);
+	$("#calssType").val(businessInfo.kclx);
+	$("#calssXz").val(businessInfo.kcxz);
+	$("#calssLlxs").val(businessInfo.llxs);
+	$("#calssSjxs").val(businessInfo.sjxs);
+	$("#classJzxs").val(businessInfo.jzxs);
+	$("#classFsxs").val(businessInfo.fsxs);
+	$("#calssZxs").val(businessInfo.zxs);
+	$("#classXf").val(businessInfo.xf);
+	$("#classBz").val(businessInfo.bz);
+	var ksfsTxt="";
+	var ksfsArray=EJDMElementInfo.ksfs;
+	for (var i = 0; i < ksfsArray.length; i++) {
+       if(businessInfo.ksfs===ksfsArray[i].ejdm){
+		   ksfsTxt=ksfsArray[i].ejdmz;
+	   }
+	}
+	$("#classKsff").val(ksfsTxt);
+}
+
+//培养计划审批信息区域
+function stuffCulturePlanInfoArea(businessInfo){
+	var culturePlanInfo=businessInfo.edu108;
+	var relationInfo=businessInfo.edu107;
+	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
+	$(".classApprovalArea,.studentStopApprovalArea,.taskApprovalArea,.teacherApprovalArea").hide();
+	$(".culturePlanApprovalArea").show();
+	$("#culturePlan_cc").val(relationInfo.edu103mc);
+	$("#culturePlan_xb").val(relationInfo.edu104mc);
+	$("#culturePlan_nj").val(relationInfo.edu105mc);
+	$("#culturePlan_zy").val(relationInfo.edu106mc);
+	$("#culturePlan_kcmc").val(culturePlanInfo.kcmc);
+	$("#culturePlan_kcdm").val(culturePlanInfo.kcdm);
+	$("#culturePlan_llxs").val(culturePlanInfo.llxs);
+	$("#culturePlan_sjxs").val(culturePlanInfo.sjxs);
+	$("#culturePlan_fsxs").val(culturePlanInfo.fsxs);
+	$("#culturePlan_jzxs").val(culturePlanInfo.jzxs);
+	$("#culturePlan_zxs").val(culturePlanInfo.zxs);
+	$("#culturePlan_zzs").val(culturePlanInfo.zzs);
+	$("#culturePlan_zxs").val(culturePlanInfo.zhouxs);
+	$("#culturePlan_kclx").val(culturePlanInfo.kclx);
+	$("#culturePlan_kcxz").val(culturePlanInfo.kcxz);
+	$("#culturePlan_ksfs").val(culturePlanInfo.ksfs);
+}
+
+//教学任务书审批信息区域
+function stuffTaskInfoArea(businessInfo){
+	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
+	$(".classApprovalArea,.culturePlanApprovalArea,.studentStopApprovalArea,.teacherApprovalArea").hide();
+	$(".taskApprovalArea").show();
+}
+
+//填充学生信息区域
+function stuffStudentInfoArea(businessInfo){
+	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
+	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.teacherApprovalArea").hide();
+	$(".studentStopApprovalArea").show();
+	$("#studentName").val(businessInfo.xm);
+	$("#studentXH").val(businessInfo.xh);
+	$("#studentAge").val(businessInfo.nl);
+	businessInfo.xb==="M"?$("#studentSex").val("男"):$("#studentSex").val("女");
+	$("#studentNation").val(businessInfo.mz);
+	$("#studentBrithdate").val(businessInfo.csrq);
+	$("#studentLevel").val(businessInfo.pyccmc);
+	$("#studentDepartment").val(businessInfo.szxbmc);
+	$("#studentGrade").val(businessInfo.njmc);
+	$("#studentMajor").val(businessInfo.zymc);
+	$("#studentClass").val(businessInfo.xzbname);
+	$("#studentIDcard").val(businessInfo.sfzh);
+	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 }
 
 //审批通过

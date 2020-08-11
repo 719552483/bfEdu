@@ -47,6 +47,6 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	public List<Edu107> queryPyjh(String levelCode, String departmentCode, String gradeCode, String majorCode);
 
 	// 根据主键查询数据
-	@Query(value = "select * from edu107 e where e.EDU107_ID", nativeQuery = true)
-    Edu107 getEdu107ByID(Long edu107_id);
+	@Query(value = "select * from edu107 e where e.Edu107_ID=?1", nativeQuery = true)
+    Edu107 getEdu107ByID(String edu107_id);
 }

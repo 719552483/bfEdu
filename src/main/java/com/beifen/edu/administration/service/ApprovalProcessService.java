@@ -484,7 +484,7 @@ public class ApprovalProcessService {
                 break;
             case"03":
                 Edu108 edu108 = edu108Dao.queryPlanByEdu108ID(businessKey);
-                Edu107 edu107 = edu107Dao.getEdu107ByID(edu108.getEdu107_ID());
+                Edu107 edu107 = edu107Dao.getEdu107ByID(edu108.getEdu107_ID().toString());
                 TrainingPlanP0 trainingPlanP0 = new TrainingPlanP0();
                 trainingPlanP0.setEdu107(edu107);
                 trainingPlanP0.setEdu108(edu108);

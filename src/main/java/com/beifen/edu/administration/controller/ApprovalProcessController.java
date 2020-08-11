@@ -118,7 +118,7 @@ public class ApprovalProcessController {
      */
     @RequestMapping(value = "getApprovalDeatils",method = RequestMethod.GET)
     @ResponseBody
-    public Object getApprovalDeatils(@RequestParam("getApprovalDeatils") String approvalText) {
+    public Object getApprovalDeatils(@RequestParam("approvalText") String approvalText) {
         boolean result = true;
         Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(approvalText);

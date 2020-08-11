@@ -456,7 +456,8 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(addinfo);
 		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
 		Edu200 addClassInfo = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.
+				class);
 		List<Edu200> allClass = administrationPageService.queryAllClass();
 		// 判断课程名称和代码是否已存在
 		boolean nameHave = false;
@@ -496,7 +497,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("updateClass")
 	@ResponseBody
-	public Object updateClass(@RequestParam("updateinfo") String updateinfo,@RequestParam("updateinfo") String approvalobect) {
+	public Object updateClass(@RequestParam("updateinfo") String updateinfo,@RequestParam("approvalobect") String approvalobect) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
 		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);

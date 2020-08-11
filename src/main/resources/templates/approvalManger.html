@@ -144,6 +144,588 @@
 		</div>
 	</div>
 
+	<!-- 审批详情Modal -->
+	<div class="modal fade bs-example-modal-lg" id="approvalDetailsModal" tabindex="-1" role="dialog" aria-labelledby="addSiteModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+
+				<div class="modal-body">
+					<div class="formtitle" style="margin-bottom: 6px;margin-left: 25px;margin-right: 42px;">
+						<span>审批信息</span>
+					</div>
+					<div class="manyInfoShow">
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">审批业务类型</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="splxlx_forDetails" placeholder="请填写审批业务类型..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">申请人</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="sqr_forDetails" placeholder="请填写申请人..."/>
+									</div>
+								</ul>
+							</div>
+							<div class="clear"></div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">发起时间</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="fqsj_forDetails" placeholder="请填写发起时间..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">上一步申请人</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="sybsqr_forDetails" placeholder="暂无上一步申请人..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">上一步审批意见</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="sybspyj_forDetails" placeholder="暂无上一步审批意见..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">审批意见</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="spyj_forDetails" placeholder="暂无审批意见..."/>
+									</div>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+
+					<div class="formtitle" style="margin-bottom: 6px;margin-left: 25px;margin-right: 42px;">
+						<span>业务详情</span>
+					</div>
+					<div class="classApprovalArea noneStart">
+						<div class="manyInfoShow">
+							<div class="searchArea moreInfoSelectStyle">
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程名称</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="className" placeholder="请填写课程名称..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程代码</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="classCode" placeholder="请填写课程代码..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程负责人</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="calssFzr" placeholder="请填写课程负责人..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程类型</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="calssType" placeholder="请填写课程类型..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程性质</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="calssXz" placeholder="请填写课程性质..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">理论学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="calssLlxs" placeholder="请填写理论学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">实践学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="calssSjxs" placeholder="请填写实践学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">集中学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="classJzxs" placeholder="请填写集中学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">分散学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="classFsxs" placeholder="请填写分散学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">总学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="calssZxs" placeholder="请填写总学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">学分</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="classXf" placeholder="请填写学分..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">考试方法</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="classKsff" placeholder="请填写考试方法..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">备注</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="classBz" placeholder="暂无备注..."/>
+										</div>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="culturePlanApprovalArea noneStart">
+						<div class="manyInfoShow">
+							<div class="searchArea moreInfoSelectStyle">
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">层次</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_cc" placeholder="请填写层次..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">系部</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_xb" placeholder="请填写系部..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">年级</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_nj" placeholder="请填写年级..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">专业</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_zy" placeholder="请填写专业..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程名称</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_kcmc" placeholder="请填写课程名称..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程代码</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_kcdm" placeholder="请填写课程代码..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">理论学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_llxs" placeholder="请填写理论学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">实践学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_sjxs" placeholder="请填写实践学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">分散学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_fsxs" placeholder="请填写分散学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">集中学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_jzxs" placeholder="请填写集中学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">周学时</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_zxs" placeholder="请填写周学时..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">总周数</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_zzs" placeholder="请填写总周数..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程类型</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_kclx" placeholder="请填写课程类型..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程性质</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_kcxz" placeholder="请填写课程性质..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">考试方式</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="culturePlan_ksfs" placeholder="请填写考试方式..."/>
+										</div>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="taskApprovalArea noneStart">
+						<div class="manyInfoShow">
+							<div class="searchArea moreInfoSelectStyle">
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">姓名</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentName" placeholder="请填写姓名..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">学号</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentXH" placeholder="请填写学号..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">年龄</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentAge" placeholder="请填写年龄..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">性别</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentSex" placeholder="请填写性别..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">民族</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentNation" placeholder="请填写民族..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">出生日期</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentBrithdate" placeholder="请填写出生日期..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">层次</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentLevel" placeholder="请填写层次..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">系部</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentDepartment" placeholder="请填写系部..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">年级</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentGrade" placeholder="请填写年级..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">专业</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentMajor" placeholder="请填写专业..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">行政班</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentClass" placeholder="请填写行政班..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">身份证号</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentIDcard" placeholder="请填写身份证号..."/>
+										</div>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="teacherApprovalArea noneStart"></div>
+
+					<div class="studentStopApprovalArea noneStart">
+						<div class="manyInfoShow">
+							<div class="searchArea moreInfoSelectStyle">
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">姓名</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentName" placeholder="请填写姓名..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">学号</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentXH" placeholder="请填写学号..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">年龄</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentAge" placeholder="请填写年龄..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">性别</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentSex" placeholder="请填写性别..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">民族</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentNation" placeholder="请填写民族..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">出生日期</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentBrithdate" placeholder="请填写出生日期..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">层次</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentLevel" placeholder="请填写层次..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">系部</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentDepartment" placeholder="请填写系部..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">年级</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentGrade" placeholder="请填写年级..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">专业</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentMajor" placeholder="请填写专业..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">行政班</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentClass" placeholder="请填写行政班..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">身份证号</label>
+											<input name="" type="text" class="myInput manyInfoInput" id="studentIDcard" placeholder="请填写身份证号..."/>
+										</div>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="clear"></div>
+				</div>
+
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmaddSiteBtn" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
