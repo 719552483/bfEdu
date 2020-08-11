@@ -153,7 +153,7 @@ function approvalHistory(row){
 			hideloding();
 			if (backjson.result) {
 				$.showModal("#historyModal",false);
-				$("#historyModal").find(".moadalTitle").html(backjson.approvalHistory[0].businessName+"历史审批信息");
+				$("#historyModal").find(".moadalTitle").html(backjson.approvalHistory[0].businessName+"历史信息");
 				$(".historyInfo").empty();
 				var historyTxt="";
 				for (var i = 0; i < backjson.approvalHistory.length; i++) {
@@ -164,7 +164,7 @@ function approvalHistory(row){
 						'<span><cite>发起人：</cite><b>'+nullMatter(currentHistory.proposerName)+'</b></span>'+
 						'<span><cite>操作人：</cite><b>'+nullMatter(currentHistory.examinerName)+'</b></span>'+
 						'<span><cite>审批意见：</cite><b>'+nullMatter(currentHistory.approvalOpinions)+'</b></span>'+
-						'<span><cite>审批结果：</cite><b>'+nullMatter(currentHistory.approvalState)+'</b></span>'+
+						'<span><cite>审批结果：</cite><b>'+nullMatter(ejdm2txt(currentHistory.approvalState))+'</b></span>'+
 						'<span><cite>操作时间：</cite><b>'+nullMatter(timeStamp2String(currentHistory.updateDate))+'</b></span>'+
 						'</div></div>' ;
 					if((i+1)!=backjson.approvalHistory.length){
@@ -179,6 +179,19 @@ function approvalHistory(row){
 	});
 }
 
+//获取耳机代码转为页面展示文字
+function ejdm2txt(str){
+	var returnStr="";
+	var spztArray=EJDMElementInfo.spzt;
+	for (var i = 0; i < spztArray.length; i++) {
+		if(str===spztArray[i].ejdm){
+			returnStr=spztArray[i].ejdmz;
+		}
+	}
+	return returnStr;
+}
+
+//空字符串处理
 function nullMatter(str){
 	str==null||str===""?str="暂无":str=str;
 	return str;
