@@ -473,6 +473,11 @@ public class ApprovalProcessService {
     }
 
 
+    /**
+     * 获取审批业务详情
+     * @param edu600BO
+     * @return
+     */
     public Object getApprovalDeatils(Edu600BO edu600BO) {
         String businessType = edu600BO.getBusinessType();
         String businessKey = edu600BO.getBusinessKey().toString();
@@ -491,7 +496,7 @@ public class ApprovalProcessService {
                 object = trainingPlanP0;
                 break;
             case"04":
-                object = edu201Dao.getTaskByEdu108Id(businessKey);
+                object = edu201Dao.getTaskById(businessKey);
                 break;
             case"05":
                 object = edu001Dao.queryStudentBy001ID(businessKey);
@@ -506,5 +511,9 @@ public class ApprovalProcessService {
                 break;
         }
         return object;
+    }
+
+    public List<Edu601> getApprovalHistory(Edu600BO edu600BO) {
+        return null;
     }
 }

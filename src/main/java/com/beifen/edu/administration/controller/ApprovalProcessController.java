@@ -2,6 +2,7 @@ package com.beifen.edu.administration.controller;
 
 import com.beifen.edu.administration.PO.Edu600BO;
 import com.beifen.edu.administration.domian.Edu600;
+import com.beifen.edu.administration.domian.Edu601;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.utility.ReflectUtils;
@@ -129,5 +130,22 @@ public class ApprovalProcessController {
         return returnMap;
     }
 
+    /**
+     *获取审批记录分组信息
+     * @param approvalText
+     * @return
+     */
+    @RequestMapping(value = "getApprovalHistory",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getApprovalHistory(@RequestParam("approvalText") String approvalText) {
+        boolean result = true;
+        Map<String, Object> returnMap = new HashMap();
+        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+        Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
+        List<Edu601> approvalHistory = approvalProcessService.getApprovalHistory(edu600BO);
+        returnMap.put("approvalHistory", approvalHistory);
+        returnMap.put("result", result);
+        return returnMap;
+    }
 
 }
