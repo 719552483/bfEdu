@@ -1,4 +1,4 @@
-package com.beifen.edu.administration.BO;
+package com.beifen.edu.administration.PO;
 
 import com.beifen.edu.administration.domian.Edu600;
 

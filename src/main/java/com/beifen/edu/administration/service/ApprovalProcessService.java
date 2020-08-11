@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.service;
 
-import com.beifen.edu.administration.BO.Edu600BO;
+import com.beifen.edu.administration.PO.Edu600BO;
+import com.beifen.edu.administration.PO.TrainingPlanP0;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import org.apache.commons.beanutils.BeanUtils;
@@ -46,6 +47,8 @@ public class ApprovalProcessService {
     private Edu001Dao edu001Dao;
     @Autowired
     private Edu101Dao edu101Dao;
+    @Autowired
+    private Edu107Dao edu107Dao;
 
     /**
      * 发起审批流程
@@ -480,7 +483,12 @@ public class ApprovalProcessService {
                 object = edu200Dao.queryClassById(businessKey);
                 break;
             case"03":
-                object = edu108Dao.queryPlanByEdu108ID(businessKey);
+                Edu108 edu108 = edu108Dao.queryPlanByEdu108ID(businessKey);
+                Edu107 edu107 = edu107Dao.getEdu107ByID(edu108.getEdu107_ID());
+                TrainingPlanP0 trainingPlanP0 = new TrainingPlanP0();
+                trainingPlanP0.setEdu107(edu107);
+                trainingPlanP0.setEdu108(edu108);
+                object = trainingPlanP0;
                 break;
             case"04":
                 object = edu201Dao.getTaskByEdu108Id(businessKey);

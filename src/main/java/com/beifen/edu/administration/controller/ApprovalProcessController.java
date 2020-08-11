@@ -1,7 +1,6 @@
 package com.beifen.edu.administration.controller;
 
-import com.beifen.edu.administration.BO.Edu600BO;
-import com.beifen.edu.administration.domian.Edu400;
+import com.beifen.edu.administration.PO.Edu600BO;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.service.ApprovalProcessService;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,7 @@ public class ApprovalProcessController {
 
     /**
      * 流程发起入口
-     * @param Edu600
+     * @param edu600
      * @return
      */
     @RequestMapping(value = "startApproval",method = RequestMethod.GET)
@@ -65,6 +63,10 @@ public class ApprovalProcessController {
         return returnMap;
     }
 
+    /**
+     *获取申请人列表
+     * @return
+     */
     @RequestMapping(value = "getProposerList",method = RequestMethod.GET)
     @ResponseBody
     public Object getProposerList() {
@@ -110,7 +112,7 @@ public class ApprovalProcessController {
     }
 
     /**
-     *
+     *获取审批业务详情
      * @param approvalText
      * @return
      */
@@ -126,8 +128,6 @@ public class ApprovalProcessController {
         returnMap.put("result", result);
         return returnMap;
     }
-
-
 
 
 }
