@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.controller;
 
 import com.beifen.edu.administration.PO.Edu600BO;
+import com.beifen.edu.administration.PO.Edu601PO;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.domian.Edu601;
 import com.beifen.edu.administration.domian.Edu990;
@@ -142,7 +143,7 @@ public class ApprovalProcessController {
         Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(approvalText);
         Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
-        List<Edu601> approvalHistory = approvalProcessService.getApprovalHistory(edu600BO);
+        List<Edu601PO> approvalHistory = approvalProcessService.getApprovalHistory(edu600BO);
         returnMap.put("approvalHistory", approvalHistory);
         returnMap.put("result", result);
         return returnMap;
@@ -160,7 +161,7 @@ public class ApprovalProcessController {
         Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(approvalText);
         Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
-        List<Edu601> approvalHistory = approvalProcessService.getHistoryDetail(edu600BO);
+        List<Edu601PO> approvalHistory = approvalProcessService.getHistoryDetail(edu600BO);
         returnMap.put("approvalHistory", approvalHistory);
         returnMap.put("result", result);
         return returnMap;

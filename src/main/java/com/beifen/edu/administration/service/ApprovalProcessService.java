@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.service;
 
 import com.beifen.edu.administration.PO.Edu600BO;
+import com.beifen.edu.administration.PO.Edu601PO;
 import com.beifen.edu.administration.PO.TrainingPlanP0;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
@@ -518,8 +519,9 @@ public class ApprovalProcessService {
      * @param edu600BO
      * @return
      */
-    public List<Edu601> getApprovalHistory(Edu600BO edu600BO) {
+    public List<Edu601PO> getApprovalHistory(Edu600BO edu600BO) {
         List<Edu601> historyList = new ArrayList<>();
+        List<Edu601PO> historyListEx = new ArrayList<>();
 
         Specification<Edu601> specification = new Specification<Edu601>() {
             public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -531,25 +533,52 @@ public class ApprovalProcessService {
                     predicates.add(cb.equal(root.<String> get("proposerKey"), edu600BO.getProposerKey()));
                 }
                 if (edu600BO.getExaminerkey() != null && !"".equals(edu600BO.getExaminerkey())) {
-                    predicates.add(cb.equal(root.<String> get("examinerKey"), edu600BO.getExaminerkey()));
+                    predicates.add(cb.equal(root.<String> get("examinerkey"), edu600BO.getExaminerkey()));
                 }
-                query.groupBy(root.<String> get("edu600Id"));
+//                query.groupBy(root.get("edu600Id,edu601Id,businessType,businessKey"));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
 
         historyList = edu601Dao.findAll(specification);
+        try {
+                for (Edu601 e :  historyList) {
+                    Edu601PO approvalEx = new Edu601PO();
+                    //赋值已有属性
+                    BeanUtils.copyProperties(approvalEx,e);
+                    //查询申请人信息
+                    Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
+                    approvalEx.setProposerName(proposer.getYhm());
+                    //获取当前审批人信息
+                    if(e.getExaminerkey() == null || "".equals(e.getExaminerkey())) {
+                        approvalEx.setExaminerName("");
+                    }else {
+                        Edu990 lastPerson = edu990Dao.queryUserById(e.getExaminerkey().toString());
+                        approvalEx.setExaminerName(lastPerson.getYhm());
+                    }
+                    //获取业务类型信息
+                    String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
+                    approvalEx.setBusinessName(splx);
+                    //将封装数据加入数组
+                    historyListEx.add(approvalEx);
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
 
-        return historyList;
-    }
+                return historyListEx;
+            }
 
     /**
      * 获取审批历史记录分组
      * @param edu600BO
      * @return
      */
-    public List<Edu601> getHistoryDetail(Edu600BO edu600BO) {
+    public List<Edu601PO> getHistoryDetail(Edu600BO edu600BO) {
         List<Edu601> historyList = new ArrayList<>();
+        List<Edu601PO> historyListEx = new ArrayList<>();
 
         Specification<Edu601> specification = new Specification<Edu601>() {
             public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -563,6 +592,33 @@ public class ApprovalProcessService {
 
         historyList = edu601Dao.findAll(specification);
 
-        return historyList;
+        try {
+            for (Edu601 e :  historyList) {
+                Edu601PO approvalEx = new Edu601PO();
+                //赋值已有属性
+                BeanUtils.copyProperties(approvalEx,e);
+                //查询申请人信息
+                Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
+                approvalEx.setProposerName(proposer.getYhm());
+                //获取当前审批人信息
+                if(e.getExaminerkey() == null || "".equals(e.getExaminerkey())) {
+                    approvalEx.setExaminerName("");
+                }else {
+                    Edu990 lastPerson = edu990Dao.queryUserById(e.getExaminerkey().toString());
+                    approvalEx.setExaminerName(lastPerson.getYhm());
+                }
+                //获取业务类型信息
+                String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
+                approvalEx.setBusinessName(splx);
+                //将封装数据加入数组
+                historyListEx.add(approvalEx);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return historyListEx;
     }
 }
