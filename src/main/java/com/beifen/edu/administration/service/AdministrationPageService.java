@@ -1312,7 +1312,12 @@ public class AdministrationPageService {
 		Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(edu201.getEdu108_ID().toString());
 		//总学时
 		double zxs = edu108.getZxs();
-		if (edu203List.size()!=zxs) {
+		//计算排课总课时
+		int ksz = Integer.parseInt(edu202.getKsz());
+		int jsz = Integer.parseInt(edu202.getJsz());
+		int plzks = (jsz - ksz + 1) * edu203List.size();
+
+		if (plzks!=zxs) {
 			isSuccess = false;
 		} else {
 			edu202DAO.save(edu202);
