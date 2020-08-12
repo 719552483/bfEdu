@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import com.beifen.edu.administration.utility.ReflectUtils;
 
-import net.sf.json.JSONObject;
 
 @Configuration
 @Service
@@ -68,6 +67,8 @@ public class AdministrationPageService {
 	private Edu401Dao edu401DAO;
 	@Autowired
 	private Edu500Dao edu500DAO;
+	@Autowired
+	private Edu203Dao edu203Dao;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -1303,8 +1304,13 @@ public class AdministrationPageService {
 
 
     //确认排课
-	public void saveSchedule(Edu202 edu202) {
+	public void saveSchedule(Edu202 edu202, List<Edu203> edu203List) {
 		edu202DAO.save(edu202);
+		String edu202_id = edu202.getEdu202_ID().toString();
+		for (Edu203 edu203 : edu203List) {
+			edu203.setEdu202_ID(edu202_id);
+			edu203Dao.save(edu203);
+		}
 	}
 
     //排课后改变任务是是否已排课
