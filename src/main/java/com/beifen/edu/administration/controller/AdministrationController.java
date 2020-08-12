@@ -4227,14 +4227,16 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/comfirmSchedule")
 	@ResponseBody
-	public Object comfirmSchedule(@RequestParam String scheduleInfo,@RequestParam("scheduleDetail") String scheduleDetail) {
+	public Object comfirmSchedule(@RequestParam("scheduleInfo") String scheduleInfo,@RequestParam("scheduleDetail") String scheduleDetail) {
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(scheduleInfo);
 		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		boolean isSuccess = administrationPageService.saveSchedule(edu202, edu203List);
-		administrationPageService.taskPutSchedule(edu202.getEdu201_ID().toString());
+		if(isSuccess){
+			administrationPageService.taskPutSchedule(edu202.getEdu201_ID().toString());
+		}
 		returnMap.put("result", isSuccess);
 		return returnMap;
 	}
