@@ -19,8 +19,7 @@ public class Edu202 {
 	private String jsz; // 结束周
 	private String skddmc; // 授课地点名称
 	private String skddid; // 授课地点ID
-	private String kjid; // 课节id 可以有多个
-	private String kjmc; // 课节名称
+
 	
 	
 	@Id
@@ -69,17 +68,6 @@ public class Edu202 {
 	public void setSkddid(String skddid) {
 		this.skddid = skddid;
 	}
-	public String getKjid() {
-		return kjid;
-	}
-	public void setKjid(String kjid) {
-		this.kjid = kjid;
-	}
-	public String getKjmc() {
-		return kjmc;
-	}
-	public void setKjmc(String kjmc) {
-		this.kjmc = kjmc;
-	}
+
 
 }

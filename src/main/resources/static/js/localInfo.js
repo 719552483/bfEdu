@@ -100,14 +100,14 @@ function stufflocalInfoTable(tableInfo) {
         exportDataType: "all",
         showExport: true,      //是否显示导出
         exportOptions:{
-            fileName: '教学点导出'  //文件名称
+            fileName: '教学任务点导出'  //文件名称
         },
         striped: true,
         sidePagination: "client",
         toolbar: '#toolbar',
         showColumns: true,
         onPageChange: function() {
-            drawPagination(".localInfoTableArea", "教学点信息");
+            drawPagination(".localInfoTableArea", "教学任务点信息");
         },
         columns: [
             {
@@ -121,7 +121,7 @@ function stufflocalInfoTable(tableInfo) {
             },
             {
                 field: 'jxdmc',
-                title: '教学点名称',
+                title: '教学任务点名称',
                 align: 'left',
                 formatter: paramsMatter
             }, {
@@ -213,10 +213,10 @@ function stufflocalInfoTable(tableInfo) {
             .join('');
     }
 
-    drawPagination(".localInfoTableArea", "教学点信息");
+    drawPagination(".localInfoTableArea", "教学任务点信息");
     drawSearchInput(".localInfoTableArea");
     changeTableNoRsTip();
-    changeColumnsStyle(".localInfoTableArea", "教学点信息");
+    changeColumnsStyle(".localInfoTableArea", "教学任务点信息");
     toolTipUp(".myTooltip");
     btnControl();
 }
@@ -224,7 +224,7 @@ function stufflocalInfoTable(tableInfo) {
 //单个删除教学点
 function removeSite(row){
     $.showModal("#remindModal",true);
-    $(".remindType").html('教学点- '+row.jxdmc+' ');
+    $(".remindType").html('教学任务点- '+row.jxdmc+' ');
     $(".remindActionType").html("删除");
 
     //确认删除教学点
@@ -244,7 +244,7 @@ function removeSites(){
         toastr.warning('暂未选择任何数据');
     } else {
         $.showModal("#remindModal",true);
-        $(".remindType").html("所选教学点");
+        $(".remindType").html("所选教学任务点");
         $(".remindActionType").html("删除");
 
         //确认删除教学点
@@ -338,7 +338,7 @@ function stufflocalInfoDetails(row){
 //预备修改教学点
 function modifySite(row,index){
     $.showModal("#addSiteModal",true);
-    $("#addSiteModal").find(".moadalTitle").html("修改教学点-"+row.jxdmc);
+    $("#addSiteModal").find(".moadalTitle").html("修改教学任务点-"+row.jxdmc);
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
     //清空模态框中元素原始值
     rebackSiteInfo();
@@ -463,7 +463,7 @@ function getnewlocalInfo(){
 //预备添加教学点
 function wantAddSite(){
     rebackSiteInfo();
-    $("#addSiteModal").find(".moadalTitle").html("新增教学点");
+    $("#addSiteModal").find(".moadalTitle").html("新增教学任务点");
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
     $.showModal("#addSiteModal",true);
     //确认按钮绑定事件
@@ -507,7 +507,7 @@ function sendNewSiteInfo(newSiteInfo){
             if (backjson.result) {
                 hideloding();
                 if (backjson.siteHave) {
-                    toastr.warning('该校区已存在此教学点');
+                    toastr.warning('该校区已存在此教学任务点');
                     return;
                 }
                 newSiteInfo.edu500Id=backjson.id;
@@ -607,7 +607,7 @@ function searchAllSite(){
             hideloding();
             if (backjson.result) {
                 if(backjson.siteList.length===0){
-                    toastr.warning('暂无教学点信息');
+                    toastr.warning('暂无教学任务点信息');
                     drawlocalInfoTableEmptyTable();
                 }else{
                     stufflocalInfoTable(backjson.siteList);
@@ -642,7 +642,7 @@ function searchAllSiteBy(searchObject){
             hideloding();
             if (backjson.result) {
                 if(backjson.siteList.length===0){
-                    toastr.warning('暂无教学点信息');
+                    toastr.warning('暂无教学任务点信息');
                     drawlocalInfoTableEmptyTable();
                 }else{
                     stufflocalInfoTable(backjson.siteList);

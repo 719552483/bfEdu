@@ -1148,7 +1148,9 @@ public class AdministrationPageService {
 		for (int i = 0; i < current108s.size(); i++) {
 			Edu201 edu201 = edu201DAO.getTaskByEdu108Id(current108s.get(i).getEdu108_ID().toString());
 			if (edu201 != null) {
-				retrunList.add(edu201);
+				if(edu201.getSfypk()==null){
+					retrunList.add(edu201);
+				}
 			}
 		}
 		return retrunList;
@@ -1214,6 +1216,11 @@ public class AdministrationPageService {
 		return edu400DAO.findAll();
 	}
 
+	// 根据ID查询学年
+	public Edu400 getTermInfoById(String termId) {
+		return edu400DAO.getTermInfoById(termId);
+	}
+
 	// 新增学年
 	public void addNewXn(Edu400 edu400) {
 		edu400DAO.save(edu400);
@@ -1229,10 +1236,10 @@ public class AdministrationPageService {
 		return edu401DAO.findAll();
 	}
 
-    //根据学年获取课节信息
-	public List<Edu401> getKjInfoByXn(String termId) {
-		return edu401DAO.getKjInfoByXn(termId);
-	}
+//    //根据学年获取课节信息
+//	public List<Edu401> getKjInfoByXn(String termId) {
+//		return edu401DAO.getKjInfoByXn(termId);
+//	}
 
 	//获取所有默认课节
 	public List<Edu401>  queryAllDeafultKj() {
@@ -1247,13 +1254,7 @@ public class AdministrationPageService {
 	// 新增课节时获得课节顺序
 	public String getNewKjsh(Edu401 edu401) {
 		List<Edu401> currentKjLenth = null;
-		// 课节是否指定了学年
-		if (edu401.getXnid() != null) {
-			currentKjLenth = edu401DAO.findKjPonitXnAndSjd(edu401.getXnid().toString(), edu401.getSjd());
-		} else {
-			currentKjLenth = edu401DAO.findKjPonitSjd(edu401.getSjd());
-		}
-
+		currentKjLenth = edu401DAO.findKjPonitSjd(edu401.getSjd());
 		return String.valueOf(currentKjLenth.size() + 1);
 	}
 
@@ -1278,11 +1279,7 @@ public class AdministrationPageService {
 		String sjd = remove401.getSjd();
 		int kjsx = Integer.parseInt(remove401.getKjsx());
 		List<Edu401> allEdu401 = null;
-		if (remove401.getXnid() != null) {
-			allEdu401 = edu401DAO.findKjPonitXnAndSjd(remove401.getXnid().toString(), sjd);
-		} else {
-			allEdu401 = edu401DAO.queryDefaultkjsz();
-		}
+		allEdu401 = edu401DAO.queryDefaultkjsz();
 
 		// 课节顺序大于删除课节的课节顺序的 可接顺序减一
 		for (int i = 0; i < allEdu401.size(); i++) {
@@ -1302,6 +1299,17 @@ public class AdministrationPageService {
 	// 修改课节名称
 	public void modifyKjMc(String newKjMc, String kjId) {
 		edu401DAO.modifyKjMc(newKjMc, kjId);
+	}
+
+
+    //确认排课
+	public void saveSchedule(Edu202 edu202) {
+		edu202DAO.save(edu202);
+	}
+
+    //排课后改变任务是是否已排课
+	public void taskPutSchedule(String edu201ID) {
+		edu201DAO.taskPutSchedule(edu201ID);
 	}
 
 	// 课程库搜索课程
@@ -1719,4 +1727,6 @@ public class AdministrationPageService {
 	public void stopClass(String Edu200id) {
 		edu200DAO.updateState(Edu200id,"stop");
 	}
+
+
 }

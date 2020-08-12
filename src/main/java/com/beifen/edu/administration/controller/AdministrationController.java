@@ -1316,38 +1316,29 @@ public class AdministrationController {
 	@ResponseBody
 	public Object getScheduleClassMustInfo(@RequestParam String edu103Id) {
 		Map<String, Object> returnMap = new HashMap();
-
 		//获取学年
 		returnMap.put("termInfo", administrationPageService.queryAllXn());
 		//获取课节
 		returnMap.put("kjInfo", administrationPageService.queryAllDeafultKj());
 		//过滤可选的教室  校区要一致
 		String current103Xq=administrationPageService.queryXqByPyccbm(2, edu103Id);
-		boolean havePlan=true;
-		if(current103Xq==null||current103Xq.equals("")){
-			havePlan=false;
-		}
+		returnMap.put("jxdInfo", administrationPageService.querySiteBySsxqCode(current103Xq));
 
-		if(havePlan){
-			returnMap.put("jxdInfo", administrationPageService.querySiteBySsxqCode(current103Xq));
-		}
-
-		returnMap.put("havePlan", havePlan);
 		returnMap.put("result", true);
 		return returnMap;
 	}
 
 	/**
-	 * 根据学年获取课节信息
+	 * 根据学年获取学年信息
 	 * @param termId
 	 * @return
 	 */
-	@RequestMapping("/getKjInfoByXn")
+	@RequestMapping("/getTermInfoById")
 	@ResponseBody
-	public Object getKjInfoByXn(@RequestParam String termId) {
+	public Object getTermInfoById(@RequestParam String termId) {
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu401> currentKj=administrationPageService.getKjInfoByXn(termId);
-		returnMap.put("currentKj", currentKj);
+		//获取学年
+		returnMap.put("termInfo", administrationPageService.getTermInfoById(termId));
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -4228,6 +4219,25 @@ public class AdministrationController {
 		}
 		returnMap.put("result", true);
 		returnMap.put("canRemove", canRemove);
+		return returnMap;
+	}
+
+
+	/**
+	 * 确认排课
+	 * @param scheduleInfo
+	 * @return
+	 */
+	@RequestMapping("/comfirmSchedule")
+	@ResponseBody
+	public Object comfirmSchedule(@RequestParam String scheduleInfo) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(scheduleInfo);
+		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
+		administrationPageService.saveSchedule(edu202);
+		administrationPageService.taskPutSchedule(edu202.getEdu201_ID().toString());
+		returnMap.put("result", true);
 		return returnMap;
 	}
 

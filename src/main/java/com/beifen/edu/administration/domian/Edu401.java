@@ -13,14 +13,10 @@ import javax.persistence.Table;
 @Table(name = "Edu401")
 public class Edu401 {
 	private Long Edu401_ID;
-	private Long xnid; //学年id
 	private String kjsx; //课节顺序
 	private String kjmc; //课节名称
 	private String sjd; //时间段
-	private String kjsc; //课节时长
-	private String sfwewkj; //是否为额外课节
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -30,12 +26,6 @@ public class Edu401 {
 	}
 	public void setEdu401_ID(Long edu401_ID) {
 		Edu401_ID = edu401_ID;
-	}
-	public Long getXnid() {
-		return xnid;
-	}
-	public void setXnid(Long xnid) {
-		this.xnid = xnid;
 	}
 	public String getKjsx() {
 		return kjsx;
@@ -55,12 +45,7 @@ public class Edu401 {
 	public void setSjd(String sjd) {
 		this.sjd = sjd;
 	}
-	public String getKjsc() {
-		return kjsc;
-	}
-	public void setKjsc(String kjsc) {
-		this.kjsc = kjsc;
-	}
+
 	
 	
 }

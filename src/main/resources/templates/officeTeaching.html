@@ -181,13 +181,40 @@
 					<div class="clear"></div>
 
 					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
+						<span>二、选择开始/结束周</span>
+					</div>
+					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">开始周<b>*</b></label>
+									<select class="isSowIndex" id="startWeek">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">结束周<b>*</b></label>
+									<select class="isSowIndex" id="endWeek">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+
+					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
 						<span>三、选择上课地点</span>
 					</div>
 					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
 						<div class="col4 giveBottom departmentSelectArea">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">授课地点</label>
+									<label class="selectName" style="margin-top: 14px;">授课地点<b>*</b></label>
 									<select class="isSowIndex" id="skdd">
 										<option value="seleceConfigTip">暂不可选</option>
 									</select>
@@ -198,7 +225,7 @@
 					<div class="clear"></div>
 
 					<div class="formtitle" style="clear:both;margin-bottom: 25px;">
-						<span>二、选择课节</span>
+						<span>四、选择课节</span>
 					</div>
 					<div class="kjArea">
 						<div class="kjForForenoonArea">
@@ -231,9 +258,21 @@
 					</div>
 					<div class="clear"></div>
 
-					<div class="formtitle noneStart" style="clear:both;margin-bottom: 25px;">
-						<span>四、排课结果</span>
+					<div class="rsArea noneStart">
+						<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+							<span>排课结果</span>
+						</div>
+						<div class="rsInfoTxt">
+							排课结果展示
+						</div>
+						<div class="clear"></div>
+						<div class="tools scheduleToolsArea">
+							<ul class="toolbar" style="padding-top: 12px;">
+								<li class="click" id="confirm"><span><img src="img/right.png" style="width: 24px;"/></span>确认排课</li>
+							</ul>
+						</div>
 					</div>
+
 				</div>
 			</div>
        </div>
