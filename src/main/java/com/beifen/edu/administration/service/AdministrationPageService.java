@@ -1317,7 +1317,7 @@ public class AdministrationPageService {
 		int jsz = Integer.parseInt(edu202.getJsz());
 		int plzks = (jsz - ksz + 1) * edu203List.size();
 
-		if (plzks!=zxs) {
+		if (plzks < zxs) {
 			isSuccess = false;
 		} else {
 			edu202DAO.save(edu202);
