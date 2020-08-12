@@ -563,7 +563,7 @@ function confirmPk(){
 			if (backjson.result) {
 				var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
 				$("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
-				returnStartSchedule();
+				controlScheduleArea();
 				toastr.success('排课成功');
 			} else {
 				toastr.warning('排课课时不等于任务书总课时');

@@ -1332,12 +1332,12 @@ public class AdministrationPageService {
 				}
 			});
 
-			//计算最后一周需要上几课时
+			//计算最后一周需要上几课时zxs
 			int weekHour = edu203List.size();
-			double d = weekHour / (edu203List.size());
+			double d = zxs / weekHour;
 			int a = (int)d;
-			double b = weekHour * (1-(d-a));
-			int size = (int)(weekHour - b);
+			double b = zxs * (1-(d-a));
+			int size = (int)(zxs - b);
 			for(int i = 0; i < size+1;  i++) {
 				edu203List.get(i).setEdu202_ID(edu202_id);
 				edu203Dao.save(edu203List.get(i));
