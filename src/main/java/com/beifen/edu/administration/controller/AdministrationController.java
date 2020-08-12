@@ -4233,9 +4233,9 @@ public class AdministrationController {
 		JSONObject jsonObject = JSONObject.fromObject(scheduleInfo);
 		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
-		administrationPageService.saveSchedule(edu202,edu203List);
+		boolean isSuccess = administrationPageService.saveSchedule(edu202, edu203List);
 		administrationPageService.taskPutSchedule(edu202.getEdu201_ID().toString());
-		returnMap.put("result", true);
+		returnMap.put("result", isSuccess);
 		return returnMap;
 	}
 

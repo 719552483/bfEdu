@@ -1304,13 +1304,25 @@ public class AdministrationPageService {
 
 
     //确认排课
-	public void saveSchedule(Edu202 edu202, List<Edu203> edu203List) {
-		edu202DAO.save(edu202);
-		String edu202_id = edu202.getEdu202_ID().toString();
-		for (Edu203 edu203 : edu203List) {
-			edu203.setEdu202_ID(edu202_id);
-			edu203Dao.save(edu203);
+	public boolean saveSchedule(Edu202 edu202, List<Edu203> edu203List) {
+		boolean isSuccess = true;
+		//根据排课计划查找任务书
+		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+		//根据任务书查找培养计划
+		Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(edu201.getEdu108_ID().toString());
+		//总学时
+		double zxs = edu108.getZxs();
+		if (edu203List.size()!=zxs) {
+			isSuccess = false;
+		} else {
+			edu202DAO.save(edu202);
+			String edu202_id = edu202.getEdu202_ID().toString();
+			for (Edu203 edu203 : edu203List) {
+				edu203.setEdu202_ID(edu202_id);
+				edu203Dao.save(edu203);
+			}
 		}
+		return isSuccess;
 	}
 
     //排课后改变任务是是否已排课
