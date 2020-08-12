@@ -1,11 +1,6 @@
 package com.beifen.edu.administration.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -1317,15 +1312,41 @@ public class AdministrationPageService {
 		int jsz = Integer.parseInt(edu202.getJsz());
 		int plzks = (jsz - ksz + 1) * edu203List.size();
 
-		if (plzks!=zxs) {
+		if (plzks < zxs) {
 			isSuccess = false;
 		} else {
 			edu202DAO.save(edu202);
 			String edu202_id = edu202.getEdu202_ID().toString();
-			for (Edu203 edu203 : edu203List) {
-				edu203.setEdu202_ID(edu202_id);
-				edu203Dao.save(edu203);
+			//重新排列课节集合
+			Collections.sort(edu203List,new Comparator<Edu203>(){
+				public int compare(Edu203 arg0, Edu203 arg1) {
+					// 第一次比较星期
+					int i = arg0.getXqid().compareTo(arg1.getXqid());
+					// 如果星期相同则进行第二次比较
+					if(i==0){
+						// 第二次比较课节
+						int j=arg0.getKjid().compareTo(arg1.getKjid());
+						return j;
+					}
+					return i;
+				}
+			});
+
+			//计算最后一周需要上几课时
+			int weekHour = edu203List.size();
+			double d = weekHour / (edu203List.size());
+			int a = (int)d;
+			double b = weekHour * (1-(d-a));
+			int size = (int)(weekHour - b);
+			for(int i = 0; i < size+1;  i++) {
+				edu203List.get(i).setEdu202_ID(edu202_id);
+				edu203Dao.save(edu203List.get(i));
 			}
+
+//			for (Edu203 edu203 : edu203List) {
+//				edu203.setEdu202_ID(edu202_id);
+//				edu203Dao.save(edu203);
+//			}
 		}
 		return isSuccess;
 	}
