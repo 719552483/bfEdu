@@ -332,44 +332,80 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 					toastr.warning('暂无可选教学点场地信息');
 					return;
 				}
-
-				var configSelectTxt="请选择";
-				var termStr='<option value="seleceConfigTip">'+configSelectTxt+'</option>';
-				var siteStr='<option value="seleceConfigTip">'+configSelectTxt+'</option>';
-
-				for (var i = 0; i < backjson.termInfo.length; i++) {
-					termStr += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc
-						+ '</option>';
-				}
-				stuffManiaSelect("#term", termStr);
-				for (var i = 0; i < backjson.jxdInfo.length; i++) {
-					siteStr += '<option value="' + backjson.jxdInfo[i].edu500Id + '">' + backjson.jxdInfo[i].jxdmc
-						+ '</option>';
-				}
-				stuffManiaSelect("#skdd", siteStr);
-
-				stuffKjTables(backjson.kjInfo);
-
-				$(".scheduleClassesMainArea").hide();
-				$(".scheduleSingleClassArea").show();
+				//渲染详情title
 				$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc);
 
-				//为学年绑定change事件 重载开始结束周信息
-				$("#term").change(function() {
-					$(".rsArea").show();
-					redrawStartAndEndWeek();
-				});
-				//返回按钮事件绑定
-				$('#returnStartSchedule').unbind('click');
-				$('#returnStartSchedule').bind('click', function(e) {
-					returnStartSchedule();
-					e.stopPropagation();
-				});
+				//渲染各个下拉框
+				var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
+				stuffTermArae(backjson.termInfo,configSelectTxt);
+				stuffJxdArae(backjson.jxdInfo,configSelectTxt);
+				drawStartAndEndWeek(backjson.termInfo[0]);
+				stuffKjArae(backjson.kjInfo,configSelectTxt,configSelectTxt);
+				controlScheduleArea();
+				scheduleSingleClassBtnBind();
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
 		}
 	});
+}
+
+//填充学年下拉框
+function stuffTermArae(termInfo,str){
+	for (var i = 0; i < termInfo.length; i++) {
+		str += '<option value="' + termInfo[i].edu400_ID + '">' + termInfo[i].xnmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#term", str);
+
+	//为学年绑定change事件 重载开始结束周信息
+	$("#term").change(function() {
+		$(".rsArea").show();
+		redrawStartAndEndWeek();
+	});
+}
+
+//填充教学点下拉框
+function stuffJxdArae(jxdInfo,str){
+	for (var i = 0; i < jxdInfo.length; i++) {
+		str += '<option value="' +jxdInfo[i].edu500Id + '">' + jxdInfo[i].jxdmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#skdd", str);
+}
+
+//填充课节下拉框
+function stuffKjArae(kjInfo,str){
+	for (var i = 0; i < kjInfo.length; i++) {
+		str += '<option value="' +kjInfo[i].edu401_ID + '">' + kjInfo[i].kjmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#Kj", str);
+}
+
+//单个课程排课区域按钮事件绑定
+function scheduleSingleClassBtnBind(){
+	//返回按钮事件绑定
+	$('#returnStartSchedule').unbind('click');
+	$('#returnStartSchedule').bind('click', function(e) {
+		controlScheduleArea();
+		e.stopPropagation();
+	});
+
+	//新增星期对应的课节
+	$('.addKj').unbind('click');
+	$('.addKj').bind('click', function(e) {
+		weekAddKj();
+		e.stopPropagation();
+	});
+}
+
+//新增星期对应的课节
+function weekAddKj(){
+     var Str=$(".kjArea:first").html();
+	 $(".kjArea").append(Str);
+	 $(".kjArea").find(".addBTnArea:last").remove();
+	 var all
 }
 
 //根据学年渲染开始结束周
@@ -385,167 +421,6 @@ function drawStartAndEndWeek(allWeeks){
 		configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
 	}
 	stuffManiaSelect("#endWeek", configStr);
-}
-
-//填充课节信息的三个表
-function stuffKjTables(kjInfo){
-	var ForenoonArray=new Array();
-	var AfternoonArray=new Array();
-	var EveingArray=new Array();
-	for (var i = 0; i < kjInfo.length; i++) {
-        if(kjInfo[i].sjd==="forenoon"){
-			ForenoonArray.push(kjInfo[i]);
-		}else if(kjInfo[i].sjd==="afternoon"){
-			AfternoonArray.push(kjInfo[i]);
-		}else{
-			EveingArray.push(kjInfo[i]);
-		}
-	}
-
-	//上午表
-	$('#kjForForenoonTable').bootstrapTable('destroy').bootstrapTable({
-		data: ForenoonArray,
-		pagination: true,
-		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
-		showToggle: false,
-		showFooter: false,
-		clickToSelect: true,
-		search: false,
-		editable: false,
-		striped: true,
-		sidePagination: "client",
-		toolbar: '#toolbar',
-		showColumns: false,
-		onPageChange: function() {
-			drawPagination(".kjForForenoonArea", "上午课节");
-		},
-		columns: [
-			{
-				field : 'check',
-				checkbox : true
-			},{
-				field: 'edu401_ID',
-				title: '唯一标识',
-				align: 'center',
-				visible: false
-			},
-			{
-				field: 'kjsx',
-				title: '课节顺序',
-				align: 'left',
-				formatter: paramsMatter
-			}, 	{
-				field: 'kjmc',
-				title: '课节名称',
-				align: 'left',
-				formatter: paramsMatter
-
-			}
-		]
-	});
-	drawPagination(".kjForForenoonArea", "上午课节");
-	toolTipUp(".myTooltip");
-
-	//下午表
-	$('#kjFoAfternoonTable').bootstrapTable('destroy').bootstrapTable({
-		data: AfternoonArray,
-		pagination: true,
-		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
-		showToggle: false,
-		showFooter: false,
-		clickToSelect: true,
-		search: false,
-		editable: false,
-		striped: true,
-		sidePagination: "client",
-		toolbar: '#toolbar',
-		showColumns: false,
-		onPageChange: function() {
-			drawPagination(".kjFoAfternoonArea", "下午课节");
-		},
-		columns: [
-			{
-				field : 'check',
-				checkbox : true
-			},{
-				field: 'edu401_ID',
-				title: '唯一标识',
-				align: 'center',
-				visible: false
-			},
-			{
-				field: 'kjsx',
-				title: '课节顺序',
-				align: 'left',
-				formatter: paramsMatter
-			}, 	{
-				field: 'kjmc',
-				title: '课节名称',
-				align: 'left',
-				formatter: paramsMatter
-
-			}
-		]
-	});
-	drawPagination(".kjFoAfternoonArea", "下午课节");
-	toolTipUp(".myTooltip");
-
-
-	//晚上表
-	$('#kjForEveingTable').bootstrapTable('destroy').bootstrapTable({
-		data: EveingArray,
-		pagination: true,
-		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
-		showToggle: false,
-		showFooter: false,
-		clickToSelect: true,
-		search: false,
-		editable: false,
-		striped: true,
-		sidePagination: "client",
-		toolbar: '#toolbar',
-		showColumns: false,
-		onPageChange: function() {
-			drawPagination(".kjForEveingTableArea", "晚上课节");
-		},
-		columns: [
-			{
-				field : 'check',
-				checkbox : true
-			},{
-				field: 'edu401_ID',
-				title: '唯一标识',
-				align: 'center',
-				visible: false
-			},
-			{
-				field: 'kjsx',
-				title: '课节顺序',
-				align: 'left',
-				formatter: paramsMatter
-			}, 	{
-				field: 'kjmc',
-				title: '课节名称',
-				align: 'left',
-				formatter: paramsMatter
-
-			}
-		]
-	});
-	drawPagination(".kjForEveingTableArea", "晚上课节");
-	toolTipUp(".myTooltip");
-}
-
-//返回待排课程区域
-function returnStartSchedule(){
-	$(".scheduleClassesMainArea").show();
-	$(".scheduleSingleClassArea").hide();
 }
 
 //重新渲染开始结束周
@@ -673,6 +548,12 @@ function getPKInfo(){
 	returnObject.kjmc=JSON.stringify(kjmcArrays);
 	returnObject.edu201_ID=taskId;
 	return returnObject;
+}
+
+//返回待排课程区域
+function controlScheduleArea(){
+	$(".scheduleClassesMainArea").toggle();
+	$(".scheduleSingleClassArea").toggle();
 }
 
 //必选检索条件检查
