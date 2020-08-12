@@ -4222,16 +4222,18 @@ public class AdministrationController {
 	/**
 	 * 确认排课
 	 * @param scheduleInfo
+	 * @param scheduleDetail
 	 * @return
 	 */
 	@RequestMapping("/comfirmSchedule")
 	@ResponseBody
-	public Object comfirmSchedule(@RequestParam String scheduleInfo) {
+	public Object comfirmSchedule(@RequestParam String scheduleInfo,@RequestParam("scheduleDetail") String scheduleDetail) {
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(scheduleInfo);
 		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
-		administrationPageService.saveSchedule(edu202);
+		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
+		administrationPageService.saveSchedule(edu202,edu203List);
 		administrationPageService.taskPutSchedule(edu202.getEdu201_ID().toString());
 		returnMap.put("result", true);
 		return returnMap;
