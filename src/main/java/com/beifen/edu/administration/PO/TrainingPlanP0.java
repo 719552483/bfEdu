@@ -4,8 +4,8 @@ import com.beifen.edu.administration.domian.Edu107;
 import com.beifen.edu.administration.domian.Edu108;
 
 public class TrainingPlanP0 {
-    private Edu108 edu108;
-    private Edu107 edu107;
+    private Edu108 edu108;//培养计划-->课程 -->行政班 关系表
+    private Edu107 edu107;//层次关系维护表
 
     public Edu108 getEdu108() {
         return edu108;

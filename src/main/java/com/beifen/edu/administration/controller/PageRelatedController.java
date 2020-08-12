@@ -160,4 +160,9 @@ public class PageRelatedController {
 	public String localInfoPage() {
 		return "localInfo";
 	}
+
+	@RequestMapping("localUsed")
+	public String localUsedPage() {
+		return "localUsed";
+	}
 }

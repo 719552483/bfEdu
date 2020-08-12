@@ -2,17 +2,15 @@ package com.beifen.edu.administration.domian;
 
 import javax.persistence.*;
 
-//教学点实体类
+//教学任务点实体类
 @Entity
 @Table(name = "Edu500")
 public class Edu500 {
 
-  private Long edu500Id;
-  private String jxdmc;
-  private String ssxq;
+  private Long edu500Id;//主键
+  private String jxdmc;//教学任务点名称
+  private String ssxq;//教学任务点
   private String ssxqCode;
-  private String pkzyx;
-  private String pkzyxCode;
   private String rnrs;
   private String glxb;
   private String glxbCode;
@@ -64,15 +62,6 @@ public class Edu500 {
 
   public void setSsxq(String ssxq) {
     this.ssxq = ssxq;
-  }
-
-
-  public String getPkzyx() {
-    return pkzyx;
-  }
-
-  public void setPkzyx(String pkzyx) {
-    this.pkzyx = pkzyx;
   }
 
 
@@ -162,14 +151,6 @@ public class Edu500 {
 
   public void setSsxqCode(String ssxqCode) {
     this.ssxqCode = ssxqCode;
-  }
-
-  public String getPkzyxCode() {
-    return pkzyxCode;
-  }
-
-  public void setPkzyxCode(String pkzyxCode) {
-    this.pkzyxCode = pkzyxCode;
   }
 
   public String getGlxbCode() {

@@ -42,7 +42,6 @@ function getSearchAreaSelectInfo(){
                 }else{
                     allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
                 }
-                stuffManiaSelect("#addPasternType", allDepartmentStr);
                 stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
                 stuffManiaSelect("#employDepartment", allDepartmentStr);
 
@@ -127,11 +126,6 @@ function stufflocalInfoTable(tableInfo) {
             }, {
                 field: 'ssxq',
                 title: '所属校区',
-                align: 'left',
-                formatter: paramsMatter
-            }, {
-                field: 'pkzyx',
-                title: '排课占用系部',
                 align: 'left',
                 formatter: paramsMatter
             }, {
@@ -314,7 +308,7 @@ function localInfoDetails(row,index){
 function rebackSiteInfo(){
     var reObject = new Object();
     reObject.InputIds = "#addTeachingPointName,#addCapacity,#addRemarks,#addAddress";
-    reObject.normalSelectIds = "#addSchool,#addPasternType,#addManagementDepartment,#addSiteType,#addSiteNature,#addBuilding,#addStorey,#addSiteManager,#addSiteStatus";
+    reObject.normalSelectIds = "#addSchool,#addManagementDepartment,#addSiteType,#addSiteNature,#addBuilding,#addStorey,#addSiteManager,#addSiteStatus";
     reReloadSearchsWithSelect(reObject);
 }
 
@@ -323,7 +317,6 @@ function stufflocalInfoDetails(row){
     $("#addTeachingPointName").val(row.jxdmc);
     $("#addAddress").val(row.xxdz);
     stuffManiaSelectWithDeafult("#addSchool", row.ssxqCode);
-    stuffManiaSelectWithDeafult("#addPasternType", row.pkzyxCode);
     stuffManiaSelectWithDeafult("#addManagementDepartment", row.glxbCode);
     stuffManiaSelectWithDeafult("#addSiteType", row.cdlxCode);
     stuffManiaSelectWithDeafult("#addSiteNature", row.cdxzCode);
@@ -413,8 +406,6 @@ function getnewlocalInfo(){
     var xxdz= $("#addAddress").val();
     var ssxq = getNormalSelectText("addSchool");
     var ssxqCode = getNormalSelectValue("addSchool");
-    var pkzyx = getNormalSelectText("addPasternType");
-    var pkzyxCode = getNormalSelectValue("addPasternType");
     var rnrs = $("#addCapacity").val();
     var glxb = getNormalSelectText("addManagementDepartment");
     var glxbCode = getNormalSelectValue("addManagementDepartment");
@@ -439,7 +430,6 @@ function getnewlocalInfo(){
     returnObject.jxdmc=jxdmc;
     returnObject.xxdz=xxdz;
     returnObject.ssxq=ssxq;
-    returnObject.pkzyx=pkzyx;
     returnObject.rnrs=rnrs;
     returnObject.glxb=glxb;
     returnObject.cdlx=cdlx;
@@ -450,7 +440,6 @@ function getnewlocalInfo(){
     returnObject.cdzt="空闲";
     returnObject.bz=bz;
     returnObject.ssxqCode=ssxqCode;
-    returnObject.pkzyxCode=pkzyxCode;
     returnObject.glxbCode=glxbCode;
     returnObject.cdlxCode=cdlxCode;
     returnObject.cdxzCode=cdxzCode;
@@ -537,8 +526,6 @@ function getSearchValue(){
     var jxdmc= $("#SiteName").val();
     var ssxq = getNormalSelectText("school");
     var ssxqCode = getNormalSelectValue("school");
-    var pkzyx = getNormalSelectText("employDepartment");
-    var pkzyxCode = getNormalSelectValue("employDepartment");
     var cdlx = getNormalSelectText("siteStype");
     var cdlxCode = getNormalSelectValue("siteStype");
     var cdxz = getNormalSelectText("siteNature");
@@ -557,11 +544,6 @@ function getSearchValue(){
     if(ssxq!==""){
         returnObject.ssxq = ssxq;
         returnObject.ssxqCode = ssxqCode;
-    }
-
-    if(pkzyx!==""){
-        returnObject.pkzyx = pkzyx;
-        returnObject.pkzyxCode = pkzyxCode;
     }
 
     if(cdlx!==""){

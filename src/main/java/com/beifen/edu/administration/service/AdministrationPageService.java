@@ -1680,9 +1680,6 @@ public class AdministrationPageService {
 				if (edu500.getSsxq() != null && !"".equals(edu500.getSsxq())) {
 					predicates.add(cb.equal(root.<String> get("ssxq"),edu500.getSsxq()));
 				}
-				if (edu500.getPkzyx() != null && !"".equals(edu500.getPkzyx())) {
-					predicates.add(cb.equal(root.<String> get("pkzyx"),edu500.getPkzyx()));
-				}
 				if (edu500.getCdlx() != null && !"".equals(edu500.getCdlx())) {
 					predicates.add(cb.equal(root.<String> get("cdlx"),edu500.getCdlx()));
 				}

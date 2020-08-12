@@ -1316,6 +1316,7 @@ public class AdministrationController {
 	@ResponseBody
 	public Object getScheduleClassMustInfo(@RequestParam String edu103Id) {
 		Map<String, Object> returnMap = new HashMap();
+
 		//获取学年
 		returnMap.put("termInfo", administrationPageService.queryAllXn());
 		//获取课节
@@ -4126,7 +4127,6 @@ public class AdministrationController {
 
 		String jxdmc ="";
 		String ssxq = "";
-		String pkzyx = "";
 		String cdlx ="";
 		String cdxz = "";
 		String lf = "";
@@ -4137,9 +4137,6 @@ public class AdministrationController {
 		}
 		if (jsonObject.has("ssxq")){
 			ssxq = jsonObject.getString("ssxq");
-		}
-		if (jsonObject.has("pkzyx")){
-			pkzyx = jsonObject.getString("pkzyx");
 		}
 		if (jsonObject.has("cdlx")){
 			cdlx = jsonObject.getString("cdlx");
@@ -4157,7 +4154,6 @@ public class AdministrationController {
 		Edu500 edu500 = new Edu500();
 		edu500.setJxdmc(jxdmc);
 		edu500.setSsxq(ssxq);
-		edu500.setPkzyx(pkzyx);
 		edu500.setCdlx(cdlx);
 		edu500.setCdxz(cdxz);
 		edu500.setLf(lf);
@@ -4237,6 +4233,62 @@ public class AdministrationController {
 		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
 		administrationPageService.saveSchedule(edu202);
 		administrationPageService.taskPutSchedule(edu202.getEdu201_ID().toString());
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+
+	/**
+	 * 搜索教学使用情况
+	 *
+	 * @param SearchCriteria
+	 * @return returnMap
+	 */
+	@RequestMapping("/searchLocalUsed")
+	@ResponseBody
+	public Object searchLocalUsed(@RequestParam String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+
+		String jxdmc ="";
+		String ssxq = "";
+		String cdlx ="";
+		String cdxz = "";
+		String lf = "";
+		String lc = "";
+		String academicYear = "";
+
+		if (jsonObject.has("academicYear")){
+			jxdmc = jsonObject.getString("academicYear");
+		}
+		if (jsonObject.has("jxdmc")){
+			jxdmc = jsonObject.getString("jxdmc");
+		}
+		if (jsonObject.has("ssxq")){
+			ssxq = jsonObject.getString("ssxq");
+		}
+		if (jsonObject.has("cdlx")){
+			cdlx = jsonObject.getString("cdlx");
+		}
+		if (jsonObject.has("cdxz")){
+			cdxz = jsonObject.getString("cdxz");
+		}
+		if (jsonObject.has("lf")){
+			lf = jsonObject.getString("lf");
+		}
+		if (jsonObject.has("lc")){
+			lc = jsonObject.getString("lc");
+		}
+
+		Edu500 edu500 = new Edu500();
+		edu500.setJxdmc(jxdmc);
+		edu500.setSsxq(ssxq);
+		edu500.setCdlx(cdlx);
+		edu500.setCdxz(cdxz);
+		edu500.setLf(lf);
+		edu500.setLc(lc);
+		List<Edu500> siteList = administrationPageService.searchSite(edu500);
+		returnMap.put("siteList", siteList);
 		returnMap.put("result", true);
 		return returnMap;
 	}
