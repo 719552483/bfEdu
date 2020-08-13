@@ -7,8 +7,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
@@ -1774,4 +1776,14 @@ public class AdministrationPageService {
 	}
 
 
+	//教学点使用率查询
+	public List<LocalUsedPO> searchLocalUsed(LocalUsedPO localUsedPO) {
+		Edu500 edu500 = new Edu500();
+		BeanUtils.copyProperties(edu500,localUsedPO);
+		List<Edu500> siteList = searchSite(edu500);
+
+		List<LocalUsedPO> localUsedPOList = new ArrayList<>();
+
+		return localUsedPOList;
+	}
 }

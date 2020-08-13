@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import org.apache.commons.fileupload.*;
@@ -4284,14 +4285,15 @@ public class AdministrationController {
 			lc = jsonObject.getString("lc");
 		}
 
-		Edu500 edu500 = new Edu500();
-		edu500.setJxdmc(jxdmc);
-		edu500.setSsxq(ssxq);
-		edu500.setCdlx(cdlx);
-		edu500.setCdxz(cdxz);
-		edu500.setLf(lf);
-		edu500.setLc(lc);
-		List<Edu500> siteList = administrationPageService.searchSite(edu500);
+		LocalUsedPO localUsedPO = new LocalUsedPO();
+		localUsedPO.setAcademicYear(academicYear);
+		localUsedPO.setJxdmc(jxdmc);
+		localUsedPO.setSsxq(ssxq);
+		localUsedPO.setCdlx(cdlx);
+		localUsedPO.setCdxz(cdxz);
+		localUsedPO.setLf(lf);
+		localUsedPO.setLc(lc);
+		List<LocalUsedPO> siteList = administrationPageService.searchLocalUsed(localUsedPO);
 		returnMap.put("siteList", siteList);
 		returnMap.put("result", true);
 		return returnMap;
