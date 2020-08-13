@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class Edu203 {
 	private Long Edu203_ID;
 	private String Edu202_ID; //排课表ID
+	private String week;//所在周
 	private String kjid; // 课节id
 	private String kjmc; // 课节名称
 	private String xqid; // 星期id
@@ -64,5 +65,13 @@ public class Edu203 {
 
 	public void setXqmc(String xqmc) {
 		this.xqmc = xqmc;
+	}
+
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
 	}
 }

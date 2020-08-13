@@ -1332,16 +1332,28 @@ public class AdministrationPageService {
 				}
 			});
 
-			//计算最后一周需要上几课时zxs
+			//计算最后一周需要上几课时
 			int weekHour = edu203List.size();
-			double d = zxs / weekHour;
+			double d = weekHour / (edu203List.size());
 			int a = (int)d;
-			double b = zxs * (1-(d-a));
-			int size = (int)(zxs - b);
-			for(int i = 0; i < size+1;  i++) {
-				edu203List.get(i).setEdu202_ID(edu202_id);
-				edu203Dao.save(edu203List.get(i));
+			int lastWeekHour = (int)(weekHour * (1-(d-a))+1);
+			//按周保存排课计划
+			for(int j = 0;j < jsz + 1;j++){
+				Integer saveWeek = ksz + j;
+				for(int i = 0; i < weekHour;  i++) {
+					edu203List.get(i).setEdu202_ID(edu202_id);
+					edu203List.get(i).setEdu202_ID(saveWeek.toString());
+					edu203Dao.save(edu203List.get(i));
+				}
+				if (saveWeek == jsz) {
+					for(int i = 0; i < lastWeekHour;  i++) {
+						edu203List.get(i).setEdu202_ID(edu202_id);
+						edu203List.get(i).setWeek(saveWeek.toString());
+						edu203Dao.save(edu203List.get(i));
+					}
+				}
 			}
+
 
 //			for (Edu203 edu203 : edu203List) {
 //				edu203.setEdu202_ID(edu202_id);
