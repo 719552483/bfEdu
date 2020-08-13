@@ -276,6 +276,7 @@ function getLsInfo(tableid,index,cellName){
 	});
 }
 
+var choosendTeachers=new Array();
 //填充教师表
 function stuffTaecherTable(tableInfo){
 		$('#allTeacherTable').bootstrapTable('destroy').bootstrapTable({
@@ -287,14 +288,28 @@ function stuffTaecherTable(tableInfo){
 			showToggle : false,
 			showFooter : false,
 			clickToSelect : true,
-			singleSelect: true,// 单选checkbox
 			search : true,
 			editable : false,
 			striped : true,
 			toolbar : '#toolbar',
 			showColumns : false,
+			onCheck : function(row) {
+				onCheck(row);
+			},
+			onUncheck : function(row) {
+				onUncheck(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAll(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAll(rows2);
+			},
 			onPageChange : function() {
 				drawPagination(".allClassMangersTableArea", "教师信息");
+				for (var i = 0; i < choosendTeachers.length; i++) {
+					$("#allTeacherTable").bootstrapTable("checkBy", {field:"edu101_ID", values:[choosendTeachers[i].edu101_ID]})
+				}
 			},
 			columns : [ {
 				field : 'edu101_ID',
@@ -304,8 +319,8 @@ function stuffTaecherTable(tableInfo){
 			},{
 				field: 'check',
 				checkbox: true
-			},{
-				field : 'szxb',
+			}, {
+				field : 'szxbmc',
 				title : '系部',
 				align : 'left',
 				formatter : paramsMatter
@@ -340,6 +355,60 @@ function stuffTaecherTable(tableInfo){
 		drawSearchInput(".allClassMangersTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
+}
+
+//单选教师
+function onCheck(row){
+	if(choosendTeachers.length<=0){
+		choosendTeachers.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendTeachers.length; i++) {
+			if(choosendTeachers[i].edu101_ID===row.edu101_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendTeachers.push(row);
+		}
+	}
+}
+
+//单反选教师
+function onUncheck(row){
+	if(choosendTeachers.length<=1){
+		choosendTeachers.length=0;
+	}else{
+		for (var i = 0; i < choosendTeachers.length; i++) {
+			if(choosendTeachers[i].edu101_ID===row.edu101_ID){
+				choosendTeachers.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选教师
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendTeachers.push(row[i]);
+	}
+}
+
+//全反选教师
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu101_ID);
+	}
+
+
+	for (var i = 0; i < choosendTeachers.length; i++) {
+		if(a.indexOf(choosendTeachers[i].edu101_ID)!==-1){
+			choosendTeachers.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //检索任务书表
@@ -523,19 +592,7 @@ function allTaecherReSearch(){
 
 //确认选择教师事件
 function confirmChoosedTeacher(tableId,index,cellName){
-	var choosedTeacher = $("#allTeacherTable").bootstrapTable("getSelections");
-	var checkedNum=0;
-	for (var i = 0; i < choosedTeacher.length; i++) {
-		if(choosedTeacher[i].check){
-			checkedNum++;
-		}
-	}
-	
-	if(checkedNum===0){
-		toastr.warning('暂未选择教师');
-		return;
-	}
-	
+	var teachers = $("#allTeacherTable").bootstrapTable("getSelections");
 	var fieldName1="";
 	var fieldName2="";
 	if(tableId==="#scheduleClassesTable"){
@@ -545,42 +602,79 @@ function confirmChoosedTeacher(tableId,index,cellName){
 		fieldName1=cellName;
 		fieldName2=cellName.substring(0,cellName.length-2);
 	}
-	
-	var choosedTask = $(tableId).bootstrapTable("getSelections");
-	if(choosedTask<=0){
-		$(tableId).bootstrapTable('updateCell', {
-			index: index,
-			field: fieldName1,
-			value: choosedTeacher[0].xm
-		});
-		
-		$(tableId).bootstrapTable('updateCell', {
-			index: index,
-			field: fieldName2,
-			value: JSON.stringify(choosedTeacher[0].edu101_ID) 
-		});
-	}else{
-		for (var i = 0; i < choosedTask.length; i++) {
-			if(choosedTask[i].check){
-				$(tableId).bootstrapTable('updateCell', {
-					index: i,
-					field: fieldName1,
-					value: choosedTeacher[0].xm
-				});
-				
-				$(tableId).bootstrapTable('updateCell', {
-					index: i,
-					field: fieldName2,
-					value:JSON.stringify(choosedTeacher[0].edu101_ID)  
-				});
-			}
-		}
+
+	var mcArray=new Array();
+	var codeArray=new Array();
+	for (var i = 0; i < teachers.length; i++) {
+		mcArray.push(teachers[i].xm);
+		codeArray.push(teachers[i].edu101_ID);
 	}
-	if(tableId==="#scheduleClassesTable"){
-		sfxylcjControlBind();
-	}else{
-		putOutTasksfxylcjControlBind();
-	}
+
+
+	$(tableId).bootstrapTable('updateCell', {
+		index: index,
+		field: fieldName1,
+		value:  JSON.stringify(mcArray)
+	});
+
+	$(tableId).bootstrapTable('updateCell', {
+		index: index,
+		field: fieldName2,
+		value: JSON.stringify(codeArray)
+	});
+
+	// var choosedTeacher = $("#allTeacherTable").bootstrapTable("getSelections")
+	//
+	// if(choosedTeacher.length===0){
+	// 	toastr.warning('暂未选择教师');
+	// 	return;
+	// }
+	//
+	// var fieldName1="";
+	// var fieldName2="";
+	// if(tableId==="#scheduleClassesTable"){
+	// 	fieldName1=cellName;
+	// 	fieldName2=cellName+"Code";
+	// }else{
+	// 	fieldName1=cellName;
+	// 	fieldName2=cellName.substring(0,cellName.length-2);
+	// }
+	//
+	// var choosedTask = $(tableId).bootstrapTable("getSelections");
+	// if(choosedTask<=0){
+	// 	$(tableId).bootstrapTable('updateCell', {
+	// 		index: index,
+	// 		field: fieldName1,
+	// 		value: choosedTeacher[0].xm
+	// 	});
+	//
+	// 	$(tableId).bootstrapTable('updateCell', {
+	// 		index: index,
+	// 		field: fieldName2,
+	// 		value: JSON.stringify(choosedTeacher[0].edu101_ID)
+	// 	});
+	// }else{
+	// 	for (var i = 0; i < choosedTask.length; i++) {
+	// 		if(choosedTask[i].check){
+	// 			$(tableId).bootstrapTable('updateCell', {
+	// 				index: i,
+	// 				field: fieldName1,
+	// 				value: choosedTeacher[0].xm
+	// 			});
+	//
+	// 			$(tableId).bootstrapTable('updateCell', {
+	// 				index: i,
+	// 				field: fieldName2,
+	// 				value:JSON.stringify(choosedTeacher[0].edu101_ID)
+	// 			});
+	// 		}
+	// 	}
+	// }
+	// if(tableId==="#scheduleClassesTable"){
+	// 	sfxylcjControlBind();
+	// }else{
+	// 	putOutTasksfxylcjControlBind();
+	// }
 	$.hideModal();
 }
 
@@ -700,12 +794,35 @@ function checkPutOutInfo(putOutArray){
 
 //发送发布任务书的请求
 function sendPutOutInfo(putOutArray){
+	for (var i = 0; i < putOutArray.length; i++) {
+		var classList=new Array();
+		var teacherList=new Array();
+		var baseTeacherList=new Array();
+		var teacheOb=new Object();
+		var zyteacheOb=new Object();
+		var classOb=new Object();
+		zyteacheOb.edu101_ID=putOutArray[i].zyls;
+		zyteacheOb.teacherName=putOutArray[i].zylsmc;
+		teacheOb.edu101_ID=putOutArray[i].ls;
+		teacheOb.teacherName=putOutArray[i].lsmc;
+		classOb.edu301_ID=putOutArray[i].edu301_ID;
+		classOb.className=putOutArray[i].jxbmc;
+		classList.push(classOb);
+		teacherList.push(teacheOb);
+		baseTeacherList.push(zyteacheOb);
+
+		putOutArray[i].classList=classList;
+		putOutArray[i].teacherList=teacherList;
+		putOutArray[i].baseTeacherList=baseTeacherList;
+	}
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/putOutTask",
 		data: {
-          "taskInfo":JSON.stringify(putOutArray) , "approvalInfo":JSON.stringify(getApprovalobect())
+            "taskInfo":JSON.stringify(putOutArray) ,
+			"approvalInfo":JSON.stringify(getApprovalobect())
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
