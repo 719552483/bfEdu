@@ -1332,33 +1332,25 @@ public class AdministrationPageService {
 				}
 			});
 
-			//计算最后一周需要上几课时
-			int weekHour = edu203List.size();
-			double d = weekHour / (edu203List.size());
-			int a = (int)d;
-			int lastWeekHour = (int)(weekHour * (1-(d-a))+1);
 			//按周保存排课计划
-			for(int j = 0;j < jsz + 1;j++){
-				Integer saveWeek = ksz + j;
-				for(int i = 0; i < weekHour;  i++) {
-					edu203List.get(i).setEdu202_ID(edu202_id);
-					edu203List.get(i).setEdu202_ID(saveWeek.toString());
-					edu203Dao.save(edu203List.get(i));
-				}
-				if (saveWeek == jsz) {
-					for(int i = 0; i < lastWeekHour;  i++) {
-						edu203List.get(i).setEdu202_ID(edu202_id);
-						edu203List.get(i).setWeek(saveWeek.toString());
-						edu203Dao.save(edu203List.get(i));
+			int currentXs = 0;
+			classCycle:for(int j = ksz;j < jsz + 1;j++){
+				Integer saveWeek = j;
+				for (Edu203 e: edu203List) {
+					Edu203 save = new Edu203();
+					save.setEdu202_ID(edu202_id);
+					save.setWeek(saveWeek.toString());
+					save.setKjid(e.getKjid());
+					save.setKjmc(e.getKjmc());
+					save.setXqid(e.getXqid());
+					save.setXqmc(e.getXqmc());
+					edu203Dao.save(save);
+					currentXs++;
+					if(currentXs == zxs){
+						break classCycle;
 					}
 				}
 			}
-
-
-//			for (Edu203 edu203 : edu203List) {
-//				edu203.setEdu202_ID(edu202_id);
-//				edu203Dao.save(edu203);
-//			}
 		}
 		return isSuccess;
 	}

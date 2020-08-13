@@ -20,7 +20,7 @@ public class Edu201 {
 	private String zymc;  //专业名称
 	private String jxbrs;  //教学班人数
 	private String xzbmc;  //行政班名称
-	private String zxs;  //周学时
+	private String zxs;  //总学时
 	private  String ls;//老师
 	private  String lsmc;//老师姓名
 	private  String zyls;//主要老师
