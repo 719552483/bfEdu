@@ -326,7 +326,7 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 					return;
 				}
 				//渲染详情title
-				$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc+" "+backjson.zxs);
+				$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc+"(总学时："+choosedTask[0].zxs+"课时)");
 
 				//渲染各个下拉框
 				var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
