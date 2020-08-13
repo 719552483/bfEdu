@@ -326,7 +326,7 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 					return;
 				}
 				//渲染详情title
-				$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc);
+				$(".scheduleInfo").html(culturePlanInfo.levelTxt+" "+culturePlanInfo.departmentTxt+" "+culturePlanInfo.gradeTxt+" "+culturePlanInfo.majorTxt+" "+choosedTask[0].kcmc+" "+backjson.zxs);
 
 				//渲染各个下拉框
 				var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
@@ -523,8 +523,8 @@ function redrawStartAndEndWeek(){
 
 //确认排课
 function confirmPk(){
-    var scheduleInfo=getPKInfo();
-	if(typeof scheduleInfo ==='undefined'){
+    var PKInfo=getPKInfo();
+	if(typeof PKInfo ==='undefined'){
 		return;
 	}
 
@@ -537,7 +537,7 @@ function confirmPk(){
 		cache: false,
 		url: "/comfirmSchedule",
 		data:{
-			"scheduleInfo":JSON.stringify(scheduleInfo),
+			"scheduleInfo":JSON.stringify(PKInfo),
 			"scheduleDetail":JSON.stringify(scheduleInfo)
 		},
 		dataType: 'json',

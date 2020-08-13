@@ -1,7 +1,5 @@
 package com.beifen.edu.administration.dao;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,4 +14,7 @@ public interface Edu400Dao extends  JpaRepository<Edu400, Long>,JpaSpecification
     @Query(value = "select * from edu400 e  where  e.Edu400_ID =?1", nativeQuery = true)
     public Edu400  getTermInfoById(String termId);
 
+    //根据学年查总周数
+    @Query(value = "select zzs from edu400 e  where  e.xnmc =?1", nativeQuery = true)
+    String getWeekByYear(String academicYear);
 }

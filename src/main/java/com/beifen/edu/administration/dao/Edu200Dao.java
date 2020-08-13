@@ -39,4 +39,8 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "update edu200 e set zt = ?2 where e.bf200_ID=?1", nativeQuery = true)
 	void updateState(String businessKey, String state);
+
+	//根据教学点名称查询课程ID
+	@Query(value = "select edu202_ID from edu202 e where e.skddmc=?1", nativeQuery = true)
+    List<String> findIdByJxdmc(String jxdmc);
 }

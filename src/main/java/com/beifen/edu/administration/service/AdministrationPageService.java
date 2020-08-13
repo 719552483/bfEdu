@@ -1781,8 +1781,17 @@ public class AdministrationPageService {
 		Edu500 edu500 = new Edu500();
 		BeanUtils.copyProperties(edu500,localUsedPO);
 		List<Edu500> siteList = searchSite(edu500);
-
+		//查找学年总周数
+		int weeks = Integer.parseInt(edu400DAO.getWeekByYear(localUsedPO.getAcademicYear()));
+		Integer countUsed = weeks * 12;
 		List<LocalUsedPO> localUsedPOList = new ArrayList<>();
+		for (Edu500 e : siteList) {
+			LocalUsedPO save = new LocalUsedPO();
+			List<String> edu202Ids = edu200DAO.findIdByJxdmc(e.getJxdmc());
+			List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
+
+		}
+
 
 		return localUsedPOList;
 	}
