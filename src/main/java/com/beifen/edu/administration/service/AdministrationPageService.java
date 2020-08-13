@@ -1,5 +1,6 @@
 package com.beifen.edu.administration.service;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -8,6 +9,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.beifen.edu.administration.PO.LocalUsedPO;
+import com.beifen.edu.administration.PO.TeacherPO;
+import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import org.springframework.beans.BeanUtils;
@@ -66,6 +69,10 @@ public class AdministrationPageService {
 	private Edu500Dao edu500DAO;
 	@Autowired
 	private Edu203Dao edu203Dao;
+	@Autowired
+	private Edu204Dao edu204DAO;
+	@Autowired
+	private Edu205Dao edu205DAO;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -1098,8 +1105,29 @@ public class AdministrationPageService {
 	}
 
 	// 发布教学任务书
-	public void putOutTask(Edu201 edu201) {
+	public void putOutTask(TeachingTaskPO edu201) {
 		edu201DAO.save(edu201);
+
+		List<Edu300> classList = edu201.getClassList();
+		for(Edu300 e : classList) {
+			Edu204 save = new Edu204();
+			save.setEdu201_ID(edu201.getEdu201_ID());
+			save.setEdu300_ID(e.getEdu300_ID());
+			save.setClassName(e.getXzbmc());
+			edu204DAO.save(save);
+		}
+
+		List<TeacherPO> teacherList = edu201.getTeacherList();
+		for(TeacherPO e : teacherList) {
+			Edu205 save = new Edu205();
+			save.setEdu201_ID(edu201.getEdu201_ID());
+			save.setEdu101_ID(e.getEdu101_ID());
+			save.setTeacherType(e.getTeacherType());
+			save.setTecherName(e.getXm());
+			edu205DAO.save(save);
+		}
+
+
 	}
 
 	// 发布教学任务书时更改108的信息
@@ -1790,8 +1818,14 @@ public class AdministrationPageService {
 			List<String> edu202Ids = edu200DAO.findIdByJxdmc(e.getJxdmc());
 			List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
 
-		}
+			NumberFormat nf = NumberFormat.getPercentInstance();
+			nf.setMinimumFractionDigits(4);//设置保留小数位
+			String usedPercent = nf.format(usedList.size() / countUsed);
+			BeanUtils.copyProperties(save, e);
+			save.setSiteUtilization(usedPercent);
 
+			localUsedPOList.add(save);
+		}
 
 		return localUsedPOList;
 	}

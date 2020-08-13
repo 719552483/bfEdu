@@ -31,7 +31,7 @@ function getSearchAreaSelectInfo(){
             if (backjson.result) {
                 var showstr="暂无选择";
                 var allDepartmentStr="";
-                var allTeacherStr="";
+                var allTermStr="";
                 if (backjson.allDepartment.length>0) {
                     showstr="请选择";
                     allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
@@ -43,20 +43,20 @@ function getSearchAreaSelectInfo(){
                     allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
                 }
                 stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
-                stuffManiaSelect("#employDepartment", allDepartmentStr);
+
 
                 var showstr="暂无选择";
-                if (backjson.allTeacher.length>0) {
+                if (backjson.allTerm.length>0) {
                     showstr="请选择";
-                    allTeacherStr= '<option value="seleceConfigTip">'+showstr+'</option>';
+                    allTermStr= '<option value="seleceConfigTip">'+showstr+'</option>';
                     for (var i = 0; i < backjson.allTeacher.length; i++) {
-                        allTeacherStr += '<option value="' + backjson.allTeacher[i].edu101_ID + '">' + backjson.allTeacher[i].xm
+                        allTermStr += '<option value="' + backjson.allTerm[i].edu400_ID + '">' + backjson.allTerm[i].xnmc
                             + '</option>';
                     }
                 }else{
-                    allTeacherStr= '<option value="seleceConfigTip">'+showstr+'</option>';
+                    allTermStr= '<option value="seleceConfigTip">'+showstr+'</option>';
                 }
-                stuffManiaSelect("#addSiteManager", allTeacherStr);
+                stuffManiaSelect("#schoolYear", allTerm);
 
 
             } else {
@@ -99,14 +99,14 @@ function stufflocalInfoTable(tableInfo) {
         exportDataType: "all",
         showExport: true,      //是否显示导出
         exportOptions:{
-            fileName: '教学点导出'  //文件名称
+            fileName: '教学任务点使用率导出'  //文件名称
         },
         striped: true,
         sidePagination: "client",
         toolbar: '#toolbar',
         showColumns: true,
         onPageChange: function() {
-            drawPagination(".localInfoTableArea", "教学点信息");
+            drawPagination(".localInfoTableArea", "教学任务点信息");
         },
         columns: [
             {
@@ -186,10 +186,10 @@ function stufflocalInfoTable(tableInfo) {
             .join('');
     }
 
-    drawPagination(".localInfoTableArea", "教学点信息");
+    drawPagination(".localInfoTableArea", "教学任务点信息");
     drawSearchInput(".localInfoTableArea");
     changeTableNoRsTip();
-    changeColumnsStyle(".localInfoTableArea", "教学点信息");
+    changeColumnsStyle(".localInfoTableArea", "教学点任务信息");
     toolTipUp(".myTooltip");
     btnControl();
 }
@@ -231,11 +231,8 @@ function stufflocalInfoDetails(row){
 //开始检索教学点
 function startSearch(){
     var searchObject = getSearchValue();
-    if ($.isEmptyObject(searchObject)) {
-        searchAllSite();
-    }else{
-        searchAllSiteBy(searchObject);
-    }
+    searchAllSiteBy(searchObject);
+
 }
 
 //获得检索区域的值
@@ -321,7 +318,7 @@ function searchAllSiteBy(searchObject){
     $.ajax({
         method : 'get',
         cache : false,
-        url : "/searchSite",
+        url : "/searchLocalUsed",
         data: {
             "SearchCriteria":JSON.stringify(searchObject)
         },

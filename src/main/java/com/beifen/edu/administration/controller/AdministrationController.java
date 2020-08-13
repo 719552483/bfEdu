@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.PO.LocalUsedPO;
+import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import org.apache.commons.fileupload.*;
@@ -1454,6 +1455,7 @@ public class AdministrationController {
 		returnMap.put("allGrade", administrationPageService.queryAllGrade());
 		returnMap.put("allMajor", administrationPageService.queryAllMajor());
 		returnMap.put("allTeacher", administrationPageService.queryAllTeacher());
+		returnMap.put("allTerm", administrationPageService.queryAllXn());
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -3834,7 +3836,7 @@ public class AdministrationController {
 		Edu600 edu600 = (Edu600) JSONObject.toBean(apprvalObject, Edu600.class);
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
-			Edu201 edu201 = new Edu201();
+			TeachingTaskPO edu201 = new TeachingTaskPO();
 			edu201.setEdu108_ID(jsonObject.getLong("edu108_ID"));
 			edu201.setEdu301_ID(jsonObject.getLong("edu301_ID"));
 			edu201.setJxbmc(jsonObject.getString("jxbmc"));
@@ -3842,16 +3844,18 @@ public class AdministrationController {
 			edu201.setZymc(jsonObject.getString("zymc"));
 			edu201.setJxbrs(jsonObject.getString("jxbrs"));
 			edu201.setXzbmc(jsonObject.getString("xzbmc"));
-			edu201.setZxs(jsonObject.getString("zxs"));
 			edu201.setLs(jsonObject.getString("ls"));
 			edu201.setLsmc(jsonObject.getString("lsmc"));
 			edu201.setZyls(jsonObject.getString("zyls"));
 			edu201.setZylsmc(jsonObject.getString("zylsmc"));
+			edu201.setZxs(jsonObject.getString("zxs"));
 			edu201.setPkbm(jsonObject.getString("pkbm"));
 			edu201.setPkbmCode(jsonObject.getString("pkbmCode"));
 			edu201.setKkbm(jsonObject.getString("kkbm"));
 			edu201.setKkbmCode(jsonObject.getString("kkbmCode"));
 			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
+			edu201.setTeacherList(jsonObject.getJSONArray("teacherList"));
+			edu201.setClassList(jsonObject.getJSONArray("classList"));
 			edu201.setSszt("passing");
 			administrationPageService.putOutTask(edu201);
 			administrationPageService.putOutTaskAction(edu201.getEdu301_ID(),edu201.getEdu201_ID());
@@ -3919,7 +3923,7 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
-		Edu201 edu201 = (Edu201) JSONObject.toBean(jsonObject, Edu201.class);
+		TeachingTaskPO edu201 = (TeachingTaskPO) JSONObject.toBean(jsonObject, TeachingTaskPO.class);
 		administrationPageService.putOutTask(edu201);
 		returnMap.put("result", true);
 		return returnMap;
