@@ -1618,6 +1618,26 @@ margin: 0px 0px -14px -15px!important;
 	font-weight: 600;
 }
 
+.scheduleInfo{
+	font-size: 15px;
+	font-family: sans-serif;
+	color: rgb(50 107 134 / 95%);
+}
+
+.choosendTerm,.choosendWeekArea,.choosendKjArea,.choosendLoactionArea{
+	margin-top: 5px;
+	font-size: 15px;
+	color: rgb(50 107 134 / 95%);
+}
+
+.choosendLoactionArea{
+	border-bottom: solid 1px #d0dee5
+}
+
+.choosendLoactionArea span{
+	margin-bottom: 17px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

@@ -289,13 +289,6 @@ function startSchedule(){
 	}
 
 	showStartScheduleArea(culturePlanInfo,choosedTask);
-	//确认排课按钮
-	$('#confirm').unbind('click');
-	$('#confirm').bind('click', function(e) {
-		confirmPk();
-		e.stopPropagation();
-	});
-
 }
 
 //展示开始排课区域
@@ -357,12 +350,6 @@ function stuffTermArae(termInfo,str){
 			+ '</option>';
 	}
 	stuffManiaSelect("#term", str);
-
-	//为学年绑定change事件 重载开始结束周信息
-	$("#term").change(function() {
-		$(".rsArea").show();
-		redrawStartAndEndWeek();
-	});
 }
 
 //填充教学点下拉框
@@ -398,16 +385,45 @@ function scheduleSingleClassBtnBind(){
 		weekAddKj();
 		e.stopPropagation();
 	});
+
+	//确认排课按钮
+	$('#confirm').unbind('click');
+	$('#confirm').bind('click', function(e) {
+		confirmPk();
+		e.stopPropagation();
+	});
+
+	//为学年绑定change事件 重载开始结束周信息
+	$("#term").change(function(e) {
+		$(".rsArea").show();
+		redrawStartAndEndWeek();
+		e.stopPropagation();
+	});
+
+	//为开始周绑定change事件
+	$("#endWeek").change(function(e) {
+		weekChange();
+		e.stopPropagation();
+	});
+
+	//为课节绑定change事件
+	$("#kj").change(function(e) {
+		kjChange();
+		e.stopPropagation();
+	});
+
+	//为授课地点绑定change事件
+	$("#skdd").change(function(e) {
+		skddChange();
+		e.stopPropagation();
+	});
 }
 
-var choossendKjInfo=new Array();
 //新增星期对应的课节
 function weekAddKj(){
 	var choossendKjObject=new Object();
 	var currentXq=getNormalSelectValue("xq");
 	var currentKj=getNormalSelectValue("kj");
-	var currentXqmc=getNormalSelectText("xq");
-	var currentKjmc=getNormalSelectText("kj");
 	if(currentXq===""){
 		toastr.warning('请选择星期');
 		return;
@@ -416,19 +432,13 @@ function weekAddKj(){
 		toastr.warning('请选择课节');
 		return;
 	}
-
-	choossendKjObject.xqid=currentXq;
-	choossendKjObject.kjid=currentKj;
-	choossendKjObject.kjmc=currentKjmc;
-	choossendKjObject.xqmc=currentXqmc;
-	choossendKjObject.dateIndex=choossendKjInfo.length+1;
-
-
-	//拼接新元素
+	choossendKjObject.id=currentXq+currentKj;
+    //拼接新元素
 	$(".kjArea").append($(".kjArea").find(".searchArea:first").clone());
-
-	$(".kjArea").find(".searchArea:last").attr("dataIndex",choossendKjInfo.length+1);
-	choossendKjInfo.push(choossendKjObject);
+	//第一个select重置id
+	$(".kjArea").find(".searchArea:first").attr("id","");
+	//拼接新元素赋值ID
+	$(".kjArea").find(".searchArea:last").attr("id",choossendKjObject.id);
 
 	//添加删除按钮
 	$(".kjArea").find(".addBTnArea:last").remove();
@@ -440,18 +450,11 @@ function weekAddKj(){
 		'</div>' +
 		'</div>');
 
-
-	 //为新元素赋值ID
-	var newDom=$(".kjArea").find(".xqSowIndex:not(:first)");
-	for (var i = 0; i < newDom.length; i++) {
-		newDom[i].id="xq"+(i+1);
-	}
-
 	//重置第一个select组
 	var reObject = new Object();
 	reObject.normalSelectIds = "#kj,#xq";
 	reReloadSearchsWithSelect(reObject);
-	$('.isSowIndex').selectMania(); // 初始化下拉框
+
 	//重新绑定事件
 	$('.addKj').unbind('click');
 	$('.addKj').bind('click', function(e) {
@@ -462,13 +465,9 @@ function weekAddKj(){
 
 //删除课节
 function removeKj(eve){
-    var currentRemoveIndex=eve.parentNode.parentNode.parentNode.parentNode.attributes[2].nodeValue;
-	for (var i = 0; i < choossendKjInfo.length; i++) {
-		if(choossendKjInfo[i].dateIndex===parseInt(currentRemoveIndex)){
-			choossendKjInfo.splice(i,1);
-		}
-	}
-	$(".kjArea").find('.searchArea:eq('+currentRemoveIndex+')').remove();
+	var currentRemoveId=eve.parentNode.parentNode.parentNode.parentNode.id;
+	$("#"+currentRemoveId).remove();
+    $(".choosendKjInfo"+currentRemoveId).remove();
 }
 
 //根据学年渲染开始结束周
@@ -489,6 +488,7 @@ function drawStartAndEndWeek(allWeeks){
 //重新渲染开始结束周
 function redrawStartAndEndWeek(){
 	var currentXn=getNormalSelectValue("term");
+	var currentXnmc=getNormalSelectText("term");
 	if(currentXn===""){
 		return;
 	}
@@ -513,6 +513,7 @@ function redrawStartAndEndWeek(){
 			hideloding();
 			if (backjson.result) {
 				drawStartAndEndWeek(backjson.termInfo.zzs);
+				$(".choosendTerm").html(currentXnmc+"学年");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -527,26 +528,17 @@ function confirmPk(){
 		return;
 	}
 
-	if(choossendKjInfo.length==0){
+	var scheduleInfo=scheduleDetailInfo();
+	if(scheduleInfo.length==0){
 		return;
 	}
-	var choossendKjObject=new Object();
-	var currentXq=getNormalSelectValue("xq");
-	var currentKj=getNormalSelectValue("kj");
-	var currentXqmc=getNormalSelectText("xq");
-	var currentKjmc=getNormalSelectText("kj");
-	choossendKjObject.xqid=currentXq;
-	choossendKjObject.kjid=currentKj;
-	choossendKjObject.kjmc=currentKjmc;
-	choossendKjObject.xqmc=currentXqmc;
-	choossendKjInfo.push(choossendKjObject);
 	$.ajax({
 		method: 'get',
 		cache: false,
 		url: "/comfirmSchedule",
 		data:{
 			"scheduleInfo":JSON.stringify(scheduleInfo),
-			"scheduleDetail":JSON.stringify(choossendKjInfo)
+			"scheduleDetail":JSON.stringify(scheduleInfo)
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -607,7 +599,74 @@ function getPKInfo(){
 	return returnObject;
 }
 
+//获得星期-课节信息
+function scheduleDetailInfo(){
+	var returnArray=new Array();
+	var all=$(".kjArea").find(".searchArea");
+	for (var i = 0; i < all.length; i++) {
+		var thisObject=new Object();
+		var currentUseId=all[i].id;
+		if(typeof currentUseId !=='undefined'&&currentUseId!==""){
+			thisObject.kjid=currentUseId.substring(0,2);
+			thisObject.xqid=currentUseId.substring(2);
+			var usekjmc=$(".choosendKjInfo"+currentUseId).find(".choosendXq")[0].innerText;
+			var usexqmc=$(".choosendKjInfo"+currentUseId).find(".choosendKj")[0].innerText;
+			thisObject.kjmc=usekjmc.substring(2);
+			thisObject.xqmc=usexqmc.substring(0,3);
+			returnArray.push(thisObject);
+		}
+	}
 
+     if(returnArray.length==0){
+		 toastr.warning('请选择课节');
+	 }
+
+	return returnArray;
+}
+
+//开始周结束周change事件
+function weekChange(){
+   var startWeek=getNormalSelectValue("startWeek");
+   var endWeek=getNormalSelectValue("endWeek");
+   $(".choosendStartWeek").html("自第"+startWeek+"周");
+   $(".choosendEndWeek").html("到第"+endWeek+"周");
+}
+
+//课节change事件
+function kjChange(){
+	var currentXq=getNormalSelectValue("xq");
+	var currentKj=getNormalSelectValue("kj");
+	var currentXqmc=getNormalSelectText("xq");
+	var currentKjmc=getNormalSelectText("kj");
+	if(currentXq===""){
+		toastr.warning('请选择星期');
+		return;
+	}
+	if(currentKj===""){
+		toastr.warning('请选择课节');
+		return;
+	}
+   	if($("#"+currentXq+currentKj).length>0){
+		//重置第一个select组
+		var reObject = new Object();
+		reObject.normalSelectIds = "#kj,#xq";
+		$(".kjArea").find(".searchArea:first").attr("id","");
+		reReloadSearchsWithSelect(reObject);
+		toastr.warning('课节已选');
+	  	 return;
+   	}
+
+	//第一个select重置id
+	$(".kjArea").find(".searchArea:first").attr("id",currentXq+currentKj);
+
+   	$(".choosendKjArea").append('<span class="choosendKjInfo'+(currentXq+currentKj)+'"><cite class="choosendXq" id="'+currentXq+'">每周'+currentXqmc+'</cite><cite class="choosendKj" id="'+currentKj+'">'+currentKjmc+'课节</cite></span>')
+}
+
+//授课地点
+function skddChange(){
+	var choosendLoaction=getNormalSelectText("skdd");
+	$(".choosendLoactionArea").append('<span class="choosendLoaction">在'+choosendLoaction+'授课</span>');
+}
 
 //返回待排课程区域
 function controlScheduleArea(){

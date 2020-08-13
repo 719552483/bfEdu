@@ -189,7 +189,7 @@
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">开始周<b>*</b></label>
 									<select class="isSowIndex" id="startWeek">
-										<option value="seleceConfigTip">请选择</option>
+										<option value="seleceConfigTip">暂无选择</option>
 									</select>
 								</div>
 							</ul>
@@ -200,32 +200,15 @@
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">结束周<b>*</b></label>
 									<select class="isSowIndex" id="endWeek">
-										<option value="seleceConfigTip">请选择</option>
+										<option value="seleceConfigTip">暂无选择</option>
 									</select>
 								</div>
 							</ul>
 						</div>
 					</div>
-
-					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
-						<span>三、选择上课地点</span>
-					</div>
-					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
-						<div class="col4 giveBottom departmentSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">授课地点<b>*</b></label>
-									<select class="isSowIndex" id="skdd">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-					</div>
-					<div class="clear"></div>
 
 					<div class="formtitle" style="clear:both;margin-bottom: 25px;">
-						<span>四、选择课节</span>
+						<span>三、选择课节</span>
 					</div>
 					<div class="kjArea">
 						<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
@@ -268,12 +251,35 @@
 					</div>
 					<div class="clear"></div>
 
+					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
+						<span>四、选择上课地点</span>
+					</div>
+					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+						<div class="col4 giveBottom departmentSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">授课地点<b>*</b></label>
+									<select class="isSowIndex" id="skdd">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+
 					<div class="rsArea noneStart">
 						<div class="formtitle" style="clear:both;margin-bottom: 25px;">
 							<span>排课结果</span>
 						</div>
-						<div class="rsInfoTxt">
-							排课结果展示
+						<div class="rsInfoArea">
+							<div class="rsInfoTXtArea">
+								<b class="scheduleInfo"></b>
+								<div class="choosendTermArea"><span class="choosendTerm"></span></div>
+								<div class="choosendWeekArea"><span class="choosendWeek"><cite class="choosendStartWeek"></cite><cite class="choosendEndWeek"></cite></span></div>
+								<div class="choosendKjArea"></div>
+								<div class="choosendLoactionArea"></div>
+							</div>
 						</div>
 						<div class="clear"></div>
 						<div class="tools scheduleToolsArea">
