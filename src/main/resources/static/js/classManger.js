@@ -1088,7 +1088,7 @@ function combinedClass() {
 	choosedTeaching.zybm = planInfo.major;
 	choosedTeaching.zymc = planInfo.majorTxt;
 	choosedTeaching.edu108_ID = choosedTeachingClass[0].edu108_ID;
-	
+	choosedTeaching.edu201_ID = "";
 	choosedTeaching.bhzyCode =combinedMajorCodes;
 	choosedTeaching.bhzymc =combinedMajorName;
 	choosedTeaching.bhxzbCode = combinedAdministrationClassesCodes;
@@ -1428,12 +1428,7 @@ function addTeachingClassBtnbind() {
 
 
 
-
-
-
-
-
-
+/*教学班管理start*/
 // 获取教学班列表信息
 function getAllTeachingClassInfo(isReturnLastPage) {
 	var sameGradeChecked=$("#sameGrade")[0].checked;
@@ -1507,7 +1502,7 @@ function getAllTeachingClassInfo(isReturnLastPage) {
 function stuffTeachingClassTable(tableInfo) {
 	window.teachingClassEvents = {
 		'click #modifyTeachingClassName' : function(e, value, row, index) {
-			modifyTeachingClassName(row, index);
+			modifyTeachingClass(row, index);
 		},
 		'click #removeTeachingClass' : function(e, value, row, index) {
 			removeTeachingClass(row);
@@ -1536,12 +1531,6 @@ function stuffTeachingClassTable(tableInfo) {
 		onPageChange : function() {
 			drawPagination(".teachingClassTableArea", "教学班信息");
 		},
-		onDblClickRow : function(row, $element, field) {
-			if (field !== "teachingClassName") {
-				return;
-			}
-			modifyTeachingClassName(row, parseInt($element[0].dataset.index));
-		},
 		columns : [ {
 			field : 'check',
 			checkbox : true
@@ -1550,7 +1539,7 @@ function stuffTeachingClassTable(tableInfo) {
 			title : '教学班名称',
 			align : 'left',
 			clickToSelect : false,
-			formatter : teachingClassNameFormatter,
+			formatter : paramsMatter,
 		}, {
 			field : 'kcmc',
 			title : '课程',
@@ -1586,16 +1575,6 @@ function stuffTeachingClassTable(tableInfo) {
 		} ]
 	});
 
-	function teachingClassNameFormatter(value, row, index) {
-		return [ '<input type="text" class="myTooltip teachingClassTableInput tableInput noneStart" id="teachingClassTable_teachingClassNameInput'
-				+ index
-				+ '">'
-				+ '<span title="'
-				+ row.jxbmc
-				+ '" class="myTooltip teachingClassTable_teachingClassName teachingClassTable_teachingClassName'
-				+ index + '">' + row.jxbmc + '</span>' ].join('');
-	}
-
 	function teachingClassFormatter(value, row, index) {
 		if (row.sffbjxrws==="F") {
 			return [ '<ul class="toolbar tabletoolbar">'
@@ -1603,7 +1582,9 @@ function stuffTeachingClassTable(tableInfo) {
 					+ '<li id="removeTeachingClass"><span><img src="images/t03.png"></span>删除</li>'
 					+ '</ul>' ].join('');
 		} else {
-			return [ '<div class="myTooltip" title="不可操作">不可操作</div>' ].join('');
+			return [ '<ul class="toolbar tabletoolbar">'
+			+ '<li id="modifyTeachingClassName"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
+			+ '</ul>' ].join('');
 		}
 	}
 	
@@ -1640,64 +1621,31 @@ function stuffTeachingClassTable(tableInfo) {
 	toolTipUp(".myTooltip");
 }
 
-// 修改教学班名称
-function modifyTeachingClassName(row, index) {
-	$(".teachingClassTableInput").hide();
-	$(".teachingClassTable_teachingClassName").show();
-	$("#teachingClassTable_teachingClassNameInput" + index).show().val(row.jxbmc).focus();
-	$(".teachingClassTable_teachingClassName" + index).hide();
-	// 绑定input失焦更新值事件
-	$("#teachingClassTable_teachingClassNameInput" + index).blur(function() {
-		if (row.jxbmc !== $("#teachingClassTable_teachingClassNameInput" + index).val()) {
-			        var modifyObject = new Object();
-			        modifyObject.teachingClassID=row.edu301_ID;
-			        modifyObject.newName=$("#teachingClassTable_teachingClassNameInput" + index).val();
-					//发起修改请求
-					$.ajax({
-						method : 'get',
-						cache : false,
-						url : "/modifyTeachingClassName",
-						data: {
-				             "modifyObject":JSON.stringify(modifyObject) 
-				        },
-						dataType : 'json',
-						beforeSend: function(xhr) {
-							requestErrorbeforeSend();
-						},
-						error: function(textStatus) {
-							requestError();
-						},
-						complete: function(xhr, status) {
-							requestComplete();
-						},
-						success : function(backjson) {
-							if (backjson.result) {
-								hideloding();
-								if(backjson.namehave){
-									toastr.warning('教学班名称已存在');
-									$("#teachingClassTable_teachingClassNameInput" + index).focus();
-									return;
-								}
-								$("#teachingClassTable").bootstrapTable('updateCell',{
-											index : index,
-											field : 'jxbmc',
-											value : modifyObject.newName
-								});
-								toolTipUp(".myTooltip");
-							} else {
-								hideloding();
-								toastr.warning('操作失败，请重试');
-							}
-						}
-					});
-				} else {
-					$("#teachingClassTable").bootstrapTable('updateCell', {
-						index : index,
-						field : 'jxbmc',
-						value : row.jxbmc
-					});
-					toolTipUp(".myTooltip");
-				}
+// 修改教学班
+function modifyTeachingClass(row, index) {
+	$.showModal("#modifyTeachingClassModal",true);
+	$('#modifyTeachingClassName').html(row.jxbmc);
+    stuffChoosendXzb(row,index);
+	stuffAllXzb(row,index);
+	// 同专业班级库
+	$('#modify_sameGrade').unbind('click');
+	$('#modify_sameGrade').bind('click', function(e) {
+		modifysameGrade(row);
+		e.stopPropagation();
+	});
+
+	// 非同专业班级库
+	$('#modify_notSameGrade').unbind('click');
+	$('#modify_notSameGrade').bind('click', function(e) {
+		modifynotSameGrade(row);
+		e.stopPropagation();
+	});
+
+	//确认按钮
+	$('.confirmModifyTeachingClass').unbind('click');
+	$('.confirmModifyTeachingClass').bind('click', function(e) {
+		confirmModifyTeachingClass(row,index);
+		e.stopPropagation();
 	});
 }
 
@@ -1867,3 +1815,242 @@ function teachingClassTetNotNullSearchs(){
 	return returnObject;
 	//123
 }
+
+//渲染可选班级
+function stuffAllXzb(row,index){
+	getAllXzbByZy(row,index);
+}
+
+//渲染已选的行政班
+function stuffChoosendXzb(row,index){
+	$(".chooseendArea").empty();
+	var bhxzbmc=row.bhxzbmc.split(",");
+	var bhxzb=row.bhxzbid.split(",");
+	var str='<span class="soprtAreaTitle">已选班级:</span>';
+	for (var i = 0; i < bhxzb.length; i++) {
+		if(bhxzb[i]!==""){
+			str+='<div class="col1 giveBottom">' +
+				'<div class="icheck-material-blue"> ' +
+				'<input type="checkbox" class="removeChoosendClassBtn" index="'+index+'" id="'+bhxzb[i]+'" checked="true"> ' +
+				'<label for="'+bhxzb[i]+'">'+bhxzbmc[i]+'</label>' +
+				'</div>' +
+				'</div>';
+		}
+	}
+	$(".chooseendArea").append(str);
+	// 非同专业班级库
+	$('.removeChoosendClassBtn').unbind('click');
+	$('.removeChoosendClassBtn').bind('click', function(e) {
+		removeChoosendClass(e);
+	});
+}
+
+//删除已选
+function  removeChoosendClass(eve){
+  var removeIndex=eve.currentTarget.attributes[2].nodeValue;
+  var removeId=eve.currentTarget.attributes[3].nodeValue;
+  $(".chooseLibirary").append(eve.currentTarget.parentElement.parentElement.outerHTML);
+
+  $(".norsArea").hide();
+
+  var allChoosend=$(".chooseendArea").find(".col1");
+	for (var i = 0; i < allChoosend.length; i++) {
+		if(allChoosend[i].childNodes[0].children[0].id===removeId){
+			$(".chooseendArea").find('.col1:eq('+i+')').remove();
+		}
+	}
+}
+
+//添加行政班
+function addChoosendClass(eve){
+	var removeIndex=eve.currentTarget.attributes[2].nodeValue;
+	var removeId=eve.currentTarget.attributes[3].nodeValue;
+	$(".chooseendArea").append(eve.currentTarget.parentElement.parentElement.outerHTML);
+
+	$(".norsArea").hide();
+
+	var allChoosend=$(".chooseLibirary").find(".col1");
+	for (var i = 0; i < allChoosend.length; i++) {
+		if(allChoosend[i].childNodes[0].children[0].id===removeId){
+			$(".chooseLibirary").find('.col1:eq('+i+')').remove();
+		}
+	}
+}
+
+//同专业班级库
+function modifysameGrade(row){
+	var currentChecked=$("#modify_sameGrade")[0].checked;
+	if(currentChecked){
+		$("#modify_notSameGrade").attr("checked", false);
+	}
+	getAllClassesLibraryforModify(true,row);
+}
+
+//非同专业班级库
+function modifynotSameGrade(row){
+	var currentChecked=$("#modify_notSameGrade")[0].checked;
+	if(currentChecked){
+		$("#modify_sameGrade").attr("checked", false);
+	}
+	getAllClassesLibraryforModify(false,row);
+}
+
+//判断类型
+function getAllClassesLibraryforModify(jsutUnqine,row){
+	if(jsutUnqine){
+		getAllXzbByZy(row);
+	}else{
+		getAllXzb(row);
+	}
+}
+
+//获取同专业行政班
+function getAllXzbByZy(row,index){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/teachingClassQueryAdministrationClassesLibrary",
+		data: {
+			"culturePlanInfo":JSON.stringify(teachingClassTetNotNullSearchs())
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if(backjson.classesInfo.length===0){
+					toastr.info('暂无可选行政班');
+					return;
+				}
+				$(".chooseLibirary").empty();
+				var xzbInfo=backjson.classesInfo;
+				var bhxzb=row.bhxzbid.split(",");
+				var str='<span class="soprtAreaTitle">可选班级:</span>';
+				var addNum=0;
+				for (var i = 0; i < xzbInfo.length; i++) {
+					if(bhxzb.indexOf(JSON.stringify(xzbInfo[i].edu300_ID))===-1){
+						str+='<div class="col1 giveBottom">' +
+							'<div class="icheck-material-blue"> ' +
+							'<input type="checkbox" index="'+index+'" id="'+xzbInfo[i].edu300_ID+'" checked="true" onclick="addChoosendClass('+this+')"> ' +
+							'<label for="'+xzbInfo[i].edu300_ID+'">'+xzbInfo[i].xzbmc+'</label>' +
+							'</div>' +
+							'</div>';
+						addNum++;
+					}
+				}
+				if(addNum==0){
+					str+='<span class="norsArea">暂无可选行政班...</span>';
+				}
+				$(".chooseLibirary").append(str);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//获取所有行政班
+function getAllXzb(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllClassesLibrary",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if(backjson.classesInfo.length===0){
+					toastr.info('暂无可选行政班');
+					return;
+				}
+				$(".chooseLibirary").empty();
+				var xzbInfo=backjson.classesInfo;
+				var bhxzb=row.bhxzbid.split(",");
+				var str='<span class="soprtAreaTitle">可选班级:</span>';
+				var addNum=0;
+				for (var i = 0; i < xzbInfo.length; i++) {
+					if(bhxzb.indexOf(JSON.stringify(xzbInfo[i].edu300_ID))===-1){
+						str+='<div class="col1 giveBottom">' +
+							'<div class="icheck-material-blue"> ' +
+							'<input type="checkbox" id="'+xzbInfo[i].edu300_ID+'" checked="true" onclick="addChoosendClass()"> ' +
+							'<label for="'+xzbInfo[i].edu300_ID+'">'+xzbInfo[i].xzbmc+'</label>' +
+							'</div>' +
+							'</div>';
+						addNum++;
+					}
+				}
+				if(addNum==0){
+					str+='<span class="norsArea">暂无可选行政班...</span>';
+				}
+				$(".chooseLibirary").append(str);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+
+function confirmModifyTeachingClass(row,index){
+	$.hideModal("#modifyTeachingClassModal");
+
+	var ids = $('.chooseendArea').find('input');
+	var names = $('.chooseendArea').find('label');
+	var bhxzbmc = ''; //包含行政班名称
+	var bhxzbCode  = ''; //包含行政班编码
+
+	for (var i = 0; i < ids.length; i++) {
+		bhxzbmc+=names[i].innerText+',';
+		bhxzbCode+=ids[i].id+',';
+	}
+
+    var modifyInfo=new Object();
+	modifyInfo.combinedClassName=$('#modifyTeachingClassName').val();
+	row.bhxzbmc=bhxzbmc;
+	row.bhxzbid=bhxzbCode;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/confirmClassAction",
+		data: {
+			"classInfo":JSON.stringify(row)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+/*教学班管理end*/

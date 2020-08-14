@@ -1638,6 +1638,63 @@ margin: 0px 0px -14px -15px!important;
 	margin-bottom: 17px;
 }
 
+.arrowAREA{
+	float: left;
+	width: 7%;
+	margin-top: 21%;
+	padding-left: 5px;
+}
+
+.arrowAREAImg{
+	float: left;
+	width: 46%;
+}
+
+.chooseLibirary{
+	float: left;
+	width: 45%;
+	border: 1px #6fadbf1f solid;
+	height: auto;
+	padding: 7px 0px 7px 22px;
+	background-color: rgb(97 137 160 / 10%);
+	border-radius: 4px;
+	box-shadow: inset 1px 2px 12px 0px rgb(160 221 234 / 33%);
+	min-height: 280px;
+	overflow: auto;
+}
+
+
+
+.chooseendArea{
+	float: left;
+	width: 45%;
+	border: 1px #6fadbf1f solid;
+	height: auto;
+	padding: 7px 0px 7px 22px;
+	background-color: rgb(97 137 160 / 10%);
+	border-radius: 4px;
+	box-shadow: inset 1px 2px 12px 0px rgb(160 221 234 / 33%);
+	min-height: 280px;
+	overflow: auto;
+}
+
+.soprtAreaTitle{
+	color: #0b404c;
+	font-size: 13px;
+}
+
+.norsArea{
+	margin: 43% 26%;
+	color: gray;
+}
+
+.img1{
+	transform: rotate(176deg);
+	margin-top: -1.3px;
+}
+
+
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

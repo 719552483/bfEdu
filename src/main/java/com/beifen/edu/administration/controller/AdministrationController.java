@@ -2933,37 +2933,6 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 修改教学班名称
-	 * @param modifyObject
-	 * @return
-	 */
-	@RequestMapping("modifyTeachingClassName")
-	@ResponseBody
-	public Object modifyTeachingClassName(@RequestParam String modifyObject) {
-		Map<String, Object> returnMap = new HashMap();
-		boolean namehave = false;
-		JSONObject modifyInfo = JSONObject.fromObject(modifyObject);
-		String teachingClassID = modifyInfo.getString("teachingClassID");
-		String newName = modifyInfo.getString("newName");
-
-		List<Edu301> calssInfo = administrationPageService.getAllTeachingClasses();
-		for (int a = 0; a < calssInfo.size(); a++) {
-			if (newName.equals(calssInfo.get(a).getJxbmc())) {
-				namehave = true;
-				break;
-			}
-		}
-
-		if (!namehave) {
-			administrationPageService.modifyTeachingClassName(teachingClassID, newName);
-		}
-
-		returnMap.put("result", true);
-		returnMap.put("namehave", namehave);
-		return returnMap;
-	}
-
-	/**
 	 * 删除教学班
 	 * @param deleteIds
 	 * @return
