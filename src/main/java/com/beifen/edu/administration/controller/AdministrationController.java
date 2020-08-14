@@ -3837,6 +3837,10 @@ public class AdministrationController {
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			TeachingTaskPO edu201 = new TeachingTaskPO();
+			String edu201_id=jsonObject.getString("edu201_ID");
+			if(!"".equals(edu201_id)) {
+				edu201.setEdu201_ID(Long.parseLong(edu201_id));
+			}
 			edu201.setEdu108_ID(jsonObject.getLong("edu108_ID"));
 			edu201.setEdu301_ID(jsonObject.getLong("edu301_ID"));
 			edu201.setJxbmc(jsonObject.getString("jxbmc"));
@@ -3913,23 +3917,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	/**
-	 * 根据ID修改任务书
-	 * @return returnMap
-	 */
-	@RequestMapping("modifyTask")
-	@ResponseBody
-	public Object modifyTask(@RequestParam("modifyInfo") String modifyInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
-		TeachingTaskPO edu201 = (TeachingTaskPO) JSONObject.toBean(jsonObject, TeachingTaskPO.class);
-		administrationPageService.putOutTask(edu201);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-	
+
 	
 	/**
 	 * 检索已发布的教学任务书
@@ -4007,6 +3995,20 @@ public class AdministrationController {
 
 		returnMap.put("calssInfo", calssInfo);
 		returnMap.put("taskInfo", taskInfo);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+	/**
+	 *  课程性质按钮获取待排课程列表
+	 * @return returnMap
+	 */
+	@RequestMapping("removeTask")
+	@ResponseBody
+	public Object removeTask(@RequestParam("removeObject") String removeObject) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject jsonObject = JSONObject.fromObject(removeObject);
+		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
 		returnMap.put("result", true);
 		return returnMap;
 	}

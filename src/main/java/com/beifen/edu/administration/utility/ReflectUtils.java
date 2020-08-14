@@ -3,20 +3,12 @@ package com.beifen.edu.administration.utility;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.DVConstraint;
-import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -46,8 +35,6 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -4042,6 +4029,41 @@ public class ReflectUtils {
         }
         return rs.toString();
     }
+
+	/**
+	 * 复制源对象和目标对象的属性值
+	 *
+	 */
+	public static void copy(Object source, Object target) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+		Class sourceClass = source.getClass().getSuperclass();//得到对象的Class
+		Class targetClass = target.getClass();//得到对象的Class父类
+
+
+		Field[] sourceFields = sourceClass.getDeclaredFields();//得到Class对象的所有属性
+		Field[] targetFields = targetClass.getDeclaredFields();//得到Class对象的所有属性
+
+		for(Field sourceField : sourceFields){
+			String name = sourceField.getName();//属性名
+			Class type = sourceField.getType();//属性类型
+
+			String methodName = name.substring(0, 1).toUpperCase() + name.substring(1);
+
+			Method getMethod = sourceClass.getMethod("get" + methodName);//得到属性对应get方法
+
+			Object value = getMethod.invoke(source);//执行源对象的get方法得到属性值
+
+			for(Field targetField : targetFields){
+				String targetName = targetField.getName();//目标对象的属性名
+
+				if(targetName.equals(name)){
+					Method setMethod = targetClass.getMethod("set" + methodName, type);//属性对应的set方法
+
+					setMethod.invoke(target, value);//执行目标对象的set方法
+				}
+			}
+		}
+	}
 
 }
 	

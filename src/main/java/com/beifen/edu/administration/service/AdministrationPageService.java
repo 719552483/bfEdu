@@ -1,5 +1,6 @@
 package com.beifen.edu.administration.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -1109,9 +1110,19 @@ public class AdministrationPageService {
 	// 发布教学任务书
 	public void putOutTask(TeachingTaskPO teachingTaskPO) {
 		Edu201 edu201 = new Edu201();
-		BeanUtils.copyProperties(edu201,teachingTaskPO);
+		try {
+			utils.copy(teachingTaskPO,edu201);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 		edu201DAO.save(edu201);
+		teachingTaskPO.setEdu201_ID(edu201.getEdu201_ID());
 
+		edu204DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
 		List<Edu301> classList = JSONArray.toList((JSONArray)teachingTaskPO.getClassList(), new Edu301(), new JsonConfig());
 		for(Edu301 e : classList) {
 			Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(e.getEdu301_ID().toString());
@@ -1130,11 +1141,14 @@ public class AdministrationPageService {
 			}
 		}
 
+		edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
 		List<TeacherPO> teacherList = JSONArray.toList((JSONArray)teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
 		for(TeacherPO e : teacherList) {
 			List<String> ls = e.getLs();
 			List<String> lsmc = e.getLsmc();
-
+			if("".equals(ls.get(0))){
+				break;
+			}
 			for (int i = 0; i <ls.size(); i++) {
 				Edu205 save = new Edu205();
 				save.setEdu201_ID(edu201.getEdu201_ID());
@@ -1143,13 +1157,15 @@ public class AdministrationPageService {
 				save.setTeacherName(lsmc.get(i));
 				edu205DAO.save(save);
 			}
-
 		}
 
 		List<TeacherPO> baseTeacherList = JSONArray.toList((JSONArray)teachingTaskPO.getBaseTeacherList(), new TeacherPO(), new JsonConfig());
 		for(TeacherPO e : baseTeacherList) {
 			List<String> zyls = e.getZyls();
 			List<String> zylsmc = e.getZylsmc();
+			if("".equals(zyls.get(0))){
+				break;
+			}
 			for (int i = 0; i <zyls.size(); i++) {
 				Edu205 save = new Edu205();
 				save.setEdu201_ID(edu201.getEdu201_ID());
@@ -1161,9 +1177,10 @@ public class AdministrationPageService {
 		}
 
 
+
 	}
 
-	// 发布教学任务书时更改108的信息
+	// 发布教学任务书时更改301的信息
 	public void putOutTaskAction(Long edu301_ID, Long edu201_ID) {
 		Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(edu301_ID.toString());
 		edu301.setSffbjxrws("T");

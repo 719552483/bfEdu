@@ -805,6 +805,7 @@ function sendPutOutInfo(putOutArray){
 		putOutArray[i].classList=classList;
 		putOutArray[i].teacherList=teacherList;
 		putOutArray[i].baseTeacherList=baseTeacherList;
+		putOutArray[i].edu201_ID="";
 	}
 
 
@@ -1207,24 +1208,51 @@ function modifyTask(row,index){
 
 //确认修改任务书
 function comfirmModifyTask(row,index){
+	var sendArray=new Array();
+
 	if(row.sszt==="passing"){
 		toastr.warning('该任务书暂不可进行操作');
 		return ;
 	}
 
+	var classList=new Array();
+	var teacherList=new Array();
+	var baseTeacherList=new Array();
+	var teacheOb=new Object();
+	var zyteacheOb=new Object();
+	var classOb=new Object();
+	if(row.zyls!=null){
+		zyteacheOb.zyls=row.zyls.split(",");
+		zyteacheOb.zylsmc=row.zylsmc.split(",");
+	}
+	if(row.ls!=null){
+		teacheOb.ls=row.ls.split(",");
+		teacheOb.lsmc=row.lsmc.split(",");
+	}
+	classOb.edu301_ID=row.edu301_ID;
+	classOb.jxbmc=row.jxbmc;
+	classList.push(classOb);
+	teacherList.push(teacheOb);
+	baseTeacherList.push(zyteacheOb);
+	row.classList=classList;
+	row.teacherList=teacherList;
+	row.baseTeacherList=baseTeacherList;
+	sendArray.push(row);
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选任务书");
 	$(".remindActionType").html("修改");
-	
+
 	//确认修改任务书
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		$.ajax({
 			method : 'get',
 			cache : false,
-			url : "/modifyTask",
+			url : "/putOutTask",
 			data: {
-	             "modifyInfo":JSON.stringify(row) 
+				"taskInfo":JSON.stringify(sendArray) ,
+				"approvalInfo":JSON.stringify(getApprovalobect())
 	        },
 			dataType : 'json',
 			beforeSend: function(xhr) {
