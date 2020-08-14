@@ -2975,7 +2975,6 @@ public class AdministrationController {
 		List<Edu001> allStudent = administrationPageService.queryAllStudent();
 		for (int i = 0; i < deleteArray.size(); i++) {
 			administrationPageService.removeTeachingClassByID(deleteArray.get(i).toString());
-			administrationPageService.updateStudentTeachingClassInfo(allStudent, deleteArray.get(i).toString());
 		}
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
