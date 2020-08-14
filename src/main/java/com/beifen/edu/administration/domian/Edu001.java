@@ -25,8 +25,6 @@ public class Edu001 {
 	private  String zymc;//专业名称
 	private  String Edu300_ID; //行政班ID
 	private  String xzbname; //行政班名称
-	private  String Edu301_ID;//教学班ID
-	private  String jxbname;//教学班名称
 	private  String xh; //学号
 	private  String xm; //学生姓名
 	private  String zym; //曾用名
@@ -199,29 +197,11 @@ public class Edu001 {
 	public void setRxsj(String rxsj) {
 		this.rxsj = rxsj;
 	}
-//	public String getEdu300_ID() {
-//		return Edu300_ID;
-//	}
-//	public void setEdu300_ID(String edu300_ID) {
-//		Edu300_ID = edu300_ID;
-//	}
-	public String getEdu301_ID() {
-		return Edu301_ID;
-	}
-	public void setEdu301_ID(String edu301_ID) {
-		Edu301_ID = edu301_ID;
-	}
 	public String getXzbname() {
 		return xzbname;
 	}
 	public void setXzbname(String xzbname) {
 		this.xzbname = xzbname;
-	}
-	public String getJxbname() {
-		return jxbname;
-	}
-	public void setJxbname(String jxbname) {
-		this.jxbname = jxbname;
 	}
 	public String getPyccmc() {
 		return pyccmc;

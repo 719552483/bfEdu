@@ -537,20 +537,7 @@ public class AdministrationPageService {
 		edu301DAO.removeTeachingClassByID(edu301ID);
 	}
 
-	// 删除教学班同时更新学生教学班信息
-	public void updateStudentTeachingClassInfo(List<Edu001> allStudent, String edu301id) {
-		for (int i = 0; i < allStudent.size(); i++) {
-			if (allStudent.get(i).getEdu301_ID() != null) {
-				if (allStudent.get(i).getEdu301_ID().equals(edu301id)) {
-					Edu001 edu001 = allStudent.get(i);
-					edu001.setEdu001_ID(allStudent.get(i).getEdu001_ID());
-					edu001.setJxbname(null);
-					edu001.setEdu301_ID(null);
-					edu001DAO.save(edu001);
-				}
-			}
-		}
-	}
+
 
 	// 查询所有教学班
 	public List<Edu301> queryAllTeachingClass() {
@@ -775,8 +762,6 @@ public class AdministrationPageService {
 			// 新行政班有教学班并且是以行政班划分 则该教学班人数加一并更新学生教学班相关信息
 			for (int i = 0; i < newXZBofJXB.size(); i++) {
 				AdministrationPageService.this.addTeachingClassesJXBRS(newXZBofJXB.get(i).getEdu301_ID().toString());
-				newStudentInfo.setEdu301_ID(newXZBofJXB.get(i).getEdu301_ID().toString());
-				newStudentInfo.setJxbname(newXZBofJXB.get(i).getJxbmc());
 			}
 
 			// 新行政班有教学班并且是以学生划分 则不处理
