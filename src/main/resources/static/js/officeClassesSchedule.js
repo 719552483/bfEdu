@@ -613,17 +613,18 @@ function confirmChoosedTeacher(tableId,index,cellName){
 		codeArray.push(teachers[i].edu101_ID);
 	}
 
-
+	var drawLsStr=JSON.stringify(mcArray).substring(1);
 	$(tableId).bootstrapTable('updateCell', {
 		index: index,
 		field: fieldName1,
-		value:  JSON.stringify(mcArray)
+		value:  drawLsStr.substring(0,drawLsStr.length-1)
 	});
 
+	var drawLsStr2=JSON.stringify(codeArray).substring(1);
 	$(tableId).bootstrapTable('updateCell', {
 		index: index,
 		field: fieldName2,
-		value: JSON.stringify(codeArray)
+		value: drawLsStr2.substring(0,drawLsStr2.length-1)
 	});
 
 	// var choosedTeacher = $("#allTeacherTable").bootstrapTable("getSelections")
@@ -804,20 +805,21 @@ function sendPutOutInfo(putOutArray){
 		var teacheOb=new Object();
 		var zyteacheOb=new Object();
 		var classOb=new Object();
-		zyteacheOb.edu101_ID=putOutArray[i].zyls;
-		zyteacheOb.teacherName=putOutArray[i].zylsmc;
-		teacheOb.edu101_ID=putOutArray[i].ls;
-		teacheOb.teacherName=putOutArray[i].lsmc;
+		zyteacheOb.zyls=putOutArray[i].zyls.split(",");
+		zyteacheOb.zylsmc=putOutArray[i].zylsmc.split(",");
+		teacheOb.ls=putOutArray[i].ls.split(",");
+		teacheOb.lsmc=putOutArray[i].lsmc.split(",");
 		classOb.edu301_ID=putOutArray[i].edu301_ID;
-		classOb.className=putOutArray[i].jxbmc;
+		classOb.jxbmc=putOutArray[i].jxbmc;
 		classList.push(classOb);
 		teacherList.push(teacheOb);
 		baseTeacherList.push(zyteacheOb);
-
 		putOutArray[i].classList=classList;
 		putOutArray[i].teacherList=teacherList;
 		putOutArray[i].baseTeacherList=baseTeacherList;
 	}
+
+
 
 	$.ajax({
 		method : 'get',
@@ -920,6 +922,9 @@ function stuffPutOutTaskTable(tableInfo) {
 			drawPagination(".putOutTaskTableArea", "教学任务书");
 		},
 		onDblClickRow : function(row, $element, field) {
+			for (var i = 0; i < choosendTeachers.length; i++) {
+				choosendTeachers.splice(i,1);
+			}
 			onDblClickputOutTaskTable(row, $element, field);
 		},
 		columns: [

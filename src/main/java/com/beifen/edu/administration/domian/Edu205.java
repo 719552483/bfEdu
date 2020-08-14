@@ -10,7 +10,7 @@ public class Edu205 {
     private Long Edu201_ID; //任务书ID
     private Long Edu101_ID;//教师表ID
     private String teacherType;//教师类型
-    private String techerName;//教师姓名
+    private String teacherName;//教师姓名
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -49,11 +49,13 @@ public class Edu205 {
         this.teacherType = teacherType;
     }
 
-    public String getTecherName() {
-        return techerName;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setTecherName(String techerName) {
-        this.techerName = techerName;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
+
+
 }

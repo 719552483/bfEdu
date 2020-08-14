@@ -13,6 +13,8 @@ import com.beifen.edu.administration.PO.TeacherPO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -1105,26 +1107,57 @@ public class AdministrationPageService {
 	}
 
 	// 发布教学任务书
-	public void putOutTask(TeachingTaskPO edu201) {
+	public void putOutTask(TeachingTaskPO teachingTaskPO) {
+		Edu201 edu201 = new Edu201();
+		BeanUtils.copyProperties(edu201,teachingTaskPO);
 		edu201DAO.save(edu201);
 
-		List<Edu300> classList = edu201.getClassList();
-		for(Edu300 e : classList) {
-			Edu204 save = new Edu204();
-			save.setEdu201_ID(edu201.getEdu201_ID());
-			save.setEdu300_ID(e.getEdu300_ID());
-			save.setClassName(e.getXzbmc());
-			edu204DAO.save(save);
+		List<Edu301> classList = JSONArray.toList((JSONArray)teachingTaskPO.getClassList(), new Edu301(), new JsonConfig());
+		for(Edu301 e : classList) {
+			Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(e.getEdu301_ID().toString());
+			String xzb = edu301.getBhxzbid();
+			xzb = xzb.substring(0, xzb.length() -1);
+			String[] xzbList = xzb.split(",");
+			String xzbmc = edu301.getBhxzbmc();
+			xzbmc = xzbmc.substring(0, xzbmc.length() -1);
+			String[] xzbmcList = xzbmc.split(",");
+			for (int i = 0; i < xzbList.length; i++) {
+				Edu204 save = new Edu204();
+				save.setEdu201_ID(edu201.getEdu201_ID());
+				save.setEdu300_ID(Long.parseLong(xzbList[i]));
+				save.setClassName(xzbmcList[i]);
+				edu204DAO.save(save);
+			}
 		}
 
-		List<TeacherPO> teacherList = edu201.getTeacherList();
+		List<TeacherPO> teacherList = JSONArray.toList((JSONArray)teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
 		for(TeacherPO e : teacherList) {
-			Edu205 save = new Edu205();
-			save.setEdu201_ID(edu201.getEdu201_ID());
-			save.setEdu101_ID(e.getEdu101_ID());
-			save.setTeacherType(e.getTeacherType());
-			save.setTecherName(e.getXm());
-			edu205DAO.save(save);
+			List<String> ls = e.getLs();
+			List<String> lsmc = e.getLsmc();
+
+			for (int i = 0; i <ls.size(); i++) {
+				Edu205 save = new Edu205();
+				save.setEdu201_ID(edu201.getEdu201_ID());
+				save.setTeacherType("01");
+				save.setEdu101_ID(Long.parseLong(ls.get(i)));
+				save.setTeacherName(lsmc.get(i));
+				edu205DAO.save(save);
+			}
+
+		}
+
+		List<TeacherPO> baseTeacherList = JSONArray.toList((JSONArray)teachingTaskPO.getBaseTeacherList(), new TeacherPO(), new JsonConfig());
+		for(TeacherPO e : baseTeacherList) {
+			List<String> zyls = e.getZyls();
+			List<String> zylsmc = e.getZylsmc();
+			for (int i = 0; i <zyls.size(); i++) {
+				Edu205 save = new Edu205();
+				save.setEdu201_ID(edu201.getEdu201_ID());
+				save.setTeacherType("01");
+				save.setEdu101_ID(Long.parseLong(zyls.get(i)));
+				save.setTeacherName(zylsmc.get(i));
+				edu205DAO.save(save);
+			}
 		}
 
 

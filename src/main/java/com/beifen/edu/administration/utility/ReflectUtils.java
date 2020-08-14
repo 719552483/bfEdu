@@ -301,16 +301,17 @@ public class ReflectUtils {
 		return null;
 
 	}
-	
-	
-	
+
+
 	/**
 	 * 检验课程文件
-	 * @param suffix文件后缀名
-	 * @return checkPass 验证结果
-	 * @throws Exception 
-	 * @throws java.text.ParseException 
-	 * */
+	 * @param file
+	 * @param checkType
+	 * @param hopeSheetName
+	 * @return
+	 * @throws java.text.ParseException
+	 * @throws Exception
+	 */
 	public Map<String, Object> checkNewClassFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
 		boolean isExcel=false;
@@ -820,16 +821,17 @@ public class ReflectUtils {
 		returnMap.put("importClassess", importClasse);
 		return returnMap;
 	}
-	
-	
-	
+
+
 	/**
 	 * 检验教师文件
-	 * @param suffix文件后缀名
-	 * @return checkPass 验证结果
-	 * @throws Exception 
-	 * @throws java.text.ParseException 
-	 * */
+	 * @param file
+	 * @param checkType
+	 * @param hopeSheetName
+	 * @return
+	 * @throws java.text.ParseException
+	 * @throws Exception
+	 */
 	public Map<String, Object> checkTeacherFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
 		boolean isExcel=false;
@@ -1187,11 +1189,13 @@ public class ReflectUtils {
 
 	/**
 	 * 检验学生文件
-	 * @param suffix文件后缀名
-	 * @return checkPass 验证结果
-	 * @throws Exception 
-	 * @throws java.text.ParseException 
-	 * */
+	 * @param file
+	 * @param checkType
+	 * @param hopeSheetName
+	 * @return
+	 * @throws java.text.ParseException
+	 * @throws Exception
+	 */
 	public Map<String, Object> checkStudentFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
 		Map<String, Object> returnMap = new HashMap();
 		boolean isExcel=false;
@@ -4038,12 +4042,6 @@ public class ReflectUtils {
         }
         return rs.toString();
     }
-
-
-
-
-
-
 
 }
 	

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "Edu101")
 public class Edu101 {
 	// 教职工基本信息表
-	private long Edu101_ID;
+	private Long Edu101_ID;
 	private String szxb; // 系部
 	private String szxbmc; // 系部名称
 	private String zy; // 专业
@@ -38,15 +38,17 @@ public class Edu101 {
 	private String jzglxbm;// 教职工类型编码
 	private String wpjzgspzt;// 外聘教职工审批状态
 
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
 	@Column(name = "Edu101_ID")
-	public long getEdu101_ID() {
+	public Long getEdu101_ID() {
 		return Edu101_ID;
 	}
 
-	public void setEdu101_ID(long edu101_ID) {
+	public void setEdu101_ID(Long edu101_ID) {
 		Edu101_ID = edu101_ID;
 	}
 

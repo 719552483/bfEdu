@@ -3855,6 +3855,7 @@ public class AdministrationController {
 			edu201.setKkbmCode(jsonObject.getString("kkbmCode"));
 			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
 			edu201.setTeacherList(jsonObject.getJSONArray("teacherList"));
+			edu201.setBaseTeacherList(jsonObject.getJSONArray("baseTeacherList"));
 			edu201.setClassList(jsonObject.getJSONArray("classList"));
 			edu201.setSszt("passing");
 			administrationPageService.putOutTask(edu201);
