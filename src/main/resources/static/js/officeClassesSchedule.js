@@ -66,6 +66,9 @@ function stuffTaskInfoTable(tableInfo) {
 			drawPagination(".scheduleClassesTableArea", "教学任务书");
 		},
 		onDblClickRow : function(row, $element, field) {
+			for (var i = 0; i < choosendTeachers.length; i++) {
+				choosendTeachers.splice(i,1);
+			}
 			onDblClickScheduleClassesTable(row, $element, field);
 		},
 		columns: [
