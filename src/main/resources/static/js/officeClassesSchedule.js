@@ -66,9 +66,7 @@ function stuffTaskInfoTable(tableInfo) {
 			drawPagination(".scheduleClassesTableArea", "教学任务书");
 		},
 		onDblClickRow : function(row, $element, field) {
-			for (var i = 0; i < choosendTeachers.length; i++) {
-				choosendTeachers.splice(i,1);
-			}
+			choosendTeachers.length=0;
 			onDblClickScheduleClassesTable(row, $element, field);
 		},
 		columns: [
@@ -93,7 +91,6 @@ function stuffTaskInfoTable(tableInfo) {
 				title: '专业',
 				align: 'left',
 				formatter: bhzymcMatter
-
 			},	{
 				field: 'bhxzbmc',
 				title: '行政班',
@@ -173,7 +170,7 @@ function stuffTaskInfoTable(tableInfo) {
 	}
 	
 	function bhzymcMatter(value, row, index) {
-		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.bhzymc).slice(0, -1)+'">'+$.uniqueArray(row.bhzymc).slice(0, -1)+'</span>' ].join('');
+		return [ '<span class="myTooltip" title="'+$.uniqueArray(row.bhzymc)+'">'+$.uniqueArray(row.bhzymc)+'</span>' ].join('');
 	}
 	
 	function pkbmMatter(value, row, index) {
@@ -537,8 +534,14 @@ function pointTeacherMatter(value, row, index) {
 			]
 			.join('');
 	} else {
+		var drawTxtArray=value.split(',');
+		var drawTxt="";
+		for (var i = 0; i < drawTxtArray.length; i++) {
+			var spilitStart=drawTxtArray[i].substring(1);
+			drawTxt+=spilitStart.substring(0,spilitStart.length-1)+',';
+		}
 		return [
-             '<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
+             '<div class="myTooltip greenTxt" title="'+drawTxt.substring(0,drawTxt.length-1)+'">'+drawTxt.substring(0,drawTxt.length-1)+'</div>'
 			]
 			.join('');
 	}
@@ -595,7 +598,12 @@ function allTaecherReSearch(){
 
 //确认选择教师事件
 function confirmChoosedTeacher(tableId,index,cellName){
-	var teachers = $("#allTeacherTable").bootstrapTable("getSelections");
+	var choosedTeacher = $("#allTeacherTable").bootstrapTable("getSelections");
+	if(choosedTeacher.length===0){
+		toastr.warning('暂未选择教师');
+		return;
+	}
+
 	var fieldName1="";
 	var fieldName2="";
 	if(tableId==="#scheduleClassesTable"){
@@ -608,78 +616,52 @@ function confirmChoosedTeacher(tableId,index,cellName){
 
 	var mcArray=new Array();
 	var codeArray=new Array();
-	for (var i = 0; i < teachers.length; i++) {
-		mcArray.push(teachers[i].xm);
-		codeArray.push(teachers[i].edu101_ID);
+	for (var i = 0; i < choosedTeacher.length; i++) {
+		mcArray.push(choosedTeacher[i].xm);
+		codeArray.push(choosedTeacher[i].edu101_ID);
 	}
-
 	var drawLsStr=JSON.stringify(mcArray).substring(1);
-	$(tableId).bootstrapTable('updateCell', {
-		index: index,
-		field: fieldName1,
-		value:  drawLsStr.substring(0,drawLsStr.length-1)
-	});
-
 	var drawLsStr2=JSON.stringify(codeArray).substring(1);
-	$(tableId).bootstrapTable('updateCell', {
-		index: index,
-		field: fieldName2,
-		value: drawLsStr2.substring(0,drawLsStr2.length-1)
-	});
 
-	// var choosedTeacher = $("#allTeacherTable").bootstrapTable("getSelections")
-	//
-	// if(choosedTeacher.length===0){
-	// 	toastr.warning('暂未选择教师');
-	// 	return;
-	// }
-	//
-	// var fieldName1="";
-	// var fieldName2="";
-	// if(tableId==="#scheduleClassesTable"){
-	// 	fieldName1=cellName;
-	// 	fieldName2=cellName+"Code";
-	// }else{
-	// 	fieldName1=cellName;
-	// 	fieldName2=cellName.substring(0,cellName.length-2);
-	// }
-	//
-	// var choosedTask = $(tableId).bootstrapTable("getSelections");
-	// if(choosedTask<=0){
-	// 	$(tableId).bootstrapTable('updateCell', {
-	// 		index: index,
-	// 		field: fieldName1,
-	// 		value: choosedTeacher[0].xm
-	// 	});
-	//
-	// 	$(tableId).bootstrapTable('updateCell', {
-	// 		index: index,
-	// 		field: fieldName2,
-	// 		value: JSON.stringify(choosedTeacher[0].edu101_ID)
-	// 	});
-	// }else{
-	// 	for (var i = 0; i < choosedTask.length; i++) {
-	// 		if(choosedTask[i].check){
-	// 			$(tableId).bootstrapTable('updateCell', {
-	// 				index: i,
-	// 				field: fieldName1,
-	// 				value: choosedTeacher[0].xm
-	// 			});
-	//
-	// 			$(tableId).bootstrapTable('updateCell', {
-	// 				index: i,
-	// 				field: fieldName2,
-	// 				value:JSON.stringify(choosedTeacher[0].edu101_ID)
-	// 			});
-	// 		}
-	// 	}
-	// }
-	// if(tableId==="#scheduleClassesTable"){
-	// 	sfxylcjControlBind();
-	// }else{
-	// 	putOutTasksfxylcjControlBind();
-	// }
+	var choosedTask = $(tableId).bootstrapTable("getSelections");
+	if(choosedTask<=0){
+		$(tableId).bootstrapTable('updateCell', {
+			index: index,
+			field: fieldName1,
+			value:  drawLsStr.substring(0,drawLsStr.length-1)
+		});
+
+
+		$(tableId).bootstrapTable('updateCell', {
+			index: index,
+			field: fieldName2,
+			value: drawLsStr2.substring(0,drawLsStr2.length-1)
+		});
+	}else{
+		for (var i = 0; i < choosedTask.length; i++) {
+			if(choosedTask[i].check){
+				$(tableId).bootstrapTable('updateCell', {
+					index: i,
+					field: fieldName1,
+					value:  drawLsStr.substring(0,drawLsStr.length-1)
+				});
+
+
+				$(tableId).bootstrapTable('updateCell', {
+					index: i,
+					field: fieldName2,
+					value: drawLsStr2.substring(0,drawLsStr2.length-1)
+				});
+			}
+		}
+	}
+	if(tableId==="#scheduleClassesTable"){
+		sfxylcjControlBind();
+	}else{
+		putOutTasksfxylcjControlBind();
+	}
 	$.hideModal();
+	toolTipUp(".myTooltip");
 }
 
 //switch事件绑定1
