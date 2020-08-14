@@ -92,34 +92,34 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 		return;
 	}
 
-
-	//用户名只能为长度为25
-	if (username.length>25) {
-		toastr.warning('用户名只长度超过25');
+	//用户名只能为长度为24
+	if (username.length>24) {
+		toastr.warning('用户名只长度超过24');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
 		return;
 	}
 
-	//由数字和26个英文字母组成的字符串
-	var userNameTest = /^[A-Za-z0-9]+$/;
-	if (!userNameTest.test(username)) {
+	//密码长度只能为长度为16
+	if (pwd.length>16) {
+		toastr.warning('密码长度超过16');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	var CharOnlyTset = /^[A-Za-z0-9]+$/;
+
+	//用户名只能由数字和26个英文字母组成的字符串
+	if (!CharOnlyTset.test(username)) {
 		toastr.warning('用户名只由数字和26个英文字母组成');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
 		return;
 	}
 
-	//密码长度验证
-	if (pwd.length>10) {
-		toastr.warning('密码长度超过10');
-		$(".saveNewAccountSetUp").addClass("animated shake");
-		reomveAnimation('.saveNewAccountSetUp', "animated shake");
-		return;
-	}
-
-	//密码组成验证
-	if (!pwd.test(username)) {
+	//密码只能由数字和26个英文字母组成的字符串
+	if (!CharOnlyTset.test(pwd)) {
 		toastr.warning('密码只由数字和26个英文字母组成');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
@@ -127,8 +127,9 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 	}
 
 	var patter_special_char = /[,;；，《》]+/;
+
 	//用户名特殊字符验证
-	if (!username.test(patter_special_char)) {
+	if (patter_special_char.test(username)) {
 		toastr.warning('用户名不允许包含特殊字符');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
@@ -136,7 +137,7 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 	}
 
 	//密码特殊字符验证
-	if (!pwd.test(patter_special_char)) {
+	if (patter_special_char.test(pwd)) {
 		toastr.warning('密码不允许包含特殊字符');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
@@ -152,7 +153,6 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 		saveNewUser(username, newRole, pwd, confirmPwd);
 		e.stopPropagation();
 	});
-	
 }
 
 //发送新用户保存数据库
@@ -187,9 +187,13 @@ function saveNewUser(username, newRole, pwd, confirmPwd) {
 			}
 			newUserObject.bf990_ID = backjson.id; //数据库生成的id
 			$('#allUserTable').bootstrapTable('append', newUserObject);
-			toastr.success('新增用户成功');
-			$("#add_username,#add_pwd,#add_confirmPwd").val("");
 			drawPagination(".allUserTableArea", "用户信息");
+			var reObject = new Object();
+			reObject.InputIds = "#add_username,#add_pwd,#add_confirmPwd";
+			reObject.numberInputs = "#newRole";
+			reReloadSearchsWithSelect(reObject);
+			toolTipUp(".myTooltip");
+			toastr.success('新增用户成功');
 		}
 	});
 }
