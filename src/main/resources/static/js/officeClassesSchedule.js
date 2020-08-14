@@ -129,6 +129,11 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'left',
 				formatter: paramsMatter
 
+			},{
+				field: 'zzs',
+				title: '总周数',
+				align: 'left',
+				formatter: paramsMatter
 			},	{
 				field: 'kkbm',
 				title: '开课部门',
@@ -487,6 +492,7 @@ function rePutTaskInfo(oldTaskInfo){
 		newTaskInfo.zylsCode="";
 		typeof(crouseInfo.sfxylcj) !== "undefined"&&crouseInfo.sfxylcj!==""?newTaskInfo.sfxylcj="T":newTaskInfo.sfxylcj="F";
 		newTaskInfo.zhouxs=crouseInfo.zhouxs;
+		newTaskInfo.zzs=crouseInfo.zzs;
 		newTaskInfo.kkbm=crouseInfo.kkbm;
 		newTaskInfo.kkbmCode=crouseInfo.kkbmCode;
 		newTaskInfo.pkbm=crouseInfo.kkbm;
@@ -711,7 +717,7 @@ function putOut(row,index){
 	putOutObject.zymc=row.bhzymc[0];
 	putOutObject.jxbrs=row.jxbrs;
 	putOutObject.xzbmc=row.bhxzbmc;
-	putOutObject.zxs=row.zhouxs;
+	putOutObject.zxs=(row.zhouxs*row.zzs);
 	putOutObject.ls=row.lsCode;
 	putOutObject.lsmc=row.ls;
 	putOutObject.zyls=row.zylsCode;
@@ -904,9 +910,7 @@ function stuffPutOutTaskTable(tableInfo) {
 			drawPagination(".putOutTaskTableArea", "教学任务书");
 		},
 		onDblClickRow : function(row, $element, field) {
-			for (var i = 0; i < choosendTeachers.length; i++) {
-				choosendTeachers.splice(i,1);
-			}
+			choosendTeachers.length=0;
 			onDblClickputOutTaskTable(row, $element, field);
 		},
 		columns: [
@@ -1048,8 +1052,6 @@ function stuffPutOutTaskTable(tableInfo) {
 			.join('');
         }
 	}
-	
-	
 
 	drawPagination(".putOutTaskTableArea", "教学任务书");
 	drawSearchInput(".putOutTaskTableArea");
@@ -1062,17 +1064,19 @@ function stuffPutOutTaskTable(tableInfo) {
 
 //已发布任务书表双击事件
 function onDblClickputOutTaskTable(row, $element, field){
-	if(row.sszt==="noStatus"){
-		var index =parseInt($element[0].dataset.index);
-		if(field==="lsmc"){
-			getLsInfo('#putOutTaskTable',index,"lsmc");
-		}else if(field==="zylsmc"){
-			getLsInfo('#putOutTaskTable',index,"zylsmc");
-		}else if(field==="pkbm"){
-			wantChangePutOutPKBM(index,"pkbm");
-		}else{
-			return;
-		}
+	if(row.sszt==="passing"){
+		toastr.warning('不允许修改审核中的任务书');
+		return;
+	}
+	var index =parseInt($element[0].dataset.index);
+	if(field==="lsmc"){
+		getLsInfo('#putOutTaskTable',index,"lsmc");
+	}else if(field==="zylsmc"){
+		getLsInfo('#putOutTaskTable',index,"zylsmc");
+	}else if(field==="pkbm"){
+		wantChangePutOutPKBM(index,"pkbm");
+	}else{
+		return;
 	}
 }
 
@@ -1108,6 +1112,10 @@ function removePutOutTasks(){
 
 //单个删除任务书
 function removeTask(row,index){
+	if(row.sszt==="passing"){
+		toastr.warning('不能删除正在审核的教学任务书');
+		return;
+	}
 	if(row.sszt==="pass"){
 		toastr.warning('不能删除已通过审核的教学任务书');
 		return;
