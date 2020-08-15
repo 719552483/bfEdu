@@ -1860,4 +1860,23 @@ public class AdministrationPageService {
 
 		return localUsedPOList;
 	}
+
+	//查询全部行政班
+	public List<Edu300> findAllClass() {
+		List<Edu300> classList = edu300DAO.findAll();
+		return classList;
+	}
+
+
+	public List<Edu300> findClassByMajor(String edu301_id) {
+		List<Edu300> classList = new ArrayList<>();
+		List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu301_id);
+
+		if(edu302List.size() != 0) {
+			 Edu300 edu300  = edu300DAO.findXzbByEdu300ID(edu302List.get(0).getEdu300_ID().toString());
+			 classList = edu300DAO.findClassByMajor(edu300.getZybm());
+		}
+
+		return classList;
+	}
 }

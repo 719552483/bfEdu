@@ -2537,6 +2537,38 @@ public class AdministrationController {
 		return returnMap;
 	}
 
+
+	/**
+	 * 查询全部行政班
+	 * @return
+	 */
+	@RequestMapping("findAllClass")
+	@ResponseBody
+	public Object findAllClass() {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu300> classList = administrationPageService.findAllClass();
+		returnMap.put("classList",classList);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+	/**
+	 * 查询同专业行政班
+	 * @return
+	 */
+	@RequestMapping("findClassByMajor")
+	@ResponseBody
+	public Object findClassByMajor(@RequestParam("edu301_ID") String edu301_ID) {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu300> classList = administrationPageService.findClassByMajor(edu301_ID);
+		returnMap.put("classList",classList);
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+
+
+
 	/**
 	 * 搜索行政班
 	 *
@@ -3885,7 +3917,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 *  课程性质按钮获取待排课程列表
+	 *  根据ID删除排课信息
 	 * @return returnMap
 	 */
 	@RequestMapping("removeTask")
@@ -3925,6 +3957,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
+
 
 //	/**
 //	 *  排课页面开始检索按钮

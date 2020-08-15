@@ -1909,9 +1909,9 @@ function getAllXzbByZy(row,index){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/findClass",
+		url : "/findClassByMajor",
 		data: {
-			"edu300_ID":JSON.stringify(row.edu300_ID)
+			"edu301_ID":JSON.stringify(row.edu301_ID)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1926,12 +1926,12 @@ function getAllXzbByZy(row,index){
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
-				if(backjson.classesInfo.length===0){
+				if(backjson.classList.length===0){
 					toastr.info('暂无可选行政班');
 					return;
 				}
 				$(".chooseLibirary").empty();
-				var xzbInfo=backjson.classesInfo;
+				var xzbInfo=backjson.classList;
 				var bhxzb=row.bhxzbid.split(",");
 				var str='<span class="soprtAreaTitle">可选班级:</span>';
 				var addNum=0;
@@ -1963,10 +1963,6 @@ function getAllXzb(row){
 		method : 'get',
 		cache : false,
 		url : "/findAllClass",
-		url : "/getAllClassesLibrary",
-		data: {
-			"edu300_ID":JSON.stringify(row.edu300_ID)
-		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -1980,13 +1976,13 @@ function getAllXzb(row){
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
-				if(backjson.classesInfo.length===0){
+				if(backjson.classList.length===0){
 					toastr.info('暂无可选行政班');
 					return;
 				}
 
 				$(".chooseLibirary").empty();
-				var xzbInfo=backjson.classesInfo;
+				var xzbInfo=backjson.classList;
 				var bhxzb=row.bhxzbid.split(",");
 				var str='<span class="soprtAreaTitle">可选班级:</span>';
 				var addNum=0;

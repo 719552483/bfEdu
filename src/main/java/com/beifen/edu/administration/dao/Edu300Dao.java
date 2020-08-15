@@ -61,4 +61,8 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	// 根据id查询行政班
 	@Query(value = "select * from edu300 where Edu300_ID =?1", nativeQuery = true)
 	Edu300 findXzbByEdu300ID(String bhxzbid);
+
+	// 根据专业查询行政班
+	@Query(value = "select * from edu300 where zybm =?1", nativeQuery = true)
+    List<Edu300> findClassByMajor(String zybm);
 }
