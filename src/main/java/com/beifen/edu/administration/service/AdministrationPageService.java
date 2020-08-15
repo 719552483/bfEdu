@@ -513,6 +513,8 @@ public class AdministrationPageService {
 	// 删除教学班
 	public void removeTeachingClassByID(String edu301ID) {
 		edu301DAO.removeTeachingClassByID(edu301ID);
+
+		edu302DAO.removeByEdu301Id(edu301ID);
 	}
 
 
