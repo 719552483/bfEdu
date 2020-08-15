@@ -44,19 +44,18 @@ function getSearchAreaSelectInfo(){
                 }
                 stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
 
-
                 var showstr="暂无选择";
                 if (backjson.allTerm.length>0) {
                     showstr="请选择";
                     allTermStr= '<option value="seleceConfigTip">'+showstr+'</option>';
-                    for (var i = 0; i < backjson.allTeacher.length; i++) {
+                    for (var i = 0; i < backjson.allTerm.length; i++) {
                         allTermStr += '<option value="' + backjson.allTerm[i].edu400_ID + '">' + backjson.allTerm[i].xnmc
                             + '</option>';
                     }
                 }else{
                     allTermStr= '<option value="seleceConfigTip">'+showstr+'</option>';
                 }
-                stuffManiaSelect("#schoolYear", allTerm);
+                stuffManiaSelect("#schoolYear", allTermStr);
 
 
             } else {
@@ -109,10 +108,7 @@ function stufflocalInfoTable(tableInfo) {
             drawPagination(".localInfoTableArea", "教学任务点信息");
         },
         columns: [
-            {
-                field: 'check',
-                checkbox: true,
-            },{
+           {
                 field: 'edu500Id',
                 title: '唯一标识',
                 align: 'center',
@@ -149,7 +145,7 @@ function stufflocalInfoTable(tableInfo) {
                 align: 'left',
                 formatter: paramsMatter,
             }, {
-                field: 'cdsyl',
+                field: 'siteUtilization',
                 title: '场地使用率',
                 align: 'left',
                 formatter: paramsMatter,
@@ -165,15 +161,15 @@ function stufflocalInfoTable(tableInfo) {
                 title: '详细地址',
                 align: 'left',
                 formatter: paramsMatter
-            },
-            {
-                field: 'action',
-                title: '操作',
-                align: 'center',
-                clickToSelect: false,
-                formatter: releaseNewsFormatter,
-                events: releaseNewsEvents,
             }
+            // {
+            //     field: 'action',
+            //     title: '操作',
+            //     align: 'center',
+            //     clickToSelect: false,
+            //     formatter: releaseNewsFormatter,
+            //     events: releaseNewsEvents,
+            // }
         ]
     });
 
@@ -231,6 +227,10 @@ function stufflocalInfoDetails(row){
 //开始检索教学点
 function startSearch(){
     var searchObject = getSearchValue();
+    if(searchObject.academicYearId === undefined){
+        toastr.warning('请选择学年');
+        return;
+    }
     searchAllSiteBy(searchObject);
 
 }
@@ -246,7 +246,7 @@ function getSearchValue(){
     var cdxzCode = getNormalSelectValue("siteNature");
     var lf= getNormalSelectText("building");
     var lfCode = getNormalSelectValue("building");
-    var xn = getNormalSelectText("schoolYear");
+    var xn = getNormalSelectValue("schoolYear");
 
 
     var returnObject = new Object();
@@ -255,7 +255,7 @@ function getSearchValue(){
     }
 
     if(xn!==""){
-        returnObject.academicYear = xn;
+        returnObject.academicYearId = xn;
     }
 
     if(ssxq!==""){
@@ -281,37 +281,6 @@ function getSearchValue(){
     return returnObject;
 }
 
-//检索所有教学点
-function searchAllSite(){
-    $.ajax({
-        method : 'get',
-        cache : false,
-        url : "/queryAllSite",
-        dataType : 'json',
-        beforeSend: function(xhr) {
-            requestErrorbeforeSend();
-        },
-        error: function(textStatus) {
-            requestError();
-        },
-        complete: function(xhr, status) {
-            requestComplete();
-        },
-        success : function(backjson) {
-            hideloding();
-            if (backjson.result) {
-                if(backjson.siteList.length===0){
-                    toastr.warning('暂无教学点信息');
-                    drawlocalInfoTableEmptyTable();
-                }else{
-                    stufflocalInfoTable(backjson.siteList);
-                }
-            } else {
-                toastr.warning('操作失败，请重试');
-            }
-        }
-    });
-}
 
 //按条件检索教学点
 function searchAllSiteBy(searchObject){

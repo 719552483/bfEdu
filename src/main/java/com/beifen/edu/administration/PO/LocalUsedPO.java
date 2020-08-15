@@ -4,7 +4,7 @@ import com.beifen.edu.administration.domian.Edu500;
 
 public class LocalUsedPO extends Edu500 {
     private String siteUtilization;//场地使用率
-    private String academicYear;//学年
+    private String academicYearId;//学年id
 
 
     public String getSiteUtilization() {
@@ -15,11 +15,11 @@ public class LocalUsedPO extends Edu500 {
         this.siteUtilization = siteUtilization;
     }
 
-    public String getAcademicYear() {
-        return academicYear;
+    public String getAcademicYearId() {
+        return academicYearId;
     }
 
-    public void setAcademicYear(String academicYear) {
-        this.academicYear = academicYear;
+    public void setAcademicYearId(String academicYearId) {
+        this.academicYearId = academicYearId;
     }
 }

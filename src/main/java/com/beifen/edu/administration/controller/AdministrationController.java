@@ -2796,13 +2796,14 @@ public class AdministrationController {
 	@ResponseBody
 	public Object confirmClassAction(@RequestParam("classInfo") String classInfo) {
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu301> allTeachingClasses = administrationPageService.queryAllTeachingClass();
-		List<Edu001> allStudent = administrationPageService.queryAllStudent();
 		JSONArray array = JSONArray.fromObject(classInfo); // 解析json字符
-		List<Edu301> verifyList = new ArrayList<Edu301>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			Edu301 verifyEdu301 = new Edu301();
+			String edu301_id = jsonObject.getString("edu301_ID");
+			if (!"".equals(edu301_id)) {
+				verifyEdu301.setEdu301_ID(Long.parseLong(edu301_id));
+			}
 			verifyEdu301.setEdu108_ID(jsonObject.getLong("edu108_ID"));
 			verifyEdu301.setKcmc(jsonObject.getString("kcmc"));
 			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
@@ -2822,9 +2823,8 @@ public class AdministrationController {
 			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
 			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
-			verifyList.add(verifyEdu301);
+			administrationPageService.classAction(verifyEdu301);
 		}
-		administrationPageService.classAction(verifyList);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -3744,7 +3744,6 @@ public class AdministrationController {
 			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
 			edu201.setTeacherList(jsonObject.getJSONArray("teacherList"));
 			edu201.setBaseTeacherList(jsonObject.getJSONArray("baseTeacherList"));
-			edu201.setClassList(jsonObject.getJSONArray("classList"));
 			edu201.setSszt("passing");
 			administrationPageService.putOutTask(edu201);
 			administrationPageService.putOutTaskAction(edu201.getEdu301_ID(),edu201.getEdu201_ID());
@@ -4146,16 +4145,17 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
 
+		String academicYearId = "";
 		String jxdmc ="";
 		String ssxq = "";
 		String cdlx ="";
 		String cdxz = "";
 		String lf = "";
 		String lc = "";
-		String academicYear = "";
 
-		if (jsonObject.has("academicYear")){
-			jxdmc = jsonObject.getString("academicYear");
+
+		if (jsonObject.has("academicYearId")){
+			academicYearId = jsonObject.getString("academicYearId");
 		}
 		if (jsonObject.has("jxdmc")){
 			jxdmc = jsonObject.getString("jxdmc");
@@ -4177,7 +4177,7 @@ public class AdministrationController {
 		}
 
 		LocalUsedPO localUsedPO = new LocalUsedPO();
-		localUsedPO.setAcademicYear(academicYear);
+		localUsedPO.setAcademicYearId(academicYearId);
 		localUsedPO.setJxdmc(jxdmc);
 		localUsedPO.setSsxq(ssxq);
 		localUsedPO.setCdlx(cdlx);

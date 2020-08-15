@@ -76,6 +76,8 @@ public class AdministrationPageService {
 	private Edu204Dao edu204DAO;
 	@Autowired
 	private Edu205Dao edu205DAO;
+	@Autowired
+	private Edu302Dao edu302DAO;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -485,45 +487,21 @@ public class AdministrationPageService {
 	}
 
 	// 教学班拆班 合班 生成的相关操作
-	public void classAction(List<Edu301> newTeachingClasses) {
-		List<Edu301> allTeachingClasses = edu301DAO.findAll();
-		boolean dateBaseHaveJXB = false;// 数据库是否有教学班
-		if (allTeachingClasses.size() != 0) {
-			dateBaseHaveJXB = true;
-		}
+	public void classAction(Edu301 edu301) {
+		edu301DAO.save(edu301);
 
-		// 判断新教学班是否有包含学生字段 有则按学生id更新学生教学班信息 无则按行政班id更新学生信息
-		for (int n = 0; n < newTeachingClasses.size(); n++) {
-			edu301DAO.save(newTeachingClasses.get(n));
-			Edu301 deu301 = new Edu301();
-			deu301.setEdu301_ID(newTeachingClasses.get(n).getEdu301_ID());
-			deu301.setJxbmc(newTeachingClasses.get(n).getJxbmc());
+		String bhxzbid = edu301.getBhxzbid().substring(0,edu301.getBhxzbid().length() - 1);
+		String bhxzbmc = edu301.getBhxzbmc().substring(0,edu301.getBhxzbmc().length() - 1);
+		String[] bhxzbids= bhxzbid.split(",");
+		String[] bhxzbmcs = bhxzbmc.split(",");
 
-			String bhXSid = newTeachingClasses.get(n).getBhxsCode();
-			if (bhXSid != null && !bhXSid.equals("")) {
-				String[] bhXsid = newTeachingClasses.get(n).getBhxsCode().split(",");
-				for (int BHXS = 0; BHXS < bhXsid.length; BHXS++) {
-					edu001DAO.stuffStudentTeachingClassInfoby001id(deu301.getJxbmc(), deu301.getEdu301_ID(),
-							bhXsid[BHXS]);
-				}
-			} else {
-				String[] bhXZBid = newTeachingClasses.get(n).getBhxzbid().split(",");
-				for (int BHXZB = 0; BHXZB < bhXZBid.length; BHXZB++) {
-					edu001DAO.stuffStudentTeachingClassInfoBy300id(deu301.getJxbmc(), deu301.getEdu301_ID(),
-							bhXZBid[BHXZB]);
-				}
-			}
-		}
-
-		// 数据库是否有教学班 并且数据库中教学班的108id等于西教学班的108id 则删除原始教学班
-		if (dateBaseHaveJXB) {
-			for (int a = 0; a < allTeachingClasses.size(); a++) {
-				for (int n = 0; n < newTeachingClasses.size(); n++) {
-					if (allTeachingClasses.get(a).getEdu108_ID().equals(newTeachingClasses.get(n).getEdu108_ID())) {
-						edu301DAO.removeTeachingClassByID(allTeachingClasses.get(a).getEdu301_ID().toString());
-					}
-				}
-			}
+		edu302DAO.removeByEdu301Id(edu301.getEdu301_ID().toString());
+		for (int i = 0; i < bhxzbids.length; i++) {
+			Edu302 save = new Edu302();
+			save.setEdu301_ID(edu301.getEdu301_ID());
+			save.setEdu300_ID(Long.parseLong(bhxzbids[i]));
+			save.setXzbmc(bhxzbmcs[i]);
+			edu302DAO.save(save);
 		}
 	}
 
@@ -1106,25 +1084,6 @@ public class AdministrationPageService {
 		}
 		edu201DAO.save(edu201);
 		teachingTaskPO.setEdu201_ID(edu201.getEdu201_ID());
-
-		edu204DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
-		List<Edu301> classList = JSONArray.toList((JSONArray)teachingTaskPO.getClassList(), new Edu301(), new JsonConfig());
-		for(Edu301 e : classList) {
-			Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(e.getEdu301_ID().toString());
-			String xzb = edu301.getBhxzbid();
-			xzb = xzb.substring(0, xzb.length() -1);
-			String[] xzbList = xzb.split(",");
-			String xzbmc = edu301.getBhxzbmc();
-			xzbmc = xzbmc.substring(0, xzbmc.length() -1);
-			String[] xzbmcList = xzbmc.split(",");
-			for (int i = 0; i < xzbList.length; i++) {
-				Edu204 save = new Edu204();
-				save.setEdu201_ID(edu201.getEdu201_ID());
-				save.setEdu300_ID(Long.parseLong(xzbList[i]));
-				save.setClassName(xzbmcList[i]);
-				edu204DAO.save(save);
-			}
-		}
 
 		edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
 		List<TeacherPO> teacherList = JSONArray.toList((JSONArray)teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
@@ -1842,23 +1801,41 @@ public class AdministrationPageService {
 	//教学点使用率查询
 	public List<LocalUsedPO> searchLocalUsed(LocalUsedPO localUsedPO) {
 		Edu500 edu500 = new Edu500();
-		BeanUtils.copyProperties(edu500,localUsedPO);
+		try {
+			utils.copy(localUsedPO,edu500);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 		List<Edu500> siteList = searchSite(edu500);
 		//查找学年总周数
-		int weeks = Integer.parseInt(edu400DAO.getWeekByYear(localUsedPO.getAcademicYear()));
+		int weeks = Integer.parseInt(edu400DAO.getWeekByYear(localUsedPO.getAcademicYearId()));
 		Integer countUsed = weeks * 12;
 		List<LocalUsedPO> localUsedPOList = new ArrayList<>();
 		for (Edu500 e : siteList) {
 			LocalUsedPO save = new LocalUsedPO();
 			List<String> edu202Ids = edu200DAO.findIdByJxdmc(e.getJxdmc());
-			List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
-
-			NumberFormat nf = NumberFormat.getPercentInstance();
-			nf.setMinimumFractionDigits(4);//设置保留小数位
-			String usedPercent = nf.format(usedList.size() / countUsed);
-			BeanUtils.copyProperties(save, e);
-			save.setSiteUtilization(usedPercent);
-
+			if(edu202Ids.size() != 0){
+				List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
+				NumberFormat nf = NumberFormat.getPercentInstance();
+				nf.setMinimumFractionDigits(2);//设置保留小数位
+				String usedPercent = nf.format(usedList.size() / countUsed);
+				save.setSiteUtilization(usedPercent);
+			} else {
+				save.setSiteUtilization("0.00%");
+			}
+			try {
+				utils.copyTargetSuper(e,save);
+			} catch (NoSuchMethodException noSuchMethodException) {
+				noSuchMethodException.printStackTrace();
+			} catch (IllegalAccessException illegalAccessException) {
+				illegalAccessException.printStackTrace();
+			} catch (InvocationTargetException invocationTargetException) {
+				invocationTargetException.printStackTrace();
+			}
 			localUsedPOList.add(save);
 		}
 
