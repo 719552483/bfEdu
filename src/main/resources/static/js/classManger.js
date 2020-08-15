@@ -1423,11 +1423,6 @@ function addTeachingClassBtnbind() {
 	});
 }
 
-
-
-
-
-
 /*教学班管理start*/
 // 获取教学班列表信息
 function getAllTeachingClassInfo(isReturnLastPage) {
@@ -1644,7 +1639,7 @@ function modifyTeachingClass(row, index) {
 	//确认按钮
 	$('.confirmModifyTeachingClass').unbind('click');
 	$('.confirmModifyTeachingClass').bind('click', function(e) {
-		confirmModifyTeachingClass(row,index);
+		confirmModifyTeachingClass(row);
 		e.stopPropagation();
 	});
 }
@@ -1822,7 +1817,7 @@ function stuffAllXzb(row,index){
 }
 
 //渲染已选的行政班
-function stuffChoosendXzb(row,index){
+function stuffChoosendXzb(row){
 	$(".chooseendArea").empty();
 	var bhxzbmc=row.bhxzbmc.split(",");
 	var bhxzb=row.bhxzbid.split(",");
@@ -1831,29 +1826,47 @@ function stuffChoosendXzb(row,index){
 		if(bhxzb[i]!==""){
 			str+='<div class="col1 giveBottom">' +
 				'<div class="icheck-material-blue"> ' +
-				'<input type="checkbox" class="removeChoosendClassBtn" index="'+index+'" id="'+bhxzb[i]+'" checked="true"> ' +
+				'<input type="checkbox" class="controlBtn" id="'+bhxzb[i]+'" checked="true"> ' +
 				'<label for="'+bhxzb[i]+'">'+bhxzbmc[i]+'</label>' +
 				'</div>' +
 				'</div>';
 		}
 	}
 	$(".chooseendArea").append(str);
-	// 非同专业班级库
-	$('.removeChoosendClassBtn').unbind('click');
-	$('.removeChoosendClassBtn').bind('click', function(e) {
-		removeChoosendClass(e);
+	// 判断
+	$('.controlBtn').unbind('click');
+	$('.controlBtn').bind('click', function(e) {
+		judgAddOrRemove(e);
 	});
 }
 
-//删除已选
+//判断穿梭框的新增或删除
+function judgAddOrRemove(eve){
+	var parentClass=eve.currentTarget.parentElement.parentElement.parentElement.classList[0];
+	if(parentClass==="chooseLibirary"){
+		removeLibiraryClass(eve);
+		addChoosendClass(eve);
+	}else{
+		removeChoosendClass(eve);
+		addLibiraryClass(eve);
+	}
+	$(".norsArea").hide();
+	// 判断
+	$('.controlBtn').unbind('click');
+	$('.controlBtn').bind('click', function(e) {
+		judgAddOrRemove(e);
+	});
+}
+
+//添加已选班级
+function  addChoosendClass(eve){
+	$(".chooseendArea").append(eve.currentTarget.parentElement.parentElement.outerHTML);
+}
+
+//删除已选班级
 function  removeChoosendClass(eve){
-  var removeIndex=eve.currentTarget.attributes[2].nodeValue;
-  var removeId=eve.currentTarget.attributes[3].nodeValue;
-  $(".chooseLibirary").append(eve.currentTarget.parentElement.parentElement.outerHTML);
-
-  $(".norsArea").hide();
-
-  var allChoosend=$(".chooseendArea").find(".col1");
+	var removeId=eve.currentTarget.attributes[2].nodeValue;
+	var allChoosend=$(".chooseendArea").find(".col1");
 	for (var i = 0; i < allChoosend.length; i++) {
 		if(allChoosend[i].childNodes[0].children[0].id===removeId){
 			$(".chooseendArea").find('.col1:eq('+i+')').remove();
@@ -1861,17 +1874,17 @@ function  removeChoosendClass(eve){
 	}
 }
 
-//添加行政班
-function addChoosendClass(eve){
-	var removeIndex=eve.currentTarget.attributes[2].nodeValue;
-	var removeId=eve.currentTarget.attributes[3].nodeValue;
-	$(".chooseendArea").append(eve.currentTarget.parentElement.parentElement.outerHTML);
+//添加可选班级
+function addLibiraryClass(eve){
+	$(".chooseLibirary").append(eve.currentTarget.parentElement.parentElement.outerHTML);
+}
 
-	$(".norsArea").hide();
-
-	var allChoosend=$(".chooseLibirary").find(".col1");
-	for (var i = 0; i < allChoosend.length; i++) {
-		if(allChoosend[i].childNodes[0].children[0].id===removeId){
+//删除可选班级
+function  removeLibiraryClass(eve){
+	var removeId=eve.currentTarget.attributes[2].nodeValue;
+	var allLibirary=$(".chooseLibirary").find(".col1");
+	for (var i = 0; i < allLibirary.length; i++) {
+		if(allLibirary[i].childNodes[0].children[0].id===removeId){
 			$(".chooseLibirary").find('.col1:eq('+i+')').remove();
 		}
 	}
@@ -1905,7 +1918,7 @@ function getAllClassesLibraryforModify(jsutUnqine,row){
 }
 
 //获取同专业行政班
-function getAllXzbByZy(row,index){
+function getAllXzbByZy(row){
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -1939,7 +1952,7 @@ function getAllXzbByZy(row,index){
 					if(bhxzb.indexOf(JSON.stringify(xzbInfo[i].edu300_ID))===-1){
 						str+='<div class="col1 giveBottom">' +
 							'<div class="icheck-material-blue"> ' +
-							'<input type="checkbox" index="'+index+'" id="'+xzbInfo[i].edu300_ID+'" checked="true" onclick="addChoosendClass('+this+')"> ' +
+							'<input type="checkbox" class="controlBtn" id="'+xzbInfo[i].edu300_ID+'" checked="false"> ' +
 							'<label for="'+xzbInfo[i].edu300_ID+'">'+xzbInfo[i].xzbmc+'</label>' +
 							'</div>' +
 							'</div>';
@@ -1950,6 +1963,11 @@ function getAllXzbByZy(row,index){
 					str+='<span class="norsArea">暂无可选行政班...</span>';
 				}
 				$(".chooseLibirary").append(str);
+				// 判断
+				$('.controlBtn').unbind('click');
+				$('.controlBtn').bind('click', function(e) {
+					judgAddOrRemove(e);
+				});
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1990,7 +2008,7 @@ function getAllXzb(row){
 					if(bhxzb.indexOf(JSON.stringify(xzbInfo[i].edu300_ID))===-1){
 						str+='<div class="col1 giveBottom">' +
 							'<div class="icheck-material-blue"> ' +
-							'<input type="checkbox" id="'+xzbInfo[i].edu300_ID+'" checked="true" onclick="addChoosendClass()"> ' +
+							'<input type="checkbox" class="controlBtn" id="'+xzbInfo[i].edu300_ID+'" checked="false"> ' +
 							'<label for="'+xzbInfo[i].edu300_ID+'">'+xzbInfo[i].xzbmc+'</label>' +
 							'</div>' +
 							'</div>';
@@ -2001,6 +2019,11 @@ function getAllXzb(row){
 					str+='<span class="norsArea">暂无可选行政班...</span>';
 				}
 				$(".chooseLibirary").append(str);
+				// 判断
+				$('.controlBtn').unbind('click');
+				$('.controlBtn').bind('click', function(e) {
+					judgAddOrRemove(e);
+				});
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -2009,7 +2032,7 @@ function getAllXzb(row){
 }
 
 //确认修改教学班
-function confirmModifyTeachingClass(row,index){
+function confirmModifyTeachingClass(row){
 	$.hideModal("#modifyTeachingClassModal");
 
 	var ids = $('.chooseendArea').find('input');

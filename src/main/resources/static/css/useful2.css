@@ -1650,7 +1650,7 @@ margin: 0px 0px -14px -15px!important;
 	width: 46%;
 }
 
-.chooseLibirary{
+.soprtAreaChildren{
 	float: left;
 	width: 45%;
 	border: 1px #6fadbf1f solid;
@@ -1661,21 +1661,7 @@ margin: 0px 0px -14px -15px!important;
 	box-shadow: inset 1px 2px 12px 0px rgb(160 221 234 / 33%);
 	min-height: 280px;
 	overflow: auto;
-}
-
-
-
-.chooseendArea{
-	float: left;
-	width: 45%;
-	border: 1px #6fadbf1f solid;
-	height: auto;
-	padding: 7px 0px 7px 22px;
-	background-color: rgb(97 137 160 / 10%);
-	border-radius: 4px;
-	box-shadow: inset 1px 2px 12px 0px rgb(160 221 234 / 33%);
-	min-height: 280px;
-	overflow: auto;
+    max-height: 280px;
 }
 
 .soprtAreaTitle{
