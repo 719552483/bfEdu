@@ -1624,7 +1624,7 @@ function stuffTeachingClassTable(tableInfo) {
 // 修改教学班
 function modifyTeachingClass(row, index) {
 	$.showModal("#modifyTeachingClassModal",true);
-	$('#modifyTeachingClassName').html(row.jxbmc);
+	$('#newNAME').html(row.jxbmc);
     stuffChoosendXzb(row,index);
 	stuffAllXzb(row,index);
 	// 同专业班级库
@@ -1909,9 +1909,9 @@ function getAllXzbByZy(row,index){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/teachingClassQueryAdministrationClassesLibrary",
+		url : "/findClass",
 		data: {
-			"culturePlanInfo":JSON.stringify(teachingClassTetNotNullSearchs())
+			"edu300_ID":JSON.stringify(row.edu300_ID)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1962,7 +1962,11 @@ function getAllXzb(row){
 	$.ajax({
 		method : 'get',
 		cache : false,
+		url : "/findAllClass",
 		url : "/getAllClassesLibrary",
+		data: {
+			"edu300_ID":JSON.stringify(row.edu300_ID)
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -1980,6 +1984,7 @@ function getAllXzb(row){
 					toastr.info('暂无可选行政班');
 					return;
 				}
+
 				$(".chooseLibirary").empty();
 				var xzbInfo=backjson.classesInfo;
 				var bhxzb=row.bhxzbid.split(",");
@@ -2007,7 +2012,7 @@ function getAllXzb(row){
 	});
 }
 
-
+//确认修改教学班
 function confirmModifyTeachingClass(row,index){
 	$.hideModal("#modifyTeachingClassModal");
 
@@ -2022,7 +2027,7 @@ function confirmModifyTeachingClass(row,index){
 	}
 
     var modifyInfo=new Object();
-	modifyInfo.combinedClassName=$('#modifyTeachingClassName').val();
+	modifyInfo.combinedClassName=$('#newNAME').val();
 	row.bhxzbmc=bhxzbmc;
 	row.bhxzbid=bhxzbCode;
 
