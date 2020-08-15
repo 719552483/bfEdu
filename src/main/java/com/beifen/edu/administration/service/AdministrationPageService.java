@@ -278,7 +278,7 @@ public class AdministrationPageService {
 	public Edu104 query104BYID(String edu104id) {
 		return edu104DAO.query104BYID(edu104id);
 	}
-	
+
 	// 验证系部
 	public boolean verifyDeaparment(String edu104id) {
 		boolean canRemove = true;
@@ -308,7 +308,7 @@ public class AdministrationPageService {
 	public Edu105 query105BYID(String njbm) {
 		return edu105DAO.query105BYID(njbm);
 	}
-	
+
 	// 验证年级
 	public boolean verifyGrade(String edu105id) {
 		boolean canRemove = true;
@@ -334,9 +334,9 @@ public class AdministrationPageService {
 	public void updateMajor(Edu106 edu106) {
 		edu106DAO.save(edu106);
 	}
-	
+
 	public Edu106 query106BYID(String edu106id) {
-	
+
 		return edu106DAO.query106BYID(edu106id);
 	}
 
@@ -433,7 +433,7 @@ public class AdministrationPageService {
 
 	// 查询培养计划下的行政班
 	public List<Edu300> queryCulturePlanAdministrationClasses(String levelCode, String departmentCode, String gradeCode,
-			String majorCode) {
+															  String majorCode) {
 		return edu300DAO.queryCulturePlanAdministrationClasses(levelCode, departmentCode, gradeCode, majorCode);
 	}
 
@@ -487,8 +487,12 @@ public class AdministrationPageService {
 	}
 
 	// 教学班拆班 合班 生成的相关操作
-	public void classAction(Edu301 edu301) {
+	public Edu301 classAction(Edu301 edu301) {
 		edu301DAO.save(edu301);
+
+		String bhzymc = "";
+		String bhzyCode = "";
+		Integer jxbrs = 0;
 
 		String bhxzbid = edu301.getBhxzbid().substring(0,edu301.getBhxzbid().length() - 1);
 		String bhxzbmc = edu301.getBhxzbmc().substring(0,edu301.getBhxzbmc().length() - 1);
@@ -497,12 +501,25 @@ public class AdministrationPageService {
 
 		edu302DAO.removeByEdu301Id(edu301.getEdu301_ID().toString());
 		for (int i = 0; i < bhxzbids.length; i++) {
+			Edu300 edu300 = edu300DAO.findXzbByEdu300ID(bhxzbids[i]);
+			bhzymc+= edu300.getZymc()+",";
+			bhzyCode+= edu300.getZybm()+",";
+			jxbrs+= edu300.getZxrs();
+
 			Edu302 save = new Edu302();
 			save.setEdu301_ID(edu301.getEdu301_ID());
 			save.setEdu300_ID(Long.parseLong(bhxzbids[i]));
 			save.setXzbmc(bhxzbmcs[i]);
 			edu302DAO.save(save);
 		}
+
+		edu301.setBhzymc(bhzymc);
+		edu301.setBhzyCode(bhzyCode);
+		edu301.setJxbrs(jxbrs);
+
+		edu301DAO.save(edu301);
+
+		return edu301;
 	}
 
 	// 增加教学班
@@ -513,7 +530,7 @@ public class AdministrationPageService {
 	// 删除教学班
 	public void removeTeachingClassByID(String edu301ID) {
 		edu301DAO.removeTeachingClassByID(edu301ID);
-
+		//删除教学班行政班关联
 		edu302DAO.removeByEdu301Id(edu301ID);
 	}
 
@@ -588,7 +605,7 @@ public class AdministrationPageService {
 		}
 		return newXh;
 	}
-	
+
 	// 为教师生成学号
 	public String getNewTeacherJzgh() {
 		String jzgh_before =utils.getRandom(2);
@@ -614,7 +631,7 @@ public class AdministrationPageService {
 		}
 		return newXh;
 	}
-	
+
 	//根据id查学生学号
 	public String queryXhBy001ID(String edu001_ID) {
 		return edu001DAO.queryXhBy001ID(edu001_ID);
@@ -636,7 +653,7 @@ public class AdministrationPageService {
 
 	// 查询培养计划下所有教学班
 	public List<Edu301> getCulturePlanAllTeachingClasses(String levelCode, String departmentCode, String gradeCode,
-			String majorCode) {
+														 String majorCode) {
 		return edu301DAO.getCulturePlanAllTeachingClasses(levelCode, departmentCode, gradeCode, majorCode);
 	}
 
@@ -652,7 +669,7 @@ public class AdministrationPageService {
 
 	// 查询培养计划下所有学生
 	public List<Edu001> queryCulturePlanStudent(String levelCode, String departmentCode, String gradeCode,
-			String majorCode) {
+												String majorCode) {
 		return edu001DAO.queryCulturePlanStudent(levelCode, departmentCode, gradeCode, majorCode);
 	}
 
@@ -696,7 +713,7 @@ public class AdministrationPageService {
 
 	// 删除学生时改变相关信息
 	public void removeStudentUpdateCorrelationInfo(List<Edu301> teachingClassesBy300id,
-			List<Edu301> teachingClassesBy001id, String edu300_ID, long studentId) {
+												   List<Edu301> teachingClassesBy001id, String edu300_ID, long studentId) {
 		// 改变行政班人数
 		AdministrationPageService.this.cutAdministrationClassesZXRS(edu300_ID);
 
@@ -971,10 +988,10 @@ public class AdministrationPageService {
 		return edu200DAO.save(du200);
 	}
 
-	 // 根据Id查询课程
-	 public Edu200 queryClassById(String edu200id) {
-	      return edu200DAO.queryClassById(edu200id);
-	 }
+	// 根据Id查询课程
+	public Edu200 queryClassById(String edu200id) {
+		return edu200DAO.queryClassById(edu200id);
+	}
 	//
 	// // 根据代码查询课程
 	// public List<Edu200> queryClassByCode(String calssCode) {
@@ -983,7 +1000,7 @@ public class AdministrationPageService {
 
 	// 根据id修改课程状态
 	public void modifyClassById(String id, String status, String approvalPerson, long approvalPersonId,
-			long approvalTime) {
+								long approvalTime) {
 		edu200DAO.modifyClassById(id, status, approvalPerson, approvalPersonId, approvalTime);
 	}
 
@@ -996,27 +1013,27 @@ public class AdministrationPageService {
 	public void addTeacher(Edu101 edu101) {
 		edu101DAO.save(edu101);
 	}
-	
+
 	// 根据id查询教师姓名
 	public String queryTecaherNameById(Long techerId) {
 		return edu101DAO.queryTeacherById(techerId);
 	}
-	
+
 	// 根据id查询教师所有信息
 	public Edu101 queryTeacherBy101ID(String techerId) {
 		return edu101DAO.queryTeacherBy101ID(techerId);
 	}
-	
+
 	// 根据id查询教职工号
 	public String queryJzghBy101ID(String techerId) {
 		return edu101DAO.queryJzghBy101ID(techerId);
 	}
-	
+
 	// 查询所有教师
 	public List<Edu101> queryAllTeacher() {
 		return edu101DAO.findAll();
 	}
-	
+
 	//查询教师任务书
 	public boolean checkTeacherTasks(String edu101Id) {
 		boolean canRemove=true;
@@ -1027,7 +1044,7 @@ public class AdministrationPageService {
 		}
 		return canRemove;
 	}
-	
+
 	//删除教师
 	public void removeTeacher(String edu101Id) {
 		edu101DAO.removeTeacher(edu101Id);
@@ -1043,7 +1060,7 @@ public class AdministrationPageService {
 		}
 		return isHave;
 	}
-	
+
 	// 根据教学班组装任务书信息
 	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {
 		List<Object> sendTaskList = new ArrayList();
@@ -1180,7 +1197,7 @@ public class AdministrationPageService {
 
 	// 课程性质按钮检索待排课程列表
 	public List<Edu201> kcxzBtnGetTask(String levelCode, String departmentCode, String gradeCode, String majorCode,
-			String kcxz) {
+									   String kcxz) {
 		List<Edu201> retrunList = new ArrayList();
 		List<Edu201> currentEdu201 = AdministrationPageService.this.getTaskByCulturePlan(levelCode, departmentCode,
 				gradeCode, majorCode);
@@ -1195,7 +1212,7 @@ public class AdministrationPageService {
 
 	// 课程性质按钮检索待排课程列表 并且有教学班
 	public List<Edu201> kcxzBtnGetTaskWithJxb(String levelCode, String departmentCode, String gradeCode,
-			String majorCode, String kcxz, String jxbID) {
+											  String majorCode, String kcxz, String jxbID) {
 		List<Edu201> retrunList = new ArrayList();
 		List<Edu201> currentEdu201 = AdministrationPageService.this.getTaskByCulturePlan(levelCode, departmentCode,
 				gradeCode, majorCode);
@@ -1324,7 +1341,7 @@ public class AdministrationPageService {
 	}
 
 
-    //确认排课
+	//确认排课
 	public boolean saveSchedule(Edu202 edu202, List<Edu203> edu203List) {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
@@ -1381,7 +1398,7 @@ public class AdministrationPageService {
 		return isSuccess;
 	}
 
-    //排课后改变任务是是否已排课
+	//排课后改变任务是是否已排课
 	public void taskPutSchedule(String edu201ID) {
 		edu201DAO.taskPutSchedule(edu201ID);
 	}
@@ -1716,17 +1733,17 @@ public class AdministrationPageService {
 	 * @param jxdmc
 	 * @return
 	 */
-    public Edu500 getSchoolInfo(String ssxq, String jxdmc) {
+	public Edu500 getSchoolInfo(String ssxq, String jxdmc) {
 		Edu500 site = edu500DAO.checkPointInSchool(ssxq,jxdmc);
 		return site;
-    }
+	}
 
 	/**
 	 *新增教学点
 	 * @param newSite
 	 */
 	public void addSite(Edu500 newSite) {
-    	edu500DAO.save(newSite);
+		edu500DAO.save(newSite);
 	}
 
 	/**

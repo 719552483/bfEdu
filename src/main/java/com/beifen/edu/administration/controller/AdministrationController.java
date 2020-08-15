@@ -151,14 +151,14 @@ public class AdministrationController {
 		Edu990 checkIsHaveUser = administrationPageService.checkIsHaveUser(username);
 		String datebasePwd = administrationPageService.checkPwd(username);
 		String ErroeTxt = "";
-		
-		
+
+
 		//判断sys用户是否存在
-		
+
 		//test
-		
-		
-		
+
+
+
 		// 用户不存在
 		if (checkIsHaveUser == null) {
 			result = false;
@@ -690,7 +690,7 @@ public class AdministrationController {
 				}
 			}
 		}
-		
+
 		if (!IDcardIshave) {
 			String jzgh =administrationPageService.getNewTeacherJzgh();
 			edu101.setJzgh(jzgh);
@@ -704,7 +704,7 @@ public class AdministrationController {
 			returnMap.put("newId", edu101.getEdu101_ID());
 			returnMap.put("jzgh", jzgh);
 		}
-		
+
 		returnMap.put("IDcardIshave", IDcardIshave);
 		returnMap.put("result", true);
 		return returnMap;
@@ -736,7 +736,7 @@ public class AdministrationController {
 				}
 			}
 		}
-		
+
 		if (!IDcardIshave) {
 			//如果修改是将教师改为外聘教师 发起审批流
 			if(edu101.getJzglxbm().equals("004")){
@@ -746,16 +746,16 @@ public class AdministrationController {
 			}
 			administrationPageService.addTeacher(edu101);
 		}
-		
+
 		returnMap.put("IDcardIshave", IDcardIshave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 
 	/**
-	 * 删除教师  
+	 * 删除教师
 	 * 课节id唯一  所以不需要考虑是否选择了学年
 	 */
 	@RequestMapping("/removeTeacher")
@@ -771,8 +771,8 @@ public class AdministrationController {
 				break;
 			}
 		}
-		
-		
+
+
 		if(canRemove){
 			//删除教师
 			for (int i = 0; i < deleteArray.size(); i++) {
@@ -783,14 +783,14 @@ public class AdministrationController {
 		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 下载课程导入模板
-	 * 
+	 *
 	 * @return returnMap
 	 * @throws IOException
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@RequestMapping("downloadNewClassModel")
 	@ResponseBody
@@ -805,14 +805,14 @@ public class AdministrationController {
 		}else{
 			fileName="导入课程模板";
 		}
-        utils.loadModal(response,fileName, workbook);
+		utils.loadModal(response,fileName, workbook);
 	}
-	
-	
+
+
 	/**
 	 * 检验课程导入的文件
-	 * 
-	 * 
+	 *
+	 *
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -837,7 +837,7 @@ public class AdministrationController {
 	@ResponseBody
 	public Object importNewClass(HttpServletRequest request) throws Exception {
 		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-	    MultipartFile file = multipartRequest.getFile("file"); //文件流
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
 		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
 		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
 		//格式化录入人信息
@@ -849,7 +849,7 @@ public class AdministrationController {
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 
 		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
-		
+
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
 			return returnMap;
@@ -861,34 +861,34 @@ public class AdministrationController {
 				return returnMap;
 			}
 		}
-		
-        if(!returnMap.get("importClasses").equals("")){
-        	List<Edu200> importClasses = (List<Edu200>) returnMap.get("importClasses");
-        	String newClassStatus = "passing";
-    		for (int i = 0; i < importClasses.size(); i++) {
-    			Edu200 edu200 = importClasses.get(i);
-    			String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
-    			long currentTimeStamp = System.currentTimeMillis();
-    			
-    			edu200.setKcdm(kcdm);
-    			edu200.setLrsj(currentTimeStamp);
-    			edu200.setZt(newClassStatus);
-    			edu200.setLrr(lrrmc);
-    			edu200.setLrrID(lrrId);
-    			administrationPageService.addNewClass(edu200);
+
+		if(!returnMap.get("importClasses").equals("")){
+			List<Edu200> importClasses = (List<Edu200>) returnMap.get("importClasses");
+			String newClassStatus = "passing";
+			for (int i = 0; i < importClasses.size(); i++) {
+				Edu200 edu200 = importClasses.get(i);
+				String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
+				long currentTimeStamp = System.currentTimeMillis();
+
+				edu200.setKcdm(kcdm);
+				edu200.setLrsj(currentTimeStamp);
+				edu200.setZt(newClassStatus);
+				edu200.setLrr(lrrmc);
+				edu200.setLrrID(lrrId);
+				administrationPageService.addNewClass(edu200);
 				edu600.setBusinessKey(importClasses.get(i).getBF200_ID());
 				approvalProcessService.initiationProcess(edu600);
-    		}
-        }
+			}
+		}
 		return returnMap;
 	}
 
 	/**
 	 * 下载课程更新模板
-	 * 
+	 *
 	 * @return returnMap
-	 * @throws ParseException 
-	 * @throws Exception 
+	 * @throws ParseException
+	 * @throws Exception
 	 */
 	@RequestMapping("downloadModifyClassesModal")
 	@ResponseBody
@@ -910,14 +910,14 @@ public class AdministrationController {
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyClassesModal(workbook,chosedClasses);
-        utils.loadModal(response,fileName, workbook);
+		utils.loadModal(response,fileName, workbook);
 	}
 
-	
+
 	/**
 	 * 检验修改课程的文件
-	 * 
-	 * 
+	 *
+	 *
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -953,7 +953,7 @@ public class AdministrationController {
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
-		
+
 		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ModifyEdu200", "已选课程信息");
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
@@ -967,33 +967,33 @@ public class AdministrationController {
 			}
 		}
 		List<Edu200> updateClasses=new ArrayList<Edu200>();
-        if(!returnMap.get("importClasses").equals("")){
+		if(!returnMap.get("importClasses").equals("")){
 			updateClasses= (List<Edu200>) returnMap.get("importClasses");
-        	for (int i = 0; i < updateClasses.size(); i++) {
-        		Edu200 edu200 =updateClasses.get(i);
-        		long currentTimeStamp = System.currentTimeMillis();
-    			edu200.setLrsj(currentTimeStamp);
-    			edu200.setZt("passing");
-    			edu200.setLrr(lrrmc);
-    			edu200.setLrrID(lrrId);
-    			edu200.setShr(null);
-    			edu200.setShrID(null);
-    			administrationPageService.updateClass(edu200);
+			for (int i = 0; i < updateClasses.size(); i++) {
+				Edu200 edu200 =updateClasses.get(i);
+				long currentTimeStamp = System.currentTimeMillis();
+				edu200.setLrsj(currentTimeStamp);
+				edu200.setZt("passing");
+				edu200.setLrr(lrrmc);
+				edu200.setLrrID(lrrId);
+				edu200.setShr(null);
+				edu200.setShrID(null);
+				administrationPageService.updateClass(edu200);
 				edu600.setBusinessKey(updateClasses.get(i).getBF200_ID());
 				approvalProcessService.initiationProcess(edu600);
-        	}
-        	returnMap.put("modifyClassesInfo", updateClasses);
-        }
+			}
+			returnMap.put("modifyClassesInfo", updateClasses);
+		}
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 下载教师导入模板
-	 * 
+	 *
 	 * @return returnMap
 	 * @throws IOException
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@RequestMapping("downloadTeacherModal")
 	@ResponseBody
@@ -1008,13 +1008,13 @@ public class AdministrationController {
 		}else{
 			fileName="导入教职工模板";
 		}
-        utils.loadModal(response,fileName, workbook);
+		utils.loadModal(response,fileName, workbook);
 	}
-	
-	
+
+
 	/**
 	 * 检验导入教师的文件
-	 * 
+	 *
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -1032,7 +1032,7 @@ public class AdministrationController {
 
 	/**
 	 * 导入教师
- 	 * @param request
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
@@ -1058,32 +1058,32 @@ public class AdministrationController {
 				return returnMap;
 			}
 		}
-		
-        if(!returnMap.get("importTeacher").equals("")){
-        	List<Edu101> importTeacher = (List<Edu101>) returnMap.get("importTeacher");
-        	String yxbz = "1";
-    		for (int i = 0; i < importTeacher.size(); i++) {
-    			Edu101 edu101 = importTeacher.get(i);
-    			String jzgh =administrationPageService.getNewTeacherJzgh(); //新教师的教职工号
-    			edu101.setJzgh(jzgh);
+
+		if(!returnMap.get("importTeacher").equals("")){
+			List<Edu101> importTeacher = (List<Edu101>) returnMap.get("importTeacher");
+			String yxbz = "1";
+			for (int i = 0; i < importTeacher.size(); i++) {
+				Edu101 edu101 = importTeacher.get(i);
+				String jzgh =administrationPageService.getNewTeacherJzgh(); //新教师的教职工号
+				edu101.setJzgh(jzgh);
 				administrationPageService.addTeacher(edu101); // 新增教师
 				if(edu101.getJzglxbm().equals("004")){
 					edu101.setWpjzgspzt("passing");
 					edu600.setBusinessKey(importTeacher.get(i).getEdu101_ID());
 					approvalProcessService.initiationProcess(edu600);
 				}
-    		}
-        }
+			}
+		}
 		return returnMap;
 	}
 
 
 	/**
 	 * 下载教师更新模板
-	 * 
+	 *
 	 * @return returnMap
-	 * @throws ParseException 
-	 * @throws Exception 
+	 * @throws ParseException
+	 * @throws Exception
 	 */
 	@RequestMapping("downloadModifyTeachersModal")
 	@ResponseBody
@@ -1105,14 +1105,14 @@ public class AdministrationController {
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyTeacherModal(workbook,chosedTeachers);
-        utils.loadModal(response,fileName, workbook);
+		utils.loadModal(response,fileName, workbook);
 	}
 
-	
+
 	/**
 	 * 检验修改教师的文件
-	 * 
-	 * 
+	 *
+	 *
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -1156,26 +1156,26 @@ public class AdministrationController {
 				return returnMap;
 			}
 		}
-		
-        if(!returnMap.get("importTeacher").equals("")){
-        	List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
-        	for (int i = 0; i < modifyTeachers.size(); i++) {
-        		administrationPageService.addTeacher(modifyTeachers.get(i)); //修改教师
+
+		if(!returnMap.get("importTeacher").equals("")){
+			List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
+			for (int i = 0; i < modifyTeachers.size(); i++) {
+				administrationPageService.addTeacher(modifyTeachers.get(i)); //修改教师
 				if(modifyTeachers.get(i).getJzglxbm().equals("004")){
 					modifyTeachers.get(i).setWpjzgspzt("passing");
 					edu600.setBusinessKey(modifyTeachers.get(i).getEdu101_ID());
 					approvalProcessService.initiationProcess(edu600);
 				}
-        	}
-        	returnMap.put("modifyTeachersInfo", modifyTeachers);
-        }
+			}
+			returnMap.put("modifyTeachersInfo", modifyTeachers);
+		}
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 查询所有教师
-	 * 
+	 *
 	 * @return returnMap
 	 */
 	@RequestMapping("queryAllTeacher")
@@ -1190,7 +1190,7 @@ public class AdministrationController {
 
 	/**
 	 * 搜索教师
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -1206,26 +1206,26 @@ public class AdministrationController {
 		String xm ="";
 		String jzgh = "";
 		String szxbmc = "";
-		
+
 		if (jsonObject.has("szxb")){
 			szxb = jsonObject.getString("szxb");
-	    }
+		}
 		if (jsonObject.has("zy")){
 			zy = jsonObject.getString("zy");
-	    }
+		}
 		if (jsonObject.has("zc")){
 			zc = jsonObject.getString("zc");
-	    }
+		}
 		if (jsonObject.has("xm")){
 			xm = jsonObject.getString("xm");
-	    }
+		}
 		if (jsonObject.has("jzgh")){
 			jzgh = jsonObject.getString("jzgh");
-	    }
+		}
 		if (jsonObject.has("szxbmc")){
 			szxbmc = jsonObject.getString("szxbmc");
-	    }
-		
+		}
+
 		Edu101 edu101 = new Edu101();
 		edu101.setSzxb(szxb);
 		edu101.setZy(zy);
@@ -1238,7 +1238,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 获得教学相关公共代码信息
 	 */
@@ -1248,11 +1248,11 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("allXn", administrationPageService.queryAllXn());
 		returnMap.put("allkj", administrationPageService.queryDefaultkjsz());
-		
+
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 新增学年
 	 */
@@ -1271,7 +1271,7 @@ public class AdministrationController {
 				break;
 			}
 		}
-		
+
 		if(!nameHave){
 			administrationPageService.addNewXn(edu400);
 			returnMap.put("id", edu400.getEdu400_ID());
@@ -1281,7 +1281,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 修改学年
 	 */
@@ -1296,12 +1296,12 @@ public class AdministrationController {
 		boolean nameHave = false;
 		for (int i = 0; i < allXn.size(); i++) {
 			if(!allXn.get(i).getEdu400_ID().equals(edu400.getEdu400_ID())&&
-				allXn.get(i).getXnmc().equals(edu400.getXnmc())){
+					allXn.get(i).getXnmc().equals(edu400.getXnmc())){
 				nameHave=true;
 				break;
 			}
 		}
-		
+
 		if(!nameHave){
 			administrationPageService.addNewXn(edu400);
 			returnMap.put("currentAllXn", administrationPageService.queryAllXn());
@@ -1345,7 +1345,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 新增课节
 	 */
@@ -1364,7 +1364,7 @@ public class AdministrationController {
 				break;
 			}
 		}
-		
+
 		if(!nameHave){
 			//获得新课节的顺序
 			String kjsx=administrationPageService.getNewKjsh(edu401);
@@ -1377,25 +1377,25 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
-	 * 删除课节  
+	 * 删除课节
 	 * 课节id唯一  所以不需要考虑是否选择了学年
 	 */
 	@RequestMapping("/rmoveKj")
 	@ResponseBody
 	public Object rmoveKj(@RequestParam String deleteId) {
 		Map<String, Object> returnMap = new HashMap();
-		
+
 		boolean canRemove=true;
 		//判断是否有课表正在使用该课节
 		boolean verifyRelation= administrationPageService.verifyKj(deleteId);
-		
+
 		if(canRemove){
 			//删除课节应该将所在时段其后所有课节的顺序减一  需要考虑是否选择了学年
 			administrationPageService.addKjsxAterThisKj(deleteId);
-			
+
 			//删除课节
 			administrationPageService.removeKj(deleteId);
 		}
@@ -1403,7 +1403,7 @@ public class AdministrationController {
 		returnMap.put("canRemove", canRemove);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 修改课节名称
 	 */
@@ -1411,17 +1411,17 @@ public class AdministrationController {
 	@ResponseBody
 	public Object modifyKjMc(@RequestParam String newKjMc,@RequestParam String kjId) {
 		Map<String, Object> returnMap = new HashMap();
-		
+
 		boolean nameHave=false;
 		List<Edu401> allKj=administrationPageService.queryAllKj();
 		for (int i = 0; i < allKj.size(); i++) {
 			if(allKj.get(i).getKjmc().equals(newKjMc)&&
-				!allKj.get(i).getKjmc().toString().equals(kjId)){
+					!allKj.get(i).getKjmc().toString().equals(kjId)){
 				nameHave=true;
 				break;
 			}
 		}
-		
+
 		if(!nameHave){
 			administrationPageService.modifyKjMc(newKjMc,kjId);
 		}
@@ -1459,7 +1459,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 
 	/**
 	 * 获得所有层次关系管理信息
@@ -1581,7 +1581,7 @@ public class AdministrationController {
 				canRemove=true;
 			}
 		}
-		
+
 		if(canRemove){
 			for (int i = 0; i < deleteArray.size(); i++) {
 				administrationPageService.removeRelation(deleteArray.get(i).toString());
@@ -1595,7 +1595,7 @@ public class AdministrationController {
 
 	/**
 	 * 搜索层次关系
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -1642,7 +1642,7 @@ public class AdministrationController {
 				break;
 			}
 		}
-		
+
 		if (!namehave&& !codehave) {
 			String yxbz = "1";
 			edu103.setYxbz(yxbz);
@@ -1678,7 +1678,7 @@ public class AdministrationController {
 				namehave = true;
 				break;
 			}
-			
+
 			if (!currentAllLevel.get(i).getEdu103_ID().equals(edu103.getEdu103_ID())
 					&& currentAllLevel.get(i).getPyccbm().equals(edu103.getPyccbm())) {
 				codehave = true;
@@ -1716,7 +1716,7 @@ public class AdministrationController {
 				canRemove=true;
 			}
 		}
-		
+
 		if(canRemove){
 			for (int i = 0; i < deleteArray.size(); i++) {
 				administrationPageService.removeLevel(deleteArray.get(i).toString());
@@ -1825,7 +1825,7 @@ public class AdministrationController {
 				canRemove=true;
 			}
 		}
-		
+
 		if(canRemove){
 			for (int i = 0; i < deleteArray.size(); i++) {
 				administrationPageService.removeDeaparment(deleteArray.get(i).toString());
@@ -1937,13 +1937,13 @@ public class AdministrationController {
 				canRemove=true;
 			}
 		}
-		
+
 		if(canRemove){
 			for (int i = 0; i < deleteArray.size(); i++) {
 				administrationPageService.removeGrade(deleteArray.get(i).toString());
 			}
 		}
-		
+
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("result", true);
 		returnMap.put("canRemove", canRemove);
@@ -2037,7 +2037,7 @@ public class AdministrationController {
 				canRemove=true;
 			}
 		}
-		
+
 		if(canRemove){
 			for (int i = 0; i < deleteArray.size(); i++) {
 				administrationPageService.removeMajor(deleteArray.get(i).toString());
@@ -2136,8 +2136,8 @@ public class AdministrationController {
 	@RequestMapping("/culturePlanAddCrouse")
 	@ResponseBody
 	public Object culturePlanAddCrouse(@RequestParam("culturePlanInfo") String culturePlanInfo,
-			@RequestParam("crouseInfo") String crouseInfo,
-										   @RequestParam("approvalInfo") String approvalObject) {
+									   @RequestParam("crouseInfo") String crouseInfo,
+									   @RequestParam("approvalInfo") String approvalObject) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject crouse = JSONObject.fromObject(crouseInfo);
 		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
@@ -2180,7 +2180,7 @@ public class AdministrationController {
 	@RequestMapping("modifyCultureCrose")
 	@ResponseBody
 	public Object modifyCultureCrose(@RequestParam("culturePlanInfo") String culturePlanInfo,
-			@RequestParam("modifyInfo") String modifyInfo ,
+									 @RequestParam("modifyInfo") String modifyInfo ,
 									 @RequestParam("approvalInfo") String approvalObject) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject approvalInfo = JSONObject.fromObject(approvalObject);
@@ -2252,7 +2252,7 @@ public class AdministrationController {
 
 	/**
 	 * 培养计划添加专业课程检索
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -2283,7 +2283,7 @@ public class AdministrationController {
 
 	/**
 	 * 搜索培养计划下的专业课程
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -2384,8 +2384,8 @@ public class AdministrationController {
 					&&currentAllAdministrationClasses.get(i).getNjbm().equals(edu300.getNjbm())
 					&&currentAllAdministrationClasses.get(i).getZybm().equals(edu300.getZybm())
 					&&currentAllAdministrationClasses.get(i).getZdybjxh().equals(edu300.getZdybjxh())
-					)
-				{
+			)
+			{
 				numhave=true;
 				break;
 			}
@@ -2394,7 +2394,7 @@ public class AdministrationController {
 				break;
 			}
 		}
-		
+
 //		int samePlanClassNum=0;
 //		if(samePlanUseNums.size()!=0){
 //			String removeStr= edu300.getNjbm();
@@ -2416,19 +2416,19 @@ public class AdministrationController {
 			}else{
 				currntNum =String.valueOf(currntNum);
 			}
-			
+
 			//班号  年级编码+（自定义序号）
 			String bh =njbm+currntNum;
-		
+
 			//班级代码
 			String bjdm =xz+currntNum;
-			
+
 			//班级编码
 			String bjbm =njbm+xbbm+zybm+bjdm;
-			
+
 			String xqmc =administrationPageService.queryXqByPyccbm(1,edu300.getPyccbm()); // 校区名称
 			String xqbm = administrationPageService.queryXqByPyccbm(2,edu300.getPyccbm()); // 校区编码
-			
+
 			edu300.setYxbz(yxbz);
 			edu300.setSfsckkjh(configTheCulturePlan);
 			edu300.setXqmc(xqmc);
@@ -2462,7 +2462,7 @@ public class AdministrationController {
 	@RequestMapping("modifyAdministrationClass")
 	@ResponseBody
 	public Object modifyAdministrationClass(@RequestParam("culturePlanInfo") String culturePlanInfo,
-			@RequestParam("modifyInfo") String modifyInfo) {
+											@RequestParam("modifyInfo") String modifyInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
 		// 将修改信息转化为108实体
@@ -2539,7 +2539,7 @@ public class AdministrationController {
 
 	/**
 	 * 搜索行政班
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -2687,11 +2687,11 @@ public class AdministrationController {
 		List<Map> classesInfo = new ArrayList(); // 组装返回信息
 		/*
 		 * 1.查询所有行政班 List<Edu300>
-		 * 
+		 *
 		 * 2.查询培养计划 List<Edu108>
-		 * 
+		 *
 		 * 3.行政班信息+课程信息 组装返回信息
-		 * 
+		 *
 		 */
 		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
 		String levelCode = culturePlan.getString("level");
@@ -2731,7 +2731,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 教学班管理 - 查询已生成开课计划的行政班班级库(不指定培养计划)
 	 */
@@ -2742,11 +2742,11 @@ public class AdministrationController {
 		List<Map> classesInfo = new ArrayList(); // 组装返回信息
 		/*
 		 * 1.查询所有行政班 List<Edu300>
-		 * 
+		 *
 		 * 2.查询培养计划 List<Edu108>
-		 * 
+		 *
 		 * 3.行政班信息+课程信息 组装返回信息
-		 * 
+		 *
 		 */
 		List<Edu300> allAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
 		// 组装行政班的培养计划信息
@@ -2797,6 +2797,7 @@ public class AdministrationController {
 	public Object confirmClassAction(@RequestParam("classInfo") String classInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONArray array = JSONArray.fromObject(classInfo); // 解析json字符
+		List<Edu301> edu301List = new ArrayList<>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			Edu301 verifyEdu301 = new Edu301();
@@ -2817,14 +2818,15 @@ public class AdministrationController {
 			verifyEdu301.setZybm(jsonObject.getString("zybm"));
 			verifyEdu301.setBhzyCode(jsonObject.getString("bhzyCode"));
 			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
-			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbCode"));
+			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbid"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
-			verifyEdu301.setBhxsCode(jsonObject.getString("bhxsCode"));
 			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
 			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
-			administrationPageService.classAction(verifyEdu301);
+			Edu301 edu301 = administrationPageService.classAction(verifyEdu301);
+			edu301List.add(edu301);
 		}
+		returnMap.put("classList",edu301List);
 		returnMap.put("result", true);
 		return returnMap;
 	}
@@ -2869,7 +2871,7 @@ public class AdministrationController {
 
 	/**
 	 * 拆班搜索学生
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -2952,7 +2954,7 @@ public class AdministrationController {
 
 	/**
 	 * 搜索教学班
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -2978,7 +2980,7 @@ public class AdministrationController {
 
 	/**
 	 * 教学班班管理检索
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -2986,7 +2988,7 @@ public class AdministrationController {
 	@RequestMapping("searchTeachingClassQueryAdministrationClassesLibrary")
 	@ResponseBody
 	public Object searchTeachingClassQueryAdministrationClassesLibrary(@RequestParam String SearchCriteria,
-			@RequestParam String culturePlanInfo) {
+																	   @RequestParam String culturePlanInfo) {
 
 		Map<String, Object> returnMap = new HashMap();
 		List<Map> classesInfo = new ArrayList(); // 组装返回信息
@@ -3196,7 +3198,7 @@ public class AdministrationController {
 				}
 			}
 		}
-		
+
 		boolean studentSpill=false;
 		// 不存在则修改学生
 		if (!IdcardHave) {
@@ -3213,9 +3215,9 @@ public class AdministrationController {
 			} else {
 				// 判断修改是否会超过行政班容纳人数
 				studentSpill = administrationPageService.administrationClassesIsSpill(edu001.getEdu300_ID());
-			    if(!studentSpill){
-			    	administrationPageService.updateStudent(edu001);
-			    }
+				if(!studentSpill){
+					administrationPageService.updateStudent(edu001);
+				}
 			}
 			approvalProcessService.initiationProcess(edu600);
 		}
@@ -3230,10 +3232,10 @@ public class AdministrationController {
 
 	/**
 	 * 下载学生导入模板
-	 * 
+	 *
 	 * @return returnMap
 	 * @throws IOException
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@RequestMapping("downloadStudentModal")
 	@ResponseBody
@@ -3248,15 +3250,15 @@ public class AdministrationController {
 		}else{
 			fileName="导入学生模板";
 		}
-        utils.loadModal(response,fileName, workbook);
+		utils.loadModal(response,fileName, workbook);
 	}
-	
+
 	/**
 	 * 下载学生更新模板
-	 * 
+	 *
 	 * @return returnMap
-	 * @throws ParseException 
-	 * @throws Exception 
+	 * @throws ParseException
+	 * @throws Exception
 	 */
 	@RequestMapping("downloadModifyStudentsModal")
 	@ResponseBody
@@ -3278,7 +3280,7 @@ public class AdministrationController {
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyStudentModal(workbook,chosedStudents);
-        utils.loadModal(response,fileName, workbook);
+		utils.loadModal(response,fileName, workbook);
 	}
 
 	/**
@@ -3302,20 +3304,20 @@ public class AdministrationController {
 				return returnMap;
 			}
 		}
-		
-        if(!returnMap.get("importStudent").equals("")){
-        	List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
-        	String yxbz = "1";
-    		for (int i = 0; i < importStudent.size(); i++) {
-    			Edu001 edu001 = importStudent.get(i);
-    			edu001.setYxbz(yxbz);
-    			edu001.setXh(administrationPageService.getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
-    			administrationPageService.addStudent(edu001); // 新增学生
-    			List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
-    			String xzbid = edu001.getEdu300_ID();
-    			administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
-    		}
-        }
+
+		if(!returnMap.get("importStudent").equals("")){
+			List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
+			String yxbz = "1";
+			for (int i = 0; i < importStudent.size(); i++) {
+				Edu001 edu001 = importStudent.get(i);
+				edu001.setYxbz(yxbz);
+				edu001.setXh(administrationPageService.getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
+				administrationPageService.addStudent(edu001); // 新增学生
+				List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
+				String xzbid = edu001.getEdu300_ID();
+				administrationPageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
+			}
+		}
 		return returnMap;
 	}
 
@@ -3347,10 +3349,10 @@ public class AdministrationController {
 				return returnMap;
 			}
 		}
-		
-        if(!returnMap.get("importStudent").equals("")){
-        	List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
-        	for (int i = 0; i < modifyStudents.size(); i++) {
+
+		if(!returnMap.get("importStudent").equals("")){
+			List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
+			for (int i = 0; i < modifyStudents.size(); i++) {
 				//如果修改操作为修改学生状态为休学 发送审批流对象
 				Edu001 oldEdu001 = administrationPageService.queryStudentBy001ID(modifyStudents.get(i).getEdu001_ID().toString());
 				if(modifyStudents.get(i).getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
@@ -3358,18 +3360,18 @@ public class AdministrationController {
 					modifyStudents.get(i).setZt("休学申请中");
 					edu600.setBusinessKey(modifyStudents.get(i).getEdu001_ID());
 				}
-        		administrationPageService.updateStudent(modifyStudents.get(i)); //修改学生
+				administrationPageService.updateStudent(modifyStudents.get(i)); //修改学生
 				approvalProcessService.initiationProcess(edu600);
-        	}
-        	returnMap.put("modifyStudentsInfo", modifyStudents);
-        }
+			}
+			returnMap.put("modifyStudentsInfo", modifyStudents);
+		}
 		return returnMap;
 	}
 
 	/**
 	 * 检验导入学生的文件
-	 * 
-	 * 
+	 *
+	 *
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -3383,11 +3385,11 @@ public class AdministrationController {
 		checkRS.put("result", true);
 		return checkRS;
 	}
-	
+
 	/**
 	 * 检验修改学生的文件
-	 * 
-	 * 
+	 *
+	 *
 	 * @return returnMap
 	 * @throws ParseException
 	 * @throws Exception
@@ -3419,11 +3421,11 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 学生管理搜索学生
-	 * 
+	 *
 	 * @param SearchCriteria
 	 *            搜索条件
 	 * @return returnMap
@@ -3457,7 +3459,7 @@ public class AdministrationController {
 		edu001.setXm(studentName);
 		edu001.setXjh(studentRollNumber);
 		edu001.setXzbname(className);
-	
+
 		List<Edu001> studentInfo = administrationPageService.studentMangerSearchStudent(edu001);
 		returnMap.put("studentInfo", studentInfo);
 		returnMap.put("result", true);
@@ -3466,9 +3468,9 @@ public class AdministrationController {
 
 	/**
 	 * 发布消息时上传图片
-	 * 
+	 *
 	 * @throws FileUploadException
-	 * 
+	 *
 	 */
 	@RequestMapping("newsImgUpload")
 	@ResponseBody
@@ -3476,9 +3478,9 @@ public class AdministrationController {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		PrintWriter out = response.getWriter();
-		
-        String savePath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
-	
+
+		String savePath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
+
 		// 定义允许上传的文件扩展名
 		HashMap<String, String> extMap = new HashMap<String, String>();
 		extMap.put("image", "gif,jpg,jpeg,png,bmp");
@@ -3488,12 +3490,12 @@ public class AdministrationController {
 
 		response.setContentType("text/html; charset=UTF-8");
 
-		//检查是否是文件 
+		//检查是否是文件
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			out.println(utils.getError("Please select the file!"));
 			return;
 		}
-		
+
 		// 检查目录
 		File uploadDir = new File(savePath);
 		if (!uploadDir.isDirectory()) {
@@ -3519,8 +3521,8 @@ public class AdministrationController {
 			out.println(utils.getError("The directory name is incorrect!"));
 			return;
 		}
-		
-		
+
+
 		// 创建文件夹
 		savePath += dirName + "/";
 		File saveDirFile = new File(savePath);
@@ -3547,7 +3549,7 @@ public class AdministrationController {
 				out.println(utils.getError("File format not supported!\nOnly " + extMap.get(dirName)));
 				return;
 			}
-			
+
 			//检查文件大小
 			if(mf.getSize() > maxSize){
 				out.println(utils.getError("Upload file size exceeds limit"));
@@ -3572,7 +3574,7 @@ public class AdministrationController {
 		}
 		// 上传结束
 	}
-	
+
 	/**
 	 * 获取所有通知
 	 * @return returnMap
@@ -3586,8 +3588,8 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 根据id获取通知
 	 * @return returnMap
@@ -3623,8 +3625,8 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 改变消息是否在首页展示
 	 * @return returnMap
@@ -3637,7 +3639,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 删除通知
 	 * @return returnMap
@@ -3648,29 +3650,29 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
 		String imgRootPath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
-		
+
 		for (int i = 0; i < deleteArray.size(); i++) {
 			Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(deleteArray.get(i).toString());
 			String noticeBody=currentNoteInfo.getTzzt();
 			List<String> imgSrcs=utils.getImgSrc(noticeBody);
-				for (int img = 0; img < imgSrcs.size(); img++) {
-					//只删除插入的图片 不删除表情
-					if(imgSrcs.get(img).startsWith("image")){
-						File file = new File(imgRootPath+imgSrcs.get(img));
-				        if (file.exists()) {
-				        	 if (file.delete()) {
-				        		 System.out.println("通知附带图片删除成功");
-				        	 }
-				        }
+			for (int img = 0; img < imgSrcs.size(); img++) {
+				//只删除插入的图片 不删除表情
+				if(imgSrcs.get(img).startsWith("image")){
+					File file = new File(imgRootPath+imgSrcs.get(img));
+					if (file.exists()) {
+						if (file.delete()) {
+							System.out.println("通知附带图片删除成功");
+						}
 					}
 				}
+			}
 			administrationPageService.removeNotices(deleteArray.get(i).toString());
 		}
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 获取可供发布的教学任务书
 	 * @return returnMap
@@ -3690,8 +3692,8 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 获得部门信息
 	 * @return returnMap
@@ -3705,8 +3707,8 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 发布教学任务书
 	 * @return returnMap
@@ -3753,9 +3755,9 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 查看已发布任务书
 	 * @return returnMap
@@ -3769,8 +3771,8 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 删除教学任务书
 	 * @return returnMap
@@ -3781,13 +3783,13 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
 		for (int i = 0; i< deleteArray.size(); i++) {
-			 administrationPageService.removeTasks(deleteArray.get(i).toString());
+			administrationPageService.removeTasks(deleteArray.get(i).toString());
 		}
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 根据ID查询任务书
 	 * @return returnMap
@@ -3801,7 +3803,7 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-	
+
 	/**
 	 * 检索已发布的教学任务书
 	 * @return returnMap
@@ -3823,7 +3825,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 任务书反馈意见
 	 * @return returnMap
@@ -3837,7 +3839,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 	/**
 	 * 修改任务书状态
 	 * @return returnMap
@@ -3853,8 +3855,8 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
+
+
 	/**
 	 * 根据层次关系查询待排课程列表
 	 * @return returnMap
@@ -3895,9 +3897,9 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
-	
-	
+
+
+
 	/**
 	 *  课程性质按钮获取待排课程列表
 	 * @return returnMap
@@ -3923,7 +3925,7 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-	
+
 //	/**
 //	 *  排课页面开始检索按钮
 //	 * @return returnMap
@@ -3940,15 +3942,15 @@ public class AdministrationController {
 
 	/*
 	 * 根据传入的二级代码参数 获取二级代码将二级代码装入LIST中返回前台
-	 * 
+	 *
 	 * @return returnMap
 	 */
 
 	public List<String> queryEdu000(String ejdmglzd) {
 		List<Edu000> ejdm = administrationPageService.queryEjdm(ejdmglzd);
 		List<String> relist = new ArrayList<String>();
-		
-		
+
+
 		if (ejdm.size() > 0) {
 
 			for (int i = 0; i < ejdm.size(); i++) {

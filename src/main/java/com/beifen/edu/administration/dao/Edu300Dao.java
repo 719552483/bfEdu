@@ -58,5 +58,7 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select * from edu300 e where e.Edu300_ID=?1 and e.pyccbm=?2 and e.xbbm=?3 and njbm=?4 and zybm=?5", nativeQuery = true)
 	public List<Edu300> classMatchCultruePaln(String edu300_ID, String pycc, String szxb, String nj, String zybm);
 
-
+	// 根据id查询行政班
+	@Query(value = "select * from edu300 where Edu300_ID =?1", nativeQuery = true)
+	Edu300 findXzbByEdu300ID(String bhxzbid);
 }

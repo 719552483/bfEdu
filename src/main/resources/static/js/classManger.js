@@ -1088,10 +1088,10 @@ function combinedClass() {
 	choosedTeaching.zybm = planInfo.major;
 	choosedTeaching.zymc = planInfo.majorTxt;
 	choosedTeaching.edu108_ID = choosedTeachingClass[0].edu108_ID;
-	choosedTeaching.edu201_ID = "";
+	choosedTeaching.edu301_ID = "";
 	choosedTeaching.bhzyCode =combinedMajorCodes;
 	choosedTeaching.bhzymc =combinedMajorName;
-	choosedTeaching.bhxzbCode = combinedAdministrationClassesCodes;
+	choosedTeaching.bhxzbid = combinedAdministrationClassesCodes;
 	choosedTeaching.bhxzbmc =combinedAdministrationClassesName;
 	choosedTeaching.bhxsxm = "";
 	choosedTeaching.bhxsCode ="";
@@ -2026,12 +2026,14 @@ function confirmModifyTeachingClass(row,index){
 	row.bhxzbmc=bhxzbmc;
 	row.bhxzbid=bhxzbCode;
 
+	var SendArray=new Array(row);
+	SendArray.push()
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/confirmClassAction",
 		data: {
-			"classInfo":JSON.stringify(row)
+			"classInfo":JSON.stringify(SendArray)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -2046,7 +2048,13 @@ function confirmModifyTeachingClass(row,index){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-
+				for (var i = 0; i < backjson.classList.length; i++) {
+					$("#teachingClassTable").bootstrapTable('updateByUniqueId', {
+						id: backjson.classList[i].edu301_ID,
+						row: backjson.classList[i]
+					});
+				}
+				toolTipUp(".myTooltip");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
