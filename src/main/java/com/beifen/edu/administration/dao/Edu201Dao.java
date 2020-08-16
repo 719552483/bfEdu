@@ -64,4 +64,10 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Transactional
 	@Query(value = "UPDATE edu201 SET sfypk ='T' WHERE Edu201_ID =?1", nativeQuery = true)
     void taskPutSchedule(String edu201ID);
+
+	//排课后改变任务是是否已排课
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE edu201 SET sfypk = null WHERE Edu201_ID =?1", nativeQuery = true)
+	void taskPutScheduleFalse(String edu201ID);
 }
