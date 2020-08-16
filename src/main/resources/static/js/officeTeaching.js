@@ -46,9 +46,8 @@ function getTaskSelectInfo() {
 							str += '<option value="' + backjson.calssInfo[i].edu301_ID + '">' +backjson.calssInfo[i].jxbmc
 									+ '</option>';
 					     }
-						stuffManiaSelect("#jxb", str);
 					}
-					
+					stuffManiaSelect("#jxb", str);
 					if(backjson.taskInfo.length===0){
 						toastr.info('暂无可排课程');
 						drawWaitTaskEmptyTable();
@@ -263,19 +262,6 @@ function stuffWaitTaskTable(tableInfo){
 		toolTipUp(".myTooltip");
 }
 
-//获取所有显示的行数据
-function getShowTableRow(){
-	var all = $("#WaitTaskTable").bootstrapTable("getData");
-	var returnArray=new Array;
-	for (var i = 0; i < all.length; i++) {
-		var currentRow=$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")");
-		if(!currentRow.is(':hidden')){
-			returnArray.push(all[i]);
-		}
-	}
-	return returnArray;
-}
-
 //开始排课
 function startSchedule(){
 	var culturePlanInfo=getNotNullSearchs();
@@ -376,6 +362,8 @@ function scheduleSingleClassBtnBind(){
 	$('#returnStartSchedule').unbind('click');
 	$('#returnStartSchedule').bind('click', function(e) {
 		controlScheduleArea();
+		$(".scheduleInfo").html("");
+		$(".rsArea ").hide();
 		e.stopPropagation();
 	});
 
@@ -567,6 +555,7 @@ function confirmPk(){
 //获得排课信息
 function getPKInfo(){
 	var term=getNormalSelectValue("term");
+	var termMc=getNormalSelectText("term");
 	var startWeek=getNormalSelectValue("startWeek");
 	var endWeek=getNormalSelectValue("endWeek");
 	var location=getNormalSelectValue("skdd");
@@ -591,6 +580,7 @@ function getPKInfo(){
 
 	var returnObject=new Object();
 	returnObject.xnid=term;
+	returnObject.xnmc=termMc;
 	returnObject.ksz=startWeek;
 	returnObject.jsz=endWeek;
 	returnObject.skddmc=getNormalSelectText("skdd");
@@ -717,6 +707,320 @@ function getNotNullSearchs() {
 	return returnObject;
 }
 
+//展示已排课表
+function puttedSchedule(){
+	puttedScheduleControlArea();
+	getPuttedTaskSelectInfo();
+	puttedScheduleBtnBind();
+	drawEmptyPuttedTable();
+}
+
+//渲染空的已排课表table
+function  drawEmptyPuttedTable(){
+	stuffPuttedOutTable({});
+}
+
+//控制已排课表区域和待排课区域的展示或隐藏
+function puttedScheduleControlArea(){
+	$(".scheduleClassesMainArea,.puttedScheduleArea").toggle();
+}
+
+//已排课表 获取-专业培养计划- 有逻辑关系select信息
+function getPuttedTaskSelectInfo() {
+	LinkageSelectPublic("#puttedlevel", "#putteddepartment", "#puttedgrade", "#puttedmajor");
+}
+
+//获取已排课表信息
+function getPuttedScheduleInfo(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeachingScheduleCompleted",
+		data: {
+			"searchCondition":JSON.stringify(getPuttedSelectValue())
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				var str ="";
+				if(backjson.teachingClassList.length===0){
+					str = '<option value="seleceConfigTip">无可选教学班</option>';
+				}else{
+					str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < backjson.teachingClassList.length; i++) {
+						str += '<option value="' + backjson.teachingClassList[i].edu301_ID + '">' +backjson.teachingClassList[i].jxbmc
+							+ '</option>';
+					}
+				}
+				stuffManiaSelect("#puttedjxb", str);
+				stuffPuttedOutTable(backjson.taskList);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//渲染已排课表table
+function stuffPuttedOutTable(tableInfo){
+	window.puttedEvents = {
+		'click #puttedInfo' : function(e, value, row, index) {
+			puttedInfo(row);
+		},
+		'click #removePutted' : function(e, value, row, index) {
+			removePutted(row);
+		}
+	};
+
+	$('#puttedTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".puttedTableArea", "已排课表");
+		},
+		columns: [
+			{
+				field : 'radio',
+				radio : true
+			},{
+				field: 'edu202_ID',
+				title: '唯一标识',
+				align: 'center',
+				visible: false
+			},
+			{
+				field: 'jxbmc',
+				title: '教学班名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			}, 	{
+				field: 'kcmc',
+				title: '课程',
+				align: 'left',
+				formatter: paramsMatter
+
+			},{
+				field: 'zylsmc',
+				title: '主要老师',
+				align: 'left',
+				formatter: paramsMatter
+
+			},{
+				field: 'lsmc',
+				title: '老师',
+				align: 'left',
+				formatter: paramsMatter
+			},{
+				field: 'sfxylcj',
+				title: '是否需要录成绩',
+				align: 'center',
+				width:'15%',
+				formatter: sfxylcjMatter
+			},{
+				field: 'kkbm',
+				title: '开课部门',
+				align: 'left',
+				formatter: paramsMatter
+			},	{
+				field: 'pkbm',
+				title: '排课部门',
+				align: 'left',
+				formatter: paramsMatter
+			}, {
+				field : 'action',
+				title : '操作',
+				align : 'center',
+				clickToSelect : false,
+				formatter : puttedFormatter,
+				events :  puttedEvents,
+			}
+		]
+	});
+
+	function puttedFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li id="puttedInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+		+ '<li id="removePutted"><span><img src="images/close1.png"></span>删除</li>'
+		+ '</ul>' ].join('');
+	}
+
+	function sfxylcjMatter(value, row, index) {
+		if (row.sfxylcj==="T") {
+			return [ '<div class="myTooltip" title="需要录成绩"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
+				.join('');
+		} else{
+			return [ '<div class="myTooltip" title="不需要录成绩"><i class="iconfont icon-chacha normalTxt"></i></div>' ]
+				.join('');
+		}
+	}
+
+	drawPagination(".puttedTableArea", "已排课表");
+	changeColumnsStyle(".puttedTableArea", "已排课表");
+	drawSearchInput(".puttedTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//已排详情
+function puttedInfo(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/",
+		data: {
+			"edu202_ID":JSON.stringify(row.edu202_ID)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				$.showModal("#puttedInfoModal",false);
+				stuffPuttedInfo(backjson);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//删除已排
+function removePutted(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/",
+		data: {
+			"edu202_ID":JSON.stringify(row.edu202_ID)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//填充已排详情
+function stuffPuttedInfo(backjson){
+
+}
+
+//已排课表按钮事件绑定
+function puttedScheduleBtnBind(){
+	//返回按钮
+	$('#puttedReturnStartSchedule').unbind('click');
+	$('#puttedReturnStartSchedule').bind('click', function(e) {
+		puttedScheduleControlArea();
+		e.stopPropagation();
+	});
+
+	//开始检索
+	$('#putted_startSearch').unbind('click');
+	$('#putted_startSearch').bind('click', function(e) {
+		getPuttedScheduleInfo();
+		e.stopPropagation();
+	});
+}
+
+//获取已排课表检索下拉框的值
+function getPuttedSelectValue(){
+   var searchObject=new Object();
+   searchObject.pyjhcc=getNormalSelectValue("puttedlevel");
+   searchObject.pyjhxb=getNormalSelectValue("putteddepartment");
+   searchObject.pyjhnj=getNormalSelectValue("puttedgrade");
+   searchObject.pyjhzy=getNormalSelectValue("puttedmajor");
+   searchObject.jxbid=getNormalSelectValue("puttedjxb");
+   searchObject.kcxzid=getNormalSelectValue("puttedkcxz");
+   return searchObject;
+}
+
+//必选检索条件检查
+function getPuttedNotNullSearchs() {
+	var levelValue = getNormalSelectValue("puttedlevel");
+	var departmentValue = getNormalSelectValue("putteddepartment");
+	var gradeValue =getNormalSelectValue("puttedgrade");
+	var majorValue =getNormalSelectValue("puttedmajor");
+	var levelText = getNormalSelectText("puttedlevel");
+	var departmentText = getNormalSelectText("putteddepartment");
+	var gradeText =getNormalSelectText("puttedgrade");
+	var majorText =getNormalSelectText("puttedmajor");
+	if (levelValue == "") {
+		toastr.warning('层次不能为空');
+		return;
+	}
+
+	if (departmentValue == "") {
+		toastr.warning('系部不能为空');
+		return;
+	}
+
+	if (gradeValue == "") {
+		toastr.warning('年级不能为空');
+		return;
+	}
+
+	if (majorValue == "") {
+		toastr.warning('专业不能为空');
+		return;
+	}
+
+	var returnObject = new Object();
+	returnObject.level = levelValue;
+	returnObject.department = departmentValue;
+	returnObject.grade = gradeValue;
+	returnObject.major = majorValue;
+	returnObject.levelTxt = levelText;
+	returnObject.departmentTxt = departmentText;
+	returnObject.gradeTxt = gradeText;
+	returnObject.majorTxt = majorText;
+	return returnObject;
+}
+
 //初始化页面按钮绑定事件
 function binBind(){
 	//提示框取消按钮
@@ -730,6 +1034,13 @@ function binBind(){
 	$('#startSchedule').unbind('click');
 	$('#startSchedule').bind('click', function(e) {
 		startSchedule();
+		e.stopPropagation();
+	});
+
+	//已排课表按钮
+	$('#puttedSchedule').unbind('click');
+	$('#puttedSchedule').bind('click', function(e) {
+		puttedSchedule();
 		e.stopPropagation();
 	});
 	

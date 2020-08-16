@@ -3937,9 +3937,7 @@ public class AdministrationController {
 		Map<String, Object> returnMap = new HashMap();
 		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(searchCondition);
 		TeachingSchedulePO teachingSchedule = JSON.toJavaObject(jsonObject,TeachingSchedulePO.class);
-		List<TeachingSchedulePO> resultList = administrationPageService.searchTeachingScheduleCompleted(teachingSchedule);
-		returnMap.put("result", true);
-		returnMap.put("resultList", resultList);
+		returnMap = administrationPageService.searchTeachingScheduleCompleted(teachingSchedule);
 		return returnMap;
 	}
 

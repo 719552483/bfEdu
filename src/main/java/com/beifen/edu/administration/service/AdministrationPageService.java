@@ -1890,37 +1890,48 @@ public class AdministrationPageService {
 	}
 
 	//根据条件检索已排课信息
-	public List<TeachingSchedulePO> searchTeachingScheduleCompleted(TeachingSchedulePO teachingSchedule) {
-		List<TeachingSchedulePO> resultList;
+	public Map<String, Object> searchTeachingScheduleCompleted(TeachingSchedulePO teachingSchedule) {
+		Map<String, Object> returnMap = new HashMap();
+
+		List<TeachingSchedulePO> taskList;
+		List<Edu301> teachingClassList = new ArrayList<>();
 
 		Specification<TeachingSchedulePO> specification = new Specification<TeachingSchedulePO>() {
 			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();
-				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
-					predicates.add(cb.equal(root.<String> get("pyjhcc"), teachingSchedule.getLevel()));
+				if (teachingSchedule.getPyjhcc() != null && !"".equals(teachingSchedule.getPyjhcc())) {
+					predicates.add(cb.equal(root.<String> get("pyjhcc"), teachingSchedule.getPyjhcc()));
 				}
-				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
-					predicates.add(cb.equal(root.<String> get("pyjhxb"), teachingSchedule.getDepartment()));
+				if (teachingSchedule.getPyjhxb() != null && !"".equals(teachingSchedule.getPyjhxb())) {
+					predicates.add(cb.equal(root.<String> get("pyjhxb"), teachingSchedule.getPyjhxb()));
 				}
-				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
-					predicates.add(cb.equal(root.<String> get("pyjhnj"), teachingSchedule.getGrade()));
+				if (teachingSchedule.getPyjhnj() != null && !"".equals(teachingSchedule.getPyjhnj())) {
+					predicates.add(cb.equal(root.<String> get("pyjhnj"), teachingSchedule.getPyjhnj()));
 				}
-				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
-					predicates.add(cb.equal(root.<String> get("pyjhzy"), teachingSchedule.getMajor()));
+				if (teachingSchedule.getPyjhzy() != null && !"".equals(teachingSchedule.getPyjhzy())) {
+					predicates.add(cb.equal(root.<String> get("pyjhzy"), teachingSchedule.getPyjhzy()));
 				}
-				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
-					predicates.add(cb.equal(root.<String> get("jxbid"), teachingSchedule.getTeachingCode()));
+				if (teachingSchedule.getJxbid() != null && !"".equals(teachingSchedule.getJxbid())) {
+					predicates.add(cb.equal(root.<String> get("jxbid"), teachingSchedule.getJxbid()));
 				}
-				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
-					predicates.add(cb.equal(root.<String> get("kcxzid"), teachingSchedule.getCourseType()));
+				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
+					predicates.add(cb.equal(root.<String> get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
 
-		resultList = scheduleCompletedViewDao.findAll(specification);
+		taskList = scheduleCompletedViewDao.findAll(specification);
 
-		return resultList;
+		for (TeachingSchedulePO e : taskList) {
+			Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(e.getJxbid());
+			teachingClassList.add(edu301);
+		}
+
+		returnMap.put("result",true);
+		returnMap.put("taskList",taskList);
+		returnMap.put("teachingClassList",teachingClassList);
+		return returnMap;
 
 	}
 }
