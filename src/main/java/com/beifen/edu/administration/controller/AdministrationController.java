@@ -3923,7 +3923,10 @@ public class AdministrationController {
 	@ResponseBody
 	public Object removeTeachingSchedule(@RequestParam("scheduleId") String scheduleId) {
 		Map<String, Object> returnMap = new HashMap();
-		administrationPageService.removeTeachingSchedule(scheduleId);
+		List<String> scheduleIds  = com.alibaba.fastjson.JSONObject.parseArray(scheduleId, String.class);
+		for (String s : scheduleIds) {
+			administrationPageService.removeTeachingSchedule(s);
+		}
 		returnMap.put("result", true);
 		return returnMap;
 	}
