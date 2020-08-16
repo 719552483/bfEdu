@@ -15,6 +15,7 @@ public class Edu202 {
 	private Long Edu202_ID;
 	private Long Edu201_ID; // 任务书ID
 	private Long xnid; // 学年id
+	private String xnmc;// 学年名称
 	private String ksz; // 开始周
 	private String jsz; // 结束周
 	private String skddmc; // 授课地点名称
@@ -68,6 +69,11 @@ public class Edu202 {
 	public void setSkddid(String skddid) {
 		this.skddid = skddid;
 	}
+	public String getXnmc() {
+		return xnmc;
+	}
 
-
+	public void setXnmc(String xnmc) {
+		this.xnmc = xnmc;
+	}
 }

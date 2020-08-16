@@ -4040,7 +4040,7 @@ public class ReflectUtils {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public static void copy(Object source, Object target) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void copy(Object source, Object target) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 		Class sourceClass = source.getClass().getSuperclass();//得到对象的Class
 		Class targetClass = target.getClass();//得到对象的Class父类
@@ -4081,7 +4081,7 @@ public class ReflectUtils {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public static void copyTargetSuper(Object source, Object target) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void copyTargetSuper(Object source, Object target) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 		Class sourceClass = source.getClass();//得到对象的Class
 		Class targetClass = target.getClass().getSuperclass();//得到对象的Class父类

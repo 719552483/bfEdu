@@ -3942,6 +3942,18 @@ public class AdministrationController {
 	}
 
 	/**
+	 *  查询已排课详情
+	 * @return returnMap
+	 */
+	@RequestMapping("searchScheduleCompletedDetail")
+	@ResponseBody
+	public Object searchScheduleCompletedDetail(@RequestParam("Edu202Id") String Edu202Id) {
+		Map<String, Object> returnMap;
+		returnMap = administrationPageService.searchScheduleCompletedDetail(Edu202Id);
+		return returnMap;
+	}
+
+	/**
 	 * 课程表查询
 	 * @param searchCondition
 	 * @return

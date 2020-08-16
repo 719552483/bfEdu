@@ -9,14 +9,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.beifen.edu.administration.PO.LocalUsedPO;
-import com.beifen.edu.administration.PO.TeacherPO;
-import com.beifen.edu.administration.PO.TeachingSchedulePO;
-import com.beifen.edu.administration.PO.TeachingTaskPO;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
@@ -1931,6 +1929,32 @@ public class AdministrationPageService {
 		returnMap.put("result",true);
 		returnMap.put("taskList",taskList);
 		returnMap.put("teachingClassList",teachingClassList);
+		return returnMap;
+
+	}
+
+	public Map<String, Object> searchScheduleCompletedDetail(String edu202Id) {
+		Map<String, Object> returnMap = new HashMap();
+		ScheduleCompletedDetailPO scheduleCompletedDetails = new ScheduleCompletedDetailPO();
+
+		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
+		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+
+		try {
+			utils.copyTargetSuper(edu201,scheduleCompletedDetails);
+			BeanUtils.copyProperties(scheduleCompletedDetails,edu202);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id,edu202.getKsz()));
+
+		returnMap.put("result",true);
+		returnMap.put("scheduleCompletedDetails",scheduleCompletedDetails);
 		return returnMap;
 
 	}

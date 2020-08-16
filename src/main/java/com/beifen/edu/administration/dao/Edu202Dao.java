@@ -16,4 +16,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 	@Query(value = "select * from edu202 e where e.kjid like %?1%", nativeQuery = true)
 	List<Edu202> verifyKj(String kjId);
 
+	//根据ID查询排课信息
+	@Query(value = "select * from edu202 e where e.Edu202_ID = ?1", nativeQuery = true)
+	Edu202 findEdu202ById(String edu202Id);
 }
