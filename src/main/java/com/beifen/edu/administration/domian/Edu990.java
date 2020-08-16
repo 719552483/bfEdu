@@ -12,6 +12,7 @@ public class Edu990 {
 	private String yhm; // 用户名
 	private String scdlsj; // 上次登录时间
 	private String yxkjfs; //已选快捷方式
+	private String userKey;//系统内人员主键
 
 	//关联Edu600
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -68,5 +69,14 @@ public class Edu990 {
 	public void setYxkjfs(String yxkjfs) {
 		this.yxkjfs = yxkjfs;
 	}
+
+	public String getUserKey() {
+		return userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
 
 }

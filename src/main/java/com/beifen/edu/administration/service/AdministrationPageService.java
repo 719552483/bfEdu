@@ -686,6 +686,18 @@ public class AdministrationPageService {
 	// 新增学生
 	public void addStudent(Edu001 edu001) {
 		edu001DAO.save(edu001);
+
+		Edu990 edu990 = new Edu990();
+		edu990.setYhm("s" + edu001.getXh());
+		edu990.setMm("123456");
+
+		edu990.setUserKey(edu001.getEdu001_ID().toString());
+		edu990DAO.save(edu990);
+
+		Edu992 edu992 = new Edu992();
+		edu992.setBF990_ID(edu990.getBF990_ID());
+		edu992.setBF991_ID(Long.parseLong("8050"));
+		edu992Dao.save(edu992);
 	}
 
 	// 新增学生时改变相关信息
@@ -1048,6 +1060,17 @@ public class AdministrationPageService {
 	//新增教师
 	public void addTeacher(Edu101 edu101) {
 		edu101DAO.save(edu101);
+
+		Edu990 edu990 = new Edu990();
+		edu990.setYhm("t" + edu101.getJzgh());
+		edu990.setMm("123456");
+		edu990.setUserKey(edu101.getEdu101_ID().toString());
+		edu990DAO.save(edu990);
+
+		Edu992 edu992 = new Edu992();
+		edu992.setBF990_ID(edu990.getBF990_ID());
+		edu992.setBF991_ID(Long.parseLong("8051"));
+		edu992Dao.save(edu992);
 	}
 
 	// 根据id查询教师姓名
