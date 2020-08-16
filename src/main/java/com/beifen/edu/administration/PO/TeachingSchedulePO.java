@@ -23,9 +23,8 @@ public class TeachingSchedulePO {
     private String pkbm;
     private String kkbm;
     private String EDU202_ID;
+    private String id;
 
-
-    @Id//视图空ID 无实际意义
 
     public String getPyjhcc() {
         return pyjhcc;
@@ -137,5 +136,14 @@ public class TeachingSchedulePO {
 
     public void setJxbid(String jxbid) {
         this.jxbid = jxbid;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Id
+    public String getId() {
+        return id;
     }
 }
