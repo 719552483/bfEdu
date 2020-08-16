@@ -382,106 +382,113 @@
 
 
 		<!-- 已排课表详情Modal -->
-		<div class="modal fade bs-example-modal-lg" id="puttedInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal fade bs-example-modal-lg" id="puttedInfoModal" tabindex="-1" role="dialog" aria-labelledby="majorTrainingModal" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<div class="tiptop"><span class="moadalTitle">排课详情</span><a class="cancel" shape="rect"></a></div>
 					</div>
 					<div class="modal-body">
-						<div class="searchArea moreInfoSelectStyle">
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">学年</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="putted" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+						<div class="manyInfoShow">
+							<div class="searchArea moreInfoSelectStyle">
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">学年</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedTerm" placeholder="请输入学年..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">教学班名称</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">教学班名称</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedJxbMC" placeholder="请输入教学班名称..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">课程名称</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程名称</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedkCMC" placeholder="请输入课程名称..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="col3 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">主要老师</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">授课地点</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedSkdd" placeholder="请输入授课地点..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="col3 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">老师</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">主要老师</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedZyls" placeholder="请输入主要老师..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="col3 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">开始周</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">老师</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedLs" placeholder="请输入老师..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="col3 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">结束周</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
-							</div>
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">开始周</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedKsz" placeholder="请输入开始周..." />
+										</div>
+									</ul>
+								</div>
 
-							<div class="puttedKjArea">
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">结束周</label>
+											<input name="" type="text" class="myInput manyInfoInput"
+												   id="puttedJsz" placeholder="请输入结束周..." />
+										</div>
+									</ul>
+								</div>
 
-							</div>
+								<div class="puttedKjArea">
 
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">授课地点</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="mangerName" placeholder="请输入姓名..." />
-									</div>
-								</ul>
+								</div>
+
+
+
+								<div class="clear"></div>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer tipbtn">
-						<input name="" type="button" class="sure" value="确定"/>&nbsp;
+						<input name="" type="button" class="sure confirmModifyMajorTraining" value="确定"/>&nbsp;
 						<input name="" type="button" class="cancel" value="取消"/>
 					</div>
 				</div>
 			</div>
 		</div>
+
 
 
 	<!-- 提示Modal -->

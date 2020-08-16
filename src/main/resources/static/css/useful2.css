@@ -747,6 +747,7 @@ float: left;
     font-weight: 500;
     font-family: fantasy;
         margin-top: 14px;
+	text-align: left;
 }
 
 .selectName {

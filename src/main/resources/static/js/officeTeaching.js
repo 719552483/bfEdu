@@ -362,7 +362,8 @@ function scheduleSingleClassBtnBind(){
 	$('#returnStartSchedule').unbind('click');
 	$('#returnStartSchedule').bind('click', function(e) {
 		controlScheduleArea();
-		$(".scheduleInfo").html("");
+		$(".scheduleInfo,.choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
+		$(".choosendKjArea").empty();
 		$(".rsArea ").hide();
 		e.stopPropagation();
 	});
@@ -599,8 +600,8 @@ function scheduleDetailInfo(){
 		if(typeof currentUseId !=='undefined'&&currentUseId!==""){
 			thisObject.kjid=currentUseId.substring(0,2);
 			thisObject.xqid=currentUseId.substring(2);
-			var usekjmc=$(".choosendKjInfo"+currentUseId).find(".choosendXq")[0].innerText;
-			var usexqmc=$(".choosendKjInfo"+currentUseId).find(".choosendKj")[0].innerText;
+			var usekjmc=$(".choosendKjInfo"+currentUseId).find(".choosendKj")[0].innerText;
+			var usexqmc=$(".choosendKjInfo"+currentUseId).find(".choosendXq")[0].innerText;
 			thisObject.kjmc=usekjmc.substring(2);
 			thisObject.xqmc=usexqmc.substring(0,3);
 			returnArray.push(thisObject);
@@ -889,9 +890,9 @@ function puttedInfo(row){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/",
+		url : "/searchScheduleCompletedDetail",
 		data: {
-			"edu202_ID":JSON.stringify(row.edu202_ID)
+			"Edu202Id":row.edu202_ID
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -906,8 +907,8 @@ function puttedInfo(row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
+				stuffPuttedInfo(row,backjson.scheduleCompletedDetails);
 				$.showModal("#puttedInfoModal",false);
-				stuffPuttedInfo(backjson);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -915,14 +916,25 @@ function puttedInfo(row){
 	});
 }
 
-//删除已排
+//预备删除已排
 function removePutted(row){
+	$.showModal("#remindModal",true);
+	$(".remindType").html("已排课表");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		confirmR额movePutted(row.edu202_ID)
+	});
+}
+
+//确认删除已排
+function confirmR额movePutted(id){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/",
+		url : "/removeTeachingSchedule",
 		data: {
-			"edu202_ID":JSON.stringify(row.edu202_ID)
+			"scheduleId":id
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -937,7 +949,10 @@ function removePutted(row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-
+				$.hideModal("#remindModal");
+			    var removeArray=new Array();
+				removeArray.push(id);
+				tableRemoveAction("#puttedTable", removeArray, ".puttedTableArea", "已排课表");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -946,8 +961,22 @@ function removePutted(row){
 }
 
 //填充已排详情
-function stuffPuttedInfo(backjson){
+function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails){
+	$("#puttedTerm").val(scheduleCompletedDetails.xnmc);
+	$("#puttedSkdd").val(scheduleCompletedDetails.skddmc);
+	$("#puttedJxbMC").val(puttedInfo.jxbmc);
+	$("#puttedkCMC").val(puttedInfo.kcmc);
+	$("#puttedZyls").val(puttedInfo.zyls);
+	$("#puttedLs").val(puttedInfo.ls);
+	$("#puttedKsz").val(scheduleCompletedDetails.ksz);
+	$("#puttedJsz").val(scheduleCompletedDetails.jsz);
+	$('#puttedInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 
+	var Str="";
+	var classPeriodList=scheduleCompletedDetails.classPeriodList;
+	for (var i = 0; i < classPeriodList.length; i++) {
+		$(".puttedKjArea").append('<div><span>'+classPeriodList[i].xqmc+'</span><span>'+classPeriodList[i].kjmc+'</span></div>');
+	}
 }
 
 //已排课表按钮事件绑定

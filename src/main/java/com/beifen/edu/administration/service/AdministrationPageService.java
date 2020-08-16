@@ -1880,7 +1880,9 @@ public class AdministrationPageService {
 
 	//根据Id删除排课计划
 	public void removeTeachingSchedule(String scheduleId) {
-		edu201DAO.taskPutScheduleFalse(scheduleId);
+		Edu202 edu202 = edu202DAO.findEdu202ById(scheduleId);
+
+		edu201DAO.taskPutScheduleFalse(edu202.getEdu201_ID().toString());
 
 		edu202DAO.delete(Long.parseLong(scheduleId));
 
