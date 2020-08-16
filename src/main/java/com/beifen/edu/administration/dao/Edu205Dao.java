@@ -14,4 +14,11 @@ public interface Edu205Dao extends JpaRepository<Edu205, Long>, JpaSpecification
     @Modifying
     @Query(value = "delete from edu205 where Edu201_ID =?1", nativeQuery = true)
     void removeByEdu201Id(String edu201_id);
+
+    //根据排课ID删除关联
+    @Transactional
+    @Modifying
+    @Query(value = "delete from edu203 where Edu202_ID =?1", nativeQuery = true)
+    void deleteByscheduleId(String scheduleId);
+
 }

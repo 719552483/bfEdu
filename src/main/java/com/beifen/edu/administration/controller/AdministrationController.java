@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.PO.LocalUsedPO;
+import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.ApprovalProcessService;
@@ -2566,9 +2567,6 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-
-
-
 	/**
 	 * 搜索行政班
 	 *
@@ -3920,16 +3918,44 @@ public class AdministrationController {
 	 *  根据ID删除排课信息
 	 * @return returnMap
 	 */
-	@RequestMapping("removeTask")
+	@RequestMapping("removeTeachingSchedule")
 	@ResponseBody
-	public Object removeTask(@RequestParam("removeObject") String removeObject) {
+	public Object removeTeachingSchedule(@RequestParam("scheduleId") String scheduleId) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(removeObject);
-		Edu202 edu202 = (Edu202) JSONObject.toBean(jsonObject, Edu202.class);
+		administrationPageService.removeTeachingSchedule(scheduleId);
 		returnMap.put("result", true);
 		return returnMap;
 	}
 
+	/**
+	 *  查询已排课信息
+	 * @return returnMap
+	 */
+	@RequestMapping("searchTeachingScheduleCompleted")
+	@ResponseBody
+	public Object searchTeachingScheduleCompleted(@RequestParam("searchCondition") String searchCondition) {
+		Map<String, Object> returnMap = new HashMap();
+		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(searchCondition);
+		TeachingSchedulePO teachingSchedule = JSON.toJavaObject(jsonObject,TeachingSchedulePO.class);
+		List<TeachingSchedulePO> resultList = administrationPageService.searchTeachingScheduleCompleted(teachingSchedule);
+		returnMap.put("result", true);
+		returnMap.put("resultList", resultList);
+		return returnMap;
+	}
+
+	/**
+	 * 课程表查询
+	 * @param searchCondition
+	 * @return
+	 */
+	@RequestMapping("searchSchoolTimetable")
+	@ResponseBody
+	public Object searchSchoolTimetable(@RequestParam("searchCondition") String searchCondition) {
+		Map<String, Object> returnMap = new HashMap();
+		administrationPageService.removeTeachingSchedule(searchCondition);
+		returnMap.put("result", true);
+		return returnMap;
+	}
 
 
 	/**

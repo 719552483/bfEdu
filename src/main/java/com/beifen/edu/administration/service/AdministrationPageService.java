@@ -11,12 +11,12 @@ import javax.persistence.criteria.Root;
 
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.PO.TeacherPO;
+import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
@@ -73,11 +73,11 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu203Dao edu203Dao;
 	@Autowired
-	private Edu204Dao edu204DAO;
-	@Autowired
 	private Edu205Dao edu205DAO;
 	@Autowired
 	private Edu302Dao edu302DAO;
+	@Autowired
+	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -1878,5 +1878,49 @@ public class AdministrationPageService {
 		}
 
 		return classList;
+	}
+
+	//根据Id删除排课计划
+	public void removeTeachingSchedule(String scheduleId) {
+		edu202DAO.delete(Long.parseLong(scheduleId));
+
+		edu203Dao.deleteByscheduleId(scheduleId);
+
+		edu205DAO.deleteByscheduleId(scheduleId);
+	}
+
+	//根据条件检索已排课信息
+	public List<TeachingSchedulePO> searchTeachingScheduleCompleted(TeachingSchedulePO teachingSchedule) {
+		List<TeachingSchedulePO> resultList;
+
+		Specification<TeachingSchedulePO> specification = new Specification<TeachingSchedulePO>() {
+			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<>();
+				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("pyjhcc"), teachingSchedule.getLevel()));
+				}
+				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("pyjhxb"), teachingSchedule.getDepartment()));
+				}
+				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("pyjhnj"), teachingSchedule.getGrade()));
+				}
+				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("pyjhzy"), teachingSchedule.getMajor()));
+				}
+				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("jxbid"), teachingSchedule.getTeachingCode()));
+				}
+				if (teachingSchedule.getLevel() != null && !"".equals(teachingSchedule.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("kcxzid"), teachingSchedule.getCourseType()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+
+		resultList = scheduleCompletedViewDao.findAll(specification);
+
+		return resultList;
+
 	}
 }
