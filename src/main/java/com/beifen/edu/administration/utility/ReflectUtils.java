@@ -4111,6 +4111,17 @@ public class ReflectUtils {
 			}
 		}
 	}
+
+	//数组去重
+	public String ruplicateRemoval(String [] arrStr) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (String str : arrStr) {
+			map.put(str, str);
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] newArrStr =  map.keySet().toArray(new String[1]);
+		return Arrays.toString(newArrStr);
+	}
 }
 	
 	

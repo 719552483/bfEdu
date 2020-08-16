@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.beifen.edu.administration.PO.Edu991PO;
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
@@ -175,7 +176,7 @@ public class AdministrationController {
 			result = true;
 			Map<String, Object> UserInfo = new HashMap();
 			Edu990 edu990 = administrationPageService.getUserInfo(username);
-			Edu991 edu991 = administrationPageService.getAuthoritysInfo(edu990.getJs());
+			Edu991PO edu991 = administrationPageService.getAuthoritys(edu990.getBF990_ID().toString());
 			if (edu990 != null && edu991 != null) {
 				// 用户首次登陆
 				if (edu990.getScdlsj() == null) {

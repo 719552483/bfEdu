@@ -15,8 +15,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Edu991")
 public class Edu991 {
-	
-	
 	private Long BF991_ID;
 	private String js;  //角色类型(名称)
 	private String cdqx;  //菜单权限(指定长度700)

@@ -76,6 +76,8 @@ public class AdministrationPageService {
 	private Edu302Dao edu302DAO;
 	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
+	@Autowired
+	private Edu992Dao edu992Dao;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -899,6 +901,42 @@ public class AdministrationPageService {
 	public Edu991 getAuthoritysInfo(String js) {
 		return edu991DAO.getAuthoritysInfo(js);
 	}
+
+	// 根据角色获取权限信息
+	public Edu991PO getAuthoritys(String edu991Id) {
+		List<Edu991> edu991List = edu992Dao.findRollByEdu991(edu991Id);
+
+		String BF991_ID = "";
+		String js = "";
+		String cdqx = "";
+		String anqx = "";
+
+		for (Edu991 e : edu991List) {
+			BF991_ID += e.getBF991_ID() +",";
+			js += e.getJs() + ",";
+			cdqx += e.getCdqx();
+			anqx += e.getAnqx();
+		}
+
+		String[] cdqxSplit = cdqx.substring(0, cdqx.length() - 1).split(",");
+		String[] anqxSplit = anqx.substring(0, anqx.length() - 1).split(",");
+
+		cdqx = utils.ruplicateRemoval(cdqxSplit);
+		anqx = utils.ruplicateRemoval(anqxSplit);
+
+		Edu991PO edu991PO = new Edu991PO();
+
+		edu991PO.setBF991_ID(BF991_ID);
+		edu991PO.setJs(js);
+		edu991PO.setAnqx(anqx);
+		edu991PO.setCdqx(cdqx);
+
+		return edu991PO;
+
+
+	}
+
+
 
 	// 新增角色
 	public void addRole(Edu991 newRole) {
