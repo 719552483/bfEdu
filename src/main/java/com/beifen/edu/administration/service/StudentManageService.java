@@ -3,11 +3,13 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,10 +18,12 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentManageService {
 
+    ReflectUtils utils = new ReflectUtils();
     @Autowired
     private AdministrationPageService administrationPageService;
     @Autowired
@@ -32,8 +36,6 @@ public class StudentManageService {
     private Edu990Dao edu990Dao;
     @Autowired
     private Edu992Dao edu992Dao;
-    @Autowired
-    private Edu301Dao edu301Dao;
 
 
     // 查询所有学生信息
@@ -179,12 +181,19 @@ public class StudentManageService {
     }
 
     // 批量发放毕业证
-    public void graduationStudents(String edu001Id) {
-        edu001Dao.graduationStudents(edu001Id);
+    public ResultVO graduationStudents(com.alibaba.fastjson.JSONArray graduationArray) {
+        ResultVO resultVO;
+        Integer count = 0;
+        for (int i = 0; i < graduationArray.size(); i++) {
+            edu001Dao.graduationStudents(graduationArray.get(i).toString());
+            count++;
+        }
+        resultVO = ResultVO.setSuccess("成功发放了"+count+"个毕业证");
+        return resultVO;
     }
 
     // 学生管理搜索学生
-    public List<Edu001> studentMangerSearchStudent(Edu001 edu001) {
+    public ResultVO studentMangerSearchStudent(Edu001 edu001) {
         Specification<Edu001> specification = new Specification<Edu001>() {
             public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -222,7 +231,8 @@ public class StudentManageService {
             }
         };
         List<Edu001> classesEntities = edu001Dao.findAll(specification);
-        return classesEntities;
+        ResultVO resultVO = ResultVO.setSuccess("共找到"+classesEntities.size()+"个学生",classesEntities);
+        return resultVO;
     }
 
     // 查询学生所在行政班ID
@@ -296,5 +306,100 @@ public class StudentManageService {
     }
 
 
+    /**
+     * 批量导入学生
+     * @param file
+     * @return
+     */
+    public ResultVO importStudent(MultipartFile file){
+        ResultVO resultVO = new ResultVO();
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = utils.checkStudentFile(file, "ImportEdu001", "导入学生信息");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultVO = ResultVO.setFailed("导入失败");
+            return resultVO;
+        }
 
+        boolean modalPass = (boolean) returnMap.get("modalPass");
+        if (!modalPass) {
+            resultVO = ResultVO.setFailed("模版错误，导入失败",returnMap);
+            return resultVO;
+        }
+
+        if(!returnMap.get("dataCheck").equals("")){
+            boolean dataCheck = (boolean) returnMap.get("dataCheck");
+            if (!dataCheck) {
+                resultVO = ResultVO.setFailed("数据格式有误，请修改后重试",returnMap);
+                return resultVO;
+            }
+        }
+
+        Integer count = 0;
+        if(!returnMap.get("importStudent").equals("")){
+            List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
+            String yxbz = "1";
+            for (int i = 0; i < importStudent.size(); i++) {
+                Edu001 edu001 = importStudent.get(i);
+                edu001.setYxbz(yxbz);
+                edu001.setXh(getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
+                addStudent(edu001); // 新增学生
+                count++;
+            }
+        }
+        resultVO = ResultVO.setSuccess("成功导入了"+count+"个学生");
+        return resultVO;
+    }
+
+    /**
+     * 批量修改学生
+     * @param file
+     * @param edu600
+     * @return
+     */
+    public ResultVO modifyStudents(MultipartFile file, Edu600 edu600) {
+        ResultVO resultVO = new ResultVO();
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = utils.checkStudentFile(file, "ModifyEdu001", "已选学生信息");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultVO = ResultVO.setFailed("修改失败");
+            return resultVO;
+        }
+        boolean modalPass = (boolean) returnMap.get("modalPass");
+        if (!modalPass) {
+            resultVO = ResultVO.setFailed("修改失败",returnMap);
+            return resultVO;
+        }
+
+        if(!returnMap.get("dataCheck").equals("")){
+            boolean dataCheck = (boolean) returnMap.get("dataCheck");
+            if (!dataCheck) {
+                resultVO = ResultVO.setFailed("修改失败",returnMap);
+                return resultVO;
+            }
+        }
+
+        Integer count = 0;
+        if(!returnMap.get("importStudent").equals("")){
+            List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
+            for (int i = 0; i < modifyStudents.size(); i++) {
+                //如果修改操作为修改学生状态为休学 发送审批流对象
+                Edu001 oldEdu001 = queryStudentBy001ID(modifyStudents.get(i).getEdu001_ID().toString());
+                if(modifyStudents.get(i).getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
+                    modifyStudents.get(i).setZtCode("007");
+                    modifyStudents.get(i).setZt("休学申请中");
+                    edu600.setBusinessKey(modifyStudents.get(i).getEdu001_ID());
+                }
+                updateStudent(modifyStudents.get(i)); //修改学生
+                approvalProcessService.initiationProcess(edu600);
+                count++;
+            }
+            returnMap.put("modifyStudentsInfo", modifyStudents);
+        }
+        resultVO = ResultVO.setSuccess("成功修改了"+count+"个学生",returnMap);
+        return resultVO;
+    }
 }

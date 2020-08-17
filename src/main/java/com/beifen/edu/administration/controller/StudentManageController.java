@@ -158,31 +158,10 @@ public class StudentManageController {
      */
     @RequestMapping("importStudent")
     @ResponseBody
-    public Object importStudent(@RequestParam("file") MultipartFile file) throws Exception {
-        Map<String, Object> returnMap = utils.checkStudentFile(file, "ImportEdu001", "导入学生信息");
-        boolean modalPass = (boolean) returnMap.get("modalPass");
-        if (!modalPass) {
-            return returnMap;
-        }
-
-        if(!returnMap.get("dataCheck").equals("")){
-            boolean dataCheck = (boolean) returnMap.get("dataCheck");
-            if (!dataCheck) {
-                return returnMap;
-            }
-        }
-
-        if(!returnMap.get("importStudent").equals("")){
-            List<Edu001> importStudent = (List<Edu001>) returnMap.get("importStudent");
-            String yxbz = "1";
-            for (int i = 0; i < importStudent.size(); i++) {
-                Edu001 edu001 = importStudent.get(i);
-                edu001.setYxbz(yxbz);
-                edu001.setXh(studentManageService.getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
-                studentManageService.addStudent(edu001); // 新增学生
-            }
-        }
-        return returnMap;
+    public ResultVO importStudent(@RequestParam("file") MultipartFile file){
+        ResultVO result;
+        result = studentManageService.importStudent(file);
+        return result;
     }
 
     /**
@@ -193,49 +172,20 @@ public class StudentManageController {
      */
     @RequestMapping("modifyStudents")
     @ResponseBody
-    public Object modifyStudents(HttpServletRequest request) throws Exception {
+    public ResultVO modifyStudents(HttpServletRequest request){
+        ResultVO result;
         MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
         MultipartFile file = multipartRequest.getFile("file"); //文件流
         String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
         //格式化审批流信息
         JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
         Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-
-        Map<String, Object> returnMap = utils.checkStudentFile(file, "ModifyEdu001", "已选学生信息");
-        boolean modalPass = (boolean) returnMap.get("modalPass");
-        if (!modalPass) {
-            return returnMap;
-        }
-
-        if(!returnMap.get("dataCheck").equals("")){
-            boolean dataCheck = (boolean) returnMap.get("dataCheck");
-            if (!dataCheck) {
-                return returnMap;
-            }
-        }
-
-        if(!returnMap.get("importStudent").equals("")){
-            List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
-            for (int i = 0; i < modifyStudents.size(); i++) {
-                //如果修改操作为修改学生状态为休学 发送审批流对象
-                Edu001 oldEdu001 = studentManageService.queryStudentBy001ID(modifyStudents.get(i).getEdu001_ID().toString());
-                if(modifyStudents.get(i).getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
-                    modifyStudents.get(i).setZtCode("007");
-                    modifyStudents.get(i).setZt("休学申请中");
-                    edu600.setBusinessKey(modifyStudents.get(i).getEdu001_ID());
-                }
-                studentManageService.updateStudent(modifyStudents.get(i)); //修改学生
-                approvalProcessService.initiationProcess(edu600);
-            }
-            returnMap.put("modifyStudentsInfo", modifyStudents);
-        }
-        return returnMap;
+        result = studentManageService.modifyStudents(file,edu600);
+        return result;
     }
 
     /**
      * 检验导入学生的文件
-     *
-     *
      * @return returnMap
      * @throws ParseException
      * @throws Exception
@@ -244,7 +194,6 @@ public class StudentManageController {
     @RequestMapping("verifiyImportStudentFile")
     @ResponseBody
     public Object verifiyImportStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
-        Map<String, Object> returnMap = new HashMap();
         Map<String, Object> checkRS = utils.checkStudentFile(file, "ImportEdu001", "导入学生信息");
         checkRS.put("result", true);
         return checkRS;
@@ -252,8 +201,6 @@ public class StudentManageController {
 
     /**
      * 检验修改学生的文件
-     *
-     *
      * @return returnMap
      * @throws ParseException
      * @throws Exception
@@ -262,7 +209,6 @@ public class StudentManageController {
     @RequestMapping("verifiyModifyStudentFile")
     @ResponseBody
     public Object verifiyModifyStudentFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
-        Map<String, Object> returnMap = new HashMap();
         Map<String, Object> checkRS = utils.checkStudentFile(file, "ModifyEdu001", "已选学生信息");
         checkRS.put("result", true);
         return checkRS;
@@ -276,14 +222,11 @@ public class StudentManageController {
      */
     @RequestMapping("/graduationStudents")
     @ResponseBody
-    public Object graduationStudents(@RequestParam String choosendStudents) {
-        Map<String, Object> returnMap = new HashMap();
+    public ResultVO graduationStudents(@RequestParam String choosendStudents) {
+        ResultVO result;
         com.alibaba.fastjson.JSONArray graduationArray = JSON.parseArray(choosendStudents);
-        for (int i = 0; i < graduationArray.size(); i++) {
-            studentManageService.graduationStudents(graduationArray.get(i).toString());
-        }
-        returnMap.put("result", true);
-        return returnMap;
+        result =studentManageService.graduationStudents(graduationArray);
+        return result;
     }
 
 
@@ -296,8 +239,7 @@ public class StudentManageController {
      */
     @RequestMapping("studentMangerSearchStudent")
     @ResponseBody
-    public Object studentMangerSearchStudent(@RequestParam String SearchCriteria) {
-        Map<String, Object> returnMap = new HashMap();
+    public ResultVO studentMangerSearchStudent(@RequestParam String SearchCriteria) {
         JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
         // 根据层次等信息查出培养计划id
         String level = searchObject.getString("level");
@@ -324,10 +266,8 @@ public class StudentManageController {
         edu001.setXjh(studentRollNumber);
         edu001.setXzbname(className);
 
-        List<Edu001> studentInfo = studentManageService.studentMangerSearchStudent(edu001);
-        returnMap.put("studentInfo", studentInfo);
-        returnMap.put("result", true);
-        return returnMap;
+        ResultVO result = studentManageService.studentMangerSearchStudent(edu001);
+        return result;
     }
 
 }
