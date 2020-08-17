@@ -5,13 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +53,19 @@ public class AdministrationController {
 	private ApprovalProcessService approvalProcessService;
 	@Autowired
 	private StudentManageService studentManageService;
+
+
+	@RequestMapping("/sessionClear")
+	@ResponseBody
+	public ResultVO sessionClear(HttpServletRequest request) {
+		Enumeration em = request.getSession().getAttributeNames();
+		while (em.hasMoreElements()) {
+			request.getSession().removeAttribute(em.nextElement().toString());
+		}
+		ResultVO result = ResultVO.setSuccess("session已清空");
+		return result;
+	}
+
 
 	/**
 	 * 检查有没有系统用户
