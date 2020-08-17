@@ -642,32 +642,16 @@ function confirmModifyStudent(row){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if (backjson.code===200) {
 				$.hideModal("#remindModal",false);
-				if (backjson.studentSpill) {
-					toastr.warning('添加学生行政班'+modifyStudentInfo.xzbname+'人数超过上限');
-					$.showModal("#addStudentModal",true);
-					return;
-				}
-//				if (backjson.xhhave) {
-//					toastr.warning('学号已存在');
-//					$.showModal("#addStudentModal",true);
-//					return;
-//				}
-				if (backjson.IdcardHave) {
-					toastr.warning('身份证号已存在');
-					$.showModal("#addStudentModal",true);
-					return;
-				}
-
-
-				$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: row.edu001_ID, row: backjson.newStudentInfo});
+				$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: row.edu001_ID, row: backjson.data});
 				$.hideModal("#addStudentModal");
-				toastr.success('修改成功');
+				toastr.success(backjson.msg);
 				toolTipUp(".myTooltip");
 			} else {
-				toastr.warning('操作失败，请重试');
+				$.hideModal("#remindModal");
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -749,17 +733,18 @@ function sendStudentRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if (backjson.code===200) {
 				for (var i = 0; i < removeArray.length; i++) {
 					$("#studentBaseInfoTable").bootstrapTable('removeByUniqueId', removeArray[i].studentId);
 				}
 				drawPagination(".studentBaseInfoTableArea", "学生信息");
 				$(".myTooltip").tooltipify();
 				$.hideModal("#remindModal");
-				toastr.success('删除成功');
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				$.hideModal("#remindModal");
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -854,28 +839,14 @@ function confirmAddStudent(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if (backjson.IDcardIshave) {
-					toastr.warning('身份证号码已存在');
-					return;
-				}
-//				if (backjson.xhhave) {
-//					toastr.warning('学号已存在');
-//					return;
-//				}
-				if (backjson.studentSpill) {
-					toastr.warning('班级人数超过上限');
-					return;
-				}
-				addStudentInfo.edu001_ID=backjson.id;
-				addStudentInfo.xh=backjson.newNh;
-				$('#studentBaseInfoTable').bootstrapTable("prepend", addStudentInfo);
+			hideloding();
+			if (backjson.code===200) {
+				$('#studentBaseInfoTable').bootstrapTable("prepend", backjson.data);
 				$(".myTooltip").tooltipify();
-				toastr.success('新增成功');
 				$.hideModal("#addStudentModal");
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -933,13 +904,7 @@ function getAddStudentInfo(){
 	var jtzz=$("#addStudentjtzz").val();
 	var zjxy=$("#addStudentzjxy").val();
 	var bz=$("#addStudentbz").val();
-	
-	
-//	if(xh===""){
-//		toastr.warning('学号不能为空');
-//		return;
-//	}
-	
+
 	if(xm===""){
 		toastr.warning('姓名不能为空');
 		return;
@@ -1329,35 +1294,37 @@ function confirmImportStudentInfo() {
 	        processData : false, // 使数据不做处理
 	        contentType : false, // 不要设置Content-Type请求头
 	        success: function(backjosn){
-	        	$(".fileLoadingArea").hide();
-        		if(!backjosn.isExcel){
-        			showImportErrorInfo("#importStudentInfoModal","请上传xls或xlsx类型的文件");
-        		   return
-        		}
-        		if(!backjosn.sheetCountPass){
-        			showImportErrorInfo("#importStudentInfoModal","上传文件的标签页个数不正确");
-        		   return
-        		}
-        		if(!backjosn.modalPass){
-        			showImportErrorInfo("#importStudentInfoModal","模板格式与原始模板不对应");
-        		   return
-        		}
-        		if(!backjosn.haveData){
-        			showImportErrorInfo("#importStudentInfoModal","文件暂无数据");
-        		   return
-        		}
-        		if(!backjosn.dataCheck){
-        			showImportErrorInfo("#importStudentInfoModal",backjosn.checkTxt);
-        		   return
-        		}
-        		
-        		var importStudents=backjosn.importStudent;
-        		for (var i = 0; i <importStudents.length; i++) {
-    				$('#studentBaseInfoTable').bootstrapTable("prepend", importStudents[i]);
-        		}
-				toastr.success('导入成功');
-				toolTipUp(".myTooltip");
-				$.hideModal("#importStudentInfoModal");
+				$(".fileLoadingArea").hide();
+	        	if(backjosn.code===200){
+					var importStudents=backjosn.data;
+					for (var i = 0; i <importStudents.length; i++) {
+						$('#studentBaseInfoTable').bootstrapTable("prepend", importStudents[i]);
+					}
+					toastr.success(backjosn.msg);
+					toolTipUp(".myTooltip");
+					$.hideModal("#importStudentInfoModal");
+				}else{
+					if(!backjosn.data.isExcel){
+						showImportErrorInfo("#importStudentInfoModal","请上传xls或xlsx类型的文件");
+						return
+					}
+					if(!backjosn.data.sheetCountPass){
+						showImportErrorInfo("#importStudentInfoModal","上传文件的标签页个数不正确");
+						return
+					}
+					if(!backjosn.data.modalPass){
+						showImportErrorInfo("#importStudentInfoModal","模板格式与原始模板不对应");
+						return
+					}
+					if(!backjosn.data.haveData){
+						showImportErrorInfo("#importStudentInfoModal","文件暂无数据");
+						return
+					}
+					if(!backjosn.data.dataCheck){
+						showImportErrorInfo("#importStudentInfoModal",backjosn.data.checkTxt);
+						return
+					}
+				}
 	        },beforeSend: function(xhr) {
 	           $(".fileLoadingArea").show();
 			},
@@ -1390,34 +1357,37 @@ function confirmModifyStudentInfo() {
 	        processData : false, // 使数据不做处理
 	        contentType : false, // 不要设置Content-Type请求头
 	        success: function(backjosn){
-	        	$(".fileLoadingArea").hide();
-        		if(!backjosn.isExcel){
-        			showImportErrorInfo("#modifyStudentsModal","请上传xls或xlsx类型的文件");
-        		   return
-        		}
-        		if(!backjosn.sheetCountPass){
-        			showImportErrorInfo("#modifyStudentsModal","上传文件的标签页个数不正确");
-        		   return
-        		}
-        		if(!backjosn.modalPass){
-        			showImportErrorInfo("#modifyStudentsModal","模板格式与原始模板不对应");
-        		   return
-        		}
-        		if(!backjosn.haveData){
-        			showImportErrorInfo("#modifyStudentsModal","文件暂无数据");
-        		   return
-        		}
-        		if(!backjosn.dataCheck){
-        			showImportErrorInfo("#modifyStudentsModal",backjosn.checkTxt);
-        		   return
-        		}
-        		var choosendStudents = backjosn.modifyStudentsInfo;
-        		for (var i = 0; i < choosendStudents.length; i++) {
-        			$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
-        		}
-				toastr.success('批量更新成功');
-		        $.hideModal("#modifyStudentsModal");
-		        toolTipUp(".myTooltip");
+				$(".fileLoadingArea").hide();
+				if(backjosn.code===200){
+					var choosendStudents = backjosn.data;
+					for (var i = 0; i < choosendStudents.length; i++) {
+						$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
+					}
+					toastr.success(backjosn.msg);
+					$.hideModal("#modifyStudentsModal");
+					toolTipUp(".myTooltip");
+				}else{
+					if(!backjosn.data.isExcel){
+						showImportErrorInfo("#modifyStudentsModal","请上传xls或xlsx类型的文件");
+						return
+					}
+					if(!backjosn.data.sheetCountPass){
+						showImportErrorInfo("#modifyStudentsModal","上传文件的标签页个数不正确");
+						return
+					}
+					if(!backjosn.data.modalPass){
+						showImportErrorInfo("#modifyStudentsModal","模板格式与原始模板不对应");
+						return
+					}
+					if(!backjosn.data.haveData){
+						showImportErrorInfo("#modifyStudentsModal","文件暂无数据");
+						return
+					}
+					if(!backjosn.data.dataCheck){
+						showImportErrorInfo("#modifyStudentsModal",backjosn.data.checkTxt);
+						return
+					}
+				}
 	        },beforeSend: function(xhr) {
 	           $(".fileLoadingArea").show();
 			},
@@ -1485,17 +1455,18 @@ function confirmGraduationStudents(choosendStudents){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
 				for (var i = 0; i < choosendStudents.length; i++) {
 					choosendStudents[i].zt="毕业";
 					choosendStudents[i].ztCode="graduation";
 					$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
 				}
+				toastr.success(backjson.msg);
 				 $.hideModal("#remindModal");
 				 toolTipUp(".myTooltip");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -1560,10 +1531,10 @@ function startSearch() {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				stuffStudentBaseInfoTable(backjson.studentInfo);
+			if (backjson.code===200) {
+				stuffStudentBaseInfoTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

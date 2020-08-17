@@ -347,8 +347,9 @@ public class StudentManageService {
                 addStudent(edu001); // 新增学生
                 count++;
             }
+            resultVO = ResultVO.setSuccess("成功导入了"+count+"个学生",importStudent);
         }
-        resultVO = ResultVO.setSuccess("成功导入了"+count+"个学生");
+
         return resultVO;
     }
 
@@ -397,9 +398,9 @@ public class StudentManageService {
                 approvalProcessService.initiationProcess(edu600);
                 count++;
             }
-            returnMap.put("modifyStudentsInfo", modifyStudents);
+            resultVO = ResultVO.setSuccess("成功修改了"+count+"个学生",modifyStudents);
         }
-        resultVO = ResultVO.setSuccess("成功修改了"+count+"个学生",returnMap);
+
         return resultVO;
     }
 }

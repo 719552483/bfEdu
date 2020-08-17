@@ -38,11 +38,6 @@ public class StudentManageController {
     ReflectUtils utils = new ReflectUtils();
     @Autowired
     private StudentManageService studentManageService;
-    @Autowired
-    private AdministrationPageService administrationPageService;
-    @Autowired
-    private ApprovalProcessService approvalProcessService;
-
 
     /**
      * 新增学生

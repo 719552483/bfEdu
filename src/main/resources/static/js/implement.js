@@ -1434,8 +1434,11 @@ function loadChoosendShortcuts() {
 
 //根据权限渲染菜单
 function changeMenu(){
-	var js=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
-	var jsid=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	var js="";
+	var jsid="";
+	js=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
+	jsid=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+
 	if(js!=="sys"){
 		var cdTxt="";
 		var allAuthority=JSON.parse($.session.get('allAuthority'));
