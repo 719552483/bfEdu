@@ -374,7 +374,7 @@ public class AdministrationController {
 	@ResponseBody
 	public Object newUser(@RequestParam("newUserInfo") String newUserInfo) {
 		boolean result = true;
-		boolean userNameHave = true;
+		boolean userNameHave = false;
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject jsonObject = JSONObject.fromObject(newUserInfo);
 		Edu990 newUser = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
@@ -382,6 +382,19 @@ public class AdministrationController {
 		Edu990 edu990 = administrationPageService.checkIsHaveUser(newUser.getYhm());
 		if (edu990 == null) {
 			userNameHave = false;
+		}else{
+			List<Edu990> currentUsers=administrationPageService.queryAllUser();
+			for (int i = 0; i < currentUsers.size(); i++) {
+				if(!currentUsers.get(i).getBF990_ID().equals(edu990.getBF990_ID())
+				&&currentUsers.get(i).getYhm().equals(edu990.getYhm())
+				){
+					userNameHave = true;
+					break;
+				}
+			}
+		}
+
+		if(!userNameHave){
 			administrationPageService.newUser(newUser);
 			returnMap.put("id", newUser.getBF990_ID());
 		}

@@ -1692,6 +1692,30 @@ margin: 0px 0px -14px -15px!important;
 	background-size: 8px 8px;
 }
 
+.newUserAuthority{
+	margin-bottom: 28px;
+	margin-top: 25px;
+}
+
+.newUserAuthority .multi-select-container{
+	margin-left: 38px!important;
+	margin-top: -13px!important;
+}
+
+.newUserAuthority .multi-select-button{
+	width: 344px;
+	text-align: center;
+}
+
+.multipleInTableArea .multi-select-menuitems label:last-child input{
+	display: inline;
+}
+
+.multipleInTableArea{
+	margin-left: 3%;
+	margin-top: -4px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

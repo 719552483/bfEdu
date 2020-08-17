@@ -7,7 +7,8 @@ import javax.persistence.*;
 @Table(name = "Edu990")
 public class Edu990 {
 	private Long BF990_ID;
-	private String js; // 角色类型
+	private String js; // 角色名称
+	private String jsId; // 角色id
 	private String mm; // 密码
 	private String yhm; // 用户名
 	private String scdlsj; // 上次登录时间
@@ -78,5 +79,11 @@ public class Edu990 {
 		this.userKey = userKey;
 	}
 
+	public String getJsId() {
+		return jsId;
+	}
 
+	public void setJsId(String jsId) {
+		this.jsId = jsId;
+	}
 }

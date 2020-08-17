@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.beifen.edu.administration.domian.Edu991;
 
+import java.util.List;
+
 public interface Edu991Dao extends JpaRepository<Edu991, Long>, JpaSpecificationExecutor<Edu991> {
 	// 根据角色获取权限信息
 	@Query(value = "select * from edu991 e where e.js=?1", nativeQuery = true)
@@ -22,4 +24,7 @@ public interface Edu991Dao extends JpaRepository<Edu991, Long>, JpaSpecification
 	//根据角色名称查询角色id
 	@Query(value = "select e.js from edu991 e where e.Bf991_ID=?1", nativeQuery = true)
 	public String queryNAMEBy991id(String js);
+
+	@Query(value = "select e.* from edu991 e,EDU992 d where e.BF991_ID = d.BF991_ID and d.BF990_ID =?1",nativeQuery = true)
+	List<Edu991> findRollByEdu990(String edu990Id);
 }

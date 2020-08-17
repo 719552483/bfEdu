@@ -864,11 +864,23 @@ public class AdministrationPageService {
 	// 新建或修改用户
 	public void newUser(Edu990 edu990) {
 		edu990DAO.save(edu990);
+
+		edu992Dao.deleteByEdu990Id(edu990.getBF990_ID().toString());
+
+		String[] jsids = edu990.getJsId().split(",");
+		for (String s : jsids) {
+			Edu992 edu992 = new Edu992();
+			edu992.setBF991_ID(Long.parseLong(s));
+			edu992.setBF990_ID(edu990.getBF990_ID());
+			edu992Dao.save(edu992);
+		}
 	}
 
 	// 删除用户
 	public void removeUser(String bf990_ID) {
 		edu990DAO.removeUser(bf990_ID);
+
+		edu992Dao.deleteByEdu990Id(bf990_ID);
 	}
 
 	// 查询用户是否存在
@@ -915,8 +927,8 @@ public class AdministrationPageService {
 	}
 
 	// 根据角色获取权限信息
-	public Edu991PO getAuthoritys(String edu991Id) {
-		List<Edu991> edu991List = edu992Dao.findRollByEdu991(edu991Id);
+	public Edu991PO getAuthoritys(String edu990Id) {
+		List<Edu991> edu991List = edu991DAO.findRollByEdu990(edu990Id);
 
 		String BF991_ID = "";
 		String js = "";
@@ -930,8 +942,8 @@ public class AdministrationPageService {
 			anqx += e.getAnqx();
 		}
 
-		String[] cdqxSplit = cdqx.substring(0, cdqx.length() - 1).split(",");
-		String[] anqxSplit = anqx.substring(0, anqx.length() - 1).split(",");
+		String[] cdqxSplit = cdqx.split(",");
+		String[] anqxSplit = anqx.split(",");
 
 		cdqx = utils.ruplicateRemoval(cdqxSplit);
 		anqx = utils.ruplicateRemoval(anqxSplit);
@@ -939,7 +951,7 @@ public class AdministrationPageService {
 		Edu991PO edu991PO = new Edu991PO();
 
 		edu991PO.setBF991_ID(BF991_ID);
-		edu991PO.setJs(js);
+		edu991PO.setJs(js.substring(0,js.length() - 1));
 		edu991PO.setAnqx(anqx);
 		edu991PO.setCdqx(cdqx);
 

@@ -1,4 +1,5 @@
 var roleOptionStr="";//全局变量接收当前所有角色类型
+var roleOption="";//全局变量接收当前所有角色类型
 $(function() {
 	getallRole(); 
 	drawNewUserRoleSelect();
@@ -25,13 +26,13 @@ function getallRole() {
 		},
 		success : function(backjson) {
 			hideloding();
+			roleOption=backjson.allRoleInfo;
 			if(backjson.allRoleInfo.length===0){
 				//首次使用 用户角色为空的情况
 				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
 			}else{
-				roleOptionStr='<option value="seleceConfigTip">请选择用户角色</option>';
 				for (var i = 0; i < backjson.allRoleInfo.length; i++) {
-					roleOptionStr += '<option value="' +  backjson.allRoleInfo[i].js + '">' +  backjson.allRoleInfo[i].js + '</option>';
+					roleOptionStr += '<option value="' +  backjson.allRoleInfo[i].bf991_ID + '">' +  backjson.allRoleInfo[i].js + '</option>';
 				}
 			}
 		}
@@ -41,13 +42,13 @@ function getallRole() {
 //初始化页面内容
 function drawNewUserRoleSelect() {
 	$("#newRole").append(roleOptionStr);
-	$('.isSowIndex').selectMania(); //初始化下拉框
+	$("#newRole").multiSelect();
 }
 
 //添加用户
 function addUser() {
 	var username = $("#add_username").val();
-	var newRole = getNormalSelectValue("newRole");
+	var newRole = getMoreSelectVALUES("#newRole");
 	var pwd = $("#add_pwd").val();
 	var confirmPwd = $("#add_confirmPwd").val();
 
@@ -159,7 +160,8 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 function saveNewUser(username, newRole, pwd, confirmPwd) {
 	var newUserObject = new Object();
 	newUserObject.yhm = username;
-	newUserObject.js = newRole;
+	newUserObject.js = newRole.name;
+	newUserObject.jsId = newRole.value;
 	newUserObject.mm = pwd;
 	$.ajax({
 		method : 'get',
@@ -302,8 +304,9 @@ function stuffTable(tableInfo) {
 
 	function userRoleFormatter(value, row, index) {
 		return [
-				'<span title="'+row.js+'" class="myTooltip roleTxt roleTxt' + row.bf990_ID + '">' + row.js + '</span><select class="myTableSelect myTableSelect' +
-				row.bf990_ID + '" id="isSowIndex">' + roleOptionStr + '</select>'
+				'<div class="multipleInTableArea multipleInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip roleTxt roleTxt' + row.bf990_ID + '">' + row.js + '</span>' +
+				'<select class="myTableSelect myTableSelect' +row.bf990_ID + '" id="userRol'+row.bf990_ID+'" multiple="true">' + roleOptionStr + '' +
+				'</select></div>'
 			]
 			.join('');
 	}
@@ -328,10 +331,11 @@ function modifiRole(row) {
 	$('.roleTxt' + row.bf990_ID).hide();
 	$('.blockStart' + row.bf990_ID).hide();
 	$(".blockName" + row.bf990_ID).hide();
-	$(".myTableSelect" + row.bf990_ID).show();
+	$(".multipleInTableArea"+row.bf990_ID).find(".multi-select-container").show();
 	$(".noneStart" + row.bf990_ID).show();
 	$("#userNameInTable" + row.bf990_ID).show();
 	$(".currentId").html(row.bf990_ID);
+	$("#userRol"+row.bf990_ID).multiSelect();
 }
 
 //单个删除用户
@@ -374,20 +378,20 @@ function canleModify(row) {
 	$('.roleTxt' + row.bf990_ID).show();
 	$('.blockStart' + row.bf990_ID).show();
 	$(".blockName" + row.bf990_ID).show();
-	$(".myTableSelect" + row.bf990_ID).hide();
 	$(".noneStart" + row.bf990_ID).hide();
 	$("#userNameInTable" + row.bf990_ID).hide();
+	$(".multipleInTableArea"+row.bf990_ID).find(".multi-select-container").hide();
 }
 
 //确认修改用户
 function okModify(row, index) {
 	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
-	var roleInSelect = $('.myTableSelect' + row.bf990_ID).val();
+	var roleInSelect = $('#userRol' + row.bf990_ID).val();
 	if (usernameInInput === "") {
 		toastr.warning('用户名不能为空');
 		return;
 	}
-	if (typeof(roleInSelect) === "undefined"||roleInSelect==="seleceConfigTip") {
+	if (roleInSelect==null) {
 		toastr.warning('用户权限未设置');
 		return;
 	}
@@ -406,11 +410,13 @@ function okModify(row, index) {
 //发送修改用户
 function confirmodifyUser(row, index) {
 	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
-	var roleInSelect = $('.myTableSelect' + row.bf990_ID).val();
+	var roleInSelect = getMoreSelectVALUES("#userRol"+row.bf990_ID);
 	var modifyObject =row;
 	modifyObject.BF990_ID = row.bf990_ID;
 	modifyObject.yhm = usernameInInput;
-	modifyObject.js = roleInSelect;
+	modifyObject.js = roleInSelect.name;
+	modifyObject.jsId = roleInSelect.value;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -479,6 +485,35 @@ function removeuUerAjaxDemo(removeArray) {
 	});
 }
 
+//获得多选的值
+function getMoreSelectVALUES(id) {
+	var values =$(id).val();
+	var valuesTxt = "";
+	if(values!=null){
+		for (var i = 0; i < values.length; ++i) {
+			valuesTxt+=values[i]+',';
+		}
+	}
+	var valuesNames =new Array();
+	for (var r = 0; r < roleOption.length; r++) {
+		for (var v = 0; v < values.length; v++) {
+			if(roleOption[r].bf991_ID===parseInt(values[v])){
+				valuesNames.push(roleOption[r].js);
+			}
+		}
+	}
+
+	var nameStr="";
+	for (var i = 0; i < valuesNames.length; i++) {
+		nameStr+=valuesNames[i]+',';
+	}
+
+	var returnObject=new Object();
+	returnObject.value=valuesTxt.substring(0,valuesTxt.length-1);
+	returnObject.name=nameStr.substring(0,nameStr.length-1);
+
+	return returnObject;
+}
 //按钮事件绑定
 function btnBind() {
 	//确认新增用户按钮
