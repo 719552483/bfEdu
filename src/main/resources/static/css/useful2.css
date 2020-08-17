@@ -1716,6 +1716,50 @@ margin: 0px 0px -14px -15px!important;
 	margin-top: -4px;
 }
 
+.canChooseRoleArea{
+	position: relative;
+	background: #79c3e0;
+	width: 171px;
+	margin-top: -11px;
+	z-index: 999999;
+	height: 76px;
+	overflow: hidden;
+	float: left;
+	border-radius: 8px;
+}
+
+.arrow-right{
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #79c3e0;
+	position: relative;
+	float: left;
+	transform: translateX(-180px) rotate(184deg);
+}
+
+.canChooseRoles cite{
+	float: left;
+	width: 100%;
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: white;
+	background-color: #53a5d470;
+	border-radius: 5px;
+	margin-right: 2px;
+	margin-left: 2px;
+	margin-top: 2px;
+	padding-bottom: 5px;
+}
+
+.canChooseRoles cite:hover{
+	color: black;
+	background-color: rgb(53 187 218 / 75%);
+	text-indent: -10px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

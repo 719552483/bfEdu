@@ -466,7 +466,6 @@ function getNoticeInfo(id){
 
 
 $(function() {
-	checkSession(); 
 	loadUserInfo();
 	loadChoosendShortcuts();
 	ShortcutsButtonBind();

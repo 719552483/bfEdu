@@ -161,8 +161,8 @@ public class PageRelatedController {
 		return "localInfo";
 	}
 
-	@RequestMapping("localUsed")
+	@RequestMapping("localUseFrequency")
 	public String localUsedPage() {
-		return "localUsed";
+		return "localUseFrequency";
 	}
 }

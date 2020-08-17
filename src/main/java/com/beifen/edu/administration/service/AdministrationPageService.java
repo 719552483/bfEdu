@@ -1827,7 +1827,8 @@ public class AdministrationPageService {
 		String datebasePwd = checkPwd(username);
 		// 用户不存在
 		if (checkIsHaveUser == null || !password.equals(datebasePwd)) {
-
+			resultVO = ResultVO.setFailed("用户名或密码错误，请重新输入");
+			return resultVO;
 		}
 		//用户登陆成功
 		if (checkIsHaveUser != null && password.equals(datebasePwd)) {

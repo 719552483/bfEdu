@@ -55,21 +55,17 @@ function comfirmLogin(username,password) {
 		},
 		dataType: 'json',
 		success: function(backjson) {
-			if(backjson.result) {
-				//注册？？？
+			if(backjson.code===200) {
 				var userInfo = $.session.get('userInfo');
-			    if(userInfo==="undefined"||userInfo===undefined){
-			    	$.session.set('userInfo', backjson.UserInfo);
-			    	$.session.set('authoritysInfo', backjson.authoritysInfo);
-			    }else{
-			    	$.session.remove('userInfo');
-			    	$.session.remove('authoritysInfo');
-			    	$.session.set('userInfo', backjson.UserInfo);
-			    	$.session.set('authoritysInfo', backjson.authoritysInfo);
-			    }
+				if(userInfo==="undefined"||userInfo===undefined){
+					$.session.set('userInfo', backjson.data.UserInfo);
+				}else{
+					$.session.remove('userInfo');
+					$.session.set('userInfo', backjson.data.UserInfo);
+				}
 				window.location.href = "main.html";
 			} else {
-				toastr.warning(backjson.ErroeTxt);
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
