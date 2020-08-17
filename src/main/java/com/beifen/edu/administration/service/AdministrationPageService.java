@@ -643,22 +643,6 @@ public class AdministrationPageService {
 		}
 	}
 
-	// 增加教学班人数
-	public void addTeachingClassesJXBRS(String jxbcode) {
-		int oldJXBrs = edu301DAO.queryJXBrs(jxbcode);
-		int newJXBrs = oldJXBrs + 1;
-		edu301DAO.changeTeachingClassesRS(jxbcode, newJXBrs);
-	}
-
-	// 减少教学班人数
-	public void cutTeachingClassesJXBRS(String jxbcode) {
-		int oldJXBrs = edu301DAO.queryJXBrs(jxbcode);
-		int newJXBrs = oldJXBrs - 1;
-		edu301DAO.changeTeachingClassesRS(jxbcode, newJXBrs);
-	}
-
-
-
 	// 检查有没有系统用户
 	public boolean checkHaveSysUser() {
 		Edu990 edu990 = edu990DAO.checkHaveSysUser("sys");
@@ -744,37 +728,9 @@ public class AdministrationPageService {
 	}
 
 	// 根据角色获取权限信息
-	public Edu991PO getAuthoritys(String edu990Id) {
-		List<Edu991> edu991List = edu991DAO.findRollByEdu990(edu990Id);
-
-		String BF991_ID = "";
-		String js = "";
-		String cdqx = "";
-		String anqx = "";
-
-		for (Edu991 e : edu991List) {
-			BF991_ID += e.getBF991_ID() +",";
-			js += e.getJs() + ",";
-			cdqx += e.getCdqx();
-			anqx += e.getAnqx();
-		}
-
-		String[] cdqxSplit = cdqx.split(",");
-		String[] anqxSplit = anqx.split(",");
-
-		cdqx = utils.ruplicateRemoval(cdqxSplit);
-		anqx = utils.ruplicateRemoval(anqxSplit);
-
-		Edu991PO edu991PO = new Edu991PO();
-
-		edu991PO.setBF991_ID(BF991_ID);
-		edu991PO.setJs(js.substring(0,js.length() - 1));
-		edu991PO.setAnqx(anqx);
-		edu991PO.setCdqx(cdqx);
-
-		return edu991PO;
-
-
+	public List<Edu991> getAuthoritys(String edu990Id) {
+		List<Edu991> roleList = edu991DAO.findRollByEdu990(edu990Id);
+		return roleList;
 	}
 
 
@@ -1860,5 +1816,40 @@ public class AdministrationPageService {
 
 	public void updateLoginTime(Edu990 edu990) {
 		edu990DAO.save(edu990);
+	}
+
+	//验证用户登陆
+	public ResultVO verifyUser(String username, String password) {
+		ResultVO resultVO = new ResultVO();
+		Map<String, Object> returnMap = new HashMap();
+
+		Edu990 checkIsHaveUser = checkIsHaveUser(username);
+		String datebasePwd = checkPwd(username);
+		// 用户不存在
+		if (checkIsHaveUser == null || !password.equals(datebasePwd)) {
+
+		}
+		//用户登陆成功
+		if (checkIsHaveUser != null && password.equals(datebasePwd)) {
+			Edu990 edu990 = getUserInfo(username);
+			List<Edu991> authoritys = getAuthoritys(edu990.getBF990_ID().toString());
+			if (edu990 != null && authoritys.size() != 0) {
+				// 用户首次登陆
+				if (edu990.getScdlsj() == null) {
+					edu990.setScdlsj("fristTime");
+				}
+			}else {
+				resultVO = ResultVO.setFailed("用户权限错误，请联系管理员");
+				return resultVO;
+			}
+			returnMap.put("UserInfo", JSON.toJSONString(edu990));
+			returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
+			// 更新用户上次登陆时间
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+			edu990.setScdlsj(df.format(new Date()));
+			updateLoginTime(edu990);
+		}
+		resultVO = ResultVO.setSuccess("登陆成功",returnMap);
+		return resultVO;
 	}
 }

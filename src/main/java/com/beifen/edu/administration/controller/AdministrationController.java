@@ -124,53 +124,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/verifyUser")
 	@ResponseBody
-	public Object verifyUser(@RequestParam String username, @RequestParam String password) {
-		boolean result = false; // 密码验证结果
-		Map<String, Object> returnMap = new HashMap();
-		Edu990 checkIsHaveUser = administrationPageService.checkIsHaveUser(username);
-		String datebasePwd = administrationPageService.checkPwd(username);
-		String ErroeTxt = "";
-
-
-		//判断sys用户是否存在
-
-		//test
-
-
-
-		// 用户不存在
-		if (checkIsHaveUser == null) {
-			result = false;
-			ErroeTxt = "用户不存在";
-			returnMap.put("result", result);
-			returnMap.put("ErroeTxt", ErroeTxt);
-		} else if (!password.equals(datebasePwd)) {
-			result = false;
-			ErroeTxt = "密码错误";
-			returnMap.put("result", result);
-			returnMap.put("ErroeTxt", ErroeTxt);
-		} else if (checkIsHaveUser != null && password.equals(datebasePwd)) {
-			result = true;
-			Map<String, Object> UserInfo = new HashMap();
-			Edu990 edu990 = administrationPageService.getUserInfo(username);
-			Edu991PO edu991 = administrationPageService.getAuthoritys(edu990.getBF990_ID().toString());
-			if (edu990 != null && edu991 != null) {
-				// 用户首次登陆
-				if (edu990.getScdlsj() == null) {
-					edu990.setScdlsj("fristTime");
-				}
-			}
-
-			returnMap.put("UserInfo", JSON.toJSONString(edu990));
-			returnMap.put("authoritysInfo", JSON.toJSONString(edu991));
-
-			// 更新用户上次登陆时间
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-			edu990.setScdlsj(df.format(new Date()));
-			administrationPageService.updateLoginTime(edu990);
-			returnMap.put("result", result);
-		}
-		return returnMap;
+	public ResultVO verifyUser(@RequestParam String username, @RequestParam String password) {
+		ResultVO result;
+		result = administrationPageService.verifyUser(username,password);
+		return result;
 	}
 
 	/**
