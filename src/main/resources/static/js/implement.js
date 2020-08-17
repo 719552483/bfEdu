@@ -1203,6 +1203,15 @@ function getCrrruentDate() {
 	return y + m + d + h + min + s;
 }
 
+//去掉字符中的双引号
+function charSpiltMatter(value, row, index) {
+	var reg = new RegExp('"',"g");
+	var str = value.replace(reg, "");
+
+	return [ '<div class="myTooltip" title="'+str+'">'+str+'</div>' ]
+		.join('');
+}
+
 //字符去所有空格  需要设置第2个参数为":g"
 function Trim(str, is_global)
 

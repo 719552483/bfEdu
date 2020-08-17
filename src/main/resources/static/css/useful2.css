@@ -1680,7 +1680,17 @@ margin: 0px 0px -14px -15px!important;
 	margin-top: -1.3px;
 }
 
-
+.PuttedKjArea{
+	color: #115882;
+	font-size: 15px;
+	font-weight: 500;
+	width: 100%;
+	text-align: left;
+	padding-left: 41px;
+	background: url(../images/btnbg1.png) center center no-repeat;
+	background-position-x: 25px;
+	background-size: 8px 8px;
+}
 
 @keyframes serachAnimation {
     10% {

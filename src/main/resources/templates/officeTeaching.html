@@ -295,6 +295,7 @@
 				<div class="tools scheduleToolsArea">
 					<ul class="toolbar" style="padding-top: 12px;">
 						<li class="click" id="puttedReturnStartSchedule"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+						<li class="click deleteBtn" id="removePutteds"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除</li>
 						<li class="click" id="putted_startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
 					</ul>
 					<ul class="toolbar1">
@@ -390,6 +391,9 @@
 					</div>
 					<div class="modal-body">
 						<div class="manyInfoShow">
+							<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+								<span>基础信息</span>
+							</div>
 							<div class="searchArea moreInfoSelectStyle">
 								<div class="col1 giveBottom">
 									<ul class="forminfo">
@@ -470,13 +474,13 @@
 										</div>
 									</ul>
 								</div>
-
+								<div class="clear"></div>
+								<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+									<span>课节安排</span>
+								</div>
 								<div class="puttedKjArea">
 
 								</div>
-
-
-
 								<div class="clear"></div>
 							</div>
 						</div>
@@ -488,8 +492,6 @@
 				</div>
 			</div>
 		</div>
-
-
 
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
