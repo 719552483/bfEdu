@@ -67,95 +67,29 @@ public class StudentManageController {
      */
     @RequestMapping("removeStudents")
     @ResponseBody
-    public Object removeStudents(@RequestParam String removeInfo) {
+    public ResultVO removeStudents(@RequestParam String removeInfo) {
+        ResultVO result;
         JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
-        for (int i = 0; i < deleteArray.size(); i++) {
-            JSONObject jsonObject = deleteArray.getJSONObject(i);
-            String edu300_ID = jsonObject.getString("edu300_ID");
-            long studentId = jsonObject.getLong("studentId");
-
-            List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu300_ID);
-            List<Edu301> teachingClassesBy001id = administrationPageService
-                    .queryTeachingClassByXSCode(String.valueOf(studentId));
-            studentManageService.removeStudentUpdateCorrelationInfo(teachingClassesBy300id, teachingClassesBy001id,
-                    edu300_ID, studentId);
-            studentManageService.removeStudentByID(studentId);
-        }
-        Map<String, Object> returnMap = new HashMap();
-        returnMap.put("result", true);
-        return returnMap;
+        result =  studentManageService.removeStudentByID(deleteArray);
+        return result;
     }
 
     /**
      * 修改学生
      * @param updateinfo
+     * @param approvalobect
      * @return
      */
     @RequestMapping("modifyStudent")
     @ResponseBody
-    public Object modifyStudent(@RequestParam("updateinfo") String updateinfo,@RequestParam("approvalobect") String approvalobect) {
-        Map<String, Object> returnMap = new HashMap();
+    public ResultVO modifyStudent(@RequestParam("updateinfo") String updateinfo,@RequestParam("approvalobect") String approvalobect) {
+        ResultVO result;
         JSONObject jsonObject = JSONObject.fromObject(updateinfo);
         JSONObject apprvalObject = JSONObject.fromObject(approvalobect);
         Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
         Edu600 edu600 = (Edu600) JSONObject.toBean(apprvalObject, Edu600.class);
-        List<Edu001> currentAllStudent = studentManageService.queryAllStudent();
-
-        // 判断身份证是否存在
-        boolean IdcardHave= false;
-        for (int i = 0; i < currentAllStudent.size(); i++) {
-            if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
-                    && currentAllStudent.get(i).getSfzh().equals(edu001.getSfzh())) {
-                IdcardHave = true;
-                break;
-            }
-        }
-
-        // 判断是否改变行政班
-        boolean isChangeXZB = false;
-        for (int i = 0; i < currentAllStudent.size(); i++) {
-            if (currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())) {
-                if (currentAllStudent.get(i).getEdu300_ID() == null
-                        || currentAllStudent.get(i).getEdu300_ID().equals("")) {
-                    isChangeXZB = true;
-                    break;
-                } else {
-                    if (!currentAllStudent.get(i).getEdu300_ID().equals(edu001.getEdu300_ID())) {
-                        isChangeXZB = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        boolean studentSpill=false;
-        // 不存在则修改学生
-        if (!IdcardHave) {
-            //如果修改操作为修改学生状态为休学 发送审批流对象
-            Edu001 oldEdu001 = studentManageService.queryStudentBy001ID(edu001.getEdu001_ID().toString());
-            if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
-                edu001.setZtCode("007");
-                edu001.setZt("休学申请中");
-                edu600.setBusinessKey(edu001.getEdu001_ID());
-            }
-            if (!isChangeXZB) {
-                // 没有修改行政班的情况
-                studentManageService.addStudent(edu001);
-            } else {
-                // 判断修改是否会超过行政班容纳人数
-                studentSpill = studentManageService.administrationClassesIsSpill(edu001.getEdu300_ID());
-                if(!studentSpill){
-                    studentManageService.updateStudent(edu001);
-                }
-            }
-            approvalProcessService.initiationProcess(edu600);
-        }
-
-        returnMap.put("newStudentInfo", edu001);
-        returnMap.put("studentSpill", studentSpill);
-        returnMap.put("IdcardHave", IdcardHave);
-        returnMap.put("result", true);
-        return returnMap;
+        result = studentManageService.modifyStudent(edu001,edu600);
+        return result;
     }
 
     /**
@@ -167,7 +101,7 @@ public class StudentManageController {
      */
     @RequestMapping("downloadStudentModal")
     @ResponseBody
-    public void downloadStudentModal(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+    public ResultVO downloadStudentModal(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
         //创建Excel文件
         XSSFWorkbook workbook  = new XSSFWorkbook();
         utils.createImportStudentModal(workbook);
@@ -179,6 +113,8 @@ public class StudentManageController {
             fileName="导入学生模板";
         }
         utils.loadModal(response,fileName, workbook);
+        ResultVO result = ResultVO.setSuccess("模版下载成功");
+        return result;
     }
 
     /**
@@ -190,7 +126,7 @@ public class StudentManageController {
      */
     @RequestMapping("downloadModifyStudentsModal")
     @ResponseBody
-    public void downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException, ParseException {
+    public ResultVO downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException, ParseException {
         // 根据ID查询已选学生信息
         com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
         List<Edu001> chosedStudents=new ArrayList<Edu001>();
@@ -209,6 +145,9 @@ public class StudentManageController {
         XSSFWorkbook workbook  = new XSSFWorkbook();
         utils.createModifyStudentModal(workbook,chosedStudents);
         utils.loadModal(response,fileName, workbook);
+
+        ResultVO result = ResultVO.setSuccess("模版下载成功");
+        return result;
     }
 
     /**
@@ -241,9 +180,6 @@ public class StudentManageController {
                 edu001.setYxbz(yxbz);
                 edu001.setXh(studentManageService.getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
                 studentManageService.addStudent(edu001); // 新增学生
-                List<Edu301> teachingClassesBy300id = administrationPageService.queryTeachingClassByXzbCode(edu001.getEdu300_ID());
-                String xzbid = edu001.getEdu300_ID();
-                studentManageService.addStudentUpdateCorrelationInfo(teachingClassesBy300id, xzbid);
             }
         }
         return returnMap;
