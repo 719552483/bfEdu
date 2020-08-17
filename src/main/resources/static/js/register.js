@@ -37,20 +37,20 @@ function comfirmRegisterUser(username,password) {
 		},
 		dataType: 'json',
 		success: function(backjson) {
-			if(backjson.result) {
+			if(backjson.code == 200) {
 				var userInfo = $.session.get('userInfo');
 			    if(userInfo==="undefined"||userInfo===undefined){
-			    	$.session.set('userInfo', backjson.UserInfo);
-			    	$.session.set('authoritysInfo', backjson.authoritysInfo);
+			    	$.session.set('userInfo', backjson.data.UserInfo);
+			    	$.session.set('authoritysInfo', backjson.data.authoritysInfo);
 			    }else{
 			    	$.session.remove('userInfo');
 			    	$.session.remove('authoritysInfo');
-			    	$.session.set('userInfo', backjson.UserInfo);
-			    	$.session.set('authoritysInfo', backjson.authoritysInfo);
+			    	$.session.set('userInfo', backjson.data.UserInfo);
+			    	$.session.set('authoritysInfo', backjson.data.authoritysInfo);
 			    }
 				window.location.href = "main.html";
 			} else {
-				toastr.warning("操作失败,请重试");
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

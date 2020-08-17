@@ -2,6 +2,7 @@ package com.beifen.edu.administration.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -9,7 +10,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.*;
+import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import net.sf.json.JSONArray;
@@ -710,7 +713,6 @@ public class AdministrationPageService {
 
 	// 获取用户信息
 	public Edu990 getUserInfo(String username) {
-
 		return edu990DAO.getUserInfo(username);
 	}
 
@@ -1807,5 +1809,56 @@ public class AdministrationPageService {
 		returnMap.put("scheduleCompletedDetails",scheduleCompletedDetails);
 		return returnMap;
 
+	}
+
+	public ResultVO newManagerUser(String username, String password) {
+		ResultVO resultVO;
+		Map<String, Object> returnMap = new HashMap();
+		String sysRole = "sys";
+		// 生成系统用户
+		Edu990 edu990 = new Edu990();
+		edu990.setJs(sysRole);
+		edu990.setYhm(username);
+		edu990.setMm(password);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+		edu990.setScdlsj(df.format(new Date()));
+		Edu990 save = edu990DAO.save(edu990);
+		if(save == null) {
+			resultVO = ResultVO.setFailed("新增管理员失败");
+			return resultVO;
+		}
+
+		// 生成系统用户权限
+		Edu991 edu991 = new Edu991();
+		edu991.setJs(sysRole);
+		edu991.setAnqx(sysRole);
+		edu991.setCdqx(sysRole);
+		Edu991 Edu991save = edu991DAO.save(edu991);
+		if(Edu991save == null) {
+			resultVO = ResultVO.setFailed("新增管理员失败");
+			return resultVO;
+		}
+
+		Edu992 edu992 = new Edu992();
+		edu992.setBF990_ID(edu990.getBF990_ID());
+		edu992.setBF991_ID(edu991.getBF991_ID());
+		edu992Dao.save(edu992);
+
+
+
+		// 获取系统用户保存在页面session信息
+		Edu990 UserInfo = getUserInfo(username);
+		UserInfo.setScdlsj("fristTime");
+		Edu991 authoritysInfo = getAuthoritysInfo(edu990.getJs());
+
+		returnMap.put("UserInfo", JSON.toJSONString(UserInfo));
+		returnMap.put("authoritysInfo", JSON.toJSONString(authoritysInfo));
+
+		resultVO = ResultVO.setSuccess("新增管理员成功",returnMap);
+		return resultVO;
+	}
+
+	public void updateLoginTime(Edu990 edu990) {
+		edu990DAO.save(edu990);
 	}
 }

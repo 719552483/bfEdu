@@ -21,6 +21,7 @@ import com.beifen.edu.administration.PO.Edu991PO;
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
+import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.service.StudentManageService;
@@ -79,38 +80,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/registerUser")
 	@ResponseBody
-	public Object registerUser(@RequestParam String username, @RequestParam String password) {
-		Map<String, Object> returnMap = new HashMap();
-		String sysRole = "sys";
-		// 生成系统用户
-		Edu990 edu990 = new Edu990();
-		edu990.setJs(sysRole);
-		edu990.setYhm(username);
-		edu990.setMm(password);
-		administrationPageService.newUser(edu990);
-
-		// 生成系统用户权限
-
-		Edu991 edu991 = new Edu991();
-		edu991.setJs(sysRole);
-		edu991.setAnqx(sysRole);
-		edu991.setCdqx(sysRole);
-		administrationPageService.addRole(edu991);
-
-		// 获取系统用户保存在页面session信息
-		Edu990 UserInfo = administrationPageService.getUserInfo(username);
-		UserInfo.setScdlsj("fristTime");
-		Edu991 authoritysInfo = administrationPageService.getAuthoritysInfo(edu990.getJs());
-
-		returnMap.put("UserInfo", JSON.toJSONString(UserInfo));
-		returnMap.put("authoritysInfo", JSON.toJSONString(authoritysInfo));
-		returnMap.put("result", true);
-
-		// 更新系统用户上次登陆时间
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-		UserInfo.setScdlsj(df.format(new Date()));
-		administrationPageService.newUser(UserInfo);
-		return returnMap;
+	public ResultVO registerUser(@RequestParam String username, @RequestParam String password) {
+		ResultVO result;
+		result = administrationPageService.newManagerUser(username,password);
+		return result;
 	}
 
 	/**
@@ -194,7 +167,7 @@ public class AdministrationController {
 			// 更新用户上次登陆时间
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 			edu990.setScdlsj(df.format(new Date()));
-			administrationPageService.newUser(edu990);
+			administrationPageService.updateLoginTime(edu990);
 			returnMap.put("result", result);
 		}
 		return returnMap;
