@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,10 +58,16 @@ public class AdministrationController {
 
 	@RequestMapping("/sessionClear")
 	@ResponseBody
-	public ResultVO sessionClear(HttpServletRequest request) {
+	public ResultVO sessionClear(HttpServletRequest request,HttpServletResponse response) {
 		Enumeration em = request.getSession().getAttributeNames();
 		while (em.hasMoreElements()) {
 			request.getSession().removeAttribute(em.nextElement().toString());
+		}
+		Cookie[] cookies=request.getCookies();
+		for(Cookie cookie : cookies) {
+			cookie.setMaxAge(0);
+			cookie.setPath("/");
+			response.addCookie(cookie);
 		}
 		ResultVO result = ResultVO.setSuccess("session已清空");
 		return result;
