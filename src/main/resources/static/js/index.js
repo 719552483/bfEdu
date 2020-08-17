@@ -14,51 +14,6 @@ function loadUserInfo() {
 	}
 }
 
-/*
-加载已选的快捷方式
-*/
-function loadChoosendShortcuts() {
-	//根据权限渲染菜单
-	var userInfo = JSON.parse($.session.get('userInfo'));
-	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
-	if(typeof(userInfo.yxkjfs) !== "undefined"){
-		var allChoosedShortcuts =userInfo.yxkjfs.split(",");
-		for (var k = 0; k < currentMenus.length; ++k) {
-			for (var i = 0; i < allChoosedShortcuts.length; ++i) {
-				if (allChoosedShortcuts[i] === currentMenus[k].id) {
-					$(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +
-						'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
-						'.png" />' +
-						'<p>' + currentMenus[k].innerText + '</a></p>' +
-						'</li>');
-				}
-			}
-		}
-	}else{
-		//默认显示6个快捷方式
-		for (var k = 0; k < currentMenus.length; ++k) {
-			if(k<=5){
-				$(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
-						'"><img class="choosedShortcutsIcon" onclick="pointPage(this)" src="img/' + currentMenus[k].id +
-						'.png" />' +
-						'<p>' + currentMenus[k].innerText + '</a></p>' +
-						'</li>');
-			}
-		}
-	}
-	
-	$(".choosendShortcuts").find("li").on({
-		mouseover : function(e){
-			var hoverClass=e.currentTarget.className;
-			$(".choosendShortcuts").find("."+hoverClass).addClass("wantPonitShortcuts");
-		} ,
-		mouseout : function(e){
-			var hoverClass=e.currentTarget.classList[0];
-			$(".choosendShortcuts").find("."+hoverClass).removeClass("wantPonitShortcuts");
-		} 
-	}) ;
-}
-
 //跳转指定页面
 function pointPage(eve){
 	window.location.href = eve.classList[0]+".html";
@@ -467,7 +422,6 @@ function getNoticeInfo(id){
 
 $(function() {
 	loadUserInfo();
-	loadChoosendShortcuts();
 	ShortcutsButtonBind();
 	drawAuthorityGroup();
 	loadNotices();

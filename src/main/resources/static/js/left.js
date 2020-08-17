@@ -17,5 +17,4 @@ $(function() {
 			$(this).next('ul').slideDown();
 		}
 	});
-	changeMenu();
 })

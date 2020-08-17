@@ -1,9 +1,11 @@
 $(document).ready(function() {
 	stuffSeession();
+	loadChoosendShortcuts();
 	$("body").find("input").attr("spellcheck",false);
 });
 
 function stuffSeession(){
+	drawNewsBySession();
 	var userInfo =JSON.parse($.session.get('userInfo')) ;
 	$.ajax({
 		method: 'post',
@@ -19,9 +21,9 @@ function stuffSeession(){
 				$.session.set('allAuthority', backjson.data.authoritysInfo);
 				var auArray=JSON.parse(backjson.data.authoritysInfo);
 				$.session.set('authoritysInfo',JSON.stringify(auArray[0]));
-				drawNewsBySession();
 				stuffCurrenRoleName();
 				changeMenu();
+				btnControl();
 			}
 		}
 	});
@@ -45,7 +47,7 @@ function drawNewsBySession(){
 function btnControl(){
 	 var allAnqx=["insert","delete","modify","query"];
 	 var btnInfo ="";
-	 var currentJsId=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id; // 用户不是管理员则隐藏发布通知
+	 var currentJsId=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	 var allJsInfo =JSON.parse($.session.get('authoritysInfo'));
 	for (var i = 0; i < allJsInfo.length; i++) {
        if(parseInt(currentJsId) ===allJsInfo[i].bF991_ID){
@@ -53,7 +55,7 @@ function btnControl(){
 	   }
 	}
 
-	 if(btnInfo==="sys"){
+	 if(allJsInfo.js==="sys"){
 		 return;
 	 }
 	 for (var i = 0; i < allAnqx.length; i++) {
@@ -1405,6 +1407,11 @@ function stuffCurrenRoleName(){
 	var jsid=JSON.parse($.session.get('allAuthority'))[0].bF991_ID;
     $(".changeRCurrentRole").find('a:eq(0)').html(js);
 	$(".changeRCurrentRole").find('a:eq(0)').attr("id",jsid);
+
+	// 用户不是管理员则隐藏发布通知
+	if(js!=="sys"){
+		$(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").hide();
+	}
 }
 
 //点击确认更换当前角色
@@ -1465,4 +1472,54 @@ function changeMenu(){
 		}
 	}
 
+}
+
+/*
+加载已选的快捷方式
+*/
+function loadChoosendShortcuts() {
+	//根据权限渲染菜单
+	var userInfo = JSON.parse($.session.get('userInfo'));
+	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
+	var stuffedNum=$(parent.frames["rightFrame"].document).find(".choosendShortcuts").find("li").length;
+	if(typeof(userInfo.yxkjfs) !== "undefined"){
+		if(stuffedNum<=0){
+			var allChoosedShortcuts =userInfo.yxkjfs.split(",");
+			for (var k = 0; k < currentMenus.length; ++k) {
+				for (var i = 0; i < allChoosedShortcuts.length; ++i) {
+					if (allChoosedShortcuts[i] === currentMenus[k].id) {
+						$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +
+							'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
+							'.png" />' +
+							'<p>' + currentMenus[k].innerText + '</a></p>' +
+							'</li>');
+					}
+				}
+			}
+		}
+	}else{
+		if(stuffedNum<=0){
+			//默认显示6个快捷方式
+			for (var k = 0; k < currentMenus.length; ++k) {
+				if(k<=5){
+					$(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
+						'"><img class="choosedShortcutsIcon" onclick="pointPage(this)" src="img/' + currentMenus[k].id +
+						'.png" />' +
+						'<p>' + currentMenus[k].innerText + '</a></p>' +
+						'</li>');
+				}
+			}
+		}
+	}
+
+	$(".choosendShortcuts").find("li").on({
+		mouseover : function(e){
+			var hoverClass=e.currentTarget.className;
+			$(".choosendShortcuts").find("."+hoverClass).addClass("wantPonitShortcuts");
+		} ,
+		mouseout : function(e){
+			var hoverClass=e.currentTarget.classList[0];
+			$(".choosendShortcuts").find("."+hoverClass).removeClass("wantPonitShortcuts");
+		}
+	}) ;
 }

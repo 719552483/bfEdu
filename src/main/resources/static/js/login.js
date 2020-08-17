@@ -60,7 +60,6 @@ function comfirmLogin(username,password) {
 				if(userInfo==="undefined"||userInfo===undefined){
 					$.session.set('userInfo', backjson.data.UserInfo);
 				}else{
-					$.session.remove('userInfo');
 					$.session.set('userInfo', backjson.data.UserInfo);
 				}
 				window.location.href = "main.html";

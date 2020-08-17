@@ -24,6 +24,12 @@
 					changeRCurrentRole(e);
 					e.stopPropagation();
 				});
+
+				$('.changeRCurrentRole').unbind('click');
+				$('.changeRCurrentRole').bind('click', function(e) {
+					changeRCurrentRole(e);
+					e.stopPropagation();
+				});
 			})
 		</script>
 
