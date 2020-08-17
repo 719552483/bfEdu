@@ -11,29 +11,7 @@
 		<script src="sripts/jquerySession.js"></script>
 		<script src="sripts/select-mania.js" type="text/javascript"></script>
 		<script src="js/implement.js" type="text/javascript"></script>
-		<script type="text/javascript">
-			$(function() {
-				//顶部导航切换
-				$(".nav li a").click(function() {
-					$(".nav li a.selected").removeClass("selected")
-					$(this).addClass("selected");
-					$(parent.frames["leftFrame"].document).find(".leftmenu").find("li").removeClass("active");
-				})
-				$('.changeRCurrentRole').unbind('click');
-				$('.changeRCurrentRole').bind('click', function(e) {
-					changeRCurrentRole(e);
-					e.stopPropagation();
-				});
-
-				$('.changeRCurrentRole').unbind('click');
-				$('.changeRCurrentRole').bind('click', function(e) {
-					changeRCurrentRole(e);
-					e.stopPropagation();
-				});
-			})
-		</script>
-
-
+		<script src="js/top.js" type="text/javascript"></script>
 	</head>
 
 	<body style="background:url(img/topbg.gif) repeat-x;">

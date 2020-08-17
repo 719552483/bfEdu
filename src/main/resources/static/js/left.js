@@ -1,4 +1,5 @@
 $(function() {
+	changeMenu();
 	// 导航切换
 	$(".menuson li").click(
 			function() {
@@ -18,3 +19,6 @@ $(function() {
 		}
 	});
 })
+
+
+

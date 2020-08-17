@@ -59,8 +59,14 @@ function comfirmLogin(username,password) {
 				var userInfo = $.session.get('userInfo');
 				if(userInfo==="undefined"||userInfo===undefined){
 					$.session.set('userInfo', backjson.data.UserInfo);
+					$.session.set('allAuthority', backjson.data.authoritysInfo);
+					var auArray=JSON.parse(backjson.data.authoritysInfo);
+					$.session.set('authoritysInfo',JSON.stringify(auArray[0]));
 				}else{
 					$.session.set('userInfo', backjson.data.UserInfo);
+					$.session.set('allAuthority', backjson.data.authoritysInfo);
+					var auArray=JSON.parse(backjson.data.authoritysInfo);
+					$.session.set('authoritysInfo',JSON.stringify(auArray[0]));
 				}
 				window.location.href = "main.html";
 			} else {

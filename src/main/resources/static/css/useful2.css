@@ -1726,6 +1726,7 @@ margin: 0px 0px -14px -15px!important;
 	overflow: hidden;
 	float: left;
 	border-radius: 8px;
+	overflow-y: auto;
 }
 
 .arrow-right{

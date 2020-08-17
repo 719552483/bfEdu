@@ -21,8 +21,6 @@ function stuffSeession(){
 				$.session.set('allAuthority', backjson.data.authoritysInfo);
 				var auArray=JSON.parse(backjson.data.authoritysInfo);
 				$.session.set('authoritysInfo',JSON.stringify(auArray[0]));
-				stuffCurrenRoleName();
-				changeMenu();
 				btnControl();
 			}
 		}
@@ -48,19 +46,22 @@ function btnControl(){
 	 var allAnqx=["insert","delete","modify","query"];
 	 var btnInfo ="";
 	 var currentJsId=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
-	 var allJsInfo =JSON.parse($.session.get('authoritysInfo'));
+	 var currentJsmc=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
+	 var allJsInfo =JSON.parse($.session.get('allAuthority'));
 	for (var i = 0; i < allJsInfo.length; i++) {
        if(parseInt(currentJsId) ===allJsInfo[i].bF991_ID){
 		   btnInfo=allJsInfo[i].anqx.split(",");
 	   }
 	}
 
-	 if(allJsInfo.js==="sys"){
+	 if(currentJsmc==="sys"){
 		 return;
 	 }
 	 for (var i = 0; i < allAnqx.length; i++) {
 		 if(btnInfo.indexOf(allAnqx[i])===-1){
-			 $("."+allAnqx[i]+"Btn").remove();
+			 $(parent.frames["rightFrame"].document).find("."+allAnqx[i]+"Btn").hide();
+		 }else{
+			 $(parent.frames["rightFrame"].document).find("."+allAnqx[i]+"Btn").show();
 		 }
 	 }
 }
@@ -1377,102 +1378,9 @@ function timeStamp2String(time){
 	return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
 }
 
-//切换当前用户
-function changeRCurrentRole(eve){
-
-	var display =$(".canChooseRoleArea").css('display');
-	if(display !== 'none'){
-		$(".canChooseRoleArea,.arrow-right").hide();
-		return;
-	}
-	$(".canChooseRoleArea,.arrow-right").show();
-	$(".canChooseRoles").find("cite").remove();
-	var allJsid=JSON.parse($.session.get('allAuthority'));
-	for (var i = 0; i < allJsid.length; i++) {
-		if(allJsid[i]!==""){
-           $(".canChooseRoles").append('<cite id="'+allJsid[i].bF991_ID+'">'+allJsid[i].js+'</cite>');
-		}
-	}
-
-	$('.canChooseRoles').find("cite").unbind('click');
-	$('.canChooseRoles').find("cite").bind('click', function(e) {
-		confirmChangeRole(e);
-		e.stopPropagation();
-	});
-}
-
-//填充当前角色名称
-function stuffCurrenRoleName(){
-	var js=JSON.parse($.session.get('allAuthority'))[0].js;
-	var jsid=JSON.parse($.session.get('allAuthority'))[0].bF991_ID;
-    $(".changeRCurrentRole").find('a:eq(0)').html(js);
-	$(".changeRCurrentRole").find('a:eq(0)').attr("id",jsid);
-
-	// 用户不是管理员则隐藏发布通知
-	if(js!=="sys"){
-		$(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").hide();
-	}
-}
-
-//点击确认更换当前角色
-function  confirmChangeRole(eve){
-	var currentRoleId=eve.currentTarget.id;
-	var oldAuthoritysInfo=JSON.parse($.session.get('allAuthority'));
-	var _session=$.session
-
-	for (var i = 0; i <oldAuthoritysInfo.length ; i++) {
-      if(oldAuthoritysInfo[i].bF991_ID===parseInt(currentRoleId)){
-		  _session.remove('authoritysInfo');
-		  _session.set('authoritysInfo',JSON.stringify(oldAuthoritysInfo[i]));
-	  }
-	}
-	$(parent.frames["topFrame"].document).find(".canChooseRoleArea,.arrow-right").hide();
-	$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)").attr("id",currentRoleId);
-	$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)").html(eve.currentTarget.innerText);
-	changeMenu();
-}
-
-//根据权限渲染菜单
-function changeMenu(){
-	var js=JSON.parse($.session.get('authoritysInfo')).js;
-	if(js!=="sys"){
-		var cdTxt=JSON.parse($.session.get('authoritysInfo')).cdqx;
-
-		var cdqx = cdTxt.split(",");
-		var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
-		for (var c = 0; c< currentMenus.length; ++c) {
-			if(cdqx.indexOf(currentMenus[c].id)===-1){
-				$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').hide();
-			}else{
-				$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').show();
-			}
-		}
 
 
-		var removeArray=new Array();
-		var menusParents = $(parent.frames["leftFrame"].document).find(".menuson"); //frame获取父窗口中的menu
-		for (var m = 0; m< menusParents.length; ++m) {
-			var hideParents=false;
-			for (var c = 0; c< menusParents[m].children.length; ++c) {
-				if(menusParents[m].children[c].style.display!=="none"){
-					hideParents=true;
-					break;
-				}
-			}
-			if(hideParents){
-				menusParents[m].style.display="block";
-			}else{
-				removeArray.push(menusParents[m].parentNode.className);
-			}
-		}
 
-		//隐藏子节点都被隐藏的父节点
-		for (var m = 0; m< removeArray.length; ++m) {
-			$("."+removeArray[m]).hide();
-		}
-	}
-
-}
 
 /*
 加载已选的快捷方式
@@ -1522,4 +1430,51 @@ function loadChoosendShortcuts() {
 			$(".choosendShortcuts").find("."+hoverClass).removeClass("wantPonitShortcuts");
 		}
 	}) ;
+}
+
+//根据权限渲染菜单
+function changeMenu(){
+	var js=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
+	var jsid=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	if(js!=="sys"){
+		var cdTxt="";
+		var allAuthority=JSON.parse($.session.get('allAuthority'));
+		for (var i = 0; i < allAuthority.length; i++) {
+			if(allAuthority[i].bF991_ID===parseInt(jsid)){
+				cdTxt=allAuthority[i].cdqx;
+			}
+		}
+		var cdqx = cdTxt.split(",");
+		var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
+		for (var c = 0; c< currentMenus.length; ++c) {
+			if(cdqx.indexOf(currentMenus[c].id)===-1){
+				$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').hide();
+			}else{
+				$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').show();
+			}
+		}
+
+
+		var removeArray=new Array();
+		var menusParents = $(parent.frames["leftFrame"].document).find(".menuson"); //frame获取父窗口中的menu
+		for (var m = 0; m< menusParents.length; ++m) {
+			var hideParents=false;
+			for (var c = 0; c< menusParents[m].children.length; ++c) {
+				if(menusParents[m].children[c].style.display!=="none"){
+					hideParents=true;
+					break;
+				}
+			}
+			if(hideParents){
+				menusParents[m].style.display="";
+			}else{
+				removeArray.push(menusParents[m].parentNode.className);
+			}
+		}
+
+		//隐藏子节点都被隐藏的父节点
+		for (var m = 0; m< removeArray.length; ++m) {
+			$("."+removeArray[m]).hide();
+		}
+	}
 }
