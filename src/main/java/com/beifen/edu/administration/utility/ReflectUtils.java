@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 
+import com.beifen.edu.administration.service.StudentManageService;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -63,14 +64,17 @@ import net.sf.json.JSONObject;
 public class ReflectUtils {
 	// 缓存类的字段
 	private static Map<String, List<Field>> cache = new HashMap<>();
-	 @Resource
+	@Resource
 	private AdministrationPageService administrationPageService;
+	@Resource
+	private StudentManageService studentManageService;
 	
 	private static ReflectUtils reflectUtils;
 	 @PostConstruct
 	    public void init() {
 		 reflectUtils = this;
 		 reflectUtils.administrationPageService = this.administrationPageService;
+		 reflectUtils.studentManageService = this.studentManageService;
 	    }
 	
 	public static Map<String, Object> createMapForNotNull(Object bean) {
@@ -1567,7 +1571,7 @@ public class ReflectUtils {
 			}else{
 				//如果是修改学生判断学生id是否存在   填充学生学号
 				if(isModify){
-					String correctXh=reflectUtils.administrationPageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
+					String correctXh=reflectUtils.studentManageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
 					if(correctXh==null){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行-可能修改了学生ID(学生ID不允许更改)";
@@ -1744,7 +1748,7 @@ public class ReflectUtils {
 
 			
 			
-			List<Edu001> databaseAllStudent=reflectUtils.administrationPageService.queryAllStudent();
+			List<Edu001> databaseAllStudent=reflectUtils.studentManageService.queryAllStudent();
 			//判断身份证号在数据库是否存在
 			if(!chaeckPass){
 				break;
@@ -1766,7 +1770,7 @@ public class ReflectUtils {
 						}
 					}
 				}else{
-					boolean IDcardIshave = reflectUtils.administrationPageService.IDcardIshave(importStudent.get(i).getSfzh());
+					boolean IDcardIshave = reflectUtils.studentManageService.IDcardIshave(importStudent.get(i).getSfzh());
 					if(IDcardIshave){
 						chaeckPass=false;
 						checkTxt="第"+(i+1)+"行- 身份证号已存在";
@@ -1784,7 +1788,7 @@ public class ReflectUtils {
 				boolean needCheckXzb=true;
 				if(isModify){
 					//判断是否改变行政班
-					String oldXzb=reflectUtils.administrationPageService.queryStudentXzbCode(edu001.getEdu001_ID().toString());
+					String oldXzb=reflectUtils.studentManageService.queryStudentXzbCode(edu001.getEdu001_ID().toString());
 					String newXzb=edu001.getEdu300_ID().toString();
 					if(oldXzb!=null){
 						if(oldXzb.equals(newXzb)){
@@ -1793,7 +1797,7 @@ public class ReflectUtils {
 					}
 				}
                 if(needCheckXzb){
-                	boolean studentSpill = reflectUtils.administrationPageService.administrationClassesIsSpill(importStudent.get(i).getEdu300_ID());
+                	boolean studentSpill = reflectUtils.studentManageService.administrationClassesIsSpill(importStudent.get(i).getEdu300_ID());
     				if(studentSpill){
     					List<Edu300> XzbInfo=reflectUtils.administrationPageService.queryXzbByEdu300ID(importStudent.get(i).getEdu300_ID());
     					chaeckPass=false;
