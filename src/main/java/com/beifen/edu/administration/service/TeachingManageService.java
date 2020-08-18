@@ -129,8 +129,17 @@ public class TeachingManageService {
         Specification<Edu112> specification = new Specification<Edu112>() {
             public Predicate toPredicate(Root<Edu112> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu112.getBusinessState() != null && !"".equals(edu112.getBusinessState())) {
+                    predicates.add(cb.equal(root.<String> get("businessState"),edu112.getBusinessState()));
+                }
                 if (edu112.getUserName() != null && !"".equals(edu112.getUserName())) {
-                    predicates.add(cb.equal(root.<String> get("zc"),edu112.getUserName()));
+                    predicates.add(cb.like(root.<String> get("userName"), '%' + edu112.getUserName() + '%'));
+                }
+                if (edu112.getTeacherName() != null && !"".equals(edu112.getTeacherName())) {
+                    predicates.add(cb.like(root.<String> get("teacherName"), '%' + edu112.getTeacherName() + '%'));
+                }
+                if (edu112.getDestination() != null && !"".equals(edu112.getDestination())) {
+                    predicates.add(cb.like(root.<String> get("destination"), '%' + edu112.getDestination() + '%'));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
