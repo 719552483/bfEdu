@@ -71,8 +71,6 @@ public class TeachingManageController {
         return result;
     }
 
-
-
     /**
      * 出差申请查询
      * @param searchInfo
@@ -88,6 +86,5 @@ public class TeachingManageController {
         result = teachingManageService.searchTeacherBusiness(edu112);
         return result;
     }
-
 
 }

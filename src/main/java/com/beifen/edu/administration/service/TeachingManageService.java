@@ -153,7 +153,7 @@ public class TeachingManageService {
             resultVO = ResultVO.setFailed("暂无符合条件的出差申请");
             return resultVO;
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+resultList.size()+"条出差申请");
+            resultVO = ResultVO.setSuccess("共找到"+resultList.size()+"条出差申请",resultList);
         }
 
         return resultVO;
@@ -184,4 +184,5 @@ public class TeachingManageService {
 
         return resultVO;
     }
+
 }
