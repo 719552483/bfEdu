@@ -60,7 +60,7 @@ public class TeacherManageService {
                     predicates.add(cb.equal(root.<String> get("zc"),edu101.getZc()));
                 }
                 Predicate predicate1 = cb.notEqual(root.<String>get("wpjzgspzt"), "passing");
-                Predicate predicate2 = cb.isNotNull(root.<String>get("wpjzgspzt"));
+                Predicate predicate2 = cb.isNull(root.<String>get("wpjzgspzt"));
                 predicates.add(cb.or(predicate1, predicate2));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
