@@ -18,6 +18,13 @@ public class Edu112 {
     private String businessState;//状态
     private String businessExplain;//出差说明
 
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
+    @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
+    @Column(name = "EDU112_ID")
+
     public Long getEdu112_ID() {
         return Edu112_ID;
     }
@@ -25,11 +32,6 @@ public class Edu112 {
     public void setEdu112_ID(Long edu112_ID) {
         Edu112_ID = edu112_ID;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
-    @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
-    @Column(name = "EDU112_ID")
 
 
 
