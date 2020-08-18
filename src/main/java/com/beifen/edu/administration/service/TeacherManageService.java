@@ -2,12 +2,11 @@ package com.beifen.edu.administration.service;
 
 
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.dao.Edu101Dao;
-import com.beifen.edu.administration.domian.Edu101;
-import com.beifen.edu.administration.domian.Edu112;
-import com.beifen.edu.administration.domian.Edu600;
+import com.beifen.edu.administration.dao.*;
+import com.beifen.edu.administration.domian.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,8 +22,20 @@ public class TeacherManageService {
 
     @Autowired
     Edu101Dao edu101Dao;
+    @Autowired
+    Edu992Dao edu992Dao;
+    @Autowired
+    Edu112Dao edu112Dao;
+    @Autowired
+    Edu113Dao edu113Dao;
+    @Autowired
+    ApprovalProcessService approvalProcessService;
 
-
+    /**
+     * 搜索在职教师
+     * @param edu101
+     * @return
+     */
     public ResultVO searchTeachersInService(Edu101 edu101) {
         ResultVO resultVO;
         Specification<Edu101> specification = new Specification<Edu101>() {
@@ -48,20 +59,57 @@ public class TeacherManageService {
                 if (edu101.getZc() != null && !"".equals(edu101.getZc())) {
                     predicates.add(cb.equal(root.<String> get("zc"),edu101.getZc()));
                 }
-                predicates.add(cb.notEqual(root.<String> get("wpjzgspzt"),"passing"));
+                Predicate predicate1 = cb.notEqual(root.<String>get("wpjzgspzt"), "passing");
+                Predicate predicate2 = cb.isNotNull(root.<String>get("wpjzgspzt"));
+                predicates.add(cb.or(predicate1, predicate2));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
 
         List<Edu101> teacherList = edu101Dao.findAll(specification);
 
-        resultVO = ResultVO.setSuccess("共搜索到"+teacherList.size()+"个教师",teacherList);
+        if(teacherList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合要求的教师");
+        } else {
+            resultVO = ResultVO.setSuccess("共搜索到"+teacherList.size()+"个教师",teacherList);
+        }
 
         return resultVO;
     }
 
+    /**
+     * 教师出差申请
+     * @param edu112
+     * @param edu600
+     * @return
+     */
     public ResultVO addTeacherBusiness(Edu112 edu112, Edu600 edu600) {
-        ResultVO resultVO = new ResultVO();
+        ResultVO resultVO;
+
+        String userName = edu992Dao.getTeacherNameByEdu990Id(edu112.getEdu990_ID().toString());
+
+        edu112.setUserName(userName);
+        edu112.setBusinessState("passing");
+        edu112Dao.save(edu112);
+        if(edu112.getEdu112_ID() == null) {
+            resultVO = ResultVO.setFailed("出差申请失败，请检查申请信息");
+        }
+
+        String[] teacherIds = edu112.getTeacherId().split(",");
+        String[] teacherNames = edu112.getTeacherName().split(",");
+
+        edu113Dao.delteByEdu112Id(edu112.getEdu112_ID().toString());
+
+        for (int i = 0; i <teacherIds.length; i++) {
+            Edu113 save = new Edu113();
+            save.setEdu112_ID(edu112.getEdu112_ID());
+            save.setEud101_ID(Long.parseLong(teacherIds[i]));
+            save.setTeacherName(teacherNames[i]);
+            edu113Dao.save(save);
+        }
+
+        approvalProcessService.initiationProcess(edu600);
+        resultVO = ResultVO.setSuccess("出差申请成功");
 
         return resultVO;
     }

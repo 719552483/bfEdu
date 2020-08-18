@@ -20,6 +20,11 @@ public class TeacherManageController {
     TeacherManageService teacherManageService;
 
 
+    /**
+     * 搜索在职教师
+     * @param searchInfo
+     * @return
+     */
     @RequestMapping("searchTeachersInService")
     @ResponseBody
     public ResultVO searchTeachersInService(@RequestParam("searchInfo") String searchInfo) {
@@ -31,6 +36,12 @@ public class TeacherManageController {
         return result;
     }
 
+    /**
+     * 教师出差申请
+     * @param businessInfo
+     * @param approvalInfo
+     * @return
+     */
     @RequestMapping("addTeacherBusiness")
     @ResponseBody
     public ResultVO addTeacherBusiness(@RequestParam("businessInfo") String businessInfo, @RequestParam("approvalInfo") String approvalInfo) {
