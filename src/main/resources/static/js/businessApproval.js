@@ -315,7 +315,7 @@ function geBusinessStartInfo(choosend){
 	}
 
 	var returnObject=new Object();
-	returnObject.Edu990_ID=Edu990_ID;
+	returnObject.edu990_ID=Edu990_ID;
 	returnObject.userName=userName;
 	returnObject.destination=destination;
 	returnObject.startTime=startTime;
