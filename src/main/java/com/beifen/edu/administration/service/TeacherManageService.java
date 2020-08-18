@@ -93,6 +93,7 @@ public class TeacherManageService {
         edu112Dao.save(edu112);
         if(edu112.getEdu112_ID() == null) {
             resultVO = ResultVO.setFailed("出差申请失败，请检查申请信息");
+            return resultVO;
         }
 
         String[] teacherIds = edu112.getTeacherId().split(",");
