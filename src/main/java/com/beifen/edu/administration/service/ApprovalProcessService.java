@@ -507,7 +507,7 @@ public class ApprovalProcessService {
                 object = edu001Dao.queryStudentBy001ID(businessKey);
                 break;
             case"06":
-                object = edu112Dao.getOne(Long.parseLong(businessKey));
+                object = edu112Dao.queryTeacherBusinessById(businessKey);
                 break;
             case"07":
                 object = edu101Dao.queryTeacherBy101ID(businessKey);

@@ -28,6 +28,8 @@ public class TeachingManageService {
     @Autowired
     Edu113Dao edu113Dao;
     @Autowired
+    Edu990Dao edu990Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
 
     /**
@@ -86,7 +88,9 @@ public class TeachingManageService {
         ResultVO resultVO;
 
         String userName = edu992Dao.getTeacherNameByEdu990Id(edu112.getEdu990_ID().toString());
-
+        if("".equals(userName) || userName == null) {
+            userName = edu990Dao.queryUserById(edu112.getEdu990_ID().toString()).getYhm();
+        }
         edu112.setUserName(userName);
         edu112.setBusinessState("passing");
         edu112Dao.save(edu112);
@@ -108,6 +112,7 @@ public class TeachingManageService {
             edu113Dao.save(save);
         }
 
+        edu600.setBusinessKey(edu112.getEdu112_ID());
         approvalProcessService.initiationProcess(edu600);
         resultVO = ResultVO.setSuccess("出差申请成功");
 
