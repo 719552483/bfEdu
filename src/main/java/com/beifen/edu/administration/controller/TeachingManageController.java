@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 //教务管理控制层
 @Controller
 public class TeachingManageController {
@@ -54,6 +56,21 @@ public class TeachingManageController {
         result = teachingManageService.addTeacherBusiness(edu112, edu600);
         return result;
     }
+
+    /**
+     * 删除出差申请
+     * @param removeKeys
+     * @return
+     */
+    @RequestMapping("removeTeacherBusiness")
+    @ResponseBody
+    public ResultVO removeTeacherBusiness(@RequestParam("removeKeys") String removeKeys) {
+        ResultVO result;
+        List<String>  removeKeyList= com.alibaba.fastjson.JSONObject.parseArray(removeKeys, String.class);
+        result = teachingManageService.removeTeacherBusiness(removeKeyList);
+        return result;
+    }
+
 
 
     /**

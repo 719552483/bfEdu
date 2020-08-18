@@ -87,6 +87,7 @@ public class TeachingManageService {
     public ResultVO addTeacherBusiness(Edu112 edu112, Edu600 edu600) {
         ResultVO resultVO;
 
+        //找到发起人姓名，若不是在校人员，使用用户姓名
         String userName = edu992Dao.getTeacherNameByEdu990Id(edu112.getEdu990_ID().toString());
         if("".equals(userName) || userName == null) {
             userName = edu990Dao.queryUserById(edu112.getEdu990_ID().toString()).getYhm();
@@ -102,6 +103,7 @@ public class TeachingManageService {
         String[] teacherIds = edu112.getTeacherId().split(",");
         String[] teacherNames = edu112.getTeacherName().split(",");
 
+        //删除关联信息
         edu113Dao.delteByEdu112Id(edu112.getEdu112_ID().toString());
 
         for (int i = 0; i <teacherIds.length; i++) {
@@ -152,6 +154,32 @@ public class TeachingManageService {
             return resultVO;
         } else {
             resultVO = ResultVO.setSuccess("共找到"+resultList.size()+"条出差申请");
+        }
+
+        return resultVO;
+    }
+
+    /**
+     * 删除出差申请
+     * @param removeKeyList
+     * @return
+     */
+    public ResultVO removeTeacherBusiness(List<String> removeKeyList) {
+        ResultVO resultVO;
+        Integer count = 0;
+
+        for (String s : removeKeyList) {
+            //删除出差申请关联表
+            edu113Dao.delteByEdu112Id(s);
+            //删除出差申请主表
+            edu112Dao.delete(Long.parseLong(s));
+            count++;
+        }
+
+        if (count == 0) {
+            resultVO = ResultVO.setFailed("并未找到任何记录");
+        } else {
+            resultVO  = ResultVO.setSuccess("成功删除了"+count+"条出差记录");
         }
 
         return resultVO;
