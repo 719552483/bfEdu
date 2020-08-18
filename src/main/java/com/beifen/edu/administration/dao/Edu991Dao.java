@@ -27,4 +27,8 @@ public interface Edu991Dao extends JpaRepository<Edu991, Long>, JpaSpecification
 
 	@Query(value = "select e.* from edu991 e,EDU992 d where e.BF991_ID = d.BF991_ID and d.BF990_ID =?1",nativeQuery = true)
 	List<Edu991> findRollByEdu990(String edu990Id);
+
+	//查询除系统角色以外的角色
+	@Query(value = "select e.* from Edu991 e where e.js != 'sys'",nativeQuery = true)
+	List<Edu991> findRoleWithoutSys();
 }

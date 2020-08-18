@@ -24,7 +24,8 @@ function checkHaveSysUser(){
 		url : "/checkHaveSysUser",
 		dataType : 'json',
 		success : function(backjson) {
-			if (!backjson.haveSysUser) {
+			if(backjson.code === 500) {
+				toastr.warning(backjson.msg);
 				window.location.href = "register.html";
 			}
 		}

@@ -26,13 +26,13 @@ function getallRole() {
 		},
 		success : function(backjson) {
 			hideloding();
-			roleOption=backjson.allRoleInfo;
-			if(backjson.allRoleInfo.length===0){
+			roleOption=backjson.data;
+			if(backjson.data.length===0){
 				//首次使用 用户角色为空的情况
 				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
 			}else{
-				for (var i = 0; i < backjson.allRoleInfo.length; i++) {
-					roleOptionStr += '<option value="' +  backjson.allRoleInfo[i].bf991_ID + '">' +  backjson.allRoleInfo[i].js + '</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					roleOptionStr += '<option value="' +  backjson.data[i].bf991_ID + '">' +  backjson.data[i].js + '</option>';
 				}
 			}
 		}
@@ -183,11 +183,7 @@ function saveNewUser(username, newRole, pwd, confirmPwd) {
 		success : function(backjson) {
 			hideloding();
 			$.hideModal("#remindModal");
-			if(backjson.userNameHave){
-				toastr.warning('用户名已存在');
-				return;
-			}
-			newUserObject.bf990_ID = backjson.id; //数据库生成的id
+			newUserObject.bf990_ID = backjson.data; //数据库生成的id
 			$('#allUserTable').bootstrapTable('append', newUserObject);
 			drawPagination(".allUserTableArea", "用户信息");
 			var reObject = new Object();
@@ -195,7 +191,7 @@ function saveNewUser(username, newRole, pwd, confirmPwd) {
 			reObject.numberInputs = "#newRole";
 			reReloadSearchsWithSelect(reObject);
 			toolTipUp(".myTooltip");
-			toastr.success('新增用户成功');
+			toastr.success(backjson.msg);
 		}
 	});
 }
@@ -219,7 +215,7 @@ function getAllUserInfo() {
 		},
 		success : function(backjson) {
 			hideloding();
-			stuffTable(backjson.allUser);
+			stuffTable(backjson.data);
 		}
 	});
 }
@@ -437,17 +433,13 @@ function confirmodifyUser(row, index) {
 		success : function(backjson) {
 			hideloding();
 			$.hideModal("#remindModal");
-			if(backjson.userNameHave){
-				toastr.warning('用户名已存在');
-				return;
-			}
 			$('#allUserTable').bootstrapTable('updateRow', {
 				index: index,
 				row: modifyObject
 			});
 			$(".tip").hide();
 			toolTipUp(".myTooltip");
-			toastr.success('修改用户成功');
+			toastr.success(backjson.msg);
 			drawPagination(".allUserTableArea", "用户信息");
 		}
 	});
@@ -473,13 +465,14 @@ function removeuUerAjaxDemo(removeArray) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				hideloding();
 				tableRemoveAction("#allUserTable", removeArray, ".allUserTableArea", "用户信息");
 				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

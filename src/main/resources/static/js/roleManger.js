@@ -365,21 +365,16 @@ function comfirmAddRole(roleName, authorityInfo,newAnqx) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code == 200) {
 				$.hideModal("#remindModal");
-				if (backjson.jsHave) {
-					toastr.warning('角色名称已存在');
-					return;
-				}
-				roleObject.bf991_ID=backjson.id;
+				roleObject.bf991_ID=backjson.data;
 				$('#allRoleTable').bootstrapTable('append', roleObject);
 				drawPagination(".allRoleTableArea", "角色信息");
-				toastr.success('角色新增成功');
+				toastr.success(backjson.msg);
 				$("#add_rolename").val("");
 				shortcutsRefresh();
 			} else {
-				hideloding();
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -443,12 +438,12 @@ function getAllRoleInfo() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				stuffTable(backjson.allRoleInfo);
+			hideloding();
+			if (backjson.code === 200) {
+				stuffTable(backjson.data);
+				toastr.success(backjson.msg);
 			} else {
-				hideloding();
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -680,9 +675,9 @@ function comfirmModifyRole(roleObject,index) {
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/modifyRole",
+		url : "/addRole",
 		data: {
-             "updateInfo":JSON.stringify(roleObject) 
+             "newRoleInfo":JSON.stringify(roleObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -696,12 +691,8 @@ function comfirmModifyRole(roleObject,index) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				$.hideModal("#remindModal");
-				if (backjson.jsHave) {
-					toastr.warning('角色名称已存在');
-					return;
-				}
 				$('#allRoleTable').bootstrapTable('updateRow', {
 					index: index,
 					row: roleObject
@@ -710,11 +701,11 @@ function comfirmModifyRole(roleObject,index) {
 				$("#tab1,#modifyRole,#canleiModifRole").hide();
 				$("#addRole,#tab2").show();
 				$(".forminfo").find("li").find("i").show();
-				toastr.success('修改角色成功');
+				toastr.success(backjson.msg);
 				drawPagination(".allRoleTableArea", "角色信息");
 			} else {
 				hideloding();
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -784,17 +775,14 @@ function sendRoleRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				hideloding();
 				$.hideModal("#remindModal");
-				if(backjson.roleIsUse){
-					toastr.warning('不可删除正在使用中的角色');
-					return;
-				}
 				tableRemoveAction("#allRoleTable", removeArray, ".allRoleTableArea", "角色信息");
 				$(".myTooltip").tooltipify();
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

@@ -252,7 +252,7 @@ function readyToReloadShortcutsList() {
 		},
 		dataType: 'json',
 		success: function(backjson) {
-			if (backjson) {
+			if (backjson.code === 200) {
 				for (var i = 0; i < allShortcuts.length; ++i) {
 					reloadShortcutsList(allShortcuts[i], currentShortcutList, i);
 					
@@ -266,8 +266,9 @@ function readyToReloadShortcutsList() {
 					$(".configIndexPage").show();
 					$(".placeul").find("li:eq(1)").remove();
 				}
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warninf('操作失败');
+				toastr.warning('操作失败');
 			}
 		}
 	});

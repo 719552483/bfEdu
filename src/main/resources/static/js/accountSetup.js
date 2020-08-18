@@ -25,7 +25,7 @@ function stuffTimeStamp(){
 		},
 		success : function(backjson) {
 			hideloding();
-			$(".loginTimeStamp").html(backjson.userInfo.scdlsj);
+			$(".loginTimeStamp").html(backjson.data.scdlsj);
 		}
 	});
 }

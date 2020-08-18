@@ -108,12 +108,11 @@ function queryEJDMElementInfo(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				queryRs=backjson.allEJDM;
+			hideloding();
+			if (backjson.code == 200) {
+				queryRs=backjson.data.allEJDM;
 			} else {
-				hideloding();
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
