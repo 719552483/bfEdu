@@ -1785,17 +1785,6 @@ function sendNewXnInfo(xnObject){
 	});
 }
 
-//判断两个日期的大小
-//判断开始结束时间大小
-function checkTime(startTime,endTime){
-	var start=new Date(startTime.replace("-", "/").replace("-", "/"));
-	var end=new Date(endTime.replace("-", "/").replace("-", "/"));
-	if(end<start){
-	 	return false;
-	}
-	return true;
-}
-
 // 判断时间是否够一周
 function dayssBetw(date1, date2) {
 	var _dt1 = new Date(date1);

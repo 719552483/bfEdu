@@ -2,6 +2,7 @@ $(document).ready(function() {
 	stuffSeession();
 	loadChoosendShortcuts();
 	$("body").find("input").attr("spellcheck",false);
+	controlMenuRelation();
 });
 
 function stuffSeession(){
@@ -64,6 +65,28 @@ function btnControl(){
 			 $(parent.frames["rightFrame"].document).find("."+allAnqx[i]+"Btn").show();
 		 }
 	 }
+}
+
+//控制菜单栏父节点和子节点的关系
+function controlMenuRelation(){
+// 导航切换
+	$(".menuson li").click(
+		function() {
+			$(".menuson li.active").removeClass("active")
+			$(this).addClass("active");
+			$(parent.frames["topFrame"].document).find(".nav").find("a")
+				.removeClass("selected");
+		});
+
+	$('.title').click(function() {
+		var $ul = $(this).next('ul');
+		$('dd').find('ul').slideUp();
+		if ($ul.is(':visible')) {
+			$(this).next('ul').slideUp();
+		} else {
+			$(this).next('ul').slideDown();
+		}
+	});
 }
 
 // 查询需要的二级代码信息
@@ -1156,7 +1179,15 @@ function toolTipUp(className) {
 }
 
 
-
+//判断开始结束时间大小
+function checkTime(startTime,endTime){
+	var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+	var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+	if(end<start){
+		return false;
+	}
+	return true;
+}
 
 // 日期选择初始化
 function drawCalenr(id,isSplitToday) {
@@ -1438,6 +1469,9 @@ function changeMenu(){
 	var jsid="";
 	js=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
 	jsid=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
+	var menusParents = $(parent.frames["leftFrame"].document).find(".menuson"); //frame获取父窗口中的menu
+	var removeArray=new Array();
 
 	if(js!=="sys"){
 		var cdTxt="";
@@ -1448,7 +1482,6 @@ function changeMenu(){
 			}
 		}
 		var cdqx = cdTxt.split(",");
-		var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
 		for (var c = 0; c< currentMenus.length; ++c) {
 			if(cdqx.indexOf(currentMenus[c].id)===-1){
 				$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').hide();
@@ -1456,10 +1489,7 @@ function changeMenu(){
 				$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').show();
 			}
 		}
-
-
-		var removeArray=new Array();
-		var menusParents = $(parent.frames["leftFrame"].document).find(".menuson"); //frame获取父窗口中的menu
+         //获取子节点都被隐藏的父节点
 		for (var m = 0; m< menusParents.length; ++m) {
 			var hideParents=false;
 			for (var c = 0; c< menusParents[m].children.length; ++c) {
@@ -1480,4 +1510,21 @@ function changeMenu(){
 			$("."+removeArray[m]).hide();
 		}
 	}
+	// else{
+	// 	//显示全部子节点
+	// 	for (var c = 0; c< currentMenus.length; ++c) {
+	// 		$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').show();
+	// 	}
+	//
+	// 	//获取全部父节点
+	// 	for (var m = 0; m< menusParents.length; ++m) {
+	// 		for (var c = 0; c< menusParents[m].children.length; ++c) {
+	// 			removeArray.push(menusParents[m].parentNode.className);
+	// 		}
+	// 	}
+	// 	//显示全部父节点
+	// 	for (var m = 0; m< removeArray.length; ++m) {
+	// 		$("."+removeArray[m]).show();
+	// 	}
+	// }
 }

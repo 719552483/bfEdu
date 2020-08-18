@@ -165,4 +165,9 @@ public class PageRelatedController {
 	public String localUsedPage() {
 		return "localUseFrequency";
 	}
+
+	@RequestMapping("businessApproval")
+	public String businessApprovalPage() {
+		return "businessApproval";
+	}
 }
