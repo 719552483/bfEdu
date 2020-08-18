@@ -6,7 +6,6 @@ import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,9 +15,9 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-//教职工管理业务层
+//教务管理业务层
 @Service
-public class TeacherManageService {
+public class TeachingManageService {
 
     @Autowired
     Edu101Dao edu101Dao;
