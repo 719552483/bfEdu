@@ -16,6 +16,6 @@ public interface Edu992Dao extends JpaRepository<Edu992, Long>, JpaSpecification
     @Query(value = "delete from Edu992 e where e.BF990_ID = ?1 ",nativeQuery = true)
     void deleteByEdu990Id(String bf990_id);
 
-    @Query(value = "select e.xm from Edu992 d, Edu101 e, Edu990 f where d.BF990_ID = f.BF990_ID and f.userKey = e.edu101_ID and d.BF990_ID = ?1", nativeQuery = true)
+    @Query(value = "select e.xm from Edu992 d, Edu101 e, Edu990 f where d.BF990_ID = f.BF990_ID and f.user_key = e.edu101_ID and d.BF990_ID = ?1", nativeQuery = true)
     String getTeacherNameByEdu990Id(String edu990Id);
 }
