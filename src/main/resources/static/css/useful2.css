@@ -1629,7 +1629,7 @@ margin: 0px 0px -14px -15px!important;
 	font-weight: 600;
 }
 
-.scheduleInfo{
+.scheduleRsTitle{
 	font-size: 15px;
 	font-family: sans-serif;
 	color: rgb(50 107 134 / 95%);
@@ -1639,6 +1639,13 @@ margin: 0px 0px -14px -15px!important;
 	margin-top: 5px;
 	font-size: 15px;
 	color: rgb(50 107 134 / 95%);
+}
+
+.choosendKjImg{
+	padding-left: 13px;
+	padding-right: -24px;
+	width: 30px;
+	margin-top: -2.5px;
 }
 
 .choosendLoactionArea{
