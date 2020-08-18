@@ -1,8 +1,6 @@
 package com.beifen.edu.administration.service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -10,9 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.*;
-import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import net.sf.json.JSONArray;
@@ -35,10 +31,6 @@ public class AdministrationPageService {
 	private Edu001Dao edu001DAO;
 	@Autowired
 	private Edu000Dao edu000DAO;
-	@Autowired
-	private Edu990Dao edu990DAO;
-	@Autowired
-	private Edu991Dao edu991DAO;
 	@Autowired
 	private Edu993Dao edu993DAO;
 	@Autowired
@@ -70,8 +62,6 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu401Dao edu401DAO;
 	@Autowired
-	private Edu500Dao edu500DAO;
-	@Autowired
 	private Edu203Dao edu203Dao;
 	@Autowired
 	private Edu205Dao edu205DAO;
@@ -79,8 +69,6 @@ public class AdministrationPageService {
 	private Edu302Dao edu302DAO;
 	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
-	@Autowired
-	private Edu992Dao edu992Dao;
 	@Autowired
 	private StudentManageService studentManageService;
 
@@ -558,33 +546,6 @@ public class AdministrationPageService {
 		return edu001DAO.queryStudentInfoByAdministrationClass(xzbCode);
 	}
 
-	// 为教师生成学号
-	public String getNewTeacherJzgh() {
-		String jzgh_before =utils.getRandom(2);
-		String newXh = "";
-		List<Edu101> allTeacher = edu101DAO.findAll();
-		if (allTeacher.size() != 0) {
-			List<Long> currentjzghs = new ArrayList<Long>();
-			for (int i = 0; i < allTeacher.size(); i++) {
-				currentjzghs.add(Long.parseLong(allTeacher.get(i).getJzgh().substring(2, allTeacher.get(i).getJzgh().length())));
-			}
-			int newXhSuffix = 0;
-			String maxjzgh = String.valueOf(Collections.max(currentjzghs));
-			newXhSuffix = Integer.parseInt(maxjzgh) + 1;
-			if (newXhSuffix <= 9) {
-				newXh = jzgh_before + "00" +  newXhSuffix;
-			} else if (newXhSuffix > 9 && newXhSuffix <= 99) {
-				newXh = jzgh_before + "0" +  newXhSuffix;
-			} else {
-				newXh = jzgh_before + newXhSuffix;
-			}
-		} else {
-			newXh = jzgh_before + "001";
-		}
-		return newXh;
-	}
-
-
 
 	// 判断导入学生的培养计划和行政班是否对应
 	public boolean classMatchCultruePaln(String edu300_ID, String pycc, String szxb, String nj, String zybm) {
@@ -730,68 +691,6 @@ public class AdministrationPageService {
 		edu200DAO.removeLibraryClassById(id);
 	}
 
-	//新增教师
-	public void addTeacher(Edu101 edu101) {
-		edu101DAO.save(edu101);
-
-		Edu990 edu990 = new Edu990();
-		edu990.setYhm("t" + edu101.getJzgh());
-		edu990.setMm("123456");
-		edu990.setUserKey(edu101.getEdu101_ID().toString());
-		edu990DAO.save(edu990);
-
-		Edu992 edu992 = new Edu992();
-		edu992.setBF990_ID(edu990.getBF990_ID());
-		edu992.setBF991_ID(Long.parseLong("8051"));
-		edu992Dao.save(edu992);
-	}
-
-	// 根据id查询教师姓名
-	public String queryTecaherNameById(Long techerId) {
-		return edu101DAO.queryTeacherById(techerId);
-	}
-
-	// 根据id查询教师所有信息
-	public Edu101 queryTeacherBy101ID(String techerId) {
-		return edu101DAO.queryTeacherBy101ID(techerId);
-	}
-
-	// 根据id查询教职工号
-	public String queryJzghBy101ID(String techerId) {
-		return edu101DAO.queryJzghBy101ID(techerId);
-	}
-
-	// 查询所有教师
-	public List<Edu101> queryAllTeacher() {
-		return edu101DAO.findAll();
-	}
-
-	//查询教师任务书
-	public boolean checkTeacherTasks(String edu101Id) {
-		boolean canRemove=true;
-		List<Edu201> teacherTasks =edu201DAO.queryTaskByTeacherID(edu101Id);
-		List<Edu201> mainTeacherTasks =edu201DAO.queryMainTaskByTeacherID(edu101Id);
-		if(teacherTasks.size()>0||mainTeacherTasks.size()>0){
-			canRemove=false;
-		}
-		return canRemove;
-	}
-
-	//删除教师
-	public void removeTeacher(String edu101Id) {
-		edu101DAO.removeTeacher(edu101Id);
-	}
-
-	//查询教师身份证号是否已存在
-	public boolean teacherIDcardIshave(String sfzh) {
-		boolean isHave = false;
-		if (sfzh != null) {
-			List<Edu101> IDcards = edu101DAO.teacherIDcardIshave(sfzh);
-			if (IDcards.size() > 0)
-				isHave = true;
-		}
-		return isHave;
-	}
 
 	// 根据教学班组装任务书信息
 	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {

@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.domian.*;
-import com.beifen.edu.administration.service.ApprovalProcessService;
-import com.beifen.edu.administration.service.StudentManageService;
-import com.beifen.edu.administration.service.TeachingPointService;
+import com.beifen.edu.administration.service.*;
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,7 +29,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.beifen.edu.administration.service.AdministrationPageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 
 import net.sf.json.JSONArray;
@@ -52,6 +49,9 @@ public class AdministrationController {
 	private StudentManageService studentManageService;
 	@Autowired
 	TeachingPointService teachingPointService;
+	@Autowired
+	StaffManageService staffManageService;
+
 
 
 
@@ -274,169 +274,6 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-
-	/**
-	 * 新增教师
-	 * @param newTeacherInfo
-	 * @return
-	 */
-	@RequestMapping("addTeacher")
-	@ResponseBody
-	public Object addTeacher(@RequestParam("addInfo") String newTeacherInfo,@RequestParam("approvalInfo") String approvalInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(newTeacherInfo);
-		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-		List<Edu101> allTeacher = administrationPageService.queryAllTeacher();
-		// 判断身份证是否存在
-		boolean IDcardIshave = false;
-		for (int i = 0; i < allTeacher.size(); i++) {
-			if(allTeacher.get(i).getSfzh()!=null){
-				if(allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
-					IDcardIshave=true;
-					break;
-				}
-			}
-		}
-
-		if (!IDcardIshave) {
-			String jzgh =administrationPageService.getNewTeacherJzgh();
-			edu101.setJzgh(jzgh);
-			administrationPageService.addTeacher(edu101);
-			//如果新增教师是外聘教师 发起审批流
-			if(edu101.getJzglxbm().equals("004")){
-				edu101.setWpjzgspzt("passing");
-				edu600.setBusinessKey(edu101.getEdu101_ID());
-				approvalProcessService.initiationProcess(edu600);
-			}
-			returnMap.put("newId", edu101.getEdu101_ID());
-			returnMap.put("jzgh", jzgh);
-		}
-
-		returnMap.put("IDcardIshave", IDcardIshave);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-	/**
-	 * 修改教师
-	 * @param modifyInfo
-	 * @return
-	 */
-	@RequestMapping("modifyTeacher")
-	@ResponseBody
-	public Object modifyTeacher(@RequestParam String modifyInfo,@RequestParam("approvalInfo") String approvalInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
-		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-		List<Edu101> allTeacher = administrationPageService.queryAllTeacher();
-		// 判断身份证是否存在
-		boolean IDcardIshave = false;
-		for (int i = 0; i < allTeacher.size(); i++) {
-			if(allTeacher.get(i).getSfzh()!=null){
-				if(!(allTeacher.get(i).getEdu101_ID()==(edu101.getEdu101_ID()))
-						&&allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
-					IDcardIshave=true;
-					break;
-				}
-			}
-		}
-
-		if (!IDcardIshave) {
-			//如果修改是将教师改为外聘教师 发起审批流
-			if(edu101.getJzglxbm().equals("004")){
-				edu101.setWpjzgspzt("passing");
-				edu600.setBusinessKey(edu101.getEdu101_ID());
-				approvalProcessService.initiationProcess(edu600);
-			}
-			administrationPageService.addTeacher(edu101);
-		}
-
-		returnMap.put("IDcardIshave", IDcardIshave);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-
-
-	/**
-	 * 删除教师
-	 * 课节id唯一  所以不需要考虑是否选择了学年
-	 */
-	@RequestMapping("/removeTeacher")
-	@ResponseBody
-	public Object removeTeacher(@RequestParam String removeIDs) {
-		Map<String, Object> returnMap = new HashMap();
-		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(removeIDs);
-		boolean canRemove=true;
-		for (int i = 0; i < deleteArray.size(); i++) {
-			//查询教师是否有任务书
-			canRemove=administrationPageService.checkTeacherTasks(deleteArray.get(i).toString());
-			if(!canRemove){
-				break;
-			}
-		}
-
-
-		if(canRemove){
-			//删除教师
-			for (int i = 0; i < deleteArray.size(); i++) {
-				administrationPageService.removeTeacher(deleteArray.get(i).toString());
-			}
-		}
-		returnMap.put("result", true);
-		returnMap.put("canRemove", canRemove);
-		return returnMap;
-	}
-
-
-	/**
-	 * 下载课程导入模板
-	 *
-	 * @return returnMap
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	@RequestMapping("downloadNewClassModel")
-	@ResponseBody
-	public void downloadNewClassModel(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
-		//创建Excel文件
-		XSSFWorkbook workbook  = new XSSFWorkbook();
-		utils.createImportNewClassModel(workbook);
-		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
-		String fileName="";
-		if(isIE){
-			fileName="ImportClass";
-		}else{
-			fileName="导入课程模板";
-		}
-		utils.loadModal(response,fileName, workbook);
-	}
-
-
-	/**
-	 * 检验课程导入的文件
-	 *
-	 *
-	 * @return returnMap
-	 * @throws ParseException
-	 * @throws Exception
-	 * @throws ServletException
-	 */
-	@RequestMapping("verifiyImportNewClassFile")
-	@ResponseBody
-	public Object verifiyImportNewClassFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
-		Map<String, Object> returnMap = new HashMap();
-		Map<String, Object> checkRS = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
-		checkRS.put("result", true);
-		return checkRS;
-	}
-
 	/**
 	 * 导入课程
 	 * @param request
@@ -597,257 +434,6 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-
-	/**
-	 * 下载教师导入模板
-	 *
-	 * @return returnMap
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	@RequestMapping("downloadTeacherModal")
-	@ResponseBody
-	public void downloadTeacherModal(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
-		//创建Excel文件
-		XSSFWorkbook workbook  = new XSSFWorkbook();
-		utils.createImportTeacherModal(workbook);
-		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
-		String fileName="";
-		if(isIE){
-			fileName="ImportTeacher";
-		}else{
-			fileName="导入教职工模板";
-		}
-		utils.loadModal(response,fileName, workbook);
-	}
-
-
-	/**
-	 * 检验导入教师的文件
-	 *
-	 * @return returnMap
-	 * @throws ParseException
-	 * @throws Exception
-	 * @throws ServletException
-	 */
-	@RequestMapping("verifiyImportTeacherFile")
-	@ResponseBody
-	public Object verifiyImportTeacherFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
-		Map<String, Object> returnMap = new HashMap();
-		Map<String, Object> checkRS = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
-		checkRS.put("result", true);
-		return checkRS;
-	}
-
-
-	/**
-	 * 导入教师
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("importTeacher")
-	@ResponseBody
-	public Object importTeacher(HttpServletRequest request) throws Exception {
-		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-		MultipartFile file = multipartRequest.getFile("file"); //文件流
-		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
-		//格式化审批流信息
-		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-
-		Map<String, Object> returnMap = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
-		boolean modalPass = (boolean) returnMap.get("modalPass");
-		if (!modalPass) {
-			return returnMap;
-		}
-
-		if(!returnMap.get("dataCheck").equals("")){
-			boolean dataCheck = (boolean) returnMap.get("dataCheck");
-			if (!dataCheck) {
-				return returnMap;
-			}
-		}
-
-		if(!returnMap.get("importTeacher").equals("")){
-			List<Edu101> importTeacher = (List<Edu101>) returnMap.get("importTeacher");
-			String yxbz = "1";
-			for (int i = 0; i < importTeacher.size(); i++) {
-				Edu101 edu101 = importTeacher.get(i);
-				String jzgh =administrationPageService.getNewTeacherJzgh(); //新教师的教职工号
-				edu101.setJzgh(jzgh);
-				administrationPageService.addTeacher(edu101); // 新增教师
-				if(edu101.getJzglxbm().equals("004")){
-					edu101.setWpjzgspzt("passing");
-					edu600.setBusinessKey(importTeacher.get(i).getEdu101_ID());
-					approvalProcessService.initiationProcess(edu600);
-				}
-			}
-		}
-		return returnMap;
-	}
-
-
-	/**
-	 * 下载教师更新模板
-	 *
-	 * @return returnMap
-	 * @throws ParseException
-	 * @throws Exception
-	 */
-	@RequestMapping("downloadModifyTeachersModal")
-	@ResponseBody
-	public void downloadModifyTeachersModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyTeacherIDs") String modifyTeacherIDs) throws IOException, ParseException {
-		// 根据ID查询已选学生信息
-		com.alibaba.fastjson.JSONArray modifyTeacherArray = JSON.parseArray(modifyTeacherIDs);
-		List<Edu101> chosedTeachers=new ArrayList<Edu101>();
-		for (int i = 0; i < modifyTeacherArray.size(); i++) {
-			Edu101 edu101=administrationPageService.queryTeacherBy101ID(modifyTeacherArray.get(i).toString());
-			chosedTeachers.add(edu101);
-		}
-		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
-		String fileName="";
-		if(isIE){
-			fileName="modifyTeachers";
-		}else{
-			fileName="批量更新教职工模板";
-		}
-		//创建Excel文件
-		XSSFWorkbook workbook  = new XSSFWorkbook();
-		utils.createModifyTeacherModal(workbook,chosedTeachers);
-		utils.loadModal(response,fileName, workbook);
-	}
-
-
-	/**
-	 * 检验修改教师的文件
-	 *
-	 *
-	 * @return returnMap
-	 * @throws ParseException
-	 * @throws Exception
-	 * @throws ServletException
-	 */
-	@RequestMapping("verifiyModifyTeacherFile")
-	@ResponseBody
-	public Object verifiyModifyTeacherFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
-		Map<String, Object> returnMap = new HashMap();
-		Map<String, Object> checkRS = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
-		checkRS.put("result", true);
-		return checkRS;
-	}
-
-
-	/**
-	 * 批量修改教师
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("modifyTeachers")
-	@ResponseBody
-	public Object modifyTeachers(HttpServletRequest request) throws Exception {
-		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-		MultipartFile file = multipartRequest.getFile("file"); //文件流
-		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
-		//格式化审批流信息
-		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-		Map<String, Object> returnMap = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
-
-		boolean modalPass = (boolean) returnMap.get("modalPass");
-		if (!modalPass) {
-			return returnMap;
-		}
-
-		if(!returnMap.get("dataCheck").equals("")){
-			boolean dataCheck = (boolean) returnMap.get("dataCheck");
-			if (!dataCheck) {
-				return returnMap;
-			}
-		}
-
-		if(!returnMap.get("importTeacher").equals("")){
-			List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
-			for (int i = 0; i < modifyTeachers.size(); i++) {
-				administrationPageService.addTeacher(modifyTeachers.get(i)); //修改教师
-				if(modifyTeachers.get(i).getJzglxbm().equals("004")){
-					modifyTeachers.get(i).setWpjzgspzt("passing");
-					edu600.setBusinessKey(modifyTeachers.get(i).getEdu101_ID());
-					approvalProcessService.initiationProcess(edu600);
-				}
-			}
-			returnMap.put("modifyTeachersInfo", modifyTeachers);
-		}
-		return returnMap;
-	}
-
-
-	/**
-	 * 查询所有教师
-	 *
-	 * @return returnMap
-	 */
-	@RequestMapping("queryAllTeacher")
-	@ResponseBody
-	public Object queryAllTeacher() {
-		Map<String, Object> returnMap = new HashMap();
-		List<Edu101> teacherList = administrationPageService.queryAllTeacher();
-		returnMap.put("result", true);
-		returnMap.put("teacherList", teacherList);
-		return returnMap;
-	}
-
-	/**
-	 * 搜索教师
-	 *
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
-	 */
-	@RequestMapping("searchTeacher")
-	@ResponseBody
-	public Object SeacchTeacher(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
-		String szxb ="";
-		String zy = "";
-		String zc = "";
-		String xm ="";
-		String jzgh = "";
-		String szxbmc = "";
-
-		if (jsonObject.has("szxb")){
-			szxb = jsonObject.getString("szxb");
-		}
-		if (jsonObject.has("zy")){
-			zy = jsonObject.getString("zy");
-		}
-		if (jsonObject.has("zc")){
-			zc = jsonObject.getString("zc");
-		}
-		if (jsonObject.has("xm")){
-			xm = jsonObject.getString("xm");
-		}
-		if (jsonObject.has("jzgh")){
-			jzgh = jsonObject.getString("jzgh");
-		}
-		if (jsonObject.has("szxbmc")){
-			szxbmc = jsonObject.getString("szxbmc");
-		}
-
-		Edu101 edu101 = new Edu101();
-		edu101.setSzxb(szxb);
-		edu101.setZy(zy);
-		edu101.setZc(zc);
-		edu101.setXm(xm);
-		edu101.setJzgh(jzgh);
-		edu101.setSzxbmc(szxbmc);
-		List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
-		returnMap.put("techerList", techerList);
-		returnMap.put("result", true);
-		return returnMap;
-	}
 
 	/**
 	 * 获得教学相关公共代码信息
@@ -1064,7 +650,7 @@ public class AdministrationController {
 		returnMap.put("allDepartment", administrationPageService.queryAllDepartment());
 		returnMap.put("allGrade", administrationPageService.queryAllGrade());
 		returnMap.put("allMajor", administrationPageService.queryAllMajor());
-		returnMap.put("allTeacher", administrationPageService.queryAllTeacher());
+		returnMap.put("allTeacher", staffManageService.queryAllTeacher());
 		returnMap.put("allTerm", administrationPageService.queryAllXn());
 		returnMap.put("result", true);
 		return returnMap;

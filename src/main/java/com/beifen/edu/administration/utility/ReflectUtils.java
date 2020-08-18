@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.beifen.edu.administration.service.StudentManageService;
+import com.beifen.edu.administration.service.StaffManageService;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -68,6 +69,8 @@ public class ReflectUtils {
 	private AdministrationPageService administrationPageService;
 	@Resource
 	private StudentManageService studentManageService;
+	@Resource
+	private StaffManageService staffManageService;
 	
 	private static ReflectUtils reflectUtils;
 	 @PostConstruct
@@ -75,6 +78,7 @@ public class ReflectUtils {
 		 reflectUtils = this;
 		 reflectUtils.administrationPageService = this.administrationPageService;
 		 reflectUtils.studentManageService = this.studentManageService;
+		 reflectUtils.staffManageService = this.staffManageService;
 	    }
 	
 	public static Map<String, Object> createMapForNotNull(Object bean) {
@@ -439,7 +443,7 @@ public class ReflectUtils {
 				}
 				
 				long kcfzrID=Long.parseLong(kcfzrIDStrs[1]);
-				String teacherName=reflectUtils.administrationPageService.queryTecaherNameById(kcfzrID);
+				String teacherName=reflectUtils.staffManageService.queryTecaherNameById(kcfzrID);
 				if(teacherName==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";
@@ -930,7 +934,7 @@ public class ReflectUtils {
 			Edu101 edu101 = importTeacher.get(i);
 			//如果是修改操作 判断是否改变了教师edu101ID
 			if(isModify){
-				String correctjzgh=reflectUtils.administrationPageService.queryJzghBy101ID(String.valueOf(edu101.getEdu101_ID()));
+				String correctjzgh=reflectUtils.staffManageService.queryJzghBy101ID(String.valueOf(edu101.getEdu101_ID()));
 				if(correctjzgh==null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-可能修改了教职工ID(教职工ID不允许更改)";
@@ -1002,7 +1006,7 @@ public class ReflectUtils {
 					break;
 				}else{
 					//判断身份证号在数据库是否存在
-					List<Edu101> databaseAllTeacher=reflectUtils.administrationPageService.queryAllTeacher();
+					List<Edu101> databaseAllTeacher=reflectUtils.staffManageService.queryAllTeacher();
 					if(!chaeckPass){
 						break;
 					}else{
@@ -1023,7 +1027,7 @@ public class ReflectUtils {
 								}
 							}
 						}else{
-							boolean IDcardIshave = reflectUtils.administrationPageService.teacherIDcardIshave(edu101.getSfzh());
+							boolean IDcardIshave = reflectUtils.staffManageService.teacherIDcardIshave(edu101.getSfzh());
 							if(IDcardIshave){
 								chaeckPass=false;
 								checkTxt="第"+(i+1)+"行- 身份证号已存在";
@@ -3299,7 +3303,7 @@ public class ReflectUtils {
 	private void ModifyNewClassSeclect(String hiddenSheetName, XSSFWorkbook workbook) {
 		int needCreatHiddenSheetNum=0;
 		List < String > kcfzrlist = new ArrayList < String > ();
-		List<Edu101> kcfzrs = reflectUtils.administrationPageService.queryAllTeacher();
+		List<Edu101> kcfzrs = reflectUtils.staffManageService.queryAllTeacher();
 		for (int i = 0; i < kcfzrs.size(); i++) {
 			kcfzrlist.add(kcfzrs.get(i).getXm()+'-'+kcfzrs.get(i).getEdu101_ID());
 		}
@@ -3523,7 +3527,7 @@ public class ReflectUtils {
 	public static void ImportNewClassSeclect(String hiddenSheetName,XSSFWorkbook workbook){
 		int needCreatHiddenSheetNum=0;
 		List < String > kcfzrlist = new ArrayList < String > ();
-		List<Edu101> kcfzrs = reflectUtils.administrationPageService.queryAllTeacher();
+		List<Edu101> kcfzrs = reflectUtils.staffManageService.queryAllTeacher();
 		for (int i = 0; i < kcfzrs.size(); i++) {
 			kcfzrlist.add(kcfzrs.get(i).getXm()+'-'+kcfzrs.get(i).getEdu101_ID());
 		}

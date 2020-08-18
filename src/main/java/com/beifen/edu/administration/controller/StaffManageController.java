@@ -1,0 +1,455 @@
+package com.beifen.edu.administration.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.domian.Edu101;
+import com.beifen.edu.administration.domian.Edu600;
+import com.beifen.edu.administration.service.AdministrationPageService;
+import com.beifen.edu.administration.service.ApprovalProcessService;
+import com.beifen.edu.administration.service.StaffManageService;
+import com.beifen.edu.administration.utility.ReflectUtils;
+import net.sf.json.JSONObject;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.util.WebUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+//教职工管理控制层
+@Controller
+public class StaffManageController {
+
+    @Autowired
+    AdministrationPageService administrationPageService;
+    @Autowired
+    ApprovalProcessService approvalProcessService;
+    @Autowired
+    StaffManageService staffManageService;
+
+    ReflectUtils utils = new ReflectUtils();
+    /**
+     * 新增教师
+     * @param newTeacherInfo
+     * @return
+     */
+    @RequestMapping("addTeacher")
+    @ResponseBody
+    public Object addTeacher(@RequestParam("addInfo") String newTeacherInfo, @RequestParam("approvalInfo") String approvalInfo) {
+        Map<String, Object> returnMap = new HashMap();
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject jsonObject = JSONObject.fromObject(newTeacherInfo);
+        JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+        Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+        Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
+        // 判断身份证是否存在
+        boolean IDcardIshave = false;
+        for (int i = 0; i < allTeacher.size(); i++) {
+            if(allTeacher.get(i).getSfzh()!=null){
+                if(allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
+                    IDcardIshave=true;
+                    break;
+                }
+            }
+        }
+
+        if (!IDcardIshave) {
+            String jzgh = staffManageService.getNewTeacherJzgh();
+            edu101.setJzgh(jzgh);
+            staffManageService.addTeacher(edu101);
+            //如果新增教师是外聘教师 发起审批流
+            if(edu101.getJzglxbm().equals("004")){
+                edu101.setWpjzgspzt("passing");
+                edu600.setBusinessKey(edu101.getEdu101_ID());
+                approvalProcessService.initiationProcess(edu600);
+            }
+            returnMap.put("newId", edu101.getEdu101_ID());
+            returnMap.put("jzgh", jzgh);
+        }
+
+        returnMap.put("IDcardIshave", IDcardIshave);
+        returnMap.put("result", true);
+        return returnMap;
+    }
+
+    /**
+     * 修改教师
+     * @param modifyInfo
+     * @return
+     */
+    @RequestMapping("modifyTeacher")
+    @ResponseBody
+    public Object modifyTeacher(@RequestParam String modifyInfo,@RequestParam("approvalInfo") String approvalInfo) {
+        Map<String, Object> returnMap = new HashMap();
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
+        JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+        Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+        Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
+        // 判断身份证是否存在
+        boolean IDcardIshave = false;
+        for (int i = 0; i < allTeacher.size(); i++) {
+            if(allTeacher.get(i).getSfzh()!=null){
+                if(!(allTeacher.get(i).getEdu101_ID()==(edu101.getEdu101_ID()))
+                        &&allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
+                    IDcardIshave=true;
+                    break;
+                }
+            }
+        }
+
+        if (!IDcardIshave) {
+            //如果修改是将教师改为外聘教师 发起审批流
+            if(edu101.getJzglxbm().equals("004")){
+                edu101.setWpjzgspzt("passing");
+                edu600.setBusinessKey(edu101.getEdu101_ID());
+                approvalProcessService.initiationProcess(edu600);
+            }
+            staffManageService.addTeacher(edu101);
+        }
+
+        returnMap.put("IDcardIshave", IDcardIshave);
+        returnMap.put("result", true);
+        return returnMap;
+    }
+
+
+
+    /**
+     * 删除教师
+     * 课节id唯一  所以不需要考虑是否选择了学年
+     */
+    @RequestMapping("/removeTeacher")
+    @ResponseBody
+    public Object removeTeacher(@RequestParam String removeIDs) {
+        Map<String, Object> returnMap = new HashMap();
+        com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(removeIDs);
+        boolean canRemove=true;
+        for (int i = 0; i < deleteArray.size(); i++) {
+            //查询教师是否有任务书
+            canRemove= staffManageService.checkTeacherTasks(deleteArray.get(i).toString());
+            if(!canRemove){
+                break;
+            }
+        }
+
+
+        if(canRemove){
+            //删除教师
+            for (int i = 0; i < deleteArray.size(); i++) {
+                staffManageService.removeTeacher(deleteArray.get(i).toString());
+            }
+        }
+        returnMap.put("result", true);
+        returnMap.put("canRemove", canRemove);
+        return returnMap;
+    }
+
+
+    /**
+     * 下载课程导入模板
+     *
+     * @return returnMap
+     * @throws IOException
+     * @throws ParseException
+     */
+    @RequestMapping("downloadNewClassModel")
+    @ResponseBody
+    public void downloadNewClassModel(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+        //创建Excel文件
+        XSSFWorkbook workbook  = new XSSFWorkbook();
+        utils.createImportNewClassModel(workbook);
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName="";
+        if(isIE){
+            fileName="ImportClass";
+        }else{
+            fileName="导入课程模板";
+        }
+        utils.loadModal(response,fileName, workbook);
+    }
+
+
+    /**
+     * 检验课程导入的文件
+     *
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     * @throws ServletException
+     */
+    @RequestMapping("verifiyImportNewClassFile")
+    @ResponseBody
+    public Object verifiyImportNewClassFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+        Map<String, Object> returnMap = new HashMap();
+        Map<String, Object> checkRS = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
+        checkRS.put("result", true);
+        return checkRS;
+    }
+
+    /**
+     * 下载教师导入模板
+     *
+     * @return returnMap
+     * @throws IOException
+     * @throws ParseException
+     */
+    @RequestMapping("downloadTeacherModal")
+    @ResponseBody
+    public void downloadTeacherModal(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
+        //创建Excel文件
+        XSSFWorkbook workbook  = new XSSFWorkbook();
+        utils.createImportTeacherModal(workbook);
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName="";
+        if(isIE){
+            fileName="ImportTeacher";
+        }else{
+            fileName="导入教职工模板";
+        }
+        utils.loadModal(response,fileName, workbook);
+    }
+
+
+    /**
+     * 检验导入教师的文件
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     * @throws ServletException
+     */
+    @RequestMapping("verifiyImportTeacherFile")
+    @ResponseBody
+    public Object verifiyImportTeacherFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+        Map<String, Object> returnMap = new HashMap();
+        Map<String, Object> checkRS = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
+        checkRS.put("result", true);
+        return checkRS;
+    }
+
+
+    /**
+     * 导入教师
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("importTeacher")
+    @ResponseBody
+    public Object importTeacher(HttpServletRequest request) throws Exception {
+        MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        MultipartFile file = multipartRequest.getFile("file"); //文件流
+        String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+        //格式化审批流信息
+        JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+        Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+
+        Map<String, Object> returnMap = utils.checkTeacherFile(file, "ImportEdu101", "导入教职工信息");
+        boolean modalPass = (boolean) returnMap.get("modalPass");
+        if (!modalPass) {
+            return returnMap;
+        }
+
+        if(!returnMap.get("dataCheck").equals("")){
+            boolean dataCheck = (boolean) returnMap.get("dataCheck");
+            if (!dataCheck) {
+                return returnMap;
+            }
+        }
+
+        if(!returnMap.get("importTeacher").equals("")){
+            List<Edu101> importTeacher = (List<Edu101>) returnMap.get("importTeacher");
+            String yxbz = "1";
+            for (int i = 0; i < importTeacher.size(); i++) {
+                Edu101 edu101 = importTeacher.get(i);
+                String jzgh = staffManageService.getNewTeacherJzgh(); //新教师的教职工号
+                edu101.setJzgh(jzgh);
+                staffManageService.addTeacher(edu101); // 新增教师
+                if(edu101.getJzglxbm().equals("004")){
+                    edu101.setWpjzgspzt("passing");
+                    edu600.setBusinessKey(importTeacher.get(i).getEdu101_ID());
+                    approvalProcessService.initiationProcess(edu600);
+                }
+            }
+        }
+        return returnMap;
+    }
+
+
+    /**
+     * 下载教师更新模板
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("downloadModifyTeachersModal")
+    @ResponseBody
+    public void downloadModifyTeachersModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyTeacherIDs") String modifyTeacherIDs) throws IOException, ParseException {
+        // 根据ID查询已选学生信息
+        com.alibaba.fastjson.JSONArray modifyTeacherArray = JSON.parseArray(modifyTeacherIDs);
+        List<Edu101> chosedTeachers=new ArrayList<Edu101>();
+        for (int i = 0; i < modifyTeacherArray.size(); i++) {
+            Edu101 edu101= staffManageService.queryTeacherBy101ID(modifyTeacherArray.get(i).toString());
+            chosedTeachers.add(edu101);
+        }
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName="";
+        if(isIE){
+            fileName="modifyTeachers";
+        }else{
+            fileName="批量更新教职工模板";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook  = new XSSFWorkbook();
+        utils.createModifyTeacherModal(workbook,chosedTeachers);
+        utils.loadModal(response,fileName, workbook);
+    }
+
+
+    /**
+     * 检验修改教师的文件
+     *
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     * @throws ServletException
+     */
+    @RequestMapping("verifiyModifyTeacherFile")
+    @ResponseBody
+    public Object verifiyModifyTeacherFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+        Map<String, Object> returnMap = new HashMap();
+        Map<String, Object> checkRS = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
+        checkRS.put("result", true);
+        return checkRS;
+    }
+
+
+    /**
+     * 批量修改教师
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("modifyTeachers")
+    @ResponseBody
+    public Object modifyTeachers(HttpServletRequest request) throws Exception {
+        MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        MultipartFile file = multipartRequest.getFile("file"); //文件流
+        String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+        //格式化审批流信息
+        JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+        Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+        Map<String, Object> returnMap = utils.checkTeacherFile(file, "ModifyEdu101", "已选教职工信息");
+
+        boolean modalPass = (boolean) returnMap.get("modalPass");
+        if (!modalPass) {
+            return returnMap;
+        }
+
+        if(!returnMap.get("dataCheck").equals("")){
+            boolean dataCheck = (boolean) returnMap.get("dataCheck");
+            if (!dataCheck) {
+                return returnMap;
+            }
+        }
+
+        if(!returnMap.get("importTeacher").equals("")){
+            List<Edu101> modifyTeachers = (List<Edu101>) returnMap.get("importTeacher");
+            for (int i = 0; i < modifyTeachers.size(); i++) {
+                staffManageService.addTeacher(modifyTeachers.get(i)); //修改教师
+                if(modifyTeachers.get(i).getJzglxbm().equals("004")){
+                    modifyTeachers.get(i).setWpjzgspzt("passing");
+                    edu600.setBusinessKey(modifyTeachers.get(i).getEdu101_ID());
+                    approvalProcessService.initiationProcess(edu600);
+                }
+            }
+            returnMap.put("modifyTeachersInfo", modifyTeachers);
+        }
+        return returnMap;
+    }
+
+
+    /**
+     * 查询所有教师
+     *
+     * @return returnMap
+     */
+    @RequestMapping("queryAllTeacher")
+    @ResponseBody
+    public Object queryAllTeacher() {
+        Map<String, Object> returnMap = new HashMap();
+        List<Edu101> teacherList = staffManageService.queryAllTeacher();
+        returnMap.put("result", true);
+        returnMap.put("teacherList", teacherList);
+        return returnMap;
+    }
+
+    /**
+     * 搜索教师
+     *
+     * @param SearchCriteria
+     *            搜索条件
+     * @return returnMap
+     */
+    @RequestMapping("searchTeacher")
+    @ResponseBody
+    public Object SeacchTeacher(@RequestParam String SearchCriteria) {
+        Map<String, Object> returnMap = new HashMap();
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        String szxb ="";
+        String zy = "";
+        String zc = "";
+        String xm ="";
+        String jzgh = "";
+        String szxbmc = "";
+
+        if (jsonObject.has("szxb")){
+            szxb = jsonObject.getString("szxb");
+        }
+        if (jsonObject.has("zy")){
+            zy = jsonObject.getString("zy");
+        }
+        if (jsonObject.has("zc")){
+            zc = jsonObject.getString("zc");
+        }
+        if (jsonObject.has("xm")){
+            xm = jsonObject.getString("xm");
+        }
+        if (jsonObject.has("jzgh")){
+            jzgh = jsonObject.getString("jzgh");
+        }
+        if (jsonObject.has("szxbmc")){
+            szxbmc = jsonObject.getString("szxbmc");
+        }
+
+        Edu101 edu101 = new Edu101();
+        edu101.setSzxb(szxb);
+        edu101.setZy(zy);
+        edu101.setZc(zc);
+        edu101.setXm(xm);
+        edu101.setJzgh(jzgh);
+        edu101.setSzxbmc(szxbmc);
+        List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
+        returnMap.put("techerList", techerList);
+        returnMap.put("result", true);
+        return returnMap;
+    }
+}
