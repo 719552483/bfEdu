@@ -49,6 +49,8 @@ public class ApprovalProcessService {
     private Edu101Dao edu101Dao;
     @Autowired
     private Edu107Dao edu107Dao;
+    @Autowired
+    private Edu112Dao edu112Dao;
 
     /**
      * 发起审批流程
@@ -237,6 +239,7 @@ public class ApprovalProcessService {
                     edu001Dao.updateState(businessKey, "002", "休学");
                     break;
                 case"06":
+                    edu112Dao.updateState(businessKey, "pass");
                     break;
                 case"07":
                     edu101Dao.updateState(businessKey, "pass");
@@ -264,6 +267,7 @@ public class ApprovalProcessService {
                     edu001Dao.updateState(businessKey, "001", "在读");
                     break;
                 case"06":
+                    edu112Dao.updateState(businessKey, "nopass");
                     break;
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
@@ -290,7 +294,7 @@ public class ApprovalProcessService {
                     edu001Dao.updateState(businessKey, "001", "在读");
                     break;
                 case"06":
-
+                    edu112Dao.updateState(businessKey, "nopass");
                     break;
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
@@ -503,7 +507,7 @@ public class ApprovalProcessService {
                 object = edu001Dao.queryStudentBy001ID(businessKey);
                 break;
             case"06":
-
+                object = edu112Dao.getOne(Long.parseLong(businessKey));
                 break;
             case"07":
                 object = edu101Dao.queryTeacherBy101ID(businessKey);

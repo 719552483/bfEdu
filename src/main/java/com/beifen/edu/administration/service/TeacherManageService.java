@@ -114,4 +114,33 @@ public class TeacherManageService {
 
         return resultVO;
     }
+
+    /**
+     * 出差申请查询
+     * @param edu112
+     * @return
+     */
+    public ResultVO searchTeacherBusiness(Edu112 edu112) {
+        ResultVO resultVO;
+        Specification<Edu112> specification = new Specification<Edu112>() {
+            public Predicate toPredicate(Root<Edu112> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu112.getUserName() != null && !"".equals(edu112.getUserName())) {
+                    predicates.add(cb.equal(root.<String> get("zc"),edu112.getUserName()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu112> resultList = edu112Dao.findAll(specification);
+
+        if (resultList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合条件的出差申请");
+            return resultVO;
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+resultList.size()+"条出差申请");
+        }
+
+        return resultVO;
+    }
 }

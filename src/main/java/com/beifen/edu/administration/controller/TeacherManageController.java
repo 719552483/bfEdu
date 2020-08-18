@@ -56,4 +56,21 @@ public class TeacherManageController {
     }
 
 
+    /**
+     * 出差申请查询
+     * @param searchInfo
+     * @return
+     */
+    @RequestMapping("searchTeacherBusiness")
+    @ResponseBody
+    public ResultVO searchTeacherBusiness(@RequestParam("searchInfo") String searchInfo) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject edu112Json = JSONObject.fromObject(searchInfo);
+        Edu112 edu112 = (Edu112) JSONObject.toBean(edu112Json, Edu112.class);
+        result = teacherManageService.searchTeacherBusiness(edu112);
+        return result;
+    }
+
+
 }
