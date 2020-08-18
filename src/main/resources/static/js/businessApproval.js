@@ -562,10 +562,10 @@ function recordInfo(row,index){
 
 //修改记录
 function modifyRecord(row,index){
-	if(row.businessState==="passing"){
-		toastr.warning('该记录暂不可进行此操作');
-		return;
-	}
+	// if(row.businessState==="passing"){
+	// 	toastr.warning('该记录暂不可进行此操作');
+	// 	return;
+	// }
 	$.showModal("#recordsInfoModal",true);
 	$(".reChooseTeacher").hide();
 	stuffRecordInfo(row,false,"recordsImg1");
@@ -619,13 +619,15 @@ function removeSingleTeacher(eve){
 	$(".singleTeacherArea").find(".singleTeacher"+id).remove();
 }
 
+var choosendTeachers=new Array();
 //增加记录中的教职工
 function addTeacher(){
 	$.hideModal("#recordsInfoModal",false);
     $.showModal("#addTeacherModal",true);
 	getAddTeacherInfo();
-	$('.confirmAddTeacherBtn').unbind('click');
-	$('.confirmAddTeacherBtn').bind('click', function(e) {
+	choosendTeachers.length=0;
+	$('#confirmAddTeacherBtn').unbind('click');
+	$('#confirmAddTeacherBtn').bind('click', function(e) {
 		confirmAddTeacher();
 		e.stopPropagation();
 	});
@@ -669,8 +671,8 @@ function stuffAddTeacherTable(tableInfo) {
 		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
+		pageSize : 5,
+		pageList : [ 5 ],
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
@@ -681,13 +683,38 @@ function stuffAddTeacherTable(tableInfo) {
 		sidePagination: "client",
 		toolbar: '#toolbar',
 		showColumns: false,
+		onCheck : function(row) {
+			onCheck(row);
+		},
+		onUncheck : function(row) {
+			onUncheck(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAll(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAll(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".addTeacherTable", "教职工信息");
+			for (var i = 0; i < choosendTeachers.length; i++) {
+				$("#addTeacherTable").bootstrapTable("checkBy", {field:"edu101_ID", values:[choosendTeachers[i].edu101_ID]})
+			}
 		},
 		columns: [
 			{
 				field : 'check',
 				checkbox : true
+			},{
+				field : 'edu101_ID',
+				title : 'id',
+				align : 'center',
+				visible : false
+			},{
+				field: 'szxbmc',
+				title: '系部',
+				align: 'left',
+				formatter: paramsMatter
 			},{
 				field: 'xm',
 				title: '姓名',
@@ -713,9 +740,63 @@ function stuffAddTeacherTable(tableInfo) {
 	toolTipUp(".myTooltip");
 }
 
+//单选教师
+function onCheck(row){
+	if(choosendTeachers.length<=0){
+		choosendTeachers.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendTeachers.length; i++) {
+			if(choosendTeachers[i].edu101_ID===row.edu101_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendTeachers.push(row);
+		}
+	}
+}
+
+//单反选教师
+function onUncheck(row){
+	if(choosendTeachers.length<=1){
+		choosendTeachers.length=0;
+	}else{
+		for (var i = 0; i < choosendTeachers.length; i++) {
+			if(choosendTeachers[i].edu101_ID===row.edu101_ID){
+				choosendTeachers.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选教师
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendTeachers.push(row[i]);
+	}
+}
+
+//全反选教师
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu101_ID);
+	}
+
+
+	for (var i = 0; i < choosendTeachers.length; i++) {
+		if(a.indexOf(choosendTeachers[i].edu101_ID)!==-1){
+			choosendTeachers.splice(i,1);
+			i--;
+		}
+	}
+}
+
 //确认新增教职工
 function confirmAddTeacher(){
-	var choosed=$("#addTeacherTable").bootstrapTable("getSelections");
+	var choosed=choosendTeachers;
 	if(choosed.length===0){
 		toastr.warning("请选择教职工");
 		return;
@@ -724,7 +805,7 @@ function confirmAddTeacher(){
 	var singleTeachers=$(".singleTeacher");
 	for (var i = 0; i < singleTeachers.length; i++) {
 		for (var c = 0; c < choosed.length; c++) {
-           if(parseInt(singleTeachers[i].id)===choosed[i].edu101_ID){
+           if(parseInt(singleTeachers[i].id)===choosed[c].edu101_ID){
 			   toastr.warning("有教职工已选择");
 			   return;
 		   }
@@ -835,6 +916,7 @@ function getAddValue(){
 	return returnObject;
 }
 
+//单个删除记录
 function removeRecord(row){
 	if(row.businessState==="passing"){
 		toastr.warning('该记录暂不可进行此操作');
@@ -845,6 +927,7 @@ function removeRecord(row){
 	sendRemoveRecord(idArray);
 }
 
+//批量删除记录
 function removeRecords(){
 	var choosed = $("#recordsTable").bootstrapTable("getSelections");
 	if(choosed.length==0){
@@ -866,6 +949,7 @@ function removeRecords(){
 	sendRemoveRecord(idArray);
 }
 
+//发送删除记录请求
 function sendRemoveRecord(removeArray){
 	// 发送查询所有用户请求
 	$.ajax({
@@ -899,7 +983,6 @@ function sendRemoveRecord(removeArray){
 		}
 	});
 }
-
 /*tab2 end*/
 
 
@@ -926,7 +1009,7 @@ function tab2BtnBind(){
 		e.stopPropagation();
 	});
 
-	//
+	//二级模态框返回按钮事件
 	$('.specialCanle').unbind('click');
 	$('.specialCanle').bind('click', function(e) {
 		$.hideModal("#addTeacherModal",false);

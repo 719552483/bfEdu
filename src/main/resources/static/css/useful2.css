@@ -971,6 +971,7 @@ float: left;
 	padding-left: 2%;
 }
 
+.addTeacherTable,
 .studentTableArea,
 .allClassMangersTableArea {
 	padding-left: 2%;
@@ -1342,10 +1343,12 @@ background: rgba(36, 138, 187, 0.77);
     min-width: 500px;
 }
 
+#addTeacherModal .modal-content
 #allClassMangersModal .modal-content{
     min-width: 619px;
 }
 
+#addTeacherModal .modal-content
 #allClassMangersModal .modal-content{
     min-width:441px;
 }
