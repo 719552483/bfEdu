@@ -12,6 +12,6 @@ public interface Edu113Dao extends JpaRepository<Edu113, Long>, JpaSpecification
 
     @Transactional
     @Modifying
-    @Query(value = "delete from Edu113 e where e. = ?1 ",nativeQuery = true)
-    void delteByEdu112Id(String toString);
+    @Query(value = "delete from Edu113 e where e.Edu112_ID = ?1 ",nativeQuery = true)
+    void delteByEdu112Id(String edu112ID);
 }
