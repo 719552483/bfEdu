@@ -274,20 +274,16 @@ function sendRemoveInfo(removeArray){
             requestComplete();
         },
         success : function(backjson) {
-            if (backjson.result) {
-                hideloding();
-                if (!backjson.canRemove) {
-                    toastr.warning('不能删除被占用的教室');
-                    return;
-                }
+            hideloding();
+            if (backjson.code === 200) {
                 for (var i = 0; i < removeArray.length; i++) {
                     $('#localInfoTable').bootstrapTable('removeByUniqueId', removeArray[i]);
                 }
                 $(".myTooltip").tooltipify();
-                toastr.success('删除成功');
+                toastr.success(backjson.msg);
                 $.hideModal("#remindModal");
             } else {
-                toastr.warning('操作失败，请重试');
+                toastr.warning(backjson.msg);
             }
         }
     });
@@ -369,9 +365,9 @@ function sendModifySite(row,modifylocalInfo){
     $.ajax({
         method : 'get',
         cache : false,
-        url : "/modifySite",
+        url : "/addSiteInfo",
         data: {
-            "modifyInfo":JSON.stringify(modifylocalInfo)
+            "newSiteInfo":JSON.stringify(modifylocalInfo)
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -384,17 +380,17 @@ function sendModifySite(row,modifylocalInfo){
             requestComplete();
         },
         success : function(backjson) {
-            if (backjson.result) {
-                hideloding();
+            hideloding();
+            if (backjson.code === 200) {
                 $("#localInfoTable").bootstrapTable('updateByUniqueId', {
                     id: modifylocalInfo.edu500Id,
                     row: modifylocalInfo
                 });
                 $(".myTooltip").tooltipify();
-                toastr.success('修改成功');
+                toastr.success(backjson.msg);
                 $.hideModal("#remindModal");
             } else {
-                toastr.warning('操作失败，请重试');
+                toastr.warning(backjson.msg);
             }
         }
     });
@@ -493,19 +489,15 @@ function sendNewSiteInfo(newSiteInfo){
             requestComplete();
         },
         success : function(backjson) {
-            if (backjson.result) {
-                hideloding();
-                if (backjson.siteHave) {
-                    toastr.warning('该校区已存在此教学任务点');
-                    return;
-                }
-                newSiteInfo.edu500Id=backjson.id;
+            hideloding();
+            if (backjson.code === 200) {
+                newSiteInfo.edu500Id=backjson.data;
                 $('#localInfoTable').bootstrapTable("prepend", newSiteInfo);
                 $(".myTooltip").tooltipify();
-                toastr.success('新增成功');
+                toastr.success(backjson.msg);
                 $.hideModal("#addSiteModal");
             } else {
-                toastr.warning('操作失败，请重试');
+                toastr.warning(backjson.msg);
             }
         }
     });
@@ -514,11 +506,7 @@ function sendNewSiteInfo(newSiteInfo){
 //开始检索教学点
 function startSearch(){
     var searchObject = getSearchValue();
-    if ($.isEmptyObject(searchObject)) {
-        searchAllSite();
-    }else{
-        searchAllSiteBy(searchObject);
-    }
+    searchAllSiteBy(searchObject);
 }
 
 //获得检索区域的值
@@ -569,38 +557,6 @@ function getSearchValue(){
     return returnObject;
 }
 
-//检索所有教学点
-function searchAllSite(){
-    $.ajax({
-        method : 'get',
-        cache : false,
-        url : "/queryAllSite",
-        dataType : 'json',
-        beforeSend: function(xhr) {
-            requestErrorbeforeSend();
-        },
-        error: function(textStatus) {
-            requestError();
-        },
-        complete: function(xhr, status) {
-            requestComplete();
-        },
-        success : function(backjson) {
-            hideloding();
-            if (backjson.result) {
-                if(backjson.siteList.length===0){
-                    toastr.warning('暂无教学任务点信息');
-                    drawlocalInfoTableEmptyTable();
-                }else{
-                    stufflocalInfoTable(backjson.siteList);
-                }
-            } else {
-                toastr.warning('操作失败，请重试');
-            }
-        }
-    });
-}
-
 //按条件检索教学点
 function searchAllSiteBy(searchObject){
     $.ajax({
@@ -622,15 +578,12 @@ function searchAllSiteBy(searchObject){
         },
         success : function(backjson) {
             hideloding();
-            if (backjson.result) {
-                if(backjson.siteList.length===0){
-                    toastr.warning('暂无教学任务点信息');
-                    drawlocalInfoTableEmptyTable();
-                }else{
-                    stufflocalInfoTable(backjson.siteList);
-                }
+            if (backjson.code === 200) {
+                stufflocalInfoTable(backjson.data);
+                toastr.success(backjson.msg);
             } else {
-                toastr.warning('操作失败，请重试');
+                toastr.warning(backjson.msg);
+                drawlocalInfoTableEmptyTable();
             }
         }
     });

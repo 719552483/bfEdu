@@ -9,7 +9,7 @@ public class Edu500 {
 
   private Long edu500Id;//主键
   private String jxdmc;//教学任务点名称
-  private String ssxq;//教学任务点
+  private String ssxq;//所属校区
   private String ssxqCode;
   private String rnrs;
   private String glxb;

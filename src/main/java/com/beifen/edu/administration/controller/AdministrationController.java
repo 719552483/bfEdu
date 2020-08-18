@@ -11,13 +11,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
-import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.service.StudentManageService;
+import com.beifen.edu.administration.service.TeachingPointService;
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -51,6 +50,8 @@ public class AdministrationController {
 	private ApprovalProcessService approvalProcessService;
 	@Autowired
 	private StudentManageService studentManageService;
+	@Autowired
+	TeachingPointService teachingPointService;
 
 
 
@@ -934,7 +935,7 @@ public class AdministrationController {
 		returnMap.put("kjInfo", administrationPageService.queryAllDeafultKj());
 		//过滤可选的教室  校区要一致
 		String current103Xq=administrationPageService.queryXqByPyccbm(2, edu103Id);
-		returnMap.put("jxdInfo", administrationPageService.querySiteBySsxqCode(current103Xq));
+		returnMap.put("jxdInfo", teachingPointService.querySiteBySsxqCode((current103Xq)));
 
 		returnMap.put("result", true);
 		return returnMap;
@@ -3261,156 +3262,6 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 新增教学点
-	 *
-	 * @param newSiteInfo
-	 *
-	 * @return returnMap
-	 */
-	@RequestMapping("/addSiteInfo")
-	@ResponseBody
-	public Object addSiteInfo(@RequestParam("newSiteInfo") String newSiteInfo) {
-		boolean result = true;
-		boolean siteHave = true;
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(newSiteInfo);
-		Edu500 newSite = (Edu500) JSONObject.toBean(jsonObject, Edu500.class);
-		// 判断同校区是否存在重复教学点
-		Edu500 newSiteBO = administrationPageService.getSchoolInfo(newSite.getSsxq(),newSite.getJxdmc());
-		if (newSiteBO == null) {
-			siteHave = false;
-			administrationPageService.addSite(newSite);
-			returnMap.put("id", newSite.getEdu500Id());
-		}
-
-		returnMap.put("siteHave", siteHave);
-		returnMap.put("result", result);
-		return returnMap;
-	}
-
-	/**
-	 * 查询所有教学点
-	 *
-	 * @return returnMap
-	 */
-	@RequestMapping("/queryAllSite")
-	@ResponseBody
-	public Object queryAllSite() {
-		Map<String, Object> returnMap = new HashMap();
-		List<Edu500> siteList = administrationPageService.queryAllSite();
-		returnMap.put("result", true);
-		returnMap.put("siteList", siteList);
-		return returnMap;
-	}
-
-	/**
-	 * 搜索教学点
-	 *
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
-	 */
-	@RequestMapping("/searchSite")
-	@ResponseBody
-	public Object searchSite(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
-
-		String jxdmc ="";
-		String ssxq = "";
-		String cdlx ="";
-		String cdxz = "";
-		String lf = "";
-		String lc = "";
-
-		if (jsonObject.has("jxdmc")){
-			jxdmc = jsonObject.getString("jxdmc");
-		}
-		if (jsonObject.has("ssxq")){
-			ssxq = jsonObject.getString("ssxq");
-		}
-		if (jsonObject.has("cdlx")){
-			cdlx = jsonObject.getString("cdlx");
-		}
-		if (jsonObject.has("cdxz")){
-			cdxz = jsonObject.getString("cdxz");
-		}
-		if (jsonObject.has("lf")){
-			lf = jsonObject.getString("lf");
-		}
-		if (jsonObject.has("lc")){
-			lc = jsonObject.getString("lc");
-		}
-
-		Edu500 edu500 = new Edu500();
-		edu500.setJxdmc(jxdmc);
-		edu500.setSsxq(ssxq);
-		edu500.setCdlx(cdlx);
-		edu500.setCdxz(cdxz);
-		edu500.setLf(lf);
-		edu500.setLc(lc);
-		List<Edu500> siteList = administrationPageService.searchSite(edu500);
-		returnMap.put("siteList", siteList);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-	/**
-	 * 修改教学点
-	 *
-	 * @param modifyInfo
-	 *
-	 * @return returnMap
-	 */
-	@RequestMapping("/modifySite")
-	@ResponseBody
-	public Object modifySite(@RequestParam String modifyInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
-		Edu500 edu500 = (Edu500) JSONObject.toBean(jsonObject, Edu500.class);
-
-		administrationPageService.addSite(edu500);;
-
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-
-	/**
-	 * 删除教学点
-	 * @param removeIDs
-	 * @return
-	 */
-
-	@RequestMapping("/removeSite")
-	@ResponseBody
-	public Object removeSite(@RequestParam String removeIDs) {
-		Map<String, Object> returnMap = new HashMap();
-		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(removeIDs);
-		boolean canRemove=true;
-		for (int i = 0; i < deleteArray.size(); i++) {
-			//查询教学点是否占用
-			canRemove=administrationPageService.checkIsUsed(deleteArray.get(i).toString());
-			if(!canRemove){
-				break;
-			}
-		}
-
-
-		if(canRemove){
-			//删除教室
-			for (int i = 0; i < deleteArray.size(); i++) {
-				administrationPageService.removeSite(deleteArray.get(i).toString());
-			}
-		}
-		returnMap.put("result", true);
-		returnMap.put("canRemove", canRemove);
-		return returnMap;
-	}
-
-
-	/**
 	 * 确认排课
 	 * @param scheduleInfo
 	 * @param scheduleDetail
@@ -3433,61 +3284,6 @@ public class AdministrationController {
 	}
 
 
-	/**
-	 * 搜索教学使用情况
-	 *
-	 * @param SearchCriteria
-	 * @return returnMap
-	 */
-	@RequestMapping("/searchLocalUsed")
-	@ResponseBody
-	public Object searchLocalUsed(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
 
-		String academicYearId = "";
-		String jxdmc ="";
-		String ssxq = "";
-		String cdlx ="";
-		String cdxz = "";
-		String lf = "";
-		String lc = "";
-
-
-		if (jsonObject.has("academicYearId")){
-			academicYearId = jsonObject.getString("academicYearId");
-		}
-		if (jsonObject.has("jxdmc")){
-			jxdmc = jsonObject.getString("jxdmc");
-		}
-		if (jsonObject.has("ssxq")){
-			ssxq = jsonObject.getString("ssxq");
-		}
-		if (jsonObject.has("cdlx")){
-			cdlx = jsonObject.getString("cdlx");
-		}
-		if (jsonObject.has("cdxz")){
-			cdxz = jsonObject.getString("cdxz");
-		}
-		if (jsonObject.has("lf")){
-			lf = jsonObject.getString("lf");
-		}
-		if (jsonObject.has("lc")){
-			lc = jsonObject.getString("lc");
-		}
-
-		LocalUsedPO localUsedPO = new LocalUsedPO();
-		localUsedPO.setAcademicYearId(academicYearId);
-		localUsedPO.setJxdmc(jxdmc);
-		localUsedPO.setSsxq(ssxq);
-		localUsedPO.setCdlx(cdlx);
-		localUsedPO.setCdxz(cdxz);
-		localUsedPO.setLf(lf);
-		localUsedPO.setLc(lc);
-		List<LocalUsedPO> siteList = administrationPageService.searchLocalUsed(localUsedPO);
-		returnMap.put("siteList", siteList);
-		returnMap.put("result", true);
-		return returnMap;
-	}
 
 }

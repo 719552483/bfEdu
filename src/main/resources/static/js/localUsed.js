@@ -303,15 +303,12 @@ function searchAllSiteBy(searchObject){
         },
         success : function(backjson) {
             hideloding();
-            if (backjson.result) {
-                if(backjson.siteList.length===0){
-                    toastr.warning('暂无教学点信息');
-                    drawlocalInfoTableEmptyTable();
-                }else{
-                    stufflocalInfoTable(backjson.siteList);
-                }
+            if (backjson.code === 200) {
+                stufflocalInfoTable(backjson.data);
+                toastr.success(backjson.msg);
             } else {
-                toastr.warning('操作失败，请重试');
+                toastr.warning(backjson.msg);
+                drawlocalInfoTableEmptyTable();
             }
         }
     });
