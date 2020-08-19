@@ -1,25 +1,47 @@
 package com.beifen.edu.administration.PO;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 //课程表查询PO
+@Entity
+@Table(name = "TEACHING_SCHEDULE_VIEW")
 public class SchoolTimetablePO {
-    private String edu203_id;//
-    private String edu202_id;
+    private String ID;
+    private String edu203_id;
     private String kjid;
     private String kjmc;
     private String xqid;
     private String xqmc;
     private String week;
+    private String edu202_id;
     private String jsx;
     private String ksz;
     private String xnid;
-    private String sddid;
-    private String skddmc;
-    private String jxbmc;
-    private String kcmc;
+    private String classRoomId;
+    private String classRoom;
+    private String classId;
+    private String className;
     private String teacherName;
-    private String teacherType;
-    private String userId;
-    private String userRole;
+    private String baseTeacherName;
+    private String teacherId;
+    private String baseTeacherId;
+    private String userName;
+    private String userType;
+    private String edu101_id;
+    private String classType;
+    private String classTypeId;
+    private String courseId;
+    private String courseName;
+
+    @Id
+    public String getID() {
+        return ID;
+    }
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 
     public String getEdu203_id() {
         return edu203_id;
@@ -27,14 +49,6 @@ public class SchoolTimetablePO {
 
     public void setEdu203_id(String edu203_id) {
         this.edu203_id = edu203_id;
-    }
-
-    public String getEdu202_id() {
-        return edu202_id;
-    }
-
-    public void setEdu202_id(String edu202_id) {
-        this.edu202_id = edu202_id;
     }
 
     public String getKjid() {
@@ -77,6 +91,14 @@ public class SchoolTimetablePO {
         this.week = week;
     }
 
+    public String getEdu202_id() {
+        return edu202_id;
+    }
+
+    public void setEdu202_id(String edu202_id) {
+        this.edu202_id = edu202_id;
+    }
+
     public String getJsx() {
         return jsx;
     }
@@ -101,36 +123,36 @@ public class SchoolTimetablePO {
         this.xnid = xnid;
     }
 
-    public String getSddid() {
-        return sddid;
+    public String getClassRoomId() {
+        return classRoomId;
     }
 
-    public void setSddid(String sddid) {
-        this.sddid = sddid;
+    public void setClassRoomId(String classRoomId) {
+        this.classRoomId = classRoomId;
     }
 
-    public String getSkddmc() {
-        return skddmc;
+    public String getClassRoom() {
+        return classRoom;
     }
 
-    public void setSkddmc(String skddmc) {
-        this.skddmc = skddmc;
+    public void setClassRoom(String classRoom) {
+        this.classRoom = classRoom;
     }
 
-    public String getJxbmc() {
-        return jxbmc;
+    public String getClassId() {
+        return classId;
     }
 
-    public void setJxbmc(String jxbmc) {
-        this.jxbmc = jxbmc;
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 
-    public String getKcmc() {
-        return kcmc;
+    public String getClassName() {
+        return className;
     }
 
-    public void setKcmc(String kcmc) {
-        this.kcmc = kcmc;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getTeacherName() {
@@ -141,12 +163,83 @@ public class SchoolTimetablePO {
         this.teacherName = teacherName;
     }
 
-    public String getTeacherType() {
-        return teacherType;
+    public String getBaseTeacherName() {
+        return baseTeacherName;
     }
 
-    public void setTeacherType(String teacherType) {
-        this.teacherType = teacherType;
+    public void setBaseTeacherName(String baseTeacherName) {
+        this.baseTeacherName = baseTeacherName;
     }
 
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getBaseTeacherId() {
+        return baseTeacherId;
+    }
+
+    public void setBaseTeacherId(String baseTeacherId) {
+        this.baseTeacherId = baseTeacherId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getEdu101_id() {
+        return edu101_id;
+    }
+
+    public void setEdu101_id(String edu101_id) {
+        this.edu101_id = edu101_id;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
+
+    public String getClassTypeId() {
+        return classTypeId;
+    }
+
+    public void setClassTypeId(String classTypeId) {
+        this.classTypeId = classTypeId;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
 }

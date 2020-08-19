@@ -132,14 +132,15 @@ function getScheduleClassesInfo() {
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
-				drawStartAndEndWeek(backjson.termInfo.zzs);
+			if (backjson.code===200) {
+				// drawStartAndEndWeek(backjson.data);
+				stuffScheduleClassesTable(backjson.data.newInfo);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
-	stuffScheduleClassesTable(tableInfo.newsInfo);
+
 }
 
 //渲染课程表

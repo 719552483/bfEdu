@@ -1,7 +1,10 @@
 package com.beifen.edu.administration.service;
 
 
+import com.beifen.edu.administration.PO.SchoolTimetablePO;
+import com.beifen.edu.administration.PO.TimeTablePO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //教务管理业务层
 @Service
@@ -31,6 +36,8 @@ public class TeachingManageService {
     Edu990Dao edu990Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
+    @Autowired
+    TeachingScheduleViewDao teachingScheduleViewDao;
 
     /**
      * 搜索在职教师
@@ -185,4 +192,208 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    /**
+     * 教师课程表查询
+     * @param timeTable
+     * @return
+     */
+    public ResultVO getScheduleInfo(TimeTablePO timeTable) {
+        ResultVO resultVO;
+        Edu101 edu101 = edu101Dao.getTeacherInfoByEdu990Id(timeTable.getCurrentUserId());
+
+        if(edu101 == null) {
+            resultVO = ResultVO.setFailed("您不是本校教师，无法查看您的课程");
+            return resultVO;
+        }
+        //根据信息查询所有课表信息
+        List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101Id(edu101.getEdu101_ID().toString(),
+                timeTable.getWeekTime(), timeTable.getSemester());
+        if(schoolTimetableList.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到您的课程");
+        } else {
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
+            resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);
+        }
+        return resultVO;
+    }
+
+    /**
+     * 组装课程信息
+     * @param schoolTimetableList
+     * @return
+     */
+    private List<Map> timeTablePackage(List<SchoolTimetablePO> schoolTimetableList) {
+        List<Map> newInfo = new ArrayList<>();
+
+        Map map1 = new HashMap();
+        map1.put("id","id1");
+        map1.put("classPeriod",ClassPeriodConstant.SECTION_ONE);
+        Map map2 = new HashMap();
+        map2.put("id","id2");
+        map2.put("classPeriod",ClassPeriodConstant.SECTION_TWO);
+        Map map3 = new HashMap();
+        map3.put("id","id3");
+        map3.put("classPeriod",ClassPeriodConstant.SECTION_THREE);
+        Map map4 = new HashMap();
+        map4.put("id","id4");
+        map4.put("classPeriod",ClassPeriodConstant.SECTION_FOUR);
+        Map map5 = new HashMap();
+        map5.put("id","id5");
+        map5.put("classPeriod",ClassPeriodConstant.SECTION_FIVE);
+        Map map6 = new HashMap();
+        map6.put("id","id6");
+        map6.put("classPeriod",ClassPeriodConstant.SECTION_SIX);
+        Map map7 = new HashMap();
+        map7.put("id","id7");
+        map7.put("classPeriod",ClassPeriodConstant.SECTION_SEVEN);
+        Map map8 = new HashMap();
+        map8.put("id","id8");
+        map8.put("classPeriod",ClassPeriodConstant.SECTION_EIGHT);
+        Map map9 = new HashMap();
+        map9.put("id","id9");
+        map9.put("classPeriod",ClassPeriodConstant.SECTION_NINE);
+        Map map10 = new HashMap();
+        map10.put("id","id10");
+        map10.put("classPeriod",ClassPeriodConstant.SECTION_TEN);
+        Map map11 = new HashMap();
+        map11.put("id","id11");
+        map11.put("classPeriod",ClassPeriodConstant.SECTION_ELEVEN);
+        Map map12 = new HashMap();
+        map12.put("id","id12");
+        map12.put("classPeriod",ClassPeriodConstant.SECTION_TWELVE);
+
+        for (SchoolTimetablePO s : schoolTimetableList) {
+            if(ClassPeriodConstant.SECTION_ONE.equals(s.getKjmc())) {
+                map1 = classPackage(map1,s,ClassPeriodConstant.SECTION_ONE);
+            }
+            if(ClassPeriodConstant.SECTION_TWO.equals(s.getKjmc())) {
+                map2 = classPackage(map2,s,ClassPeriodConstant.SECTION_TWO);
+            }
+            if(ClassPeriodConstant.SECTION_THREE.equals(s.getKjmc())) {
+                map3 = classPackage(map3,s,ClassPeriodConstant.SECTION_THREE);
+            }
+            if(ClassPeriodConstant.SECTION_FOUR.equals(s.getKjmc())) {
+                map4 = classPackage(map4,s,ClassPeriodConstant.SECTION_FOUR);
+            }
+            if(ClassPeriodConstant.SECTION_FIVE.equals(s.getKjmc())) {
+                map5 = classPackage(map5,s,ClassPeriodConstant.SECTION_FIVE);
+            }
+            if(ClassPeriodConstant.SECTION_SIX.equals(s.getKjmc())) {
+                map6 = classPackage(map6,s,ClassPeriodConstant.SECTION_SIX);
+            }
+            if(ClassPeriodConstant.SECTION_SEVEN.equals(s.getKjmc())) {
+                map7 = classPackage(map7,s,ClassPeriodConstant.SECTION_SEVEN);
+            }
+            if(ClassPeriodConstant.SECTION_EIGHT.equals(s.getKjmc())) {
+                map8 = classPackage(map8,s,ClassPeriodConstant.SECTION_EIGHT);
+            }
+            if(ClassPeriodConstant.SECTION_NINE.equals(s.getKjmc())) {
+                map9 = classPackage(map9,s,ClassPeriodConstant.SECTION_NINE);
+            }
+            if(ClassPeriodConstant.SECTION_TEN.equals(s.getKjmc())) {
+                map10 = classPackage(map10,s,ClassPeriodConstant.SECTION_TEN);
+            }
+            if(ClassPeriodConstant.SECTION_ELEVEN.equals(s.getKjmc())) {
+                map11 = classPackage(map11,s,ClassPeriodConstant.SECTION_ELEVEN);
+            }
+            if(ClassPeriodConstant.SECTION_TWELVE.equals(s.getKjmc())) {
+                map12 = classPackage(map12,s,ClassPeriodConstant.SECTION_TWELVE);
+            }
+        }
+
+        newInfo.add(map1);
+        newInfo.add(map2);
+        newInfo.add(map3);
+        newInfo.add(map4);
+        newInfo.add(map5);
+        newInfo.add(map6);
+        newInfo.add(map7);
+        newInfo.add(map8);
+        newInfo.add(map9);
+        newInfo.add(map10);
+        newInfo.add(map11);
+        newInfo.add(map12);
+
+        return newInfo;
+    }
+
+
+    //按星期组装课程
+    private Map classPackage(Map map,SchoolTimetablePO s,String session) {
+
+        //定义星期是否使用开关
+        Boolean mondy = false;
+        Boolean tuesday = false;
+        Boolean wednesday = false;
+        Boolean thursday = false;
+        Boolean friday = false;
+        Boolean saturday = false;
+        Boolean sunday = false;
+
+        //定义每周课程数组
+        List<SchoolTimetablePO> mondayList = new ArrayList<>();
+        List<SchoolTimetablePO> tuesdayList = new ArrayList<>();
+        List<SchoolTimetablePO> wednesdayList = new ArrayList<>();
+        List<SchoolTimetablePO> thursdayList = new ArrayList<>();
+        List<SchoolTimetablePO> fridayList = new ArrayList<>();
+        List<SchoolTimetablePO> saturdayList = new ArrayList<>();
+        List<SchoolTimetablePO> sundayList = new ArrayList<>();
+
+
+        String xq = s.getXqid();
+        switch (xq) {
+            case "01":
+                mondayList.add(s);
+                mondy = true;
+                break;
+            case "02":
+                tuesdayList.add(s);
+                tuesday = true;
+                break;
+            case "03":
+                wednesdayList.add(s);
+                wednesday = true;
+                break;
+            case "04":
+                thursdayList.add(s);
+                thursday = true;
+                break;
+            case "05":
+                fridayList.add(s);
+                friday = true;
+                break;
+            case "06":
+                saturdayList.add(s);
+                saturday = true;
+                break;
+            case "07":
+                sundayList.add(s);
+                sunday = true;
+                break;
+        }
+
+        if(mondy) {
+            map.put("monday",mondayList);
+        }
+        if(tuesday) {
+            map.put("tuesday",tuesdayList);
+        }
+        if(wednesday) {
+            map.put("wednesday",wednesdayList);
+        }
+        if(thursday) {
+            map.put("thursday",thursdayList);
+        }
+        if(friday) {
+            map.put("friday",fridayList);
+        }
+        if(saturday) {
+            map.put("saturday",saturdayList);
+        }
+        if(sunday) {
+            map.put("sunday",sundayList);
+        }
+
+        return map;
+    }
 }
