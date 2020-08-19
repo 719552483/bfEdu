@@ -1501,7 +1501,7 @@ function changeMenu(){
 
 		//隐藏子节点都被隐藏的父节点
 		for (var m = 0; m< removeArray.length; ++m) {
-			$("."+removeArray[m]).hide();
+			$(parent.frames["leftFrame"].document).find("."+removeArray[m]).hide();
 		}
 	}
 
