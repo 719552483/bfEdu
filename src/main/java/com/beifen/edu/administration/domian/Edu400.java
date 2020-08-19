@@ -17,6 +17,7 @@ public class Edu400 {
 	private String kssj; //开始时间
 	private String jssj; //结束时间
 	private int zzs; //总周数
+	private String relaseTime;//开始排课时间
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -51,7 +52,11 @@ public class Edu400 {
 	public void setZzs(int zzs) {
 		this.zzs = zzs;
 	}
+	public String getRelaseTime() {
+		return relaseTime;
+	}
 
-
-
+	public void setRelaseTime(String relaseTime) {
+		this.relaseTime = relaseTime;
+	}
 }

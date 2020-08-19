@@ -52,9 +52,6 @@ public class AdministrationController {
 	@Autowired
 	StaffManageService staffManageService;
 
-
-
-
 	/**
 	 * 新增课程
 	 * @param addinfo
@@ -1956,7 +1953,6 @@ public class AdministrationController {
 				administrationClassesWithcrouseInfo.put("kcxz", palnInfos.get(p).getKcxz());
 				administrationClassesWithcrouseInfo.put("kcxzCode", palnInfos.get(p).getKcxzCode());
 				administrationClassesWithcrouseInfo.put("xf", palnInfos.get(p).getXf());
-				administrationClassesWithcrouseInfo.put("skxq", palnInfos.get(p).getSkxq());
 				administrationClassesWithcrouseInfo.put("zdrs", allAdministrationClasses.get(i).getZxrs());
 				administrationClassesWithcrouseInfo.put("rnrs", allAdministrationClasses.get(i).getRnrs());
 				administrationClassesWithcrouseInfo.put("jxbrs", 0);
@@ -2011,7 +2007,6 @@ public class AdministrationController {
 				administrationClassesWithcrouseInfo.put("kcxz", palnInfos.get(p).getKcxz());
 				administrationClassesWithcrouseInfo.put("kcxzCode", palnInfos.get(p).getKcxzCode());
 				administrationClassesWithcrouseInfo.put("xf", palnInfos.get(p).getXf());
-				administrationClassesWithcrouseInfo.put("skxq", palnInfos.get(p).getSkxq());
 				administrationClassesWithcrouseInfo.put("zdrs", allAdministrationClasses.get(i).getZxrs());
 				administrationClassesWithcrouseInfo.put("rnrs", allAdministrationClasses.get(i).getRnrs());
 				administrationClassesWithcrouseInfo.put("jxbrs", 0);
@@ -2281,7 +2276,6 @@ public class AdministrationController {
 				administrationClassesWithcrouseInfo.put("kcxz", palnInfos.get(p).getKcxz());
 				administrationClassesWithcrouseInfo.put("kcxzCode", palnInfos.get(p).getKcxzCode());
 				administrationClassesWithcrouseInfo.put("xf", palnInfos.get(p).getXf());
-				administrationClassesWithcrouseInfo.put("skxq", palnInfos.get(p).getSkxq());
 				administrationClassesWithcrouseInfo.put("zdrs", allAdministrationClasses.get(i).getZxrs());
 				administrationClassesWithcrouseInfo.put("rnrs", allAdministrationClasses.get(i).getRnrs());
 				administrationClassesWithcrouseInfo.put("jxbrs", 0);

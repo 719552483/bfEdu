@@ -107,11 +107,6 @@ function stuffMajorTrainingTable(tableInfo) {
 			align : 'left',
 			formatter : calssNameMatter
 		},{
-			field : 'skxq',
-			title : '授课学期',
-			align : 'left',
-			formatter : skxqMatter
-		},{
 			field : 'llxs',
 			title : '理论学时',
 			align : 'left',
@@ -299,11 +294,6 @@ function getCrouseModifyInfo(row){
 		toastr.warning('学分不能为0');
 		return;
 	}
-	
-	if($("#majorTrainingDetails_teachingTerm").val()==null){
-		toastr.warning('请选择授课学期');
-		return;
-	}
 
 	var crouseInfoObject=new Object();
 	crouseInfoObject.edu108_ID=row.edu108_ID;
@@ -318,7 +308,6 @@ function getCrouseModifyInfo(row){
 	crouseInfoObject.sjxs=$("#majorTrainingDetails_practiceHours").val();
 	crouseInfoObject.fsxs=$("#majorTrainingDetails_disperseHours").val();
 	crouseInfoObject.jzxs=$("#majorTrainingDetails_centralizedHours").val();
-	crouseInfoObject.skxq=JSON.stringify($("#majorTrainingDetails_teachingTerm").val());
 	crouseInfoObject.zhouxs=$("#majorTrainingDetails_weekHours").val();
 	crouseInfoObject.zzs=$("#majorTrainingDetails_weekCounts").val();
 	crouseInfoObject.kclx=getNormalSelectText("majorTrainingDetails_classType");
@@ -327,14 +316,9 @@ function getCrouseModifyInfo(row){
 	crouseInfoObject.kcxzCode=getNormalSelectValue("majorTrainingDetails_coursesNature");
 	crouseInfoObject.ksfs=getNormalSelectText("majorTrainingDetails_testWay");
 	crouseInfoObject.ksfsCode=getNormalSelectValue("majorTrainingDetails_testWay");
-	crouseInfoObject.kkbm=getNormalSelectText("majorTrainingDetails_startDepartment");
-	crouseInfoObject.kkbmCode=getNormalSelectValue("majorTrainingDetails_startDepartment");
-	crouseInfoObject.skdd=getNormalSelectValue("majorTrainingDetails_calssPlace");
-	crouseInfoObject.mklb=getNormalSelectValue("majorTrainingDetails_moduleCategory");
 	crouseInfoObject.kcsx=getNormalSelectValue("majorTrainingDetails_classQuality");
 	crouseInfoObject.fkyj=$("#majorTrainingDetails_feedback").val();
 	crouseInfoObject.qzz=$("#majorTrainingDetails_startEndWeek").val(); 
-	crouseInfoObject.pkyq=getNormalSelectValue("majorTrainingDetails_scheduleClassesRequire");
 	crouseInfoObject.qzcjbl=$("#majorTrainingDetails_midtermPrcent").val();
 	crouseInfoObject.qmcjbl=$("#majorTrainingDetails_endtermPrcent").val();
 	crouseInfoObject.sfxk=getNormalSelectValue("classBaseInfo_isNewClass");
@@ -448,19 +432,14 @@ function showAndStuffDetails(row,showFooter) {
 	$("#majorTrainingDetails_practiceHours").val(row.sjxs);
 	$("#majorTrainingDetails_disperseHours").val(row.fsxs);
 	$("#majorTrainingDetails_centralizedHours").val(row.jzxs);
-	multiSelectWithDefault("#majorTrainingDetails_teachingTerm",JSON.parse(row.skxq)); //授课学期
 	$("#majorTrainingDetails_weekHours").val(row.zhouxs);
 	$("#majorTrainingDetails_weekCounts").val(row.zzs);
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_classType", row.kclxCode);  //课程类型
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_coursesNature", row.kcxzCode);  //课程性质
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_testWay", row.ksfsCode);  //课程性质
-	stuffManiaSelectWithDeafult("#majorTrainingDetails_startDepartment", row.kkbmCode);  //开课部门
-	stuffManiaSelectWithDeafult("#majorTrainingDetails_calssPlace", row.skdd);  //授课地点
-	stuffManiaSelectWithDeafult("#majorTrainingDetails_moduleCategory", row.mklb);  //模块类别
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_classQuality", row.kcsx);  //模块类别
 	$("#majorTrainingDetails_feedback").val(row.fkyj);
 	$("#majorTrainingDetails_startEndWeek").val(row.qzz);
-	stuffManiaSelectWithDeafult("#majorTrainingDetails_scheduleClassesRequire", row.pkyq);  //排课要求
 	$("#majorTrainingDetails_midtermPrcent").val(row.qzcjbl);
 	$("#majorTrainingDetails_endtermPrcent").val(row.qmcjbl);
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isNewClass", row.sfxk);  //是否新课
@@ -729,11 +708,7 @@ function getNewCulturePlanInfo(crouseID){
 		toastr.warning('周学时*总周数不等于总学时');
 		return;
 	}
-	
-	if($("#classBaseInfo_classSemesters").val()==null){
-		toastr.warning('授课学期不能为空');
-		return;
-	}
+
 	
 	if(getNormalSelectValue("classBaseInfo_classType")===""){
 		toastr.warning('请选择课程类型');
@@ -749,16 +724,7 @@ function getNewCulturePlanInfo(crouseID){
 		toastr.warning('请选择考试方式');
 		return;
 	}
-	
-	if(getNormalSelectValue("classBaseInfo_setUp")===""){
-		toastr.warning('请选择开课部门');
-		return;
-	}
-	
-	if(getNormalSelectValue("classBaseInfo_classLocation")===""){
-		toastr.warning('请选择授课地点');
-		return;
-	}
+
 	var crouseInfoObject=new Object();
 	crouseInfoObject.edu200_ID=crouseID;
 	crouseInfoObject.kcmc=$("#classBaseInfo_className").val();
@@ -770,7 +736,6 @@ function getNewCulturePlanInfo(crouseID){
 	crouseInfoObject.sjxs=$("#classBaseInfo_practiceHours").val();
 	crouseInfoObject.fsxs=$("#classBaseInfo_disperseHours").val();
 	crouseInfoObject.jzxs=$("#classBaseInfo_centralizedHours").val();
-	crouseInfoObject.skxq=JSON.stringify($("#classBaseInfo_classSemesters").val());
 	crouseInfoObject.zhouxs=$("#classBaseInfo_weekHours").val();
 	crouseInfoObject.zzs=$("#classBaseInfo_countWeeks").val();
 	crouseInfoObject.kclx=getNormalSelectText("classBaseInfo_classType");
@@ -779,12 +744,7 @@ function getNewCulturePlanInfo(crouseID){
 	crouseInfoObject.kcxzCode=getNormalSelectValue("classBaseInfo_classNature");
 	crouseInfoObject.ksfs=getNormalSelectText("classBaseInfo_testWay");
 	crouseInfoObject.ksfsCode=getNormalSelectValue("classBaseInfo_testWay");
-	crouseInfoObject.kkbm=getNormalSelectText("classBaseInfo_setUp");
-	crouseInfoObject.kkbmCode=getNormalSelectValue("classBaseInfo_setUp");
-	crouseInfoObject.skdd=getNormalSelectValue("classBaseInfo_classLocation");
-	crouseInfoObject.mklb=getNormalSelectValue("classBaseInfo_moduleType");
 	crouseInfoObject.kcsx=getNormalSelectValue("classBaseInfo_classQuality");
-	crouseInfoObject.pkyq=getNormalSelectValue("classBaseInfo_classSchedRequire");
 	crouseInfoObject.qzcjbl=$("#classBaseInfo_midtermPrcent").val();
 	crouseInfoObject.qmcjbl=$("#classBaseInfo_endtermPrcent").val();
 	crouseInfoObject.sfxk=getNormalSelectValue("classBaseInfo_isNewClass");
@@ -890,21 +850,16 @@ function stuffAllClassTable(tableInfo) {
 
 // 根据点击行填充基本信息内容
 function stuffClassBaseInfo(row) {
-//	stuffManiaSelectWithDeafult("#classBaseInfo_setUp", row.setUp);   //开课部门哪里来？
 	$("#classBaseInfo_classCode").val(row.kcdm);   //课程代码
 	$("#classBaseInfo_className").val(row.kcmc);   //课程名称
-	$("#classBaseInfo_enName").val(row.ywmc);       //英文名称
 	$("#classBaseInfo_credits").val(row.xf);       //学分
 	$("#classBaseInfo_theoryHours").val(row.llxs);  //理论学时
 	$("#classBaseInfo_practiceHours").val(row.sjxs); //实践学时
 	$("#classBaseInfo_disperseHours").val(row.fsxs);  //分散学时
 	$("#classBaseInfo_centralizedHours").val(row.jzxs); //集中学时
-//	$("#classBaseInfo_allHours").val(row.zxs);  //总学时
 	stuffManiaSelectWithDeafult("#classBaseInfo_classType", row.kclxCode);  //课程类型
 	stuffManiaSelectWithDeafult("#classBaseInfo_classNature", row.kcxzCode); //课程性质
 	stuffManiaSelectWithDeafult("#classBaseInfo_testWay", row.ksfs);    //考试方式
-	stuffManiaSelectWithDeafult("#classBaseInfo_classLocation",row.skdd);  //授课地点
-	stuffManiaSelectWithDeafult("#classBaseInfo_moduleType",row.mklb);  //模块类别
 	stuffManiaSelectWithDeafult("#classBaseInfo_classQuality",row.kcsx);  //课程属性
 	stuffManiaSelectWithDeafult("#classBaseInfo_isNewClass",row.sfxk);  //是否新课
 	stuffManiaSelectWithDeafult("#classBaseInfo_signatureCourseLevel",row.jpkcdj);  //精品课程等级
@@ -1003,7 +958,6 @@ function rebackClassBaseInfo() {
 	$("#classBaseInfo_centralizedHours").val(0);
 	$("#classBaseInfo_weekHours").val(0);
 	$("#classBaseInfo_countWeeks").val(0);
-	$("#classBaseInfo_startWeek").val(1);
 	refreshMultiSselect("#classBaseInfo_classSemesters");
 }
 
@@ -1160,11 +1114,6 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 			title: '唯一标识',
 			align : 'center',
 			visible : false
-		},  {
-			field : 'skxq',
-			title : '授课学期',
-			align : 'left',
-			formatter : skxqMatter
 		}, {
 			field : 'kcmc',
 			title : '课程名称',
