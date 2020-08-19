@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	stuffSeession();
-	loadChoosendShortcuts();
 	$("body").find("input").attr("spellcheck",false);
 	controlMenuRelation();
 });
@@ -1416,36 +1415,32 @@ function timeStamp2String(time){
 加载已选的快捷方式
 */
 function loadChoosendShortcuts() {
+	$(parent.frames["rightFrame"].document).find(".choosendShortcuts").find("li").remove();
 	//根据权限渲染菜单
 	var userInfo = JSON.parse($.session.get('userInfo'));
 	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
-	var stuffedNum=$(parent.frames["rightFrame"].document).find(".choosendShortcuts").find("li").length;
 	if(typeof(userInfo.yxkjfs) !== "undefined"){
-		if(stuffedNum<=0){
-			var allChoosedShortcuts =userInfo.yxkjfs.split(",");
-			for (var k = 0; k < currentMenus.length; ++k) {
-				for (var i = 0; i < allChoosedShortcuts.length; ++i) {
-					if (allChoosedShortcuts[i] === currentMenus[k].id) {
-						$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +
-							'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
-							'.png" />' +
-							'<p>' + currentMenus[k].innerText + '</a></p>' +
-							'</li>');
-					}
-				}
-			}
-		}
-	}else{
-		if(stuffedNum<=0){
-			//默认显示6个快捷方式
-			for (var k = 0; k < currentMenus.length; ++k) {
-				if(k<=5){
-					$(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
-						'"><img class="choosedShortcutsIcon" onclick="pointPage(this)" src="img/' + currentMenus[k].id +
+		var allChoosedShortcuts =userInfo.yxkjfs.split(",");
+		for (var k = 0; k < currentMenus.length; ++k) {
+			for (var i = 0; i < allChoosedShortcuts.length; ++i) {
+				if (allChoosedShortcuts[i] === currentMenus[k].id&&currentMenus[k].parentElement.style.display!=="none") {
+					$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +
+						'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
 						'.png" />' +
 						'<p>' + currentMenus[k].innerText + '</a></p>' +
 						'</li>');
 				}
+			}
+		}
+	}else{
+		//默认显示6个快捷方式
+		for (var k = 0; k < currentMenus.length; ++k) {
+			if(k<=5&&currentMenus[k].parentElement.style.display!=="none"){
+				$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
+					'"><img class="choosedShortcutsIcon" onclick="pointPage(this)" src="img/' + currentMenus[k].id +
+					'.png" />' +
+					'<p>' + currentMenus[k].innerText + '</a></p>' +
+					'</li>');
 			}
 		}
 	}
@@ -1509,21 +1504,6 @@ function changeMenu(){
 			$("."+removeArray[m]).hide();
 		}
 	}
-	// else{
-	// 	//显示全部子节点
-	// 	for (var c = 0; c< currentMenus.length; ++c) {
-	// 		$(parent.frames["leftFrame"].document).find("#"+currentMenus[c].id).closest('li').show();
-	// 	}
-	//
-	// 	//获取全部父节点
-	// 	for (var m = 0; m< menusParents.length; ++m) {
-	// 		for (var c = 0; c< menusParents[m].children.length; ++c) {
-	// 			removeArray.push(menusParents[m].parentNode.className);
-	// 		}
-	// 	}
-	// 	//显示全部父节点
-	// 	for (var m = 0; m< removeArray.length; ++m) {
-	// 		$("."+removeArray[m]).show();
-	// 	}
-	// }
+
+	loadChoosendShortcuts();
 }
