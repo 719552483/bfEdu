@@ -1018,18 +1018,20 @@ function scheduleFormatter(value, row, index) {
 	var htmlStr = "";
 	if ($.isArray(value)) {
 		for (var i = 0; i < value.length; i++) {
-			htmlStr += '<div classRoomID="' + value[i].classRoomID
-					+ '" teacherID="' + value[i].teacherID + '" classTypeId="'
-					+ value[i].classTypeId + '" classID="' + value[i].classID
+			htmlStr += '<div classRoomID="' + value[i].classRoomId
+					+ '" teacherID="' + value[i].teacherId + '" classTypeId="'
+					+ value[i].classTypeId + '" classID="' + value[i].classId
 					+ '" courseId="' + value[i].courseId
 					+ '"  class="singleSchedule singleScheduleHover '
 					+ changeClassAreaBg(value[i].classTypeId) + '">'
-					+ value[i].className + '</br>'
-					+ '<span class="teaName_teaRoom">' + value[i].teacherName
-					+ '-' + value[i].classRoom + '</span>' + '</div>'
+					+ '<span class="scheduleClassName">'+ value[i].className+'</span>'
+				    + '<span class="scheduleClassName">'+ value[i].courseName+'</span>'
+				    + '<span class="scheduleClassName">'+ charSpiltMatter(value[i].teacherName)+'</span>'
+				    + '<span class="lastscheduleClassName">'+ value[i].classRoom+'</span>'
+					+  '</div>'
 		}
 	} else {
-		htmlStr = '<div class="singleSchedule">' + value + '</div>'
+		htmlStr = '<div class="singleSchedule"></div>'
 	}
 
 	return [ htmlStr ].join('');

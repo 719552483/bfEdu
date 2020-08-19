@@ -443,8 +443,7 @@ public class AdministrationController {
 	public Object getJxPublicCodes() {
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("allXn", administrationPageService.queryAllXn());
-		returnMap.put("allkj", administrationPageService.queryDefaultkjsz());
-
+//		returnMap.put("allkj", administrationPageService.queryDefaultkjsz());
 		returnMap.put("result", true);
 		return returnMap;
 	}

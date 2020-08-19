@@ -148,19 +148,19 @@
 					<label>模块导航</label> <select class="isSowIndex" id="publicCodeModel">
 						<option value="all">全部</option>
 						<option value="termManger">学年管理</option>
-						<option value="classTimePartManger">课节管理</option>
-						<option value="otherTimePartManger">额外课节管理</option>
-						<option value="setUpDepartment">开课部门</option>
-						<option value="scheduleClassesDepartment">排课部门</option>
-						<option value="tecchTaskIn">教学任务书输入</option>
-						<option value="tecchScheduleIn">教学排课输入</option>
-						<option value="parcelClassroom">分配部门排课课室</option>
-						<option value="teacherScheduleClassesLimit">教师排课限制条件</option>
-						<option value="schoolTeacher_cannotScheduleClasses">校内老师禁止排课星期和课节</option>
-						<option value="cannotScheduleClasses_week">禁止排课星期</option>
-						<option value="cannotUseClassroom">禁止使用排课教室</option>
-						<option value="class_yjkjsxz">一节课节数限制</option>
-						<option value="calssScheduleReleaseTime">学年学期课表发布时间</option>
+<!--						<option value="classTimePartManger">课节管理</option>-->
+<!--						<option value="otherTimePartManger">额外课节管理</option>-->
+<!--						<option value="setUpDepartment">开课部门</option>-->
+<!--						<option value="scheduleClassesDepartment">排课部门</option>-->
+<!--						<option value="tecchTaskIn">教学任务书输入</option>-->
+<!--						<option value="tecchScheduleIn">教学排课输入</option>-->
+<!--						<option value="parcelClassroom">分配部门排课课室</option>-->
+<!--						<option value="teacherScheduleClassesLimit">教师排课限制条件</option>-->
+<!--						<option value="schoolTeacher_cannotScheduleClasses">校内老师禁止排课星期和课节</option>-->
+<!--						<option value="cannotScheduleClasses_week">禁止排课星期</option>-->
+<!--						<option value="cannotUseClassroom">禁止使用排课教室</option>-->
+<!--						<option value="class_yjkjsxz">一节课节数限制</option>-->
+<!--						<option value="calssScheduleReleaseTime">学年学期课表发布时间</option>-->
 					</select>
 				</div>
 			</div>
@@ -172,8 +172,7 @@
 					</div>
 					<div class="tools">
 						<ul class="toolbar">
-							<li class="click" id="addXn"><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
+							<li class="click" id="addXn"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
 						</ul>
 					</div>
 					<div class="xnTableArea searchGivePaddingR">
@@ -183,205 +182,205 @@
 				
 			</div>
 
-			<div id="classTimePartManger" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>课节管理</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id="addClassTimePart"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-					<div class="kjTableArea searchGivePaddingR">
-							<table class="tablelist myTableStyle" id="kjTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>
-					</div>
-				</div>
-			</div>
+<!--			<div id="classTimePartManger" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>课节管理</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id="addClassTimePart"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--					<div class="kjTableArea searchGivePaddingR">-->
+<!--							<table class="tablelist myTableStyle" id="kjTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="otherTimePartManger" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>额外课节管理</span>
-					</div>
-					<div class="formtext myformtext myformtextTipArea" style="margin-top: -23px;">
-						<b>提示：不选择学年则为默认额外课节设置，选择学年则为当前学年额外课节设置</b>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
-							<li class="MyspinnerStyle spinnerInTools"><label style="margin-top: -14px;" class="selectName">课节时长(分钟)</label><input id="otherTimePart_kjsc" type="number" min="1" step="1" /></li>
-						</ul>
-						<div class="searchArea searchAreaWitheSelect">
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div style="margin-top: -8px;">
-										<label class="selectName" style="margin-top: 14px;">学年</label>
-										<select id="otherTimePart_forXN" class="isSowIndex xnForSelect">
-											<option value="seleceConfigTip">请选择</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+<!--			<div id="otherTimePartManger" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>额外课节管理</span>-->
+<!--					</div>-->
+<!--					<div class="formtext myformtext myformtextTipArea" style="margin-top: -23px;">-->
+<!--						<b>提示：不选择学年则为默认额外课节设置，选择学年则为当前学年额外课节设置</b>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--							<li class="MyspinnerStyle spinnerInTools"><label style="margin-top: -14px;" class="selectName">课节时长(分钟)</label><input id="otherTimePart_kjsc" type="number" min="1" step="1" /></li>-->
+<!--						</ul>-->
+<!--						<div class="searchArea searchAreaWitheSelect">-->
+<!--							<div class="col4 giveBottom">-->
+<!--								<ul class="forminfo">-->
+<!--									<div style="margin-top: -8px;">-->
+<!--										<label class="selectName" style="margin-top: 14px;">学年</label>-->
+<!--										<select id="otherTimePart_forXN" class="isSowIndex xnForSelect">-->
+<!--											<option value="seleceConfigTip">请选择</option>-->
+<!--										</select>-->
+<!--									</div>-->
+<!--								</ul>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="setUpDepartment" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>开课部门</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="setUpDepartment" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>开课部门</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="scheduleClassesDepartment" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>排课部门</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="scheduleClassesDepartment" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>排课部门</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="tecchTaskIn" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>教学任务书输入</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="tecchTaskIn" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>教学任务书输入</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="tecchScheduleIn" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>教学排课输入</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="tecchScheduleIn" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>教学排课输入</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="parcelClassroom" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>分配部门排课课室</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="parcelClassroom" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>分配部门排课课室</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="teacherScheduleClassesLimit" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>教师排课限制条件</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="teacherScheduleClassesLimit" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>教师排课限制条件</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="schoolTeacher_cannotScheduleClasses"
-				class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>校内老师禁止排课星期和课节</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="schoolTeacher_cannotScheduleClasses"-->
+<!--				class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>校内老师禁止排课星期和课节</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="cannotScheduleClasses_week" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>禁止排课星期</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="cannotScheduleClasses_week" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>禁止排课星期</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="cannotUseClassroom" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>禁止使用排课教室</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="cannotUseClassroom" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>禁止使用排课教室</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="class_yjkjsxz" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>一节课节数限制</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="class_yjkjsxz" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>一节课节数限制</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
-			<div id="calssScheduleReleaseTime" class="publicCodeCHildren">
-				<div class="formbody">
-					<div class="formtitle">
-						<span>学年学期课表发布时间</span>
-					</div>
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img
-									src="images/t01.png" style="width: 24px;" /></span>新增</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+<!--			<div id="calssScheduleReleaseTime" class="publicCodeCHildren">-->
+<!--				<div class="formbody">-->
+<!--					<div class="formtitle">-->
+<!--						<span>学年学期课表发布时间</span>-->
+<!--					</div>-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img-->
+<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
 		</div>
 
@@ -720,7 +719,7 @@
 						<div class="col1 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学年名称</label>
+									<label class="selectName" style="margin-top: 14px;">学年名称<b>*</b></label>
 									<input name="" type="text" class="myInput colInput"
 										id="addXnName" placeholder="请输入学年名称..." />
 								</div>
@@ -730,7 +729,7 @@
 						<div class="col1 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">开始时间</label>
+									<label class="selectName" style="margin-top: 14px;">开始时间<b>*</b></label>
 									<input name="" type="text" class="myInput colInput"
 										id="addXn_startTime" placeholder="请选择开始时间..." />
 								</div>
@@ -740,38 +739,9 @@
 						<div class="col1 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">结束时间</label>
+									<label class="selectName" style="margin-top: 14px;">结束时间<b>*</b></label>
 									<input name="" type="text" class="myInput colInput"
 										id="addXn_endTime" placeholder="请选择结束时间..." />
-								</div>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer tipbtn">
-					<input name="" type="button" class="sure addXn_confimBtn" value="确定"/>&nbsp;
-					<input name="" type="button" class="cancel" value="取消"/>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	
-	<!-- 课节年Modal -->
-	<div class="modal fade bs-example-modal-lg" id="classTimePartModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content bodyOnlyOneRow">
-				<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
-				</div>
-				<div class="modal-body">
-					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
-						<div class="col1 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">课节名称</label>
-									<input name="" type="text" class="myInput colInput"
-										id="addKjName" placeholder="请输入课节名称..." />
 								</div>
 							</ul>
 						</div>
@@ -779,21 +749,16 @@
 						<div class="col1 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">上下午(晚)</label>
-									<select class="isSowIndex" id="addKjsjd">
-										<option value="seleceConfigTip">请选择</option>
-										<option value="forenoon">上午</option>
-										<option value="afternoon">下午</option>
-										<option value="eveing">晚上</option>
-									</select>
+									<label class="selectName" style="margin-top: 14px;">课表发布时间</label>
+									<input name="" type="text" class="myInput colInput"
+										   id="relaseTime" placeholder="请选择学年课表发布时间..." />
 								</div>
 							</ul>
 						</div>
-						
 					</div>
 				</div>
 				<div class="modal-footer tipbtn">
-					<input name="" type="button" class="sure classTimePart_confimBtn" value="确定"/>&nbsp;
+					<input name="" type="button" class="sure addXn_confimBtn" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
 			</div>
@@ -841,3 +806,46 @@
 
 </body>
 </html>
+
+<!-- 课节年Modal -->
+<!--	<div class="modal fade bs-example-modal-lg" id="classTimePartModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">-->
+<!--		<div class="modal-dialog modal-lg" role="document">-->
+<!--			<div class="modal-content bodyOnlyOneRow">-->
+<!--				<div class="modal-header">-->
+<!--						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>-->
+<!--				</div>-->
+<!--				<div class="modal-body">-->
+<!--					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">-->
+<!--						<div class="col1 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">课节名称</label>-->
+<!--									<input name="" type="text" class="myInput colInput"-->
+<!--										id="addKjName" placeholder="请输入课节名称..." />-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
+
+<!--						<div class="col1 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">上下午(晚)</label>-->
+<!--									<select class="isSowIndex" id="addKjsjd">-->
+<!--										<option value="seleceConfigTip">请选择</option>-->
+<!--										<option value="forenoon">上午</option>-->
+<!--										<option value="afternoon">下午</option>-->
+<!--										<option value="eveing">晚上</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				<div class="modal-footer tipbtn">-->
+<!--					<input name="" type="button" class="sure classTimePart_confimBtn" value="确定"/>&nbsp;-->
+<!--					<input name="" type="button" class="cancel" value="取消"/>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->

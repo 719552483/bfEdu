@@ -1037,12 +1037,16 @@ float: left;
 	padding: 0;
 	display: block;
 	margin-top: -13px;
+	line-height: 29px;
+	font-weight: 600;
+	color: #677e92;
 }
 
 .singleSchedule {
 	border-bottom: 1px #bdb3b3 dotted;
 	padding-left: 15px;
 	min-height: 97px;
+	border-radius: 6px;
 }
 
 .singleSchedule:last-child {
@@ -1857,6 +1861,19 @@ top角色切换滚动体样式
 	border-radius: 10px;
 	background: #ffffff;
 }
+
+.scheduleClassName,.lastscheduleClassName{
+	line-height: normal;
+	padding-bottom: 1px;
+	font-weight: 600;
+	color: #677e92;
+	padding-top: 12px;
+}
+.lastscheduleClassName{
+	padding-bottom: 5px;
+}
+
+
 
 @keyframes serachAnimation {
     10% {
