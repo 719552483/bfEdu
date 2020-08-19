@@ -264,40 +264,40 @@ public class TeachingManageService {
 
         for (SchoolTimetablePO s : schoolTimetableList) {
             if(ClassPeriodConstant.SECTION_ONE.equals(s.getKjmc())) {
-                map1 = classPackage(map1,s,ClassPeriodConstant.SECTION_ONE);
+                map1 = classPackage(map1,s);
             }
             if(ClassPeriodConstant.SECTION_TWO.equals(s.getKjmc())) {
-                map2 = classPackage(map2,s,ClassPeriodConstant.SECTION_TWO);
+                map2 = classPackage(map2,s);
             }
             if(ClassPeriodConstant.SECTION_THREE.equals(s.getKjmc())) {
-                map3 = classPackage(map3,s,ClassPeriodConstant.SECTION_THREE);
+                map3 = classPackage(map3,s);
             }
             if(ClassPeriodConstant.SECTION_FOUR.equals(s.getKjmc())) {
-                map4 = classPackage(map4,s,ClassPeriodConstant.SECTION_FOUR);
+                map4 = classPackage(map4,s);
             }
             if(ClassPeriodConstant.SECTION_FIVE.equals(s.getKjmc())) {
-                map5 = classPackage(map5,s,ClassPeriodConstant.SECTION_FIVE);
+                map5 = classPackage(map5,s);
             }
             if(ClassPeriodConstant.SECTION_SIX.equals(s.getKjmc())) {
-                map6 = classPackage(map6,s,ClassPeriodConstant.SECTION_SIX);
+                map6 = classPackage(map6,s);
             }
             if(ClassPeriodConstant.SECTION_SEVEN.equals(s.getKjmc())) {
-                map7 = classPackage(map7,s,ClassPeriodConstant.SECTION_SEVEN);
+                map7 = classPackage(map7,s);
             }
             if(ClassPeriodConstant.SECTION_EIGHT.equals(s.getKjmc())) {
-                map8 = classPackage(map8,s,ClassPeriodConstant.SECTION_EIGHT);
+                map8 = classPackage(map8,s);
             }
             if(ClassPeriodConstant.SECTION_NINE.equals(s.getKjmc())) {
-                map9 = classPackage(map9,s,ClassPeriodConstant.SECTION_NINE);
+                map9 = classPackage(map9,s);
             }
             if(ClassPeriodConstant.SECTION_TEN.equals(s.getKjmc())) {
-                map10 = classPackage(map10,s,ClassPeriodConstant.SECTION_TEN);
+                map10 = classPackage(map10,s);
             }
             if(ClassPeriodConstant.SECTION_ELEVEN.equals(s.getKjmc())) {
-                map11 = classPackage(map11,s,ClassPeriodConstant.SECTION_ELEVEN);
+                map11 = classPackage(map11,s);
             }
             if(ClassPeriodConstant.SECTION_TWELVE.equals(s.getKjmc())) {
-                map12 = classPackage(map12,s,ClassPeriodConstant.SECTION_TWELVE);
+                map12 = classPackage(map12,s);
             }
         }
 
@@ -319,79 +319,68 @@ public class TeachingManageService {
 
 
     //按星期组装课程
-    private Map classPackage(Map map,SchoolTimetablePO s,String session) {
-
-        //定义星期是否使用开关
-        Boolean mondy = false;
-        Boolean tuesday = false;
-        Boolean wednesday = false;
-        Boolean thursday = false;
-        Boolean friday = false;
-        Boolean saturday = false;
-        Boolean sunday = false;
-
-        //定义每周课程数组
-        List<SchoolTimetablePO> mondayList = new ArrayList<>();
-        List<SchoolTimetablePO> tuesdayList = new ArrayList<>();
-        List<SchoolTimetablePO> wednesdayList = new ArrayList<>();
-        List<SchoolTimetablePO> thursdayList = new ArrayList<>();
-        List<SchoolTimetablePO> fridayList = new ArrayList<>();
-        List<SchoolTimetablePO> saturdayList = new ArrayList<>();
-        List<SchoolTimetablePO> sundayList = new ArrayList<>();
-
+    private Map classPackage(Map map,SchoolTimetablePO s) {
+        List<SchoolTimetablePO> newList = new ArrayList<>();
 
         String xq = s.getXqid();
+
         switch (xq) {
             case "01":
-                mondayList.add(s);
-                mondy = true;
+                if(map.get("monday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("monday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("monday",newList);
+                }
                 break;
             case "02":
-                tuesdayList.add(s);
-                tuesday = true;
+                if(map.get("tuesday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("tuesday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("tuesday",newList);
+                }
                 break;
             case "03":
-                wednesdayList.add(s);
-                wednesday = true;
+                if(map.get("wednesday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("wednesday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("wednesday",newList);
+                }
                 break;
             case "04":
-                thursdayList.add(s);
-                thursday = true;
+                if(map.get("thursday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("thursday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("thursday",newList);
+                }
                 break;
             case "05":
-                fridayList.add(s);
-                friday = true;
+                if(map.get("friday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("friday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("friday",newList);
+                }
                 break;
             case "06":
-                saturdayList.add(s);
-                saturday = true;
+                if(map.get("saturday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("saturday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("saturday",newList);
+                }
                 break;
             case "07":
-                sundayList.add(s);
-                sunday = true;
+                if(map.get("sunday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("sunday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("sunday",newList);
+                }
                 break;
-        }
-
-        if(mondy) {
-            map.put("monday",mondayList);
-        }
-        if(tuesday) {
-            map.put("tuesday",tuesdayList);
-        }
-        if(wednesday) {
-            map.put("wednesday",wednesdayList);
-        }
-        if(thursday) {
-            map.put("thursday",thursdayList);
-        }
-        if(friday) {
-            map.put("friday",fridayList);
-        }
-        if(saturday) {
-            map.put("saturday",saturdayList);
-        }
-        if(sunday) {
-            map.put("sunday",sundayList);
         }
 
         return map;
