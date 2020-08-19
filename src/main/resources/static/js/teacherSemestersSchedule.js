@@ -1,56 +1,90 @@
 $(function() {
-	getSelectInfo("#semester", "#weekTime");
+	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
-	binBind();
+	// binBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 });
 
 //获取学期信息
-function getSelectInfo(id1, id2) {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	//初始化下拉框
-	semesterbackjson = ["2018-2019第一学期", "2018-2019第二学期", "2019-2020第一学期", "019-2020第二学期"];
-	var str = '';
-	for (var i = 0; i < semesterbackjson.length; i++) {
-		str += '<option value="' + semesterbackjson[i] + '">' + semesterbackjson[i] + '</option>';
-	}
-	$(id1).append(str);
-	$(id1).selectMania();
-	//changge事件
-	$(id1).change(function() {
-		$(id1).selectMania('destroy');
-		$(id1).find("option").remove();
-		$(id1).append(str);
-		$(id1).selectMania();
-		startSearch();
+function getSemesterInfo() {
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getAllXn",
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				if(backjson.termInfo.length===0){
+					toastr.warning('暂无学年信息');
+					return;
+				}
+				//初始化下拉框
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < backjson.termInfo.length; i++) {
+					str += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc + '</option>';
+				}
+				stuffManiaSelect("#semester", str);
+				//changge事件
+				$("#semester").change(function() {
+					getAllWeeks();
+				});
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
 	});
+}
 
-
-	weekTimebackjson = ["第一周", "第二周", "第三周", "第四周"];
-	var str2 = '';
-	for (var i = 0; i < weekTimebackjson.length; i++) {
-		str2 += '<option value="' + weekTimebackjson[i] + '">' + weekTimebackjson[i] + '</option>';
-	}
-	$(id2).append(str2);
-	$(id2).selectMania(); //初始化下拉框
-	// $(id2).change(function() {
-	// 	var reObject=new Object();
-	// 	reObject.removeConfigOptionSelect= id2;
-	// 	reReloadSearchsWithSelect(reObject);
-	// });
+//根据学年获取周的信息
+function getAllWeeks(){
+   var semester=getNormalSelectValue("semester");
+   if(semester===""){
+   	return;
+   }
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getTermInfoById",
+		data:{
+			"termId":semester
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				var configStr='<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < backjson.termInfo.zzs; i++) {
+					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
+				}
+				stuffManiaSelect("#weekTime", configStr);
+				//changge事件
+				$("#weekTime").change(function() {
+					getScheduleClassesInfo();
+				});
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //填充空的课程表
@@ -73,101 +107,42 @@ function drawScheduleClassesEmptyTable() {
 	stuffScheduleClassesTable(tableInfo);
 }
 
-//填充课程表信息
+//获取课程表信息
 function getScheduleClassesInfo() {
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-
-	//tableInfo必须按照 星期一至星期五 
-	var tableInfo = {
-		"newsInfo": [{
-			"id": "id1",
-			"classPeriod": "第一节",
-			"monday": [{
-				"courseId": "scheduleId1",
-				"classType": "必修",
-				"classTypeId": "1",
-				"className": "优秀中华传统文化+美育2(一班)",
-				"classID": "0029",
-				"teacherName": "张三",
-				"teacherID": "5595",
-				"classRoom": "北楼203",
-				"classRoomID": "5569",
-			}, {
-				"courseId": "scheduleId2",
-				"classType": "必修",
-				"classTypeId": "2",
-				"className": "优秀中华传统文化+美育2(一班)",
-				"classID": "0029",
-				"teacherName": "张三",
-				"teacherID": "5595",
-				"classRoom": "北楼203",
-				"classRoomID": "5569",
-			}],
-			"tuesday": [{
-				"courseId": "scheduleId5",
-				"classType": "必修",
-				"classTypeId": "3",
-				"className": "优秀中华传统文化+美育2(一班)",
-				"classID": "0029",
-				"teacherName": "张三",
-				"teacherID": "5595",
-				"classRoom": "北楼203",
-				"classRoomID": "5569",
-			}],
-			"wednesday": "",
-			"thursday": "",
-			"friday": "",
-			"saturday": "",
-			"sunday": ""
-		}, {
-			"id": "id2",
-			"classPeriod": "第二节",
-			"monday": "",
-			"tuesday": [{
-				"courseId": "scheduleId3",
-				"classType": "必修",
-				"classTypeId": "4",
-				"className": "优秀中华传统文化+美育2(一班)",
-				"classID": "0029",
-				"teacherName": "张三",
-				"teacherID": "5595",
-				"classRoom": "北楼203",
-				"classRoomID": "5569",
-			}, {
-				"courseId": "scheduleId4",
-				"classType": "必修",
-				"classTypeId": "1",
-				"className": "优秀中华传统文化+美育2(一班)",
-				"classID": "0029",
-				"teacherName": "张三",
-				"teacherID": "5595",
-				"classRoom": "北楼203",
-				"classRoomID": "5569",
-			}],
-			"wednesday": "",
-			"thursday": "",
-			"friday": "",
-			"saturday": "",
-			"sunday": ""
-		}]
-	};
+	var searchObject=getScheduleSearchInfo();
+	if(typeof(searchObject) === "undefined"){
+		return;
+	}
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getScheduleInfo",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				drawStartAndEndWeek(backjson.termInfo.zzs);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 	stuffScheduleClassesTable(tableInfo.newsInfo);
 }
 
-//渲染培养计划表格
+//渲染课程表
 function stuffScheduleClassesTable(tableInfo) {
 	$('#scheduleClassesTable').bootstrapTable('destroy').bootstrapTable({
 		data: tableInfo,
@@ -232,9 +207,11 @@ function stuffScheduleClassesTable(tableInfo) {
 			}
 		]
 	});
-
-	drawSearchInput();
+	changeColumnsStyle(".scheduleClassesTableArea", "已排课表");
+	drawSearchInput(".scheduleClassesTableArea");
 	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+
 	//课程区域点击事件
 	$('.singleSchedule').unbind('click');
 	$('.singleSchedule').bind('click', function(e) {
@@ -386,78 +363,33 @@ function stuffStudentInfoTable(tableInfo) {
 
 
 
-
-
-
-
-
-//检索课表
-function startSearch() {
-	var semester = getNormalSelectValue("semester");
-	var weekTime = getNormalSelectValue("weekTime");
-
-	if (semester === "seleceConfigTip" && weekTime === "seleceConfigTip") {
-		toastr.warning('请输入检索条件');
-		return;
-	}
-	if (semester === "seleceConfigTip") {
-		toastr.warning('请选择学期');
-		return;
+//获得课表检索对象
+function getScheduleSearchInfo(){
+	var currentUserId= $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	var semester=getNormalSelectValue("semester");
+	var weekTime=getNormalSelectValue("weekTime");
+	if(semester===""){
+		toastr.warning('请选择学年');
+		return ;
 	}
 
-	var searchObject = new Object();
-	searchObject.semester = semester;
-	if (weekTime !== "seleceConfigTip") {
-		searchObject.weekTime = weekTime;
+	if(weekTime===""){
+		toastr.warning('请选择周数');
+		return ;
 	}
-	// 发送查询所有用户请求
-	// $.ajax({
-	//  method : 'get',
-	//  cache : false,
-	//  url : "/queryDrgGroupIntoInfo",
-	//  dataType : 'json',
-	//  success : function(backjson) {
-	// 	 if (backjson.result) {
-	// 		 stuffDrgGroupMangerTable(backjson);
-	// 	 } else {
-	// 		 jGrowlStyleClose('操作失败，请重试');
-	// 	 }
-	//  }
-	// });
-	getScheduleClassesInfo();
-}
-
-
-function reSearch() {
-	var reObject = new Object();
-	reObject.fristSelectId = "#semester";
-	reObject.normalSelectIds = "#weekTime";
-	reReloadSearchsWithSelect(reObject);
-	drawScheduleClassesEmptyTable();
+	var returnObject=new Object();
+	returnObject.currentUserId=currentUserId;
+	returnObject.semester=semester;
+	returnObject.weekTime=weekTime;
+	return returnObject;
 }
 
 //初始化页面按钮绑定事件
 function binBind() {
-	//检索按钮
-	$('#startSearch').unbind('click');
-	$('#startSearch').bind('click', function(e) {
-		startSearch();
-		e.stopPropagation();
-	});
-
-	//重置检索
-	$('#reSearch').unbind('click');
-	$('#reSearch').bind('click', function(e) {
-		reSearch();
-		e.stopPropagation();
-	});
-
 	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$(".tip").hide();
-		showMaskingElement();
+		$.hideModal();
 		e.stopPropagation();
 	});
-
 }

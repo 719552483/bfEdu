@@ -543,6 +543,20 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 获得所有学年
+	 * @return
+	 */
+	@RequestMapping("/getAllXn")
+	@ResponseBody
+	public Object getAllXn() {
+		Map<String, Object> returnMap = new HashMap();
+		returnMap.put("termInfo", administrationPageService.queryAllXn());
+		returnMap.put("result", true);
+		return returnMap;
+	}
+
+
+	/**
 	 * 新增课节
 	 */
 	@RequestMapping("/addNewKj")

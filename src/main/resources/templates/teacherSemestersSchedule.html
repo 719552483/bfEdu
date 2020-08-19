@@ -38,30 +38,18 @@
 			<ul class="placeul myPlaceul">
 				<li><a href="index.html">首页</a></li>
 				<li><a>教师管理</a></li>
-				<li><a>教师学期课表</a></li>
+				<li><a>教师学年课表</a></li>
 			</ul>
 		</div>
 
 		<div class="formbody">
 			<div class="scheduleClassesMainArea">
-				<div class="tools">
-					<ul class="toolbar">
-						<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>查询课表</li>
-					</ul>
-					<ul class="toolbar1">
-						<li class="click" id="reSearch"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
-						<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出Excel</li>
-					</ul>
-				</div>
-
-				<div class="formtext myformtext">当前周数：<b>第三周</b></div>
-
 				<div class="searchArea searchAreaWitheSelect">
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
-								<label class="selectName" style="margin-top: 14px;">学年学期<b>*</b></label>
-								<select id="semester">
+								<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+								<select id="semester" class="isSowIndex">
 									<option value="seleceConfigTip">请选择</option>
 								</select>
 							</div>
@@ -71,9 +59,9 @@
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
-								<label class="selectName" style="margin-top: 14px;">周数</label>
+								<label class="selectName" style="margin-top: 14px;">周数<b>*</b></label>
 								<select id="weekTime" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
+									<option value="seleceConfigTip">暂无选择</option>
 								</select>
 							</div>
 						</ul>
@@ -87,39 +75,67 @@
 			</div>
 </div>
 
-			<div class="tip manyInfoShow courseDetailsTip">
-				<div class="tiptop"><span class="courseDetails_Name"></span><cite class="tipCite">-学生列表</cite><a class="cancelTipBtn"></a></div>
-				<div class="tipBody">
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出点名Excel</li>
-						</ul>
-						<ul class="toolbar1">
-							<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出Excel</li>
-						</ul>
-					</div>
-					
-					<div class="teacher_studentInfoTableArea searchGivePaddingR">
-						<table class="tablelist myTableStyle" id="teacher_studentInfoTable" data-unique-id="id" style="margin-top: 10px;"></table>
-					</div>
-				</div>
+<!--			<div class="tip manyInfoShow courseDetailsTip">-->
+<!--				<div class="tiptop"><span class="courseDetails_Name"></span><cite class="tipCite">-学生列表</cite><a class="cancelTipBtn"></a></div>-->
+<!--				<div class="tipBody">-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出点名Excel</li>-->
+<!--						</ul>-->
+<!--						<ul class="toolbar1">-->
+<!--							<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出Excel</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--					-->
+<!--					<div class="teacher_studentInfoTableArea searchGivePaddingR">-->
+<!--						<table class="tablelist myTableStyle" id="teacher_studentInfoTable" data-unique-id="id" style="margin-top: 10px;"></table>-->
+<!--					</div>-->
+<!--				</div>-->
 
 
-				<div class="tipbtn">
-					<input name="" type="button" class="cancel singleTipBtn" value="返回"/>
+<!--				<div class="tipbtn">-->
+<!--					<input name="" type="button" class="cancel singleTipBtn" value="返回"/>-->
+<!--				</div>-->
+<!--			</div>-->
+
+
+		<!-- 提示Modal -->
+		<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tipinfo">
+							<span><img src="images/ticon.png" /></span>
+							<div class="tipright">
+								<p>
+									是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
+								</p>
+								<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="modal-backdrop fade maskingElement noneStart"></div>
+		<!-- ajax请求masking -->
 		<div class="modal-backdrop fade loadingMasking noneStart">
-				<div class="spinner-box">
-					<div class="pulse-container">
-						<div class="pulse-bubble pulse-bubble-1"></div>
-						<div class="pulse-bubble pulse-bubble-2"></div>
-						<div class="pulse-bubble pulse-bubble-3"></div>
-					</div>
-					<div class="loadingtxt">数据加载中，请稍后...</div>
+			<div class="spinner-box">
+				<div class="pulse-container">
+					<div class="pulse-bubble pulse-bubble-1"></div>
+					<div class="pulse-bubble pulse-bubble-2"></div>
+					<div class="pulse-bubble pulse-bubble-3"></div>
 				</div>
+				<div class="loadingtxt">数据加载中，请稍后...</div>
+			</div>
 		</div>
 
 			<script type="text/javascript">

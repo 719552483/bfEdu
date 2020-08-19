@@ -562,10 +562,10 @@ function recordInfo(row,index){
 
 //修改记录
 function modifyRecord(row,index){
-	// if(row.businessState==="passing"){
-	// 	toastr.warning('该记录暂不可进行此操作');
-	// 	return;
-	// }
+	if(row.businessState==="passing"){
+		toastr.warning('该记录暂不可进行此操作');
+		return;
+	}
 	$.showModal("#recordsInfoModal",true);
 	$(".reChooseTeacher").hide();
 	stuffRecordInfo(row,false,"recordsImg1");
