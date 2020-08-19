@@ -68,4 +68,5 @@ function  confirmChangeRole(eve){
 	$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)").html(eve.currentTarget.innerText);
 	changeMenu();
 	btnControl();
+	parent.rightFrame.location.href="index.html";
 }

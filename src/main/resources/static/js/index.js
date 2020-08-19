@@ -38,9 +38,10 @@ function showAllShortcuts() {
 */
 function drawAllShortcuts() {
 	var currentMenus = $(parent.frames["leftFrame"].document).find(".menuson").find("a"); //frame获取父窗口中的menu
-	var allShortcutsNum = $(".allShortcuts").find(".bacimg").length;
-	if (allShortcutsNum <= 0) {
-		for (var i = 0; i < currentMenus.length; ++i) {
+	$(".allShortcuts").find(".bacimg").remove();
+
+	for (var i = 0; i < currentMenus.length; ++i) {
+		if(currentMenus[i].parentElement.style.display!=="none"){
 			$(".allShortcuts").append('<div class="bacimg ' + currentMenus[i].id + '">' +
 				'<div class="choosingArea">' +
 				'<img src="img/' + currentMenus[i].id + '.png" />' +
@@ -50,7 +51,7 @@ function drawAllShortcuts() {
 				'</div>' +
 				'<h2><a>' + currentMenus[i].innerText + '</a></h2>' +
 				'<p><a class="wantAddShortcut">添加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="giveupAddShortcut">取消</a></p>' +
-				'</div>')
+				'</div>');
 		}
 	}
 }
@@ -308,9 +309,9 @@ function removeChoosendShortcut(className) {
 //获取所有角色类型
 function drawAuthorityGroup() {
 	var str = '<option value="all">所有权限</option>';
-	var allMenuParents = $(parent.frames["leftFrame"].document).find(".leftmenu").find('.title'); //frame获取父窗口中的menu
+	var allMenuParents = $(parent.frames["leftFrame"].document).find(".leftmenu").find('dd'); //frame获取父窗口中的menu
 	for (var i = 0; i < allMenuParents.length; i++) {
-		if (i !== 0) {
+		if (i !== 0&&allMenuParents[i].style.display!=="none") {
 			str += '<option value="' + allMenuParents[i].innerText + '">' + allMenuParents[i].innerText + '</option>';
 		}
 	}

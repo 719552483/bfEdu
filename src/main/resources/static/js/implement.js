@@ -1459,6 +1459,9 @@ function loadChoosendShortcuts() {
 
 //根据权限渲染菜单
 function changeMenu(){
+	//首先全部展示父节点
+	$(parent.frames["leftFrame"].document).find(".leftmenu").find("dd").show();
+
 	var js="";
 	var jsid="";
 	js=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
