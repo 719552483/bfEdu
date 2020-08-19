@@ -795,16 +795,31 @@ function confimModifyDeaparment(row){
 	});
 }
 
-//修改时填充该行信息到培养层次选择区
+//修改时填充该行信息到系部选择区
 function stufDeadultDepartmentInfo(row){
 	$("#addNewDeaparment_deaparmentName").val(row.xbmc);
 	$("#addNewDeaparment_deaparmentCode").val(row.xbbm);
+	if(row.iskk!=null){
+		stuffManiaSelectWithDeafult("#iskk", row.iskk);
+	}else{
+		var reObject = new Object();
+		reObject.normalSelectIds = "#iskk";
+		reReloadSearchsWithSelect(reObject);
+	}
+	if(row.ispk!=null){
+		stuffManiaSelectWithDeafult("#ispk", row.ispk);
+	}else{
+		var reObject = new Object();
+		reObject.normalSelectIds = "#ispk";
+		reReloadSearchsWithSelect(reObject);
+	}
 }
 
 //清空系部模态框中的值
 function  emptyDepartmentChooseArea(){
 	var reObject = new Object();
 	reObject.InputIds = "#addNewDeaparment_deaparmentName";
+	reObject.normalSelectIds = "#iskk,#ispk";
 	reReloadSearchsWithSelect(reObject);
 }
 
@@ -812,6 +827,8 @@ function  emptyDepartmentChooseArea(){
 function getDeaparmentInfo(){
 	var deaparmentName = $("#addNewDeaparment_deaparmentName").val();
 	var deaparmentCode = $("#addNewDeaparment_deaparmentCode").val();
+	var iskk =getNormalSelectValue("iskk");
+	var ispk =getNormalSelectValue("ispk");
 	
 	if(deaparmentName===""){
 		toastr.warning('请输入系部名称');
@@ -821,9 +838,13 @@ function getDeaparmentInfo(){
 		toastr.warning('请输入系部编码');
 		return;
 	}
-
-	
 	var newDeaparmentObject=new Object();
+	if(iskk!==""){
+		newDeaparmentObject.iskk=iskk;
+	}
+	if(ispk!==""){
+		newDeaparmentObject.ispk=ispk;
+	}
 	newDeaparmentObject.xbmc=deaparmentName;
 	newDeaparmentObject.xbbm=deaparmentCode;
 	return newDeaparmentObject;

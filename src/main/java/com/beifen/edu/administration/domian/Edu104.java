@@ -19,11 +19,10 @@ public class Edu104 {
 	private  String xbmc;//系部名称
 	private  String xbbm;//系部编码
 	private  String yxbz;//有效标志
-	
-	
-	
-	
-	
+	private  String iskk;//是否为开课部门
+	private  String ispk;//是否为排课部门
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -53,17 +52,20 @@ public class Edu104 {
 	public void setYxbz(String yxbz) {
 		this.yxbz = yxbz;
 	}
-	
 
-	
+	public String getIskk() {
+		return iskk;
+	}
 
+	public void setIskk(String iskk) {
+		this.iskk = iskk;
+	}
 
+	public String getIspk() {
+		return ispk;
+	}
 
-	
-	
-
-	
-
-	
-	
+	public void setIspk(String ispk) {
+		this.ispk = ispk;
+	}
 }
