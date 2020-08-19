@@ -426,7 +426,7 @@ $(function() {
 	ShortcutsButtonBind();
 	drawAuthorityGroup();
 	loadNotices();
-	
+	loadChoosendShortcuts();
 	//返回首页事件绑定
 	$('.backIndex').unbind('click');
 	$('.backIndex').bind('click', function(e) {
