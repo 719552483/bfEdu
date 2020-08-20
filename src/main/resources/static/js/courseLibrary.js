@@ -319,9 +319,9 @@ function comfirmmodifyCourseInfo(row){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/updateClass",
+		url : "/addNewClass",
 		data: {
-             "updateinfo":JSON.stringify(newClassObject),
+             "newClassInfo":JSON.stringify(newClassObject),
 			 "approvalobect":JSON.stringify(getApprovalobect("01"))
         },
 		dataType : 'json',
@@ -335,18 +335,10 @@ function comfirmmodifyCourseInfo(row){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.nameHave){
-					toastr.warning('课程名称已存在');
-					return;
-				}
-				if(backjson.codeHave){
-					toastr.warning('课程代码已存在');
-					return;
-				}
+			hideloding();
+			if (backjson.code === 200) {
 				$.hideModal("#addNewClassModal");
-				newClassObject.lrsj=backjson.currentTimeStamp;
+				newClassObject.lrsj=backjson.date.currentTimeStamp;
 				newClassObject.zt="noStatus";
 				newClassObject.shr=null;
 				newClassObject.shrID=null;
@@ -355,12 +347,12 @@ function comfirmmodifyCourseInfo(row){
 					id: row.bf200_ID,
 					row: newClassObject
 				});
-				toastr.success('修改专业课程成功');
+				toastr.success(backjson.mg);
 				$("#addNewClass_calssManger").removeAttr("mangerId");
 				$(".myTooltip").tooltipify();
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -433,25 +425,21 @@ function comfirmAddNewClass(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.nameHave){
-					toastr.warning('课程名称已存在');
-					return;
-				}
-				newClassObject.bf200_ID=backjson.newId;
-				newClassObject.kcdm=backjson.kcdm;
-				newClassObject.zt=backjson.zt;
-				newClassObject.lrsj=backjson.lrsj;
+			hideloding();
+			if (backjson.code == 200) {
+				newClassObject.bf200_ID=backjson.data.newId;
+				newClassObject.kcdm=backjson.data.kcdm;
+				newClassObject.zt=backjson.data.zt;
+				newClassObject.lrsj=backjson.data.lrsj;
 				newClassObject.kcfzr=$("#addNewClass_calssManger").val();
 				$('#courseLibraryTable').bootstrapTable("prepend", newClassObject);
-				toastr.success('新增专业课程成功');
+				toastr.success(backjson.msg);
 				$.hideModal("#addNewClassModal");
 				$("#addNewClass_calssManger").removeAttr("mangerId");
 				$(".myTooltip").tooltipify();
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -775,17 +763,17 @@ function confirmRemoveClasses(idArray){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if (backjson.code === 200) {
 				for (var i = 0; i < idArray.length; i++) {
 					$("#courseLibraryTable").bootstrapTable('removeByUniqueId', idArray[i]);
 				}
 				$.hideModal("");
-				toastr.success('操作成功');
+				toastr.success(backjson.msg);
 				toolTipUp(".myTooltip");
 				drawPagination(".courseLibraryTableArea", "课程信息");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -805,11 +793,11 @@ function startSearch(){
 	}
 	
 	var serachObject=new Object();
-	courseCode===""?serachObject.courseCode="":serachObject.courseCode=courseCode;
-	courseName===""?serachObject.courseName="":serachObject.courseName=courseName;
-	markName===""?serachObject.markName="":serachObject.markName=markName;
-	coursesNature==="seleceConfigTip"?serachObject.coursesNature="":serachObject.coursesNature=coursesNature;
-	status==="seleceConfigTip"?serachObject.status="":serachObject.status=status;
+	courseCode===""?serachObject.kcdm="":serachObject.kcdm=courseCode;
+	courseName===""?serachObject.kcmc="":serachObject.kcmc=courseName;
+	markName===""?serachObject.bzzymc="":serachObject.bzzymc=markName;
+	coursesNature==="seleceConfigTip"?serachObject.ccxzCode="":serachObject.ccxzCode=coursesNature;
+	status==="seleceConfigTip"?serachObject.zt="":serachObject.zt=status;
 	
 	// 发送查询所有用户请求
 	$.ajax({
@@ -830,16 +818,13 @@ function startSearch(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.classList.length===0){
-					toastr.warning('暂无数据');
-					 drawCourseLibraryEmptyTable();
-					return;
-				}
-				stuffCourseLibraryTable(backjson.classList);
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
+				stuffCourseLibraryTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawCourseLibraryEmptyTable();
 			}
 		}
 	});
@@ -1019,35 +1004,39 @@ function confirmImportNewClass(){
         processData : false, // 使数据不做处理
         contentType : false, // 不要设置Content-Type请求头
         success: function(backjosn){
-        	$(".fileLoadingArea").hide();
-    		if(!backjosn.isExcel){
-    			showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
-    		   return
-    		}
-    		if(!backjosn.sheetCountPass){
-    			showImportErrorInfo("#importNewClassModal","上传文件的标签页个数不正确");
-    		   return
-    		}
-    		if(!backjosn.modalPass){
-    			showImportErrorInfo("#importNewClassModal","模板格式与原始模板不对应");
-    		   return
-    		}
-    		if(!backjosn.haveData){
-    			showImportErrorInfo("#importNewClassModal","文件暂无数据");
-    		   return
-    		}
-    		if(!backjosn.dataCheck){
-    			showImportErrorInfo("#importNewClassModal",backjosn.checkTxt);
-    		   return
-    		}
-    		
-    		var importClasses=backjosn.importClasses;
-    		for (var i = 0; i <importClasses.length; i++) {
-				$('#courseLibraryTable').bootstrapTable("prepend", importClasses[i]);
-    		}
-			toastr.success('导入成功');
-			toolTipUp(".myTooltip");
-			$.hideModal("#importNewClassModal");
+        	if(backjosn.code === 200) {
+				$(".fileLoadingArea").hide();
+				if(!backjosn.data.isExcel){
+					showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
+					return
+				}
+				if(!backjosn.data.sheetCountPass){
+					showImportErrorInfo("#importNewClassModal","上传文件的标签页个数不正确");
+					return
+				}
+				if(!backjosn.data.modalPass){
+					showImportErrorInfo("#importNewClassModal","模板格式与原始模板不对应");
+					return
+				}
+				if(!backjosn.data.haveData){
+					showImportErrorInfo("#importNewClassModal","文件暂无数据");
+					return
+				}
+				if(!backjosn.data.dataCheck){
+					showImportErrorInfo("#importNewClassModal",backjosn.data.checkTxt);
+					return
+				}
+
+				var importClasses=backjosn.data.importClasses;
+				for (var i = 0; i <importClasses.length; i++) {
+					$('#courseLibraryTable').bootstrapTable("prepend", importClasses[i]);
+				}
+				toastr.success(backjosn.msg);
+				toolTipUp(".myTooltip");
+				$.hideModal("#importNewClassModal");
+			} else {
+				toastr.warning(backjosn.msg);
+			}
         },beforeSend: function(xhr) {
            $(".fileLoadingArea").show();
 		},
@@ -1249,34 +1238,39 @@ function confirmModifyClasses(){
         processData : false, // 使数据不做处理
         contentType : false, // 不要设置Content-Type请求头
         success: function(backjosn){
-        	$(".fileLoadingArea").hide();
-    		if(!backjosn.isExcel){
-    			showImportErrorInfo("#modifyClassesModal","请上传xls或xlsx类型的文件");
-    		   return
-    		}
-    		if(!backjosn.sheetCountPass){
-    			showImportErrorInfo("#modifyClassesModal","上传文件的标签页个数不正确");
-    		   return
-    		}
-    		if(!backjosn.modalPass){
-    			showImportErrorInfo("#modifyClassesModal","模板格式与原始模板不对应");
-    		   return
-    		}
-    		if(!backjosn.haveData){
-    			showImportErrorInfo("#modifyClassesModal","文件暂无数据");
-    		   return
-    		}
-    		if(!backjosn.dataCheck){
-    			showImportErrorInfo("#modifyClassesModal",backjosn.checkTxt);
-    		   return
-    		}
-    		var choosendClasses = backjosn.modifyClassesInfo;
-    		for (var i = 0; i < choosendClasses.length; i++) {
-    			$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosendClasses[i].bf200_ID, row: choosendClasses[i]});
-    		}
-			toastr.success('批量更新成功');
-	        $.hideModal("#modifyClassesModal");
-	        toolTipUp(".myTooltip");
+        	if(backjosn.code === 200) {
+				$(".fileLoadingArea").hide();
+				if(!backjosn.data.isExcel){
+					showImportErrorInfo("#modifyClassesModal","请上传xls或xlsx类型的文件");
+					return
+				}
+				if(!backjosn.data.sheetCountPass){
+					showImportErrorInfo("#modifyClassesModal","上传文件的标签页个数不正确");
+					return
+				}
+				if(!backjosn.data.modalPass){
+					showImportErrorInfo("#modifyClassesModal","模板格式与原始模板不对应");
+					return
+				}
+				if(!backjosn.data.haveData){
+					showImportErrorInfo("#modifyClassesModal","文件暂无数据");
+					return
+				}
+				if(!backjosn.data.dataCheck){
+					showImportErrorInfo("#modifyClassesModal",backjosn.data.checkTxt);
+					return
+				}
+				var choosendClasses = backjosn.data.modifyClassesInfo;
+				for (var i = 0; i < choosendClasses.length; i++) {
+					$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosendClasses[i].bf200_ID, row: choosendClasses[i]});
+				}
+				toastr.success(backjosn.msg);
+				$.hideModal("#modifyClassesModal");
+				toolTipUp(".myTooltip");
+			} else {
+				toastr.warning(backjosn.msg);
+			}
+
         },beforeSend: function(xhr) {
            $(".fileLoadingArea").show();
 		},
@@ -1339,14 +1333,14 @@ function confirmStopClass(choosedCrouseArray,choosedCrouse){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				for (var i = 0; i < choosedCrouse.length; i++) {
 					$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosedCrouse[i], row: choosedCrouse[i]});
 				}
 				$.hideModal("#remindModal");
-				toastr.success('课程停用流转成功');
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

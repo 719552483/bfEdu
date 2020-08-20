@@ -85,7 +85,7 @@ public class ResultVO<T> {
      * @return ResultVO
      */
     public static <T> ResultVO setApprovalFailed(String msg, T data) {
-        return new ResultVO(500, msg, data);
+        return new ResultVO(501, msg, data);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ResultVO<T> {
      * @return ResultVO
      */
     public static <T> ResultVO setApprovalFailed(String msg) {
-        return new ResultVO(500, msg);
+        return new ResultVO(501, msg);
     }
 
     public Integer getCode() {

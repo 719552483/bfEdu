@@ -503,27 +503,27 @@ function startSearch(){
 	var markName=$("#markName").val();
 	var coursesNature=getNormalSelectValue("coursesNature");
 	var status=getNormalSelectValue("status");
-	
+
 	if(courseCode===""&&courseName===""&&markName===""&&coursesNature===""&&status===""){
 		toastr.warning('请输入检索条件');
 		return;
 	}
-	
+
 	var serachObject=new Object();
-	courseCode===""?serachObject.courseCode="":serachObject.courseCode=courseCode;
-	courseName===""?serachObject.courseName="":serachObject.courseName=courseName;
-	markName===""?serachObject.markName="":serachObject.markName=markName;
-	coursesNature==="seleceConfigTip"?serachObject.coursesNature="":serachObject.coursesNature=coursesNature;
-	status==="seleceConfigTip"?serachObject.status="":serachObject.status=status;
-	
+	courseCode===""?serachObject.kcdm="":serachObject.kcdm=courseCode;
+	courseName===""?serachObject.kcmc="":serachObject.kcmc=courseName;
+	markName===""?serachObject.bzzymc="":serachObject.bzzymc=markName;
+	coursesNature==="seleceConfigTip"?serachObject.ccxzCode="":serachObject.ccxzCode=coursesNature;
+	status==="seleceConfigTip"?serachObject.zt="":serachObject.zt=status;
+
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/librarySeacchClass",
 		data: {
-             "SearchCriteria":JSON.stringify(serachObject) 
-        },
+			"SearchCriteria":JSON.stringify(serachObject)
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -535,16 +535,13 @@ function startSearch(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.classList.length===0){
-					toastr.warning('暂无数据');
-					 drawCourseLibraryEmptyTable();
-					return;
-				}
-				stuffCourseLibraryTable(backjson.classList);
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
+				stuffCourseLibraryTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawCourseLibraryEmptyTable();
 			}
 		}
 	});

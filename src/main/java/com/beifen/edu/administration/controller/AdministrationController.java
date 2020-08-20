@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
+import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.*;
 import org.apache.commons.fileupload.*;
@@ -53,90 +54,21 @@ public class AdministrationController {
 	StaffManageService staffManageService;
 
 	/**
-	 * 新增课程
+	 * 新增修改课程
 	 * @param addinfo
 	 * @param approvalobect
 	 * @return
 	 */
 	@RequestMapping("addNewClass")
 	@ResponseBody
-	public Object addNewClass(@RequestParam("newClassInfo") String addinfo,@RequestParam("approvalobect") String approvalobect) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO addNewClass(@RequestParam("newClassInfo") String addinfo, @RequestParam("approvalobect") String approvalobect) {
 		JSONObject jsonObject = JSONObject.fromObject(addinfo);
 		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
 		Edu200 addClassInfo = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.
-				class);
-		List<Edu200> allClass = administrationPageService.queryAllClass();
-		// 判断课程名称和代码是否已存在
-		boolean nameHave = false;
-		for (int i = 0; i < allClass.size(); i++) {
-			if (allClass.get(i).getKcmc().equals(addClassInfo.getKcmc())) {
-				nameHave = true;
-				break;
-			}
-		}
-
-		// 不存在则往数据库新增课程
-		if (!nameHave) {
-			String newClassStatus = "passing";
-			String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
-			long currentTimeStamp = System.currentTimeMillis();
-			addClassInfo.setKcdm(kcdm);
-			addClassInfo.setLrsj(currentTimeStamp);
-			addClassInfo.setZt(newClassStatus);
-			administrationPageService.addNewClass(addClassInfo);
-			edu600.setBusinessKey(addClassInfo.getBF200_ID());
-			approvalProcessService.initiationProcess(edu600);
-			Long id = addClassInfo.getBF200_ID();
-			returnMap.put("newId", id);
-			returnMap.put("kcdm", kcdm);
-			returnMap.put("lrsj", currentTimeStamp);
-			returnMap.put("zt", newClassStatus);
-		}
-		returnMap.put("result", true);
-		returnMap.put("nameHave", nameHave);
-		return returnMap;
-	}
-
-	/**
-	 * 课程库修改课程
-	 * @param updateinfo
-	 * @return
-	 */
-	@RequestMapping("updateClass")
-	@ResponseBody
-	public Object updateClass(@RequestParam("updateinfo") String updateinfo,@RequestParam("approvalobect") String approvalobect) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
-		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
-		Edu200 edu200 = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.class);
-		List<Edu200> allClass = administrationPageService.queryAllClass();
-		// 判断课程名称和代码是否已存在
-		boolean nameHave = false;
-		for (int i = 0; i < allClass.size(); i++) {
-			if (!allClass.get(i).getBF200_ID().equals(edu200.getBF200_ID())
-					&& allClass.get(i).getKcmc().equals(edu200.getKcmc())) {
-				nameHave = true;
-				break;
-			}
-		}
-		returnMap.put("nameHave", nameHave);
-		// 不存在则修改数据
-		if (!nameHave) {
-			long currentTimeStamp = System.currentTimeMillis();
-			edu200.setLrsj(currentTimeStamp);
-			edu200.setZt("passing");
-			administrationPageService.updateClass(edu200);
-			edu600.setBusinessKey(edu200.getBF200_ID());
-			approvalProcessService.initiationProcess(edu600);
-			returnMap.put("currentTimeStamp", currentTimeStamp);
-		}
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.addNewClass(edu600,addClassInfo);
+		return result;
 	}
-
 
 	/**
 	 * 课程库停用课程
@@ -145,17 +77,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("stopClass")
 	@ResponseBody
-	public Object stopClass(@RequestParam("choosedCrouse") String choosedCrouse) {
-		Map<String, Object> returnMap = new HashMap();
-		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(choosedCrouse);
-		for (int i = 0; i < deleteArray.size(); i++) {
-			administrationPageService.stopClass(deleteArray.get(i).toString());
-		}
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO  stopClass(@RequestParam("choosedCrouse") String choosedCrouse) {
+		List<String> stopList = JSON.parseArray(choosedCrouse, String.class);
+		ResultVO resultVO = administrationPageService.stopClass(stopList);
+		return resultVO;
 	}
-
-
 
 	/**
 	 * 课程库搜索课程
@@ -165,61 +91,10 @@ public class AdministrationController {
 	@RequestMapping("librarySeacchClass")
 	@ResponseBody
 	public Object librarySeacchClass(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
-		Edu200 edu200 = new Edu200();
-		edu200.setKcdm(jsonObject.getString("courseCode"));
-		edu200.setKcmc(jsonObject.getString("courseName"));
-		edu200.setBzzymc(jsonObject.getString("markName"));
-		edu200.setKcxzCode(jsonObject.getString("coursesNature"));
-		edu200.setZt(jsonObject.getString("status"));
-		List<Edu200> classList = administrationPageService.librarySeacchClass(edu200);
-		returnMap.put("result", true);
-		returnMap.put("classList", classList);
-		return returnMap;
-	}
-
-	/**
-	 * 修改课程库课程是判断是否存在培养计划
-	 * @param modifyInfo
-	 * @return
-	 */
-	@RequestMapping("librarymodifyClassByID")
-	@ResponseBody
-	public Object changeClassStatusById(@RequestParam String modifyInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		// modifyInfo转json对象
-		JSONObject jsonObject = new JSONObject().fromObject(modifyInfo);
-		// 获得更改的状态
-		String modifyStatus = jsonObject.getString("modifyStatus");
-		// 获得更改的课程
-		JSONArray classArray = jsonObject.getJSONArray("choosedClasses");
-		// 获得审核人id
-		Long approvalPersonID = Long.valueOf(jsonObject.getString("approvalPersonID"));
-		// 获得审核人
-		String approvalPerson = jsonObject.getString("approvalPerson");
-		// 获得审核时间戳
-		long approvalTime = System.currentTimeMillis();
-
-		// 查询课程是否存在培养计划
-		for (int i = 0; i < classArray.size(); i++) {
-			boolean notInPlan = administrationPageService.classIsInCurturePlan(classArray.get(i).toString());
-			if (notInPlan && !modifyStatus.equals("pass")) {
-				returnMap.put("notInPlan", notInPlan);
-				returnMap.put("result", true);
-				return returnMap;
-			}
-		}
-
-		// 不存在修改
-		for (int i = 0; i < classArray.size(); i++) {
-			administrationPageService.modifyClassById(classArray.get(i).toString(), modifyStatus, approvalPerson,
-					approvalPersonID, approvalTime);
-		}
-		returnMap.put("result", true);
-		returnMap.put("approvalTime", approvalTime);
-		returnMap.put("notInPlan", false);
-		return returnMap;
+		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+		Edu200 edu200 = JSON.toJavaObject(jsonObject, Edu200.class);
+		ResultVO result = administrationPageService.librarySeacchClass(edu200);
+		return result;
 	}
 
 	/**
@@ -256,19 +131,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("libraryReomveClassByID")
 	@ResponseBody
-	public Object deleteOperationCodeing(@RequestParam String deleteIds) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = new JSONObject().fromObject(deleteIds);
-		// 获得删除的课程
-		JSONArray classArray = jsonObject.getJSONArray("deleteIdArray");
-
-		for (int i = 0; i < classArray.size(); i++) {
-			administrationPageService.removeLibraryClass(classArray.get(i).toString());
-		}
-
-		returnMap.put("result", true);
-		returnMap.put("notInPlan", false);
-		return returnMap;
+	public ResultVO libraryReomveClassByID(@RequestParam String deleteIds) {
+		List<String> removeIdList = JSON.parseArray(deleteIds, String.class);
+		ResultVO resultVO = administrationPageService.libraryReomveClassByID(removeIdList);
+		return resultVO;
 	}
 
 	/**
@@ -279,52 +145,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("importNewClass")
 	@ResponseBody
-	public Object importNewClass(HttpServletRequest request) throws Exception {
+	public ResultVO importNewClass(HttpServletRequest request) {
 		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-		MultipartFile file = multipartRequest.getFile("file"); //文件流
-		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
-		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
-		//格式化录入人信息
-		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
-		String lrrmc=jsonObject.getString("lrr");
-		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
-		//格式化审批流信息
-		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-
-		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
-
-		boolean modalPass = (boolean) returnMap.get("modalPass");
-		if (!modalPass) {
-			return returnMap;
-		}
-
-		if(!returnMap.get("dataCheck").equals("")){
-			boolean dataCheck = (boolean) returnMap.get("dataCheck");
-			if (!dataCheck) {
-				return returnMap;
-			}
-		}
-
-		if(!returnMap.get("importClasses").equals("")){
-			List<Edu200> importClasses = (List<Edu200>) returnMap.get("importClasses");
-			String newClassStatus = "passing";
-			for (int i = 0; i < importClasses.size(); i++) {
-				Edu200 edu200 = importClasses.get(i);
-				String kcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
-				long currentTimeStamp = System.currentTimeMillis();
-
-				edu200.setKcdm(kcdm);
-				edu200.setLrsj(currentTimeStamp);
-				edu200.setZt(newClassStatus);
-				edu200.setLrr(lrrmc);
-				edu200.setLrrID(lrrId);
-				administrationPageService.addNewClass(edu200);
-				edu600.setBusinessKey(importClasses.get(i).getBF200_ID());
-				approvalProcessService.initiationProcess(edu600);
-			}
-		}
-		return returnMap;
+		ResultVO resultVO = administrationPageService.importNewClass(multipartRequest);
+		return resultVO;
 	}
 
 	/**
@@ -336,7 +160,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("downloadModifyClassesModal")
 	@ResponseBody
-	public void downloadModifyClassesModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyClassesIDs") String modifyClassesIDs) throws IOException, ParseException {
+	public ResultVO downloadModifyClassesModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyClassesIDs") String modifyClassesIDs) throws IOException, ParseException {
 		// 根据ID查询已选学生信息
 		com.alibaba.fastjson.JSONArray modifyTeacherArray = JSON.parseArray(modifyClassesIDs);
 		List<Edu200> chosedClasses=new ArrayList<Edu200>();
@@ -355,6 +179,8 @@ public class AdministrationController {
 		XSSFWorkbook workbook  = new XSSFWorkbook();
 		utils.createModifyClassesModal(workbook,chosedClasses);
 		utils.loadModal(response,fileName, workbook);
+		ResultVO result = ResultVO.setSuccess("下载成功");
+		return result;
 	}
 
 
@@ -385,50 +211,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("modifyClassess")
 	@ResponseBody
-	public Object modifyClassess(HttpServletRequest request) throws Exception {
+	public ResultVO modifyClassess(HttpServletRequest request) throws Exception {
 		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-		MultipartFile file = multipartRequest.getFile("file"); //文件流
-		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
-		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
-		//格式化录入人信息
-		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
-		String lrrmc=jsonObject.getString("lrr");
-		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
-		//格式化审批流信息
-		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
-
-		Map<String, Object> returnMap = utils.checkNewClassFile(file, "ModifyEdu200", "已选课程信息");
-		boolean modalPass = (boolean) returnMap.get("modalPass");
-		if (!modalPass) {
-			return returnMap;
-		}
-
-		if(!returnMap.get("dataCheck").equals("")){
-			boolean dataCheck = (boolean) returnMap.get("dataCheck");
-			if (!dataCheck) {
-				return returnMap;
-			}
-		}
-		List<Edu200> updateClasses=new ArrayList<Edu200>();
-		if(!returnMap.get("importClasses").equals("")){
-			updateClasses= (List<Edu200>) returnMap.get("importClasses");
-			for (int i = 0; i < updateClasses.size(); i++) {
-				Edu200 edu200 =updateClasses.get(i);
-				long currentTimeStamp = System.currentTimeMillis();
-				edu200.setLrsj(currentTimeStamp);
-				edu200.setZt("passing");
-				edu200.setLrr(lrrmc);
-				edu200.setLrrID(lrrId);
-				edu200.setShr(null);
-				edu200.setShrID(null);
-				administrationPageService.updateClass(edu200);
-				edu600.setBusinessKey(updateClasses.get(i).getBF200_ID());
-				approvalProcessService.initiationProcess(edu600);
-			}
-			returnMap.put("modifyClassesInfo", updateClasses);
-		}
-		return returnMap;
+		ResultVO result = administrationPageService.modifyClassess(multipartRequest);
+		return result;
 	}
 
 
@@ -440,7 +226,6 @@ public class AdministrationController {
 	public Object getJxPublicCodes() {
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("allXn", administrationPageService.queryAllXn());
-//		returnMap.put("allkj", administrationPageService.queryDefaultkjsz());
 		returnMap.put("result", true);
 		return returnMap;
 	}

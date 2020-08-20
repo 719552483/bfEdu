@@ -9,9 +9,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.beifen.edu.administration.PO.*;
+import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 
 @Configuration
@@ -71,6 +75,8 @@ public class AdministrationPageService {
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
+	@Autowired
+	private ApprovalProcessService approvalProcessService;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -649,12 +655,6 @@ public class AdministrationPageService {
 	}
 
 
-
-	// 课程库新增课程
-	public void addNewClass(Edu200 edu200) {
-		edu200DAO.save(edu200);
-	}
-
 	// 查询课程库所有课程
 	public List<Edu200> queryAllClass() {
 		return edu200DAO.findAll();
@@ -687,8 +687,22 @@ public class AdministrationPageService {
 	}
 
 	// 根据id删除课程
-	public void removeLibraryClass(String id) {
-		edu200DAO.removeLibraryClassById(id);
+	public ResultVO libraryReomveClassByID(List<String> removeIdList) {
+		ResultVO resultVO;
+		for (String s : removeIdList) {
+			List<Edu108> planByEdu200Id = edu108DAO.findPlanByEdu200Id(s);
+			if(planByEdu200Id.size() != 0) {
+				resultVO = ResultVO.setFailed("所选课程有的存在培养计划，无法删除");
+				return resultVO;
+			}
+		}
+
+		for (String s : removeIdList) {
+			edu200DAO.removeLibraryClassById(s);
+		}
+
+		resultVO = ResultVO.setSuccess("共计删除了"+removeIdList.size()+"门课程");
+		return resultVO;
 	}
 
 
@@ -1035,7 +1049,8 @@ public class AdministrationPageService {
 	}
 
 	// 课程库搜索课程
-	public List<Edu200> librarySeacchClass(final Edu200 edu200) {
+	public ResultVO librarySeacchClass(final Edu200 edu200) {
+		ResultVO resultVO;
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1058,7 +1073,13 @@ public class AdministrationPageService {
 			}
 		};
 		List<Edu200> courseEntities = edu200DAO.findAll(specification);
-		return courseEntities;
+
+		if(courseEntities.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无符合要求的数据");
+		}else {
+			resultVO = ResultVO.setSuccess("共找到"+courseEntities.size()+"门课程",courseEntities);
+		}
+		return resultVO;
 	}
 
 	// 搜索教师
@@ -1319,8 +1340,13 @@ public class AdministrationPageService {
 	}
 
 	//停用课程
-	public void stopClass(String Edu200id) {
-		edu200DAO.updateState(Edu200id,"stop");
+	public ResultVO stopClass(List<String> stopList) {
+		ResultVO resultVO;
+		for (String  s : stopList) {
+			edu200DAO.updateState(s,"stop");
+		}
+		resultVO = ResultVO.setSuccess("停用了"+stopList.size()+"个课程");
+		return resultVO;
 	}
 
 	//查询全部行政班
@@ -1424,6 +1450,91 @@ public class AdministrationPageService {
 		return returnMap;
 	}
 
+	/**
+	 * 新增修改课程
+	 * @param edu600
+	 * @param edu200
+	 * @return
+	 */
+	public ResultVO addNewClass(Edu600 edu600, Edu200 edu200) {
+		ResultVO resultVO;
+		Boolean isAdd = false;
+
+		//保留原始数据
+		Edu200 oldEdu200 = new Edu200();
+		try {
+			utils.copyParm(edu200,oldEdu200);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+
+		// 判断课程名称和代码是否已存在
+		List<Edu200> edu200List = findCourseByKcmdOrKcdm(edu200);
+		if(edu200List.size() != 0) {
+			resultVO = ResultVO.setFailed("课程库存在课程名称或课程代码相同课程，请修改");
+			return resultVO;
+		}
+		//如果为新增，赋予必要属性
+		if(edu200.getBF200_ID() == null){
+			isAdd = true;
+			String newClassStatus = "passing";
+			String newkcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
+			edu200.setKcdm(newkcdm);
+			edu200.setZt(newClassStatus);
+		}else {
+			//查询是否有培养计划正在使用该课程
+			List<Edu108> edu108List = edu108DAO.findPlanByEdu200Id(edu200.getBF200_ID().toString());
+			if(edu108List.size() != 0) {
+				resultVO = ResultVO.setFailed("存在培养计划正在使用课程，不可修改");
+				return resultVO;
+			}
+		}
+
+		long currentTimeStamp = System.currentTimeMillis();
+		edu200.setLrsj(currentTimeStamp);
+		edu200DAO.save(edu200);
+		edu600.setBusinessKey(edu200.getBF200_ID());
+
+		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+		if(!isSuccess){
+			if(isAdd) {
+				edu200DAO.delete(edu200.getBF200_ID());
+			} else {
+				edu200DAO.save(oldEdu200);
+			}
+			resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员处理");
+			return resultVO;
+		}
+
+		resultVO = ResultVO.setSuccess("操作成功",edu200);
+		return resultVO;
+	}
+
+	public  List<Edu200> findCourseByKcmdOrKcdm(Edu200 edu200){
+		Specification<Edu200> specification = new Specification<Edu200>() {
+			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu200.getBF200_ID() != null && !"".equals(edu200.getBF200_ID())) {
+					predicates.add(cb.notEqual(root.<String> get("BF200_ID"), edu200.getBF200_ID()));
+				}
+				if (edu200.getKcmc() != null && !"".equals(edu200.getKcmc())) {
+					predicates.add(cb.equal(root.<String> get("kcmc"), edu200.getKcmc()));
+				}
+				if (edu200.getKcdm() != null && !"".equals(edu200.getKcdm())) {
+					predicates.add(cb.equal(root.<String> get("kcdm"), edu200.getKcdm()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu200> edu200List = edu200DAO.findAll(specification);
+		return edu200List;
+	}
+
 	//查询所有开课部门
 	public List<Edu104> queryAllKkbm() {
 		return edu104DAO.queryAllKkbm();
@@ -1432,5 +1543,157 @@ public class AdministrationPageService {
 	//查询所有排课部门
 	public List<Edu104> queryAllPkbm() {
 		return edu104DAO.queryAllPkbm();
+	}
+
+
+	/**
+	 *导入课程
+	 * @param multipartRequest
+	 * @return
+	 */
+	public ResultVO importNewClass(MultipartHttpServletRequest multipartRequest) {
+		ResultVO resultVO;
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化录入人信息
+		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+		String lrrmc=jsonObject.getString("lrr");
+		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+
+		Map<String, Object> returnMap = null;
+		try {
+			returnMap = utils.checkNewClassFile(file, "ImportClass", "导入课程信息");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			resultVO = ResultVO.setFailed("模版错误，导入失败",returnMap);
+			return resultVO;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				resultVO = ResultVO.setFailed("数据格式有误，请修改后重试",returnMap);
+				return resultVO;
+			}
+		}
+
+		Integer count = 0;
+		List<String> saveIds = new ArrayList<>();
+		if(!returnMap.get("importClasses").equals("")){
+			List<Edu200> importClasses = (List<Edu200>) returnMap.get("importClasses");
+			count = importClasses.size();
+			for (int i = 0; i < importClasses.size(); i++) {
+				Edu200 edu200 = importClasses.get(i);
+				edu200.setLrr(lrrmc);
+				edu200.setLrrID(lrrId);
+				ResultVO result = addNewClass(edu600, edu200);
+				if (result.getCode() == 500) {
+					resultVO = ResultVO.setFailed("数据导入失败");
+					if(saveIds.size() != 0) {
+						edu200DAO.deleteByIds(saveIds);
+					}
+					return resultVO;
+				} else if(result.getCode() == 501) {
+					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+					if(saveIds.size() != 0) {
+						edu200DAO.deleteByIds(saveIds);
+					}
+					return resultVO;
+				}
+				saveIds.add(edu200.getBF200_ID().toString());
+			}
+		}
+
+		resultVO = ResultVO.setSuccess("成功导入了"+count+"门课程",returnMap);
+		return resultVO;
+	}
+
+	/**
+	 * 批量修改课程
+	 * @param multipartRequest
+	 * @return
+	 * @throws Exception
+	 */
+	public ResultVO modifyClassess(MultipartHttpServletRequest multipartRequest) {
+		ResultVO resultVO;
+		MultipartFile file = multipartRequest.getFile("file"); //文件流
+		String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
+		//格式化录入人信息
+		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+		String lrrmc=jsonObject.getString("lrr");
+		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		//格式化审批流信息
+		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
+
+		Map<String, Object> returnMap = null;
+		try {
+			returnMap = utils.checkNewClassFile(file, "ModifyEdu200", "已选课程信息");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		boolean modalPass = (boolean) returnMap.get("modalPass");
+		if (!modalPass) {
+			resultVO = ResultVO.setFailed("模版错误，导入失败",returnMap);
+			return resultVO;
+		}
+
+		if(!returnMap.get("dataCheck").equals("")){
+			boolean dataCheck = (boolean) returnMap.get("dataCheck");
+			if (!dataCheck) {
+				resultVO = ResultVO.setFailed("数据格式有误，请修改后重试",returnMap);
+				return resultVO;
+			}
+		}
+
+
+		Integer count = 0;
+		List<Edu200> saveList = new ArrayList<>();
+		List<Edu200> updateClasses;
+		if(!returnMap.get("importClasses").equals("")){
+			updateClasses= (List<Edu200>) returnMap.get("importClasses");
+			count = updateClasses.size();
+			for (int i = 0; i < updateClasses.size(); i++) {
+				Edu200 edu200 =updateClasses.get(i);
+				//保留原始数据
+				Edu200 oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
+				edu200.setLrr(lrrmc);
+				edu200.setLrrID(lrrId);
+				edu200.setShr(null);
+				edu200.setShrID(null);
+				ResultVO result = addNewClass(edu600, edu200);
+				if (result.getCode() == 500) {
+					resultVO = ResultVO.setFailed("数据导入失败");
+					if(saveList.size() != 0) {
+						for (Edu200 e : saveList) {
+							edu200DAO.save(e);
+						}
+					}
+					return resultVO;
+				} else if(result.getCode() == 501) {
+					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+					if(saveList.size() != 0) {
+						for (Edu200 e : saveList) {
+							edu200DAO.save(e);
+						}
+					}
+					return resultVO;
+				}
+				saveList.add(oldEdu200);
+			}
+			returnMap.put("modifyClassesInfo", updateClasses);
+		}
+
+		resultVO = ResultVO.setSuccess("成功修改了"+count+"门课程",returnMap);
+		return resultVO;
 	}
 }

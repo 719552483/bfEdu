@@ -43,4 +43,11 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	//根据教学点名称查询课程ID
 	@Query(value = "select edu202_ID from edu202 e where e.skddmc=?1", nativeQuery = true)
     List<String> findIdByJxdmc(String jxdmc);
+
+
+	// 根据id集合删除课程
+	@Transactional
+	@Modifying
+	@Query(value = "delete from edu200 where bf200_ID in ?1", nativeQuery = true)
+    void deleteByIds(List<String> saveIds);
 }

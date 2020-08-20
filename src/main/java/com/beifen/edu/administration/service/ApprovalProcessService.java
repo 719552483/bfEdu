@@ -68,7 +68,7 @@ public class ApprovalProcessService {
         //保存审批信息
         Edu600 newEdu600 = edu600DAO.save(edu600);
         //保存历史审批记录
-        saveApprovalHistory(edu600, "0");
+        Edu601 edu601 = saveApprovalHistory(edu600, "0");
 
 //        if("05".equals(edu600.getBusinessType())) {
 //            edu001Dao.updateState(edu600.getBusinessKey().toString(),"007", "休学申请中");
@@ -80,7 +80,11 @@ public class ApprovalProcessService {
         //开始流转
         isSuccess = processFlow(newEdu600, "1");
 
-        return isSuccess;
+        if(!isSuccess) {
+            edu601Dao.delete(edu601.getEdu601Id());
+        }
+
+       return isSuccess;
 
     }
 
@@ -90,9 +94,8 @@ public class ApprovalProcessService {
      * @param approvalFlag
      * @return
      */
-    public boolean saveApprovalHistory(Edu600 edu600,String approvalFlag) {
+    public Edu601 saveApprovalHistory(Edu600 edu600,String approvalFlag) {
         //初始化成功标识和审批历史记录实体类
-        boolean isSuccess = true;
         Edu601 edu601 = new Edu601();
 
         //复制属性并存储历史审批记录
@@ -100,17 +103,14 @@ public class ApprovalProcessService {
             BeanUtils.copyProperties(edu601, edu600);
             edu601.setUpdateDate(new Date());
             edu601.setApprovalResult(approvalFlag);
-            Edu601 save = edu601Dao.save(edu601);
-            if(save == null) {
-                isSuccess = false;
-            }
+            edu601Dao.save(edu601);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
 
-        return isSuccess;
+        return edu601;
 
     }
 
@@ -132,6 +132,7 @@ public class ApprovalProcessService {
             Edu602 edu602 = edu602Dao.selectNextRole(businessType, lastRole.toString());
             if(edu602 == null) {
                 isSuccess =  false;
+                return isSuccess;
             } else {
                 //更新同意审批信息
                 edu600.setCurrentRole(edu602.getNextRole());
@@ -143,6 +144,7 @@ public class ApprovalProcessService {
                 Edu600 save = edu600DAO.save(edu600);
                 if(save == null){
                     isSuccess = false;
+                    return isSuccess;
                 }
             }
         } else if("2".equals(approvalFlag)) {
@@ -157,6 +159,7 @@ public class ApprovalProcessService {
             Edu600 save = edu600DAO.save(edu600);
             if(save == null){
                 isSuccess = false;
+                return isSuccess;
             }
         } else if("3".equals(approvalFlag)){
            //更新追回审批信息
@@ -197,9 +200,11 @@ public class ApprovalProcessService {
            Edu600 save = edu600DAO.save(edu600);
            if(save == null){
                isSuccess = false;
+               return isSuccess;
            }
        } else {
            isSuccess = false;
+           return isSuccess;
        }
 
 
