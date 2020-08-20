@@ -43,6 +43,8 @@ public class TeachingManageService {
     @Autowired
     Edu302Dao edu302Dao;
     @Autowired
+    Edu108Dao edu108Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     TeachingScheduleViewDao teachingScheduleViewDao;
@@ -438,4 +440,38 @@ public class TeachingManageService {
 
         return map;
     }
+
+
+    /**
+     * 课表详情查询
+     * @param classId
+     * @param edu108Id
+     * @return
+     */
+    public ResultVO getScheduleInfoDetail(String classId, String edu108Id) {
+        ResultVO resultVO;
+        Map<String, Object> returnMap = new HashMap();
+
+        List<String> edu300IdList = edu302Dao.findEdu300IdsByEdu301Id(classId);
+        if (edu300IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到符合要求的行政班");
+            return resultVO;
+        }
+
+        List<Edu001> studentList = edu001Dao.getStudentInEdu300(edu300IdList);
+        if (studentList.size() == 0) {
+            resultVO = ResultVO.setFailed("教学班内暂无学生");
+            return resultVO;
+        }
+
+        Edu108 edu108 = edu108Dao.queryPlanByEdu108ID(edu108Id);
+
+        returnMap.put("studentList", studentList);
+        returnMap.put("planInfo", edu108);
+
+        resultVO = ResultVO.setSuccess("查询成功", returnMap);
+
+        return resultVO;
+    }
 }
+

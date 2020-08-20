@@ -104,7 +104,7 @@ public class TeachingManageController {
     }
 
     /**
-     * 教师课程表查询
+     * 学生课程表查询
      * @param searchObject
      * @return
      */
@@ -116,6 +116,21 @@ public class TeachingManageController {
         JSONObject jsonObject = JSONObject.parseObject(searchObject);
         TimeTablePO timeTable = JSONObject.toJavaObject(jsonObject, TimeTablePO.class);
         result = teachingManageService.getStudentScheduleInfo(timeTable);
+        return result;
+    }
+
+    /**
+     * 课表详情查询
+     * @param classId
+     * @param edu108Id
+     * @return
+     */
+    @RequestMapping("/getScheduleInfoDetail")
+    @ResponseBody
+    public ResultVO getScheduleInfoDetail(@RequestParam("classId") String classId, @RequestParam("edu108Id") String edu108Id) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        result = teachingManageService.getScheduleInfoDetail(classId,edu108Id);
         return result;
     }
 

@@ -9,6 +9,7 @@ public class ResultVO<T> {
 
     public static Integer SUCCESS_CODE = 200;
     public static Integer FAILED_CODE = 500;
+    public static Integer APPROVAL_FAILED = 501;
 
     private Integer code;
     private String msg;
@@ -75,28 +76,28 @@ public class ResultVO<T> {
         return new ResultVO(500, msg, data);
     }
 
-
     /**
-     * 用户未登录
+     * 审批发起失败  状态 501
      *
-     * @param <T> 类型
+     * @param msg  返回信息
+     * @param data 返回数据
+     * @param <T>  类型
      * @return ResultVO
      */
-    public static <T> ResultVO setNoLogin() {
-        return new ResultVO(501, "用户未登录，请重新登录");
+    public static <T> ResultVO setApprovalFailed(String msg, T data) {
+        return new ResultVO(500, msg, data);
     }
-
 
     /**
-     * 用户没有操作权限
+     * 审批发起失败  状态 501
      *
-     * @param <T> 类型
+     * @param msg  返回信息
+     * @param <T>  类型
      * @return ResultVO
      */
-    public static <T> ResultVO getNoAuthorization() {
-        return new ResultVO(502, "用户没有操作权限，请重新登录");
+    public static <T> ResultVO setApprovalFailed(String msg) {
+        return new ResultVO(500, msg);
     }
-
 
     public Integer getCode() {
         return code;

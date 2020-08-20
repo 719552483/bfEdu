@@ -80,4 +80,8 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//根据用户ID查找学生信息
 	@Query(value = "select e.* from Edu992 d, Edu001 e, Edu990 f where d.BF990_ID = f.BF990_ID and f.user_key = e.edu001_ID and d.BF990_ID = ?1", nativeQuery = true)
 	Edu001 getStudentInfoByEdu990Id(String currentUserId);
+
+	//查询行政班所有学生
+	@Query(value = "select e.* from Edu001 e where e.edu300_ID in ?1",nativeQuery = true)
+	List<Edu001> getStudentInEdu300(List<String> edu300IdList);
 }

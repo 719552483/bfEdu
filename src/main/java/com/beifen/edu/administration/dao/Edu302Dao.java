@@ -22,7 +22,11 @@ public interface Edu302Dao extends JpaRepository<Edu302, Long>, JpaSpecification
     @Query(value = "select * from edu302 where Edu301_ID =?1", nativeQuery = true)
     List<Edu302> findClassByEdu301ID(String edu301_id);
 
-    //根据教学班查询行政班
+    //根据行政班查询教学班id集合
     @Query(value = "select e.Edu301_ID from edu302 e where Edu300_ID =?1", nativeQuery = true)
     List<Long> findEdu301IdsByEdu300Id(String edu300_id);
+
+    //根据教学班查询行政班id集合
+    @Query(value = "select e.Edu300_ID from edu302 e where Edu301_ID =?1", nativeQuery = true)
+    List<String> findEdu300IdsByEdu301Id(String classId);
 }
