@@ -10,9 +10,25 @@ $(function() {
 		changeRCurrentRole(e);
 		e.stopPropagation();
 	});
-
+	loadUserInfo();
 	stuffCurrenRoleName();
 })
+
+/*
+加载用户信息
+*/
+function loadUserInfo() {
+	//渲染用户信息
+	var userInfo = JSON.parse($.session.get('userInfo'));
+	$(parent.frames["topFrame"].document).find(".user").find("span").attr("userId",userInfo.bF990_ID); // frame获取父窗
+	$(parent.frames["topFrame"].document).find(".user").find("span").html(userInfo.yhm); // frame获取父窗
+	if(userInfo.scdlsj==="fristTime"){
+		$(".welinfo:eq(1)").hide();
+	}else{
+		$(".welinfo:eq(1)").find("i").html("您上次登录的时间："+userInfo.scdlsj);
+		$(".welinfo:eq(1)").show();
+	}
+}
 
 //填充当前角色名称
 function stuffCurrenRoleName(){
