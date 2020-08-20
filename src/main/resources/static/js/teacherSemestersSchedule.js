@@ -3,6 +3,7 @@ $(function() {
 	drawScheduleClassesEmptyTable();
 	btnBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	$("input[type='number']").inputSpinner();
 });
 
 //获取学期信息
@@ -231,41 +232,81 @@ function singleScheduleAction(eve) {
 
 //获取课程详情
 function getScheduleDetails(eve){
-	stuffScheduleDetails();
 	 var classId=eve.currentTarget.attributes[3].nodeValue;;
      var edu108Id=eve.currentTarget.attributes[4].nodeValue;
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "/teacherGetScheduleDetails",
-	// 	data:{
-	// 		"classId":classId,
-	// 		"edu108Id":edu108Id
-	// 	},
-	// 	dataType: 'json',
-	// 	beforeSend: function (xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function (textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function (xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success: function (backjson) {
-	// 		hideloding();
-	// 		if (backjson.code===200) {
-	// 			stuffScheduleDetails();
-	// 		} else {
-	// 			toastr.warning(backjson.msg);
-	// 		}
-	// 	}
-	// });
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getScheduleInfoDetail",
+		data:{
+			"classId":classId,
+			"edu108Id":edu108Id
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffScheduleDetails(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //渲染课表详情
-function stuffScheduleDetails(){
+function stuffScheduleDetails(data){
 	$.showModal("#scheduleInfoModal",false);
+	stuffStudentInfo(data.studentList);
+	stuffPlanDetails(data.planInfo);
+}
+
+// 显示详细信息并填充内容
+function stuffPlanDetails(row) {
+	$('#scheduleInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+	$("#majorTrainingDetails_code").val(row.kcdm);
+	$("#majorTrainingDetails_coursesName").val(row.kcmc);
+	$("#majorTrainingDetails_allhours").val(row.zxs);
+	$("#majorTrainingDetails_credits").val(row.xf);
+	$("#majorTrainingDetails_theoryHours").val(row.llxs);
+	$("#majorTrainingDetails_practiceHours").val(row.sjxs);
+	$("#majorTrainingDetails_disperseHours").val(row.fsxs);
+	$("#majorTrainingDetails_centralizedHours").val(row.jzxs);
+	$("#majorTrainingDetails_weekHours").val(row.zhouxs);
+	$("#majorTrainingDetails_weekCounts").val(row.zzs);
+	$("#majorTrainingDetails_classType").val(row.kclx);
+	$("#majorTrainingDetails_coursesNature").val(row.kcxz);
+	$("#majorTrainingDetails_testWay").val(row.ksfs);
+	$("#majorTrainingDetails_classQuality").val(row.kcsx);
+	$("#majorTrainingDetails_feedback").val(row.fkyj);
+	$("#majorTrainingDetails_startEndWeek").val(row.qzz);
+	$("#majorTrainingDetails_midtermPrcent").val(row.qzcjbl);
+	$("#majorTrainingDetails_endtermPrcent").val(row.qmcjbl);
+	$("#majorTrainingDetails_isNewClass").val(row.sfxk);
+	$("#majorTrainingDetails_calssWay").val(row.skfs);
+	$("#majorTrainingDetails_isSchoolBusiness").val(row.xqhz);
+	$("#majorTrainingDetails_signatureCourseLevel").val(row.jpkcdj);
+	$("#majorTrainingDetails_isKernelClass").val(row.zyhxkc);
+	$("#majorTrainingDetails_isTextual").val(row.zyzgkzkc);
+	$("#majorTrainingDetails_isCalssTextual").val(row.kztrkc);
+	$("#majorTrainingDetails_isTeachingReform").val(row.jxgglxkc);
+}
+
+//填充学生
+function stuffStudentInfo(studentList){
+	$(".singleRecordsArea").empty();
+	for (var i = 0; i < studentList.length; i++) {
+		$(".singleRecordsArea").append('<div id="'+studentList[i].edu001_ID+'" class="col5 singleTeacher'+studentList[i].edu001_ID+' singleTeacher recordsImg2">'+studentList[i].xm+'</div>');
+	}
 }
 
 

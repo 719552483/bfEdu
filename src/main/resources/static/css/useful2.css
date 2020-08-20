@@ -1787,14 +1787,17 @@ margin: 0px 0px -14px -15px!important;
 	min-height: 120px;
 	overflow: hidden;
 	overflow-y: auto;
-	float: right;
-	width: 78%;
 	background-color: rgba(183, 215, 232, 0.050980392156862744);
 	border: 1px solid rgba(211, 234, 241, 0.07058823529411765);
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
+}
+
+.teacherBusiness_singleRecordsArea{
+	float: right;
+	width: 78%;
 }
 
 .reChooseTeacher .toolbar,.reChooseTeacher .toolbar li{
