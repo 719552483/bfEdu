@@ -1423,4 +1423,14 @@ public class AdministrationPageService {
 		returnMap.put("scheduleCompletedDetails",scheduleCompletedDetails);
 		return returnMap;
 	}
+
+	//查询所有开课部门
+	public List<Edu104> queryAllKkbm() {
+		return edu104DAO.queryAllKkbm();
+	}
+
+	//查询所有排课部门
+	public List<Edu104> queryAllPkbm() {
+		return edu104DAO.queryAllPkbm();
+	}
 }

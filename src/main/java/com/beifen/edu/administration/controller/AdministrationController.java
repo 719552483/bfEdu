@@ -2548,12 +2548,14 @@ public class AdministrationController {
 	 * 获得部门信息
 	 * @return returnMap
 	 */
-	@RequestMapping("getKkbmInfo")
+	@RequestMapping("getPkAndKkInfo")
 	@ResponseBody
-	public Object getKkbmInfo(@RequestParam("ejdmGlzd") String ejdmGlzd) {
+	public Object getKkbmInfo() {
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu000> bmInfo = administrationPageService.queryEjdm(ejdmGlzd);
-		returnMap.put("bmInfo", bmInfo);
+		List<Edu104> kkbm = administrationPageService.queryAllKkbm();
+		List<Edu104> pkbm = administrationPageService.queryAllPkbm();
+		returnMap.put("kkbm", kkbm);
+		returnMap.put("pkbm", pkbm);
 		returnMap.put("result", true);
 		return returnMap;
 	}

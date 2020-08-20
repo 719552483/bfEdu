@@ -1,4 +1,4 @@
-var roleOptionStr="";//全局变量接收当前所有部门
+var roleOptionObject=new Object();//全局变量接收当前所有部门
 $(function() {
 	drawTaskEmptyTable();
 	binBind();
@@ -10,18 +10,24 @@ function getBmInfo(){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/getKkbmInfo",
-		data: {
-            "ejdmGlzd":"kcbm"
-        },
+		url : "/getPkAndKkInfo",
 		dataType : 'json',
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				roleOptionStr='<option value="seleceConfigTip">请选择部门</option>';
-				for (var i = 0; i < backjson.bmInfo.length; i++) {
-					roleOptionStr += '<option value="' +  backjson.bmInfo[i].bf000_ID + '">' +  backjson.bmInfo[i].ejdmz + '</option>';
+				var roleOptionStr='<option value="seleceConfigTip">请选择部门</option>';
+				var kkbm=backjson.kkbm;
+				for (var i = 0; i < kkbm.length; i++) {
+					roleOptionStr += '<option value="' + kkbm[i].edu104_ID + '">' +  kkbm[i].xbmc + '</option>';
 				}
+				roleOptionObject.kkbm=roleOptionStr;
+
+				roleOptionStr='<option value="seleceConfigTip">请选择部门</option>';
+				var pkbm=backjson.pkbm;
+				for (var i = 0; i < pkbm.length; i++) {
+					roleOptionStr += '<option value="' + pkbm[i].edu104_ID + '">' +  pkbm[i].xbmc + '</option>';
+				}
+				roleOptionObject.pkbm=roleOptionStr;
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -138,8 +144,8 @@ function stuffTaskInfoTable(tableInfo) {
 				field: 'kkbm',
 				title: '开课部门',
 				align: 'left',
-				formatter: paramsMatter
-
+				formatter: kkbmMatter,
+				clickToSelect: false
 			},	{
 				field: 'pkbm',
 				title: '排课部门',
@@ -179,13 +185,36 @@ function stuffTaskInfoTable(tableInfo) {
 	}
 	
 	function pkbmMatter(value, row, index) {
-		return [
-				'<span title="'+row.pkbm+'" class="myTooltip pkbmTxt pkbmTxt' + index + '">' + row.pkbm + '</span><select class="myTableSelect myTableSelect' +
-				index + '" id="pkbmSelect'+index+'">' + roleOptionStr + '</select>'
+		if(typeof value==="undefined"){
+			return [
+				'<span title="'+row.pkbm+'" class="myTooltip pkbmTxt pkbmTxt' + index + '"></span><select class="myTableSelect myTableSelect' +
+				index + '" id="pkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
 			]
-			.join('');
+				.join('');
+		}else{
+			return [
+				'<span title="'+row.pkbm+'" class="myTooltip pkbmTxt pkbmTxt' + index + '">' + row.pkbm + '</span><select class="myTableSelect myTableSelect' +
+				index + '" id="pkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
+			]
+				.join('');
+		}
 	}
-	
+
+	function kkbmMatter(value, row, index) {
+		if(typeof value==="undefined"){
+			return [
+				'<span title="'+row.kkbm+'" class="myTooltip kkbmTxt kkbmTxt' + index + '"></span><select class="myTableSelect mykkbmTableSelect' +
+				index + '" id="kkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
+			]
+				.join('');
+		}else{
+			return [
+				'<span title="'+row.kkbm+'" class="myTooltip kkbmTxt kkbmTxt' + index + '">' + row.kkbm + '</span><select class="myTableSelect mykkbmTableSelect' +
+				index + '" id="kkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
+			]
+				.join('');
+		}
+	}
 
 	drawPagination(".scheduleClassesTableArea", "教学任务书");
 	drawSearchInput(".scheduleClassesTableArea");
@@ -205,6 +234,8 @@ function onDblClickScheduleClassesTable(row, $element, field){
 		getLsInfo('#scheduleClassesTable',index,"zyls");
 	}else if(field==="pkbm"){
 		wantChangePKBM(index,"pkbm");
+	}else if(field==="kkbm"){
+		wantChangeKkBM(index,"kkbm");
 	}else{
 		return;
 	}
@@ -212,16 +243,24 @@ function onDblClickScheduleClassesTable(row, $element, field){
 
 //预备改变排课部门1
 function wantChangePKBM(index,cellName){
+	if($("#pkbmSelect" + index).find("option").length<=1){
+		toastr.warning('暂无排课部门');
+		return;
+	}
 	$('.pkbmTxt' + index).hide();
 	$(".myTableSelect" + index).show();
 	changePKBM("#pkbmSelect" + index,'.pkbmTxt' + index,".myTableSelect" + index,"#scheduleClassesTable",index,cellName);
 }
 
-//预备改变排课部门2
-function wantChangePutOutPKBM(index,cellName){
-	$('.putOutTaskpkbmTxt' + index).hide();
-	$(".myputOutTaskTableSelect" + index).show();
-	changePKBM("#putOutTaskpkbmSelect" + index,'.putOutTaskpkbmTxt' + index,".myputOutTaskTableSelect" + index,"#putOutTaskTable",index,cellName);
+//预备改变开课部门1
+function wantChangeKkBM(index,cellName){
+	if($("#kkbmSelect" + index).find("option").length<=1){
+		toastr.warning('暂无开课部门');
+		return;
+	}
+	$('.kkbmTxt' + index).hide();
+	$(".mykkbmTableSelect" + index).show();
+	changePKBM("#kkbmSelect" + index,'.kkbmTxt' + index,".mykkbmTableSelect" + index,"#scheduleClassesTable",index,cellName);
 }
 
 //改变排课部门
@@ -534,7 +573,7 @@ function putOutTasksfxylcjMatter(value, row, index) {
 
 //指定老师格式化
 function pointTeacherMatter(value, row, index) {
-	if (value===""||typeof(value) === "undefined"||value===null){
+	if (value===""||typeof(value) === "undefined"||value===null||value==='null'){
 		return [
               '<div class="myTooltip redTxt" title="暂未指定老师,双击选择">暂未指定老师</div>'
 			]
@@ -707,7 +746,7 @@ function changsfxylcj(tableid,inputid,index){
 }
 
 //单个发布任务书
-function putOut(row,index){
+function putOut(row){
 	var putOutArray=new Array();
 	var putOutObject=new Object();
 	putOutObject.edu301_ID=row.edu301_ID;
@@ -786,36 +825,16 @@ function checkPutOutInfo(putOutArray){
 
 //发送发布任务书的请求
 function sendPutOutInfo(putOutArray){
-	for (var i = 0; i < putOutArray.length; i++) {
-		var classList=new Array();
-		var teacherList=new Array();
-		var baseTeacherList=new Array();
-		var teacheOb=new Object();
-		var zyteacheOb=new Object();
-		var classOb=new Object();
-		zyteacheOb.zyls=putOutArray[i].zyls.split(",");
-		zyteacheOb.zylsmc=putOutArray[i].zylsmc.split(",");
-		teacheOb.ls=putOutArray[i].ls.split(",");
-		teacheOb.lsmc=putOutArray[i].lsmc.split(",");
-		classOb.edu301_ID=putOutArray[i].edu301_ID;
-		classOb.jxbmc=putOutArray[i].jxbmc;
-		classList.push(classOb);
-		teacherList.push(teacheOb);
-		baseTeacherList.push(zyteacheOb);
-		putOutArray[i].classList=classList;
-		putOutArray[i].teacherList=teacherList;
-		putOutArray[i].baseTeacherList=baseTeacherList;
-		putOutArray[i].edu201_ID="";
+	var info=getTasKInfo(putOutArray);
+	for (var i = 0; i <info.length ; i++) {
+		info[i].edu201_ID="";
 	}
-
-
-
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/putOutTask",
 		data: {
-            "taskInfo":JSON.stringify(putOutArray) ,
+			"taskInfo":JSON.stringify(info) ,
 			"approvalInfo":JSON.stringify(getApprovalobect())
 		},
 		dataType : 'json',
@@ -832,7 +851,7 @@ function sendPutOutInfo(putOutArray){
 			hideloding();
 			if (backjson.result) {
 				for (var i = 0; i < putOutArray.length; i++) {
-					$("#scheduleClassesTable").bootstrapTable("remove", {field: "jxbmc", values: putOutArray[i].jxbmc}); 
+					$("#scheduleClassesTable").bootstrapTable("remove", {field: "jxbmc", values: putOutArray[i].jxbmc});
 				}
 				$.hideModal("#remindModal");
 				toastr.success('发布任务书成功');
@@ -841,6 +860,57 @@ function sendPutOutInfo(putOutArray){
 			}
 		}
 	});
+}
+
+//获取任务书对象
+function getTasKInfo(putOutArray){
+	for (var i = 0; i < putOutArray.length; i++) {
+		var classList=new Array();
+		var teacherList=new Array();
+		var baseTeacherList=new Array();
+		var teacheOb=new Object();
+		var zyteacheOb=new Object();
+		var classOb=new Object();
+		if(zyteacheOb.zyls!=null&&typeof zyteacheOb.zyls!=="undefined"){
+			zyteacheOb.zyls=putOutArray[i].zyls.split(",");
+			zyteacheOb.zylsmc=putOutArray[i].zylsmc.split(",");
+		}else{
+			zyteacheOb.zyls=[""];
+			zyteacheOb.zylsmc=[""];
+		}
+
+		if(zyteacheOb.ls!=null&&typeof zyteacheOb.ls==="undefined"){
+			teacheOb.ls=putOutArray[i].ls.split(",");
+			teacheOb.lsmc=putOutArray[i].lsmc.split(",");
+		}else{
+			teacheOb.ls=[""];
+			teacheOb.lsmc=[""];
+		}
+		classOb.edu301_ID=putOutArray[i].edu301_ID;
+		classOb.jxbmc=putOutArray[i].jxbmc;
+		classList.push(classOb);
+		teacherList.push(teacheOb);
+		baseTeacherList.push(zyteacheOb);
+		putOutArray[i].classList=classList;
+		putOutArray[i].teacherList=teacherList;
+		putOutArray[i].baseTeacherList=baseTeacherList;
+		if(typeof putOutArray[i].pkbm==="undefined"){
+			putOutArray[i].pkbm='';
+			putOutArray[i].pkbmCode='';
+		}else{
+			putOutArray[i].pkbm=putOutArray[i].pkbm;
+			putOutArray[i].pkbmCode=putOutArray[i].pkbmCode;
+		}
+
+		if(typeof putOutArray[i].kkbm==="undefined"){
+			putOutArray[i].kkbm='';
+			putOutArray[i].kkbmCode='';
+		}else{
+			putOutArray[i].kkbm=putOutArray[i].kkbm;
+			putOutArray[i].kkbmCode=putOutArray[i].kkbmCode;
+		}
+	}
+	return  putOutArray;
 }
 
 //查看已发布任务书
@@ -983,8 +1053,8 @@ function stuffPutOutTaskTable(tableInfo) {
 				field: 'kkbm',
 				title: '开课部门',
 				align: 'left',
-				formatter: paramsMatter
-
+				formatter: putOutTaskkkbmMatter,
+				clickToSelect: false
 			},	{
 				field: 'pkbm',
 				title: '排课部门',
@@ -1033,13 +1103,37 @@ function stuffPutOutTaskTable(tableInfo) {
 	}
 	
 	function putOutTaskpkbmMatter(value, row, index) {
-		return [
-				'<span title="'+row.pkbm+'" class="myTooltip putOutTaskpkbmTxt putOutTaskpkbmTxt' + index + '">' + row.pkbm + '</span><select class="myTableSelect myputOutTaskTableSelect' +
-				index + '" id="putOutTaskpkbmSelect'+index+'">' + roleOptionStr + '</select>'
+		if(value ==null||value ==="null"){
+			return [
+				'<span title="'+row.pkbm+'" class="myTooltip normalTxt putOutTaskpkbmTxt putOutTaskpkbmTxt' + index + '">暂未安排</span><select class="myTableSelect myputOutTaskTableSelect' +
+				index + '" id="putOutTaskpkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
 			]
-			.join('');
+				.join('');
+		}else{
+			return [
+				'<span title="'+row.pkbm+'" class="myTooltip putOutTaskpkbmTxt putOutTaskpkbmTxt' + index + '">' + row.pkbm + '</span><select class="myTableSelect myputOutTaskTableSelect' +
+				index + '" id="putOutTaskpkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
+			]
+				.join('');
+		}
 	}
-	
+
+	function putOutTaskkkbmMatter(value, row, index) {
+		if(value ==null||value ==="null"){
+			return [
+				'<span title="'+row.kkbm+'" class="myTooltip normalTxt putOutTaskkkbmTxt putOutTaskkkbmTxt' + index + '">暂未安排</span><select class="myTableSelect mykkbmputOutTaskTableSelect' +
+				index + '" id="putOutTaskkkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
+			]
+				.join('');
+		}else{
+			return [
+				'<span title="'+row.kkbm+'" class="myTooltip putOutTaskkkbmTxt putOutTaskkkbmTxt' + index + '">' + row.kkbm + '</span><select class="myTableSelect mykkbmputOutTaskTableSelect' +
+				index + '" id="putOutTaskkkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
+			]
+				.join('');
+		}
+	}
+
 	
 	function ztMatter(value, row, index) {
 		if (row.sszt==="pass") {
@@ -1076,9 +1170,25 @@ function onDblClickputOutTaskTable(row, $element, field){
 		getLsInfo('#putOutTaskTable',index,"zylsmc");
 	}else if(field==="pkbm"){
 		wantChangePutOutPKBM(index,"pkbm");
+	}else if(field==="kkbm") {
+		wantChangePutOutKKBM(index, "kkbm");
 	}else{
 		return;
 	}
+}
+
+//预备改变排课部门2
+function wantChangePutOutPKBM(index,cellName){
+	$('.putOutTaskpkbmTxt' + index).hide();
+	$(".myputOutTaskTableSelect" + index).show();
+	changePKBM("#putOutTaskpkbmSelect" + index,'.putOutTaskpkbmTxt' + index,".myputOutTaskTableSelect" + index,"#putOutTaskTable",index,cellName);
+}
+
+//预备改变开课部门2
+function wantChangePutOutKKBM(index,cellName){
+	$('.putOutTaskkkbmTxt' + index).hide();
+	$(".mykkbmputOutTaskTableSelect" + index).show();
+	changePKBM("#putOutTaskkkbmSelect" + index,'.putOutTaskkkbmTxt' + index,".mykkbmputOutTaskTableSelect" + index,"#putOutTaskTable",index,cellName);
 }
 
 //批量删除任务书
@@ -1194,7 +1304,7 @@ function modifyTask(row,index){
 			hideloding();
 			if (backjson.result) {
 				var edu201=backjson.taskInfo;
-				if(edu201.ls===row.ls&&edu201.zyls===row.zyls&&edu201.pkbmCode===row.pkbmCode&&edu201.sfxylcj===row.sfxylcj){
+				if(edu201.kkbm===row.kkbm&&edu201.pkbm===row.pkbm&&edu201.ls===row.ls&&edu201.zyls===row.zyls&&edu201.pkbmCode===row.pkbmCode&&edu201.sfxylcj===row.sfxylcj){
 					toastr.warning('该教学任务书暂未进行任何修改');
 					return;
 				}
@@ -1208,36 +1318,17 @@ function modifyTask(row,index){
 
 //确认修改任务书
 function comfirmModifyTask(row,index){
-	var sendArray=new Array();
-
 	if(row.sszt==="passing"){
 		toastr.warning('该任务书暂不可进行操作');
 		return ;
 	}
+	var infoArray=new Array();
+	infoArray.push(row);
+	var sendInfo=getTasKInfo(infoArray);
+	for (var i = 0; i < sendInfo.length; i++) {
+		sendInfo[i].edu201_ID=row.edu201_ID;
+	}
 
-	var classList=new Array();
-	var teacherList=new Array();
-	var baseTeacherList=new Array();
-	var teacheOb=new Object();
-	var zyteacheOb=new Object();
-	var classOb=new Object();
-	if(row.zyls!=null){
-		zyteacheOb.zyls=row.zyls.split(",");
-		zyteacheOb.zylsmc=row.zylsmc.split(",");
-	}
-	if(row.ls!=null){
-		teacheOb.ls=row.ls.split(",");
-		teacheOb.lsmc=row.lsmc.split(",");
-	}
-	classOb.edu301_ID=row.edu301_ID;
-	classOb.jxbmc=row.jxbmc;
-	classList.push(classOb);
-	teacherList.push(teacheOb);
-	baseTeacherList.push(zyteacheOb);
-	row.classList=classList;
-	row.teacherList=teacherList;
-	row.baseTeacherList=baseTeacherList;
-	sendArray.push(row);
 
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选任务书");
@@ -1251,7 +1342,7 @@ function comfirmModifyTask(row,index){
 			cache : false,
 			url : "/putOutTask",
 			data: {
-				"taskInfo":JSON.stringify(sendArray) ,
+				"taskInfo":JSON.stringify(infoArray) ,
 				"approvalInfo":JSON.stringify(getApprovalobect())
 	        },
 			dataType : 'json',
@@ -1319,7 +1410,6 @@ function startSearchPutOutTasks(){
 		}
 	});
 }
-
 
 //页面展示区域控制
 function mainAreaControl(){

@@ -35,4 +35,11 @@ public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecification
 	@Query(value = "select * from edu104 where Edu104_ID =?1", nativeQuery = true)
 	public Edu104 query104BYID(String edu104id);
 
+	//查询所有排课部门
+	@Query(value = "select * from edu104 e where e.iskk ='T'", nativeQuery = true)
+    List<Edu104> queryAllKkbm();
+
+	//查询所有排课部门
+	@Query(value = "select * from edu104 e where e.ispk ='T'", nativeQuery = true)
+	List<Edu104> queryAllPkbm();
 }

@@ -977,6 +977,7 @@ function saveTeachingClass() {
 				return;
 			}
 			var choosedTeaching = new Object();
+			choosedTeaching.edu301_ID = "";
 			choosedTeaching.edu108_ID = allClass[i].edu108_ID;
 			choosedTeaching.kcmc = allClass[i].kcmc;
 			choosedTeaching.jxbmc = allClass[i].jxbmc;
@@ -990,8 +991,8 @@ function saveTeachingClass() {
 			choosedTeaching.zymc = planInfo.majorTxt;
 			choosedTeaching.bhzyCode =allClass[i].zybm;
 			choosedTeaching.bhzymc =allClass[i].zymc ;
-			choosedTeaching.bhxzbCode =allClass[i].edu300_ID;
-			choosedTeaching.bhxzbmc =allClass[i].xzbmc;
+			choosedTeaching.bhxzbid =allClass[i].edu300_ID+',';
+			choosedTeaching.bhxzbmc =allClass[i].xzbmc+',';
 			choosedTeaching.bhxsxm = "";
 			choosedTeaching.bhxsCode ="";
 			choosedTeaching.sffbjxrws ="F";
@@ -1111,9 +1112,9 @@ function combinedClass() {
 	});
 }
 
-//保存教学班验证
+//保存教学班
 function verifySaveClass(choosedTeaching) {
-	verifyClassInfo("保存教学班",choosedTeaching,false);
+	confirmClassAction(choosedTeaching);
 }
 
 // 合班验证
