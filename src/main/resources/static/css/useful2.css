@@ -1782,7 +1782,7 @@ margin: 0px 0px -14px -15px!important;
 	text-indent: -10px;
 }
 
-.singleTeacherArea{
+.singleRecordsArea{
 	margin-top: -4px;
 	min-height: 120px;
 	overflow: hidden;
@@ -1806,7 +1806,7 @@ margin: 0px 0px -14px -15px!important;
 	padding-left: 130px;
 }
 
-.recordsInfoTeacherArea span{
+.recordsInfoArea span{
 	color: #3c3b3b;
 	font-weight: 500;
 	font-family: fantasy;

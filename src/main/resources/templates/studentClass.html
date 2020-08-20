@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>教师学期课表</title>
+		<title>学生课表查询</title>
 		<link href="css/loading.css" rel="stylesheet" type="text/css" />
 		<link href='css/bootstrap.min.css' media='all' rel='stylesheet' type='text/css' />
 		<link href='css/bootstrap-table.css' media='all' rel='stylesheet' type='text/css' />
@@ -28,7 +28,7 @@
 		<script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
 		<script src="sripts/jquerySession.js"></script>
 		<script type="text/javascript" src="js/implement.js"></script>
-		<script type="text/javascript" src="js/teacherSemestersSchedule.js"></script>
+		<script type="text/javascript" src="js/studentClass.js"></script>
 	</head>
 
 	<body>
@@ -37,8 +37,8 @@
 			<span>位置：</span>
 			<ul class="placeul myPlaceul">
 				<li><a href="index.html">首页</a></li>
-				<li><a>教师管理</a></li>
-				<li><a>教师学年课表</a></li>
+				<li><a>学生管理</a></li>
+				<li><a>学生课表查询</a></li>
 			</ul>
 		</div>
 
@@ -78,44 +78,29 @@
 			</div>
 </div>
 
+<!--			<div class="tip manyInfoShow courseDetailsTip">-->
+<!--				<div class="tiptop"><span class="courseDetails_Name"></span><cite class="tipCite">-学生列表</cite><a class="cancelTipBtn"></a></div>-->
+<!--				<div class="tipBody">-->
+<!--					<div class="tools">-->
+<!--						<ul class="toolbar">-->
+<!--							<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出点名Excel</li>-->
+<!--						</ul>-->
+<!--						<ul class="toolbar1">-->
+<!--							<li class="click" id=""><span><img src="images/i01.png" style="width: 24px;"/></span>导出Excel</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--					-->
+<!--					<div class="teacher_studentInfoTableArea searchGivePaddingR">-->
+<!--						<table class="tablelist myTableStyle" id="teacher_studentInfoTable" data-unique-id="id" style="margin-top: 10px;"></table>-->
+<!--					</div>-->
+<!--				</div>-->
 
-		<!-- 课表详情Modal -->
-		<div class="modal fade bs-example-modal-lg" id="scheduleInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">课程详情</span><a class="cancel" shape="rect"></a></div>
-					</div>
 
-					<div class="modal-body">
-						<div id="usual1" class="usual">
-							<div class="itab">
-								<ul>
-									<li><a href="#tab1" class="selected">课程信息</a></li>
-									<li><a href="#tab2">上课学生</a></li>
-								</ul>
-							</div>
+<!--				<div class="tipbtn">-->
+<!--					<input name="" type="button" class="cancel singleTipBtn" value="返回"/>-->
+<!--				</div>-->
+<!--			</div>-->
 
-							<div id="tab1" class="tabson myTabson">
-
-							</div>
-
-							<div id="tab2" class="tabson myTabson">
-								<div class="recordsInfoArea">
-									<div class="singleRecordsArea"></div>
-								</div>
-							</div>
-						</div>
-						<div class="clear"></div>
-					</div>
-
-					<div class="modal-footer tipbtn">
-						<input name="" type="button" class="sure confirmModifyBtn" value="确定"/>&nbsp;
-						<input name="" type="button" class="cancel" value="取消"/>
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<!-- 提示Modal -->
 		<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">

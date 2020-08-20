@@ -1,7 +1,6 @@
 $(function() {
 	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
-	btnBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 });
 
@@ -47,10 +46,10 @@ function getSemesterInfo() {
 
 //根据学年获取周的信息
 function getAllWeeks(){
-   var semester=getNormalSelectValue("semester");
-   if(semester===""){
-   	return;
-   }
+	var semester=getNormalSelectValue("semester");
+	if(semester===""){
+		return;
+	}
 	$.ajax({
 		method: 'get',
 		cache: false,
@@ -87,6 +86,42 @@ function getAllWeeks(){
 	});
 }
 
+//获取课程表信息
+function getScheduleClassesInfo() {
+	var searchObject=getScheduleSearchInfo();
+	if(typeof(searchObject) === "undefined"){
+		return;
+	}
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getStudentScheduleInfo",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffScheduleClassesTable(backjson.data.newInfo);
+			} else {
+				toastr.warning(backjson.msg);
+				drawScheduleClassesEmptyTable();
+			}
+		}
+	});
+
+}
+
 //填充空的课程表
 function drawScheduleClassesEmptyTable() {
 	var defaultClassPeriod = 12;
@@ -107,42 +142,6 @@ function drawScheduleClassesEmptyTable() {
 	stuffScheduleClassesTable(tableInfo);
 }
 
-//获取课程表信息
-function getScheduleClassesInfo() {
-	var searchObject=getScheduleSearchInfo();
-	if(typeof(searchObject) === "undefined"){
-		return;
-	}
-	$.ajax({
-		method: 'get',
-		cache: false,
-		url: "/getScheduleInfo",
-		data:{
-			"searchObject":JSON.stringify(searchObject)
-		},
-		dataType: 'json',
-		beforeSend: function (xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function (textStatus) {
-			requestError();
-		},
-		complete: function (xhr, status) {
-			requestComplete();
-		},
-		success: function (backjson) {
-			hideloding();
-			if (backjson.code===200) {
-				// drawStartAndEndWeek(backjson.data);
-				stuffScheduleClassesTable(backjson.data.newInfo);
-			} else {
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
-
-}
-
 //渲染课程表
 function stuffScheduleClassesTable(tableInfo) {
 	$('#scheduleClassesTable').bootstrapTable('destroy').bootstrapTable({
@@ -160,11 +159,11 @@ function stuffScheduleClassesTable(tableInfo) {
 		toolbar: '#toolbar',
 		showColumns: false,
 		columns: [{
-				field: 'id',
-				title: 'id',
-				align: 'left',
-				visible: false
-			},
+			field: 'id',
+			title: 'id',
+			align: 'left',
+			visible: false
+		},
 			{
 				field: 'classPeriod',
 				title: '课节数',
@@ -221,55 +220,6 @@ function stuffScheduleClassesTable(tableInfo) {
 	});
 }
 
-//课程点击事件
-function singleScheduleAction(eve) {
-	if (eve.currentTarget.childNodes.length === 0) {
-		return;
-	}
-	getScheduleDetails(eve);
-}
-
-//获取课程详情
-function getScheduleDetails(eve){
-	stuffScheduleDetails();
-	 var classId=eve.currentTarget.attributes[3].nodeValue;;
-     var edu108Id=eve.currentTarget.attributes[4].nodeValue;
-	// $.ajax({
-	// 	method: 'get',
-	// 	cache: false,
-	// 	url: "/teacherGetScheduleDetails",
-	// 	data:{
-	// 		"classId":classId,
-	// 		"edu108Id":edu108Id
-	// 	},
-	// 	dataType: 'json',
-	// 	beforeSend: function (xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function (textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function (xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success: function (backjson) {
-	// 		hideloding();
-	// 		if (backjson.code===200) {
-	// 			stuffScheduleDetails();
-	// 		} else {
-	// 			toastr.warning(backjson.msg);
-	// 		}
-	// 	}
-	// });
-}
-
-//渲染课表详情
-function stuffScheduleDetails(){
-	$.showModal("#scheduleInfoModal",false);
-}
-
-
-
 //获得课表检索对象
 function getScheduleSearchInfo(){
 	var currentUserId= $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
@@ -289,14 +239,4 @@ function getScheduleSearchInfo(){
 	returnObject.semester=semester;
 	returnObject.weekTime=weekTime;
 	return returnObject;
-}
-
-//初始化页面按钮绑定事件
-function btnBind() {
-	//提示框取消按钮
-	$('.cancelTipBtn,.cancel').unbind('click');
-	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$.hideModal();
-		e.stopPropagation();
-	});
 }

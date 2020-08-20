@@ -8,6 +8,7 @@ import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +48,8 @@ public class TeachingManageService {
     TeachingScheduleViewDao teachingScheduleViewDao;
     @Autowired
     StudentScheduleViewDao studentScheduleViewDao;
+
+    ReflectUtils utils = new ReflectUtils();
 
     /**
      * 搜索在职教师
@@ -249,8 +253,16 @@ public class TeachingManageService {
         } else {
             for (StudentSchoolTimetablePO o : studentSchoolTimetableList) {
                 SchoolTimetablePO s = new SchoolTimetablePO();
-                BeanUtils.copyProperties(s,o);
-                schoolTimetableList.add(s);
+                try {
+                    utils.copyParm(o,s);
+                    schoolTimetableList.add(s);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
             timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
             resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);

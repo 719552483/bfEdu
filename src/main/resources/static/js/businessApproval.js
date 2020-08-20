@@ -584,25 +584,25 @@ function stuffRecordInfo(row,unbind,imgName){
 	$("#recordsInfo_startUser").val(row.userName);
 	$("#recordsInfo_location").val(row.destination);
 	$("#recordsInfo_explain").val(row.businessExplain);
-	$(".singleTeacherArea").empty();
+	$(".singleRecordsArea").empty();
 
 	var Ids=row.teacherId.split(",");
 	var names=row.teacherName.split(",")
 	for (var i = 0; i < Ids.length; i++) {
-		$(".singleTeacherArea").append('<div id="'+Ids[i]+'" class="col5 singleTeacher'+Ids[i]+' singleTeacher '+imgName+'">'+names[i]+'</div>');
+		$(".singleRecordsArea").append('<div id="'+Ids[i]+'" class="col5 singleTeacher'+Ids[i]+' singleTeacher '+imgName+'">'+names[i]+'</div>');
 	}
 
 	if(unbind){
 		$('#recordsInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
-		$('.singleTeacherArea').unbind('click');
+		$('.singleRecordsArea').unbind('click');
 		$(".reChooseTeacher").hide();
 	}else{
 		$(".reChooseTeacher").show();
 		drawCalenr("#recordsInfo_startTime",true);
 		drawCalenr("#recordsInfo_endtTime",true);
 		$('#recordsInfoModal').find(".myInput").attr("disabled", false)
-		$('.singleTeacherArea').unbind('click');
-		$('.singleTeacherArea').bind('click', function(e) {
+		$('.singleRecordsArea').unbind('click');
+		$('.singleRecordsArea').bind('click', function(e) {
 			removeSingleTeacher(e);
 			e.stopPropagation();
 		});
@@ -611,12 +611,12 @@ function stuffRecordInfo(row,unbind,imgName){
 
 //删除记录中的教职工
 function removeSingleTeacher(eve){
-	if($(".singleTeacherArea").find(".singleTeacher").length===1){
+	if($(".singleRecordsArea").find(".singleTeacher").length===1){
 		toastr.warning('至少保留一名教职工');
 		return;
 	}
 	var id=eve.currentTarget.firstChild.id;
-	$(".singleTeacherArea").find(".singleTeacher"+id).remove();
+	$(".singleRecordsArea").find(".singleTeacher"+id).remove();
 }
 
 var choosendTeachers=new Array();
@@ -813,7 +813,7 @@ function confirmAddTeacher(){
 	}
 
 	for (var i = 0; i < choosed.length; i++) {
-		$(".singleTeacherArea").append('<div id="'+choosed[i].edu101_ID+'" class="col5 singleTeacher'+choosed[i].edu101_ID+' singleTeacher recordsImg1">'+choosed[i].xm+'</div>');
+		$(".singleRecordsArea").append('<div id="'+choosed[i].edu101_ID+'" class="col5 singleTeacher'+choosed[i].edu101_ID+' singleTeacher recordsImg1">'+choosed[i].xm+'</div>');
 	}
 	$.hideModal("#addTeacherModal",false);
 	$.showModal("#recordsInfoModal",true);

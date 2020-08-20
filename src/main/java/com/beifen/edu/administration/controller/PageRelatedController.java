@@ -170,4 +170,9 @@ public class PageRelatedController {
 	public String businessApprovalPage() {
 		return "businessApproval";
 	}
+
+	@RequestMapping("studentClass")
+	public String studentClassPage() {
+		return "studentClass";
+	}
 }
