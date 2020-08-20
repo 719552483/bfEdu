@@ -2,6 +2,8 @@ $(function() {
 	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	$("input[type='number']").inputSpinner();
+	btnBind();
 });
 
 //获取学期信息
@@ -239,4 +241,91 @@ function getScheduleSearchInfo(){
 	returnObject.semester=semester;
 	returnObject.weekTime=weekTime;
 	return returnObject;
+}
+
+//课程点击事件
+function singleScheduleAction(eve) {
+	if (eve.currentTarget.childNodes.length === 0) {
+		return;
+	}
+	getScheduleDetails(eve);
+}
+
+//获取课程详情
+function getScheduleDetails(eve){
+	var classId=eve.currentTarget.attributes[3].nodeValue;;
+	var edu108Id=eve.currentTarget.attributes[4].nodeValue;
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getScheduleInfoDetail",
+		data:{
+			"classId":classId,
+			"edu108Id":edu108Id
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffScheduleDetails(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//渲染课表详情
+function stuffScheduleDetails(data){
+	$.showModal("#scheduleInfoModal",false);
+	stuffPlanDetails(data.planInfo);
+}
+
+// 显示详细信息并填充内容
+function stuffPlanDetails(row) {
+	$('#scheduleInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+	$("#majorTrainingDetails_code").val(row.kcdm);
+	$("#majorTrainingDetails_coursesName").val(row.kcmc);
+	$("#majorTrainingDetails_allhours").val(row.zxs);
+	$("#majorTrainingDetails_credits").val(row.xf);
+	$("#majorTrainingDetails_theoryHours").val(row.llxs);
+	$("#majorTrainingDetails_practiceHours").val(row.sjxs);
+	$("#majorTrainingDetails_disperseHours").val(row.fsxs);
+	$("#majorTrainingDetails_centralizedHours").val(row.jzxs);
+	$("#majorTrainingDetails_weekHours").val(row.zhouxs);
+	$("#majorTrainingDetails_weekCounts").val(row.zzs);
+	$("#majorTrainingDetails_classType").val(row.kclx);
+	$("#majorTrainingDetails_coursesNature").val(row.kcxz);
+	$("#majorTrainingDetails_testWay").val(row.ksfs);
+	$("#majorTrainingDetails_classQuality").val(row.kcsx);
+	$("#majorTrainingDetails_feedback").val(row.fkyj);
+	$("#majorTrainingDetails_startEndWeek").val(row.qzz);
+	$("#majorTrainingDetails_midtermPrcent").val(row.qzcjbl);
+	$("#majorTrainingDetails_endtermPrcent").val(row.qmcjbl);
+	$("#majorTrainingDetails_isNewClass").val(row.sfxk);
+	$("#majorTrainingDetails_calssWay").val(row.skfs);
+	$("#majorTrainingDetails_isSchoolBusiness").val(row.xqhz);
+	$("#majorTrainingDetails_signatureCourseLevel").val(row.jpkcdj);
+	$("#majorTrainingDetails_isKernelClass").val(row.zyhxkc);
+	$("#majorTrainingDetails_isTextual").val(row.zyzgkzkc);
+	$("#majorTrainingDetails_isCalssTextual").val(row.kztrkc);
+	$("#majorTrainingDetails_isTeachingReform").val(row.jxgglxkc);
+}
+//初始化页面按钮绑定事件
+function btnBind() {
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
 }

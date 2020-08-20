@@ -134,9 +134,9 @@ function getScheduleClassesInfo() {
 		success: function (backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				// drawStartAndEndWeek(backjson.data);
 				stuffScheduleClassesTable(backjson.data.newInfo);
 			} else {
+				drawScheduleClassesEmptyTable()
 				toastr.warning(backjson.msg);
 			}
 		}
