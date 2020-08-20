@@ -408,7 +408,7 @@ function getSearchValue(){
 	return returnObject;
 }
 
-//外聘教师审批流对象
+//审批流对象
 function getApprovalobect(){
 	var approvalObject=new Object();
 	approvalObject.businessType="06";

@@ -175,4 +175,9 @@ public class PageRelatedController {
 	public String studentClassPage() {
 		return "studentClass";
 	}
+
+	@RequestMapping("techerStudentList")
+	public String techerStudentListPage() {
+		return "techerStudentList";
+	}
 }

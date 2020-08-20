@@ -1486,7 +1486,7 @@ function confirmGeneratAllClassAllCourse(generatObject) {
 function getApprovalobect(){
 	var approvalObject=new Object();
 	approvalObject.businessType="03";
-	approvalObject.proposerType=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	approvalObject.proposerType=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	approvalObject.approvalStyl="1";
 	return approvalObject;
