@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.beifen.edu.administration.domian.Edu101;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -75,4 +76,8 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "UPDATE edu001 set zt_code =?2, zt=?3  WHERE Edu001_ID =?1", nativeQuery = true)
     void updateState(String businessKey, String state, String stateName);
+
+	//根据用户ID查找学生信息
+	@Query(value = "select e.* from Edu992 d, Edu001 e, Edu990 f where d.BF990_ID = f.BF990_ID and f.user_key = e.edu001_ID and d.BF990_ID = ?1", nativeQuery = true)
+	Edu001 getStudentInfoByEdu990Id(String currentUserId);
 }

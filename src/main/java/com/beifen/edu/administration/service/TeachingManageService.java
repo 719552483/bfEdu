@@ -2,11 +2,13 @@ package com.beifen.edu.administration.service;
 
 
 import com.beifen.edu.administration.PO.SchoolTimetablePO;
+import com.beifen.edu.administration.PO.StudentSchoolTimetablePO;
 import com.beifen.edu.administration.PO.TimeTablePO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class TeachingManageService {
 
     @Autowired
+    Edu001Dao edu001Dao;
+    @Autowired
     Edu101Dao edu101Dao;
     @Autowired
     Edu992Dao edu992Dao;
@@ -35,9 +39,13 @@ public class TeachingManageService {
     @Autowired
     Edu990Dao edu990Dao;
     @Autowired
+    Edu302Dao edu302Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     TeachingScheduleViewDao teachingScheduleViewDao;
+    @Autowired
+    StudentScheduleViewDao studentScheduleViewDao;
 
     /**
      * 搜索在职教师
@@ -211,6 +219,39 @@ public class TeachingManageService {
         if(schoolTimetableList.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
         } else {
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
+            resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);
+        }
+        return resultVO;
+    }
+
+    /**
+     * 查询学生课表
+     * @param timeTable
+     * @return
+     */
+    public ResultVO getStudentScheduleInfo(TimeTablePO timeTable) {
+        ResultVO resultVO;
+        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+        Edu001 edu001 = edu001Dao.getStudentInfoByEdu990Id(timeTable.getCurrentUserId());
+        if(edu001 == null) {
+            resultVO = ResultVO.setFailed("您不是本校学生，无法查看您的课程");
+            return resultVO;
+        }
+
+        List<Long> edu301IdList = edu302Dao.findEdu301IdsByEdu300Id(edu001.getEdu300_ID());
+
+        //根据信息查询所有课表信息
+        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu301IdList,
+                timeTable.getWeekTime(), timeTable.getSemester());
+        if(studentSchoolTimetableList.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到您的课程");
+        } else {
+            for (StudentSchoolTimetablePO o : studentSchoolTimetableList) {
+                SchoolTimetablePO s = new SchoolTimetablePO();
+                BeanUtils.copyProperties(s,o);
+                schoolTimetableList.add(s);
+            }
             timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
             resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);
         }
