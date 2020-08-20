@@ -1036,6 +1036,7 @@ function confirmImportNewClass(){
 				$.hideModal("#importNewClassModal");
 			} else {
 				toastr.warning(backjosn.msg);
+				$.hideModal("#importNewClassModal");
 			}
         },beforeSend: function(xhr) {
            $(".fileLoadingArea").show();
@@ -1269,6 +1270,7 @@ function confirmModifyClasses(){
 				toolTipUp(".myTooltip");
 			} else {
 				toastr.warning(backjosn.msg);
+				$.hideModal("#modifyClassesModal");
 			}
 
         },beforeSend: function(xhr) {

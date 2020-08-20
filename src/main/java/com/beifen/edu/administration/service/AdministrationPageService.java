@@ -1460,18 +1460,8 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		Boolean isAdd = false;
 
-		//保留原始数据
+		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
-		try {
-			utils.copyParm(edu200,oldEdu200);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-
 
 		// 判断课程名称和代码是否已存在
 		List<Edu200> edu200List = findCourseByKcmdOrKcdm(edu200);
@@ -1487,6 +1477,8 @@ public class AdministrationPageService {
 			edu200.setKcdm(newkcdm);
 			edu200.setZt(newClassStatus);
 		}else {
+			//保留原始数据
+			oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
 			//查询是否有培养计划正在使用该课程
 			List<Edu108> edu108List = edu108DAO.findPlanByEdu200Id(edu200.getBF200_ID().toString());
 			if(edu108List.size() != 0) {
@@ -1633,7 +1625,7 @@ public class AdministrationPageService {
 		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject, Edu600.class);
+		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 
 		Map<String, Object> returnMap = null;
 		try {
