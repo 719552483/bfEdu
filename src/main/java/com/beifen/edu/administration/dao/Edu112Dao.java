@@ -13,7 +13,7 @@ public interface Edu112Dao extends JpaRepository<Edu112, Long>, JpaSpecification
     //审批结束后回写状态
     @Transactional
     @Modifying
-    @Query(value = "UPDATE edu112 set businessState =?2 WHERE Edu112_ID =?1", nativeQuery = true)
+    @Query(value = "UPDATE edu112 e set e.BUSINESS_STATE =?2 WHERE Edu112_ID =?1", nativeQuery = true)
     void updateState(String businessKey, String state);
 
     //根据ID查找出差申请信息
