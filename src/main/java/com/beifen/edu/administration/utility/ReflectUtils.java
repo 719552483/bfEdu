@@ -402,29 +402,29 @@ public class ReflectUtils {
 			}
 		}
 		
-		if(chaeckPass){
-			//判断课程名称是否存在
-			for (int d = 0; d < dataBaseClasses.size(); d++) {
-				for (int i = 0; i < importClassess.size(); i++) {
-					if(isModify){
-						if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))
-								&&!String.valueOf(dataBaseClasses.get(d).getBF200_ID()).equals(importClassess.get(i).get("BF200_ID"))){
-							chaeckPass=false;
-							checkTxt="第"+(i+1)+"行-课程名称已存在";
-							returnMap.put("chaeckPass", chaeckPass);
-							returnMap.put("checkTxt", checkTxt);
-						}
-					}else{
-						if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))){
-							chaeckPass=false;
-							checkTxt="第"+(i+1)+"行-课程名称已存在";
-							returnMap.put("chaeckPass", chaeckPass);
-							returnMap.put("checkTxt", checkTxt);
-						}
-					}
-				}
-			}
-		}
+//		if(chaeckPass){
+//			//判断课程名称是否存在
+//			for (int d = 0; d < dataBaseClasses.size(); d++) {
+//				for (int i = 0; i < importClassess.size(); i++) {
+//					if(isModify){
+//						if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))
+//								&&!String.valueOf(dataBaseClasses.get(d).getBF200_ID()).equals(importClassess.get(i).get("BF200_ID"))){
+//							chaeckPass=false;
+//							checkTxt="第"+(i+1)+"行-课程名称已存在";
+//							returnMap.put("chaeckPass", chaeckPass);
+//							returnMap.put("checkTxt", checkTxt);
+//						}
+//					}else{
+//						if(dataBaseClasses.get(d).getKcmc().equals(importClassess.get(i).get("kcmc"))){
+//							chaeckPass=false;
+//							checkTxt="第"+(i+1)+"行-课程名称已存在";
+//							returnMap.put("chaeckPass", chaeckPass);
+//							returnMap.put("checkTxt", checkTxt);
+//						}
+//					}
+//				}
+//			}
+//		}
 		
 		
 		
@@ -444,21 +444,21 @@ public class ReflectUtils {
 				
 				long kcfzrID=Long.parseLong(kcfzrIDStrs[1]);
 				String teacherName=reflectUtils.staffManageService.queryTecaherNameById(kcfzrID);
-				if(teacherName==null){
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
-				}else{
-					if(!teacherName.equals(kcfzrIDStrs[0])){
-						chaeckPass=false;
-						checkTxt="第"+(i+1)+"行-可能修改了课程负责人姓名(课程负责人姓名不允许更改)";
-						returnMap.put("chaeckPass", chaeckPass);
-						returnMap.put("checkTxt", checkTxt);
-						break;
-					}
-				}
+//				if(teacherName==null){
+//					chaeckPass=false;
+//					checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";
+//					returnMap.put("chaeckPass", chaeckPass);
+//					returnMap.put("checkTxt", checkTxt);
+//					break;
+//				}else{
+//					if(!teacherName.equals(kcfzrIDStrs[0])){
+//						chaeckPass=false;
+//						checkTxt="第"+(i+1)+"行-可能修改了课程负责人姓名(课程负责人姓名不允许更改)";
+//						returnMap.put("chaeckPass", chaeckPass);
+//						returnMap.put("checkTxt", checkTxt);
+//						break;
+//					}
+//				}
 				
 				if(importClassess.get(i).get("llxs")!=null){
 					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("llxs")))){

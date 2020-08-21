@@ -1463,12 +1463,12 @@ public class AdministrationPageService {
 		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
 
-		// 判断课程名称和代码是否已存在
-		List<Edu200> edu200List = findCourseByKcmdOrKcdm(edu200);
-		if(edu200List.size() != 0) {
-			resultVO = ResultVO.setFailed("课程库存在课程名称或课程代码相同课程，请修改");
-			return resultVO;
-		}
+//		// 判断课程名称和代码是否已存在
+//		List<Edu200> edu200List = findCourseByKcmdOrKcdm(edu200);
+//		if(edu200List.size() != 0) {
+//			resultVO = ResultVO.setFailed("课程库存在课程名称或课程代码相同课程，请修改");
+//			return resultVO;
+//		}
 		//如果为新增，赋予必要属性
 		if(edu200.getBF200_ID() == null){
 			isAdd = true;
