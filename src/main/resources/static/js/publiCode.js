@@ -1432,16 +1432,16 @@ function getAllStuffTab2Info(){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				//学年下拉框
-				if(backjson.allXn!==0){
+				if(backjson.data.allXn!==0){
 					var str = '<option value="seleceConfigTip">暂不选择</option>';
-					for (var i = 0; i < backjson.allXn.length; i++) {
-						str += '<option value="' + backjson.allXn[i].edu400_ID + '">' + backjson.allXn[i].xnmc + '</option>';
+					for (var i = 0; i < backjson.data.allXn.length; i++) {
+						str += '<option value="' + backjson.data.allXn[i].edu400_ID + '">' + backjson.data.allXn[i].xnmc + '</option>';
 					}
 					stuffManiaSelect(".xnForSelect", str);
 				}
-				stuffAllXnTable(backjson.allXn);
+				stuffAllXnTable(backjson.data.allXn);
 				// stuffAllKjTable(backjson.allkj);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1696,7 +1696,7 @@ function sendModifyXnInfo(xnObject){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/modifyXn",
+		url : "/addNewXn",
 		dataType : 'json',
 		data: {
             "xninfo":JSON.stringify(xnObject) 
@@ -1712,28 +1712,25 @@ function sendModifyXnInfo(xnObject){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if (backjson.nameHave) {
-					toastr.warning('学年名称已存在');
-					return;
-				}
+			if (backjson.code === 200) {
 				$("#xnTable").bootstrapTable('updateByUniqueId', {
 					id: xnObject.edu400_ID,
 					row: xnObject
 				});
 				toolTipUp(".myTooltip");
-				toastr.success('修改成功');
+				toastr.success(backjson.msg);
 				$.hideModal("#remindModal");
 				
-				//更新学年下拉框
-				var currentAllXn=backjson.currentAllXn;
-				var str = '<option value="seleceConfigTip">暂不选择</option>';
-				for (var i = 0; i < currentAllXn.length; i++) {
-					str += '<option value="' + currentAllXn[i].edu400_ID + '">' + currentAllXn[i].xnmc + '</option>';
-				}
-				stuffManiaSelect(".xnForSelect", str);
+				// //更新学年下拉框
+				// var currentAllXn=backjson.currentAllXn;
+				// var str = '<option value="seleceConfigTip">暂不选择</option>';
+				// for (var i = 0; i < currentAllXn.length; i++) {
+				// 	str += '<option value="' + currentAllXn[i].edu400_ID + '">' + currentAllXn[i].xnmc + '</option>';
+				// }
+				// stuffManiaSelect(".xnForSelect", str);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				$.hideModal("#remindModal");
 			}
 		}
 	});
@@ -1828,12 +1825,8 @@ function sendNewXnInfo(xnObject){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if (backjson.nameHave) {
-					toastr.warning('学年名称已存在');
-					return;
-				}
-				xnObject.edu400_ID=backjson.id;
+			if (backjson.code === 200) {
+				xnObject.edu400_ID=backjson.data;
 				$('#xnTable').bootstrapTable("prepend", xnObject);
 				$.hideModal("#addXnModal");
 				toolTipUp(".myTooltip");
@@ -1845,7 +1838,8 @@ function sendNewXnInfo(xnObject){
 				// }
 				// stuffManiaSelect(".xnForSelect", str);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				$.hideModal("#addXnModal");
 			}
 		}
 	});

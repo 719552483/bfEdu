@@ -493,17 +493,17 @@ public class AdministrationPageService {
 		String bhzyCode = "";
 		Integer jxbrs = 0;
 
-		String bhxzbid = edu301.getBhxzbid().substring(0,edu301.getBhxzbid().length() - 1);
-		String bhxzbmc = edu301.getBhxzbmc().substring(0,edu301.getBhxzbmc().length() - 1);
-		String[] bhxzbids= bhxzbid.split(",");
+		String bhxzbid = edu301.getBhxzbid().substring(0, edu301.getBhxzbid().length() - 1);
+		String bhxzbmc = edu301.getBhxzbmc().substring(0, edu301.getBhxzbmc().length() - 1);
+		String[] bhxzbids = bhxzbid.split(",");
 		String[] bhxzbmcs = bhxzbmc.split(",");
 
 		edu302DAO.removeByEdu301Id(edu301.getEdu301_ID().toString());
 		for (int i = 0; i < bhxzbids.length; i++) {
 			Edu300 edu300 = edu300DAO.findXzbByEdu300ID(bhxzbids[i]);
-			bhzymc+= edu300.getZymc()+",";
-			bhzyCode+= edu300.getZybm()+",";
-			jxbrs+= edu300.getZxrs();
+			bhzymc += edu300.getZymc() + ",";
+			bhzyCode += edu300.getZybm() + ",";
+			jxbrs += edu300.getZxrs();
 
 			Edu302 save = new Edu302();
 			save.setEdu301_ID(edu301.getEdu301_ID());
@@ -532,7 +532,6 @@ public class AdministrationPageService {
 		//删除教学班行政班关联
 		edu302DAO.removeByEdu301Id(edu301ID);
 	}
-
 
 
 	// 查询所有教学班
@@ -691,7 +690,7 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		for (String s : removeIdList) {
 			List<Edu108> planByEdu200Id = edu108DAO.findPlanByEdu200Id(s);
-			if(planByEdu200Id.size() != 0) {
+			if (planByEdu200Id.size() != 0) {
 				resultVO = ResultVO.setFailed("所选课程有的存在培养计划，无法删除");
 				return resultVO;
 			}
@@ -701,7 +700,7 @@ public class AdministrationPageService {
 			edu200DAO.removeLibraryClassById(s);
 		}
 
-		resultVO = ResultVO.setSuccess("共计删除了"+removeIdList.size()+"门课程");
+		resultVO = ResultVO.setSuccess("共计删除了" + removeIdList.size() + "门课程");
 		return resultVO;
 	}
 
@@ -738,7 +737,7 @@ public class AdministrationPageService {
 	public void putOutTask(TeachingTaskPO teachingTaskPO) {
 		Edu201 edu201 = new Edu201();
 		try {
-			utils.copy(teachingTaskPO,edu201);
+			utils.copy(teachingTaskPO, edu201);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -750,14 +749,14 @@ public class AdministrationPageService {
 		teachingTaskPO.setEdu201_ID(edu201.getEdu201_ID());
 
 		edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
-		List<TeacherPO> teacherList = JSONArray.toList((JSONArray)teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
-		for(TeacherPO e : teacherList) {
+		List<TeacherPO> teacherList = JSONArray.toList((JSONArray) teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
+		for (TeacherPO e : teacherList) {
 			List<String> ls = e.getLs();
 			List<String> lsmc = e.getLsmc();
-			if("".equals(ls.get(0))){
+			if ("".equals(ls.get(0))) {
 				break;
 			}
-			for (int i = 0; i <ls.size(); i++) {
+			for (int i = 0; i < ls.size(); i++) {
 				Edu205 save = new Edu205();
 				save.setEdu201_ID(edu201.getEdu201_ID());
 				save.setTeacherType("01");
@@ -767,14 +766,14 @@ public class AdministrationPageService {
 			}
 		}
 
-		List<TeacherPO> baseTeacherList = JSONArray.toList((JSONArray)teachingTaskPO.getBaseTeacherList(), new TeacherPO(), new JsonConfig());
-		for(TeacherPO e : baseTeacherList) {
+		List<TeacherPO> baseTeacherList = JSONArray.toList((JSONArray) teachingTaskPO.getBaseTeacherList(), new TeacherPO(), new JsonConfig());
+		for (TeacherPO e : baseTeacherList) {
 			List<String> zyls = e.getZyls();
 			List<String> zylsmc = e.getZylsmc();
-			if("".equals(zyls.get(0))){
+			if ("".equals(zyls.get(0))) {
 				break;
 			}
-			for (int i = 0; i <zyls.size(); i++) {
+			for (int i = 0; i < zyls.size(); i++) {
 				Edu205 save = new Edu205();
 				save.setEdu201_ID(edu201.getEdu201_ID());
 				save.setTeacherType("01");
@@ -783,7 +782,6 @@ public class AdministrationPageService {
 				edu205DAO.save(save);
 			}
 		}
-
 
 
 	}
@@ -832,7 +830,7 @@ public class AdministrationPageService {
 		for (int i = 0; i < current108s.size(); i++) {
 			Edu201 edu201 = edu201DAO.getTaskByEdu108Id(current108s.get(i).getEdu108_ID().toString());
 			if (edu201 != null) {
-				if(edu201.getSfypk()==null){
+				if (edu201.getSfypk() == null) {
 					retrunList.add(edu201);
 				}
 			}
@@ -906,8 +904,34 @@ public class AdministrationPageService {
 	}
 
 	// 新增学年
-	public void addNewXn(Edu400 edu400) {
-		edu400DAO.save(edu400);
+	public ResultVO addNewXn(Edu400 edu400) {
+		ResultVO resultVO;
+		List<Edu400> edu400List = checkXnName(edu400);
+		if(edu400List.size() != 0) {
+			resultVO = ResultVO.setFailed("学年名称重复，请重新输入");
+		}else {
+			edu400DAO.save(edu400);
+			resultVO = ResultVO.setSuccess("操作成功",edu400.getEdu400_ID());
+		}
+		return resultVO;
+	}
+
+	//检查学年名称
+	private List<Edu400> checkXnName(Edu400 edu400) {
+		Specification<Edu400> specification = new Specification<Edu400>() {
+			public Predicate toPredicate(Root<Edu400> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu400.getEdu400_ID() != null && !"".equals(edu400.getEdu400_ID())) {
+					predicates.add(cb.notEqual(root.<String>get("edu400_ID"), edu400.getEdu400_ID()));
+				}
+				if (edu400.getXnmc() != null && !"".equals(edu400.getXnmc())) {
+					predicates.add(cb.equal(root.<String>get("xnmc"), edu400.getXnmc()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu400> all = edu400DAO.findAll(specification);
+		return all;
 	}
 
 	// 查询默认课节设置
@@ -926,7 +950,7 @@ public class AdministrationPageService {
 //	}
 
 	//获取所有默认课节
-	public List<Edu401>  queryAllDeafultKj() {
+	public List<Edu401> queryAllDeafultKj() {
 		return edu401DAO.queryAllDeafultKj();
 	}
 
@@ -1006,14 +1030,14 @@ public class AdministrationPageService {
 			edu202DAO.save(edu202);
 			String edu202_id = edu202.getEdu202_ID().toString();
 			//重新排列课节集合
-			Collections.sort(edu203List,new Comparator<Edu203>(){
+			Collections.sort(edu203List, new Comparator<Edu203>() {
 				public int compare(Edu203 arg0, Edu203 arg1) {
 					// 第一次比较星期
 					int i = arg0.getXqid().compareTo(arg1.getXqid());
 					// 如果星期相同则进行第二次比较
-					if(i==0){
+					if (i == 0) {
 						// 第二次比较课节
-						int j=arg0.getKjid().compareTo(arg1.getKjid());
+						int j = arg0.getKjid().compareTo(arg1.getKjid());
 						return j;
 					}
 					return i;
@@ -1022,9 +1046,10 @@ public class AdministrationPageService {
 
 			//按周保存排课计划
 			int currentXs = 0;
-			classCycle:for(int j = ksz;j < jsz + 1;j++){
+			classCycle:
+			for (int j = ksz; j < jsz + 1; j++) {
 				Integer saveWeek = j;
-				for (Edu203 e: edu203List) {
+				for (Edu203 e : edu203List) {
 					Edu203 save = new Edu203();
 					save.setEdu202_ID(edu202_id);
 					save.setWeek(saveWeek.toString());
@@ -1034,7 +1059,7 @@ public class AdministrationPageService {
 					save.setXqmc(e.getXqmc());
 					edu203Dao.save(save);
 					currentXs++;
-					if(currentXs == zxs){
+					if (currentXs == zxs) {
 						break classCycle;
 					}
 				}
@@ -1055,29 +1080,29 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu200.getKcdm() != null && !"".equals(edu200.getKcdm())) {
-					predicates.add(cb.like(root.<String> get("kcdm"), '%' + edu200.getKcdm() + '%'));
+					predicates.add(cb.like(root.<String>get("kcdm"), '%' + edu200.getKcdm() + '%'));
 				}
 				if (edu200.getKcmc() != null && !"".equals(edu200.getKcmc())) {
-					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu200.getKcmc() + '%'));
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu200.getKcmc() + '%'));
 				}
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
-					predicates.add(cb.like(root.<String> get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
+					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
 				}
 				if (edu200.getKcxzCode() != null && !"".equals(edu200.getKcxzCode())) {
-					predicates.add(cb.equal(root.<String> get("kcxzCode"), edu200.getKcxzCode() ));
+					predicates.add(cb.equal(root.<String>get("kcxzCode"), edu200.getKcxzCode()));
 				}
 				if (edu200.getZt() != null && !"".equals(edu200.getZt())) {
-					predicates.add(cb.equal(root.<String> get("zt"), edu200.getZt()));
+					predicates.add(cb.equal(root.<String>get("zt"), edu200.getZt()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
 		List<Edu200> courseEntities = edu200DAO.findAll(specification);
 
-		if(courseEntities.size() == 0) {
+		if (courseEntities.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无符合要求的数据");
-		}else {
-			resultVO = ResultVO.setSuccess("共找到"+courseEntities.size()+"门课程",courseEntities);
+		} else {
+			resultVO = ResultVO.setSuccess("共找到" + courseEntities.size() + "门课程", courseEntities);
 		}
 		return resultVO;
 	}
@@ -1088,22 +1113,22 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu101.getSzxb() != null && !"".equals(edu101.getSzxb())) {
-					predicates.add(cb.equal(root.<String> get("szxb"),edu101.getSzxb()));
+					predicates.add(cb.equal(root.<String>get("szxb"), edu101.getSzxb()));
 				}
 				if (edu101.getZy() != null && !"".equals(edu101.getZy())) {
-					predicates.add(cb.equal(root.<String> get("zy"),edu101.getZy()));
+					predicates.add(cb.equal(root.<String>get("zy"), edu101.getZy()));
 				}
 				if (edu101.getXm() != null && !"".equals(edu101.getXm())) {
-					predicates.add(cb.like(root.<String> get("xm"), '%' + edu101.getXm() + '%'));
+					predicates.add(cb.like(root.<String>get("xm"), '%' + edu101.getXm() + '%'));
 				}
 				if (edu101.getJzgh() != null && !"".equals(edu101.getJzgh())) {
-					predicates.add(cb.like(root.<String> get("jzgh"), '%' + edu101.getJzgh() + '%'));
+					predicates.add(cb.like(root.<String>get("jzgh"), '%' + edu101.getJzgh() + '%'));
 				}
 				if (edu101.getSzxbmc() != null && !"".equals(edu101.getSzxbmc())) {
-					predicates.add(cb.like(root.<String> get("szxbmc"), '%' + edu101.getSzxbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("szxbmc"), '%' + edu101.getSzxbmc() + '%'));
 				}
 				if (edu101.getZc() != null && !"".equals(edu101.getZc())) {
-					predicates.add(cb.equal(root.<String> get("zc"),edu101.getZc()));
+					predicates.add(cb.equal(root.<String>get("zc"), edu101.getZc()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1118,19 +1143,19 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu107.getEdu103mc() != null && !"".equals(edu107.getEdu103mc())) {
-					predicates.add(cb.like(root.<String> get("edu103mc"), '%' + edu107.getEdu103mc() + '%'));
+					predicates.add(cb.like(root.<String>get("edu103mc"), '%' + edu107.getEdu103mc() + '%'));
 				}
 				if (edu107.getPyjhmc() != null && !"".equals(edu107.getPyjhmc())) {
-					predicates.add(cb.like(root.<String> get("pyjhmc"), '%' + edu107.getPyjhmc() + '%'));
+					predicates.add(cb.like(root.<String>get("pyjhmc"), '%' + edu107.getPyjhmc() + '%'));
 				}
 				if (edu107.getEdu104mc() != null && !"".equals(edu107.getEdu104mc())) {
-					predicates.add(cb.like(root.<String> get("edu104mc"), '%' + edu107.getEdu104mc() + '%'));
+					predicates.add(cb.like(root.<String>get("edu104mc"), '%' + edu107.getEdu104mc() + '%'));
 				}
 				if (edu107.getEdu105mc() != null && !"".equals(edu107.getEdu105mc())) {
-					predicates.add(cb.like(root.<String> get("edu105mc"), '%' + edu107.getEdu105mc() + '%'));
+					predicates.add(cb.like(root.<String>get("edu105mc"), '%' + edu107.getEdu105mc() + '%'));
 				}
 				if (edu107.getEdu106mc() != null && !"".equals(edu107.getEdu106mc())) {
-					predicates.add(cb.like(root.<String> get("edu106mc"), '%' + edu107.getEdu106mc() + '%'));
+					predicates.add(cb.like(root.<String>get("edu106mc"), '%' + edu107.getEdu106mc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1145,19 +1170,19 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu108.getEdu107_ID() != null && !"".equals(edu108.getEdu107_ID())) {
-					predicates.add(cb.equal(root.<String> get("edu107_ID"), edu108.getEdu107_ID()));
+					predicates.add(cb.equal(root.<String>get("edu107_ID"), edu108.getEdu107_ID()));
 				}
 				if (edu108.getKcxzCode() != null && !"".equals(edu108.getKcxzCode())) {
-					predicates.add(cb.equal(root.<String> get("kcxzCode"), edu108.getKcxzCode()));
+					predicates.add(cb.equal(root.<String>get("kcxzCode"), edu108.getKcxzCode()));
 				}
 				if (edu108.getKcmc() != null && !"".equals(edu108.getKcmc())) {
-					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu108.getKcmc() + '%'));
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu108.getKcmc() + '%'));
 				}
 				if (edu108.getKsfsCode() != null && !"".equals(edu108.getKsfsCode())) {
-					predicates.add(cb.equal(root.<String> get("ksfsCode"), edu108.getKsfsCode()));
+					predicates.add(cb.equal(root.<String>get("ksfsCode"), edu108.getKsfsCode()));
 				}
 				if (edu108.getXbsp() != null && !"".equals(edu108.getXbsp())) {
-					predicates.add(cb.equal(root.<String> get("xbsp"), edu108.getXbsp()));
+					predicates.add(cb.equal(root.<String>get("xbsp"), edu108.getXbsp()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1172,19 +1197,19 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu300.getPyccbm() != null && !"".equals(edu300.getPyccbm())) {
-					predicates.add(cb.equal(root.<String> get("pyccbm"), edu300.getPyccbm()));
+					predicates.add(cb.equal(root.<String>get("pyccbm"), edu300.getPyccbm()));
 				}
 				if (edu300.getXbbm() != null && !"".equals(edu300.getXbbm())) {
-					predicates.add(cb.equal(root.<String> get("xbbm"), edu300.getXbbm()));
+					predicates.add(cb.equal(root.<String>get("xbbm"), edu300.getXbbm()));
 				}
 				if (edu300.getNjbm() != null && !"".equals(edu300.getNjbm())) {
-					predicates.add(cb.equal(root.<String> get("njbm"), edu300.getNjbm()));
+					predicates.add(cb.equal(root.<String>get("njbm"), edu300.getNjbm()));
 				}
 				if (edu300.getZybm() != null && !"".equals(edu300.getZybm())) {
-					predicates.add(cb.equal(root.<String> get("zybm"), edu300.getZybm()));
+					predicates.add(cb.equal(root.<String>get("zybm"), edu300.getZybm()));
 				}
 				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
-					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1199,17 +1224,17 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu108.getEdu107_ID() != null && !"".equals(edu108.getEdu107_ID())) {
-					predicates.add(cb.equal(root.<String> get("edu107_ID"), edu108.getEdu107_ID()));
+					predicates.add(cb.equal(root.<String>get("edu107_ID"), edu108.getEdu107_ID()));
 				}
 
 				if (edu108.getKcdm() != null && !"".equals(edu108.getKcdm())) {
-					predicates.add(cb.like(root.<String> get("kcdm"), '%' + edu108.getKcdm() + '%'));
+					predicates.add(cb.like(root.<String>get("kcdm"), '%' + edu108.getKcdm() + '%'));
 				}
 				if (edu108.getKcmc() != null && !"".equals(edu108.getKcmc())) {
-					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu108.getKcmc() + '%'));
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu108.getKcmc() + '%'));
 				}
 				if (edu108.getBzzymc() != null && !"".equals(edu108.getBzzymc())) {
-					predicates.add(cb.like(root.<String> get("bzzymc"), '%' + edu108.getBzzymc() + '%'));
+					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu108.getBzzymc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1224,16 +1249,16 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
-					predicates.add(cb.like(root.<String> get("xm"), '%' + edu001.getXm() + '%'));
+					predicates.add(cb.like(root.<String>get("xm"), '%' + edu001.getXm() + '%'));
 				}
 				if (edu001.getEdu300_ID() != null && !"".equals(edu001.getEdu300_ID())) {
-					predicates.add(cb.equal(root.<String> get("edu300_ID"), edu001.getEdu300_ID()));
+					predicates.add(cb.equal(root.<String>get("edu300_ID"), edu001.getEdu300_ID()));
 				}
 				if (edu001.getXb() != null && !"".equals(edu001.getXb())) {
-					predicates.add(cb.equal(root.<String> get("xb"), edu001.getXb()));
+					predicates.add(cb.equal(root.<String>get("xb"), edu001.getXb()));
 				}
 				if (edu001.getZtCode() != null && !"".equals(edu001.getZtCode())) {
-					predicates.add(cb.equal(root.<String> get("ztCode"), edu001.getZtCode()));
+					predicates.add(cb.equal(root.<String>get("ztCode"), edu001.getZtCode()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1248,16 +1273,16 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu301> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu301.getJxbmc() != null && !"".equals(edu301.getJxbmc())) {
-					predicates.add(cb.like(root.<String> get("jxbmc"), '%' + edu301.getJxbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("jxbmc"), '%' + edu301.getJxbmc() + '%'));
 				}
 				if (edu301.getKcmc() != null && !"".equals(edu301.getKcmc())) {
-					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu301.getKcmc() + '%'));
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu301.getKcmc() + '%'));
 				}
 				if (edu301.getBhxzbmc() != null && !"".equals(edu301.getBhxzbmc())) {
-					predicates.add(cb.like(root.<String> get("bhxzbmc"), '%' + edu301.getBhxzbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("bhxzbmc"), '%' + edu301.getBhxzbmc() + '%'));
 				}
 				if (checkSFFBRWS) {
-					predicates.add(cb.equal(root.<String> get("sffbjxrws"), "F"));
+					predicates.add(cb.equal(root.<String>get("sffbjxrws"), "F"));
 				}
 
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -1273,20 +1298,20 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu300.getPyccbm() != null && !"".equals(edu300.getPyccbm())) {
-					predicates.add(cb.equal(root.<String> get("pyccbm"), edu300.getPyccbm()));
+					predicates.add(cb.equal(root.<String>get("pyccbm"), edu300.getPyccbm()));
 				}
 				if (edu300.getXbbm() != null && !"".equals(edu300.getXbbm())) {
-					predicates.add(cb.equal(root.<String> get("xbbm"), edu300.getXbbm()));
+					predicates.add(cb.equal(root.<String>get("xbbm"), edu300.getXbbm()));
 				}
 				if (edu300.getNjbm() != null && !"".equals(edu300.getNjbm())) {
-					predicates.add(cb.equal(root.<String> get("njbm"), edu300.getNjbm()));
+					predicates.add(cb.equal(root.<String>get("njbm"), edu300.getNjbm()));
 				}
 				if (edu300.getZybm() != null && !"".equals(edu300.getZybm())) {
-					predicates.add(cb.equal(root.<String> get("zybm"), edu300.getZybm()));
+					predicates.add(cb.equal(root.<String>get("zybm"), edu300.getZybm()));
 				}
 
 				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
-					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1301,11 +1326,11 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu108.getXzbmc() != null && !"".equals(edu108.getXzbmc())) {
-					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu108.getXzbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu108.getXzbmc() + '%'));
 				}
 
 				if (edu108.getKcmc() != null && !"".equals(edu108.getKcmc())) {
-					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu108.getKcmc() + '%'));
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu108.getKcmc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1315,22 +1340,21 @@ public class AdministrationPageService {
 	}
 
 
-
 	// 检索已发布的教学任务书
 	public List<Edu201> searchPutOutTasks(Edu201 edu201) {
 		Specification<Edu201> specification = new Specification<Edu201>() {
 			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu201.getXzbmc() != null && !"".equals(edu201.getXzbmc())) {
-					predicates.add(cb.like(root.<String> get("xzbmc"), '%' + edu201.getXzbmc() + '%'));
+					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu201.getXzbmc() + '%'));
 				}
 
 				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
-					predicates.add(cb.like(root.<String> get("kcmc"), '%' + edu201.getKcmc() + '%'));
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu201.getKcmc() + '%'));
 				}
 
 				if (edu201.getSszt() != null && !"".equals(edu201.getSszt())) {
-					predicates.add(cb.equal(root.<String> get("sszt"), edu201.getSszt()));
+					predicates.add(cb.equal(root.<String>get("sszt"), edu201.getSszt()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1342,10 +1366,10 @@ public class AdministrationPageService {
 	//停用课程
 	public ResultVO stopClass(List<String> stopList) {
 		ResultVO resultVO;
-		for (String  s : stopList) {
-			edu200DAO.updateState(s,"stop");
+		for (String s : stopList) {
+			edu200DAO.updateState(s, "stop");
 		}
-		resultVO = ResultVO.setSuccess("停用了"+stopList.size()+"个课程");
+		resultVO = ResultVO.setSuccess("停用了" + stopList.size() + "个课程");
 		return resultVO;
 	}
 
@@ -1360,9 +1384,9 @@ public class AdministrationPageService {
 		List<Edu300> classList = new ArrayList<>();
 		List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu301_id);
 
-		if(edu302List.size() != 0) {
-			 Edu300 edu300  = edu300DAO.findXzbByEdu300ID(edu302List.get(0).getEdu300_ID().toString());
-			 classList = edu300DAO.findClassByMajor(edu300.getZybm());
+		if (edu302List.size() != 0) {
+			Edu300 edu300 = edu300DAO.findXzbByEdu300ID(edu302List.get(0).getEdu300_ID().toString());
+			classList = edu300DAO.findClassByMajor(edu300.getZybm());
 		}
 
 		return classList;
@@ -1371,12 +1395,9 @@ public class AdministrationPageService {
 	//根据Id删除排课计划
 	public void removeTeachingSchedule(String scheduleId) {
 		Edu202 edu202 = edu202DAO.findEdu202ById(scheduleId);
-
 		edu201DAO.taskPutScheduleFalse(edu202.getEdu201_ID().toString());
-
-		edu202DAO.delete(Long.parseLong(scheduleId));
-
 		edu203Dao.deleteByscheduleId(scheduleId);
+		edu202DAO.delete(Long.parseLong(scheduleId));
 	}
 
 	//根据条件检索已排课信息
@@ -1390,22 +1411,22 @@ public class AdministrationPageService {
 			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();
 				if (teachingSchedule.getPyjhcc() != null && !"".equals(teachingSchedule.getPyjhcc())) {
-					predicates.add(cb.equal(root.<String> get("pyjhcc"), teachingSchedule.getPyjhcc()));
+					predicates.add(cb.equal(root.<String>get("pyjhcc"), teachingSchedule.getPyjhcc()));
 				}
 				if (teachingSchedule.getPyjhxb() != null && !"".equals(teachingSchedule.getPyjhxb())) {
-					predicates.add(cb.equal(root.<String> get("pyjhxb"), teachingSchedule.getPyjhxb()));
+					predicates.add(cb.equal(root.<String>get("pyjhxb"), teachingSchedule.getPyjhxb()));
 				}
 				if (teachingSchedule.getPyjhnj() != null && !"".equals(teachingSchedule.getPyjhnj())) {
-					predicates.add(cb.equal(root.<String> get("pyjhnj"), teachingSchedule.getPyjhnj()));
+					predicates.add(cb.equal(root.<String>get("pyjhnj"), teachingSchedule.getPyjhnj()));
 				}
 				if (teachingSchedule.getPyjhzy() != null && !"".equals(teachingSchedule.getPyjhzy())) {
-					predicates.add(cb.equal(root.<String> get("pyjhzy"), teachingSchedule.getPyjhzy()));
+					predicates.add(cb.equal(root.<String>get("pyjhzy"), teachingSchedule.getPyjhzy()));
 				}
 				if (teachingSchedule.getJxbid() != null && !"".equals(teachingSchedule.getJxbid())) {
-					predicates.add(cb.equal(root.<String> get("jxbid"), teachingSchedule.getJxbid()));
+					predicates.add(cb.equal(root.<String>get("jxbid"), teachingSchedule.getJxbid()));
 				}
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
-					predicates.add(cb.equal(root.<String> get("kcxzid"), teachingSchedule.getKcxzid()));
+					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1418,9 +1439,9 @@ public class AdministrationPageService {
 			teachingClassList.add(edu301);
 		}
 
-		returnMap.put("result",true);
-		returnMap.put("taskList",taskList);
-		returnMap.put("teachingClassList",teachingClassList);
+		returnMap.put("result", true);
+		returnMap.put("taskList", taskList);
+		returnMap.put("teachingClassList", teachingClassList);
 		return returnMap;
 
 	}
@@ -1433,8 +1454,8 @@ public class AdministrationPageService {
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
 
 		try {
-			utils.copyTargetSuper(edu201,scheduleCompletedDetails);
-			BeanUtils.copyProperties(scheduleCompletedDetails,edu202);
+			utils.copyTargetSuper(edu201, scheduleCompletedDetails);
+			BeanUtils.copyProperties(scheduleCompletedDetails, edu202);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -1443,15 +1464,16 @@ public class AdministrationPageService {
 			e.printStackTrace();
 		}
 
-		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id,edu202.getKsz()));
+		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id, edu202.getKsz()));
 
-		returnMap.put("result",true);
-		returnMap.put("scheduleCompletedDetails",scheduleCompletedDetails);
+		returnMap.put("result", true);
+		returnMap.put("scheduleCompletedDetails", scheduleCompletedDetails);
 		return returnMap;
 	}
 
 	/**
 	 * 新增修改课程
+	 *
 	 * @param edu600
 	 * @param edu200
 	 * @return
@@ -1465,23 +1487,23 @@ public class AdministrationPageService {
 
 //		// 判断课程名称和代码是否已存在
 //		List<Edu200> edu200List = findCourseByKcmdOrKcdm(edu200);
-//		if(edu200List.size() != 0) {
+//		if (edu200List.size() != 0) {
 //			resultVO = ResultVO.setFailed("课程库存在课程名称或课程代码相同课程，请修改");
 //			return resultVO;
 //		}
 		//如果为新增，赋予必要属性
-		if(edu200.getBF200_ID() == null){
+		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
 			String newClassStatus = "passing";
-			String newkcdm ="LNVCKC"+utils.getUUID(6)+utils.getRandom(2);
+			String newkcdm = "LNVCKC" + utils.getUUID(6) + utils.getRandom(2);
 			edu200.setKcdm(newkcdm);
 			edu200.setZt(newClassStatus);
-		}else {
+		} else {
 			//保留原始数据
 			oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
 			//查询是否有培养计划正在使用该课程
 			List<Edu108> edu108List = edu108DAO.findPlanByEdu200Id(edu200.getBF200_ID().toString());
-			if(edu108List.size() != 0) {
+			if (edu108List.size() != 0) {
 				resultVO = ResultVO.setFailed("存在培养计划正在使用课程，不可修改");
 				return resultVO;
 			}
@@ -1493,8 +1515,8 @@ public class AdministrationPageService {
 		edu600.setBusinessKey(edu200.getBF200_ID());
 
 		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-		if(!isSuccess){
-			if(isAdd) {
+		if (!isSuccess) {
+			if (isAdd) {
 				edu200DAO.delete(edu200.getBF200_ID());
 			} else {
 				edu200DAO.save(oldEdu200);
@@ -1503,22 +1525,22 @@ public class AdministrationPageService {
 			return resultVO;
 		}
 
-		resultVO = ResultVO.setSuccess("操作成功",edu200);
+		resultVO = ResultVO.setSuccess("操作成功", edu200);
 		return resultVO;
 	}
 
-	public  List<Edu200> findCourseByKcmdOrKcdm(Edu200 edu200){
+	public List<Edu200> findCourseByKcmdOrKcdm(Edu200 edu200) {
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu200.getBF200_ID() != null && !"".equals(edu200.getBF200_ID())) {
-					predicates.add(cb.notEqual(root.<String> get("BF200_ID"), edu200.getBF200_ID()));
+					predicates.add(cb.notEqual(root.<String>get("BF200_ID"), edu200.getBF200_ID()));
 				}
 				if (edu200.getKcmc() != null && !"".equals(edu200.getKcmc())) {
-					predicates.add(cb.equal(root.<String> get("kcmc"), edu200.getKcmc()));
+					predicates.add(cb.equal(root.<String>get("kcmc"), edu200.getKcmc()));
 				}
 				if (edu200.getKcdm() != null && !"".equals(edu200.getKcdm())) {
-					predicates.add(cb.equal(root.<String> get("kcdm"), edu200.getKcdm()));
+					predicates.add(cb.equal(root.<String>get("kcdm"), edu200.getKcdm()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1539,7 +1561,8 @@ public class AdministrationPageService {
 
 
 	/**
-	 *导入课程
+	 * 导入课程
+	 *
 	 * @param multipartRequest
 	 * @return
 	 */
@@ -1550,8 +1573,8 @@ public class AdministrationPageService {
 		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
-		String lrrmc=jsonObject.getString("lrr");
-		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		String lrrmc = jsonObject.getString("lrr");
+		Long lrrId = Long.valueOf(jsonObject.getString("lrrID"));
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
@@ -1565,21 +1588,21 @@ public class AdministrationPageService {
 
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
-			resultVO = ResultVO.setFailed("模版错误，导入失败",returnMap);
+			resultVO = ResultVO.setFailed("模版错误，导入失败", returnMap);
 			return resultVO;
 		}
 
-		if(!returnMap.get("dataCheck").equals("")){
+		if (!returnMap.get("dataCheck").equals("")) {
 			boolean dataCheck = (boolean) returnMap.get("dataCheck");
 			if (!dataCheck) {
-				resultVO = ResultVO.setFailed("数据格式有误，请修改后重试",returnMap);
+				resultVO = ResultVO.setFailed("数据格式有误，请修改后重试", returnMap);
 				return resultVO;
 			}
 		}
 
 		Integer count = 0;
 		List<String> saveIds = new ArrayList<>();
-		if(!returnMap.get("importClasses").equals("")){
+		if (!returnMap.get("importClasses").equals("")) {
 			List<Edu200> importClasses = (List<Edu200>) returnMap.get("importClasses");
 			count = importClasses.size();
 			for (int i = 0; i < importClasses.size(); i++) {
@@ -1589,13 +1612,13 @@ public class AdministrationPageService {
 				ResultVO result = addNewClass(edu600, edu200);
 				if (result.getCode() == 500) {
 					resultVO = ResultVO.setFailed("数据导入失败");
-					if(saveIds.size() != 0) {
+					if (saveIds.size() != 0) {
 						edu200DAO.deleteByIds(saveIds);
 					}
 					return resultVO;
-				} else if(result.getCode() == 501) {
+				} else if (result.getCode() == 501) {
 					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
-					if(saveIds.size() != 0) {
+					if (saveIds.size() != 0) {
 						edu200DAO.deleteByIds(saveIds);
 					}
 					return resultVO;
@@ -1604,12 +1627,13 @@ public class AdministrationPageService {
 			}
 		}
 
-		resultVO = ResultVO.setSuccess("成功导入了"+count+"门课程",returnMap);
+		resultVO = ResultVO.setSuccess("成功导入了" + count + "门课程", returnMap);
 		return resultVO;
 	}
 
 	/**
 	 * 批量修改课程
+	 *
 	 * @param multipartRequest
 	 * @return
 	 * @throws Exception
@@ -1621,8 +1645,8 @@ public class AdministrationPageService {
 		String approvalInfo = multipartRequest.getParameter("approvalInfo"); //接收客户端传入文件携带的审批流参数
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
-		String lrrmc=jsonObject.getString("lrr");
-		Long lrrId=Long.valueOf(jsonObject.getString("lrrID"));
+		String lrrmc = jsonObject.getString("lrr");
+		Long lrrId = Long.valueOf(jsonObject.getString("lrrID"));
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
@@ -1635,14 +1659,14 @@ public class AdministrationPageService {
 		}
 		boolean modalPass = (boolean) returnMap.get("modalPass");
 		if (!modalPass) {
-			resultVO = ResultVO.setFailed("模版错误，导入失败",returnMap);
+			resultVO = ResultVO.setFailed("模版错误，导入失败", returnMap);
 			return resultVO;
 		}
 
-		if(!returnMap.get("dataCheck").equals("")){
+		if (!returnMap.get("dataCheck").equals("")) {
 			boolean dataCheck = (boolean) returnMap.get("dataCheck");
 			if (!dataCheck) {
-				resultVO = ResultVO.setFailed("数据格式有误，请修改后重试",returnMap);
+				resultVO = ResultVO.setFailed("数据格式有误，请修改后重试", returnMap);
 				return resultVO;
 			}
 		}
@@ -1651,11 +1675,11 @@ public class AdministrationPageService {
 		Integer count = 0;
 		List<Edu200> saveList = new ArrayList<>();
 		List<Edu200> updateClasses;
-		if(!returnMap.get("importClasses").equals("")){
-			updateClasses= (List<Edu200>) returnMap.get("importClasses");
+		if (!returnMap.get("importClasses").equals("")) {
+			updateClasses = (List<Edu200>) returnMap.get("importClasses");
 			count = updateClasses.size();
 			for (int i = 0; i < updateClasses.size(); i++) {
-				Edu200 edu200 =updateClasses.get(i);
+				Edu200 edu200 = updateClasses.get(i);
 				//保留原始数据
 				Edu200 oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
 				edu200.setLrr(lrrmc);
@@ -1665,15 +1689,15 @@ public class AdministrationPageService {
 				ResultVO result = addNewClass(edu600, edu200);
 				if (result.getCode() == 500) {
 					resultVO = ResultVO.setFailed("数据导入失败");
-					if(saveList.size() != 0) {
+					if (saveList.size() != 0) {
 						for (Edu200 e : saveList) {
 							edu200DAO.save(e);
 						}
 					}
 					return resultVO;
-				} else if(result.getCode() == 501) {
+				} else if (result.getCode() == 501) {
 					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
-					if(saveList.size() != 0) {
+					if (saveList.size() != 0) {
 						for (Edu200 e : saveList) {
 							edu200DAO.save(e);
 						}
@@ -1685,7 +1709,17 @@ public class AdministrationPageService {
 			returnMap.put("modifyClassesInfo", updateClasses);
 		}
 
-		resultVO = ResultVO.setSuccess("成功修改了"+count+"门课程",returnMap);
+		resultVO = ResultVO.setSuccess("成功修改了" + count + "门课程", returnMap);
+		return resultVO;
+	}
+
+	//获取教学公共代码
+	public ResultVO getJxPublicCodes() {
+		ResultVO resultVO;
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu400> allXn = edu400DAO.findAll();
+		returnMap.put("allXn", allXn);
+		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
 }

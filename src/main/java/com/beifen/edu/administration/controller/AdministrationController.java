@@ -223,70 +223,24 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/getJxPublicCodes")
 	@ResponseBody
-	public Object getJxPublicCodes() {
-		Map<String, Object> returnMap = new HashMap();
-		returnMap.put("allXn", administrationPageService.queryAllXn());
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO getJxPublicCodes() {
+		ResultVO resultVO = administrationPageService.getJxPublicCodes();
+		return resultVO;
 	}
 
 	/**
-	 * 新增学年
+	 * 新增修改学年
 	 */
 	@RequestMapping("/addNewXn")
 	@ResponseBody
-	public Object addNewXn(@RequestParam String xninfo) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO addNewXn(@RequestParam String xninfo) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(xninfo);
 		Edu400 edu400 = (Edu400) JSONObject.toBean(jsonObject, Edu400.class);
-		List<Edu400> allXn=administrationPageService.queryAllXn();
-		boolean nameHave = false;
-		for (int i = 0; i < allXn.size(); i++) {
-			if(allXn.get(i).getXnmc().equals(edu400.getXnmc())){
-				nameHave=true;
-				break;
-			}
-		}
-
-		if(!nameHave){
-			administrationPageService.addNewXn(edu400);
-			returnMap.put("id", edu400.getEdu400_ID());
-			returnMap.put("currentAllXn", administrationPageService.queryAllXn());
-		}
-		returnMap.put("nameHave", nameHave);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.addNewXn(edu400);
+		return result;
 	}
 
-	/**
-	 * 修改学年
-	 */
-	@RequestMapping("/modifyXn")
-	@ResponseBody
-	public Object modifyXn(@RequestParam String xninfo) {
-		Map<String, Object> returnMap = new HashMap();
-		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(xninfo);
-		Edu400 edu400 = (Edu400) JSONObject.toBean(jsonObject, Edu400.class);
-		List<Edu400> allXn=administrationPageService.queryAllXn();
-		boolean nameHave = false;
-		for (int i = 0; i < allXn.size(); i++) {
-			if(!allXn.get(i).getEdu400_ID().equals(edu400.getEdu400_ID())&&
-					allXn.get(i).getXnmc().equals(edu400.getXnmc())){
-				nameHave=true;
-				break;
-			}
-		}
-
-		if(!nameHave){
-			administrationPageService.addNewXn(edu400);
-			returnMap.put("currentAllXn", administrationPageService.queryAllXn());
-		}
-		returnMap.put("nameHave", nameHave);
-		returnMap.put("result", true);
-		return returnMap;
-	}
 
 	/**
 	 *预备开始排课时 处理相关信息
