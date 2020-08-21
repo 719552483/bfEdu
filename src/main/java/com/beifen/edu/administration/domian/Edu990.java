@@ -63,6 +63,9 @@ public class Edu990 {
 		this.scdlsj = scdlsj;
 	}
 
+	// 指定blob字段
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	public String getYxkjfs() {
 		return yxkjfs;
 	}
