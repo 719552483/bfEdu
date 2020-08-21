@@ -451,7 +451,7 @@ function configTAB2(){
 //追回开始检索
 function startSearchTab2(){
 	var searchObjet=new Object();
-	searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	searchObjet.currentUserRole=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	searchObjet.proposerKey=getNormalSelectValue("fqrID");
 	searchObjet.businessType=getNormalSelectValue("splxForTab2");
 

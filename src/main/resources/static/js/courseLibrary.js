@@ -1004,8 +1004,16 @@ function confirmImportNewClass(){
         processData : false, // 使数据不做处理
         contentType : false, // 不要设置Content-Type请求头
         success: function(backjosn){
+			$(".fileLoadingArea").hide();
         	if(backjosn.code === 200) {
-				$(".fileLoadingArea").hide();
+				var importClasses=backjosn.data.importClasses;
+				for (var i = 0; i <importClasses.length; i++) {
+					$('#courseLibraryTable').bootstrapTable("prepend", importClasses[i]);
+				}
+				toastr.success(backjosn.msg);
+				toolTipUp(".myTooltip");
+				$.hideModal("#importNewClassModal");
+			} else {
 				if(!backjosn.data.isExcel){
 					showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
 					return
@@ -1026,17 +1034,7 @@ function confirmImportNewClass(){
 					showImportErrorInfo("#importNewClassModal",backjosn.data.checkTxt);
 					return
 				}
-
-				var importClasses=backjosn.data.importClasses;
-				for (var i = 0; i <importClasses.length; i++) {
-					$('#courseLibraryTable').bootstrapTable("prepend", importClasses[i]);
-				}
-				toastr.success(backjosn.msg);
-				toolTipUp(".myTooltip");
-				$.hideModal("#importNewClassModal");
-			} else {
 				toastr.warning(backjosn.msg);
-				$.hideModal("#importNewClassModal");
 			}
         },beforeSend: function(xhr) {
            $(".fileLoadingArea").show();
@@ -1239,8 +1237,17 @@ function confirmModifyClasses(){
         processData : false, // 使数据不做处理
         contentType : false, // 不要设置Content-Type请求头
         success: function(backjosn){
+			$(".fileLoadingArea").hide();
         	if(backjosn.code === 200) {
-				$(".fileLoadingArea").hide();
+				var choosendClasses = backjosn.data.modifyClassesInfo;
+				for (var i = 0; i < choosendClasses.length; i++) {
+					$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosendClasses[i].bf200_ID, row: choosendClasses[i]});
+				}
+				toastr.success(backjosn.msg);
+				$.hideModal("#modifyClassesModal");
+				toolTipUp(".myTooltip");
+			} else {
+
 				if(!backjosn.data.isExcel){
 					showImportErrorInfo("#modifyClassesModal","请上传xls或xlsx类型的文件");
 					return
@@ -1261,16 +1268,7 @@ function confirmModifyClasses(){
 					showImportErrorInfo("#modifyClassesModal",backjosn.data.checkTxt);
 					return
 				}
-				var choosendClasses = backjosn.data.modifyClassesInfo;
-				for (var i = 0; i < choosendClasses.length; i++) {
-					$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosendClasses[i].bf200_ID, row: choosendClasses[i]});
-				}
-				toastr.success(backjosn.msg);
-				$.hideModal("#modifyClassesModal");
-				toolTipUp(".myTooltip");
-			} else {
 				toastr.warning(backjosn.msg);
-				$.hideModal("#modifyClassesModal");
 			}
 
         },beforeSend: function(xhr) {
