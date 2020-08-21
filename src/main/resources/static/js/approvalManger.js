@@ -396,7 +396,7 @@ function disagree(row){
 //审批管理开始检索
 function startSearch(){
       var searchObjet=new Object();
-	  searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	  searchObjet.currentUserRole=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	  searchObjet.proposerKey=getNormalSelectValue("sqrID");
 	  searchObjet.businessType=getNormalSelectValue("splx");
 
