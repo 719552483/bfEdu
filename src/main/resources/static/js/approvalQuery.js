@@ -357,7 +357,7 @@ function stuffTeacherInfoArea(businessInfo){
 //获取审批历史记录分组
 function startSearch(){
       var searchObjet=new Object();
-	  searchObjet.currentUserRole=JSON.parse($.session.get('authoritysInfo')).bF991_ID;
+	  searchObjet.currentUserRole=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	  searchObjet.proposerKey=getNormalSelectValue("sqrID");
 	  searchObjet.businessType=getNormalSelectValue("splx");
 	  searchObjet.examinerkey= $(parent.frames["topFrame"].document).find(".topright").find(".user").find("span").attr("userId");
