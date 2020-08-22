@@ -414,7 +414,7 @@ public class StudentManageService {
         if (one == null) {
             resultVO = ResultVO.setFailed("此学生暂无评价");
         } else {
-            resultVO = ResultVO.setSuccess("查询成功",edu004);
+            resultVO = ResultVO.setSuccess("查询成功",one);
         }
         return resultVO;
     }
