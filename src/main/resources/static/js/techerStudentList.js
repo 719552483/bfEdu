@@ -14,6 +14,9 @@ function getMajorTrainingSelectInfo() {
     $("#major").change(function() {
         startSearch();
     });
+    $("#sex").change(function() {
+        startSearch();
+    });
 }
 
 //填充空的学生表
@@ -49,7 +52,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
         exportDataType: "all",
         showExport: true,      //是否显示导出
         exportOptions:{
-            fileName: '学生信息导出'  //文件名称
+            fileName: '授课班级学生信息导出'  //文件名称
         },
         striped: true,
         sidePagination: "client",
