@@ -37,6 +37,8 @@ public class StudentManageService {
     private Edu990Dao edu990Dao;
     @Autowired
     private Edu992Dao edu992Dao;
+    @Autowired
+    private Edu004Dao edu004Dao;
 
 
     // 查询所有学生信息
@@ -402,6 +404,39 @@ public class StudentManageService {
             resultVO = ResultVO.setSuccess("成功修改了"+count+"个学生",modifyStudents);
         }
 
+        return resultVO;
+    }
+
+    //查询学生评价
+    public ResultVO queryStudentAppraise(String edu001Id) {
+        ResultVO resultVO;
+        Edu004  edu004 = edu004Dao.findAppraiseByStudentId(edu001Id);
+        if (edu004.getEdu001_ID() == null) {
+            resultVO = ResultVO.setFailed("此学生暂无评价");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu004);
+        }
+        return resultVO;
+    }
+
+
+    public ResultVO studentAppraise(List<String> studnetIdList, String appraiseInfo) {
+        ResultVO resultVO;
+
+        for (String s : studnetIdList) {
+            Edu004 one = edu004Dao.findAppraiseByStudentId(s);
+            if (one.getEdu001_ID() != null) {
+                one.setAppraiseText(appraiseInfo);
+                edu004Dao.save(one);
+            } else {
+                Edu004 edu004 = new Edu004();
+                edu004.setEdu001_ID(Long.parseLong(s));
+                edu004.setAppraiseText(appraiseInfo);
+                edu004Dao.save(edu004);
+            }
+        }
+
+        resultVO = ResultVO.setSuccess("成功评价了"+studnetIdList.size()+"个学生");
         return resultVO;
     }
 }

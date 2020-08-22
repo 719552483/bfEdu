@@ -3,6 +3,8 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu001;
+import com.beifen.edu.administration.domian.Edu004;
+import com.beifen.edu.administration.domian.Edu400;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.service.StudentManageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
@@ -258,6 +260,32 @@ public class StudentManageController {
         edu001.setXzbname(className);
 
         ResultVO result = studentManageService.studentMangerSearchStudent(edu001);
+        return result;
+    }
+
+
+    /**
+     * 查看学生评价
+     * @param edu001Id
+     * @return
+     */
+    @RequestMapping("/queryStudentAppraise")
+    @ResponseBody
+    public ResultVO queryStudentAppraise(@RequestParam("edu001Id") String edu001Id) {
+        ResultVO result =studentManageService.queryStudentAppraise(edu001Id);
+        return result;
+    }
+
+    /**
+     * 查看学生评价
+     * @param edu001Id
+     * @return
+     */
+    @RequestMapping("/studentAppraise")
+    @ResponseBody
+    public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo) {
+        List<String> studnetIdList = JSON.parseArray(studentArray, String.class);
+        ResultVO result =studentManageService.studentAppraise(studnetIdList,appraiseInfo);
         return result;
     }
 

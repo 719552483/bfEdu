@@ -20,7 +20,7 @@ import java.util.List;
 public class TeachingManageController {
 
     @Autowired
-    TeachingManageService teachingManageService;
+    private TeachingManageService teachingManageService;
 
 
 

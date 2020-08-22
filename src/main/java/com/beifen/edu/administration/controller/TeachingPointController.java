@@ -19,7 +19,7 @@ import java.util.List;
 public class TeachingPointController {
 
     @Autowired
-    TeachingPointService teachingPointService;
+    private TeachingPointService teachingPointService;
 
     /**
      * 新增教学点

@@ -49,9 +49,9 @@ public class AdministrationController {
 	@Autowired
 	private StudentManageService studentManageService;
 	@Autowired
-	TeachingPointService teachingPointService;
+	private TeachingPointService teachingPointService;
 	@Autowired
-	StaffManageService staffManageService;
+	private StaffManageService staffManageService;
 
 	/**
 	 * 新增修改课程

@@ -33,11 +33,11 @@ import java.util.Map;
 public class StaffManageController {
 
     @Autowired
-    AdministrationPageService administrationPageService;
+    private AdministrationPageService administrationPageService;
     @Autowired
-    ApprovalProcessService approvalProcessService;
+    private ApprovalProcessService approvalProcessService;
     @Autowired
-    StaffManageService staffManageService;
+    private StaffManageService staffManageService;
 
     ReflectUtils utils = new ReflectUtils();
     /**
