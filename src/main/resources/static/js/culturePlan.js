@@ -35,10 +35,10 @@ function getMajorTrainingSelectInfo() {
 					hideloding();
 					dropConfigOption("#major");
 					if(backjson.couserInfo.length===0){
-						toastr.info('暂无培养计划');
+						toastr.info('该培养计划下暂无专业课程');
+						drawMajorTrainingEmptyTable();
 					}
 					stuffMajorTrainingTable(backjson.couserInfo);
-					
 				} else {
 					toastr.warning('操作失败，请重试');
 				}
@@ -783,6 +783,9 @@ function stuffAllClassTable(tableInfo) {
 		toolbar : '#toolbar',
 		showColumns : false,
 		onClickRow : function(row) {
+			stuffClassBaseInfo(row);
+		},
+		onCheck : function(row) {
 			stuffClassBaseInfo(row);
 		},
 		onPageChange : function() {

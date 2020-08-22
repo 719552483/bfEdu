@@ -27,7 +27,10 @@ function stuffStudentBaseInfoTable(tableInfo) {
         'click #studentDetails': function(e, value, row, index) {
             studentDetails(row);
         },
-        'click #modifyStudent': function(e, value, row, index) {
+        'click #querystudentAppraise': function(e, value, row, index) {
+            querystudentAppraise(row,index);
+        },
+        'click #modifyStudentAppraise': function(e, value, row, index) {
             studentAppraise(row,index);
         }
     };
@@ -69,39 +72,43 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 field: 'pyccmc',
                 title: '层次',
                 align: 'left',
-                formatter: paramsMatter
-
+                formatter: paramsMatter,
+                visible: false
             }, {
                 field: 'szxbmc',
                 title: '系部',
                 align: 'left',
-                formatter: paramsMatter
+                formatter: paramsMatter,
+                visible: false
             }, {
                 field: 'njmc',
                 title: '年级',
                 align: 'left',
-                formatter: paramsMatter
+                formatter: paramsMatter,
+                visible: false
             }, {
                 field: 'zymc',
                 title: '专业名称',
                 align: 'center',
-                formatter: paramsMatter
+                formatter: paramsMatter,
+                visible: false
             }, {
                 field: 'xzbname',
                 title: '行政班',
                 align: 'left',
-                formatter: xzbnameMatter
-            }, {
-                field: 'xh',
-                title: '学号',
-                align: 'left',
-                formatter: paramsMatter
+                formatter: xzbnameMatter,
+                visible: false
             }, {
                 field: 'xm',
                 title: '姓名',
                 align: 'left',
                 formatter: paramsMatter
             },{
+                field: 'xh',
+                title: '学号',
+                align: 'left',
+                formatter: paramsMatter
+            }, {
                 field: 'sylx',
                 title: '生源类型',
                 align: 'left',
@@ -110,8 +117,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 field: 'xb',
                 title: '性别',
                 align: 'left',
-                formatter: sexFormatter,
-                visible: false
+                formatter: sexFormatter
             }, {
                 field: 'zt',
                 title: '状态',
@@ -271,7 +277,8 @@ function stuffStudentBaseInfoTable(tableInfo) {
         return [
             '<ul class="toolbar tabletoolbar">' +
             '<li id="studentDetails" class="queryBtn"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
-            '<li id="studentAppraise" class="insertBtn"><span><img src="images/t01.png" style="width:24px"></span>评价</li>' +
+            '<li id="querystudentAppraise" class="insertBtn"><span><img src="images/t01.png" style="width:24px"></span>查看评价</li>' +
+            '<li id="modifyStudentAppraise" class="insertBtn"><span><img src="images/t02.png" style="width:24px"></span>修改评价</li>' +
             '</ul>'
         ]
             .join('');
@@ -413,18 +420,84 @@ function emptyStudentBaseInfoArea() {
     reReloadSearchsWithSelect(reObject);
 }
 
-//预备单个给学生评价
+//查看学生评价
+function querystudentAppraise(row,index){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/queryStudentAppraise",
+        data: {
+            "edu001Id":JSON.stringify(row.edu001_ID)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                $.showModal("#studentAppraiseModal",false);
+                $('#studentAppraiseModal').find(".myInput,textarea").attr("disabled", true) // 将input元素设置为readonly
+                $("#studentAppraiseModal").find(".searchArea").show().val(row.xm);
+                $("#AppraiseTxt").val(backjson.msg)
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//预备操作单个学生
 function studentAppraise(row,index){
+    $.showModal("#studentAppraiseModal",true);
+    $("#studentAppraiseModal").find(".moadalTitle").html(row.xm+" -评价操作");
+    $('#studentAppraiseModal').find(".myInput,textarea").attr("disabled", false) // 将input元素设置为readonly
+    $("#studentAppraiseModal").find(".searchArea").show()
+    $("#studentAppraise_name").val(row.xm);
     //确认提交评价
-    $('#confirmAppraiseBtn').unbind('click');
-    $('#confirmAppraiseBtn').bind('click', function(e) {
-        confirmAppraise();
+    $('.confirmAppraiseBtn').unbind('click');
+    $('.confirmAppraiseBtn').bind('click', function(e) {
+        var sendArray=new Array();
+        sendArray.push(row.edu001_ID);
+        confirmAppraise(sendArray);
+        e.stopPropagation();
+    });
+}
+
+//预备预备操作多个学生
+function wantAddAppraises(){
+    var choosed=$("#techerStudentListTable").bootstrapTable("getSelections");
+    if(choosed.length===0){
+        toastr.warning("暂未选择学生");
+        return;
+    }
+
+    $.showModal("#studentAppraiseModal",true);
+    $("#studentAppraiseModal").find(".moadalTitle").html("学生批量评价操作");
+    $('#studentAppraiseModal').find(".myInput,textarea").attr("disabled", false) // 将input元素设置为readonly
+    $("#studentAppraiseModal").find(".searchArea").hide()
+    $("#studentAppraise_name").val("");
+
+    var sendArray=new Array();
+    for (var i = 0; i < choosed.length; i++) {
+        sendArray.push(choosed[i].edu001_ID);
+    }
+    //确认提交评价
+    $('.confirmAppraiseBtn').unbind('click');
+    $('.confirmAppraiseBtn').bind('click', function(e) {
+        confirmAppraise(sendArray);
         e.stopPropagation();
     });
 }
 
 //发送评价
-function confirmAppraise(){
+function confirmAppraise(sendArray){
     var AppraiseTxt=$("#AppraiseTxt").val();
     if(AppraiseTxt===""){
         toastr.warning('请输入学生评价内容');
@@ -435,6 +508,34 @@ function confirmAppraise(){
         toastr.warning('学生评价字符集长度超过255');
         return;
     }
+
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/studentAppraise",
+        data: {
+            "studentArray":JSON.stringify(sendArray),
+            "appraiseInfo":AppraiseTxt
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+               $.hideModal("#studentAppraiseModal");
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
 }
 
 //使用字符unicode判断长度
@@ -541,6 +642,7 @@ function startSearch(){
             if (backjson.code===200) {
                 stuffStudentBaseInfoTable(backjson.data);
             } else {
+                drawStudentBaseInfoEmptyTable();
                 toastr.warning(backjson.msg);
             }
         }
@@ -560,6 +662,13 @@ function btnBind(){
     $('#startSearch').unbind('click');
     $('#startSearch').bind('click', function(e) {
         startSearch();
+        e.stopPropagation();
+    });
+
+    //预备批量评价操作
+    $('#wantAddAppraises,#wantModifyAppraises').unbind('click');
+    $('#wantAddAppraises,#wantModifyAppraises').bind('click', function(e) {
+        wantAddAppraises();
         e.stopPropagation();
     });
 }

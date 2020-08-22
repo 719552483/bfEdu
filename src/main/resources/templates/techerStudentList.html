@@ -51,6 +51,7 @@
 			<div class="tools">
 				<ul class="toolbar">
 					<li class="click insertBtn" id="wantAddAppraises"><span><img src="images/t01.png" style="width: 24px;" /></span>批量新增学生评价</li>
+					<li class="click insertBtn" id="wantModifyAppraises"><span><img src="images/t01.png" style="width: 24px;" /></span>批量修改学生评价</li>
 					<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
 				</ul>
 				<ul class="toolbar1">
@@ -546,7 +547,23 @@
 					<div class="tiptop"><span class="moadalTitle">学生评价</span><a class="cancel" shape="rect"></a></div>
 				</div>
 				<div class="modal-body">
-                    <textarea id="AppraiseTxt"></textarea>
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;width:11%;" >学生名称</label>
+									<input name="" type="text" class="myInput searchInput"
+										   id="studentAppraise_name" placeholder="学生名称..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+
+					<div style="padding-left: 20px; padding-right: 20px;">
+						<label class="selectName" style="margin-top: 14px;">请输入评价内容:</label>
+						<textarea id="AppraiseTxt" class="appraiseTextArea"></textarea>
+					</div>
 					<div class="clear"></div>
 				</div>
 				<div class="modal-footer tipbtn">

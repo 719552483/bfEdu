@@ -1233,27 +1233,23 @@ public class AdministrationPageService {
 	}
 
 	// 培养计划添加专业课程检索
-	public List<Edu108> addCrouseSeacch(Edu108 edu108) {
-		Specification<Edu108> specification = new Specification<Edu108>() {
-			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public List<Edu200> addCrouseSeacch(Edu200 edu200) {
+		Specification<Edu200> specification = new Specification<Edu200>() {
+			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu108.getEdu107_ID() != null && !"".equals(edu108.getEdu107_ID())) {
-					predicates.add(cb.equal(root.<String>get("edu107_ID"), edu108.getEdu107_ID()));
+				if (edu200.getKcdm() != null && !"".equals(edu200.getKcdm())) {
+					predicates.add(cb.like(root.<String>get("kcdm"), '%' + edu200.getKcdm() + '%'));
 				}
-
-				if (edu108.getKcdm() != null && !"".equals(edu108.getKcdm())) {
-					predicates.add(cb.like(root.<String>get("kcdm"), '%' + edu108.getKcdm() + '%'));
+				if (edu200.getKcmc() != null && !"".equals(edu200.getKcmc())) {
+					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu200.getKcmc() + '%'));
 				}
-				if (edu108.getKcmc() != null && !"".equals(edu108.getKcmc())) {
-					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu108.getKcmc() + '%'));
-				}
-				if (edu108.getBzzymc() != null && !"".equals(edu108.getBzzymc())) {
-					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu108.getBzzymc() + '%'));
+				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
+					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
-		List<Edu108> crouseEntities = edu108DAO.findAll(specification);
+		List<Edu200> crouseEntities = edu200DAO.findAll(specification);
 		return crouseEntities;
 	}
 

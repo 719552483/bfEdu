@@ -1215,12 +1215,11 @@ public class AdministrationController {
 		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 填充搜索对象
-		Edu108 edu108 = new Edu108();
-		edu108.setEdu107_ID(edu107ID);
-		edu108.setKcdm(searchObject.getString("coursesCode"));
-		edu108.setKcmc(searchObject.getString("coursesName"));
-		edu108.setBzzymc(searchObject.getString("majorWorkSign"));
-		List<Edu108> crouseInfo = administrationPageService.addCrouseSeacch(edu108);
+		Edu200 edu200 = new Edu200();
+		edu200.setKcdm(searchObject.getString("coursesCode"));
+		edu200.setKcmc(searchObject.getString("coursesName"));
+		edu200.setBzzymc(searchObject.getString("majorWorkSign"));
+		List<Edu200> crouseInfo = administrationPageService.addCrouseSeacch(edu200);
 		returnMap.put("crouseInfo", crouseInfo);
 		returnMap.put("result", true);
 		return returnMap;
