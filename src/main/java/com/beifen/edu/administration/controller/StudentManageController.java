@@ -266,13 +266,15 @@ public class StudentManageController {
 
     /**
      * 查看学生评价
-     * @param edu001Id
+     * @param appraiseInfo
      * @return
      */
     @RequestMapping("/queryStudentAppraise")
     @ResponseBody
-    public ResultVO queryStudentAppraise(@RequestParam("edu001Id") String edu001Id) {
-        ResultVO result =studentManageService.queryStudentAppraise(edu001Id);
+    public ResultVO queryStudentAppraise(@RequestParam("appraiseInfo") String appraiseInfo) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(appraiseInfo);
+        Edu004 edu004 = JSON.toJavaObject(jsonObject, Edu004.class);
+        ResultVO result =studentManageService.queryStudentAppraise(edu004);
         return result;
     }
 
@@ -285,9 +287,9 @@ public class StudentManageController {
 
     @RequestMapping("/studentAppraise")
     @ResponseBody
-    public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo) {
+    public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo,@RequestParam("userKey") String userKey) {
         List<String> studnetIdList = JSON.parseArray(studentArray, String.class);
-        ResultVO result =studentManageService.studentAppraise(studnetIdList,appraiseInfo);
+        ResultVO result =studentManageService.studentAppraise(studnetIdList,userKey,appraiseInfo);
         return result;
     }
 

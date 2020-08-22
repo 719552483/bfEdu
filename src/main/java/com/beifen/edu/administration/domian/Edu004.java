@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class Edu004 {
     private Long Edu004_ID;//主键
     private Long Edu001_ID;//学生id
+    private Long Edu101_ID;//老师id
     private String appraiseText;//评价文本
 
     @Id
@@ -40,5 +41,11 @@ public class Edu004 {
         this.appraiseText = appraiseText;
     }
 
+    public Long getEdu101_ID() {
+        return Edu101_ID;
+    }
 
+    public void setEdu101_ID(Long edu101_ID) {
+        Edu101_ID = edu101_ID;
+    }
 }

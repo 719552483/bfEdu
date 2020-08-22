@@ -408,10 +408,10 @@ public class StudentManageService {
     }
 
     //查询学生评价
-    public ResultVO queryStudentAppraise(String edu001Id) {
+    public ResultVO queryStudentAppraise(Edu004 edu004) {
         ResultVO resultVO;
-        Edu004 edu004 = edu004Dao.findAppraiseByStudentId(edu001Id);
-        if (edu004 == null) {
+        Edu004 one = edu004Dao.findAppraiseByTeacher(edu004.getEdu001_ID().toString(),edu004.getEdu101_ID().toString());
+        if (one == null) {
             resultVO = ResultVO.setFailed("此学生暂无评价");
         } else {
             resultVO = ResultVO.setSuccess("查询成功",edu004);
@@ -421,17 +421,18 @@ public class StudentManageService {
 
 
     //增改学生评价
-    public ResultVO studentAppraise(List<String> studnetIdList, String appraiseInfo) {
+    public ResultVO studentAppraise(List<String> studnetIdList, String userKey,String appraiseInfo) {
         ResultVO resultVO;
 
         for (String s : studnetIdList) {
-            Edu004 one = edu004Dao.findAppraiseByStudentId(s);
+            Edu004 one = edu004Dao.findAppraiseByTeacher(s,userKey);
             if (one != null) {
                 one.setAppraiseText(appraiseInfo);
                 edu004Dao.save(one);
             } else {
                 Edu004 edu004 = new Edu004();
                 edu004.setEdu001_ID(Long.parseLong(s));
+                edu004.setEdu101_ID(Long.parseLong(userKey));
                 edu004.setAppraiseText(appraiseInfo);
                 edu004Dao.save(edu004);
             }
