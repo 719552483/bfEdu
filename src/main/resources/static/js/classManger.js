@@ -1409,6 +1409,13 @@ function addTeachingClassBtnbind() {
 		e.stopPropagation();
 	});
 
+	// 教学班导出点名表
+	$('#exportRollcallTable').unbind('click');
+	$('#exportRollcallTable').bind('click', function(e) {
+		exportRollcallTable();
+		e.stopPropagation();
+	});
+
 	// 开始检索
 	$('#allteachingClassArea_startSearch').unbind('click');
 	$('#allteachingClassArea_startSearch').bind('click', function(e) {
@@ -2085,5 +2092,24 @@ function confirmModifyTeachingClass(row){
 			}
 		}
 	});
+}
+
+//教学班导出点名表
+function exportRollcallTable(){
+	var choosedClass = $("#teachingClassTable").bootstrapTable("getSelections");
+	if(choosedClass.length===0){
+		toastr.warning('暂未选择教学班');
+		return;
+	}
+	var sendArray=new Array();
+	for (var i = 0; i < choosedClass.length; i++) {
+		sendArray.push(choosedClassp[i].edu301_ID);
+	}
+
+	var url = "/exportRollcallExcel";
+	var sendArray = JSON.stringify(sendArray) ;
+	var form = $("<form></form>").attr("action", url).attr("method", "post");
+	form.append($("<input></input>").attr("type", "hidden").attr("name", "edu301Ids").attr("value", sendArray));
+	form.appendTo('body').submit().remove();
 }
 /*教学班管理end*/
