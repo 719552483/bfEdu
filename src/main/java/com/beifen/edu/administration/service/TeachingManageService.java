@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.service;
 
 
+import com.beifen.edu.administration.PO.ClassStudentViewPO;
 import com.beifen.edu.administration.PO.SchoolTimetablePO;
 import com.beifen.edu.administration.PO.StudentSchoolTimetablePO;
 import com.beifen.edu.administration.PO.TimeTablePO;
@@ -50,6 +51,8 @@ public class TeachingManageService {
     TeachingScheduleViewDao teachingScheduleViewDao;
     @Autowired
     StudentScheduleViewDao studentScheduleViewDao;
+    @Autowired
+    ClassStudentViewDao classStudentViewDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -470,6 +473,66 @@ public class TeachingManageService {
         returnMap.put("planInfo", edu108);
 
         resultVO = ResultVO.setSuccess("查询成功", returnMap);
+
+        return resultVO;
+    }
+
+    /**
+     * 查询授课学生名单
+     * @param classStudent
+     * @return
+     */
+    public ResultVO findStudentInTeaching(ClassStudentViewPO classStudent) {
+        ResultVO resultVO;
+
+        if("".equals(classStudent.getUserKey()) || classStudent.getUserKey() == null){
+            resultVO = ResultVO.setFailed("您不是本校老师，暂时无法查询");
+            return resultVO;
+        }
+
+        Specification<ClassStudentViewPO> specification = new Specification<ClassStudentViewPO>() {
+            public Predicate toPredicate(Root<ClassStudentViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (classStudent.getGradation() != null && !"".equals(classStudent.getGradation())) {
+                    predicates.add(cb.equal(root.<String> get("gradation"),classStudent.getGradation()));
+                }
+                if (classStudent.getDepartment() != null && !"".equals(classStudent.getDepartment())) {
+                    predicates.add(cb.equal(root.<String> get("department"),classStudent.getDepartment()));
+                }
+                if (classStudent.getGrade() != null && !"".equals(classStudent.getGrade())) {
+                    predicates.add(cb.equal(root.<String> get("grade"),classStudent.getGrade()));
+                }
+                if (classStudent.getMajor() != null && !"".equals(classStudent.getMajor())) {
+                    predicates.add(cb.equal(root.<String> get("major"),classStudent.getMajor()));
+                }
+                if (classStudent.getSex() != null && !"".equals(classStudent.getSex())) {
+                    predicates.add(cb.equal(root.<String> get("sex"),classStudent.getSex()));
+                }
+                if (classStudent.getUserKey() != null && !"".equals(classStudent.getUserKey())) {
+                    predicates.add(cb.equal(root.<String> get("userKey"),classStudent.getUserKey()));
+                }
+                if (classStudent.getName() != null && !"".equals(classStudent.getName())) {
+                    predicates.add(cb.like(root.<String> get("name"), '%' + classStudent.getName() + '%'));
+                }
+                if (classStudent.getClassName() != null && !"".equals(classStudent.getClassName())) {
+                    predicates.add(cb.like(root.<String> get("className"), '%' + classStudent.getClassName() + '%'));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<ClassStudentViewPO> allInfo = classStudentViewDao.findAll(specification);
+        List<Edu001> edu001List;
+        if(allInfo.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合要求的学生名单");
+        } else {
+            List<String> studentIds = new ArrayList<>();
+            for (ClassStudentViewPO e : allInfo) {
+                studentIds.add(e.getEdu001_id().toString());
+            }
+            edu001List = edu001Dao.findStudentsByIds(studentIds);
+            resultVO = ResultVO.setSuccess("共找到"+edu001List.size()+"个学生",edu001List);
+        }
 
         return resultVO;
     }

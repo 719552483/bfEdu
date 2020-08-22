@@ -443,7 +443,7 @@ public class ReflectUtils {
 				}
 				
 				long kcfzrID=Long.parseLong(kcfzrIDStrs[1]);
-				String teacherName=reflectUtils.staffManageService.queryTecaherNameById(kcfzrID);
+				String teacherName=kcfzrIDStrs[0];
 //				if(teacherName==null){
 //					chaeckPass=false;
 //					checkTxt="第"+(i+1)+"行-可能修改了课程负责人ID(课程负责人ID不允许更改)";

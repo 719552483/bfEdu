@@ -1,6 +1,8 @@
 package com.beifen.edu.administration.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.beifen.edu.administration.PO.ClassStudentViewPO;
 import com.beifen.edu.administration.PO.TimeTablePO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
@@ -133,5 +135,22 @@ public class TeachingManageController {
         result = teachingManageService.getScheduleInfoDetail(classId,edu108Id);
         return result;
     }
+
+    /**
+     * 授课名单那查询
+     * @param searchsObject
+     * @return
+     */
+    @RequestMapping("/findStudentInTeaching")
+    @ResponseBody
+    public ResultVO findStudentInTeaching(@RequestParam("searchsObject") String searchsObject) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject jsonObject = JSON.parseObject(searchsObject);
+        ClassStudentViewPO classStudent = JSON.toJavaObject(jsonObject, ClassStudentViewPO.class);
+        result = teachingManageService.findStudentInTeaching(classStudent);
+        return result;
+    }
+
 
 }

@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.beifen.edu.administration.domian.Edu000;
-import com.beifen.edu.administration.domian.Edu001;
-import com.beifen.edu.administration.domian.Edu990;
+
 @Configuration
 public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecificationExecutor<Edu000>{
 
