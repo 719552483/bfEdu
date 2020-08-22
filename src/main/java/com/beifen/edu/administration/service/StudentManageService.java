@@ -420,6 +420,7 @@ public class StudentManageService {
     }
 
 
+    //增改学生评价
     public ResultVO studentAppraise(List<String> studnetIdList, String appraiseInfo) {
         ResultVO resultVO;
 

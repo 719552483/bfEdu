@@ -277,10 +277,12 @@ public class StudentManageController {
     }
 
     /**
-     * 查看学生评价
-     * @param edu001Id
+     * 增改学生评价
+     * @param studentArray
+     * @param appraiseInfo
      * @return
      */
+
     @RequestMapping("/studentAppraise")
     @ResponseBody
     public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo) {
