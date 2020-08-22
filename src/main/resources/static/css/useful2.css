@@ -530,7 +530,9 @@ float: left;
     margin-bottom: 0px;
 }
 
-
+.techerStudentListTableArea .search {
+	margin-top: 12px !important;
+}
 
 .majorTrainingTableArea .search {
 	    margin-top: 2px !important;

@@ -50,12 +50,11 @@
 	<div class="formbody">
 			<div class="tools">
 				<ul class="toolbar">
-					<li class="click insertBtn" id="wantAddAdministrationClass"><span><img src="images/t01.png" style="width: 24px;" /></span>新增班级</li>
-				    <li class="click deleteBtn" id="removedministrationClasses"><span><img src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
-					<li class="click" id="startSearchAdministrationClass"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+					<li class="click insertBtn" id="wantAddAppraises"><span><img src="images/t01.png" style="width: 24px;" /></span>批量新增学生评价</li>
+					<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
 				</ul>
 				<ul class="toolbar1">
-					<li class="click" id="reReloadSearchsAdministrationClass"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+					<li class="click" id="reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
 				</ul>
 			</div>
 			
@@ -110,6 +109,8 @@
 							<label class="selectName" style="margin-top: 14px;">性&#12288;&#8197;别</label>
 							<select class="isSowIndex" id="sex">
 								<option value="seleceConfigTip">请选择</option>
+								<option value="M">男</option>
+								<option value="F">女</option>
 							</select>
 
 						</div>
@@ -120,8 +121,7 @@
 					<ul class="forminfo">
 						<div class="">
 							<label class="selectName" style="margin-top: 14px;">姓&#12288;&#8197;名</label>
-							<input name="" type="text" class="myInput searchInput"
-								id="name" placeholder="请输入姓名..." />
+							<input name="" type="text" class="myInput searchInput" id="name" placeholder="请输入姓名..." />
 						</div>
 					</ul>
 				</div>
@@ -136,18 +136,426 @@
 					</ul>
 				</div>
 			</div>
-			
-			<div class="administrationClassTableArea searchGivePaddingR columnsStyle">
-				<table class="tablelist myTableStyle" id="administrationClassTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>
-			</div>
-			
-			
+
+		<div class="techerStudentListTableArea columnsStyle searchGivePaddingR">
+			<table class="tablelist myTableStyle" id="techerStudentListTable" data-unique-id="edu001_ID" style="margin-top: 10px;"></table>
+		</div>
 		</div>
 
 
+	<!-- 学生详情Modal -->
+	<div class="modal fade bs-example-modal-lg" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="manyInfoShow">
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="formtitle" style="margin-bottom: 6px;"><span>基本信息：</span></div>
+
+							<div class="col1 noneStart giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学号<b>*</b></label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentNum" placeholder="请填写学号..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">姓名<b>*</b></label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentName" placeholder="请填写姓名..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">生源类型<b>*</b></label>
+										<select class="isSowIndex isOrNotIsEvement" id="addStudentType">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">曾用名</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentUsedName" placeholder="请填写曾用名..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">性别<b>*</b></label>
+										<select class="isSowIndex" id="addStudentSex">
+											<option value="M">男</option>
+											<option value="F">女</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学生状态<b>*</b></label>
+										<select class="isSowIndex" id="addStudentStatus">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom dateOfBrithArea">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">出生日期<b>*</b></label>
+										<input readonly="readonly" name="" type="text" class="myInput manyInfoInput" id="dateOfBrith" placeholder="点击选择出生日期..."/>
+									</div>
+								</ul>
+							</div>
+							<div class="clear"></div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">层次<b>*</b></label>
+										<select class="isSowIndex" id="addStudentpycc">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">系部<b>*</b></label>
+										<select class="isSowIndex" id="addStudentxb">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">年级<b>*</b></label>
+										<select class="isSowIndex" id="addStudentnj">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">专业<b>*</b></label>
+										<select class="isSowIndex" id="addStudentzy">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">班级<b>*</b></label>
+										<select class="isSowIndex" id="addStudentxzb">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">身份证号<b>*</b></label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentIDNum" placeholder="请填写身份证号..."/>
+									</div>
+								</ul>
+							</div>
+							<div class="clear"></div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">民族<b>*</b></label>
+										<select class="isSowIndex" id="addStudentNation">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">是否有学籍</label>
+										<select class="isSowIndex isOrNotIsEvement" id="addStudentIsHaveStatus">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学籍号</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentStatusNum" placeholder="请填写学籍号..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">政治面貌</label>
+										<select class="isSowIndex" id="addStudentzzmm">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">生源地</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentsyd" placeholder="请填写生源地..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">文化程度</label>
+										<select class="isSowIndex" id="addStudentwhcd">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">考生号</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentksh" placeholder="请填写生源地..."/>
+									</div>
+								</ul>
+							</div>
+						</div>
+
+						<div class="clear"></div>
+
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="formtitle" style="margin-bottom: 6px;"><span>其他：</span></div>
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">入学总分</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentrxzf" placeholder="请填入学总分..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom enterSchoolDateArea">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">入学时间</label>
+										<input readonly="readonly" name="" type="text" class="myInput manyInfoInput" id="enterSchoolDate" placeholder="点击选择入学时间..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">毕业证号</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentbyzh" placeholder="请填入毕业证号..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">准考证号</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentzkzh" placeholder="请填入准考证号..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">手机号码</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentphoneNum" placeholder="请填入手机号码..."/>
+									</div>
+								</ul>
+							</div>
 
 
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">E-mail</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentemail" placeholder="请填入E-mail..."/>
+									</div>
+								</ul>
+							</div>
 
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">籍贯</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentjk" placeholder="请填入籍贯..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">职业</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentzhiye" placeholder="请填入职业..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">身高</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudentsg" placeholder="请填入身高..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">体重</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="addStudenttz" placeholder="请填入体重..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">婚否</label>
+										<select class="isSowIndex isOrNotIsEvement" id="addStudentIsMarried">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">招生方式</label>
+										<select class="isSowIndex" id="addStudentzsfs">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">定向(订单)培养</label>
+										<select class="isSowIndex isOrNotIsEvement" id="addStudentIsDxpy">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">建档贫困家庭</label>
+										<select class="isSowIndex isOrNotIsEvement" id="addStudentIsPoorFamily">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+							<div class="clear"></div>
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">家庭住址</label>
+										<input name="" type="text" class="myInput allWidthInput" id="addStudentjtzz" placeholder="请填写家庭住址..."/>
+									</div>
+								</ul>
+							</div>
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">宗教信仰</label>
+										<input name="" type="text" class="myInput allWidthInput" id="addStudentzjxy" placeholder="请填写宗教信仰..."/>
+									</div>
+								</ul>
+							</div>
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">备注</label>
+										<input name="" type="text" class="myInput allWidthInput" id="addStudentbz" placeholder="请填写备注..."/>
+									</div>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 学生评价Modal -->
+	<div class="modal fade bs-example-modal-lg" id="studentAppraiseModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle">学生评价</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+                    <textarea id="AppraiseTxt"></textarea>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmAppraiseBtn" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
