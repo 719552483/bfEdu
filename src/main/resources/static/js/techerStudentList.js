@@ -34,6 +34,8 @@ function stuffStudentBaseInfoTable(tableInfo) {
             querystudentAppraise(row,index);
         },
         'click #modifyStudentAppraise': function(e, value, row, index) {
+            $("#studentAppraiseModal").find(".searchArea").show()
+            $("#studentAppraise_name").val(row.xm);
             studentAppraise(row,index);
         }
     };
@@ -425,12 +427,15 @@ function emptyStudentBaseInfoArea() {
 
 //查看学生评价
 function querystudentAppraise(row,index){
+    var sendObject=new Object();
+    sendObject.Edu001_ID=JSON.stringify(row.edu001_ID);
+    sendObject.Edu101_ID=JSON.parse($.session.get('userInfo')).userKey;
     $.ajax({
         method : 'get',
         cache : false,
         url : "/queryStudentAppraise",
         data: {
-            "edu001Id":JSON.stringify(row.edu001_ID)
+            "appraiseInfo":JSON.stringify(sendObject)
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -447,8 +452,9 @@ function querystudentAppraise(row,index){
             if (backjson.code===200) {
                 $.showModal("#studentAppraiseModal",false);
                 $('#studentAppraiseModal').find(".myInput,textarea").attr("disabled", true) // 将input元素设置为readonly
-                $("#studentAppraiseModal").find(".searchArea").show().val(row.xm);
-                $("#AppraiseTxt").val(backjson.msg)
+                $("#studentAppraiseModal").find(".searchArea").show()
+                $("#studentAppraise_name").val(row.xm);
+                $("#AppraiseTxt").val(backjson.data.appraiseText)
             } else {
                 toastr.warning(backjson.msg);
             }
@@ -518,7 +524,8 @@ function confirmAppraise(sendArray){
         url : "/studentAppraise",
         data: {
             "studentArray":JSON.stringify(sendArray),
-            "appraiseInfo":AppraiseTxt
+            "appraiseInfo":AppraiseTxt,
+            "userKey":JSON.parse($.session.get('userInfo')).userKey
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -534,6 +541,7 @@ function confirmAppraise(sendArray){
             hideloding();
             if (backjson.code===200) {
                $.hideModal("#studentAppraiseModal");
+                toastr.success(backjson.msg);
             } else {
                 toastr.warning(backjson.msg);
             }
@@ -671,6 +679,7 @@ function btnBind(){
     //预备批量评价操作
     $('#wantAddAppraises,#wantModifyAppraises').unbind('click');
     $('#wantAddAppraises,#wantModifyAppraises').bind('click', function(e) {
+        $("#AppraiseTxt").val("");
         wantAddAppraises();
         e.stopPropagation();
     });

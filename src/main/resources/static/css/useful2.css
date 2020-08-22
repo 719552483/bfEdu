@@ -1898,6 +1898,11 @@ top角色切换滚动体样式
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
 }
 
+.allClassTableArea .fixed-table-container{
+	padding-left: 31px;
+	padding-right: 30px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
