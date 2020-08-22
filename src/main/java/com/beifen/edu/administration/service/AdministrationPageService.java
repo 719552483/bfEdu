@@ -1,12 +1,16 @@
 package com.beifen.edu.administration.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
@@ -16,6 +20,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
@@ -161,12 +166,14 @@ public class AdministrationPageService {
 
 	// 根据层次 系部 年级 专业定位培养计划 (excel导入时可能不对应 所以要返回结果集 而不是基础数据类型)
 	public List<Edu107> queryPyjh(String levelCode, String departmentCode, String gradeCode, String majorCode) {
-		return edu107DAO.queryPyjh(levelCode, departmentCode, gradeCode, majorCode);
+		List<Edu107> edu107s = edu107DAO.queryPyjh(levelCode, departmentCode, gradeCode, majorCode);
+		return edu107s;
 	}
 
 	// 根据层次 系部 年级 专业定位培养计划
-	public long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode) {
-		return edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+	public Long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode) {
+		Long aLong = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		return aLong;
 	}
 
 	// 新增层次关系
@@ -357,22 +364,29 @@ public class AdministrationPageService {
 
 	// 查询某层次下的系部
 	public List<Edu107> levelMatchDepartment(String leveCode) {
-		return edu107DAO.levelMatchDepartment(leveCode);
+		List<Edu107> edu107s = edu107DAO.levelMatchDepartment(leveCode);
+		return edu107s;
 	}
 
 	// 查询某系部下的年级
 	public List<Edu107> departmentMatchGrade(String departmentCode) {
-		return edu107DAO.departmentMatchGrade(departmentCode);
+		List<Edu107> edu107s = edu107DAO.departmentMatchGrade(departmentCode);
+		return edu107s;
 	}
 
 	// 查询某年级下的专业
 	public List<Edu107> gradeMatchMajor(String gradeCode) {
-		return edu107DAO.gradeMatchMajor(gradeCode);
+		List<Edu107> edu107s = edu107DAO.gradeMatchMajor(gradeCode);
+		return edu107s;
 	}
 
 	// 查询培养计划下的专业课程
-	public List<Edu108> queryCulturePlanCouses(long edu107id) {
-		return edu108DAO.queryCulturePlanCouses(edu107id);
+	public List<Edu108> queryCulturePlanCouses(Long edu107id) {
+		List<Edu108> edu108List = new ArrayList<>();
+		if(edu107id != null) {
+			edu108List = edu108DAO.queryCulturePlanCouses(edu107id);
+		}
+		return edu108List;
 	}
 
 	// 培养计划下新增课程
@@ -1722,4 +1736,44 @@ public class AdministrationPageService {
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
+
+	//生成教学班学生名单
+	public ResultVO exportRollcallExcel(HttpServletRequest request, HttpServletResponse response,List<String> edu301IdList) {
+		ResultVO resultVO;
+		List<String> edu300IdList = new ArrayList<>();
+		for (String s : edu301IdList) {
+			List<String> idList = edu302DAO.findEdu300IdsByEdu301Id(s);
+			edu300IdList.addAll(idList);
+		}
+		edu300IdList = utils.heavyListMethod(edu300IdList);
+
+		List<Edu001> studentInEdu300 = edu001DAO.getStudentInEdu300(edu300IdList);
+
+		if(studentInEdu300.size() == 0) {
+			resultVO = ResultVO.setFailed("教学班内暂无学生");
+			return resultVO;
+		}
+
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="studentInTeachingClass";
+		}else{
+			fileName="教学班学生名单";
+		}
+		//创建Excel文件
+		XSSFWorkbook workbook  = new XSSFWorkbook();
+		utils.createModifyStudentModal(workbook,studentInEdu300);
+		try {
+			utils.loadModal(response,fileName, workbook);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		resultVO = ResultVO.setSuccess("生成成功");
+		return resultVO;
+	}
+
 }

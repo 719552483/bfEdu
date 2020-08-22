@@ -1,5 +1,6 @@
 package com.beifen.edu.administration.utility;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -20,8 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.beifen.edu.administration.service.StudentManageService;
 import com.beifen.edu.administration.service.StaffManageService;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hpsf.DocumentSummaryInformation;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -4171,6 +4174,14 @@ public class ReflectUtils {
 		String[] newArrStr =  map.keySet().toArray(new String[1]);
 		return Arrays.toString(newArrStr);
 	}
+
+	//集合去重
+	public List heavyListMethod(List list){
+		List newList=new ArrayList();
+		newList.addAll(new HashSet(list));
+		return newList;
+	}
+
 }
 	
 	

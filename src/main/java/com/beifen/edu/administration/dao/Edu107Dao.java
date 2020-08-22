@@ -40,7 +40,7 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 
 	//根据层次 系部 年级 专业定位培养计划  返回id
 	@Query(value = "select e.Edu107_ID from edu107 e where e.edu103=?1 and e.edu104=?2 and e.edu105=?3 and e.edu106=?4", nativeQuery = true)
-	public long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode);
+	public Long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode);
 
 	// 根据层次 系部 年级 专业定位培养计划 返回结果集
 	@Query(value = "select * from edu107 e where e.edu103=?1 and e.edu104=?2 and e.edu105=?3 and e.edu106=?4", nativeQuery = true)

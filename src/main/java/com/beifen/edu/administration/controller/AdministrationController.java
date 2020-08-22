@@ -1067,7 +1067,7 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		List<Edu108> couserInfo = administrationPageService.queryCulturePlanCouses(edu107ID);
 		returnMap.put("couserInfo", couserInfo);
@@ -1096,7 +1096,7 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		String configTheCulturePlan = "F";// 初始化的是否生成开课计划
 		String xbspTxt = "passing";// 初始化的系部审批
@@ -1137,7 +1137,7 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 查询培养计划下的所有专业课程
 		List<Edu108> currentAllCultureCrose = administrationPageService.queryCulturePlanCouses(edu107ID);
@@ -1212,7 +1212,7 @@ public class AdministrationController {
 		String departmentCode = searchObject.getString("department");
 		String gradeCode = searchObject.getString("grade");
 		String majorCode = searchObject.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 填充搜索对象
 		Edu108 edu108 = new Edu108();
@@ -1236,6 +1236,7 @@ public class AdministrationController {
 	@RequestMapping("culturePlanSeacchCrouse")
 	@ResponseBody
 	public Object culturePlanSeacchCrouse(@RequestParam String SearchCriteria) {
+		List<Edu108> crouseInfo = new ArrayList<>();
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
 		// 根据层次等信息查出培养计划id
@@ -1243,8 +1244,12 @@ public class AdministrationController {
 		String departmentCode = searchObject.getString("department");
 		String gradeCode = searchObject.getString("grade");
 		String majorCode = searchObject.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		if(edu107ID == null ) {
+			returnMap.put("crouseInfo", crouseInfo);
+			returnMap.put("result", true);
+			return  returnMap;
+		}
 		// 填充搜索对象
 		Edu108 edu108 = new Edu108();
 		edu108.setEdu107_ID(edu107ID);
@@ -1252,7 +1257,7 @@ public class AdministrationController {
 		edu108.setKcmc(searchObject.getString("coursesName"));
 		edu108.setKsfsCode(searchObject.getString("testWay"));
 		edu108.setXbsp(searchObject.getString("suditStatus"));
-		List<Edu108> crouseInfo = administrationPageService.culturePlanSeacchCrouse(edu108);
+		crouseInfo = administrationPageService.culturePlanSeacchCrouse(edu108);
 		returnMap.put("crouseInfo", crouseInfo);
 		returnMap.put("result", true);
 		return returnMap;
@@ -1555,7 +1560,7 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 培养计划下的课程
 		List<Edu108> couserInfo = administrationPageService.queryCulturePlanCouses(edu107ID);
@@ -1608,7 +1613,7 @@ public class AdministrationController {
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
 
 		// 查询培养计划下的行政班
 		List<Edu300> administrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode,departmentCode, gradeCode, majorCode);
@@ -2618,6 +2623,19 @@ public class AdministrationController {
 	}
 
 
+	/**
+	 * 生成教学班名单
+	 * @param scheduleInfo
+	 * @return
+	 */
+	@RequestMapping("/exportRollcallExcel")
+	@ResponseBody
+	public Object exportRollcallExcel(HttpServletRequest request,HttpServletResponse response,@RequestParam("edu301Ids") String scheduleInfo) {
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		List<String> edu301IdList = JSON.parseArray(scheduleInfo, String.class);
+		ResultVO result = administrationPageService.exportRollcallExcel(request,response,edu301IdList);
+		return result;
+	}
 
 
 }
