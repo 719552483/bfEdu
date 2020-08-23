@@ -587,16 +587,14 @@ function makePlan(row){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code === 200) {
-				$(".startArea").toggle();
-				$(".culturePlanArea").toggle();
-				$(".edu107Id").html(row.edu107_ID);
-				$(".planName").html(row.levelTxt+'/'+row.departmentTxt+'/'+row.gradeTxt+'/'+row.majorTxt);
-				stuffMajorTrainingTable(backjson.data);
-			} else {
-				toastr.warning(backjson.msg);
-				toastr.info('该培养计划下暂无专业课程');
-				drawMajorTrainingEmptyTable();
+			$(".startArea").toggle();
+			$(".culturePlanArea").toggle();
+			$(".edu107Id").html(row.edu107_ID);
+			$(".planName").html(row.edu103mc+'/'+row.edu104mc+'/'+row.edu105mc+'/'+row.edu106mc);
+			stuffMajorTrainingTable(backjson.data);
+			binBind();
+			if(backjson.code===500){
+				toastr.info(backjson.msg);
 			}
 		}
 	});
@@ -865,7 +863,7 @@ function getCrouseModifyInfo(row){
 	crouseInfoObject.edu200_ID=row.edu200_ID;
 	crouseInfoObject.kcmc=$("#majorTrainingDetails_coursesName").val();
 	crouseInfoObject.kcdm=$("#majorTrainingDetails_code").val();
-	crouseInfoObject.ywmc=$("#majorTrainingDetails_enName").val();
+	// crouseInfoObject.ywmc=$("#majorTrainingDetails_enName").val();
 	crouseInfoObject.zxs=$("#majorTrainingDetails_allhours").val();
 	crouseInfoObject.xf=$("#majorTrainingDetails_credits").val();
 	crouseInfoObject.llxs=$("#majorTrainingDetails_theoryHours").val();
@@ -988,7 +986,7 @@ function showAndStuffDetails(row,showFooter) {
 	$("#majorTrainingDetails_teachingTerm").multiSelect();
 	$("#majorTrainingDetails_code").val(row.kcdm);
 	$("#majorTrainingDetails_coursesName").val(row.kcmc);
-	$("#majorTrainingDetails_enName").val(row.ywmc);
+	// $("#majorTrainingDetails_enName").val(row.ywmc);
 	$("#majorTrainingDetails_allhours").val(row.zxs);
 	$("#majorTrainingDetails_credits").val(row.xf);
 	$("#majorTrainingDetails_theoryHours").val(row.llxs);
@@ -1023,9 +1021,6 @@ function startSearch() {
 	var coursesName = $("#coursesName").val();
 	var testWay = getNormalSelectValue("testWay");
 	var suditStatus = getNormalSelectValue("suditStatus");
-	if(typeof nouNullSearch ==='undefined'){
-		return;
-	}
 	var serachObject=new Object();
 	serachObject.edu107_ID=$(".edu107Id")[0].innerText;
 	coursesNature===""?serachObject.coursesNature="":serachObject.coursesNature=coursesNature;
@@ -1039,7 +1034,7 @@ function startSearch() {
 		cache : false,
 		url : "/culturePlanSeacchCrouse",
 		data: {
-             "SearchCriteria":JSON.stringify(serachObject) 
+             "searchCriteria":JSON.stringify(serachObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1075,10 +1070,8 @@ function reReloadSearchs() {
 
 // 预备添加专业课程
 function wantAddClass() {
-	if (typeof (searchs) != "undefined") {
-		getAllClassInfo($(".planName")[0].innerText);
-		$("#classBaseInfo_classSemesters").multiSelect();
-	}
+	getAllClassInfo($(".planName")[0].innerText);
+	$("#classBaseInfo_classSemesters").multiSelect();
 }
 
 // 获取课程库列表
