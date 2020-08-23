@@ -104,7 +104,7 @@ function stuffAdministrationClassTable(tableInfo){
 				formatter :paramsMatter
 			}, {
 				field : 'xbmc',
-				title : '所属系部',
+				title : '所属二级学院',
 				align : 'left',
 				formatter : paramsMatter
 			},{
@@ -198,7 +198,7 @@ function administrationClassInfo(row){
 function stuffAdministrationClassDetails(row){
 //	actionStuffManiaSelectWithDeafult("#addAdministrationClass_campus",row.xqbm,row.xqmc);  //校区
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_level",row.pyccbm,row.pyccmc); //层次
-	actionStuffManiaSelectWithDeafult("#addAdministrationClass_department",row.xbbm,row.xbmc); //系部
+	actionStuffManiaSelectWithDeafult("#addAdministrationClass_department",row.xbbm,row.xbmc); //二级学院
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_garde",row.njbm,row.njmc); //年级
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_major",row.zybm,row.zymc); //专业
 	$("#addAdministrationClass_classCode").val(row.xzbbh);
@@ -369,7 +369,7 @@ function getAdministrationClassDetails(){
 		return;
 	}
 	if(getNormalSelectValue("addAdministrationClass_department") === ""){
-		toastr.warning('系部不能为空');
+		toastr.warning('二级学院不能为空');
 		return;
 	}
 	if(getNormalSelectValue("addAdministrationClass_garde") === ""){
@@ -580,7 +580,7 @@ function getNotNullSearchs() {
 	}
 
 	if (departmentValue == "") {
-		toastr.warning('系部不能为空');
+		toastr.warning('二级学院不能为空');
 		return;
 	}
 
@@ -1036,8 +1036,8 @@ function combinedClass() {
 	}else{
 		var levelTxts = ''; //包含培养层次
 		var levels = ''; //包含培养层次编码
-		var departmentTxts = ''; //包含系部层次
-		var departments = ''; //包含系部编码
+		var departmentTxts = ''; //包含二级学院层次
+		var departments = ''; //包含二级学院编码
 		var gradeTxts = ''; //包含年级层次
 		var grades = ''; //包含年级编码
 		var majorTxts = ''; //包含年级层次
@@ -1777,7 +1777,7 @@ function teachingClassTetNotNullSearchs(){
 	}
 
 	if (departmentValue == "") {
-		toastr.warning('系部不能为空');
+		toastr.warning('二级学院不能为空');
 		return;
 	}
 

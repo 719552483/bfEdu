@@ -160,7 +160,7 @@ function stuffAllLevelTable(allLevel){
 		btnControl();
 }
 
-//填充系部表
+//填充二级学院表
 function stuffAllDepartmentTable(allDepartment){
 	window.releaseNewsEvents = {
 			'click #modifyDepartment': function(e, value, row, index) {
@@ -186,7 +186,7 @@ function stuffAllDepartmentTable(allDepartment){
 			toolbar: '#toolbar',
 			showColumns: false,
 			onPageChange: function() {
-				drawPagination(".allDepartmentTableArea", "系部信息");
+				drawPagination(".allDepartmentTableArea", "二级学院信息");
 			},
 			columns: [{
 					field: 'edu104_ID',
@@ -205,13 +205,13 @@ function stuffAllDepartmentTable(allDepartment){
 				},
 				{
 					field: 'xbmc',
-					title: '系部名称',
+					title: '二级学院名称',
 					align: 'left',
 					formatter: paramsMatter
 
 				}, {
 					field: 'xbbm',
-					title: '系部代码',
+					title: '二级学院代码',
 					align: 'left',
 					formatter: paramsMatter
 				},{
@@ -235,7 +235,7 @@ function stuffAllDepartmentTable(allDepartment){
 				.join('');
 		}
 		drawSearchInput(".allDepartmentTableArea ");
-		drawPagination(".allDepartmentTableArea", "系部信息");
+		drawPagination(".allDepartmentTableArea", "二级学院信息");
 		toolTipUp(".myTooltip");
 		btnControl();
 }
@@ -665,14 +665,14 @@ function sendLvelRemoveInfo(removeArray){
 	});
 }
 
-//预备新增系部
+//预备新增二级学院
 function addNewDepartment(){
 	$.showModal("#addNewDeaparmentModal",true);
-	$("#addNewDeaparmentModal").find(".moadalTitle").html("新增系部");
+	$("#addNewDeaparmentModal").find(".moadalTitle").html("新增二级学院");
 	$('#addNewDeaparment_deaparmentCode').attr("disabled", false) // 编码可修改
 	$('#addNewDeaparment_deaparmentCode').val("");
 	emptyDepartmentChooseArea();
-	//确认新增系部
+	//确认新增二级学院
 	$('.confimaddNewDeaparment').unbind('click');
 	$('.confimaddNewDeaparment').bind('click', function(e) {
 		confimAddNewDeaparment();
@@ -680,7 +680,7 @@ function addNewDepartment(){
 	});
 }
 
-//确认新增系部
+//确认新增二级学院
 function confimAddNewDeaparment(){
 	var newDeaparmentObject=getDeaparmentInfo();
 	if(typeof newDeaparmentObject ==='undefined'){
@@ -708,21 +708,21 @@ function confimAddNewDeaparment(){
 			if (backjson.result) {
 				hideloding();
 				if(backjson.namehave){
-					toastr.warning('系部名称已存在');
+					toastr.warning('二级学院名称已存在');
 					return;
 				}
 				if(backjson.codehave){
-					toastr.warning('系部编码已存在');
+					toastr.warning('二级学院编码已存在');
 					return;
 				}
 				
 				newDeaparmentObject.edu104_ID=backjson.id;
 				newDeaparmentObject.yxbz=backjson.yxbz;
 				$('#allDepartmentTable').bootstrapTable('prepend', newDeaparmentObject);
-				toastr.success('新增系部成功');
+				toastr.success('新增二级学院成功');
 				$.hideModal("#addNewDeaparmentModal");
 				$(".myTooltip").tooltipify();
-				drawPagination(".allDepartmentTableArea", "系部信息");
+				drawPagination(".allDepartmentTableArea", "二级学院信息");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -730,13 +730,13 @@ function confimAddNewDeaparment(){
 	});
 }
 
-//预备修改系部
+//预备修改二级学院
 function modifyDepartment(row){
 	$.showModal("#addNewDeaparmentModal",true);
-	$("#addNewDeaparmentModal").find(".moadalTitle").html("修改系部");
+	$("#addNewDeaparmentModal").find(".moadalTitle").html("修改二级学院");
 	$('#addNewDeaparment_deaparmentCode').attr("disabled", true) // 编码不可修改
 	stufDeadultDepartmentInfo(row);
-	//确认修改系部
+	//确认修改二级学院
 	$('.confimaddNewDeaparment').unbind('click');
 	$('.confimaddNewDeaparment').bind('click', function(e) {
 		confimModifyDeaparment(row);
@@ -744,7 +744,7 @@ function modifyDepartment(row){
 	});
 }
 
-//确认修改系部
+//确认修改二级学院
 function confimModifyDeaparment(row){
 	var newDeaparmentObject=getDeaparmentInfo();
 	if(typeof newDeaparmentObject ==='undefined'){
@@ -774,21 +774,21 @@ function confimModifyDeaparment(row){
 			if (backjson.result) {
 				hideloding();
 				if(backjson.namehave){
-					toastr.warning('系部名称已存在');
+					toastr.warning('二级学院名称已存在');
 					return;
 				}
 				if(backjson.codehave){
-					toastr.warning('系部编码已存在');
+					toastr.warning('二级学院编码已存在');
 					return;
 				}
 				$("#allDepartmentTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu104_ID,
 					row: newDeaparmentObject
 				});
-				toastr.success('修改系部成功');
+				toastr.success('修改二级学院成功');
 				$.hideModal("#addNewDeaparmentModal");
 				$(".myTooltip").tooltipify();
-				drawPagination(".allDepartmentTableArea", "系部信息");
+				drawPagination(".allDepartmentTableArea", "二级学院信息");
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -796,7 +796,7 @@ function confimModifyDeaparment(row){
 	});
 }
 
-//修改时填充该行信息到系部选择区
+//修改时填充该行信息到二级学院选择区
 function stufDeadultDepartmentInfo(row){
 	$("#addNewDeaparment_deaparmentName").val(row.xbmc);
 	$("#addNewDeaparment_deaparmentCode").val(row.xbbm);
@@ -816,7 +816,7 @@ function stufDeadultDepartmentInfo(row){
 	}
 }
 
-//清空系部模态框中的值
+//清空二级学院模态框中的值
 function  emptyDepartmentChooseArea(){
 	var reObject = new Object();
 	reObject.InputIds = "#addNewDeaparment_deaparmentName";
@@ -824,7 +824,7 @@ function  emptyDepartmentChooseArea(){
 	reReloadSearchsWithSelect(reObject);
 }
 
-//获取系部信息
+//获取二级学院信息
 function getDeaparmentInfo(){
 	var deaparmentName = $("#addNewDeaparment_deaparmentName").val();
 	var deaparmentCode = $("#addNewDeaparment_deaparmentCode").val();
@@ -832,11 +832,11 @@ function getDeaparmentInfo(){
 	var ispk =getNormalSelectValue("ispk");
 	
 	if(deaparmentName===""){
-		toastr.warning('请输入系部名称');
+		toastr.warning('请输入二级学院名称');
 		return;
 	}
 	if(deaparmentCode===""){
-		toastr.warning('请输入系部编码');
+		toastr.warning('请输入二级学院编码');
 		return;
 	}
 	var newDeaparmentObject=new Object();
@@ -851,10 +851,10 @@ function getDeaparmentInfo(){
 	return newDeaparmentObject;
 }
 
-//单个删除系部
+//单个删除二级学院
 function removeDepartment(removeID){
 	$.showModal("#remindModal",true);
-	$(".remindType").html("系部");
+	$(".remindType").html("二级学院");
 	$(".remindActionType").html("删除");
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
@@ -866,7 +866,7 @@ function removeDepartment(removeID){
 	});
 }
 
-//批量删除系部
+//批量删除二级学院
 function reomoveDepartments(){
 	var chosenDepartments = $('#allDepartmentTable').bootstrapTable('getAllSelections');
 	if (chosenDepartments.length === 0) {
@@ -875,7 +875,7 @@ function reomoveDepartments(){
 	}
 	
 	$.showModal("#remindModal",true);
-	$(".remindType").html("系部");
+	$(".remindType").html("二级学院");
 	$(".remindActionType").html("删除");
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -888,7 +888,7 @@ function reomoveDepartments(){
 	});
 }
 
-//发送删除系部请求
+//发送删除二级学院请求
 function sendDeaparmentRemoveInfo(removeArray){
 	$.ajax({
 		method : 'get',
@@ -911,11 +911,11 @@ function sendDeaparmentRemoveInfo(removeArray){
 			hideloding();
 			if (backjson.result) {
 				if (backjson.canRemove) {
-					tableRemoveAction("#allDepartmentTable", removeArray, ".allDepartmentTableArea", "系部信息");
+					tableRemoveAction("#allDepartmentTable", removeArray, ".allDepartmentTableArea", "二级学院信息");
 					$.hideModal("#remindModal");
 					$(".myTooltip").tooltipify();
 				}else{
-					toastr.warning('不能删除正在使用的系部');
+					toastr.warning('不能删除正在使用的二级学院');
 				}
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -995,7 +995,7 @@ function modifyGrade(row){
 	$("#addNewGradeModal").find(".moadalTitle").html("修改年级");
 	$('#addNewGrade_gradeCode').attr("disabled", true); // 编码不可修改
 	stufDeadultGradeInfo(row);
-	//确认修改系部
+	//确认修改二级学院
 	$('.confimaddNewGrade').unbind('click');
 	$('.confimaddNewGrade').bind('click', function(e) {
 		confimModifyGrade(row);
@@ -1229,7 +1229,7 @@ function modifyMajor(row){
 	$("#addNewMajorModal").find(".moadalTitle").html("修改专业");
 	$('#addNewMajor_majorCode').attr("disabled", true) // 编码不可修改
 	stufDeadultMajorInfo(row);
-	//确认修改系部
+	//确认修改二级学院
 	$('.confimaddNewMajor').unbind('click');
 	$('.confimaddNewMajor').bind('click', function(e) {
 		confimModifyMajor(row);
@@ -2391,13 +2391,13 @@ function tab2BtnBind(){
 // 				},
 // 				{
 // 					field: 'edu104mc',
-// 					title: '系部名称',
+// 					title: '二级学院名称',
 // 					align: 'left',
 // 					formatter: paramsMatter
 //
 // 				},{
 // 					field: 'edu104',
-// 					title: '系部编码',
+// 					title: '二级学院编码',
 // 					align: 'left',
 // 					visible: false
 // 				},{
@@ -2464,7 +2464,7 @@ function tab2BtnBind(){
 // //修改时填充该行信息到层次关系选择区
 // function stufDeadultRelation(row){
 // 	stuffManiaSelectWithDeafult("#addNewRelation_level",row.pyccbm);  //填充默认培养层次
-// 	stuffManiaSelectWithDeafult("#addNewRelation_department",row.xbbm);  //填充默认系部
+// 	stuffManiaSelectWithDeafult("#addNewRelation_department",row.xbbm);  //填充默认二级学院
 // 	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.njbm);  //填充默认年级
 // 	stuffManiaSelectWithDeafult("#addNewRelation_major",row.zybm);  //填充默认专业
 // 	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
@@ -2608,7 +2608,7 @@ function tab2BtnBind(){
 // 	}
 //
 // 	if(relationDepartmentValue===""){
-// 		toastr.warning('请选择系部');
+// 		toastr.warning('请选择二级学院');
 // 		return;
 // 	}
 //
@@ -2659,7 +2659,7 @@ function tab2BtnBind(){
 // 		stuffManiaSelect("#addNewRelation_level", str);
 // 	}
 //
-// 	//系部下拉框
+// 	//二级学院下拉框
 // 	if(allDepartments.length!==0){
 // 		var str = '<option value="seleceConfigTip">请选择</option>';
 // 		for (var i = 0; i < allDepartments.length; i++) {
@@ -2850,14 +2850,14 @@ function btnbind(){
 		e.stopPropagation();
 	});
 
-	//新增系部
+	//新增二级学院
 	$('#addNewDepartment').unbind('click');
 	$('#addNewDepartment').bind('click', function(e) {
 		addNewDepartment();
 		e.stopPropagation();
 	});
 	
-	//批量删除系部
+	//批量删除二级学院
 	$('#reomoveDepartments').unbind('click');
 	$('#reomoveDepartments').bind('click', function(e) {
 		reomoveDepartments();

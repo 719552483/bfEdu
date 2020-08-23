@@ -135,7 +135,7 @@ function stufflocalInfoTable(tableInfo) {
                 formatter: paramsMatter
             }, {
                 field: 'glxb',
-                title: '管理系部',
+                title: '管理二级学院',
                 align: 'left',
                 formatter: paramsMatter
             },{

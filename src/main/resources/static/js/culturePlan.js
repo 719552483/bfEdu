@@ -156,13 +156,13 @@ function stuffAllRelationInfoTable(allRelationInfo){
 			},
 			{
 				field: 'edu104mc',
-				title: '系部名称',
+				title: '二级学院名称',
 				align: 'left',
 				formatter: paramsMatter
 
 			},{
 				field: 'edu104',
-				title: '系部编码',
+				title: '二级学院编码',
 				align: 'left',
 				visible: false
 			},{
@@ -230,7 +230,7 @@ function modifyRelation(row){
 //修改时填充该行信息到层次关系选择区
 function stufDeadultRelation(row){
 	LinkageSelectPublic("#addNewRelation_level","#addNewRelation_department","#addNewRelation_garde","#addNewRelation_major");
-	stuffManiaSelectWithDeafult("#addNewRelation_department",row.edu104,row.edu104mc);  //填充默认系部
+	stuffManiaSelectWithDeafult("#addNewRelation_department",row.edu104,row.edu104mc);  //填充默认二级学院
 	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.edu105,row.edu105mc);  //填充默认年级
 	stuffManiaSelectWithDeafult("#addNewRelation_major",row.edu106,row.edu106mc);  //填充默认专业
 	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
@@ -360,7 +360,7 @@ function getRelationSelectInfo(){
 	}
 
 	if(relationDepartmentValue===""){
-		toastr.warning('请选择系部');
+		toastr.warning('请选择二级学院');
 		return;
 	}
 
@@ -411,7 +411,7 @@ function stuffRelationTipSelect(){
 		stuffManiaSelect("#addNewRelation_level", str);
 	}
 
-	//系部下拉框
+	//二级学院下拉框
 	if(allDepartments.length!==0){
 		var str = '<option value="seleceConfigTip">请选择</option>';
 		for (var i = 0; i < allDepartments.length; i++) {
@@ -668,7 +668,7 @@ function stuffMajorTrainingTable(tableInfo) {
 			visible : false
 		}, {
 			field : 'xbsp',
-			title : '系部审批',
+			title : '二级学院审批',
 			align : 'center',
 			formatter :approvalMatter
 		}, {
@@ -1425,8 +1425,9 @@ function addClassAreaStartSearch() {
 		cache : false,
 		url : "/addCrouseSeacch",
 		data: {
-             "SearchCriteria":JSON.stringify(serachObject) 
-        },
+             "SearchCriteria":JSON.stringify(serachObject),
+			 "userKey":JSON.parse($.session.get('userInfo')).userKey
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();

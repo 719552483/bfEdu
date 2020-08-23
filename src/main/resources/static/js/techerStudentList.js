@@ -81,7 +81,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 visible: false
             }, {
                 field: 'szxbmc',
-                title: '系部',
+                title: '二级学院',
                 align: 'left',
                 formatter: paramsMatter,
                 visible: false
@@ -594,7 +594,7 @@ function getNotNullSearchs() {
     }
 
     if (departmentValue == "") {
-        toastr.warning('系部不能为空');
+        toastr.warning('二级学院不能为空');
         return;
     }
 

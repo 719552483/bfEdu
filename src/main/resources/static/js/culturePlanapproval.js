@@ -59,7 +59,7 @@ function getNotNullSearchs() {
 	}
 
 	if (departmentValue == "") {
-		toastr.warning('系部不能为空');
+		toastr.warning('二级学院不能为空');
 		return;
 	}
 
@@ -139,7 +139,7 @@ function stuffMajorTrainingVerifyTable(tableInfo) {
 			formatter : calssNameMatter
 		}, {
 			field : 'xbsp',
-			title : '系部审批状态',
+			title : '二级学院审批状态',
 			align : 'center',
 			formatter : approvalMatter
 		}, {

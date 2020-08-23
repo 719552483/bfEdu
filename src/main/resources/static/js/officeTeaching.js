@@ -675,7 +675,7 @@ function getNotNullSearchs() {
 	}
 
 	if (departmentValue == "") {
-		toastr.warning('系部不能为空');
+		toastr.warning('二级学院不能为空');
 		return;
 	}
 
@@ -1050,7 +1050,7 @@ function getPuttedNotNullSearchs() {
 	}
 
 	if (departmentValue == "") {
-		toastr.warning('系部不能为空');
+		toastr.warning('二级学院不能为空');
 		return;
 	}
 

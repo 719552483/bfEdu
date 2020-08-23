@@ -114,7 +114,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 			},
 			 {
 				field: 'szxbmc',
-				title: '系部',
+				title: '二级学院',
 				align: 'left',
 				formatter: szxbmcMatter
 			}, {
@@ -175,7 +175,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 	function szxbmcMatter(value, row, index) {
 		if (value===""||value==null) {
 			return [
-					'<div class="myTooltip normalTxt" title="暂未分配系部">暂未分配系部</div>'
+					'<div class="myTooltip normalTxt" title="暂未分配二级学院">暂未分配二级学院</div>'
 				]
 				.join('');
 		} else {
@@ -712,7 +712,7 @@ function stuffAddTeacherTable(tableInfo) {
 				visible : false
 			},{
 				field: 'szxbmc',
-				title: '系部',
+				title: '二级学院',
 				align: 'left',
 				formatter: paramsMatter
 			},{

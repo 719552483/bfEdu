@@ -365,7 +365,7 @@ function stuffTaecherTable(tableInfo){
 				checkbox: true
 			}, {
 				field : 'szxbmc',
-				title : '系部',
+				title : '二级学院',
 				align : 'left',
 				formatter : paramsMatter
 
