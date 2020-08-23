@@ -871,20 +871,20 @@ function getTasKInfo(putOutArray){
 		var teacheOb=new Object();
 		var zyteacheOb=new Object();
 		var classOb=new Object();
-		if(zyteacheOb.zyls!=null&&typeof zyteacheOb.zyls!=="undefined"){
-			zyteacheOb.zyls=putOutArray[i].zyls.split(",");
-			zyteacheOb.zylsmc=putOutArray[i].zylsmc.split(",");
-		}else{
+		if(putOutArray[i].zyls==null&&typeof putOutArray[i].zyls==="undefined"||putOutArray[i].zyls===""){
 			zyteacheOb.zyls=[""];
 			zyteacheOb.zylsmc=[""];
+		}else{
+			zyteacheOb.zyls=putOutArray[i].zyls.split(",");
+			zyteacheOb.zylsmc=putOutArray[i].zylsmc.split(",");
 		}
 
-		if(zyteacheOb.ls!=null&&typeof zyteacheOb.ls==="undefined"){
-			teacheOb.ls=putOutArray[i].ls.split(",");
-			teacheOb.lsmc=putOutArray[i].lsmc.split(",");
-		}else{
+		if(putOutArray[i].ls==null||typeof putOutArray[i].ls==="undefined"||putOutArray[i].ls===""){
 			teacheOb.ls=[""];
 			teacheOb.lsmc=[""];
+		}else{
+			teacheOb.ls=putOutArray[i].ls.split(",");
+			teacheOb.lsmc=putOutArray[i].lsmc.split(",");
 		}
 		classOb.edu301_ID=putOutArray[i].edu301_ID;
 		classOb.jxbmc=putOutArray[i].jxbmc;
