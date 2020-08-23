@@ -892,18 +892,10 @@ public class AdministrationPageService {
 	}
 
 	// 根据培养计划检索待排课程列表
-	public List getTaskByCulturePlan(String levelCode, String departmentCode, String gradeCode, String majorCode) {
+	public List<Edu201> getTaskByCulturePlan(String levelCode, String departmentCode, String gradeCode, String majorCode) {
 		long edu107id = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-		List<Edu108> current108s = edu108DAO.queryCulturePlanCouses(edu107id);
-		List<Edu201> retrunList = new ArrayList();
-		for (int i = 0; i < current108s.size(); i++) {
-			Edu201 edu201 = edu201DAO.getTaskByEdu108Id(current108s.get(i).getEdu108_ID().toString());
-			if (edu201 != null) {
-				if (edu201.getSfypk() == null) {
-					retrunList.add(edu201);
-				}
-			}
-		}
+		List<String> current108s = edu108DAO.queryCulturePlanIds(edu107id);
+		List<Edu201> retrunList= edu201DAO.queryCulturePlanIds(current108s);
 		return retrunList;
 	}
 
@@ -1003,10 +995,6 @@ public class AdministrationPageService {
 		return all;
 	}
 
-	// 查询默认课节设置
-	public List<Edu401> queryDefaultkjsz() {
-		return edu401DAO.queryDefaultkjsz();
-	}
 
 	// 查询所有课节
 	public List<Edu401> queryAllKj() {
@@ -1020,7 +1008,7 @@ public class AdministrationPageService {
 
 	//获取所有默认课节
 	public List<Edu401> queryAllDeafultKj() {
-		return edu401DAO.queryAllDeafultKj();
+		return edu401DAO.findAll();
 	}
 
 	// 新增课节

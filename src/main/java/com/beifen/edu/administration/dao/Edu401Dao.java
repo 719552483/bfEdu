@@ -52,7 +52,7 @@ public interface Edu401Dao extends JpaRepository<Edu401, Long>, JpaSpecification
 //	@Query(value = "select * from edu401 e where e.xnid=?1", nativeQuery = true)
 //    List<Edu401> getKjInfoByXn(String termId);
 
-	//获取所有默认课节
-	@Query(value = "select * from edu401 e where e.xnid is Null", nativeQuery = true)
-	List<Edu401> queryAllDeafultKj();
+//	//获取所有默认课节
+//	@Query(value = "select * from edu401 e where e.xnid is Null", nativeQuery = true)
+//	List<Edu401> queryAllDeafultKj();
 }
