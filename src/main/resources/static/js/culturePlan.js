@@ -1393,10 +1393,6 @@ function addClassAreaStartSearch() {
 	var coursesCode = $("#addClassSearch_classCode").val();
 	var coursesName = $("#addClassSearch_className").val();
 	var majorWorkSign = $("#addClassSearch_classMark").val();
-	if (coursesCode === "" && coursesName === "" && majorWorkSign === "") {
-		toastr.warning('请输入检索条件');
-		return;
-	}
 	var serachObject=new Object();
 	serachObject.edu107Id=$(".edu107Id")[0].innerText;
 	coursesCode===""?serachObject.coursesCode="":serachObject.coursesCode=coursesCode;
@@ -1784,7 +1780,7 @@ function generatCoursePalnSearch() {
 	var suditStatus = getNormalSelectValue("generatCourse_suditStatus");
 	var coursesName = $("#coursesName").val();
 	var serachObject=new Object();
-	serachObject.edu107Id=$(".edu107Id")[0].innerText
+	serachObject.edu107_ID=$(".edu107Id")[0].innerText
 	suditStatus===""?serachObject.suditStatus="":serachObject.suditStatus=suditStatus;
 	coursesName===""?serachObject.coursesName="":serachObject.coursesName=coursesName;
 	serachObject.coursesNature="";
@@ -1796,7 +1792,7 @@ function generatCoursePalnSearch() {
 		cache : false,
 		url : "/culturePlanSeacchCrouse",
 		data: {
-             "SearchCriteria":JSON.stringify(serachObject) 
+             "searchCriteria":JSON.stringify(serachObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1811,10 +1807,10 @@ function generatCoursePalnSearch() {
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				stuffMajorTrainingTable(backjson.data);
+				stuffGeneratCoursePalnTable(backjson.data)
 			} else {
 				toastr.warning(backjson.msg);
-				drawMajorTrainingEmptyTable();
+				stuffGeneratCoursePalnTable({})
 			}
 		}
 	});

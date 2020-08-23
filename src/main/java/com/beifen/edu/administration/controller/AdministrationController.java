@@ -1072,7 +1072,8 @@ public class AdministrationController {
 		JSONObject searchObject = JSONObject.fromObject(searchCriteria);
 		// 填充搜索对象
 		Edu108 edu108 = new Edu108();
-		edu108.setEdu107_ID(searchObject.getLong("edu107_ID"));
+		String edu107_ID=searchObject.getString("edu107_ID");
+		edu108.setEdu107_ID(Long.parseLong(edu107_ID));
 		edu108.setKcxzCode(searchObject.getString("coursesNature"));
 		edu108.setKcmc(searchObject.getString("coursesName"));
 		edu108.setKsfsCode(searchObject.getString("testWay"));
