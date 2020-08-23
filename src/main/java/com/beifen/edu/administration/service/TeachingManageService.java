@@ -117,7 +117,7 @@ public class TeachingManageService {
             userName = edu990Dao.queryUserById(edu112.getEdu990_ID().toString()).getYhm();
         }
         edu112.setUserName(userName);
-        edu112.setBusinessState("passing");
+        edu112.setBusinessState("nopass");
         edu112Dao.save(edu112);
         if(edu112.getEdu112_ID() == null) {
             resultVO = ResultVO.setFailed("出差申请失败，请检查申请信息");
@@ -139,9 +139,13 @@ public class TeachingManageService {
         }
 
         edu600.setBusinessKey(edu112.getEdu112_ID());
-        approvalProcessService.initiationProcess(edu600);
-        resultVO = ResultVO.setSuccess("出差申请成功");
-
+        boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+        if (!isSuccess) {
+            resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+            edu113Dao.delteByEdu112Id(edu112.getEdu112_ID().toString());
+        } else {
+            resultVO = ResultVO.setSuccess("出差申请成功");
+        }
         return resultVO;
     }
 
