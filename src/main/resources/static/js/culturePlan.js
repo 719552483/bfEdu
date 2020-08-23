@@ -1081,6 +1081,9 @@ function getAllClassInfo(planName) {
 		method : 'get',
 		cache : false,
 		url : "/queryAllPassCrouse",
+		data: {
+			"userKey":JSON.parse($.session.get('userInfo')).userKey
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
