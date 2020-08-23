@@ -67,11 +67,11 @@ function getAllRelationInfo(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				stuffAllRelationInfoTable(backjson.allRelationInfo);
-				hideloding();
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllRelationInfoTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -243,9 +243,9 @@ function confimModifyRelation(row){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/updateRelation",
+		url : "/addNewRelation",
 		data: {
-			"updateinfo":JSON.stringify(newRelationObject)
+			"newRelationInfo":JSON.stringify(newRelationObject)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -258,26 +258,18 @@ function confimModifyRelation(row){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.have){
-					toastr.warning('层次关系已存在');
-					return;
-				}
-				if(backjson.relationNameHave){
-					toastr.warning('培养计划名称已存在');
-					return;
-				}
+			hideloding();
+			if (backjson.code === 200) {
 				$("#relationTable").bootstrapTable('updateByUniqueId', {
 					id: row.edu107_ID,
 					row: newRelationObject
 				});
-				toastr.success('修改培养计划成功');
+				toastr.success(backjson.msg);
 				$.hideModal("#addNewRelationModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".relationTableArea", "培养计划信息");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -323,25 +315,17 @@ function confimAddNewRelation(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.have){
-					toastr.warning('层次关系已存在');
-					return;
-				}
-				if(backjson.relationNameHave){
-					toastr.warning('培养计划名称已存在');
-					return;
-				}
-				newRelationObject.edu107_ID=backjson.id;
-				newRelationObject.yxbz=backjson.yxbz;
+			hideloding();
+			if (backjson.code === 200) {
+				newRelationObject.edu107_ID=backjson.data.edu107_ID;
+				newRelationObject.yxbz=backjson.data.yxbz;
 				$('#relationTable').bootstrapTable('prepend', newRelationObject);
-				toastr.success('新增培养计划成功');
+				toastr.success(backjson.msg);
 				$.hideModal("#addNewRelationModal");
 				$(".myTooltip").tooltipify();
 				drawPagination(".relationTableArea", "培养计划信息");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

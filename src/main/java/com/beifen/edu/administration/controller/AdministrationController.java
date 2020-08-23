@@ -411,100 +411,24 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/getAllRelationInfo")
 	@ResponseBody
-	public Object getAllRelationInfo() {
-		Map<String, Object> returnMap = new HashMap();
-		returnMap.put("allRelationInfo", administrationPageService.queryAllRelation());
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO getAllRelationInfo() {
+		ResultVO result = administrationPageService.queryAllRelation();
+		return result;
 	}
 
 	/**
-	 * 新增层次关系
+	 * 新增修改层次关系
 	 * @param newRelationInfo
 	 * @return
 	 */
 	@RequestMapping("addNewRelation")
 	@ResponseBody
-	public Object addNewRelation(@RequestParam("newRelationInfo") String newRelationInfo) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO addNewRelation(@RequestParam("newRelationInfo") String newRelationInfo) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(newRelationInfo);
 		Edu107 edu107 = (Edu107) JSONObject.toBean(jsonObject, Edu107.class);
-		List<Edu107> currentAllRelation = administrationPageService.queryAllRelation();
-		// 判断关系是否已存在
-		boolean have = false;
-		boolean relationNameHave = false;
-		for (int i = 0; i < currentAllRelation.size(); i++) {
-			if (currentAllRelation.get(i).getPyjhmc().equals(edu107.getPyjhmc())) {
-				relationNameHave = true;
-				break;
-			}
-
-			if (currentAllRelation.get(i).getEdu103().equals(edu107.getEdu103())
-					&& currentAllRelation.get(i).getEdu104().equals(edu107.getEdu104())
-					&& currentAllRelation.get(i).getEdu105().equals(edu107.getEdu105())
-					&& currentAllRelation.get(i).getEdu106().equals(edu107.getEdu106())) {
-				have = true;
-				break;
-			}
-		}
-		// 不存在则往数据库新增关系
-		if (!have && !relationNameHave) {
-			String yxbz = "1";
-			edu107.setYxbz(yxbz);
-			administrationPageService.addNewRelation(edu107);
-			Long id = edu107.getEdu107_ID();
-			returnMap.put("id", id);
-			returnMap.put("yxbz", yxbz);
-
-		}
-
-		returnMap.put("result", true);
-		returnMap.put("have", have);
-		returnMap.put("relationNameHave", relationNameHave);
-		return returnMap;
-	}
-
-	/**
-	 * 修改层次关系
-	 * @param updateinfo
-	 * @return
-	 */
-	@RequestMapping("updateRelation")
-	@ResponseBody
-	public Object updateRelation(@RequestParam("updateinfo") String updateinfo) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = JSONObject.fromObject(updateinfo);
-		Edu107 edu107 = (Edu107) JSONObject.toBean(jsonObject, Edu107.class);
-		List<Edu107> currentAllRelation = administrationPageService.queryAllRelation();
-		// 判断关系是否已存在
-		boolean have = false;
-		boolean relationNameHave = false;
-		for (int i = 0; i < currentAllRelation.size(); i++) {
-			if (!currentAllRelation.get(i).getEdu107_ID().equals(edu107.getEdu107_ID())
-					&& currentAllRelation.get(i).getPyjhmc().equals(edu107.getPyjhmc())) {
-				relationNameHave = true;
-				break;
-			}
-
-			if (!currentAllRelation.get(i).getEdu107_ID().equals(edu107.getEdu107_ID())
-					&& currentAllRelation.get(i).getEdu103().equals(edu107.getEdu103())
-					&& currentAllRelation.get(i).getEdu104().equals(edu107.getEdu104())
-					&& currentAllRelation.get(i).getEdu105().equals(edu107.getEdu105())
-					&& currentAllRelation.get(i).getEdu106().equals(edu107.getEdu106())) {
-				have = true;
-				break;
-			}
-		}
-		// 不存在则修改关系
-		if (!have) {
-			administrationPageService.updateRelation(edu107);
-		}
-
-		returnMap.put("have", have);
-		returnMap.put("result", true);
-		returnMap.put("relationNameHave", relationNameHave);
-		return returnMap;
+		ResultVO result = administrationPageService.addNewRelation(edu107);
+		return result;
 	}
 
 	/**
@@ -547,18 +471,15 @@ public class AdministrationController {
 	 */
 	@RequestMapping("seacchRelation")
 	@ResponseBody
-	public Object seacchRelation(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO seacchRelation(@RequestParam String SearchCriteria) {
 		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
 		Edu107 edu107 = new Edu107();
 		edu107.setEdu103mc(jsonObject.getString("lvelName"));
 		edu107.setEdu104mc(jsonObject.getString("deaparmentName"));
 		edu107.setEdu105mc(jsonObject.getString("gradeName"));
 		edu107.setEdu106mc(jsonObject.getString("majorName"));
-		List<Edu107> relationList = administrationPageService.seacchRelation(edu107);
-		returnMap.put("relationList", relationList);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.seacchRelation(edu107);
+		return result;
 	}
 
 	/**

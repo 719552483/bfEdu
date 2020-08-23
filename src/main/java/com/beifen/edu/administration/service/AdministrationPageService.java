@@ -160,8 +160,15 @@ public class AdministrationPageService {
 	}
 
 	// 查询所有层次关系管理信息
-	public List<Edu107> queryAllRelation() {
-		return edu107DAO.queryAllRelation();
+	public ResultVO queryAllRelation() {
+		ResultVO resultVO;
+		List<Edu107> edu107List = edu107DAO.queryAllRelation();
+		if(edu107List.size() == 0) {
+			resultVO = ResultVO.setFailed("暂未找到培养计划");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+edu107List.size()+"条培养计划",edu107List);
+		}
+		return resultVO;
 	}
 
 	// 根据层次 系部 年级 专业定位培养计划 (excel导入时可能不对应 所以要返回结果集 而不是基础数据类型)
@@ -176,9 +183,47 @@ public class AdministrationPageService {
 		return aLong;
 	}
 
+	//查询是否有重复的培养计划
+	public List<Edu107> checkRelation(Edu107 edu107){
+		Specification<Edu107> specification = new Specification<Edu107>() {
+			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu107.getEdu107_ID() != null && !"".equals(edu107.getEdu107_ID())) {
+					predicates.add(cb.notEqual(root.<String>get("edu107_ID"), edu107.getEdu107_ID()));
+				}
+				if (edu107.getEdu103() != null && !"".equals(edu107.getEdu103())) {
+					predicates.add(cb.equal(root.<String>get("edu103"), edu107.getEdu103()));
+				}
+				if (edu107.getEdu104() != null && !"".equals(edu107.getEdu104())) {
+					predicates.add(cb.equal(root.<String>get("edu104"), edu107.getEdu104()));
+				}
+				if (edu107.getEdu105() != null && !"".equals(edu107.getEdu105())) {
+					predicates.add(cb.equal(root.<String>get("edu105"), edu107.getEdu105()));
+				}
+				if (edu107.getEdu106() != null && !"".equals(edu107.getEdu106())) {
+					predicates.add(cb.equal(root.<String>get("edu106"), edu107.getEdu106()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu107> edu107List = edu107DAO.findAll(specification);
+		return edu107List;
+	}
+
 	// 新增层次关系
-	public void addNewRelation(Edu107 edu107) {
+	public ResultVO addNewRelation(Edu107 edu107) {
+		ResultVO resultVO;
+		List<Edu107> edu107List = checkRelation(edu107);
+		if (edu107List.size() != 0) {
+			resultVO = ResultVO.setFailed("存在相同的培养计划，请重新输入");
+			return resultVO;
+		}
+
+		edu107.setYxbz("1");
 		edu107DAO.save(edu107);
+
+		resultVO = ResultVO.setSuccess("操作成功",edu107);
+		return resultVO;
 	}
 
 	// 修改层次关系
@@ -1152,7 +1197,8 @@ public class AdministrationPageService {
 	}
 
 	// 搜索关系
-	public List<Edu107> seacchRelation(Edu107 edu107) {
+	public ResultVO seacchRelation(Edu107 edu107) {
+		ResultVO resultVO;
 		Specification<Edu107> specification = new Specification<Edu107>() {
 			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1175,7 +1221,13 @@ public class AdministrationPageService {
 			}
 		};
 		List<Edu107> relationEntities = edu107DAO.findAll(specification);
-		return relationEntities;
+
+		if(relationEntities.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无符合要求的培养计划");
+		}else {
+			resultVO = ResultVO.setSuccess("查询到"+relationEntities.size()+"条培养计划",relationEntities);
+		}
+		return resultVO;
 	}
 
 	// 搜索培养计划下的专业课程
@@ -1495,17 +1547,11 @@ public class AdministrationPageService {
 		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
 
-//		// 判断课程名称和代码是否已存在
-//		List<Edu200> edu200List = findCourseByKcmdOrKcdm(edu200);
-//		if (edu200List.size() != 0) {
-//			resultVO = ResultVO.setFailed("课程库存在课程名称或课程代码相同课程，请修改");
-//			return resultVO;
-//		}
 		//如果为新增，赋予必要属性
 		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
 			String newClassStatus = "passing";
-			String newkcdm = "LNVCKC" + utils.getUUID(6) + utils.getRandom(2);
+			String newkcdm = creatCourseCode("1");
 			edu200.setKcdm(newkcdm);
 			edu200.setZt(newClassStatus);
 		} else {
@@ -1539,6 +1585,15 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	//生成课程代码
+	public String creatCourseCode(String userKey) {
+		Edu101 edu101 = edu101DAO.getTeacherInfoByEdu990Id(userKey);
+		String courseCode = edu101.getSzxb()+utils.getRandom(4);
+		return courseCode;
+	}
+
+
+	//查询是否有重复的课程名称或课程代码
 	public List<Edu200> findCourseByKcmdOrKcdm(Edu200 edu200) {
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
