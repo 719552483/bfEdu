@@ -1580,7 +1580,7 @@ public class AdministrationPageService {
 	 * @param edu200
 	 * @return
 	 */
-	public ResultVO addNewClass(Edu600 edu600, Edu200 edu200) {
+	public ResultVO addNewClass(Edu600 edu600, Edu200 edu200,String userKey) {
 		ResultVO resultVO;
 		Boolean isAdd = false;
 
@@ -1591,7 +1591,7 @@ public class AdministrationPageService {
 		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
 			String newClassStatus = "passing";
-			String newkcdm = creatCourseCode("1");
+			String newkcdm = creatCourseCode(userKey);
 			edu200.setKcdm(newkcdm);
 			edu200.setZt(newClassStatus);
 		} else {
@@ -1627,7 +1627,7 @@ public class AdministrationPageService {
 
 	//生成课程代码
 	public String creatCourseCode(String userKey) {
-		Edu101 edu101 = edu101DAO.getTeacherInfoByEdu990Id(userKey);
+		Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
 		String departmentCode = getDepartmentCode(edu101.getSzxb());
 		String courseCode = departmentCode+utils.getRandom(4);
 		return courseCode;
@@ -1680,7 +1680,7 @@ public class AdministrationPageService {
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc = jsonObject.getString("lrr");
-		Long lrrId = Long.valueOf(jsonObject.getString("lrrID"));
+		String userKey = jsonObject.getString("userKey");
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
@@ -1714,8 +1714,8 @@ public class AdministrationPageService {
 			for (int i = 0; i < importClasses.size(); i++) {
 				Edu200 edu200 = importClasses.get(i);
 				edu200.setLrr(lrrmc);
-				edu200.setLrrID(lrrId);
-				ResultVO result = addNewClass(edu600, edu200);
+				edu200.setLrrID(Long.parseLong(userKey));
+				ResultVO result = addNewClass(edu600, edu200,userKey);
 				if (result.getCode() == 500) {
 					resultVO = ResultVO.setFailed("数据导入失败");
 					if (saveIds.size() != 0) {
@@ -1752,7 +1752,7 @@ public class AdministrationPageService {
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc = jsonObject.getString("lrr");
-		Long lrrId = Long.valueOf(jsonObject.getString("lrrID"));
+		String userKey = jsonObject.getString("userKey");
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
@@ -1789,10 +1789,10 @@ public class AdministrationPageService {
 				//保留原始数据
 				Edu200 oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
 				edu200.setLrr(lrrmc);
-				edu200.setLrrID(lrrId);
+				edu200.setLrrID(Long.parseLong(userKey));
 				edu200.setShr(null);
 				edu200.setShrID(null);
-				ResultVO result = addNewClass(edu600, edu200);
+				ResultVO result = addNewClass(edu600, edu200,userKey);
 				if (result.getCode() == 500) {
 					resultVO = ResultVO.setFailed("数据导入失败");
 					if (saveList.size() != 0) {

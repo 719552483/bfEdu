@@ -61,12 +61,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("addNewClass")
 	@ResponseBody
-	public ResultVO addNewClass(@RequestParam("newClassInfo") String addinfo, @RequestParam("approvalobect") String approvalobect) {
+	public ResultVO addNewClass(@RequestParam("newClassInfo") String addinfo, @RequestParam("approvalobect") String approvalobect,@RequestParam("userKey") String userKey) {
 		JSONObject jsonObject = JSONObject.fromObject(addinfo);
 		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
 		Edu200 addClassInfo = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.class);
-		ResultVO result = administrationPageService.addNewClass(edu600,addClassInfo);
+		ResultVO result = administrationPageService.addNewClass(edu600,addClassInfo,userKey);
 		return result;
 	}
 
