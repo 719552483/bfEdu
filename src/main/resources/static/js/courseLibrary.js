@@ -1222,7 +1222,7 @@ function confirmModifyClasses(){
 	}
 
 	var lrrInfo=new Object();
-	lrrInfo.lrrID=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span").attr("userId");
+	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
 	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
 	
     var formData = new FormData();
