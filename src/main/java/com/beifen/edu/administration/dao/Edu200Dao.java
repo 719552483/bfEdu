@@ -17,6 +17,10 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	@Query(value = "select * from edu200 e where e.zt='pass'", nativeQuery = true)
 	public List<Edu200> queryAllPassCrouse();
 
+	// 根据代码查询课程
+	@Query(value = "select * from edu200 e where e.zt='pass' and e.kcdm like ?1", nativeQuery = true)
+	public List<Edu200> queryAllPassCrouseByDepartment(String departmentCode);
+
 	// 根据id修改课程状态
 	@Modifying
 	@Transactional

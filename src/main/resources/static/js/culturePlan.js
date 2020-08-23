@@ -1095,19 +1095,15 @@ function getAllClassInfo(planName) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.allCrouse.length===0){
-					toastr.warning('课程库暂无课程');
-					return;
-				}
+			hideloding();
+			if (backjson.code === 200) {
 				$(".currentMajorName").html(planName);
-				stuffAllClassTable(backjson.allCrouse);
+				stuffAllClassTable(backjson.data);
 				addClassAreaBtnbind();
 				$(".addClassArea").show();
 				$(".culturePlanArea").hide();
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.info(backjson.msg);
 			}
 		}
 	});

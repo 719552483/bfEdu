@@ -716,8 +716,21 @@ public class AdministrationPageService {
 	}
 
 	// 课程库通过审核课程
-	public List<Edu200> queryAllPassCrouse() {
-		return edu200DAO.queryAllPassCrouse();
+	public ResultVO queryAllPassCrouse(String userKey) {
+		ResultVO resultVO;
+		Edu101 edu101 = edu101DAO.getOne(Long.parseLong(userKey));
+		if(edu101 == null) {
+			resultVO = ResultVO.setFailed("您不是本校老师无法为您查找课程");
+			return resultVO;
+		}
+		String departmentCode = getDepartmentCode(edu101.getSzxb());
+		List<Edu200> edu200List = edu200DAO.queryAllPassCrouseByDepartment(departmentCode+"%");
+		if(edu200List.size() == 0){
+			resultVO = ResultVO.setFailed("暂未找到课程");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+edu200List+"门课程",edu200List);
+		}
+		return resultVO;
 	}
 
 	// 修改课程
@@ -1290,11 +1303,20 @@ public class AdministrationPageService {
 		return classEntities;
 	}
 
+	public String getDepartmentCode (String edu104Id) {
+		String departmentCode = "00";
+		Edu104 edu104 = edu104DAO.query104BYID(edu104Id);
+		if(edu104 != null) {
+			departmentCode = edu104.getXbbm();
+		}
+		return departmentCode;
+	}
+
 	// 培养计划添加专业课程检索
 	public ResultVO addCrouseSeacch(Edu200 edu200,String userKey) {
 		ResultVO resultVO;
-		Edu101 edu101 = edu101DAO.getTeacherInfoByEdu990Id(userKey);
-
+		Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
+		String departmentCode = getDepartmentCode(edu101.getSzxb());
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1307,8 +1329,8 @@ public class AdministrationPageService {
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
 					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
 				}
-				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
-					predicates.add(cb.like(root.<String>get("kcdm"),  edu101.getSzxb() + '%'));
+				if (departmentCode != null && !"00".equals(departmentCode)) {
+					predicates.add(cb.like(root.<String>get("kcdm"),  departmentCode + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1606,7 +1628,8 @@ public class AdministrationPageService {
 	//生成课程代码
 	public String creatCourseCode(String userKey) {
 		Edu101 edu101 = edu101DAO.getTeacherInfoByEdu990Id(userKey);
-		String courseCode = edu101.getSzxb()+utils.getRandom(4);
+		String departmentCode = getDepartmentCode(edu101.getSzxb());
+		String courseCode = departmentCode+utils.getRandom(4);
 		return courseCode;
 	}
 

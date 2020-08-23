@@ -968,12 +968,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryAllPassCrouse")
 	@ResponseBody
-	public Object queryCrouseBelongToCultureplan() {
-		Map<String, Object> returnMap = new HashMap();
-		List<Edu200> allCrouse = administrationPageService.queryAllPassCrouse();
-		returnMap.put("allCrouse", allCrouse);
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO queryCrouseBelongToCultureplan(@RequestParam("userKey") String userKey) {
+		ResultVO result = administrationPageService.queryAllPassCrouse(userKey);
+		return result;
 	}
 
 	/**
