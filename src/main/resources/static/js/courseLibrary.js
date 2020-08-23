@@ -321,8 +321,9 @@ function comfirmmodifyCourseInfo(row){
 		cache : false,
 		url : "/addNewClass",
 		data: {
-             "newClassInfo":JSON.stringify(newClassObject),
-			 "approvalobect":JSON.stringify(getApprovalobect("01"))
+			"newClassInfo":JSON.stringify(newClassObject),
+			"userKey":JSON.parse($.session.get('userInfo')).userKey,
+			"approvalobect":JSON.stringify(getApprovalobect("01"))
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -987,7 +988,7 @@ function confirmImportNewClass(){
 	}
 	
     var lrrInfo=new Object();
-    lrrInfo.lrrID=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span").attr("userId");
+    lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
     lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
 
     var formData = new FormData();
