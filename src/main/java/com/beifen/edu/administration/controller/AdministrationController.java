@@ -1380,8 +1380,8 @@ public class AdministrationController {
 
 			edu300.setYxbz(yxbz);
 			edu300.setSfsckkjh(configTheCulturePlan);
-			edu300.setXqmc(xqmc);
-			edu300.setXqbm(xqbm);
+//			edu300.setXqmc(xqmc);
+//			edu300.setXqbm(xqbm);
 			edu300.setXzbbh(bh);
 			edu300.setXzbdm(bjdm);
 			edu300.setXzbbm(bjbm);
@@ -1685,8 +1685,8 @@ public class AdministrationController {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
 				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
-				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
-				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
+//				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
+//				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
 				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
 				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());

@@ -1270,11 +1270,16 @@ function getCrrruentDate() {
 
 //去掉字符中的双引号
 function charSpiltMatter(value, row, index) {
-	var reg = new RegExp('"',"g");
-	var str = value.replace(reg, "");
+	if(value!=null){
+		var reg = new RegExp('"',"g");
+		var str = value.replace(reg, "");
 
-	return [ '<div class="myTooltip" title="'+str+'">'+str+'</div>' ]
-		.join('');
+		return [ '<div class="myTooltip" title="'+str+'">'+str+'</div>' ]
+			.join('');
+	}else{
+		return [ '<div class="myTooltip" title="暂无">暂无</div>' ]
+			.join('');
+	}
 }
 
 //字符去所有空格  需要设置第2个参数为":g"

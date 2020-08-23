@@ -139,12 +139,6 @@ function stuffAdministrationClassTable(tableInfo){
 				align : 'left',
 				formatter : paramsMatter
 			},{
-				field : 'xqmc',
-				title : '校区',
-				align : 'left',
-				formatter : paramsMatter,
-				visible : false
-			},{
 				field : 'zxrs',
 				title : '在校人数',
 				align : 'left',
@@ -760,11 +754,6 @@ function stuffClassManagementTable(tableInfo) {
 			title: '唯一标识',
 			align : 'center',
 			visible : false
-		},  {
-			field : 'xqmc',
-			title : '校区名称',
-			align : 'left',
-			formatter : paramsMatter
 		}, {
 			field : 'zymc',
 			title : '专业',

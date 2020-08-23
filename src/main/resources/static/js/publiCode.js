@@ -533,7 +533,7 @@ function confimModifyNewLevel(row){
 
 //修改时填充该行信息到培养层次选择区
 function stufDeadultLevekInfo(row){
-	stuffManiaSelectWithDeafult("#addNewLevel_schoolLocation",row.xq);  //填充默认培养层次
+	// stuffManiaSelectWithDeafult("#addNewLevel_schoolLocation",row.xq);  //填充默认培养层次
 	$("#addNewLevel_levelName").val(row.pyccmc);//填充默认培养层次名称
 	$("#addNewLevel_levelCode").val(row.pyccbm);//填充默认培养层次编码
 	stuffManiaSelectWithDeafult("#addNewLevel_enterSeason",row.rxjj);  //填充默认入学季节
@@ -543,23 +543,24 @@ function stufDeadultLevekInfo(row){
 //清空培养层次模态框中select的值
 function emptyLevelChooseArea(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#addNewLevel_schoolLocation,#addNewLevel_enterSeason";
+	// reObject.normalSelectIds = "#addNewLevel_schoolLocation,#addNewLevel_enterSeason";
+	reObject.normalSelectIds = "#addNewLevel_enterSeason";
 	reObject.InputIds = "#addNewLevel_levelName,#addNewLevel_academicStructure";
 	reReloadSearchsWithSelect(reObject);
 }
 
 //获取培养层次信息
 function getLevelInfo(){
-	var schoolLocation = getNormalSelectValue("addNewLevel_schoolLocation");
+	// var schoolLocation = getNormalSelectValue("addNewLevel_schoolLocation");
 	var levelName = $("#addNewLevel_levelName").val();
 	var levelCode = $("#addNewLevel_levelCode").val();
 	var enterSeason = getNormalSelectValue("addNewLevel_enterSeason");
 	var academicStructure = $("#addNewLevel_academicStructure").val();
 	
-	if(schoolLocation===""){
-		toastr.warning('请选择校区');
-		return;
-	}
+	// if(schoolLocation===""){
+	// 	toastr.warning('请选择校区');
+	// 	return;
+	// }
 	if(levelName===""){
 		toastr.warning('请输入培养层次名称');
 		return;
@@ -583,7 +584,7 @@ function getLevelInfo(){
 	}
 	
 	var newRelationObject=new Object();
-	newRelationObject.xq=schoolLocation;
+	// newRelationObject.xq=schoolLocation;
 	newRelationObject.pyccmc=levelName;
 	newRelationObject.pyccbm=levelCode;
 	newRelationObject.rxjj=enterSeason;

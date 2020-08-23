@@ -17,7 +17,7 @@ public class Edu103 {
     //培养层次管理表
 	//该表对应的是培养层次，如全日制 全日制二年中职等
 	private  Long Edu103_ID; 	
-	private  String xq; //校区
+//	private  String xq; //校区
 	private  String pyccmc;//培养层次名称 
 	private  String pyccbm;//培养层次编码
 	private  String xz; //学制
@@ -35,12 +35,12 @@ public class Edu103 {
 	public void setEdu103_ID(Long edu103_ID) {
 		Edu103_ID = edu103_ID;
 	}
-	public String getXq() {
-		return xq;
-	}
-	public void setXq(String xq) {
-		this.xq = xq;
-	}
+//	public String getXq() {
+//		return xq;
+//	}
+//	public void setXq(String xq) {
+//		this.xq = xq;
+//	}
 	public String getPyccmc() {
 		return pyccmc;
 	}
