@@ -4,7 +4,6 @@ $(function() {
 	getallRole(); 
 	drawNewUserRoleSelect();
 	btnBind();
-	getAllUserInfo();
 });
 
 //获取所有角色类型
