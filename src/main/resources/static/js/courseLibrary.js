@@ -413,6 +413,7 @@ function comfirmAddNewClass(){
 		url : "/addNewClass",
 		data: {
              "newClassInfo":JSON.stringify(newClassObject),
+			 "userKey":JSON.parse($.session.get('userInfo')).userKey,
 			 "approvalobect":JSON.stringify(getApprovalobect("01"))
 		},
 		dataType : 'json',
