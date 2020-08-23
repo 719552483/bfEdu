@@ -2253,572 +2253,572 @@ function tab2BtnBind(){
 
 
 
-/**
- * tab3
- * */
-//判断是否首次点击层级关系管理
-function judgmentIsFristTimeLoadTab3(){
-	var isFirstShowTab3 = $(".isFirstShowTab3")[0].innerText;
-	stuffRelationTipSelect();
-	if (isFirstShowTab3 === "T") {
-		$(".isFirstShowTab3").html("F");
-		getAllRelationInfo();
-		tab3BtnBind();
-	}
-}
-
-//层次关系管理页面按钮事件绑定
-function tab3BtnBind(){
-	//批量删除关系
-	$('#removeRelations').unbind('click');
-	$('#removeRelations').bind('click', function(e) {
-		removeRelations();
-		e.stopPropagation();
-	});
-	
-	//预备新增关系
-	$('#addRelation').unbind('click');
-	$('#addRelation').bind('click', function(e) {
-		wantAddRelation();
-		e.stopPropagation();
-	});
-	
-	//开始检索层次关系
-	$('#startSearch_relation').unbind('click');
-	$('#startSearch_relation').bind('click', function(e) {
-		relationStartSearch();
-		e.stopPropagation();
-	});
- 
-	//层次关系重置检索
-	$('#reReloadSearchs_relation').unbind('click');
-	$('#reReloadSearchs_relation').bind('click', function(e) {
-		relationReloadSearchs();
-		e.stopPropagation();
-	});
-	
-}
-
-//获取所有层次关系
-function getAllRelationInfo(){
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/getAllRelationInfo",
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			if (backjson.result) {
-				stuffAllRelationInfoTable(backjson.allRelationInfo);
-				hideloding();
-			} else {
-				toastr.warning('操作失败，请重试');
-			}
-		}
-	});
-}
-
-//填充层次关系管理表
-function stuffAllRelationInfoTable(allRelationInfo){
-	window.releaseNewsEvents = {
-			'click #modifyRelation': function(e, value, row, index) {
-				modifyRelation(row);
-			},
-			'click #removeRelation': function(e, value, row, index) {
-				removeRelation(row.edu107_ID);
-			}
-		};
-
-		$('#relationTable').bootstrapTable('destroy').bootstrapTable({
-			data: allRelationInfo,
-			pagination: true,
-			pageNumber: 1,
-			pageSize: 10,
-			pageList: [10],
-			showToggle: false,
-			showFooter: false,
-			clickToSelect: true,
-			search: true,
-			editable: false,
-			striped: true,
-			toolbar: '#toolbar',
-			showColumns: false,
-			onPageChange: function() {
-				drawPagination(".relationTableArea", "培养计划信息");
-			},
-			columns: [{
-					field: 'edu107_ID',
-					title: 'edu107_ID',
-					align: 'center',
-					visible: false
-				}, {
-					field: 'yxbz',
-					title: '有效标志',
-					align: 'left',
-					visible: false
-				},
-				{
-					field: 'check',
-					checkbox: true
-				},
-				{
-					field: 'pyjhmc',
-					title: '培养计划名称',
-					align: 'left',
-					formatter: paramsMatter
-
-				}, 
-				{
-					field: 'edu103mc',
-					title: '培养层次名称',
-					align: 'left',
-					formatter: paramsMatter
-
-				}, 
-				{
-					field: 'edu103',
-					title: '培养层次代码',
-					align: 'left',
-					visible: false
-				},
-				{
-					field: 'edu104mc',
-					title: '系部名称',
-					align: 'left',
-					formatter: paramsMatter
-
-				},{
-					field: 'edu104',
-					title: '系部编码',
-					align: 'left',
-					visible: false
-				},{
-					field: 'edu105mc',
-					title: '年级名称',
-					align: 'left',
-					formatter: paramsMatter
-
-				},{
-					field: 'edu105',
-					title: '年级编码',
-					align: 'left',
-					visible: false
-				},{
-					field: 'edu106mc',
-					title: '专业名称',
-					align: 'left',
-					formatter: paramsMatter
-
-				},{
-					field: 'edu106',
-					title: '专业编码',
-					align: 'left',
-					visible: false
-				},{
-					field: 'action',
-					title: '操作',
-					align: 'center',
-					clickToSelect: false,
-					formatter: releaseNewsFormatter,
-					events: releaseNewsEvents,
-				}
-			]
-		});
-
-		function releaseNewsFormatter(value, row, index) {
-			return [
-					'<ul class="toolbar tabletoolbar">' +
-					'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-					'<li id="removeRelation" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
-					'</ul>'
-				]
-				.join('');
-		}
-		drawSearchInput(".relationTableArea");
-		drawPagination(".relationTableArea", "培养计划信息");
-		toolTipUp(".myTooltip");
-		btnControl();
-}
-
-//预备修改关系
-function modifyRelation(row){
-	stufDeadultRelation(row);
-	$.showModal("#addNewRelationModal",true);
-	$("#addNewRelationModal").find(".moadalTitle").html("修改培养计划");
-	//确认新增关系按钮
-	$('.addNewRelationTip_confimBtn').unbind('click');
-	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
-		confimModifyRelation(row);
-		e.stopPropagation();
-	});
-}
-
-//修改时填充该行信息到层次关系选择区
-function stufDeadultRelation(row){
-	stuffManiaSelectWithDeafult("#addNewRelation_level",row.pyccbm);  //填充默认培养层次
-	stuffManiaSelectWithDeafult("#addNewRelation_department",row.xbbm);  //填充默认系部
-	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.njbm);  //填充默认年级
-	stuffManiaSelectWithDeafult("#addNewRelation_major",row.zybm);  //填充默认专业
-	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
-}
-
-//确认修改关系
-function confimModifyRelation(row){
-	var newRelationObject=getRelationSelectInfo();
-	
-	if(typeof newRelationObject ==='undefined'){
-		return;
-	}
-	newRelationObject.yxbz=row.yxbz;
-	newRelationObject.edu107_ID=row.edu107_ID;
-	
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/updateRelation",
-		data: {
-             "updateinfo":JSON.stringify(newRelationObject) 
-        },
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.have){
-					toastr.warning('层次关系已存在');
-					return;
-				}
-				if(backjson.relationNameHave){
-					toastr.warning('培养计划名称已存在');
-					return;
-				}
-				$("#relationTable").bootstrapTable('updateByUniqueId', {
-					id: row.edu107_ID,
-					row: newRelationObject
-				});
-				toastr.success('修改培养计划成功');
-				$.hideModal("#addNewRelationModal");
-				$(".myTooltip").tooltipify();
-				drawPagination(".relationTableArea", "培养计划信息");
-			} else {
-				toastr.warning('操作失败，请重试');
-			}
-		}
-	});
-}
-
-//预备新增关系
-function wantAddRelation(){
-	$.showModal("#addNewRelationModal",true);
-	$("#addNewRelationModal").find(".moadalTitle").html("新增培养计划");
-	emptyRelationChooseArea();
-	//确认新增关系按钮
-	$('.addNewRelationTip_confimBtn').unbind('click');
-	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
-		confimAddNewRelation();
-		e.stopPropagation();
-	});
-}
-
-//确认新增关系
-function confimAddNewRelation(){
-	var newRelationObject=getRelationSelectInfo();
-	if(typeof newRelationObject ==='undefined'){
-		return;
-	}
-	
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/addNewRelation",
-		data: {
-             "newRelationInfo":JSON.stringify(newRelationObject) 
-        },
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.have){
-					toastr.warning('层次关系已存在');
-					return;
-				}
-				if(backjson.relationNameHave){
-					toastr.warning('培养计划名称已存在');
-					return;
-				}
-				newRelationObject.edu107_ID=backjson.id;
-				newRelationObject.yxbz=backjson.yxbz;
-				$('#relationTable').bootstrapTable('prepend', newRelationObject);
-				toastr.success('新增培养计划成功');
-				$.hideModal("#addNewRelationModal");
-				$(".myTooltip").tooltipify();
-				drawPagination(".relationTableArea", "培养计划信息");
-			} else {
-				toastr.warning('操作失败，请重试');
-			}
-		}
-	});
-}
-
-//获得关系模态框中select 的值
-function getRelationSelectInfo(){
-	var relationlLevelValue = getNormalSelectValue("addNewRelation_level");
-	var relationlLevelText = getNormalSelectText("addNewRelation_level");
-	var relationDepartmentValue = getNormalSelectValue("addNewRelation_department");
-	var relationDepartmentText = getNormalSelectText("addNewRelation_department");
-	var relationGardeValue = getNormalSelectValue("addNewRelation_garde");
-	var relationGardeText = getNormalSelectText("addNewRelation_garde");
-	var relationMmajorValue = getNormalSelectValue("addNewRelation_major");
-	var relationMmajorText = getNormalSelectText("addNewRelation_major");
-	var relationName =$("#addNewRelation_RelationName").val();
-	
-	if(relationName===""){
-		toastr.warning('培养计划名称不能为空');
-		return;
-	}
-	
-	if(relationlLevelValue===""){
-		toastr.warning('请选择培养层次');
-		return;
-	}
-	
-	if(relationDepartmentValue===""){
-		toastr.warning('请选择系部');
-		return;
-	}
-	
-	if(relationGardeValue===""){
-		toastr.warning('请选择年级');
-		return;
-	}
-	if(relationMmajorValue===""){
-		toastr.warning('请选择专业');
-		return;
-	}
-	
-	var newRelationObject=new Object();
-	newRelationObject.edu103mc=relationlLevelText;
-	newRelationObject.edu104mc=relationDepartmentText;
-	newRelationObject.edu105mc=relationGardeText;
-	newRelationObject.edu106mc=relationMmajorText;
-	newRelationObject.edu103=relationlLevelValue;
-	newRelationObject.edu104=relationDepartmentValue;
-	newRelationObject.edu105=relationGardeValue;
-	newRelationObject.edu106=relationMmajorValue;
-	newRelationObject.pyjhmc=relationName;
-	return newRelationObject;
-}
-
-//清空关系模态框中select的值
-function emptyRelationChooseArea(){
-	var reObject = new Object();
-	reObject.normalSelectIds = "#addNewRelation_level,#addNewRelation_department,#addNewRelation_garde,#addNewRelation_major";
-	reObject.InputIds = "#addNewRelation_RelationName";
-	reReloadSearchsWithSelect(reObject);
-}
-
-//填充新增关系模态框中的下拉框选项
-function stuffRelationTipSelect(){
-	$('.isSowIndex').selectMania(); //初始化下拉框
-	var allLevls = $("#allLevlTable").bootstrapTable("getData");
-	var allDepartments = $("#allDepartmentTable").bootstrapTable("getData");
-	var allGrades = $("#allGradeTable").bootstrapTable("getData");
-	var allMajors = $("#allMajorTable").bootstrapTable("getData");
-	
-	//层次下拉框
-	if(allLevls.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allLevls.length; i++) {
-			str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_level", str);
-	}
-	
-	//系部下拉框
-	if(allDepartments.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allDepartments.length; i++) {
-			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_department", str);
-	}
-	
-	//年级下拉框
-	if(allGrades.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allGrades.length; i++) {
-			str += '<option value="' + allGrades[i].edu105_ID + '">' + allGrades[i].njmc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_garde", str);
-	}
-	
-	//专业下拉框
-	if(allMajors.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allMajors.length; i++) {
-			str += '<option value="' + allMajors[i].edu106_ID + '">' + allMajors[i].zymc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_major", str);
-	}
-}
-
-//单个删除关系
-function removeRelation(removeID){
-	$.showModal("#remindModal",true);
-	$(".remindType").html("培养计划");
-	$(".remindActionType").html("删除");
-	//确认新增关系按钮
-	$('.confirmRemind').unbind('click');
-	$('.confirmRemind').bind('click', function(e) {
-		var removeArray = new Array;
-		removeArray.push(removeID);
-		sendRelationRemoveInfo(removeArray);
-		e.stopPropagation();
-	});
-}
-
-//批量删除关系
-function removeRelations() {
-	var chosenRelations = $('#relationTable').bootstrapTable('getAllSelections');
-	if (chosenRelations.length === 0) {
-		toastr.warning('暂未选择任何数据');
-		return;
-	}
-	
-	$.showModal("#remindModal",true);
-	$(".remindType").html("培养计划");
-	$(".remindActionType").html("删除");
-	$('.confirmRemind').unbind('click');
-	$('.confirmRemind').bind('click', function(e) {
-		var removeArray = new Array;
-		for (var i = 0; i < chosenRelations.length; i++) {
-			removeArray.push(chosenRelations[i].edu107_ID);
-		}
-		sendRelationRemoveInfo(removeArray);
-		e.stopPropagation();
-	});
-}
-
-//发送删除关系请求
-function sendRelationRemoveInfo(removeArray){
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/removeRelation",
-		data: {
-             "deleteIds":JSON.stringify(removeArray) 
-        },
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.result) {
-				if (backjson.canRemove) {
-					tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
-					$.hideModal("#remindModal");
-					$(".myTooltip").tooltipify();
-				}else{
-					toastr.warning('不能删除正在使用的培养计划');
-				}
-			} else {
-				toastr.warning('操作失败，请重试');
-			}
-		}
-	});
-}
-
-//开始检索层次关系
-function relationStartSearch(){
-	var lvelName=$("#relation_seaechLvel").val();
-	var deaparmentName=$("#relation_seaechDeaparment").val();
-	var gradeName=$("#relation_seaechGrade").val();
-	var majorName=$("#relation_seaechMajor").val();
-	if(lvelName===""&&deaparmentName===""&&gradeName===""&&majorName===""){
-		toastr.warning('请输入检索条件');
-		return;
-	}
-	
-	var serachObject=new Object();
-	lvelName===""?serachObject.lvelName="":serachObject.lvelName=lvelName;
-	deaparmentName===""?serachObject.deaparmentName="":serachObject.deaparmentName=deaparmentName;
-	gradeName===""?serachObject.gradeName="":serachObject.gradeName=gradeName;
-	majorName===""?serachObject.majorName="":serachObject.majorName=majorName;
-	
-	// 发送查询所有用户请求
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/seacchRelation",
-		data: {
-             "SearchCriteria":JSON.stringify(serachObject) 
-        },
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.relationList.length===0){
-					toastr.warning('暂无数据');
-				}
-				stuffAllRelationInfoTable(backjson.relationList);
-			} else {
-				toastr.warning('操作失败，请重试');
-			}
-		}
-	});
-}
-
-//层次关系重置检索
-function relationReloadSearchs(){
-	var reObject = new Object();
-	reObject.InputIds = "#relation_seaechRelationName,#relation_seaechLvel,#relation_seaechDeaparment,#relation_seaechGrade,#relation_seaechMajor";
-	reReloadSearchsWithSelect(reObject);
-	getAllRelationInfo();
-}
-/**
- * tab3 end
- * */
+// /**
+//  * tab3
+//  * */
+// //判断是否首次点击层级关系管理
+// function judgmentIsFristTimeLoadTab3(){
+// 	var isFirstShowTab3 = $(".isFirstShowTab3")[0].innerText;
+// 	stuffRelationTipSelect();
+// 	if (isFirstShowTab3 === "T") {
+// 		$(".isFirstShowTab3").html("F");
+// 		getAllRelationInfo();
+// 		tab3BtnBind();
+// 	}
+// }
+//
+// //层次关系管理页面按钮事件绑定
+// function tab3BtnBind(){
+// 	//批量删除关系
+// 	$('#removeRelations').unbind('click');
+// 	$('#removeRelations').bind('click', function(e) {
+// 		removeRelations();
+// 		e.stopPropagation();
+// 	});
+//
+// 	//预备新增关系
+// 	$('#addRelation').unbind('click');
+// 	$('#addRelation').bind('click', function(e) {
+// 		wantAddRelation();
+// 		e.stopPropagation();
+// 	});
+//
+// 	//开始检索层次关系
+// 	$('#startSearch_relation').unbind('click');
+// 	$('#startSearch_relation').bind('click', function(e) {
+// 		relationStartSearch();
+// 		e.stopPropagation();
+// 	});
+//
+// 	//层次关系重置检索
+// 	$('#reReloadSearchs_relation').unbind('click');
+// 	$('#reReloadSearchs_relation').bind('click', function(e) {
+// 		relationReloadSearchs();
+// 		e.stopPropagation();
+// 	});
+//
+// }
+//
+// //获取所有层次关系
+// function getAllRelationInfo(){
+// 	$.ajax({
+// 		method : 'get',
+// 		cache : false,
+// 		url : "/getAllRelationInfo",
+// 		dataType : 'json',
+// 		beforeSend: function(xhr) {
+// 			requestErrorbeforeSend();
+// 		},
+// 		error: function(textStatus) {
+// 			requestError();
+// 		},
+// 		complete: function(xhr, status) {
+// 			requestComplete();
+// 		},
+// 		success : function(backjson) {
+// 			if (backjson.result) {
+// 				stuffAllRelationInfoTable(backjson.allRelationInfo);
+// 				hideloding();
+// 			} else {
+// 				toastr.warning('操作失败，请重试');
+// 			}
+// 		}
+// 	});
+// }
+//
+// //填充层次关系管理表
+// function stuffAllRelationInfoTable(allRelationInfo){
+// 	window.releaseNewsEvents = {
+// 			'click #modifyRelation': function(e, value, row, index) {
+// 				modifyRelation(row);
+// 			},
+// 			'click #removeRelation': function(e, value, row, index) {
+// 				removeRelation(row.edu107_ID);
+// 			}
+// 		};
+//
+// 		$('#relationTable').bootstrapTable('destroy').bootstrapTable({
+// 			data: allRelationInfo,
+// 			pagination: true,
+// 			pageNumber: 1,
+// 			pageSize: 10,
+// 			pageList: [10],
+// 			showToggle: false,
+// 			showFooter: false,
+// 			clickToSelect: true,
+// 			search: true,
+// 			editable: false,
+// 			striped: true,
+// 			toolbar: '#toolbar',
+// 			showColumns: false,
+// 			onPageChange: function() {
+// 				drawPagination(".relationTableArea", "培养计划信息");
+// 			},
+// 			columns: [{
+// 					field: 'edu107_ID',
+// 					title: 'edu107_ID',
+// 					align: 'center',
+// 					visible: false
+// 				}, {
+// 					field: 'yxbz',
+// 					title: '有效标志',
+// 					align: 'left',
+// 					visible: false
+// 				},
+// 				{
+// 					field: 'check',
+// 					checkbox: true
+// 				},
+// 				{
+// 					field: 'pyjhmc',
+// 					title: '培养计划名称',
+// 					align: 'left',
+// 					formatter: paramsMatter
+//
+// 				},
+// 				{
+// 					field: 'edu103mc',
+// 					title: '培养层次名称',
+// 					align: 'left',
+// 					formatter: paramsMatter
+//
+// 				},
+// 				{
+// 					field: 'edu103',
+// 					title: '培养层次代码',
+// 					align: 'left',
+// 					visible: false
+// 				},
+// 				{
+// 					field: 'edu104mc',
+// 					title: '系部名称',
+// 					align: 'left',
+// 					formatter: paramsMatter
+//
+// 				},{
+// 					field: 'edu104',
+// 					title: '系部编码',
+// 					align: 'left',
+// 					visible: false
+// 				},{
+// 					field: 'edu105mc',
+// 					title: '年级名称',
+// 					align: 'left',
+// 					formatter: paramsMatter
+//
+// 				},{
+// 					field: 'edu105',
+// 					title: '年级编码',
+// 					align: 'left',
+// 					visible: false
+// 				},{
+// 					field: 'edu106mc',
+// 					title: '专业名称',
+// 					align: 'left',
+// 					formatter: paramsMatter
+//
+// 				},{
+// 					field: 'edu106',
+// 					title: '专业编码',
+// 					align: 'left',
+// 					visible: false
+// 				},{
+// 					field: 'action',
+// 					title: '操作',
+// 					align: 'center',
+// 					clickToSelect: false,
+// 					formatter: releaseNewsFormatter,
+// 					events: releaseNewsEvents,
+// 				}
+// 			]
+// 		});
+//
+// 		function releaseNewsFormatter(value, row, index) {
+// 			return [
+// 					'<ul class="toolbar tabletoolbar">' +
+// 					'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+// 					'<li id="removeRelation" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
+// 					'</ul>'
+// 				]
+// 				.join('');
+// 		}
+// 		drawSearchInput(".relationTableArea");
+// 		drawPagination(".relationTableArea", "培养计划信息");
+// 		toolTipUp(".myTooltip");
+// 		btnControl();
+// }
+//
+// //预备修改关系
+// function modifyRelation(row){
+// 	stufDeadultRelation(row);
+// 	$.showModal("#addNewRelationModal",true);
+// 	$("#addNewRelationModal").find(".moadalTitle").html("修改培养计划");
+// 	//确认新增关系按钮
+// 	$('.addNewRelationTip_confimBtn').unbind('click');
+// 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
+// 		confimModifyRelation(row);
+// 		e.stopPropagation();
+// 	});
+// }
+//
+// //修改时填充该行信息到层次关系选择区
+// function stufDeadultRelation(row){
+// 	stuffManiaSelectWithDeafult("#addNewRelation_level",row.pyccbm);  //填充默认培养层次
+// 	stuffManiaSelectWithDeafult("#addNewRelation_department",row.xbbm);  //填充默认系部
+// 	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.njbm);  //填充默认年级
+// 	stuffManiaSelectWithDeafult("#addNewRelation_major",row.zybm);  //填充默认专业
+// 	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
+// }
+//
+// //确认修改关系
+// function confimModifyRelation(row){
+// 	var newRelationObject=getRelationSelectInfo();
+//
+// 	if(typeof newRelationObject ==='undefined'){
+// 		return;
+// 	}
+// 	newRelationObject.yxbz=row.yxbz;
+// 	newRelationObject.edu107_ID=row.edu107_ID;
+//
+// 	$.ajax({
+// 		method : 'get',
+// 		cache : false,
+// 		url : "/updateRelation",
+// 		data: {
+//              "updateinfo":JSON.stringify(newRelationObject)
+//         },
+// 		dataType : 'json',
+// 		beforeSend: function(xhr) {
+// 			requestErrorbeforeSend();
+// 		},
+// 		error: function(textStatus) {
+// 			requestError();
+// 		},
+// 		complete: function(xhr, status) {
+// 			requestComplete();
+// 		},
+// 		success : function(backjson) {
+// 			if (backjson.result) {
+// 				hideloding();
+// 				if(backjson.have){
+// 					toastr.warning('层次关系已存在');
+// 					return;
+// 				}
+// 				if(backjson.relationNameHave){
+// 					toastr.warning('培养计划名称已存在');
+// 					return;
+// 				}
+// 				$("#relationTable").bootstrapTable('updateByUniqueId', {
+// 					id: row.edu107_ID,
+// 					row: newRelationObject
+// 				});
+// 				toastr.success('修改培养计划成功');
+// 				$.hideModal("#addNewRelationModal");
+// 				$(".myTooltip").tooltipify();
+// 				drawPagination(".relationTableArea", "培养计划信息");
+// 			} else {
+// 				toastr.warning('操作失败，请重试');
+// 			}
+// 		}
+// 	});
+// }
+//
+// //预备新增关系
+// function wantAddRelation(){
+// 	$.showModal("#addNewRelationModal",true);
+// 	$("#addNewRelationModal").find(".moadalTitle").html("新增培养计划");
+// 	emptyRelationChooseArea();
+// 	//确认新增关系按钮
+// 	$('.addNewRelationTip_confimBtn').unbind('click');
+// 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
+// 		confimAddNewRelation();
+// 		e.stopPropagation();
+// 	});
+// }
+//
+// //确认新增关系
+// function confimAddNewRelation(){
+// 	var newRelationObject=getRelationSelectInfo();
+// 	if(typeof newRelationObject ==='undefined'){
+// 		return;
+// 	}
+//
+// 	$.ajax({
+// 		method : 'get',
+// 		cache : false,
+// 		url : "/addNewRelation",
+// 		data: {
+//              "newRelationInfo":JSON.stringify(newRelationObject)
+//         },
+// 		dataType : 'json',
+// 		beforeSend: function(xhr) {
+// 			requestErrorbeforeSend();
+// 		},
+// 		error: function(textStatus) {
+// 			requestError();
+// 		},
+// 		complete: function(xhr, status) {
+// 			requestComplete();
+// 		},
+// 		success : function(backjson) {
+// 			if (backjson.result) {
+// 				hideloding();
+// 				if(backjson.have){
+// 					toastr.warning('层次关系已存在');
+// 					return;
+// 				}
+// 				if(backjson.relationNameHave){
+// 					toastr.warning('培养计划名称已存在');
+// 					return;
+// 				}
+// 				newRelationObject.edu107_ID=backjson.id;
+// 				newRelationObject.yxbz=backjson.yxbz;
+// 				$('#relationTable').bootstrapTable('prepend', newRelationObject);
+// 				toastr.success('新增培养计划成功');
+// 				$.hideModal("#addNewRelationModal");
+// 				$(".myTooltip").tooltipify();
+// 				drawPagination(".relationTableArea", "培养计划信息");
+// 			} else {
+// 				toastr.warning('操作失败，请重试');
+// 			}
+// 		}
+// 	});
+// }
+//
+// //获得关系模态框中select 的值
+// function getRelationSelectInfo(){
+// 	var relationlLevelValue = getNormalSelectValue("addNewRelation_level");
+// 	var relationlLevelText = getNormalSelectText("addNewRelation_level");
+// 	var relationDepartmentValue = getNormalSelectValue("addNewRelation_department");
+// 	var relationDepartmentText = getNormalSelectText("addNewRelation_department");
+// 	var relationGardeValue = getNormalSelectValue("addNewRelation_garde");
+// 	var relationGardeText = getNormalSelectText("addNewRelation_garde");
+// 	var relationMmajorValue = getNormalSelectValue("addNewRelation_major");
+// 	var relationMmajorText = getNormalSelectText("addNewRelation_major");
+// 	var relationName =$("#addNewRelation_RelationName").val();
+//
+// 	if(relationName===""){
+// 		toastr.warning('培养计划名称不能为空');
+// 		return;
+// 	}
+//
+// 	if(relationlLevelValue===""){
+// 		toastr.warning('请选择培养层次');
+// 		return;
+// 	}
+//
+// 	if(relationDepartmentValue===""){
+// 		toastr.warning('请选择系部');
+// 		return;
+// 	}
+//
+// 	if(relationGardeValue===""){
+// 		toastr.warning('请选择年级');
+// 		return;
+// 	}
+// 	if(relationMmajorValue===""){
+// 		toastr.warning('请选择专业');
+// 		return;
+// 	}
+//
+// 	var newRelationObject=new Object();
+// 	newRelationObject.edu103mc=relationlLevelText;
+// 	newRelationObject.edu104mc=relationDepartmentText;
+// 	newRelationObject.edu105mc=relationGardeText;
+// 	newRelationObject.edu106mc=relationMmajorText;
+// 	newRelationObject.edu103=relationlLevelValue;
+// 	newRelationObject.edu104=relationDepartmentValue;
+// 	newRelationObject.edu105=relationGardeValue;
+// 	newRelationObject.edu106=relationMmajorValue;
+// 	newRelationObject.pyjhmc=relationName;
+// 	return newRelationObject;
+// }
+//
+// //清空关系模态框中select的值
+// function emptyRelationChooseArea(){
+// 	var reObject = new Object();
+// 	reObject.normalSelectIds = "#addNewRelation_level,#addNewRelation_department,#addNewRelation_garde,#addNewRelation_major";
+// 	reObject.InputIds = "#addNewRelation_RelationName";
+// 	reReloadSearchsWithSelect(reObject);
+// }
+//
+// //填充新增关系模态框中的下拉框选项
+// function stuffRelationTipSelect(){
+// 	$('.isSowIndex').selectMania(); //初始化下拉框
+// 	var allLevls = $("#allLevlTable").bootstrapTable("getData");
+// 	var allDepartments = $("#allDepartmentTable").bootstrapTable("getData");
+// 	var allGrades = $("#allGradeTable").bootstrapTable("getData");
+// 	var allMajors = $("#allMajorTable").bootstrapTable("getData");
+//
+// 	//层次下拉框
+// 	if(allLevls.length!==0){
+// 		var str = '<option value="seleceConfigTip">请选择</option>';
+// 		for (var i = 0; i < allLevls.length; i++) {
+// 			str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
+// 		}
+// 		stuffManiaSelect("#addNewRelation_level", str);
+// 	}
+//
+// 	//系部下拉框
+// 	if(allDepartments.length!==0){
+// 		var str = '<option value="seleceConfigTip">请选择</option>';
+// 		for (var i = 0; i < allDepartments.length; i++) {
+// 			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc + '</option>';
+// 		}
+// 		stuffManiaSelect("#addNewRelation_department", str);
+// 	}
+//
+// 	//年级下拉框
+// 	if(allGrades.length!==0){
+// 		var str = '<option value="seleceConfigTip">请选择</option>';
+// 		for (var i = 0; i < allGrades.length; i++) {
+// 			str += '<option value="' + allGrades[i].edu105_ID + '">' + allGrades[i].njmc + '</option>';
+// 		}
+// 		stuffManiaSelect("#addNewRelation_garde", str);
+// 	}
+//
+// 	//专业下拉框
+// 	if(allMajors.length!==0){
+// 		var str = '<option value="seleceConfigTip">请选择</option>';
+// 		for (var i = 0; i < allMajors.length; i++) {
+// 			str += '<option value="' + allMajors[i].edu106_ID + '">' + allMajors[i].zymc + '</option>';
+// 		}
+// 		stuffManiaSelect("#addNewRelation_major", str);
+// 	}
+// }
+//
+// //单个删除关系
+// function removeRelation(removeID){
+// 	$.showModal("#remindModal",true);
+// 	$(".remindType").html("培养计划");
+// 	$(".remindActionType").html("删除");
+// 	//确认新增关系按钮
+// 	$('.confirmRemind').unbind('click');
+// 	$('.confirmRemind').bind('click', function(e) {
+// 		var removeArray = new Array;
+// 		removeArray.push(removeID);
+// 		sendRelationRemoveInfo(removeArray);
+// 		e.stopPropagation();
+// 	});
+// }
+//
+// //批量删除关系
+// function removeRelations() {
+// 	var chosenRelations = $('#relationTable').bootstrapTable('getAllSelections');
+// 	if (chosenRelations.length === 0) {
+// 		toastr.warning('暂未选择任何数据');
+// 		return;
+// 	}
+//
+// 	$.showModal("#remindModal",true);
+// 	$(".remindType").html("培养计划");
+// 	$(".remindActionType").html("删除");
+// 	$('.confirmRemind').unbind('click');
+// 	$('.confirmRemind').bind('click', function(e) {
+// 		var removeArray = new Array;
+// 		for (var i = 0; i < chosenRelations.length; i++) {
+// 			removeArray.push(chosenRelations[i].edu107_ID);
+// 		}
+// 		sendRelationRemoveInfo(removeArray);
+// 		e.stopPropagation();
+// 	});
+// }
+//
+// //发送删除关系请求
+// function sendRelationRemoveInfo(removeArray){
+// 	$.ajax({
+// 		method : 'get',
+// 		cache : false,
+// 		url : "/removeRelation",
+// 		data: {
+//              "deleteIds":JSON.stringify(removeArray)
+//         },
+// 		dataType : 'json',
+// 		beforeSend: function(xhr) {
+// 			requestErrorbeforeSend();
+// 		},
+// 		error: function(textStatus) {
+// 			requestError();
+// 		},
+// 		complete: function(xhr, status) {
+// 			requestComplete();
+// 		},
+// 		success : function(backjson) {
+// 			hideloding();
+// 			if (backjson.result) {
+// 				if (backjson.canRemove) {
+// 					tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
+// 					$.hideModal("#remindModal");
+// 					$(".myTooltip").tooltipify();
+// 				}else{
+// 					toastr.warning('不能删除正在使用的培养计划');
+// 				}
+// 			} else {
+// 				toastr.warning('操作失败，请重试');
+// 			}
+// 		}
+// 	});
+// }
+//
+// //开始检索层次关系
+// function relationStartSearch(){
+// 	var lvelName=$("#relation_seaechLvel").val();
+// 	var deaparmentName=$("#relation_seaechDeaparment").val();
+// 	var gradeName=$("#relation_seaechGrade").val();
+// 	var majorName=$("#relation_seaechMajor").val();
+// 	if(lvelName===""&&deaparmentName===""&&gradeName===""&&majorName===""){
+// 		toastr.warning('请输入检索条件');
+// 		return;
+// 	}
+//
+// 	var serachObject=new Object();
+// 	lvelName===""?serachObject.lvelName="":serachObject.lvelName=lvelName;
+// 	deaparmentName===""?serachObject.deaparmentName="":serachObject.deaparmentName=deaparmentName;
+// 	gradeName===""?serachObject.gradeName="":serachObject.gradeName=gradeName;
+// 	majorName===""?serachObject.majorName="":serachObject.majorName=majorName;
+//
+// 	// 发送查询所有用户请求
+// 	$.ajax({
+// 		method : 'get',
+// 		cache : false,
+// 		url : "/seacchRelation",
+// 		data: {
+//              "SearchCriteria":JSON.stringify(serachObject)
+//         },
+// 		dataType : 'json',
+// 		beforeSend: function(xhr) {
+// 			requestErrorbeforeSend();
+// 		},
+// 		error: function(textStatus) {
+// 			requestError();
+// 		},
+// 		complete: function(xhr, status) {
+// 			requestComplete();
+// 		},
+// 		success : function(backjson) {
+// 			if (backjson.result) {
+// 				hideloding();
+// 				if(backjson.relationList.length===0){
+// 					toastr.warning('暂无数据');
+// 				}
+// 				stuffAllRelationInfoTable(backjson.relationList);
+// 			} else {
+// 				toastr.warning('操作失败，请重试');
+// 			}
+// 		}
+// 	});
+// }
+//
+// //层次关系重置检索
+// function relationReloadSearchs(){
+// 	var reObject = new Object();
+// 	reObject.InputIds = "#relation_seaechRelationName,#relation_seaechLvel,#relation_seaechDeaparment,#relation_seaechGrade,#relation_seaechMajor";
+// 	reReloadSearchsWithSelect(reObject);
+// 	getAllRelationInfo();
+// }
+// /**
+//  * tab3 end
+//  * */
 
 
 //填充年份选择器

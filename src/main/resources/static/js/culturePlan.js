@@ -3,49 +3,622 @@ $(function() {
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
-	drawMajorTrainingEmptyTable();
-	getMajorTrainingSelectInfo();
-	binBind();
+	getAllRelationInfo();
+	tab3BtnBind();
 	$("input[type='number']").inputSpinner();
 });
 
-// 获取-专业培养计划- 有逻辑关系select信息
-function getMajorTrainingSelectInfo() {
-	LinkageSelectPublic("#level","#department","#grade","#major");
-	$("#major").change(function() {
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/queryCulturePlanCouses",
-			data: {
-	             "culturePlanInfo":JSON.stringify(getNotNullSearchs()) 
-	        },
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				if (backjson.result) {
-					hideloding();
-					dropConfigOption("#major");
-					if(backjson.couserInfo.length===0){
-						toastr.info('该培养计划下暂无专业课程');
-						drawMajorTrainingEmptyTable();
-					}
-					stuffMajorTrainingTable(backjson.couserInfo);
-				} else {
-					toastr.warning('操作失败，请重试');
-				}
+/**
+ * tab3
+ * */
+//层次关系管理页面按钮事件绑定
+function tab3BtnBind(){
+	//批量删除关系
+	$('#removeRelations').unbind('click');
+	$('#removeRelations').bind('click', function(e) {
+		removeRelations();
+		e.stopPropagation();
+	});
+
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+
+	//预备新增关系
+	$('#addRelation').unbind('click');
+	$('#addRelation').bind('click', function(e) {
+		wantAddRelation();
+		e.stopPropagation();
+	});
+
+	//开始检索层次关系
+	$('#startSearch_relation').unbind('click');
+	$('#startSearch_relation').bind('click', function(e) {
+		relationStartSearch();
+		e.stopPropagation();
+	});
+
+	//层次关系重置检索
+	$('#reReloadSearchs_relation').unbind('click');
+	$('#reReloadSearchs_relation').bind('click', function(e) {
+		relationReloadSearchs();
+		e.stopPropagation();
+	});
+
+}
+
+//获取所有层次关系
+function getAllRelationInfo(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRelationInfo",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				stuffAllRelationInfoTable(backjson.allRelationInfo);
+				hideloding();
+			} else {
+				toastr.warning('操作失败，请重试');
 			}
-		});
+		}
 	});
 }
+
+//填充层次关系管理表
+function stuffAllRelationInfoTable(allRelationInfo){
+	window.releaseNewsEvents = {
+		'click #modifyRelation': function(e, value, row, index) {
+			modifyRelation(row);
+		},
+		'click #removeRelation': function(e, value, row, index) {
+			removeRelation(row.edu107_ID);
+		},
+		'click #makePlan': function(e, value, row, index) {
+			makePlan(row);
+		}
+	};
+
+	$('#relationTable').bootstrapTable('destroy').bootstrapTable({
+		data: allRelationInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 10,
+		pageList: [10],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: '培养计划导出'  //文件名称
+		},
+		onPageChange: function() {
+			drawPagination(".relationTableArea", "培养计划信息");
+		},
+		columns: [{
+			field: 'edu107_ID',
+			title: 'edu107_ID',
+			align: 'center',
+			visible: false
+		}, {
+			field: 'yxbz',
+			title: '有效标志',
+			align: 'left',
+			visible: false
+		},
+			{
+				field: 'check',
+				checkbox: true
+			},
+			{
+				field: 'pyjhmc',
+				title: '培养计划名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			},
+			{
+				field: 'edu103mc',
+				title: '培养层次名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			},
+			{
+				field: 'edu103',
+				title: '培养层次代码',
+				align: 'left',
+				visible: false
+			},
+			{
+				field: 'edu104mc',
+				title: '系部名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			},{
+				field: 'edu104',
+				title: '系部编码',
+				align: 'left',
+				visible: false
+			},{
+				field: 'edu105mc',
+				title: '年级名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			},{
+				field: 'edu105',
+				title: '年级编码',
+				align: 'left',
+				visible: false
+			},{
+				field: 'edu106mc',
+				title: '专业名称',
+				align: 'left',
+				formatter: paramsMatter
+
+			},{
+				field: 'edu106',
+				title: '专业编码',
+				align: 'left',
+				visible: false
+			},{
+				field: 'action',
+				title: '操作',
+				align: 'center',
+				clickToSelect: false,
+				formatter: releaseNewsFormatter,
+				events: releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [
+			'<ul class="toolbar tabletoolbar">' +
+			'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+			'<li id="makePlan" class="modifyBtn"><span><img src="images/icon03.png" style="width:24px"></span>培养计划定制</li>' +
+			'<li id="removeRelation" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
+			'</ul>'
+		]
+			.join('');
+	}
+	drawSearchInput(".relationTableArea");
+	drawPagination(".relationTableArea", "培养计划信息");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//预备修改关系
+function modifyRelation(row){
+	stufDeadultRelation(row);
+	$.showModal("#addNewRelationModal",true);
+	$("#addNewRelationModal").find(".moadalTitle").html("修改培养计划");
+	//确认新增关系按钮
+	$('.addNewRelationTip_confimBtn').unbind('click');
+	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
+		confimModifyRelation(row);
+		e.stopPropagation();
+	});
+}
+
+//修改时填充该行信息到层次关系选择区
+function stufDeadultRelation(row){
+	LinkageSelectPublic("#addNewRelation_level","#addNewRelation_department","#addNewRelation_garde","#addNewRelation_major");
+	stuffManiaSelectWithDeafult("#addNewRelation_department",row.edu104,row.edu104mc);  //填充默认系部
+	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.edu105,row.edu105mc);  //填充默认年级
+	stuffManiaSelectWithDeafult("#addNewRelation_major",row.edu106,row.edu106mc);  //填充默认专业
+	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
+}
+
+//确认修改关系
+function confimModifyRelation(row){
+	var newRelationObject=getRelationSelectInfo();
+
+	if(typeof newRelationObject ==='undefined'){
+		return;
+	}
+	newRelationObject.yxbz=row.yxbz;
+	newRelationObject.edu107_ID=row.edu107_ID;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/updateRelation",
+		data: {
+			"updateinfo":JSON.stringify(newRelationObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if(backjson.have){
+					toastr.warning('层次关系已存在');
+					return;
+				}
+				if(backjson.relationNameHave){
+					toastr.warning('培养计划名称已存在');
+					return;
+				}
+				$("#relationTable").bootstrapTable('updateByUniqueId', {
+					id: row.edu107_ID,
+					row: newRelationObject
+				});
+				toastr.success('修改培养计划成功');
+				$.hideModal("#addNewRelationModal");
+				$(".myTooltip").tooltipify();
+				drawPagination(".relationTableArea", "培养计划信息");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//预备新增关系
+function wantAddRelation(){
+	$.showModal("#addNewRelationModal",true);
+	$("#addNewRelationModal").find(".moadalTitle").html("新增培养计划");
+	emptyRelationChooseArea();
+	LinkageSelectPublic("#addNewRelation_level","#addNewRelation_department","#addNewRelation_garde","#addNewRelation_major");
+
+	//确认新增关系按钮
+	$('.addNewRelationTip_confimBtn').unbind('click');
+	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
+		confimAddNewRelation();
+		e.stopPropagation();
+	});
+}
+
+//确认新增关系
+function confimAddNewRelation(){
+	var newRelationObject=getRelationSelectInfo();
+	if(typeof newRelationObject ==='undefined'){
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addNewRelation",
+		data: {
+			"newRelationInfo":JSON.stringify(newRelationObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if(backjson.have){
+					toastr.warning('层次关系已存在');
+					return;
+				}
+				if(backjson.relationNameHave){
+					toastr.warning('培养计划名称已存在');
+					return;
+				}
+				newRelationObject.edu107_ID=backjson.id;
+				newRelationObject.yxbz=backjson.yxbz;
+				$('#relationTable').bootstrapTable('prepend', newRelationObject);
+				toastr.success('新增培养计划成功');
+				$.hideModal("#addNewRelationModal");
+				$(".myTooltip").tooltipify();
+				drawPagination(".relationTableArea", "培养计划信息");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//获得关系模态框中select 的值
+function getRelationSelectInfo(){
+	var relationlLevelValue = getNormalSelectValue("addNewRelation_level");
+	var relationlLevelText = getNormalSelectText("addNewRelation_level");
+	var relationDepartmentValue = getNormalSelectValue("addNewRelation_department");
+	var relationDepartmentText = getNormalSelectText("addNewRelation_department");
+	var relationGardeValue = getNormalSelectValue("addNewRelation_garde");
+	var relationGardeText = getNormalSelectText("addNewRelation_garde");
+	var relationMmajorValue = getNormalSelectValue("addNewRelation_major");
+	var relationMmajorText = getNormalSelectText("addNewRelation_major");
+	var relationName =$("#addNewRelation_RelationName").val();
+
+	if(relationName===""){
+		toastr.warning('培养计划名称不能为空');
+		return;
+	}
+
+	if(relationlLevelValue===""){
+		toastr.warning('请选择培养层次');
+		return;
+	}
+
+	if(relationDepartmentValue===""){
+		toastr.warning('请选择系部');
+		return;
+	}
+
+	if(relationGardeValue===""){
+		toastr.warning('请选择年级');
+		return;
+	}
+	if(relationMmajorValue===""){
+		toastr.warning('请选择专业');
+		return;
+	}
+
+	var newRelationObject=new Object();
+	newRelationObject.edu103mc=relationlLevelText;
+	newRelationObject.edu104mc=relationDepartmentText;
+	newRelationObject.edu105mc=relationGardeText;
+	newRelationObject.edu106mc=relationMmajorText;
+	newRelationObject.edu103=relationlLevelValue;
+	newRelationObject.edu104=relationDepartmentValue;
+	newRelationObject.edu105=relationGardeValue;
+	newRelationObject.edu106=relationMmajorValue;
+	newRelationObject.pyjhmc=relationName;
+	return newRelationObject;
+}
+
+//清空关系模态框中select的值
+function emptyRelationChooseArea(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#addNewRelation_level,#addNewRelation_department,#addNewRelation_garde,#addNewRelation_major";
+	reObject.InputIds = "#addNewRelation_RelationName";
+	reReloadSearchsWithSelect(reObject);
+}
+
+//填充新增关系模态框中的下拉框选项
+function stuffRelationTipSelect(){
+	$('.isSowIndex').selectMania(); //初始化下拉框
+	var allLevls = $("#allLevlTable").bootstrapTable("getData");
+	var allDepartments = $("#allDepartmentTable").bootstrapTable("getData");
+	var allGrades = $("#allGradeTable").bootstrapTable("getData");
+	var allMajors = $("#allMajorTable").bootstrapTable("getData");
+
+	//层次下拉框
+	if(allLevls.length!==0){
+		var str = '<option value="seleceConfigTip">请选择</option>';
+		for (var i = 0; i < allLevls.length; i++) {
+			str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
+		}
+		stuffManiaSelect("#addNewRelation_level", str);
+	}
+
+	//系部下拉框
+	if(allDepartments.length!==0){
+		var str = '<option value="seleceConfigTip">请选择</option>';
+		for (var i = 0; i < allDepartments.length; i++) {
+			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc + '</option>';
+		}
+		stuffManiaSelect("#addNewRelation_department", str);
+	}
+
+	//年级下拉框
+	if(allGrades.length!==0){
+		var str = '<option value="seleceConfigTip">请选择</option>';
+		for (var i = 0; i < allGrades.length; i++) {
+			str += '<option value="' + allGrades[i].edu105_ID + '">' + allGrades[i].njmc + '</option>';
+		}
+		stuffManiaSelect("#addNewRelation_garde", str);
+	}
+
+	//专业下拉框
+	if(allMajors.length!==0){
+		var str = '<option value="seleceConfigTip">请选择</option>';
+		for (var i = 0; i < allMajors.length; i++) {
+			str += '<option value="' + allMajors[i].edu106_ID + '">' + allMajors[i].zymc + '</option>';
+		}
+		stuffManiaSelect("#addNewRelation_major", str);
+	}
+}
+
+//单个删除关系
+function removeRelation(removeID){
+	$.showModal("#remindModal",true);
+	$(".remindType").html("培养计划");
+	$(".remindActionType").html("删除");
+	//确认新增关系按钮
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var removeArray = new Array;
+		removeArray.push(removeID);
+		sendRelationRemoveInfo(removeArray);
+		e.stopPropagation();
+	});
+}
+
+//批量删除关系
+function removeRelations() {
+	var chosenRelations = $('#relationTable').bootstrapTable('getAllSelections');
+	if (chosenRelations.length === 0) {
+		toastr.warning('暂未选择任何数据');
+		return;
+	}
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html("培养计划");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var removeArray = new Array;
+		for (var i = 0; i < chosenRelations.length; i++) {
+			removeArray.push(chosenRelations[i].edu107_ID);
+		}
+		sendRelationRemoveInfo(removeArray);
+		e.stopPropagation();
+	});
+}
+
+//发送删除关系请求
+function sendRelationRemoveInfo(removeArray){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/removeRelation",
+		data: {
+			"deleteIds":JSON.stringify(removeArray)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.canRemove) {
+					tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
+					$.hideModal("#remindModal");
+					$(".myTooltip").tooltipify();
+				}else{
+					toastr.warning('不能删除正在使用的培养计划');
+				}
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//开始检索层次关系
+function relationStartSearch(){
+	var lvelName=$("#relation_seaechLvel").val();
+	var deaparmentName=$("#relation_seaechDeaparment").val();
+	var gradeName=$("#relation_seaechGrade").val();
+	var majorName=$("#relation_seaechMajor").val();
+	if(lvelName===""&&deaparmentName===""&&gradeName===""&&majorName===""){
+		toastr.warning('请输入检索条件');
+		return;
+	}
+
+	var serachObject=new Object();
+	lvelName===""?serachObject.lvelName="":serachObject.lvelName=lvelName;
+	deaparmentName===""?serachObject.deaparmentName="":serachObject.deaparmentName=deaparmentName;
+	gradeName===""?serachObject.gradeName="":serachObject.gradeName=gradeName;
+	majorName===""?serachObject.majorName="":serachObject.majorName=majorName;
+
+	// 发送查询所有用户请求
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/seacchRelation",
+		data: {
+			"SearchCriteria":JSON.stringify(serachObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				if(backjson.relationList.length===0){
+					toastr.warning('暂无数据');
+				}
+				stuffAllRelationInfoTable(backjson.relationList);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//层次关系重置检索
+function relationReloadSearchs(){
+	var reObject = new Object();
+	reObject.InputIds = "#relation_seaechRelationName,#relation_seaechLvel,#relation_seaechDeaparment,#relation_seaechGrade,#relation_seaechMajor";
+	reReloadSearchsWithSelect(reObject);
+	getAllRelationInfo();
+}
+
+//定制培养计划
+function makePlan(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryCulturePlanCouses",
+		data: {
+			"edu107Id":JSON.stringify(row.edu107_ID)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				$(".startArea").toggle();
+				$(".culturePlanArea").toggle();
+				$(".edu107Id").html(row.edu107_ID);
+				$(".planName").html(row.levelTxt+'/'+row.departmentTxt+'/'+row.gradeTxt+'/'+row.majorTxt);
+				if(backjson.couserInfo.length===0){
+					toastr.info('该培养计划下暂无专业课程');
+					drawMajorTrainingEmptyTable();
+				}
+				stuffMajorTrainingTable(backjson.couserInfo);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+/**
+ * tab3 end
+ * */
 
 // 渲染空专业培养计划表格
 function drawMajorTrainingEmptyTable() {
@@ -210,7 +783,6 @@ function modifyMajorTraining(row) {
 
 // 确认修改培养计划
 function confirmModifyMajorTraining(row) {
-	var culturePlanInfo=getNotNullSearchs();
 	var crouseModifyInfo=getCrouseModifyInfo(row);
 	var approvalInfo=getApprovalobect();
 	if(typeof crouseModifyInfo ==='undefined'){
@@ -222,7 +794,7 @@ function confirmModifyMajorTraining(row) {
 		url : "/modifyCultureCrose",
 		dataType : 'json',
 		data: {
-		     "culturePlanInfo":JSON.stringify(culturePlanInfo) ,
+			 "edu107Id":$(".edu107Id")[0].innerText,
              "modifyInfo":JSON.stringify(crouseModifyInfo),
 			 "approvalInfo":JSON.stringify(approvalInfo)
        },
@@ -421,8 +993,7 @@ function sendLvelRemoveInfo(removeArray){
 
 // 显示详细信息并填充内容
 function showAndStuffDetails(row,showFooter) {
-	var nouNullSearch=getNotNullSearchs();
-	$("#majorTrainingDetails_teachingTerm").multiSelect(); 
+	$("#majorTrainingDetails_teachingTerm").multiSelect();
 	$("#majorTrainingDetails_code").val(row.kcdm);
 	$("#majorTrainingDetails_coursesName").val(row.kcmc);
 	$("#majorTrainingDetails_enName").val(row.ywmc);
@@ -450,13 +1021,12 @@ function showAndStuffDetails(row,showFooter) {
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isTextual", row.zyzgkzkc);  //职业资格考证
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isCalssTextual", row.kztrkc);  //课证通融
 	stuffManiaSelectWithDeafult("#majorTrainingDetails_isTeachingReform", row.jxgglxkc);  //教学改革
-	$("#majorTrainingModal").find(".moadalTitle").html(nouNullSearch.levelTxt+'/'+nouNullSearch.departmentTxt+'/'+nouNullSearch.gradeTxt+'/'+nouNullSearch.majorTxt+"-"+row.kcmc);
+	$("#majorTrainingModal").find(".moadalTitle").html($(".planName")[0].innerText+"-"+row.kcmc);
 	$.showModal("#majorTrainingModal",showFooter);
 }
 
 // 开始检索按钮
 function startSearch() {
-	var nouNullSearch=getNotNullSearchs();
 	var coursesNature = getNormalSelectValue("coursesNature");
 	var coursesName = $("#coursesName").val();
 	var testWay = getNormalSelectValue("testWay");
@@ -465,10 +1035,7 @@ function startSearch() {
 		return;
 	}
 	var serachObject=new Object();
-	serachObject.level=nouNullSearch.level;
-	serachObject.department=nouNullSearch.department;
-	serachObject.grade=nouNullSearch.grade;
-	serachObject.major=nouNullSearch.major;
+	serachObject.edu107_ID=$(".edu107Id")[0].innerText;
 	coursesNature===""?serachObject.coursesNature="":serachObject.coursesNature=coursesNature;
 	coursesName===""?serachObject.coursesName="":serachObject.coursesName=coursesName;
 	testWay===""?serachObject.testWay="":serachObject.testWay=testWay;
@@ -512,69 +1079,22 @@ function startSearch() {
 function reReloadSearchs() {
 	var reObject = new Object();
 	var reObject = new Object();
-	reObject.fristSelectId = "#level";
 	reObject.InputIds = "#coursesName";
 	reObject.normalSelectIds = "#coursesNature,#suditStatus,#testWay,#coursesSemester";
-	reObject.actionSelectIds = "#department,#grade,#major";
 	reReloadSearchsWithSelect(reObject);
 	drawMajorTrainingEmptyTable();
 }
 
 // 预备添加专业课程
 function wantAddClass() {
-	var searchs = getNotNullSearchs();
 	if (typeof (searchs) != "undefined") {
-		getAllClassInfo(searchs.levelTxt, searchs.departmentTxt, searchs.gradeTxt,
-				searchs.majorTxt);
+		getAllClassInfo($(".planName")[0].innerText);
 		$("#classBaseInfo_classSemesters").multiSelect();
 	}
 }
 
-//必选检索条件检查
-function getNotNullSearchs() {
-	var levelValue = getNormalSelectValue("level");
-	var departmentValue = getNormalSelectValue("department");
-	var gradeValue =getNormalSelectValue("grade");
-	var majorValue =getNormalSelectValue("major");
-
-	if (levelValue == "") {
-		toastr.warning('层次不能为空');
-		return;
-	}
-
-	if (departmentValue == "") {
-		toastr.warning('系部不能为空');
-		return;
-	}
-
-	if (gradeValue == "") {
-		toastr.warning('年级不能为空');
-		return;
-	}
-
-	if (majorValue == "") {
-		toastr.warning('专业不能为空');
-		return;
-	}
-	var levelText = getNormalSelectText("level");
-	var departmentText = getNormalSelectText("department");
-	var gradeText =getNormalSelectText("grade");
-	var majorText =getNormalSelectText("major");
-	
-	var returnObject = new Object();
-	returnObject.level = levelValue;
-	returnObject.department = departmentValue;
-	returnObject.grade = gradeValue;
-	returnObject.major = majorValue;
-	returnObject.levelTxt = levelText;
-	returnObject.departmentTxt = departmentText;
-	returnObject.gradeTxt = gradeText;
-	returnObject.majorTxt = majorText;
-	return returnObject;
-}
-
 // 获取课程库列表
-function getAllClassInfo(level, department, grade, major) {
+function getAllClassInfo(planName) {
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -596,9 +1116,7 @@ function getAllClassInfo(level, department, grade, major) {
 					toastr.warning('课程库暂无课程');
 					return;
 				}
-				$(".currentMajorName").html(
-						level + '  ' + department + '  ' + grade + '  ' + major);
-				var selectInfo = "";
+				$(".currentMajorName").html(planName);
 				stuffAllClassTable(backjson.allCrouse);
 				addClassAreaBtnbind();
 				$(".addClassArea").show();
@@ -626,7 +1144,6 @@ function addCulturePlan(){
 		}
 	}
 	
-	var culturePlanInfo=getNotNullSearchs();
 	var crouseInfo=getNewCulturePlanInfo(currentchoosedCroese[0].bf200_ID);
 	var approvalInfo=getApprovalobect();
 	if(typeof crouseInfo ==='undefined'){
@@ -638,7 +1155,7 @@ function addCulturePlan(){
 		async :false,
 		url : "/culturePlanAddCrouse",
 		data: {
-            "culturePlanInfo":JSON.stringify(culturePlanInfo) ,
+            "edu107Id":$(".edu107Id")[0].innerText,
             "crouseInfo":JSON.stringify(crouseInfo),
 			"approvalInfo":JSON.stringify(approvalInfo)
        },
@@ -892,22 +1409,15 @@ function stuffMoreClassInfo() {
 
 // 添加专业课程开始检索
 function addClassAreaStartSearch() {
-	var nouNullSearch=getNotNullSearchs();
 	var coursesCode = $("#addClassSearch_classCode").val();
 	var coursesName = $("#addClassSearch_className").val();
 	var majorWorkSign = $("#addClassSearch_classMark").val();
-	if(typeof nouNullSearch ==='undefined'){
-		return;
-	}
 	if (coursesCode === "" && coursesName === "" && majorWorkSign === "") {
 		toastr.warning('请输入检索条件');
 		return;
 	}
 	var serachObject=new Object();
-	serachObject.level=nouNullSearch.level;
-	serachObject.department=nouNullSearch.department;
-	serachObject.grade=nouNullSearch.grade;
-	serachObject.major=nouNullSearch.major;
+	serachObject.edu107Id=$(".edu107Id")[0].innerText;
 	coursesCode===""?serachObject.coursesCode="":serachObject.coursesCode=coursesCode;
 	coursesName===""?serachObject.coursesName="":serachObject.coursesName=coursesName;
 	majorWorkSign===""?serachObject.majorWorkSign="":serachObject.majorWorkSign=majorWorkSign;
@@ -969,11 +1479,7 @@ function addClassArea_rebackSearch(isReloadTable) {
 	$("#addClassSearch_classCode,#addClassSearch_className,#addClassSearch_classMark").val("");
 	refreshMultiSselect("#classBaseInfo_classSemesters");
 	rebackClassBaseInfo();
-	var searchs = getNotNullSearchs();
-	if (typeof (searchs) != "undefined") {
-		getAllClassInfo(searchs.levelTxt, searchs.departmentTxt, searchs.gradeTxt,
-				searchs.majorTxt);
-	}
+	getAllClassInfo($(".planName")[0].innerText);
 }
 
 //添加专业课程区域按钮绑定事件
@@ -1016,22 +1522,15 @@ function addClassAreaBtnbind() {
 
 
 
-
-
-
 // 生成班级开课计划
 function wantGeneratCoursePaln() {
-	var searchs = getNotNullSearchs();
-	if (typeof (searchs) === "undefined") {
-	return;
-    }
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/getGeneratCoursePalnInfo",
 		data: {
-            "culturePlanInfo":JSON.stringify(searchs)
+            "culturePlanInfo":$(".edu107Id")[0].innerText
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1054,7 +1553,7 @@ function wantGeneratCoursePaln() {
 					toastr.info('请添加行政班');
 					return;
 				}
-				$(".GeneratCoursePaln_currentMajorName").html(searchs.levelTxt + '  ' + searchs.departmentTxt + '  ' + searchs.gradeTxt + '  ' + searchs.majorTxt);
+				$(".GeneratCoursePaln_currentMajorName").html($(".planName")[0].innerText);
 				$(".generatCoursePalnArea").show();
 				$(".culturePlanArea").hide();
 				stuffAllClassArea(backjson.classInfo);
@@ -1304,18 +1803,10 @@ function generatCoursePalnReturnCulturePlan() {
 
 // 生成开课计划检索
 function generatCoursePalnSearch() {
-	var nouNullSearch=getNotNullSearchs();
 	var suditStatus = getNormalSelectValue("generatCourse_suditStatus");
 	var coursesName = $("#coursesName").val();
-
-	if(typeof nouNullSearch ==='undefined'){
-		return;
-	}
 	var serachObject=new Object();
-	serachObject.level=nouNullSearch.level;
-	serachObject.department=nouNullSearch.department;
-	serachObject.grade=nouNullSearch.grade;
-	serachObject.major=nouNullSearch.major;
+	serachObject.edu107Id=$(".edu107Id")[0].innerText
 	suditStatus===""?serachObject.suditStatus="":serachObject.suditStatus=suditStatus;
 	coursesName===""?serachObject.coursesName="":serachObject.coursesName=coursesName;
 	serachObject.coursesNature="";
@@ -1410,42 +1901,32 @@ function generatCoursePalnBtnbind() {
 }
 
 
-
 // 预备生成专业下所有班级课程
 function wantGeneratAllClassAllCourse() {
-	var searchs = getNotNullSearchs();
-	if (typeof (searchs) != "undefined") {
-		generatAllClassAllCourse(searchs.level, searchs.department,
-				searchs.grade, searchs.major);
-	}
+	generatAllClassAllCourse();
 }
 
 // 生成专业下所有班级课程
-function generatAllClassAllCourse(level, department, grade, major) {
+function generatAllClassAllCourse() {
 	$.showModal("#remindModal",true);
 	$(".remindType").html("专业下所有班级课程");
 	$(".remindActionType").html("生成");
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
-		var generatObject=new Object();
-		generatObject.level=level;
-		generatObject.department=department;
-		generatObject.grade=grade;
-		generatObject.major=major;
-		confirmGeneratAllClassAllCourse(generatObject);
+		confirmGeneratAllClassAllCourse();
 		e.stopPropagation();
 	});
 }
 
 // 确认生成专业下所有班级课程
-function confirmGeneratAllClassAllCourse(generatObject) {
+function confirmGeneratAllClassAllCourse() {
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/generatAllClassAllCourse",
 		data: {
-             "generatInfo":JSON.stringify(generatObject) 
+             "edu107":$(".edu107Id")[0].innerText
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1508,13 +1989,6 @@ function binBind() {
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
 		startSearch();
-		e.stopPropagation();
-	});
-
-	//提示框取消按钮
-	$('.cancelTipBtn,.cancel').unbind('click');
-	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$.hideModal();
 		e.stopPropagation();
 	});
 

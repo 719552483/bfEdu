@@ -48,7 +48,67 @@
 	</div>
 
 	<div class="formbody">
-		<div class="culturePlanArea">
+		<div class="startArea">
+			<div class="tools">
+				<ul class="toolbar">
+					<li class="click insertBtn" id="addRelation"><span><img src="images/t01.png" style="width: 24px;"/></span>新增培养计划</li>
+					<li class="click deleteBtn" id="removeRelations"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除</li>
+					<li class="click" id="startSearch_relation"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+
+				</ul>
+
+				<ul class="toolbar1">
+					<li class="click" id="reReloadSearchs_relation"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+				</ul>
+			</div>
+
+			<div class="searchArea searchAreaWitheSelect">
+
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">培养层次名称</label>
+							<input name="" type="text" class="myInput searchInput" id="relation_seaechLvel" placeholder="请输入培养层次名称..."/>
+						</div>
+					</ul>
+				</div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">系部名称</label>
+							<input name="" type="text" class="myInput searchInput" id="relation_seaechDeaparment" placeholder="请输入系部名称..."/>
+						</div>
+					</ul>
+				</div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">年级名称</label>
+							<input name="" type="text" class="myInput searchInput" id="relation_seaechGrade" placeholder="请输入年级名称..."/>
+						</div>
+					</ul>
+				</div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">专业名称</label>
+							<input name="" type="text" class="myInput searchInput" id="relation_seaechMajor" placeholder="请输入专业名称..."/>
+						</div>
+					</ul>
+				</div>
+			</div>
+
+			<div class="relationTableArea searchGivePaddingR">
+				<table class="tablelist myTableStyle" id="relationTable" data-unique-id="edu107_ID" style="margin-top: 10px;"></table>
+			</div>
+		</div>
+		<span class="edu107Id noneStart"></span>
+		<span class="planName noneStart"></span>
+		<div class="culturePlanArea noneStart">
 			<div class="formtext myformtext myformtextTipArea">
 				<b>提示：课程名字为红色代表未生成班级开课计划 , 课程名字为绿色代表已生成班级开课计划</b>
 			</div>
@@ -70,8 +130,6 @@
 							src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
 				</ul>
 			</div>
-
-
 
 			<div class="searchArea searchAreaWitheSelect">
 				<div class="col4 giveBottom levelSelectArea">
@@ -580,6 +638,77 @@
 				<table class="tablelist myTableStyle" id="generatCourseTable" data-unique-id="id" style="margin-top: 10px;"></table>
 			</div>
 
+		</div>
+	</div>
+
+	<!-- startArea培养计划Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addNewRelationModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">培养计划名称</label>
+									<input name="" type="text" class="myInput colInput"
+										   id="addNewRelation_RelationName" placeholder="请输入培养计划名称..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">培养层次</label>
+									<select  id="addNewRelation_level">
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">系部</label>
+									<select class="isSowIndex" id="addNewRelation_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年级</label>
+									<select class="isSowIndex" id="addNewRelation_garde">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专业</label>
+									<select class="isSowIndex" id="addNewRelation_major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure addNewRelationTip_confimBtn" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
 		</div>
 	</div>
 
