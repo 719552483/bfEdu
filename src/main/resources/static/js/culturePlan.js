@@ -798,8 +798,8 @@ function confirmModifyMajorTraining(row) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if(backjson.code===500){
 				crouseModifyInfo.xbsp="noStatus";
 				$("#majorTrainingTable").bootstrapTable('updateByUniqueId', {
 					id : row.edu108_ID,
@@ -808,8 +808,9 @@ function confirmModifyMajorTraining(row) {
 				toolTipUp(".myTooltip");
 				$.hideModal("#majorTrainingModal");
 				drawPagination(".majorTrainingTableArea", "培养计划");
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -1049,10 +1050,10 @@ function startSearch() {
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				stuffMajorTrainingVerifyTable(backjson.data);
+				stuffMajorTrainingTable(backjson.data);
 			} else {
 				toastr.warning(backjson.msg);
-				drawMajorTrainingVerifyEmptyTable();
+				drawMajorTrainingEmptyTable();
 			}
 		}
 	});
@@ -1810,10 +1811,10 @@ function generatCoursePalnSearch() {
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				stuffMajorTrainingVerifyTable(backjson.data);
+				stuffMajorTrainingTable(backjson.data);
 			} else {
 				toastr.warning(backjson.msg);
-				drawMajorTrainingVerifyEmptyTable();
+				drawMajorTrainingEmptyTable();
 			}
 		}
 	});
