@@ -48,6 +48,12 @@ function tab3BtnBind(){
 		e.stopPropagation();
 	});
 
+	//返回初始页面
+	$('#returnStart').unbind('click');
+	$('#returnStart').bind('click', function(e) {
+		returnStart();
+		e.stopPropagation();
+	});
 }
 
 //获取所有层次关系
@@ -599,6 +605,13 @@ function makePlan(row){
 			}
 		}
 	});
+}
+
+//返回初始页面
+function returnStart(){
+	$(".startArea").toggle();
+	$(".culturePlanArea").toggle();
+	$(".edu107Id,.planName").html("");
 }
 /**
  * tab3 end
