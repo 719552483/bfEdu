@@ -548,14 +548,11 @@ function relationStartSearch(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.relationList.length===0){
-					toastr.warning('暂无数据');
-				}
-				stuffAllRelationInfoTable(backjson.relationList);
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllRelationInfoTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -590,18 +587,16 @@ function makePlan(row){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				$(".startArea").toggle();
 				$(".culturePlanArea").toggle();
 				$(".edu107Id").html(row.edu107_ID);
 				$(".planName").html(row.levelTxt+'/'+row.departmentTxt+'/'+row.gradeTxt+'/'+row.majorTxt);
-				if(backjson.couserInfo.length===0){
-					toastr.info('该培养计划下暂无专业课程');
-					drawMajorTrainingEmptyTable();
-				}
-				stuffMajorTrainingTable(backjson.couserInfo);
+				stuffMajorTrainingTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				toastr.info('该培养计划下暂无专业课程');
+				drawMajorTrainingEmptyTable();
 			}
 		}
 	});
@@ -1057,16 +1052,12 @@ function startSearch() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.crouseInfo.length===0){
-					toastr.warning('暂无数据');
-					drawMajorTrainingEmptyTable();
-					return;
-				}
-				stuffMajorTrainingTable(backjson.crouseInfo);
+			hideloding();
+			if (backjson.code === 200) {
+				stuffMajorTrainingVerifyTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawMajorTrainingVerifyEmptyTable();
 			}
 		}
 	});
@@ -1167,22 +1158,21 @@ function addCulturePlan(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				crouseInfo.edu108_ID=backjson.crouseID;
-				crouseInfo.edu107_ID=backjson.culturePlanID;
-				crouseInfo.sfsckkjh=backjson.configTheCulturePlan;
-				crouseInfo.xbsp=backjson.departmentApproval;
+			hideloding();
+			if (backjson.code === 200) {
+				crouseInfo.edu108_ID=backjson.data.edu108_ID;
+				crouseInfo.edu107_ID=backjson.data.edu107_ID;
+				crouseInfo.sfsckkjh=backjson.data.sfsckkjh;
+				crouseInfo.xbsp=backjson.data.xbsp;
 				$('#majorTrainingTable').bootstrapTable('prepend', crouseInfo);
 				toolTipUp(".myTooltip");
 				$(".addClassArea").hide();
 				$(".culturePlanArea").show();	
 				reloadCulturePlanArea();
 				drawPagination(".majorTrainingTableArea", "培养计划");
-				toastr.success('专业课程添加成功');
+				toastr.success(backjson.msg);
 			} else {
-				hideloding();
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -1439,17 +1429,13 @@ function addClassAreaStartSearch() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.crouseInfo.length===0){
-					toastr.warning('暂无数据');
-					stuffAllClassTable({});
-					return;
-				}
-				stuffAllClassTable(backjson.crouseInfo);
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllClassTable(backjson.data);
 				rebackClassBaseInfo();
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				stuffAllClassTable({});
 			}
 		}
 	});
@@ -1541,24 +1527,24 @@ function wantGeneratCoursePaln() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.tableInfo.length===0){
+			hideloding();
+			if (backjson.code === 200) {
+				if(backjson.data.tableInfo.length===0){
 					toastr.info('请添加专业课程');
 					return;
 				}
-				if(backjson.classInfo.length===0){
+				if(backjson.data.classInfo.length===0){
 					toastr.info('请添加行政班');
 					return;
 				}
 				$(".GeneratCoursePaln_currentMajorName").html($(".planName")[0].innerText);
 				$(".generatCoursePalnArea").show();
 				$(".culturePlanArea").hide();
-				stuffAllClassArea(backjson.classInfo);
-				stuffGeneratCoursePalnTable(backjson.tableInfo);
+				stuffAllClassArea(backjson.data.classInfo);
+				stuffGeneratCoursePalnTable(backjson.data.tableInfo);
 				generatCoursePalnBtnbind();
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -1829,16 +1815,12 @@ function generatCoursePalnSearch() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.crouseInfo.length===0){
-					toastr.warning('暂无数据');
-					stuffGeneratCoursePalnTable({});
-					return;
-				}
-				stuffGeneratCoursePalnTable(backjson.crouseInfo);
+			hideloding();
+			if (backjson.code === 200) {
+				stuffMajorTrainingVerifyTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawMajorTrainingVerifyEmptyTable();
 			}
 		}
 	});
@@ -1937,7 +1919,7 @@ function confirmGeneratAllClassAllCourse() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				hideloding();
 				$.hideModal("#remindModal");
 				if(backjson.crouseInfo.length===0){
@@ -1955,7 +1937,7 @@ function confirmGeneratAllClassAllCourse() {
 						}
 					}
 				}
-				toastr.success('已生成专业下所有班级课程');
+				toastr.success(backjson.msg);
 				drawPagination(".majorTrainingTableArea", "培养计划");
 			} else {
 				toastr.warning('操作失败，请重试');

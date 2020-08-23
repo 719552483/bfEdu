@@ -31,15 +31,13 @@ function getMajorTrainingSelectInfo(){
 				requestComplete();
 			},
 			success : function(backjson) {
-				if (backjson.result) {
-					hideloding();
+				hideloding();
+				if (backjson.code === 200) {
 					dropConfigOption("#culturePlanVerify_major");
-					if(backjson.couserInfo.length===0){
-						toastr.info('暂无培养计划');
-					}
-					stuffMajorTrainingVerifyTable(backjson.couserInfo)
+					stuffMajorTrainingVerifyTable(backjson.data)
 				} else {
-					toastr.warning('操作失败，请重试');
+					toastr.info('暂无培养计划');
+					toastr.warning(backjson.msg);
 				}
 			}
 		});
@@ -496,16 +494,12 @@ function culturePlanVerifyStartSearch() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.crouseInfo.length===0){
-					toastr.warning('暂无数据');
-					drawMajorTrainingVerifyEmptyTable();
-					return;
-				}
-				stuffMajorTrainingVerifyTable(backjson.crouseInfo);
+			hideloding();
+			if (backjson.code === 200) {
+				stuffMajorTrainingVerifyTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawMajorTrainingVerifyEmptyTable();
 			}
 		}
 	});

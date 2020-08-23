@@ -434,10 +434,7 @@ public class AdministrationPageService {
 		return edu108List;
 	}
 
-	// 培养计划下新增课程
-	public void culturePlanAddCrouse(Edu108 edu108) {
-		edu108DAO.save(edu108);
-	}
+
 
 	// 修改培养计划下的专业课程
 	public void updateCultureCrouse(Edu108 edu108) {
@@ -1231,7 +1228,8 @@ public class AdministrationPageService {
 	}
 
 	// 搜索培养计划下的专业课程
-	public List<Edu108> culturePlanSeacchCrouse(Edu108 edu108) {
+	public ResultVO culturePlanSeacchCrouse(Edu108 edu108) {
+		ResultVO resultVO;
 		Specification<Edu108> specification = new Specification<Edu108>() {
 			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1253,8 +1251,16 @@ public class AdministrationPageService {
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
+
 		List<Edu108> crouseEntities = edu108DAO.findAll(specification);
-		return crouseEntities;
+
+		if(crouseEntities.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无专业课程信息");
+		}else {
+			resultVO = ResultVO.setSuccess("共找到"+crouseEntities.size()+"条信息",crouseEntities);
+		}
+
+		return resultVO;
 	}
 
 	// 搜索行政班
@@ -1285,7 +1291,10 @@ public class AdministrationPageService {
 	}
 
 	// 培养计划添加专业课程检索
-	public List<Edu200> addCrouseSeacch(Edu200 edu200) {
+	public ResultVO addCrouseSeacch(Edu200 edu200,String userKey) {
+		ResultVO resultVO;
+		Edu101 edu101 = edu101DAO.getTeacherInfoByEdu990Id(userKey);
+
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1298,11 +1307,20 @@ public class AdministrationPageService {
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
 					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
 				}
+				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
+					predicates.add(cb.like(root.<String>get("kcdm"),  edu101.getSzxb() + '%'));
+				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
 		List<Edu200> crouseEntities = edu200DAO.findAll(specification);
-		return crouseEntities;
+
+		if(crouseEntities.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无专业课程信息");
+		}else {
+			resultVO = ResultVO.setSuccess("共找到"+crouseEntities.size()+"条信息",crouseEntities);
+		}
+		return resultVO;
 	}
 
 	// 拆班搜索学生
@@ -1827,4 +1845,114 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+
+	//修改培养计划课程
+	public ResultVO modifyCultureCrose(String edu107Id, Edu108 edu108, Edu600 edu600) {
+		ResultVO resultVO;
+		//保存原始信息
+		Edu108 one = edu108DAO.findOne(edu108.getEdu108_ID());
+		edu108DAO.save(edu108);
+		edu108DAO.chengeCulturePlanCrouseStatus(edu108.getEdu108_ID().toString(), "passing");
+		//发起审批
+		edu600.setBusinessKey(edu108.getEdu108_ID());
+		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+		if(!isSuccess) {
+			edu108DAO.save(one);
+			resultVO  = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+		}else {
+			resultVO = ResultVO.setSuccess("修改成功",edu108);
+		}
+		return resultVO;
+	}
+
+
+	//新增培养计划专业课程
+	public ResultVO culturePlanAddCrouse(String edu107Id, Edu108 edu108, Edu600 edu600) {
+		ResultVO resultVO;
+		edu108.setEdu107_ID(Long.parseLong(edu107Id));
+		edu108.setSfsckkjh("F");// 初始化的是否生成开课计划
+		edu108.setXbsp("passing");// 初始化的系部审批
+		edu108DAO.save(edu108);
+		edu600.setBusinessKey(edu108.getEdu108_ID());
+		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+		if(!isSuccess) {
+			edu108DAO.delete(edu108.getEdu108_ID());
+			resultVO  = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+		}else {
+			resultVO = ResultVO.setSuccess("保存成功",edu108);
+		}
+		return resultVO;
+	}
+
+	//生成开课计划查询课程库和班级信息
+	public ResultVO getGeneratCoursePalnInfo(String edu107_id) {
+		ResultVO resultVO;
+		Map<String, Object> returnMap = new HashMap();
+		Edu107 edu107 = edu107DAO.findOne(Long.parseLong(edu107_id));
+		// 培养计划下的课程
+		List<Edu108> couserInfo = queryCulturePlanCouses(Long.parseLong(edu107_id));
+		// 培养计划下的行政班
+		List<Edu300> currentAllAdministrationClasses = queryCulturePlanAdministrationClasses(edu107.getEdu103(), edu107.getEdu104(), edu107.getEdu105(), edu107.getEdu106());
+		returnMap.put("tableInfo", couserInfo);
+		returnMap.put("classInfo", currentAllAdministrationClasses);
+		resultVO = ResultVO.setSuccess("查询成功",returnMap);
+		return resultVO;
+	}
+
+
+	//生成专业下所有课程开课计划
+	public ResultVO generatAllClassAllCourse(String edu107_id) {
+		ResultVO resultVO;
+
+		Edu107 edu107 = edu107DAO.findOne(Long.parseLong(edu107_id));
+
+		// 查询培养计划下的行政班
+		List<Edu300> administrationClasses = queryCulturePlanAdministrationClasses(edu107.getEdu103(), edu107.getEdu104(), edu107.getEdu105(), edu107.getEdu106());
+		List<String> classNames = new ArrayList();
+		List<String> classIds = new ArrayList();
+		for (int i = 0; i < administrationClasses.size(); i++) {
+			classNames.add(administrationClasses.get(i).getXzbmc());
+			classIds.add(administrationClasses.get(i).getEdu300_ID().toString());
+		}
+
+		// 查询培养计划下所有课程
+		List<Edu108> allCrouse = queryCulturePlanCouses(Long.parseLong(edu107_id));
+		String isGeneratCoursePlan = "T";
+		List<Edu108> crouseInfo = new ArrayList();
+		for (int i = 0; i < allCrouse.size(); i++) {
+			// 课程通过审核则生成开课计划
+			if (allCrouse.get(i).getXbsp().equals("pass")) {
+				for (int g = 0; g < administrationClasses.size(); g++) {
+					for (int c = 0; c < classIds.size(); c++) {
+						// eud300 行政班更改开课计划属性
+						generatAdministrationCoursePlan(classIds.get(i), isGeneratCoursePlan);
+					}
+
+					// eud180 课程更改开课计划属性
+					generatCoursePlan(allCrouse.get(i).getEdu108_ID().toString(), JSONArray.fromObject(classNames).toString(),
+							JSONArray.fromObject(classIds).toString(), isGeneratCoursePlan);
+					Edu108 edu108 = allCrouse.get(i);
+					edu108.setSfsckkjh(isGeneratCoursePlan);
+					edu108.setEdu300_ID(JSONArray.fromObject(classIds).toString());
+					edu108.setXzbmc(JSONArray.fromObject(classNames).toString());
+					crouseInfo.add(edu108);
+				}
+			}
+		}
+
+		resultVO = ResultVO.setSuccess("已生成专业下所有班级课程",crouseInfo);
+		return resultVO;
+	}
+
+
+	public ResultVO findPlanCourse(String edu107Id) {
+		ResultVO resultVO;
+		List<Edu108> edu108List = edu108DAO.queryCulturePlanCouses(Long.parseLong(edu107Id));
+		if(edu108List.size() == 0) {
+			resultVO = ResultVO.setFailed("暂未查到专业课程",edu108List);
+		}else {
+			resultVO = ResultVO.setSuccess("共查询到"+edu108List.size()+"条专业课程",edu108List);
+		}
+		return resultVO;
+	}
 }

@@ -981,19 +981,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryCulturePlanCouses")
 	@ResponseBody
-	public Object queryCulturePlanCouses(@RequestParam("culturePlanInfo") String culturePlanInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
-		String levelCode = culturePlan.getString("level");
-		String departmentCode = culturePlan.getString("department");
-		String gradeCode = culturePlan.getString("grade");
-		String majorCode = culturePlan.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
-		List<Edu108> couserInfo = administrationPageService.queryCulturePlanCouses(edu107ID);
-		returnMap.put("couserInfo", couserInfo);
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO queryCulturePlanCouses(@RequestParam("edu107Id") String edu107Id) {
+		ResultVO result = administrationPageService.findPlanCourse(edu107Id);
+		return result;
 	}
 
 	/**
@@ -1001,102 +991,37 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/culturePlanAddCrouse")
 	@ResponseBody
-	public Object culturePlanAddCrouse(@RequestParam("culturePlanInfo") String culturePlanInfo,
+	public ResultVO culturePlanAddCrouse(@RequestParam("edu107Id") String edu107Id,
 									   @RequestParam("crouseInfo") String crouseInfo,
 									   @RequestParam("approvalInfo") String approvalObject) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject crouse = JSONObject.fromObject(crouseInfo);
-		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
 		JSONObject approvalInfo = JSONObject.fromObject(approvalObject);
 		Edu108 edu108 = (Edu108) JSONObject.toBean(crouse, Edu108.class);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalInfo, Edu600.class);
-
-		// 通过 层次 系部 年级 专业定位培养计划
-		// 获得培养计划ID
-		String levelCode = culturePlan.getString("level");
-		String departmentCode = culturePlan.getString("department");
-		String gradeCode = culturePlan.getString("grade");
-		String majorCode = culturePlan.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
-		String configTheCulturePlan = "F";// 初始化的是否生成开课计划
-		String xbspTxt = "passing";// 初始化的系部审批
-		edu108.setEdu107_ID(edu107ID);
-		edu108.setSfsckkjh(configTheCulturePlan);
-		edu108.setXbsp(xbspTxt);
-		administrationPageService.culturePlanAddCrouse(edu108);
-		Long id = edu108.getEdu108_ID();
-		edu600.setBusinessKey(edu108.getEdu108_ID());
-		approvalProcessService.initiationProcess(edu600);
-
-		returnMap.put("crouseID", id);
-		returnMap.put("culturePlanID", edu107ID);
-		returnMap.put("configTheCulturePlan", configTheCulturePlan);
-		returnMap.put("departmentApproval", xbspTxt);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.culturePlanAddCrouse(edu107Id,edu108,edu600);
+		return result;
 	}
 
 	/**
 	 * 修改培养计划下的专业课程
-	 * @param culturePlanInfo
+	 * @param edu107Id
 	 * @param modifyInfo
+	 * @param approvalObject
 	 * @return
 	 */
 	@RequestMapping("modifyCultureCrose")
 	@ResponseBody
-	public Object modifyCultureCrose(@RequestParam("culturePlanInfo") String culturePlanInfo,
+	public ResultVO  modifyCultureCrose(@RequestParam("edu107Id") String edu107Id,
 									 @RequestParam("modifyInfo") String modifyInfo ,
 									 @RequestParam("approvalInfo") String approvalObject) {
-		Map<String, Object> returnMap = new HashMap();
 		JSONObject approvalInfo = JSONObject.fromObject(approvalObject);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalInfo, Edu600.class);
-
-		// 根据层次等信息查出培养计划id
-		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
-		String levelCode = culturePlan.getString("level");
-		String departmentCode = culturePlan.getString("department");
-		String gradeCode = culturePlan.getString("grade");
-		String majorCode = culturePlan.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
-		// 查询培养计划下的所有专业课程
-		List<Edu108> currentAllCultureCrose = administrationPageService.queryCulturePlanCouses(edu107ID);
-
 		// 将修改信息转化为108实体
 		JSONObject newCrouseInfo = JSONObject.fromObject(modifyInfo);
 		Edu108 edu108 = (Edu108) JSONObject.toBean(newCrouseInfo, Edu108.class);
-
-		// 判断课程信息是否冲突
-		boolean namehave = false;
-		boolean codehave = false;
-		for (int i = 0; i < currentAllCultureCrose.size(); i++) {
-			if (!currentAllCultureCrose.get(i).getEdu108_ID().equals(edu108.getEdu108_ID())
-					&& currentAllCultureCrose.get(i).getKcmc().equals(edu108.getKcmc())) {
-				namehave = true;
-				break;
-			}
-
-			if (!currentAllCultureCrose.get(i).getEdu108_ID().equals(edu108.getEdu108_ID())
-					&& currentAllCultureCrose.get(i).getKcdm().equals(edu108.getKcdm())) {
-				codehave = true;
-				break;
-			}
-
-		}
-		// 不存在则修改关系
-		if (!namehave && !codehave) {
-			administrationPageService.updateCultureCrouse(edu108);
-			administrationPageService.chengeCulturePlanCrouseStatus(edu108.getEdu108_ID().toString(), "passing");
-			edu600.setBusinessKey(edu108.getEdu108_ID());
-			approvalProcessService.initiationProcess(edu600);
-
-		}
-
-		returnMap.put("namehave", namehave);
-		returnMap.put("codehave", codehave);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.modifyCultureCrose(edu107Id,edu108,edu600);
+		return result;
 	}
 
 	/**
@@ -1125,62 +1050,35 @@ public class AdministrationController {
 	 */
 	@RequestMapping("addCrouseSeacch")
 	@ResponseBody
-	public Object addCrouseSeacch(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
+	public Object addCrouseSeacch(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userKey")String userKey) {
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
-		// 根据层次等信息查出培养计划id
-		String levelCode = searchObject.getString("level");
-		String departmentCode = searchObject.getString("department");
-		String gradeCode = searchObject.getString("grade");
-		String majorCode = searchObject.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
 		// 填充搜索对象
 		Edu200 edu200 = new Edu200();
 		edu200.setKcdm(searchObject.getString("coursesCode"));
 		edu200.setKcmc(searchObject.getString("coursesName"));
 		edu200.setBzzymc(searchObject.getString("majorWorkSign"));
-		List<Edu200> crouseInfo = administrationPageService.addCrouseSeacch(edu200);
-		returnMap.put("crouseInfo", crouseInfo);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.addCrouseSeacch(edu200,userKey);
+		return result;
 	}
 
 	/**
 	 * 搜索培养计划下的专业课程
-	 *
-	 * @param SearchCriteria
-	 *            搜索条件
-	 * @return returnMap
+	 * @param searchCriteria
+	 * @return
 	 */
 	@RequestMapping("culturePlanSeacchCrouse")
 	@ResponseBody
-	public Object culturePlanSeacchCrouse(@RequestParam String SearchCriteria) {
-		List<Edu108> crouseInfo = new ArrayList<>();
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
-		// 根据层次等信息查出培养计划id
-		String levelCode = searchObject.getString("level");
-		String departmentCode = searchObject.getString("department");
-		String gradeCode = searchObject.getString("grade");
-		String majorCode = searchObject.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-		if(edu107ID == null ) {
-			returnMap.put("crouseInfo", crouseInfo);
-			returnMap.put("result", true);
-			return  returnMap;
-		}
+	public ResultVO culturePlanSeacchCrouse(@RequestParam String searchCriteria) {
+		JSONObject searchObject = JSONObject.fromObject(searchCriteria);
 		// 填充搜索对象
 		Edu108 edu108 = new Edu108();
-		edu108.setEdu107_ID(edu107ID);
+		edu108.setEdu107_ID(searchObject.getLong("edu107_ID"));
 		edu108.setKcxzCode(searchObject.getString("coursesNature"));
 		edu108.setKcmc(searchObject.getString("coursesName"));
 		edu108.setKsfsCode(searchObject.getString("testWay"));
 		edu108.setXbsp(searchObject.getString("suditStatus"));
-		crouseInfo = administrationPageService.culturePlanSeacchCrouse(edu108);
-		returnMap.put("crouseInfo", crouseInfo);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.culturePlanSeacchCrouse(edu108);
+		return result;
 	}
 
 	/**
@@ -1470,27 +1368,14 @@ public class AdministrationController {
 
 	/**
 	 * 生成开课计划查询课程库和班级信息
+	 * @param edu107_Id
+	 * @return
 	 */
 	@RequestMapping("/getGeneratCoursePalnInfo")
 	@ResponseBody
-	public Object getGeneratCoursePalnInfo(@RequestParam("culturePlanInfo") String culturePlanInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
-		String levelCode = culturePlan.getString("level");
-		String departmentCode = culturePlan.getString("department");
-		String gradeCode = culturePlan.getString("grade");
-		String majorCode = culturePlan.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
-		// 培养计划下的课程
-		List<Edu108> couserInfo = administrationPageService.queryCulturePlanCouses(edu107ID);
-		// 培养计划下的行政班
-		List<Edu300> currentAllAdministrationClasses = administrationPageService
-				.queryCulturePlanAdministrationClasses(levelCode, departmentCode, gradeCode, majorCode);
-		returnMap.put("tableInfo", couserInfo);
-		returnMap.put("classInfo", currentAllAdministrationClasses);
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO getGeneratCoursePalnInfo(@RequestParam("culturePlanInfo") String edu107_Id) {
+		ResultVO result = administrationPageService.getGeneratCoursePalnInfo(edu107_Id);
+		return result;
 	}
 
 	/**
@@ -1526,53 +1411,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/generatAllClassAllCourse")
 	@ResponseBody
-	public Object generatAllClassAllCourse(@RequestParam("generatInfo") String generatInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject culturePlan = JSONObject.fromObject(generatInfo);
-		String levelCode = culturePlan.getString("level");
-		String departmentCode = culturePlan.getString("department");
-		String gradeCode = culturePlan.getString("grade");
-		String majorCode = culturePlan.getString("major");
-		Long edu107ID = administrationPageService.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-
-		// 查询培养计划下的行政班
-		List<Edu300> administrationClasses = administrationPageService.queryCulturePlanAdministrationClasses(levelCode,departmentCode, gradeCode, majorCode);
-		List<String> classNames = new ArrayList();
-		List<String> classIds = new ArrayList();
-		for (int i = 0; i < administrationClasses.size(); i++) {
-			classNames.add(administrationClasses.get(i).getXzbmc());
-			classIds.add(administrationClasses.get(i).getEdu300_ID().toString());
-		}
-
-		// 查询培养计划下所有课程
-		List<Edu108> allCrouse = administrationPageService.queryCulturePlanCouses(edu107ID);
-		String isGeneratCoursePlan = "T";
-		List<Edu108> crouseInfo = new ArrayList();
-		for (int i = 0; i < allCrouse.size(); i++) {
-			// 课程通过审核则生成开课计划
-			if (allCrouse.get(i).getXbsp().equals("pass")) {
-				for (int g = 0; g < administrationClasses.size(); g++) {
-					for (int c = 0; c < classIds.size(); c++) {
-						// eud300 行政班更改开课计划属性
-						administrationPageService.generatAdministrationCoursePlan(classIds.get(i), isGeneratCoursePlan);
-					}
-
-					// eud180 课程更改开课计划属性
-					administrationPageService.generatCoursePlan(allCrouse.get(i).getEdu108_ID().toString(),
-							JSONArray.fromObject(classNames).toString(), JSONArray.fromObject(classIds).toString(),
-							isGeneratCoursePlan);
-					Edu108 edu108 = allCrouse.get(i);
-					edu108.setSfsckkjh(isGeneratCoursePlan);
-					edu108.setEdu300_ID(JSONArray.fromObject(classIds).toString());
-					edu108.setXzbmc(JSONArray.fromObject(classNames).toString());
-					crouseInfo.add(edu108);
-				}
-			}
-		}
-
-		returnMap.put("crouseInfo", crouseInfo);
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO generatAllClassAllCourse(@RequestParam("edu107") String edu107_Id) {
+		ResultVO result = administrationPageService.generatAllClassAllCourse(edu107_Id);
+		return result;
 	}
 
 	/**
