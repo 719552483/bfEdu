@@ -154,10 +154,11 @@ public class SystemManageController {
      */
     @RequestMapping("/newUser")
     @ResponseBody
-    public ResultVO newUser(@RequestParam("newUserInfo") String newUserInfo) {
+    public ResultVO newUser(@RequestParam("newUserInfo") String newUserInfo,@RequestParam String departments) {
         JSONObject jsonObject = JSONObject.fromObject(newUserInfo);
         Edu990 edu990 = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
-        ResultVO result = systemManageService.newUser(edu990);
+        List<String> departmentList = JSON.parseArray(departments, String.class);
+        ResultVO result = systemManageService.newUser(edu990,departmentList);
         return result;
     }
 
@@ -168,9 +169,12 @@ public class SystemManageController {
      */
     @RequestMapping("/removeUser")
     @ResponseBody
-    public ResultVO removeUser(@RequestParam String deleteIds) {
-        List<String> removeList = JSON.parseArray(deleteIds,String.class);
-        ResultVO result = systemManageService.removeUser(removeList);
+    public ResultVO removeUser(@RequestParam("deleteIds") String deleteIds) {
+        List<String> deleteIdList = JSON.parseArray(deleteIds, String.class);
+        ResultVO result = systemManageService.removeUser(deleteIdList);
         return result;
     }
+
+
+
 }

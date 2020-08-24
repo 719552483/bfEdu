@@ -440,7 +440,7 @@ function getAllRoleInfo() {
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				stuffTable(backjson.data);
+				stuffTable(backjson.data.allRole);
 				toastr.info(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);

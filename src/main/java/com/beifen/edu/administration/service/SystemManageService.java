@@ -1,12 +1,11 @@
 package com.beifen.edu.administration.service;
 
 import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.PO.Edu990PO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.dao.Edu000Dao;
-import com.beifen.edu.administration.dao.Edu990Dao;
-import com.beifen.edu.administration.dao.Edu991Dao;
-import com.beifen.edu.administration.dao.Edu992Dao;
+import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -31,6 +31,14 @@ public class SystemManageService {
     Edu992Dao edu992Dao;
     @Autowired
     Edu000Dao edu000Dao;
+    @Autowired
+    Edu104Dao edu104Dao;
+    @Autowired
+    Edu101Dao edu101Dao;
+    @Autowired
+    RedisUtils redisUtils;
+    @Autowired
+    Edu994Dao edu994Dao;
 
 
     // 检查有没有系统用户
@@ -145,6 +153,18 @@ public class SystemManageService {
                 resultVO = ResultVO.setFailed("用户权限错误，请联系管理员");
                 return resultVO;
             }
+
+            //将学院权限存入redis备用
+            String userId = edu990.getBF990_ID().toString();
+            List<String> deparmentIds = new ArrayList<>();
+            deparmentIds = edu994Dao.findAllDepartmentIds(userId);
+            if(deparmentIds.size() == 0) {
+                Edu101 one = edu101Dao.getOne(Long.parseLong(edu990.getUserKey()));
+                deparmentIds.add(one.getSzxb());
+            }
+            redisUtils.set("department:"+userId ,deparmentIds);
+
+
             returnMap.put("UserInfo", JSON.toJSONString(edu990));
             returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
             // 更新用户上次登陆时间
@@ -221,24 +241,60 @@ public class SystemManageService {
     // 获取所有角色
     public ResultVO getAllRole() {
        ResultVO resultVO;
+       Map<String,Object> returnMap = new HashMap<>();
        List<Edu991> edu991List = edu991Dao.findRoleWithoutSys();
        if (edu991List.size() == 0) {
            resultVO = ResultVO.setFailed("暂无角色信息");
+           return resultVO;
        } else {
-           resultVO = ResultVO.setSuccess("当前系统共有"+edu991List.size()+"种角色",edu991List);
+           returnMap.put("allRole",edu991List);
        }
-       return resultVO;
+        List<Edu104> allDepartment = edu104Dao.findAll();
+        if (allDepartment.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无二级学院信息");
+            return resultVO;
+        } else {
+            returnMap.put("allDepartment",allDepartment);
+        }
+        resultVO = ResultVO.setSuccess("查询成功",returnMap);
+        return resultVO;
     }
 
     // 查询所有用户
     public ResultVO queryAllUser() {
         ResultVO resultVO;
+        List<Edu990PO> edu990POS = new ArrayList<>();
         List<Edu990> edu990List = edu990Dao.findUserWithoutSys();
         if (edu990List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无用户信息");
+            return resultVO;
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+edu990List.size()+"个用户",edu990List);
+            for (Edu990 edu990:edu990List) {
+                Edu990PO edu990PO = new Edu990PO();
+                String userId = edu990.getBF990_ID().toString();
+                List<String> deparmentIds = new ArrayList<>();
+                List<String> departmentNames = new ArrayList<>();
+                deparmentIds = edu994Dao.findAllDepartmentIds(userId);
+                departmentNames = edu994Dao.findAllDepartmentNames(userId);
+                String ids = utils.listToString(deparmentIds, ',');
+                String names = utils.listToString(departmentNames, ',');
+                
+                try {
+                    utils.copyTargetSuper(edu990,edu990PO);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                edu990PO.setDeparmentIds(ids);
+                edu990PO.setDeparmentNames(names);
+                edu990POS.add(edu990PO);
+            }
+            resultVO = ResultVO.setSuccess("共找到" + edu990List.size() + "个用户", edu990POS);
         }
+
         return resultVO;
     }
 
@@ -273,7 +329,7 @@ public class SystemManageService {
     }
 
     // 新建或修改用户
-    public ResultVO newUser(Edu990 edu990) {
+    public ResultVO newUser(Edu990 edu990,List<String> departmentList) {
         ResultVO resultVO;
         // 判断用户名是否存在
         List<Edu990> edu990List = checkUserName(edu990);
@@ -292,6 +348,16 @@ public class SystemManageService {
                 edu992.setBF990_ID(edu990.getBF990_ID());
                 edu992Dao.save(edu992);
             }
+
+            //添加用户与学院关系
+            edu994Dao.deleteByEdu990Id(edu990.getBF990_ID().toString());
+            for(String s: departmentList) {
+                Edu994 edu994 = new Edu994();
+                edu994.setEdu990_ID(edu990.getBF990_ID());
+                edu994.setEdu104_ID(s);
+                edu994Dao.save(edu994);
+            }
+
             resultVO = ResultVO.setSuccess("操作已成功",edu990.getBF990_ID());
         }
         return resultVO;
@@ -301,10 +367,13 @@ public class SystemManageService {
     public ResultVO removeUser(List<String> removeList) {
         ResultVO resultVO;
         for (String s : removeList) {
-            edu990Dao.removeUser(s);
+            edu994Dao.deleteByEdu990Id(s);
             edu992Dao.deleteByEdu990Id(s);
+            edu990Dao.removeUser(s);
         }
         resultVO = ResultVO.setSuccess("共删除了"+removeList.size()+"个用户");
         return resultVO;
     }
+
+
 }

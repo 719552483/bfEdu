@@ -28,8 +28,8 @@ function getallRole() {
 		},
 		success : function(backjson) {
 			hideloding();
-			roleOption=backjson.data;
-			departmentOption=backjson.data;
+			roleOption=backjson.data.allRole;
+			departmentOption=backjson.data.allDepartment;
 			if(roleOption.length===0){
 				//首次使用 用户角色为空的情况
 				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
@@ -43,7 +43,7 @@ function getallRole() {
 				//首次使用 用户二级学院为空的情况
 				departmentOptionStr= '<option value="seleceConfigTip">暂无二级学院</option>';
 			}else{
-				for (var i = 0; i < backjson.data.length; i++) {
+				for (var i = 0; i < departmentOption.length; i++) {
 					departmentOptionStr += '<option value="' +  departmentOption[i].edu104_ID + '">' +  departmentOption[i].xbmc + '</option>';
 				}
 			}
@@ -457,7 +457,7 @@ function okModify(row, index) {
 //发送修改用户
 function confirmodifyUser(row, index) {
 	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
-	var roleInSelect = getMoreSelectVALUES("#userRol"+row.bf990_ID);
+	var roleInSelect = getRoleMoreSelectVALUES("#userRol"+row.bf990_ID);
 	var deparmentSelect = $('#userDeparment' + row.bf990_ID).val();
 	var modifyObject =row;
 	modifyObject.BF990_ID = row.bf990_ID;

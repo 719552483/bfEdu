@@ -19,10 +19,6 @@ public class Edu990 {
 
 	private String userKey;//系统内人员主键
 
-	//关联Edu600
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Edu600 edu600;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
