@@ -297,6 +297,11 @@ function stuffTable(tableInfo) {
 				align: 'left',
 				formatter: userRoleFormatter,
 			}, {
+				field: 'deparmentNames',
+				title: '绑定的二级学院',
+				align: 'left',
+				formatter: deparmentNamesFormatter,
+			},{
 				field: 'action',
 				title: '操作',
 				align: 'center',
@@ -330,6 +335,24 @@ function stuffTable(tableInfo) {
 			.join('');
 	}
 
+	function deparmentNamesFormatter(value, row, index) {
+		if(value===""){
+			return [
+				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">暂未绑定</span>' +
+				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
+				'</select></div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">' + row.deparmentNames + '</span>' +
+				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
+				'</select></div>'
+			]
+				.join('');
+		}
+	}
+
 	function userNameFormatter(value, row, index) {
 		return [
 				'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable Mydfinput" value="' + row.yhm +
@@ -348,13 +371,16 @@ function stuffTable(tableInfo) {
 //修改用户
 function modifiRole(row) {
 	$('.roleTxt' + row.bf990_ID).hide();
+	$('.deparmentTxt' + row.bf990_ID).hide();
 	$('.blockStart' + row.bf990_ID).hide();
 	$(".blockName" + row.bf990_ID).hide();
 	$(".multipleInTableArea"+row.bf990_ID).find(".multi-select-container").show();
+	$(".deparmentInTableArea"+row.bf990_ID).find(".multi-select-container").show();
 	$(".noneStart" + row.bf990_ID).show();
 	$("#userNameInTable" + row.bf990_ID).show();
 	$(".currentId").html(row.bf990_ID);
 	$("#userRol"+row.bf990_ID).multiSelect();
+	$("#userDeparment"+row.bf990_ID).multiSelect();
 }
 
 //单个删除用户
@@ -395,11 +421,13 @@ function removeUsersBtn() {
 //取消删除用户
 function canleModify(row) {
 	$('.roleTxt' + row.bf990_ID).show();
+	$('.deparmentTxt' + row.bf990_ID).show();
 	$('.blockStart' + row.bf990_ID).show();
 	$(".blockName" + row.bf990_ID).show();
 	$(".noneStart" + row.bf990_ID).hide();
 	$("#userNameInTable" + row.bf990_ID).hide();
 	$(".multipleInTableArea"+row.bf990_ID).find(".multi-select-container").hide();
+	$(".deparmentInTableArea"+row.bf990_ID).find(".multi-select-container").hide();
 }
 
 //确认修改用户
@@ -430,11 +458,15 @@ function okModify(row, index) {
 function confirmodifyUser(row, index) {
 	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
 	var roleInSelect = getMoreSelectVALUES("#userRol"+row.bf990_ID);
+	var deparmentSelect = $('#userDeparment' + row.bf990_ID).val();
 	var modifyObject =row;
 	modifyObject.BF990_ID = row.bf990_ID;
 	modifyObject.yhm = usernameInInput;
 	modifyObject.js = roleInSelect.name;
 	modifyObject.jsId = roleInSelect.value;
+	if(deparmentSelect==null){
+		deparmentSelect=[]
+	}
 
 	$.ajax({
 		method : 'get',
@@ -442,6 +474,7 @@ function confirmodifyUser(row, index) {
 		url : "/newUser",
 		data: {
             "newUserInfo":JSON.stringify(modifyObject),
+			"departments":JSON.stringify(deparmentSelect)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
