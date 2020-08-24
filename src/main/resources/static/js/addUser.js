@@ -1,5 +1,8 @@
 var roleOptionStr="";//全局变量接收当前所有角色类型
 var roleOption="";//全局变量接收当前所有角色类型
+
+var departmentOptionStr="";//全局变量接收当前所有二级学院
+var departmentOption="";//全局变量接收当前所有二级学院
 $(function() {
 	getallRole(); 
 	drawNewUserRoleSelect();
@@ -26,12 +29,22 @@ function getallRole() {
 		success : function(backjson) {
 			hideloding();
 			roleOption=backjson.data;
-			if(backjson.data.length===0){
+			departmentOption=backjson.data;
+			if(roleOption.length===0){
 				//首次使用 用户角色为空的情况
 				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
 			}else{
+				for (var i = 0; i < roleOption.length; i++) {
+					roleOptionStr += '<option value="' +  roleOption[i].bf991_ID + '">' +  roleOption[i].js + '</option>';
+				}
+			}
+
+			if(departmentOption.length===0){
+				//首次使用 用户二级学院为空的情况
+				departmentOptionStr= '<option value="seleceConfigTip">暂无二级学院</option>';
+			}else{
 				for (var i = 0; i < backjson.data.length; i++) {
-					roleOptionStr += '<option value="' +  backjson.data[i].bf991_ID + '">' +  backjson.data[i].js + '</option>';
+					departmentOptionStr += '<option value="' +  departmentOption[i].edu104_ID + '">' +  departmentOption[i].xbmc + '</option>';
 				}
 			}
 		}
@@ -42,20 +55,23 @@ function getallRole() {
 function drawNewUserRoleSelect() {
 	$("#newRole").append(roleOptionStr);
 	$("#newRole").multiSelect();
+	$("#roleBtnDepartment").append(departmentOptionStr);
+	$("#roleBtnDepartment").multiSelect();
 }
 
 //添加用户
 function addUser() {
 	var username = $("#add_username").val();
-	var newRole = getMoreSelectVALUES("#newRole");
+	var newRole =$("#newRole").val();
 	var pwd = $("#add_pwd").val();
 	var confirmPwd = $("#add_confirmPwd").val();
+	var roleBtnDepartment =$("#roleBtnDepartment").val();
 
-	verifyNewUserInfo(username, newRole, pwd, confirmPwd);
+	verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment);
 }
 
 //验证用户输入
-function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
+function verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment) {
 	if (username === "") {
 		toastr.warning('用户名不能为空');
 		$(".saveNewAccountSetUp").addClass("animated shake");
@@ -77,11 +93,13 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 		return;
 	}
 
-	 if(newRole===""){
+	 if(newRole==null){
 	 	toastr.warning('新用户权限未设置');
 	 	$(".saveNewAccountSetUp").addClass("animated shake");
 	 	reomveAnimation('.saveNewAccountSetUp', "animated shake");
 	 	return;
+	 }else{
+		 newRole=getRoleMoreSelectVALUES("#newRole");
 	 }
 
 	//新旧密码对比
@@ -144,30 +162,36 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd) {
 		return;
 	}
 
+	if(roleBtnDepartment==null){
+		roleBtnDepartment=[];
+	}
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("用户"+username);
 	$(".remindActionType").html("生成");
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		//保存新用户设置
-		saveNewUser(username, newRole, pwd, confirmPwd);
+		saveNewUser(username, newRole, pwd,roleBtnDepartment);
 		e.stopPropagation();
 	});
 }
 
 //发送新用户保存数据库
-function saveNewUser(username, newRole, pwd, confirmPwd) {
+function saveNewUser(username, newRole, pwd,roleBtnDepartment) {
 	var newUserObject = new Object();
 	newUserObject.yhm = username;
 	newUserObject.js = newRole.name;
 	newUserObject.jsId = newRole.value;
 	newUserObject.mm = pwd;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/newUser",
 		data: {
             "newUserInfo":JSON.stringify(newUserObject),
+			"departments":JSON.stringify(roleBtnDepartment)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -477,8 +501,8 @@ function removeuUerAjaxDemo(removeArray) {
 	});
 }
 
-//获得多选的值
-function getMoreSelectVALUES(id) {
+//获得角色多选的值
+function getRoleMoreSelectVALUES(id) {
 	var values =$(id).val();
 	var valuesTxt = "";
 	if(values!=null){
@@ -506,6 +530,7 @@ function getMoreSelectVALUES(id) {
 
 	return returnObject;
 }
+
 //按钮事件绑定
 function btnBind() {
 	//确认新增用户按钮
