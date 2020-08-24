@@ -36,6 +36,8 @@ public class SystemManageService {
     @Autowired
     Edu101Dao edu101Dao;
     @Autowired
+    Edu001Dao edu001Dao;
+    @Autowired
     RedisUtils redisUtils;
     @Autowired
     Edu994Dao edu994Dao;
@@ -155,12 +157,21 @@ public class SystemManageService {
             }
 
             //将学院权限存入redis备用
-            String userId = edu990.getBF990_ID().toString();
             List<String> deparmentIds = new ArrayList<>();
-            deparmentIds = edu994Dao.findAllDepartmentIds(userId);
-            if(deparmentIds.size() == 0) {
-                Edu101 one = edu101Dao.getOne(Long.parseLong(edu990.getUserKey()));
-                deparmentIds.add(one.getSzxb());
+            String userId = edu990.getBF990_ID().toString();
+            if(edu990.getUserKey() != null) {
+                deparmentIds = edu994Dao.findAllDepartmentIds(userId);
+                if (deparmentIds.size() == 0) {
+                    Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                    if (one == null) {
+                        Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                        if (edu001 != null) {
+                            deparmentIds.add(edu001.getSzxb());
+                        }
+                    } else {
+                        deparmentIds.add(one.getSzxb());
+                    }
+                }
             }
             redisUtils.set("department:"+userId ,deparmentIds);
 
