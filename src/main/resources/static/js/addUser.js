@@ -221,26 +221,29 @@ function saveNewUser(username, newRole, pwd,roleBtnDepartment) {
 
 //获取所有用户
 function getAllUserInfo() {
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/getAllUser",
-		async:false,
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			stuffTable(backjson.data);
-		}
-	});
+	var isFirst=$(".isFirstLoad")[0].innerText;
+	if(isFirst==="T"){
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/getAllUser",
+			async:false,
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				stuffTable(backjson.data);
+			}
+		});
+	}
 }
 
 //填充所有用户table

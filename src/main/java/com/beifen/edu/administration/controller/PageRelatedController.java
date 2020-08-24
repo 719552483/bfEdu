@@ -180,4 +180,9 @@ public class PageRelatedController {
 	public String techerStudentListPage() {
 		return "techerStudentList";
 	}
+
+	@RequestMapping("teacherClassChange")
+	public String teacherClassChangePage() {
+		return "teacherClassChange";
+	}
 }
