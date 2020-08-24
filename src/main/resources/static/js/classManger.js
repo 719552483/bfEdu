@@ -2092,7 +2092,7 @@ function exportRollcallTable(){
 	}
 	var sendArray=new Array();
 	for (var i = 0; i < choosedClass.length; i++) {
-		sendArray.push(choosedClassp[i].edu301_ID);
+		sendArray.push(choosedClass[i].edu301_ID);
 	}
 
 	var url = "/exportRollcallExcel";
