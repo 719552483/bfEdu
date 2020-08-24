@@ -1559,7 +1559,7 @@ function stuffAllXnTable(allRelationInfo){
 		}
 
 		function relaseTimeMatter(value, row, index) {
-			if (typeof(value) === "undefined") {
+			if (typeof(value) === "undefined"||value==null) {
 				return [
 					'<div class="myTooltip normalTxt fbsjTxt'+index+'" title="暂未安排">暂未安排</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifyXn_relaseTime'+index+'" spellcheck="false">'
 				]

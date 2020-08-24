@@ -458,10 +458,6 @@ function onUncheckAll(row){
 //检索任务书表
 function searchTask(){
 	var taskInfo=getSearchInfo();
-	if(typeof taskInfo ==='undefined'){
-		return;
-	}
-	
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -498,11 +494,6 @@ function searchTask(){
 function getSearchInfo(){
 	var xzbmc=$("#xzbmc").val();
 	var kcmc=$("#kcmc").val();
-	if(xzbmc===""&&kcmc===""){
-		toastr.warning('检索条件不能为空');
-		return;
-	}
-	
 	var returnObject=new Object();
 	returnObject.xzbmc=xzbmc;
 	returnObject.kcmc=kcmc;
