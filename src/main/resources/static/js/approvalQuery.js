@@ -92,6 +92,11 @@ function stuffApprovalMangerTable(tableInfo){
 			align : 'left',
 			formatter :paramsMatter
 		}, {
+			field : 'keyWord',
+			title : '审批关键词',
+			align : 'left',
+			formatter :paramsMatter
+		}, {
 			field : 'proposerName',
 			title : '申请人',
 			align : 'left',

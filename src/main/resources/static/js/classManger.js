@@ -1157,7 +1157,7 @@ function confirmClassAction(choosedTeaching) {
 		success : function(backjson) {
 			if (backjson.result) {
 				hideloding();
-				toastr.success('合班成功');
+				toastr.success('操作成功');
 				$('#classManagementTable').bootstrapTable('uncheckAll');
 				$.hideModal();
 			} else {

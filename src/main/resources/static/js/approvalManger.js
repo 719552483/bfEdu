@@ -104,7 +104,12 @@ function stuffApprovalMangerTable(tableInfo){
 			title : '审批业务类型',
 			align : 'left',
 			formatter :paramsMatter
-		}, {
+		},{
+			field : 'keyWord',
+			title : '审批关键词',
+			align : 'left',
+			formatter :paramsMatter
+		},  {
 			field : 'proposerName',
 			title : '申请人',
 			align : 'left',
@@ -542,6 +547,11 @@ function stuffApprovalBackTable(tableInfo){
 			align : 'left',
 			formatter :paramsMatter
 		}, {
+			field : 'keyWord',
+			title : '审批关键词',
+			align : 'left',
+			formatter :paramsMatter
+		},  {
 			field : 'proposerName',
 			title : '申请人',
 			align : 'left',

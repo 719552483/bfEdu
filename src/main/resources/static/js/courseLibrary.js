@@ -406,6 +406,9 @@ function comfirmAddNewClass(){
 		return;
 	}
 
+	var userKey=JSON.parse($.session.get('userInfo')).userKey;
+	typeof userKey ==="undefined"?userKey="":userKey=userKey;
+
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
@@ -413,7 +416,7 @@ function comfirmAddNewClass(){
 		url : "/addNewClass",
 		data: {
              "newClassInfo":JSON.stringify(newClassObject),
-			 "userKey":JSON.parse($.session.get('userInfo')).userKey,
+			 "userKey":userKey,
 			 "approvalobect":JSON.stringify(getApprovalobect("01"))
 		},
 		dataType : 'json',

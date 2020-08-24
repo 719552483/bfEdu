@@ -65,6 +65,15 @@ public class ApprovalProcessService {
         edu600.setCreatDate(new Date());
         edu600.setUpdateDate(new Date());
 
+        Long businessKey = edu600.getBusinessKey();
+        String businessType = edu600.getBusinessType();
+        String keyWord = creatApprovalKeyWord(businessKey,businessType);
+        edu600.setKeyWord(keyWord);
+
+        Edu101 edu101 = edu101Dao.getTeacherInfoByEdu990Id(edu600.getProposerKey().toString());
+        edu600.setDepartmentCode(edu101.getSzxb());
+
+
         //保存审批信息
         Edu600 newEdu600 = edu600DAO.save(edu600);
         //保存历史审批记录
@@ -85,6 +94,47 @@ public class ApprovalProcessService {
         }
 
        return isSuccess;
+
+    }
+
+
+    public String creatApprovalKeyWord(Long businessKey,String businessType){
+        String keyWord = "";
+        switch(businessType) {
+            case"01":
+            case"02":
+                Edu200 edu200 = edu200Dao.findOne(businessKey);
+                keyWord = edu200.getKcmc();
+                break;
+            case"03":
+                Edu108 edu108 = edu108Dao.findOne(businessKey);
+                Edu107 edu107 = edu107Dao.findOne(edu108.getEdu107_ID());
+                keyWord = edu107.getPyjhmc()+"-"+edu108.getKcmc();
+                break;
+            case"04":
+                Edu201 edu201 = edu201Dao.findOne(businessKey);
+                keyWord = edu201.getJxbmc()+"教学任务书";
+                break;
+            case"05":
+                Edu001 edu001 = edu001Dao.findOne(businessKey);
+                keyWord = edu001.getXm();
+                break;
+            case"06":
+                Edu112 edu112 = edu112Dao.findOne(businessKey);
+                keyWord = edu112.getDestination();
+                break;
+            case"07":
+                Edu101 edu101 = edu101Dao.findOne(businessKey);
+                keyWord = edu101.getXm();
+                break;
+            default:
+                keyWord = "查无此类型";
+                break;
+
+        }
+
+
+        return keyWord;
 
     }
 

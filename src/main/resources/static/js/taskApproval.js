@@ -281,7 +281,7 @@ function sendChangeStatus(choosedArray,status){
 					}
 				}
 				$.hideModal("#remindModal");
-				toastr.success('操作成功');
+				toastr.success('教学班生成成功');
 				toolTipUp(".myTooltip");
 			} else {
 				toastr.warning('操作失败，请重试');

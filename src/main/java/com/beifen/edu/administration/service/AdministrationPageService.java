@@ -1615,9 +1615,14 @@ public class AdministrationPageService {
 
 	//生成课程代码
 	public String creatCourseCode(String userKey) {
-		Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
-		String departmentCode = getDepartmentCode(edu101.getSzxb());
-		String courseCode = departmentCode+utils.getRandom(4);
+		String courseCode = "";
+		if(userKey == "") {
+			courseCode = utils.getRandom(6);
+		} else {
+			Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
+			String departmentCode = getDepartmentCode(edu101.getSzxb());
+			courseCode= departmentCode+utils.getRandom(4);
+		}
 		return courseCode;
 	}
 
