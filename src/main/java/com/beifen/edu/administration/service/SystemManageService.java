@@ -172,6 +172,8 @@ public class SystemManageService {
                         deparmentIds.add(one.getSzxb());
                     }
                 }
+            } else {
+                deparmentIds.add("0");
             }
             redisUtils.set("department:"+userId ,deparmentIds);
 
