@@ -2301,7 +2301,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/getUsefulDepartment")
 	@ResponseBody
-	public ResultVO exportRollcallExcel(@RequestParam("userId") String userId) {
+	public ResultVO getUsefulDepartment(@RequestParam("userId") String userId) {
 		ResultVO result = administrationPageService.getUsefulDepartment(userId);
 		return result;
 	}
