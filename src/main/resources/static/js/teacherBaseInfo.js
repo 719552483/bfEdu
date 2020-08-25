@@ -868,6 +868,9 @@ function searchAllTeacher(){
 		method : 'get',
 		cache : false,
 		url : "/queryAllTeacher",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -901,7 +904,8 @@ function searchAllTeacherBy(searchObject){
 		cache : false,
 		url : "/searchTeacher",
 		data: {
-             "SearchCriteria":JSON.stringify(searchObject) 
+             "SearchCriteria":JSON.stringify(searchObject),
+			 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1075,7 +1079,6 @@ function getApprovalobect(){
 	approvalObject.approvalStyl="1";
 	return approvalObject;
 }
-
 
 //初始化页面按钮绑定事件
 function binBind() {

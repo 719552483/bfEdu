@@ -62,6 +62,9 @@ function getAllRelationInfo(){
 		method : 'get',
 		cache : false,
 		url : "/getAllRelationInfo",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -573,7 +576,8 @@ function makePlan(row){
 		cache : false,
 		url : "/queryCulturePlanCouses",
 		data: {
-			"edu107Id":JSON.stringify(row.edu107_ID)
+			"edu107Id":JSON.stringify(row.edu107_ID),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {

@@ -463,7 +463,8 @@ function searchTask(){
 		cache : false,
 		url : "/getTaskInfo",
 		data: {
-             "searchInfo":JSON.stringify(taskInfo) 
+             "searchInfo":JSON.stringify(taskInfo),
+			 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {

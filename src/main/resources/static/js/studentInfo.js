@@ -1517,7 +1517,8 @@ function startSearch() {
 		cache : false,
 		url : "/studentMangerSearchStudent",
 		data: {
-             "SearchCriteria":JSON.stringify(searchObject) 
+             "SearchCriteria":JSON.stringify(searchObject),
+			 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {

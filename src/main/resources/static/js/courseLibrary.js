@@ -810,7 +810,8 @@ function startSearch(){
 		cache : false,
 		url : "/librarySeacchClass",
 		data: {
-             "SearchCriteria":JSON.stringify(serachObject) 
+             "SearchCriteria":JSON.stringify(serachObject),
+			 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
