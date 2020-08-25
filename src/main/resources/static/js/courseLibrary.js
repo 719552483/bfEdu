@@ -282,6 +282,7 @@ function stuffclassDetailsArea(row){
 	$("#addNewClass_practiceHours").val(row.sjxs);//填充默认实践学时
 	$("#addNewClass_disperseHours").val(row.fsxs);//填充默认分散学时
 	$("#addNewClass_centralizedHours").val(row.jzxs);//填充默认集中学时
+	stuffManiaSelectWithDeafult("#addNewClass_department",row.departmentCode);  //填充默认二级学院
 //	$("#addNewClass_allHours").val(row.zxs);//填充默认总学时
 	stuffManiaSelectWithDeafult("#addNewClass_testWay",row.ksfs);  //填充默认考试方式
 	$("#addNewClass_credits").val(row.xf);//填充默认学分
@@ -361,26 +362,47 @@ function comfirmmodifyCourseInfo(row){
 
 //新增课程
 function wantAddClass() {
+	$.ajax({
+		method: 'post',
+		cache: false,
+		url: "/getUsefulDepartment",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType: 'json',
+		success: function(backjson) {
+			if(backjson.code===200) {
+				droawAddModal(backjson.data);
+			}else{
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获取系部成功或的回调
+function droawAddModal(departmentData){
 	$(".addNewClass_calssCodeArae").hide();
 	emptyClassDetailsArea();
+	drawUsefulDepartment(departmentData);
 	$.showModal("#addNewClassModal",true);
 	$("#addNewClassModal").find(".moadalTitle").html("录入新课");
 	$(".comfirmAddNewClass").attr("value","录入");
-	
+
 	// 确认按钮绑定事件
 	$('.comfirmAddNewClass').unbind('click');
 	$('.comfirmAddNewClass').bind('click', function(e) {
 		comfirmAddNewClass();
 		e.stopPropagation();
 	});
-	
+
 	// 开始检索教师按钮
 	$('#allClassMangers_StartSearch').unbind('click');
 	$('#allClassMangers_StartSearch').bind('click', function(e) {
 		allClassMangersStartSearch();
 		e.stopPropagation();
 	});
-	
+
 	// 重置检索教师按钮
 	$('#allClassMangers_ReSearch').unbind('click');
 	$('#allClassMangers_ReSearch').bind('click', function(e) {
@@ -389,11 +411,21 @@ function wantAddClass() {
 	});
 }
 
+//填充系部下拉框
+function  drawUsefulDepartment(departmentData){
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var g = 0; g < departmentData.length; g++) {
+		str += '<option value="' + departmentData[g].edu104_ID + '">' + departmentData[g].xbmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#addNewClass_department", str);
+}
+
 //清空课程详情tip内容
 function emptyClassDetailsArea(){
 	var reObject = new Object();
 	reObject.InputIds = "#addNewClass_teacheMarks,#addNewClass_teacheSays,#addNewClass_calssAdvice,#addNewClass_calssContent,#addNewClass_calssDesignIdeas,#addNewClass_calssGoal,#addNewClass_calssIntroduce,#addNewClass_calssName,#addNewClass_calssManger,#addNewClass_markName";
-	reObject.normalSelectIds = "#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
+	reObject.normalSelectIds = "#addNewClass_department,#addNewClass_isTeachingReform,#addNewClass_isCalssTextual,#addNewClass_isTextual,#addNewClass_isNewClass,#addNewClass_isKernelClass,#addNewClass_signatureCourseLevel,#addNewClass_classLocation,#addNewClass_classWay,#addNewClass_isSchoolBusiness,#addNewClass_testWay,#addNewClass_moduleType,#addNewClass_classQuality,#addNewClass_classType,#addNewClass_classNature";
 	reObject.numberInputs = "#addNewClass_theoryHours,#addNewClass_practiceHours,#addNewClass_credits,#addNewClass_disperseHours,#addNewClass_centralizedHours";
 	reReloadSearchsWithSelect(reObject);
 }
@@ -570,6 +602,11 @@ function classDetailsConfirmBtnAction(){
 		toastr.warning('请选择课程负责人');
 		return;
 	}
+
+	if(getNormalSelectValue("addNewClass_department") === ""){
+		toastr.warning('请选择课程所属二级学院');
+		return;
+	}
 	
 	if(getNormalSelectValue("addNewClass_classType") === ""){
 		toastr.warning('请选择课程类型');
@@ -611,6 +648,7 @@ function classDetailsConfirmBtnAction(){
 //	newClassObject.kcdm=$("#addNewClass_calssCode").val();
 //	newClassObject.ywmc=$("#addNewClass_enName").val();
 	newClassObject.kcfzr=$("#addNewClass_calssManger").val();
+	newClassObject.departmentCode=$("#addNewClass_department").val();
 	newClassObject.kcfzrID=$("#addNewClass_calssManger").attr("mangerId");
 	newClassObject.kclx=getNormalSelectText("addNewClass_classType");
 	newClassObject.kclxCode=getNormalSelectValue("addNewClass_classType");

@@ -1086,7 +1086,7 @@ function getAllClassInfo(planName) {
 		cache : false,
 		url : "/queryAllPassCrouse",
 		data: {
-			"userKey":JSON.parse($.session.get('userInfo')).userKey
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {

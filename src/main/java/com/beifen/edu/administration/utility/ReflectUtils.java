@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.service.StudentManageService;
 import com.beifen.edu.administration.service.StaffManageService;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +47,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,6 +77,8 @@ public class ReflectUtils {
 	private StudentManageService studentManageService;
 	@Resource
 	private StaffManageService staffManageService;
+	@Autowired
+	private RedisUtils redisUtils;
 	
 	private static ReflectUtils reflectUtils;
 	 @PostConstruct
@@ -463,7 +467,7 @@ public class ReflectUtils {
 //						break;
 //					}
 //				}
-				
+
 				if(importClassess.get(i).get("llxs")!=null){
 					if(!isDoubleOrInt(String.valueOf(importClassess.get(i).get("llxs")))){
 						chaeckPass=false;
@@ -612,6 +616,18 @@ public class ReflectUtils {
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt",checkTxt);
 				break;
+			}
+
+			//判断课程所属二级学院是否存在
+			String XbCode=reflectUtils.administrationPageService.queryXbCodeByXbName(edu200.getDepartmentName());
+			if (XbCode == null) {
+				chaeckPass = false;
+				checkTxt = "第" + (i + 1) + "行-所属二级学院不存在";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			} else {
+				edu200.setDepartmentCode(XbCode);
 			}
 			
 			//判断课程类型是否存在
@@ -1897,91 +1913,94 @@ public class ReflectUtils {
 	private String getImportantEdu200KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
-		case 0:
+			case 0:
+				result="departmentName";
+				break;
+		case 1:
             result="kcmc";
             break;
-        case 1:
+        case 2:
             result="kcfzrID";
             break;
-        case 2:
+        case 3:
             result="kclx";
             break;
-        case 3:
+        case 4:
             result="kcxz";
             break;
-        case 4:
+        case 5:
             result="llxs";
             break;
-        case 5:
+        case 6:
             result="sjxs";
             break;
-        case 6:
+        case 7:
             result="fsxs";
             break;
-        case 7:
+        case 8:
             result="jzxs";
             break;
-        case 8:
+        case 9:
             result="ksfs";
             break;
-        case 9:
+        case 10:
             result="xf";
             break;
-        case 10:
+        case 11:
             result="mklb";
             break;
-        case 11:
+        case 12:
             result="kcsx";
             break;
-        case 12:
+        case 13:
             result="bzzymc";
             break;
-        case 13:
+        case 14:
             result="xqhz";
             break;
-        case 14:
+        case 15:
             result="skfs";
             break;
-        case 15:
+        case 16:
             result="skdd";
             break;
-        case 16:
+        case 17:
             result="jpkcdj";
             break;
-        case 17:
+        case 18:
             result="zyhxkc";
             break;
-        case 18:
+        case 19:
             result="zyzgkzkc";
             break;
-        case 19:
+        case 20:
             result="sfxk";
             break;
-        case 20:
+        case 21:
             result="kztrkc";
             break;
-        case 21:
+        case 22:
             result="jxgglxkc";
             break;
-        case 22:
+        case 23:
             result="kcjj";
             break;
-        case 23:
+        case 24:
             result="kcmb";
             break;
-        case 24:
+        case 25:
             result="sjsl";
             break;
-        case 25:
+        case 26:
             result="jxnrjyq";
             break;
-        case 26:
+        case 27:
             result="kcssjy";
             break;
-        case 27:
+        case 28:
             result="jsyqsm";
             break;
-        case 28:
+        case 29:
             result="bz";
             break;
         default:
@@ -2167,94 +2186,97 @@ public class ReflectUtils {
 	private String getModifyEdu200KeyName(int columnIndex) {
 		String result = null;
 		switch (columnIndex) {
-		case 0:
+			case 0:
+				result="departmentName";
+				break;
+		case 1:
             result="BF200_ID";
             break;
-		case 1:
+		case 2:
             result="kcmc";
             break;
-        case 2:
+        case 3:
             result="kcfzrID";
             break;
-        case 3:
+        case 4:
             result="kclx";
             break;
-        case 4:
+        case 5:
             result="kcxz";
             break;
-        case 5:
+        case 6:
             result="llxs";
             break;
-        case 6:
+        case 7:
             result="sjxs";
             break;
-        case 7:
+        case 8:
             result="fsxs";
             break;
-        case 8:
+        case 9:
             result="jzxs";
             break;
-        case 9:
+        case 10:
             result="ksfs";
             break;
-        case 10:
+        case 11:
             result="xf";
             break;
-        case 11:
+        case 12:
             result="mklb";
             break;
-        case 12:
+        case 13:
             result="kcsx";
             break;
-        case 13:
+        case 14:
             result="bzzymc";
             break;
-        case 14:
+        case 15:
             result="xqhz";
             break;
-        case 15:
+        case 16:
             result="skfs";
             break;
-        case 16:
+        case 17:
             result="skdd";
             break;
-        case 17:
+        case 18:
             result="jpkcdj";
             break;
-        case 18:
+        case 19:
             result="zyhxkc";
             break;
-        case 19:
+        case 20:
             result="zyzgkzkc";
             break;
-        case 20:
+        case 21:
             result="sfxk";
             break;
-        case 21:
+        case 22:
             result="kztrkc";
             break;
-        case 22:
+        case 23:
             result="jxgglxkc";
             break;
-        case 23:
+        case 24:
             result="kcjj";
             break;
-        case 24:
+        case 25:
             result="kcmb";
             break;
-        case 25:
+        case 26:
             result="sjsl";
             break;
-        case 26:
+        case 27:
             result="jxnrjyq";
             break;
-        case 27:
+        case 28:
             result="kcssjy";
             break;
-        case 28:
+        case 29:
             result="jsyqsm";
             break;
-        case 29:
+        case 30:
             result="bz";
             break;
         default:
@@ -2647,7 +2669,7 @@ public class ReflectUtils {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"*课程ID","*课程名字","*课程负责人", "*课程类型", "*课程性质", "*理论学时", "*实践学时","*分散学时",
+		String[] titles = new String[] {"*所属二级学院","*课程ID","*课程名字","*课程负责人", "*课程类型", "*课程性质", "*理论学时", "*实践学时","*分散学时",
 				"*集中学时", "*考试方式", "*学分", "模块类别 ", "课程属性", "标志专业名称 ", "校企合作",
 				"授课方式", "授课地点", "精品课程等级", "专业核心课程 ", "职业资格考证课程", "是否新课 ", "课证通融课程",
 				"教学改革立项课程", "课程简介", "课程目标", "设计思路 ", "教学内容及要求", "课程实施建议 ", "教师要求说明","备注"};
@@ -2659,83 +2681,89 @@ public class ReflectUtils {
 		}
 		
 		for (int i = 0; i < chosedClasses.size(); i++) {
-			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getBF200_ID()),-1,0,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcmc(),-1,1,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcfzr()+'-'+chosedClasses.get(i).getKcfzrID(),-1,2,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKclx(),-1,3,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcxz(),-1,4,false);
-			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getLlxs()),-1,5,false);
-			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getSjxs()),-1,6,false);
-			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getFsxs()),-1,7,false);
-			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getJzxs()),-1,8,false);
+			String xbName=chosedClasses.get(i).getDepartmentName();
+			if(xbName==null){
+				xbName="暂未选择";
+			}
+
+			appendCell(sheet,i,"",xbName,-1,0,false);
+			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getBF200_ID()),-1,1,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcmc(),-1,2,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcfzr()+'-'+chosedClasses.get(i).getKcfzrID(),-1,3,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKclx(),-1,4,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcxz(),-1,5,false);
+			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getLlxs()),-1,6,false);
+			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getSjxs()),-1,7,false);
+			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getFsxs()),-1,8,false);
+			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getJzxs()),-1,9,false);
 			String skfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(chosedClasses.get(i).getKsfs(),"ksfs");
 			String ksfs=reflectUtils.administrationPageService.queryEjdmZByEjdm(skfsCode,"考试方式");
 			
 			
-			appendCell(sheet,i,"",ksfs,-1,9,false);
-			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getXf()),-1,10,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getMklb(),-1,11,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcsx(),-1,12,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getBzzymc(),-1,13,false);
+			appendCell(sheet,i,"",ksfs,-1,10,false);
+			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getXf()),-1,11,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getMklb(),-1,12,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcsx(),-1,13,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getBzzymc(),-1,14,false);
 			if(chosedClasses.get(i).getXqhz()!=null){
 				if(chosedClasses.get(i).getXqhz().equals("T")){
-					appendCell(sheet,i,"","是",-1,14,false);
+					appendCell(sheet,i,"","是",-1,15,false);
 				}else{
-					appendCell(sheet,i,"","否",-1,14,false);
+					appendCell(sheet,i,"","否",-1,15,false);
 				}
 			}
 	
-			appendCell(sheet,i,"",chosedClasses.get(i).getSkfs(),-1,15,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getSkdd(),-1,16,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getJpkcdj(),-1,17,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getSkfs(),-1,16,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getSkdd(),-1,17,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getJpkcdj(),-1,18,false);
 			if(chosedClasses.get(i).getZyhxkc()!=null){
 				if(chosedClasses.get(i).getZyhxkc().equals("T")){
-					appendCell(sheet,i,"","是",-1,18,false);
-				}else{
-					appendCell(sheet,i,"","否",-1,18,false);
-				}
-			}
-		
-			if(chosedClasses.get(i).getZyzgkzkc()!=null){
-				if(chosedClasses.get(i).getZyzgkzkc().equals("T")){
 					appendCell(sheet,i,"","是",-1,19,false);
 				}else{
 					appendCell(sheet,i,"","否",-1,19,false);
 				}
 			}
 		
-			if(chosedClasses.get(i).getSfxk()!=null){
-				if(chosedClasses.get(i).getSfxk().equals("T")){
+			if(chosedClasses.get(i).getZyzgkzkc()!=null){
+				if(chosedClasses.get(i).getZyzgkzkc().equals("T")){
 					appendCell(sheet,i,"","是",-1,20,false);
 				}else{
 					appendCell(sheet,i,"","否",-1,20,false);
 				}
 			}
 		
-			if(chosedClasses.get(i).getKztrkc()!=null){
-				if(chosedClasses.get(i).getKztrkc().equals("T")){
+			if(chosedClasses.get(i).getSfxk()!=null){
+				if(chosedClasses.get(i).getSfxk().equals("T")){
 					appendCell(sheet,i,"","是",-1,21,false);
 				}else{
 					appendCell(sheet,i,"","否",-1,21,false);
 				}
 			}
 		
-			if(chosedClasses.get(i).getJxgglxkc()!=null){
-				if(chosedClasses.get(i).getJxgglxkc().equals("T")){
+			if(chosedClasses.get(i).getKztrkc()!=null){
+				if(chosedClasses.get(i).getKztrkc().equals("T")){
 					appendCell(sheet,i,"","是",-1,22,false);
 				}else{
 					appendCell(sheet,i,"","否",-1,22,false);
 				}
 			}
 		
+			if(chosedClasses.get(i).getJxgglxkc()!=null){
+				if(chosedClasses.get(i).getJxgglxkc().equals("T")){
+					appendCell(sheet,i,"","是",-1,23,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,23,false);
+				}
+			}
+		
 			
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcjj(),-1,23,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcmb(),-1,24,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getSjsl(),-1,25,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getJxnrjyq(),-1,26,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getKcssjy(),-1,27,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getJsyqsm(),-1,28,false);
-			appendCell(sheet,i,"",chosedClasses.get(i).getBz(),-1,29,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcjj(),-1,24,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcmb(),-1,25,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getSjsl(),-1,26,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getJxnrjyq(),-1,27,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getKcssjy(),-1,28,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getJsyqsm(),-1,29,false);
+			appendCell(sheet,i,"",chosedClasses.get(i).getBz(),-1,30,false);
 		}
 	}
     
@@ -2782,7 +2810,7 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"*课程名字","*课程负责人", "*课程类型", "*课程性质", "*理论学时", "*实践学时","*分散学时",
+		String[] titles = new String[] {"*所属二级学院","*课程名字","*课程负责人", "*课程类型", "*课程性质", "*理论学时", "*实践学时","*分散学时",
 				"*集中学时", "*考试方式", "*学分", "模块类别 ", "课程属性", "标志专业名称 ", "校企合作",
 				"授课方式", "授课地点", "精品课程等级", "专业核心课程 ", "职业资格考证课程", "是否新课 ", "课证通融课程",
 				"教学改革立项课程", "课程简介", "课程目标", "设计思路 ", "教学内容及要求", "课程实施建议 ", "教师要求说明","备注"};
@@ -3367,6 +3395,16 @@ public class ReflectUtils {
 		}
 		needCreatHiddenSheetNum++;
 		String[]skfsArrays = skfslist.toArray(new String[skfslist.size()]);
+
+
+		List < String > xblist = new ArrayList < String > ();
+		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
+		for (int i = 0; i < xbs.size(); i++) {
+			xblist.add(xbs.get(i).getXbmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]xbArrays = xblist.toArray(new String[xblist.size()]);
+
 		
 		//授课地点todo
 //		List < String > kcfzrlist = new ArrayList < String > ();
@@ -3384,16 +3422,17 @@ public class ReflectUtils {
 		}
 		needCreatHiddenSheetNum++;
 		String[]jpkcdjArrays = jpkcdjlist.toArray(new String[jpkcdjlist.size()]);
-		
-		int[] kcfzrIndex={1};
-		int[] kclxIndex={2};
-		int[] kcxzIndex={3};
-		int[] ksfsIndex={8};
-		int[] mklbIndex={10};
-		int[] kcsxIndex={11};
-		int[] isOrNOTNeedIndex={13,17,18,19,20,21};
-		int[] skfsIndex={14};
-		int[] jpkcdjIndex={16};
+
+		int[] xbIndex={0};
+		int[] kcfzrIndex={2};
+		int[] kclxIndex={3};
+		int[] kcxzIndex={4};
+		int[] ksfsIndex={9};
+		int[] mklbIndex={11};
+		int[] kcsxIndex={12};
+		int[] isOrNOTNeedIndex={14,18,19,20,21,22};
+		int[] skfsIndex={15};
+		int[] jpkcdjIndex={17};
 		
 		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
 			hiddenSheetName = hiddenSheetName+(i+1);
@@ -3415,6 +3454,8 @@ public class ReflectUtils {
 				cell2Select(workbook,hiddenSheetName,skfsArrays,skfsIndex,true);
 			}else if(i==8){
 				cell2Select(workbook,hiddenSheetName,jpkcdjArrays,jpkcdjIndex,true);
+			}else if(i==9){
+				cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
 			}
 //			else if(i==7){
 //				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);
@@ -3608,16 +3649,25 @@ public class ReflectUtils {
 		}
 		needCreatHiddenSheetNum++;
 		String[]jpkcdjArrays = jpkcdjlist.toArray(new String[jpkcdjlist.size()]);
-		
-		int[] kcfzrIndex={1};
-		int[] kclxIndex={2};
-		int[] kcxzIndex={3};
-		int[] ksfsIndex={8};
-		int[] mklbIndex={10};
-		int[] kcsxIndex={11};
-		int[] isOrNOTNeedIndex={13,17,18,19,20,21};
-		int[] skfsIndex={14};
-		int[] jpkcdjIndex={16};
+
+		List < String > xblist = new ArrayList < String > ();
+		List<Edu104> xbs = reflectUtils.administrationPageService.queryAllDepartment();
+		for (int i = 0; i < xbs.size(); i++) {
+			xblist.add(xbs.get(i).getXbmc());
+		}
+		needCreatHiddenSheetNum++;
+		String[]xbArrays = xblist.toArray(new String[xblist.size()]);
+
+		int[] xbIndex={0};
+		int[] kcfzrIndex={2};
+		int[] kclxIndex={3};
+		int[] kcxzIndex={4};
+		int[] ksfsIndex={9};
+		int[] mklbIndex={11};
+		int[] kcsxIndex={12};
+		int[] isOrNOTNeedIndex={14,18,19,20,21,22};
+		int[] skfsIndex={15};
+		int[] jpkcdjIndex={17};
 		
 		for (int i = 0; i < needCreatHiddenSheetNum; i++) {
 			hiddenSheetName = hiddenSheetName+(i+1);
@@ -3639,6 +3689,8 @@ public class ReflectUtils {
 				cell2Select(workbook,hiddenSheetName,skfsArrays,skfsIndex,false);
 			}else if(i==8){
 				cell2Select(workbook,hiddenSheetName,jpkcdjArrays,jpkcdjIndex,false);
+			}else if(i==9){
+				cell2Select(workbook,hiddenSheetName,xbArrays,xbIndex,false);
 			}
 //			else if(i==7){
 //				cell2Select(workbook,hiddenSheetName,whcdArrays,whcdIndex,false);

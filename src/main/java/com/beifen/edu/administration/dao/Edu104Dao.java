@@ -26,8 +26,6 @@ public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecification
 	@Query(value = "select * from edu104 e  where  e.Edu104_ID =?1", nativeQuery = true)
 	public List<Edu104> queryAllDepartmentByXbbm(String xbbm);
 	
-	
-
 	//按名称查系部编码
 	@Query(value = "select e.Edu104_ID from edu104 e  where  e.xbmc =?1", nativeQuery = true)
 	public String queryXbCodeByXbName(String xbbm);

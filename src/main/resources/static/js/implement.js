@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	stuffSeession();
-	getFromRedis();
+	// getFromRedis();
 	$("body").find("input").attr("spellcheck",false);
 	controlMenuRelation();
 });
