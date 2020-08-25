@@ -12,9 +12,9 @@ import com.beifen.edu.administration.domian.Edu107;
 
 public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecificationExecutor<Edu107> {
 
-	// 查询所有培养计划
-	@Query(value = "select * from edu107", nativeQuery = true)
-	public List<Edu107> queryAllRelation();
+	// 根据权限查询所有培养计划
+	@Query(value = "select * from edu107 where edu104 in ?1 ", nativeQuery = true)
+	public List<Edu107> queryAllRelation(List<String> departments);
 
 	// 根据id删除
 	@Transactional
@@ -22,9 +22,13 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	@Query(value = "delete from edu107 where Edu107_ID =?1", nativeQuery = true)
 	void removeRelation(String id);
 
+	// 根据权限查询某层次下的系部
+	@Query(value = "select * from edu107 e where e.edu103=?1 and e.edu104 in ?2", nativeQuery = true)
+	public List<Edu107> levelMatchDepartment(String leveCode,List<String> departments);
+
 	// 查询某层次下的系部
 	@Query(value = "select * from edu107 e where e.edu103=?1", nativeQuery = true)
-	public List<Edu107> levelMatchDepartment(String leveCode);
+	public List<Edu107> getDepartmentInLevel(String leveCode);
 
 	// 查询某系部下的年级
 	@Query(value = "select * from edu107 e where e.edu104=?1", nativeQuery = true)

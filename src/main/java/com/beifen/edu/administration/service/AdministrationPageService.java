@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.RedisUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -82,6 +82,8 @@ public class AdministrationPageService {
 	private StudentManageService studentManageService;
 	@Autowired
 	private ApprovalProcessService approvalProcessService;
+	@Autowired
+	private RedisUtils redisUtils;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -160,9 +162,13 @@ public class AdministrationPageService {
 	}
 
 	// 查询所有层次关系管理信息
-	public ResultVO queryAllRelation() {
+	public ResultVO queryAllRelation(String userId) {
 		ResultVO resultVO;
-		List<Edu107> edu107List = edu107DAO.queryAllRelation();
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		List<Edu107> edu107List = edu107DAO.queryAllRelation(departments);
 		if(edu107List.size() == 0) {
 			resultVO = ResultVO.setFailed("暂未找到培养计划");
 		} else {
@@ -303,11 +309,18 @@ public class AdministrationPageService {
 	public boolean verifyLevel(String edu103id) {
 		boolean canRemove = true;
 		Edu103 edu103 = edu103DAO.query103BYID(edu103id);
-		List<Edu107> levelMatchDepartment = edu107DAO.levelMatchDepartment(edu103.getPyccbm());
+		List<Edu107> levelMatchDepartment = edu107DAO.getDepartmentInLevel(edu103.getPyccbm());
 		if (levelMatchDepartment.size() > 0) {
 			canRemove = false;
 		}
 		return canRemove;
+	}
+
+	//查询层次下所有系部
+	public List<Edu107> getDepartmentInLevel(String level) {
+		List<Edu107> edu107List = edu107DAO.getDepartmentInLevel(level);
+		return edu107List;
+
 	}
 
 	// 删除层次
@@ -408,9 +421,16 @@ public class AdministrationPageService {
 	}
 
 	// 查询某层次下的系部
-	public List<Edu107> levelMatchDepartment(String leveCode) {
-		List<Edu107> edu107s = edu107DAO.levelMatchDepartment(leveCode);
-		return edu107s;
+	public ResultVO levelMatchDepartment(String leveCode, String userId) {
+		ResultVO resultVO;
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		List<Edu107> edu107s = edu107DAO.levelMatchDepartment(leveCode,departments);
+		if(edu107s.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无系部信息");
+		} else {
+			resultVO = ResultVO.setSuccess("查询成功",edu107s);
+		}
+		return resultVO;
 	}
 
 	// 查询某系部下的年级
@@ -775,31 +795,49 @@ public class AdministrationPageService {
 
 
 	// 根据教学班组装任务书信息
-	public List<Object> getTaskInfo(List<Edu301> jxbInfo) {
-		List<Object> sendTaskList = new ArrayList();
-		List<Edu201> currentTaskList = edu201DAO.findAll();
-		for (int i = 0; i < jxbInfo.size(); i++) {
-			Map<String, Object> taskObject = new HashMap();
-			taskObject.put("jxbInfo", jxbInfo.get(i));
-			Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(jxbInfo.get(i).getEdu108_ID().toString());
-			taskObject.put("crouseInfo", edu108);
-			sendTaskList.add(taskObject);
-		}
+	public ResultVO getTaskInfo(Edu301 edu301BO,String userId) {
+		ResultVO resultVO;
+		Map<String,Object> returnMap = new HashMap<>();
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		// 排除已发布的教学任务书(108ID和301ID都相同的)
-		for (int s = 0; s < sendTaskList.size(); s++) {
-			Map<String, Object> map = (HashMap) sendTaskList.get(s);
-			Edu108 edu108 = (Edu108) map.get("crouseInfo");
-			Edu301 edu301 = (Edu301) map.get("jxbInfo");
-			for (int c = 0; c < currentTaskList.size(); c++) {
-				Edu201 edu201 = currentTaskList.get(c);
-				if (edu201.getEdu108_ID().equals(edu108.getEdu108_ID())
-						&& edu201.getEdu301_ID().equals(edu301.getEdu301_ID())) {
-					sendTaskList.remove(s);
-				}
-			}
+
+		List<Edu201> sendTaskList = edu201DAO.findTaskInfoByDepartments(departments);
+
+		if(sendTaskList.size() == 0) {
+			resultVO = ResultVO.setFailed("暂未找到任务书");
+		} else {
+			List<Long> edu301Ids = sendTaskList.stream().map(Edu201::getEdu301_ID).collect(Collectors.toList());
+			List<Edu301> edu301List = edu301DAO.findAllInEdu301Ids(edu301Ids);
+			returnMap.put("",sendTaskList);
+			resultVO = ResultVO.setSuccess("共找到"+sendTaskList.size()+"条任务书",sendTaskList);
 		}
-		return sendTaskList;
+		return resultVO;
+
+//		List<Object> sendTaskList = new ArrayList();
+//		List<Edu201> currentTaskList = edu201DAO.findAll();
+//		for (int i = 0; i < jxbInfo.size(); i++) {
+//			Map<String, Object> taskObject = new HashMap();
+//			taskObject.put("jxbInfo", jxbInfo.get(i));
+//			Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(jxbInfo.get(i).getEdu108_ID().toString());
+//			taskObject.put("crouseInfo", edu108);
+//			sendTaskList.add(taskObject);
+//		}
+
+//		// 排除已发布的教学任务书(108ID和301ID都相同的)
+//		for (int s = 0; s < sendTaskList.size(); s++) {
+//			Map<String, Object> map = (HashMap) sendTaskList.get(s);
+//			Edu108 edu108 = (Edu108) map.get("crouseInfo");
+//			Edu301 edu301 = (Edu301) map.get("jxbInfo");
+//			for (int c = 0; c < currentTaskList.size(); c++) {
+//				Edu201 edu201 = currentTaskList.get(c);
+//				if (edu201.getEdu108_ID().equals(edu108.getEdu108_ID())
+//						&& edu201.getEdu301_ID().equals(edu301.getEdu301_ID())) {
+//					sendTaskList.remove(s);
+//				}
+//			}
+//		}
+
 	}
 
 	// 发布教学任务书
@@ -1131,8 +1169,13 @@ public class AdministrationPageService {
 	}
 
 	// 课程库搜索课程
-	public ResultVO librarySeacchClass(final Edu200 edu200) {
+	public ResultVO librarySeacchClass(final Edu200 edu200,String userId) {
 		ResultVO resultVO;
+
+
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1151,6 +1194,13 @@ public class AdministrationPageService {
 				if (edu200.getZt() != null && !"".equals(edu200.getZt())) {
 					predicates.add(cb.equal(root.<String>get("zt"), edu200.getZt()));
 				}
+				Path<Object> path = root.get("departmentCode");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
@@ -1968,6 +2018,21 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setFailed("暂未查到专业课程",edu108List);
 		}else {
 			resultVO = ResultVO.setSuccess("共查询到"+edu108List.size()+"条专业课程",edu108List);
+		}
+		return resultVO;
+	}
+
+
+	//根据权限查询系部
+	public ResultVO getUsefulDepartment(String userId) {
+		ResultVO resultVO;
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		List<Edu104> edu104s = edu104DAO.query104BYdepartments(departments);
+		if (edu104s.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无二级学院信息");
+		} else {
+			resultVO = ResultVO.setSuccess("共查到"+edu104s.size()+"个学院信息",edu104s);
 		}
 		return resultVO;
 	}

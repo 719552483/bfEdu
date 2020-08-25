@@ -263,23 +263,24 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				requestComplete();
 			},
 			success : function(backjson) {
-				if (backjson.result) {
-					hideloding();
+				hideloding();
+				if (backjson.code === 200) {
 					var departments=new Array();
 					var all=new Array();
-					for (var i = 0; i < backjson.department.length; i++) {
+					for (var i = 0; i < backjson.data.length; i++) {
 						var departmentObject=new Object();
-						departmentObject.name=backjson.department[i].edu104mc;
-						departmentObject.value=backjson.department[i].edu104;
-						var isHave=all.indexOf(backjson.department[i].edu104);
+						departmentObject.name=backjson.data[i].edu104mc;
+						departmentObject.value=backjson.data[i].edu104;
+						var isHave=all.indexOf(backjson.data[i].edu104);
 						if(isHave===-1){
 							departments.push(departmentObject);
-							all.push(backjson.department[i].edu104);
+							all.push(backjson.data[i].edu104);
 						}
 					}
 					drawNextSelect(levelInputId, departments, departmentInputId);
 				} else {
-					toastr.warning('操作失败，请重试');
+					toastr.warning(backjson.msg);
+					drawNextSelect(levelInputId, {}, departmentInputId);
 				}
 			}
 		});

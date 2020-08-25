@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.beifen.edu.administration.domian.Edu201;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -66,4 +67,5 @@ public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecification
 	//根据课程查询培养计划
 	@Query(value = "select e.* from edu108 e where e.Edu200_ID = ?1", nativeQuery = true)
 	List<Edu108> findPlanByEdu200Id(String edu200Id);
+
 }

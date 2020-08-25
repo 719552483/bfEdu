@@ -18,6 +18,8 @@ public class Edu200 {
 //	private String ywmc;  //英文名称
 	private String kcfzr;  //课程负责人
 	private Long kcfzrID;  //课程负责人id
+	private String departmentCode;//归属二级学院
+	private String departmentName;//二级学院名称
 	private String kclx;  //课程类型
 	private String kclxCode;  //课程类型编码
 	private String kcxz;  //课程性质
@@ -338,8 +340,23 @@ public double getFsxs() {
 //		this.kcccCode = kcccCode;
 //	}
 
-	
-	
-	
-	
+	public void setKcfzrID(Long kcfzrID) {
+		this.kcfzrID = kcfzrID;
+	}
+
+	public String getDepartmentCode() {
+		return departmentCode;
+	}
+
+	public void setDepartmentCode(String departmentCode) {
+		this.departmentCode = departmentCode;
+	}
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
 }

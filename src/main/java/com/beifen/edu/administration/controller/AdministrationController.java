@@ -90,10 +90,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("librarySeacchClass")
 	@ResponseBody
-	public Object librarySeacchClass(@RequestParam String SearchCriteria) {
+	public ResultVO librarySeacchClass(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userId") String userId) {
 		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
 		Edu200 edu200 = JSON.toJavaObject(jsonObject, Edu200.class);
-		ResultVO result = administrationPageService.librarySeacchClass(edu200);
+		ResultVO result = administrationPageService.librarySeacchClass(edu200,userId);
 		return result;
 	}
 
@@ -313,8 +313,8 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/getAllRelationInfo")
 	@ResponseBody
-	public ResultVO getAllRelationInfo() {
-		ResultVO result = administrationPageService.queryAllRelation();
+	public ResultVO getAllRelationInfo(@RequestParam("userId") String userId) {
+		ResultVO result = administrationPageService.queryAllRelation(userId);
 		return result;
 	}
 
@@ -834,11 +834,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/levelMatchDepartment")
 	@ResponseBody
-	public Object levelMatchDepartment(@RequestParam String leveCode) {
-		Map<String, Object> returnMap = new HashMap();
-		returnMap.put("department", administrationPageService.levelMatchDepartment(leveCode));
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO levelMatchDepartment(@RequestParam("leveCode") String leveCode,@RequestParam("userId") String userId) {
+		ResultVO resultVO =  administrationPageService.levelMatchDepartment(leveCode, userId);
+		return resultVO;
 	}
 
 	/**
@@ -1934,18 +1932,15 @@ public class AdministrationController {
 	 */
 	@RequestMapping("getTaskInfo")
 	@ResponseBody
-	public Object getTaskInfo(@RequestParam("searchInfo") String searchInfo) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO getTaskInfo(@RequestParam("searchInfo") String searchInfo,@RequestParam("userId") String userId) {
 		JSONObject searchObject = JSONObject.fromObject(searchInfo);
 		String xzbmc = searchObject.getString("xzbmc");
 		String kcmc = searchObject.getString("kcmc");
 		Edu301 edu301=new Edu301();
 		edu301.setBhxzbmc(xzbmc);
 		edu301.setKcmc(kcmc);
-		List<Edu301> jxbInfo = administrationPageService.searchTeachingClass(edu301,true);
-		returnMap.put("taskInfo", administrationPageService.getTaskInfo(jxbInfo));
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.getTaskInfo(edu301,userId);
+		return result;
 	}
 
 
@@ -2291,10 +2286,23 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/exportRollcallExcel")
 	@ResponseBody
-	public Object exportRollcallExcel(HttpServletRequest request,HttpServletResponse response,@RequestParam("edu301Ids") String scheduleInfo) {
+	public ResultVO exportRollcallExcel(HttpServletRequest request,HttpServletResponse response,@RequestParam("edu301Ids") String scheduleInfo) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		List<String> edu301IdList = JSON.parseArray(scheduleInfo, String.class);
 		ResultVO result = administrationPageService.exportRollcallExcel(request,response,edu301IdList);
+		return result;
+	}
+
+
+	/**
+	 * 根据权限查询二级学院
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getUsefulDepartment")
+	@ResponseBody
+	public ResultVO exportRollcallExcel(@RequestParam("userId") String userId) {
+		ResultVO result = administrationPageService.getUsefulDepartment(userId);
 		return result;
 	}
 

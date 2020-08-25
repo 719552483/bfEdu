@@ -478,14 +478,11 @@ function searchTask(){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if(backjson.taskInfo.length===0){
-					toastr.info('暂无可发布的教学任务书');
-					return;
-				}
-				stuffTaskInfoTable(rePutTaskInfo(backjson.taskInfo));
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
+				stuffTaskInfoTable(rePutTaskInfo(backjson.data));
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

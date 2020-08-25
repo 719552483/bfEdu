@@ -74,4 +74,14 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	//根据108ID获取任务书集合
 	@Query(value = "select e.* from Edu201 e where e.edu108_ID in ?1 and e.sfypk is null ",nativeQuery = true)
 	List<Edu201> queryCulturePlanIds(List<String> current108s);
+
+	//根据权限获未发布的教学任务书
+	@Query(value = "select distinct a.* from edu201 a,edu301 b,edu302 c,edu300 d " +
+			"where a.EDU201_ID = b.EDU201_ID " +
+			"and b.EDU301_ID = c.EDU301_ID " +
+			"and c.EDU300_ID = d.EDU300_ID " +
+			"and b.SFFBJXRWS = 'F' " +
+			"and d.XBBM in ?1", nativeQuery = true)
+	List<Edu201> findTaskInfoByDepartments(List<String> departments);
+
 }

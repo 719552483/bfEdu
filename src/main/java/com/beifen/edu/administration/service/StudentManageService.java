@@ -1,8 +1,10 @@
 package com.beifen.edu.administration.service;
 
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -11,10 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +38,8 @@ public class StudentManageService {
     private Edu992Dao edu992Dao;
     @Autowired
     private Edu004Dao edu004Dao;
+    @Autowired
+    private RedisUtils redisUtils;
 
 
     // 查询所有学生信息
@@ -196,7 +197,10 @@ public class StudentManageService {
     }
 
     // 学生管理搜索学生
-    public ResultVO studentMangerSearchStudent(Edu001 edu001) {
+    public ResultVO studentMangerSearchStudent(Edu001 edu001,String userId) {
+
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
         Specification<Edu001> specification = new Specification<Edu001>() {
             public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -230,6 +234,14 @@ public class StudentManageService {
                 if (edu001.getXzbname() != null && !"".equals(edu001.getXzbname())) {
                     predicates.add(cb.like(root.<String> get("xzbname"), '%' + edu001.getXzbname() + '%'));
                 }
+
+                Path<Object> path = root.get("szxb");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <departments.size() ; i++) {
+                    in.value(departments.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };

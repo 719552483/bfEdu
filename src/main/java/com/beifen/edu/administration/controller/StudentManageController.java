@@ -232,7 +232,7 @@ public class StudentManageController {
      */
     @RequestMapping("studentMangerSearchStudent")
     @ResponseBody
-    public ResultVO studentMangerSearchStudent(@RequestParam String SearchCriteria) {
+    public ResultVO studentMangerSearchStudent(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userId") String userId) {
         JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
         // 根据层次等信息查出培养计划id
         String level = searchObject.getString("level");
@@ -259,7 +259,7 @@ public class StudentManageController {
         edu001.setXjh(studentRollNumber);
         edu001.setXzbname(className);
 
-        ResultVO result = studentManageService.studentMangerSearchStudent(edu001);
+        ResultVO result = studentManageService.studentMangerSearchStudent(edu001,userId);
         return result;
     }
 

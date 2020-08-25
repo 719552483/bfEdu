@@ -57,4 +57,8 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	@Query(value = "select e.jxbrs from edu301 e where e.Edu301_ID =?1", nativeQuery = true)
 	public int queryJXBrs(String jxbcode);
 
+
+	//根据id集合查询教学班
+	@Query(value = "select e.* from edu301 e where e.Edu301_ID in ?1",nativeQuery = true)
+	List<Edu301> findAllInEdu301Ids(List<Long> edu301Ids);
 }
