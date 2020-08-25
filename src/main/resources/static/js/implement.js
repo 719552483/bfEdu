@@ -1,9 +1,31 @@
 $(document).ready(function() {
 	stuffSeession();
+	getFromRedis();
 	$("body").find("input").attr("spellcheck",false);
 	controlMenuRelation();
 });
 
+//获取redies
+function  getFromRedis(keName){
+	var returnData=new Object();
+	$.ajax({
+		method: 'post',
+		cache: false,
+		url: "/getFromRedis",
+		data: {
+			"key": keName
+		},
+		dataType: 'json',
+		success: function(backjson) {
+			if(backjson.code===200) {
+				returnData=backjson.data;
+			}
+		}
+	});
+	return returnData;
+}
+
+//填充session
 function stuffSeession(){
 	drawNewsBySession();
 	var userInfo =JSON.parse($.session.get('userInfo')) ;
@@ -227,8 +249,9 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 			cache : false,
 			url : "/levelMatchDepartment",
 			data: {
-	             "leveCode":choosedLevel 
-	        },
+	             "leveCode":choosedLevel,
+				 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			},
 			dataType : 'json',
 			beforeSend: function(xhr) {
 				requestErrorbeforeSend();
