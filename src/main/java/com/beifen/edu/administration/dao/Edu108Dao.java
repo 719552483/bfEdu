@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.beifen.edu.administration.domian.Edu108;
 
 public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecificationExecutor<Edu108> {
-	// 查询培养计划下的专业课程
+	// 根据权限查询培养计划下的专业课程
 	@Query(value = "select * from edu108 e where e.Edu107_ID=?1", nativeQuery = true)
 	public List<Edu108> queryCulturePlanCouses(long edu107id);
 

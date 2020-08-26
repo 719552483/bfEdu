@@ -2,6 +2,7 @@ package com.beifen.edu.administration.controller;
 
 import com.beifen.edu.administration.PO.Edu600BO;
 import com.beifen.edu.administration.PO.Edu601PO;
+import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.domian.Edu601;
 import com.beifen.edu.administration.domian.Edu990;
@@ -55,14 +56,11 @@ public class ApprovalProcessController {
      */
     @RequestMapping(value = "searchApproval",method = RequestMethod.GET)
     @ResponseBody
-    public Object searchApproval(@RequestParam("approvalText") String approvalText) {
-        Map<String, Object> returnMap = new HashMap();
+    public ResultVO searchApproval(@RequestParam("approvalText") String approvalText) {
         JSONObject jsonObject = JSONObject.fromObject(approvalText);
         Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
-        List<Edu600BO> approvalList = approvalProcessService.searchApproval(edu600BO);
-        returnMap.put("approvalList", approvalList);
-        returnMap.put("result", true);
-        return returnMap;
+        ResultVO result = approvalProcessService.searchApproval(edu600BO);
+        return result;
     }
 
     /**

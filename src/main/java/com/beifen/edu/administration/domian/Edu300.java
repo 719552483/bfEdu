@@ -25,8 +25,6 @@ public class Edu300 {
 	private  String njmc;//年级名称
 	private  String zybm;//专业编码
 	private  String zymc;//专业名称
-//	private  String xqmc;//校区名称
-//	private  String xqbm;//校区编码
 	private  String zdybjxh;//自定义班级序号
 	private  int zxrs;//在校人数    -新增学生是分配行政班 改变行政班在校人数
 	private  int rnrs;//容纳人数

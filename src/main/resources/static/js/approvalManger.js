@@ -404,6 +404,7 @@ function startSearch(){
 	  searchObjet.currentUserRole=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	  searchObjet.proposerKey=getNormalSelectValue("sqrID");
 	  searchObjet.businessType=getNormalSelectValue("splx");
+	  searchObjet.examinerkey = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 
 		$.ajax({
 			method: 'get',
@@ -424,15 +425,12 @@ function startSearch(){
 			},
 			success: function (backjson) {
 				hideloding();
-				if (backjson.result) {
-					if (backjson.approvalList.length === 0) {
-						toastr.warning('暂无数据');
-						drawApprovalMangerEmptyTable();
-						return;
-					}
-					stuffApprovalMangerTable(backjson.approvalList);
+				if (backjson.code === 200) {
+					toastr.success(backjson.msg);
+					stuffApprovalMangerTable(backjson.data);
 				} else {
-					toastr.warning('操作失败，请重试');
+					toastr.warning(backjson.msg);
+					drawApprovalMangerEmptyTable();
 				}
 			}
 		});

@@ -61,4 +61,8 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	//根据id集合查询教学班
 	@Query(value = "select e.* from edu301 e where e.Edu301_ID in ?1",nativeQuery = true)
 	List<Edu301> findAllInEdu301Ids(List<Long> edu301Ids);
+
+	//任务书查找教学班
+	@Query(value = "select e.* from edu301 e,edu302 f,edu300 d where e.EDU301_ID = f.EDU301_ID and f.EDU300_ID = d.EDU300_ID and d.SFSCKKJH = 'T' and d.XBBM in ?1",nativeQuery = true)
+	List<Edu301> findTeachingClassForTask(List<String> departments);
 }

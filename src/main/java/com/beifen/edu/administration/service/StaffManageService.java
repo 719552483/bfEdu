@@ -1,5 +1,7 @@
 package com.beifen.edu.administration.service;
 
+import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.Edu101Dao;
 import com.beifen.edu.administration.dao.Edu201Dao;
 import com.beifen.edu.administration.dao.Edu990Dao;
@@ -8,6 +10,7 @@ import com.beifen.edu.administration.domian.Edu101;
 import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu992;
+import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,8 @@ public class StaffManageService {
     Edu992Dao edu992Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
+    @Autowired
+    RedisUtils redisUtils;
 
 
     ReflectUtils utils = new ReflectUtils();
@@ -123,5 +128,24 @@ public class StaffManageService {
             newXh = jzgh_before + "001";
         }
         return newXh;
+    }
+
+
+    //根据权限查询所有教师
+    public ResultVO queryAllTeacherByUserId(String userId) {
+        ResultVO resultVO;
+
+        //从redis中查询二级学院管理权限
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+        List<Edu101> teacherList = edu101Dao.queryAllTeacherByUserId(departments);
+
+        if(teacherList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无教师信息");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+teacherList.size()+"个教师",teacherList);
+        }
+
+        return resultVO;
     }
 }

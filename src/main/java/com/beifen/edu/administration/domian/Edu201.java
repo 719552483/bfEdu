@@ -15,7 +15,9 @@ public class Edu201 {
 	private Long Edu201_ID; //任务书ID
 	private Long Edu301_ID;  //教学班ID
 	private Long Edu108_ID;  //培养计划ID
-	private String jxbmc;  //教学班名称
+	private String sffbjxrws;  //是否发布教学任务书
+	private	String classType; //班级类型
+	private String className;  //班级名称
 	private String kcmc;  //课程名称
 	private String zymc;  //专业名称
 	private String jxbrs;  //教学班人数
@@ -99,12 +101,6 @@ public class Edu201 {
 		this.zylsmc = zylsmc;
 	}
 
-	public String getJxbmc() {
-		return jxbmc;
-	}
-	public void setJxbmc(String jxbmc) {
-		this.jxbmc = jxbmc;
-	}
 	public String getKcmc() {
 		return kcmc;
 	}
@@ -165,7 +161,28 @@ public class Edu201 {
 	public void setSfypk(String sfypk) {
 		this.sfypk = sfypk;
 	}
-	
-	
-	
+
+	public String getSffbjxrws() {
+		return sffbjxrws;
+	}
+
+	public void setSffbjxrws(String sffbjxrws) {
+		this.sffbjxrws = sffbjxrws;
+	}
+
+	public String getClassType() {
+		return classType;
+	}
+
+	public void setClassType(String classType) {
+		this.classType = classType;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
 }

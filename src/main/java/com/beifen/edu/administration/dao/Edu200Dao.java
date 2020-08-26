@@ -18,8 +18,8 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	public List<Edu200> queryAllPassCrouse();
 
 	// 根据代码查询课程
-	@Query(value = "select * from edu200 e where e.zt='pass' and e.kcdm like ?1", nativeQuery = true)
-	public List<Edu200> queryAllPassCrouseByDepartment(String departmentCode);
+	@Query(value = "select * from edu200 e where e.zt='pass' and e.department_code in ?1", nativeQuery = true)
+	public List<Edu200> queryAllPassCrouseByDepartment(List<String> departmentCode);
 
 	// 根据id修改课程状态
 	@Modifying
@@ -54,4 +54,7 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "delete from edu200 where bf200_ID in ?1", nativeQuery = true)
     void deleteByIds(List<String> saveIds);
+
+
+
 }

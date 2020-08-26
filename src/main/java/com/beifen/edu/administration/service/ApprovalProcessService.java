@@ -3,18 +3,18 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.Edu600BO;
 import com.beifen.edu.administration.PO.Edu601PO;
 import com.beifen.edu.administration.PO.TrainingPlanP0;
+import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.RedisUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,6 +51,8 @@ public class ApprovalProcessService {
     private Edu107Dao edu107Dao;
     @Autowired
     private Edu112Dao edu112Dao;
+    @Autowired
+    private RedisUtils redisUtils;
 
     /**
      * 发起审批流程
@@ -113,7 +115,7 @@ public class ApprovalProcessService {
                 break;
             case"04":
                 Edu201 edu201 = edu201Dao.findOne(businessKey);
-                keyWord = edu201.getJxbmc()+"教学任务书";
+                keyWord = edu201.getClassName()+"教学任务书";
                 break;
             case"05":
                 Edu001 edu001 = edu001Dao.findOne(businessKey);
@@ -369,7 +371,9 @@ public class ApprovalProcessService {
      * @param edu600BO
      * @return
      */
-    public List<Edu600BO> searchApproval(Edu600BO edu600BO) {
+    public ResultVO searchApproval(Edu600BO edu600BO) {
+        ResultVO resultVO;
+
         Edu600 edu600 = new Edu600();
         List<Edu600BO> approvalExList = new ArrayList<>();
 
@@ -379,6 +383,10 @@ public class ApprovalProcessService {
 
             //赋值查询条件
             edu600.setCurrentRole(edu600BO.getCurrentUserRole());
+
+            String userId = edu600.getExaminerkey().toString();
+            //从redis中查询二级学院管理权限
+            List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
             Specification<Edu600> specification = new Specification<Edu600>() {
                 public Predicate toPredicate(Root<Edu600> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -392,12 +400,28 @@ public class ApprovalProcessService {
                     if (edu600.getProposerKey() != null && !"".equals(edu600.getProposerKey())) {
                         predicates.add(cb.equal(root.<String> get("proposerKey"), edu600.getProposerKey()));
                     }
+                    Path<Object> path = root.get("departmentCode");//定义查询的字段
+                    CriteriaBuilder.In<Object> in = cb.in(path);
+                    for (int i = 0; i <departments.size() ; i++) {
+                        in.value(departments.get(i));//存入值
+                    }
+                    predicates.add(cb.and(in));
+
                     predicates.add(cb.notEqual(root.<String> get("currentRole"),root.<String> get("proposerType")));
-                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+
+                    query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+                    query.orderBy(cb.desc(root.get("creatDate").as(Date.class)));
+
+                    return query.getRestriction();
                 }
             };
 
             List<Edu600> aprovalList = edu600DAO.findAll(specification);
+
+            if (aprovalList.size() == 0) {
+                resultVO = ResultVO.setFailed("暂无可审批信息");
+                return resultVO;
+            }
 
             for (Edu600 e :  aprovalList) {
                 Edu600BO approvalEx = new Edu600BO();
@@ -424,8 +448,9 @@ public class ApprovalProcessService {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        return approvalExList;
 
+        resultVO = ResultVO.setSuccess("共找到"+approvalExList.size()+"条记录",approvalExList);
+        return resultVO;
     }
 
     /**
@@ -582,6 +607,7 @@ public class ApprovalProcessService {
         List<Edu601> historyList = new ArrayList<>();
         List<Edu601PO> historyListEx = new ArrayList<>();
 
+
         Specification<Edu601> specification = new Specification<Edu601>() {
             public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -594,7 +620,10 @@ public class ApprovalProcessService {
                 if (edu600BO.getExaminerkey() != null && !"".equals(edu600BO.getExaminerkey())) {
                     predicates.add(cb.equal(root.<String> get("examinerkey"), edu600BO.getExaminerkey()));
                 }
-                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+
+                query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+                query.orderBy(cb.desc(root.get("creatDate").as(Date.class)));
+                return query.getRestriction();
             }
         };
 

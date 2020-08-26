@@ -13,8 +13,7 @@ import javax.persistence.Table;
 @Table(name = "Edu301")
 public class Edu301 {
 	private Long Edu301_ID; //教学班ID
-	private Long Edu108_ID;  //培养计划id - 查询课程相关属性
-	private  String pyccmc;//培养层次名称 
+	private  String pyccmc;//培养层次名称
 	private  String pyccbm;//培养层次编码
 	private  String xbmc;//系部名称
 	private  String xbbm;//系部编码
@@ -23,15 +22,11 @@ public class Edu301 {
 	private  String zybm;//专业编码
 	private  String zymc;//专业名称
 	private  String jxbmc;  //教学班名称
-	private  String kcmc;//培养层次名称 
 	private String bhzyCode;  //包含的专业编码
 	private String bhzymc;  //包含的专业名称
 	private String bhxzbid;  //包含的行政班Id
 	private String bhxzbmc;  //包含的行政班名称
-//	private String bhxsxm;  //包含的学生姓名
-	private String bhxsCode;  //包含的学生编码   包含的行政班和学生二选一
 	private Integer jxbrs;  //教学班人数
-	private String sffbjxrws;  //是否发布教学任务书
 	private Long Edu201_ID; //教学任务书ID
 	private String yxbz;//有效标志
 	
@@ -46,14 +41,6 @@ public class Edu301 {
 
 	public void setEdu301_ID(Long edu301_ID) {
 		Edu301_ID = edu301_ID;
-	}
-
-	public Long getEdu108_ID() {
-		return Edu108_ID;
-	}
-
-	public void setEdu108_ID(Long edu108_ID) {
-		Edu108_ID = edu108_ID;
 	}
 
 	public String getPyccmc() {
@@ -128,13 +115,6 @@ public class Edu301 {
 		this.jxbmc = jxbmc;
 	}
 
-	public String getKcmc() {
-		return kcmc;
-	}
-
-	public void setKcmc(String kcmc) {
-		this.kcmc = kcmc;
-	}
 
 	public String getBhzyCode() {
 		return bhzyCode;
@@ -168,28 +148,12 @@ public class Edu301 {
 		this.bhxzbmc = bhxzbmc;
 	}
 
-	public String getBhxsCode() {
-		return bhxsCode;
-	}
-
-	public void setBhxsCode(String bhxsCode) {
-		this.bhxsCode = bhxsCode;
-	}
-
 	public Integer getJxbrs() {
 		return jxbrs;
 	}
 
 	public void setJxbrs(Integer jxbrs) {
 		this.jxbrs = jxbrs;
-	}
-
-	public String getSffbjxrws() {
-		return sffbjxrws;
-	}
-
-	public void setSffbjxrws(String sffbjxrws) {
-		this.sffbjxrws = sffbjxrws;
 	}
 
 	public Long getEdu201_ID() {

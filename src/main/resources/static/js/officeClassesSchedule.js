@@ -297,6 +297,9 @@ function getLsInfo(tableid,index,cellName){
 		method : 'get',
 		cache : false,
 		url : "/queryAllTeacher",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -309,12 +312,13 @@ function getLsInfo(tableid,index,cellName){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
 				$.showModal("#allTeacherModal",true);
-				stuffTaecherTable(backjson.teacherList);
+				stuffTaecherTable(backjson.data);
 				allTaecherAreabtnBind(tableid,index,cellName);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -599,8 +603,9 @@ function allTeacherStartSearch(){
 		cache : false,
 		url : "/searchTeacher",
 		data: {
-            "SearchCriteria":JSON.stringify(serachObject) 
-       },
+            "SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -613,11 +618,11 @@ function allTeacherStartSearch(){
 		},
 		success : function(backjson) {
 			 hideloding();
-			 if (backjson.result) {
-				 stuffTaecherTable(backjson.techerList);
-			 	 } else {
-					toastr.warning('操作失败，请重试');
-			 	 }
+			 if (backjson.code === 200) {
+				 stuffTaecherTable(backjson.data);
+			 } else {
+			 	toastr.warning(backjson.data);
+			 }
 		}
 	});
 }

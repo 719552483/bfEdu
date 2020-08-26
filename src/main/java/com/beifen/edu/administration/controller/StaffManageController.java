@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu101;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.service.AdministrationPageService;
@@ -394,12 +395,9 @@ public class StaffManageController {
      */
     @RequestMapping("queryAllTeacher")
     @ResponseBody
-    public Object queryAllTeacher() {
-        Map<String, Object> returnMap = new HashMap();
-        List<Edu101> teacherList = staffManageService.queryAllTeacher();
-        returnMap.put("result", true);
-        returnMap.put("teacherList", teacherList);
-        return returnMap;
+    public ResultVO queryAllTeacher(@RequestParam("userId") String userId) {
+        ResultVO result = staffManageService.queryAllTeacherByUserId(userId);
+        return result;
     }
 
     /**
@@ -411,7 +409,7 @@ public class StaffManageController {
      */
     @RequestMapping("searchTeacher")
     @ResponseBody
-    public Object SeacchTeacher(@RequestParam String SearchCriteria) {
+    public ResultVO SeacchTeacher(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
         Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
         String szxb ="";
@@ -447,9 +445,7 @@ public class StaffManageController {
         edu101.setXm(xm);
         edu101.setJzgh(jzgh);
         edu101.setSzxbmc(szxbmc);
-        List<Edu101> techerList = administrationPageService.searchTeacher(edu101);
-        returnMap.put("techerList", techerList);
-        returnMap.put("result", true);
-        return returnMap;
+        ResultVO result = administrationPageService.searchTeacher(edu101,userId);
+        return result;
     }
 }

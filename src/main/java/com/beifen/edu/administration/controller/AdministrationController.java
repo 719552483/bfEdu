@@ -868,8 +868,8 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryAllPassCrouse")
 	@ResponseBody
-	public ResultVO queryCrouseBelongToCultureplan(@RequestParam("userKey") String userKey) {
-		ResultVO result = administrationPageService.queryAllPassCrouse(userKey);
+	public ResultVO queryCrouseBelongToCultureplan(@RequestParam("userId") String userId) {
+		ResultVO result = administrationPageService.queryAllPassCrouse(userId);
 		return result;
 	}
 
@@ -1281,27 +1281,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/generatCoursePlan")
 	@ResponseBody
-	public Object generatCoursePlan(@RequestParam("generatInfo") String generatInfo) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO generatCoursePlan(@RequestParam("generatInfo") String generatInfo) {
 		JSONObject culturePlan = JSONObject.fromObject(generatInfo);
-		JSONArray classArray = culturePlan.getJSONArray("classIds");
-		JSONArray classNames = culturePlan.getJSONArray("classNames");
-		JSONArray edu108Ids = culturePlan.getJSONArray("crouses");
-
-		String isGeneratCoursePlan = "T";
-		// eud300 行政班更改开课计划属性
-		for (int i = 0; i < classArray.size(); i++) {
-			administrationPageService.generatAdministrationCoursePlan(classArray.get(i).toString(),
-					isGeneratCoursePlan);
-		}
-
-		// eud180 课程更改开课计划属性
-		for (int i = 0; i < edu108Ids.size(); i++) {
-			administrationPageService.generatCoursePlan(edu108Ids.get(i).toString(), classNames.toString(),
-					classArray.toString(), isGeneratCoursePlan);
-		}
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO  result = administrationPageService.generatCoursePlan(culturePlan);
+		return result;
 	}
 
 	/**
@@ -1441,8 +1424,6 @@ public class AdministrationController {
 			if (!"".equals(edu301_id)) {
 				verifyEdu301.setEdu301_ID(Long.parseLong(edu301_id));
 			}
-			verifyEdu301.setEdu108_ID(jsonObject.getLong("edu108_ID"));
-			verifyEdu301.setKcmc(jsonObject.getString("kcmc"));
 			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
 			verifyEdu301.setPyccmc(jsonObject.getString("pyccmc"));
 			verifyEdu301.setPyccbm(jsonObject.getString("pyccbm"));
@@ -1456,7 +1437,6 @@ public class AdministrationController {
 			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
 			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbid"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
-			verifyEdu301.setSffbjxrws(jsonObject.getString("sffbjxrws"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
 			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
 			Edu301 edu301 = administrationPageService.classAction(verifyEdu301);
@@ -1607,7 +1587,6 @@ public class AdministrationController {
 		// 填充搜索对象
 		Edu301 edu301 = new Edu301();
 		edu301.setJxbmc(className);
-		edu301.setKcmc(coursesName);
 		List<Edu301> tableInfo = administrationPageService.searchTeachingClass(edu301,false);
 		returnMap.put("tableInfo", tableInfo);
 		returnMap.put("result", true);
@@ -1938,7 +1917,6 @@ public class AdministrationController {
 		String kcmc = searchObject.getString("kcmc");
 		Edu301 edu301=new Edu301();
 		edu301.setBhxzbmc(xzbmc);
-		edu301.setKcmc(kcmc);
 		ResultVO result = administrationPageService.getTaskInfo(edu301,userId);
 		return result;
 	}
@@ -1975,13 +1953,11 @@ public class AdministrationController {
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			TeachingTaskPO edu201 = new TeachingTaskPO();
-			String edu201_id=jsonObject.getString("edu201_ID");
-			if(!"".equals(edu201_id)) {
-				edu201.setEdu201_ID(Long.parseLong(edu201_id));
-			}
+			edu201.setEdu201_ID(Long.parseLong("edu201_id"));
 			edu201.setEdu108_ID(jsonObject.getLong("edu108_ID"));
 			edu201.setEdu301_ID(jsonObject.getLong("edu301_ID"));
-			edu201.setJxbmc(jsonObject.getString("jxbmc"));
+			edu201.setClassType(jsonObject.getString("classType"));
+			edu201.setClassName(jsonObject.getString("className"));
 			edu201.setKcmc(jsonObject.getString("kcmc"));
 			edu201.setZymc(jsonObject.getString("zymc"));
 			edu201.setJxbrs(jsonObject.getString("jxbrs"));
@@ -2303,6 +2279,19 @@ public class AdministrationController {
 	@ResponseBody
 	public ResultVO getUsefulDepartment(@RequestParam("userId") String userId) {
 		ResultVO result = administrationPageService.getUsefulDepartment(userId);
+		return result;
+	}
+
+	/**
+	 * 根据类型选择班级
+	 * @param classType
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getClassByType")
+	@ResponseBody
+	public ResultVO getClassBytype(@RequestParam("classType") String classType,@RequestParam("userId") String userId) {
+		ResultVO result = administrationPageService.getClassBytype(classType,userId);
 		return result;
 	}
 

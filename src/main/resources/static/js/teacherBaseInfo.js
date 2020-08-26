@@ -883,15 +883,12 @@ function searchAllTeacher(){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if(backjson.teacherList.length===0){
-					toastr.warning('暂无教师信息');
-					drawTeacherBaseInfoEmptyTable();
-				}else{
-					stuffTeacherBaseInfoTable(backjson.teacherList);
-				}
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
+				stuffTeacherBaseInfoTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawTeacherBaseInfoEmptyTable();
 			}
 		}
 	});
@@ -919,15 +916,12 @@ function searchAllTeacherBy(searchObject){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if(backjson.techerList.length===0){
-					toastr.warning('暂无教师信息');
-					drawTeacherBaseInfoEmptyTable();
-				}else{
-					stuffTeacherBaseInfoTable(backjson.techerList);
-				}
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
+				stuffTeacherBaseInfoTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
+				drawTeacherBaseInfoEmptyTable();
 			}
 		}
 	});

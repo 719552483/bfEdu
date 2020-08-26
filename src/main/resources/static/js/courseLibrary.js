@@ -488,6 +488,9 @@ function getAllClassMangers(){
 		method : 'get',
 		cache : false,
 		url : "/queryAllTeacher",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -499,13 +502,13 @@ function getAllClassMangers(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			 if (backjson.result) {
+			 if (backjson.code === 200) {
 				    hideloding();
-			 		stuffAllClassMangersTable(backjson.teacherList);
+			 		stuffAllClassMangersTable(backjson.data);
 			 		$.hideModal("#addNewClassModal",false);
 			 		$.showModal("#allClassMangersModal",true);
 			 	 } else {
-					toastr.warning('操作失败，请重试');
+					toastr.warning(backjson.msg);
 			 	 }
 		}
 	});
@@ -892,8 +895,9 @@ function allClassMangersStartSearch(){
 		cache : false,
 		url : "/searchTeacher",
 		data: {
-            "SearchCriteria":JSON.stringify(serachObject) 
-       },
+            "SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -906,10 +910,10 @@ function allClassMangersStartSearch(){
 		},
 		success : function(backjson) {
 			hideloding();
-			 if (backjson.result) {
-				 stuffAllClassMangersTable(backjson.techerList);
+			 if (backjson.code === 200) {
+				 stuffAllClassMangersTable(backjson.data);
 			 	 } else {
-					toastr.warning('操作失败，请重试');
+					toastr.warning(backjson.msg);
 			 	 }
 		}
 	});

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
+import com.beifen.edu.administration.constant.SecondaryCodeConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
@@ -487,8 +487,25 @@ public class AdministrationPageService {
 	}
 
 	// 确认生成开课计划
-	public void generatCoursePlan(String crouses, String classNames, String classIds, String isGeneratCoursePlan) {
-		edu108DAO.chengeCulturePlanCrouseFeedBack(crouses, classNames, classIds, isGeneratCoursePlan);
+	public ResultVO generatCoursePlan(JSONObject culturePlan) {
+		ResultVO resultVO;
+		JSONArray classArray = culturePlan.getJSONArray("classIds");
+		JSONArray classNames = culturePlan.getJSONArray("classNames");
+		JSONArray edu108Ids = culturePlan.getJSONArray("crouses");
+
+		String isGeneratCoursePlan = "T";
+		// eud300 行政班更改开课计划属性
+		for (int i = 0; i < classArray.size(); i++) {
+			generatAdministrationCoursePlan(classArray.get(i).toString(), isGeneratCoursePlan);
+		}
+
+		// eud180 课程更改开课计划属性
+		for (int i = 0; i < edu108Ids.size(); i++) {
+			edu108DAO.chengeCulturePlanCrouseFeedBack(edu108Ids.get(i).toString(), classNames.toString(), classArray.toString(), isGeneratCoursePlan);
+		}
+
+		resultVO = ResultVO.setSuccess("开课计划生成成功");
+		return resultVO;
 	}
 
 	// 查询所有行政班
@@ -736,15 +753,13 @@ public class AdministrationPageService {
 	}
 
 	// 课程库通过审核课程
-	public ResultVO queryAllPassCrouse(String userKey) {
+	public ResultVO queryAllPassCrouse(String userId) {
 		ResultVO resultVO;
-		Edu101 edu101 = edu101DAO.getOne(Long.parseLong(userKey));
-		if(edu101 == null) {
-			resultVO = ResultVO.setFailed("您不是本校老师无法为您查找课程");
-			return resultVO;
-		}
-		String departmentCode = getDepartmentCode(edu101.getSzxb());
-		List<Edu200> edu200List = edu200DAO.queryAllPassCrouseByDepartment(departmentCode+"%");
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		List<Edu200> edu200List = edu200DAO.queryAllPassCrouseByDepartment(departments);
 		if(edu200List.size() == 0){
 			resultVO = ResultVO.setFailed("暂未找到课程");
 		} else {
@@ -797,19 +812,15 @@ public class AdministrationPageService {
 	// 根据教学班组装任务书信息
 	public ResultVO getTaskInfo(Edu301 edu301BO,String userId) {
 		ResultVO resultVO;
-		Map<String,Object> returnMap = new HashMap<>();
+
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
-
 
 		List<Edu201> sendTaskList = edu201DAO.findTaskInfoByDepartments(departments);
 
 		if(sendTaskList.size() == 0) {
 			resultVO = ResultVO.setFailed("暂未找到任务书");
 		} else {
-			List<Long> edu301Ids = sendTaskList.stream().map(Edu201::getEdu301_ID).collect(Collectors.toList());
-			List<Edu301> edu301List = edu301DAO.findAllInEdu301Ids(edu301Ids);
-			returnMap.put("",sendTaskList);
 			resultVO = ResultVO.setSuccess("共找到"+sendTaskList.size()+"条任务书",sendTaskList);
 		}
 		return resultVO;
@@ -896,7 +907,6 @@ public class AdministrationPageService {
 	// 发布教学任务书时更改301的信息
 	public void putOutTaskAction(Long edu301_ID, Long edu201_ID) {
 		Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(edu301_ID.toString());
-		edu301.setSffbjxrws("T");
 		edu301.setEdu201_ID(edu201_ID);
 		edu301DAO.save(edu301);
 	}
@@ -1215,7 +1225,11 @@ public class AdministrationPageService {
 	}
 
 	// 搜索教师
-	public List<Edu101> searchTeacher(Edu101 edu101) {
+	public ResultVO searchTeacher(Edu101 edu101,String userId) {
+		ResultVO resultVO;
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
 		Specification<Edu101> specification = new Specification<Edu101>() {
 			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1237,11 +1251,24 @@ public class AdministrationPageService {
 				if (edu101.getZc() != null && !"".equals(edu101.getZc())) {
 					predicates.add(cb.equal(root.<String>get("zc"), edu101.getZc()));
 				}
+				Path<Object> path = root.get("szxb");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
-		List<Edu101> teacherEntities = edu101DAO.findAll(specification);
-		return teacherEntities;
+		List<Edu101> teacherList = edu101DAO.findAll(specification);
+
+		if(teacherList.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无教师信息");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+teacherList.size()+"个教师",teacherList);
+		}
+
+		return resultVO;
 	}
 
 	// 搜索关系
@@ -1415,16 +1442,9 @@ public class AdministrationPageService {
 				if (edu301.getJxbmc() != null && !"".equals(edu301.getJxbmc())) {
 					predicates.add(cb.like(root.<String>get("jxbmc"), '%' + edu301.getJxbmc() + '%'));
 				}
-				if (edu301.getKcmc() != null && !"".equals(edu301.getKcmc())) {
-					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu301.getKcmc() + '%'));
-				}
 				if (edu301.getBhxzbmc() != null && !"".equals(edu301.getBhxzbmc())) {
 					predicates.add(cb.like(root.<String>get("bhxzbmc"), '%' + edu301.getBhxzbmc() + '%'));
 				}
-				if (checkSFFBRWS) {
-					predicates.add(cb.equal(root.<String>get("sffbjxrws"), "F"));
-				}
-
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
@@ -1995,7 +2015,7 @@ public class AdministrationPageService {
 					}
 
 					// eud180 课程更改开课计划属性
-					generatCoursePlan(allCrouse.get(i).getEdu108_ID().toString(), JSONArray.fromObject(classNames).toString(),
+					edu108DAO.chengeCulturePlanCrouseFeedBack(allCrouse.get(i).getEdu108_ID().toString(), JSONArray.fromObject(classNames).toString(),
 							JSONArray.fromObject(classIds).toString(), isGeneratCoursePlan);
 					Edu108 edu108 = allCrouse.get(i);
 					edu108.setSfsckkjh(isGeneratCoursePlan);
@@ -2033,6 +2053,31 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setFailed("暂无二级学院信息");
 		} else {
 			resultVO = ResultVO.setSuccess("共查到"+edu104s.size()+"个学院信息",edu104s);
+		}
+		return resultVO;
+	}
+
+	//根据班级类型查询班级
+	public ResultVO getClassBytype(String classType,String userId) {
+		ResultVO resultVO;
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		if(classType == SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE) {
+			List<Edu300> edu300List = edu300DAO.findAdministrativeClassForTask(departments);
+			if(edu300List.size() == 0){
+				resultVO = ResultVO.setFailed("暂无班级信息");
+			} else {
+				resultVO = ResultVO.setSuccess("查询成功",edu300List);
+			}
+		} else {
+			List<Edu301> edu301List = edu301DAO.findTeachingClassForTask(departments);
+			List<Edu300> edu300List = edu300DAO.findAdministrativeClassForTask(departments);
+			if(edu301List.size() == 0){
+				resultVO = ResultVO.setFailed("暂无班级信息");
+			} else {
+				resultVO = ResultVO.setSuccess("查询成功",edu301List);
+			}
 		}
 		return resultVO;
 	}
