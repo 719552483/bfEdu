@@ -2099,7 +2099,6 @@ public class AdministrationPageService {
 			}
 		} else {
 			List<Edu301> edu301List = edu301DAO.findTeachingClassForTask(departments);
-			List<Edu300> edu300List = edu300DAO.findAdministrativeClassForTask(departments);
 			if(edu301List.size() == 0){
 				resultVO = ResultVO.setFailed("暂无班级信息");
 			} else {
