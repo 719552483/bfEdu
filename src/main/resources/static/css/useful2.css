@@ -55,9 +55,9 @@ padding:1.6em 0em 0.6em 31px !important
 	max-width: 100% !important
 }
 
-.giveBottom .multi-select-menuitems label:last-child input{
-	display:block!important;
-}
+/*.giveBottom .multi-select-menuitems label:last-child input{*/
+/*	display:block!important;*/
+/*}*/
 
 
 .serachFocus {
@@ -458,9 +458,9 @@ float: left;
 	margin:15px -24px auto !important;
 }
 
-.multi-select-menuitems label:last-child input {
-	display: none;
-}
+/*.multi-select-menuitems label:last-child input {*/
+/*	display: none;*/
+/*}*/
 
 .multi-select-menuitem {
 	padding: 0.6em 1em 0.6em 20px !important;
@@ -1913,6 +1913,18 @@ top角色切换滚动体样式
 	padding-left: 31px;
 	padding-right: 30px;
 }
+
+
+.canchooseClass .multi-select-button{
+	margin-left: -105%;
+	width: 368px;
+}
+
+.canchooseClass .multi-select-menu{
+	margin: 2.8em -16em !important;
+	min-width: 100% !important;
+}
+
 
 @keyframes serachAnimation {
     10% {

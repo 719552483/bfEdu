@@ -51,7 +51,7 @@
 			<div class="scheduleClassesMainArea">
 			<div class="formtext myformtext myformtextTipArea" style="margin-bottom: 14px;">
 				<b>提示：1.勾选多条任务书，双击教师栏，可实现多任务书指定相同授课教师</b><br></br>
-				<b>2.双击可手动更改排课部门</b><br></br>
+				<b>2.双击可手动更改任务书包含班级等属性</b><br></br>
 			</div>
 			<div class="tools">
 					<ul class="toolbar">
@@ -89,7 +89,7 @@
 				</div>
 
 				<div class="scheduleClassesTableArea columnsStyle searchGivePaddingR">
-					<table class="tablelist myTableStyle" id="scheduleClassesTable" style="margin-top: 10px;"></table>
+					<table class="tablelist myTableStyle" id="scheduleClassesTable" data-unique-id="edu201_ID"> style="margin-top: 10px;"></table>
 				</div>
 				
 				<div class="putOutTaskTableArea columnsStyle searchGivePaddingR noneStart">
@@ -97,10 +97,73 @@
 				</div>
 			</div>
        </div>
-			
 
 
 
+		<!-- 选择班级Modal -->
+		<div class="modal fade bs-example-modal-lg" style="min-width: 600px;" id="chooseClassModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">选择班级</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="searchArea searchAreaWitheSelect" style="padding-right: 36px;">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">班级类型</label>
+										<select class="isSowIndex" id="classType">
+											<option value="seleceConfigTip">请选择</option>
+											<option value="01">行政班</option>
+											<option value="02">教学班</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">可选班级</label>
+										<select class="isSowIndex" id="class">
+											<option value="seleceConfigTip">暂无选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+
+<!--							<div class="col1 giveBottom classChooseArea xzbclassChooseArea noneStart">-->
+<!--								<ul class="forminfo">-->
+<!--									<div class="">-->
+<!--										<label class="selectName" style="margin-top: 14px;">可选班级</label>-->
+<!--										<select class="isSowIndex" id="xzbclass">-->
+<!--										</select>-->
+<!--									</div>-->
+<!--								</ul>-->
+<!--							</div>-->
+
+<!--							<div class="col1 giveBottom classChooseArea jxbclassChooseArea">-->
+<!--								<ul class="forminfo">-->
+<!--									<div class="">-->
+<!--										<label class="selectName" style="margin-top: 14px;">可选班级</label>-->
+<!--										<select class="isSowIndex" id="jxbclass">-->
+<!--										</select>-->
+<!--									</div>-->
+<!--								</ul>-->
+<!--							</div>-->
+						</div>
+
+					</div>
+					<div class="clear"></div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmChooseClass" value="确定"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
 	
 	
 	<!-- 提示Modal -->
