@@ -204,9 +204,9 @@ function stuffTaskInfoTable(tableInfo) {
 function onDblClickScheduleClassesTable(row, $element, field){
 	var index =parseInt($element[0].dataset.index);
 	if(field==="lsmc"){
-		getLsInfo('#scheduleClassesTable',index,"lsmc");
+		getLsInfo('#scheduleClassesTable',index,"ls");
 	}else if(field==="zylsmc"){
-		getLsInfo('#scheduleClassesTable',index,"zylsmc");
+		getLsInfo('#scheduleClassesTable',index,"zyls");
 	}else if(field==="pkbm"){
 		wantChangePKBM(index,"pkbm");
 	}else if(field==="kkbm"){
@@ -609,14 +609,8 @@ function pointTeacherMatter(value, row, index) {
 			]
 			.join('');
 	} else {
-		var drawTxtArray=value.split(',');
-		var drawTxt="";
-		for (var i = 0; i < drawTxtArray.length; i++) {
-			var spilitStart=drawTxtArray[i].substring(1);
-			drawTxt+=spilitStart.substring(0,spilitStart.length-1)+',';
-		}
 		return [
-             '<div class="myTooltip greenTxt" title="'+drawTxt.substring(0,drawTxt.length-1)+'">'+drawTxt.substring(0,drawTxt.length-1)+'</div>'
+             '<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
 			]
 			.join('');
 	}
@@ -699,10 +693,10 @@ function confirmChoosedTeacher(tableId,index,cellName){
 	var fieldName2="";
 	if(tableId==="#scheduleClassesTable"){
 		fieldName1=cellName;
-		fieldName2=cellName+"Code";
+		fieldName2=cellName+"mc";
 	}else{
 		fieldName1=cellName;
-		fieldName2=cellName.substring(0,cellName.length-2);
+		fieldName2=cellName+"mc";
 	}
 
 	var mcArray=new Array();
@@ -711,37 +705,37 @@ function confirmChoosedTeacher(tableId,index,cellName){
 		mcArray.push(choosedTeacher[i].xm);
 		codeArray.push(choosedTeacher[i].edu101_ID);
 	}
-	var drawLsStr=JSON.stringify(mcArray).substring(1);
-	var drawLsStr2=JSON.stringify(codeArray).substring(1);
+	var drawLsStr=mcArray.toString();
+	var drawLsStr2=codeArray.toString();
 
 	var choosedTask = $(tableId).bootstrapTable("getSelections");
 	if(choosedTask<=0){
 		$(tableId).bootstrapTable('updateCell', {
 			index: index,
-			field: fieldName1,
-			value:  drawLsStr.substring(0,drawLsStr.length-1)
+			field: fieldName2,
+			value:  drawLsStr
 		});
 
 
 		$(tableId).bootstrapTable('updateCell', {
 			index: index,
-			field: fieldName2,
-			value: drawLsStr2.substring(0,drawLsStr2.length-1)
+			field: fieldName1,
+			value: drawLsStr2
 		});
 	}else{
 		for (var i = 0; i < choosedTask.length; i++) {
 			if(choosedTask[i].check){
 				$(tableId).bootstrapTable('updateCell', {
 					index: i,
-					field: fieldName1,
-					value:  drawLsStr.substring(0,drawLsStr.length-1)
+					field: fieldName2,
+					value:  drawLsStr
 				});
 
 
 				$(tableId).bootstrapTable('updateCell', {
 					index: i,
-					field: fieldName2,
-					value: drawLsStr2.substring(0,drawLsStr2.length-1)
+					field: fieldName1,
+					value:drawLsStr2
 				});
 			}
 		}
@@ -1100,9 +1094,9 @@ function onDblClickputOutTaskTable(row, $element, field){
 	}
 	var index =parseInt($element[0].dataset.index);
 	if(field==="lsmc"){
-		getLsInfo('#putOutTaskTable',index,"lsmc");
+		getLsInfo('#putOutTaskTable',index,"ls");
 	}else if(field==="zylsmc"){
-		getLsInfo('#putOutTaskTable',index,"zylsmc");
+		getLsInfo('#putOutTaskTable',index,"zyls");
 	}else if(field==="pkbm"){
 		wantChangePutOutPKBM(index,"pkbm");
 	}else if(field==="kkbm") {
