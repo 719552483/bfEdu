@@ -21,7 +21,6 @@ public class Edu201 {
 	private String kcmc;  //课程名称
 	private String zymc;  //专业名称
 	private String jxbrs;  //教学班人数
-	private String xzbmc;  //行政班名称
 	private String zxs;  //总学时
 	private  String ls;//老师
 	private  String lsmc;//老师姓名
@@ -118,12 +117,6 @@ public class Edu201 {
 	}
 	public void setJxbrs(String jxbrs) {
 		this.jxbrs = jxbrs;
-	}
-	public String getXzbmc() {
-		return xzbmc;
-	}
-	public void setXzbmc(String xzbmc) {
-		this.xzbmc = xzbmc;
 	}
 	public String getZxs() {
 		return zxs;

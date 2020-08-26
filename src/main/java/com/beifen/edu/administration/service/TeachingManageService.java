@@ -252,10 +252,8 @@ public class TeachingManageService {
             return resultVO;
         }
 
-        List<Long> edu301IdList = edu302Dao.findEdu301IdsByEdu300Id(edu001.getEdu300_ID());
-
         //根据信息查询所有课表信息
-        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu301IdList,
+        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu001.getEdu300_ID().toString(),
                 timeTable.getWeekTime(), timeTable.getSemester());
         if(studentSchoolTimetableList.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");

@@ -71,6 +71,9 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "UPDATE edu300 SET zxrs = zxrs - 1 WHERE Edu300_ID =?1", nativeQuery = true)
 	void ZxrsMinusOne(String edu300_id);
 
+	//教学任务书查询行政班
 	@Query(value = "select e.* from edu300 e where e.sfsckkjh = 'T' and e.xbbm in ?1", nativeQuery = true)
     List<Edu300> findAdministrativeClassForTask(List<String> departments);
+
+
 }

@@ -31,6 +31,7 @@ public class StudentSchoolTimetablePO {
     private String classTypeId;
     private String courseId;
     private String courseName;
+    private String kclx;
 
     @Id
     public String getID() {
@@ -216,5 +217,11 @@ public class StudentSchoolTimetablePO {
         this.courseName = courseName;
     }
 
+    public String getKclx() {
+        return kclx;
+    }
 
+    public void setKclx(String kclx) {
+        this.kclx = kclx;
+    }
 }

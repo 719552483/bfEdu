@@ -19,14 +19,14 @@ public class Edu108 {
 	private String xzbmc;  //行政班名称
 	private String kcmc;  //课程名称
 	private String kcdm;  //课程代码
-	private double zxs;  //总学时
-	private double xf;  //学分
-	private double llxs;  //理论学时
-	private double sjxs;  //实践学时
-	private double fsxs;  //分散学时
-	private double jzxs;  //集中学时
-	private double zhouxs;  //周学时
-	private double zzs;  //总周数
+	private Double zxs;  //总学时
+	private Double xf;  //学分
+	private Double llxs;  //理论学时
+	private Double sjxs;  //实践学时
+	private Double fsxs;  //分散学时
+	private Double jzxs;  //集中学时
+	private Double zhouxs;  //周学时
+	private Double zzs;  //总周数
 	private String kclx;  //课程类型
 	private String kclxCode;  //课程类型编码
 	private String kcxz;  //课程性质
@@ -112,67 +112,67 @@ public class Edu108 {
 		this.kcdm = kcdm;
 	}
 
-	public double getZxs() {
+	public Double getZxs() {
 		return zxs;
 	}
 
-	public void setZxs(double zxs) {
+	public void setZxs(Double zxs) {
 		this.zxs = zxs;
 	}
 
-	public double getXf() {
+	public Double getXf() {
 		return xf;
 	}
 
-	public void setXf(double xf) {
+	public void setXf(Double xf) {
 		this.xf = xf;
 	}
 
-	public double getLlxs() {
+	public Double getLlxs() {
 		return llxs;
 	}
 
-	public void setLlxs(double llxs) {
+	public void setLlxs(Double llxs) {
 		this.llxs = llxs;
 	}
 
-	public double getSjxs() {
+	public Double getSjxs() {
 		return sjxs;
 	}
 
-	public void setSjxs(double sjxs) {
+	public void setSjxs(Double sjxs) {
 		this.sjxs = sjxs;
 	}
 
-	public double getFsxs() {
+	public Double getFsxs() {
 		return fsxs;
 	}
 
-	public void setFsxs(double fsxs) {
+	public void setFsxs(Double fsxs) {
 		this.fsxs = fsxs;
 	}
 
-	public double getJzxs() {
+	public Double getJzxs() {
 		return jzxs;
 	}
 
-	public void setJzxs(double jzxs) {
+	public void setJzxs(Double jzxs) {
 		this.jzxs = jzxs;
 	}
 
-	public double getZhouxs() {
+	public Double getZhouxs() {
 		return zhouxs;
 	}
 
-	public void setZhouxs(double zhouxs) {
+	public void setZhouxs(Double zhouxs) {
 		this.zhouxs = zhouxs;
 	}
 
-	public double getZzs() {
+	public Double getZzs() {
 		return zzs;
 	}
 
-	public void setZzs(double zzs) {
+	public void setZzs(Double zzs) {
 		this.zzs = zzs;
 	}
 

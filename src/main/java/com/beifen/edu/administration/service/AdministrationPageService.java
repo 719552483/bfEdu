@@ -73,6 +73,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu203Dao edu203Dao;
 	@Autowired
+	private Edu204Dao edu204Dao;
+	@Autowired
 	private Edu205Dao edu205DAO;
 	@Autowired
 	private Edu302Dao edu302DAO;
@@ -499,9 +501,17 @@ public class AdministrationPageService {
 			generatAdministrationCoursePlan(classArray.get(i).toString(), isGeneratCoursePlan);
 		}
 
-		// eud180 课程更改开课计划属性
+		// eud108 课程更改开课计划属性
 		for (int i = 0; i < edu108Ids.size(); i++) {
-			edu108DAO.chengeCulturePlanCrouseFeedBack(edu108Ids.get(i).toString(), classNames.toString(), classArray.toString(), isGeneratCoursePlan);
+			String edu108Id = edu108Ids.get(i).toString();
+			edu108DAO.chengeCulturePlanCrouseFeedBack(edu108Id, classNames.toString(), classArray.toString(), isGeneratCoursePlan);
+			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108Id));
+			Edu201 edu201 = new Edu201();
+			edu201.setEdu108_ID(Long.parseLong(edu108Id));
+			edu201.setSffbjxrws("F");
+			edu201.setKcmc(edu108.getKcmc());
+			edu201.setZxs(edu108.getZxs().toString());
+			edu201DAO.save(edu201);
 		}
 
 		resultVO = ResultVO.setSuccess("开课计划生成成功");
@@ -866,6 +876,25 @@ public class AdministrationPageService {
 		edu201DAO.save(edu201);
 		teachingTaskPO.setEdu201_ID(edu201.getEdu201_ID());
 
+
+		edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
+		Edu204 edu204 = new Edu204();
+		if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
+			edu204.setClassName(edu201.getClassName());
+			edu204.setEdu201_ID(edu201.getEdu201_ID());
+			edu204.setEdu300_ID(edu201.getEdu301_ID());
+			edu204Dao.save(edu204);
+		} else {
+			List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu201.getEdu301_ID().toString());
+			for (Edu302 e : edu302List) {
+				edu204.setClassName(edu201.getClassName());
+				edu204.setEdu201_ID(edu201.getEdu201_ID());
+				edu204.setEdu300_ID(e.getEdu300_ID());
+				edu204Dao.save(edu204);
+			}
+		}
+
+
 		edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
 		List<TeacherPO> teacherList = JSONArray.toList((JSONArray) teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
 		for (TeacherPO e : teacherList) {
@@ -1120,10 +1149,8 @@ public class AdministrationPageService {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
-		//根据任务书查找培养计划
-		Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(edu201.getEdu108_ID().toString());
 		//总学时
-		double zxs = edu108.getZxs();
+		double zxs = Double.parseDouble(edu201.getZxs());
 		//计算排课总课时
 		int ksz = Integer.parseInt(edu202.getKsz());
 		int jsz = Integer.parseInt(edu202.getJsz());
@@ -1505,8 +1532,8 @@ public class AdministrationPageService {
 		Specification<Edu201> specification = new Specification<Edu201>() {
 			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu201.getXzbmc() != null && !"".equals(edu201.getXzbmc())) {
-					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu201.getXzbmc() + '%'));
+				if (edu201.getClassName() != null && !"".equals(edu201.getClassName())) {
+					predicates.add(cb.like(root.<String>get("className"), '%' + edu201.getClassName() + '%'));
 				}
 
 				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {

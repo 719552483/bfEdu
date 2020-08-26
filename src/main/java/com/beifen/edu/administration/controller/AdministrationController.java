@@ -1559,7 +1559,6 @@ public class AdministrationController {
 	@ResponseBody
 	public Object removeTeachingClass(@RequestParam String deleteIds) {
 		com.alibaba.fastjson.JSONArray deleteArray = JSON.parseArray(deleteIds);
-		List<Edu001> allStudent = studentManageService.queryAllStudent();
 		for (int i = 0; i < deleteArray.size(); i++) {
 			administrationPageService.removeTeachingClassByID(deleteArray.get(i).toString());
 		}
@@ -1647,8 +1646,6 @@ public class AdministrationController {
 				Map<String, Object> administrationClassesWithcrouseInfo = new HashMap();
 				administrationClassesWithcrouseInfo.put("edu108_ID", palnInfos.get(p).getEdu108_ID());
 				administrationClassesWithcrouseInfo.put("edu300_ID", allAdministrationClasses.get(i).getEdu300_ID());
-//				administrationClassesWithcrouseInfo.put("xqmc", allAdministrationClasses.get(i).getXqmc());
-//				administrationClassesWithcrouseInfo.put("xqbm", allAdministrationClasses.get(i).getXqbm());
 				administrationClassesWithcrouseInfo.put("zymc", allAdministrationClasses.get(i).getZymc());
 				administrationClassesWithcrouseInfo.put("zybm", allAdministrationClasses.get(i).getZybm());
 				administrationClassesWithcrouseInfo.put("xzbmc", allAdministrationClasses.get(i).getXzbmc());
@@ -1961,7 +1958,6 @@ public class AdministrationController {
 			edu201.setKcmc(jsonObject.getString("kcmc"));
 			edu201.setZymc(jsonObject.getString("zymc"));
 			edu201.setJxbrs(jsonObject.getString("jxbrs"));
-			edu201.setXzbmc(jsonObject.getString("xzbmc"));
 			edu201.setLs(jsonObject.getString("ls"));
 			edu201.setLsmc(jsonObject.getString("lsmc"));
 			edu201.setZyls(jsonObject.getString("zyls"));
@@ -2045,7 +2041,6 @@ public class AdministrationController {
 		String kcmc = searchObject.getString("kcmc");
 		String sszt = searchObject.getString("sszt");
 		Edu201 edu201=new Edu201();
-		edu201.setXzbmc(xzbmc);
 		edu201.setKcmc(kcmc);
 		edu201.setSszt(sszt);
 		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201);
