@@ -2090,7 +2090,7 @@ public class AdministrationPageService {
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		if(classType == SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE) {
+		if(classType.equals(SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE)) {
 			List<Edu300> edu300List = edu300DAO.findAdministrativeClassForTask(departments);
 			if(edu300List.size() == 0){
 				resultVO = ResultVO.setFailed("暂无班级信息");
