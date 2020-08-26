@@ -862,30 +862,23 @@ public class AdministrationPageService {
 	}
 
 	// 发布教学任务书
-	public void putOutTask(TeachingTaskPO teachingTaskPO) {
-		Edu201 edu201 = new Edu201();
-		try {
-			utils.copy(teachingTaskPO, edu201);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		edu201DAO.save(edu201);
-		teachingTaskPO.setEdu201_ID(edu201.getEdu201_ID());
+	public void putOutTask(Edu201 edu201,Edu600 edu600) {
+		//保留原始数据
+		Edu201 oledEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
 
+		edu201.setSszt("passing");
+		edu201.setSffbjxrws("T");
+		edu201DAO.save(edu201);
 
 		edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
 		Edu204 edu204 = new Edu204();
 		if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
 			edu204.setClassName(edu201.getClassName());
 			edu204.setEdu201_ID(edu201.getEdu201_ID());
-			edu204.setEdu300_ID(edu201.getEdu301_ID());
+			edu204.setEdu300_ID(edu201.getClassId());
 			edu204Dao.save(edu204);
 		} else {
-			List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu201.getEdu301_ID().toString());
+			List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu201.getClassId().toString());
 			for (Edu302 e : edu302List) {
 				edu204.setClassName(edu201.getClassName());
 				edu204.setEdu201_ID(edu201.getEdu201_ID());
@@ -896,38 +889,32 @@ public class AdministrationPageService {
 
 
 		edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
-		List<TeacherPO> teacherList = JSONArray.toList((JSONArray) teachingTaskPO.getTeacherList(), new TeacherPO(), new JsonConfig());
-		for (TeacherPO e : teacherList) {
-			List<String> ls = e.getLs();
-			List<String> lsmc = e.getLsmc();
-			if ("".equals(ls.get(0))) {
-				break;
-			}
-			for (int i = 0; i < ls.size(); i++) {
-				Edu205 save = new Edu205();
-				save.setEdu201_ID(edu201.getEdu201_ID());
-				save.setTeacherType("01");
-				save.setEdu101_ID(Long.parseLong(ls.get(i)));
-				save.setTeacherName(lsmc.get(i));
-				edu205DAO.save(save);
-			}
+		String[] lsid = edu201.getLs().split(",");
+		String[] lsmc = edu201.getLsmc().split(",");
+		for (int i = 0; i < lsid.length; i++) {
+			Edu205 save = new Edu205();
+			save.setEdu201_ID(edu201.getEdu201_ID());
+			save.setTeacherType("01");
+			save.setEdu101_ID(Long.parseLong(lsid[i]));
+			save.setTeacherName(lsmc[i]);
+			edu205DAO.save(save);
 		}
 
-		List<TeacherPO> baseTeacherList = JSONArray.toList((JSONArray) teachingTaskPO.getBaseTeacherList(), new TeacherPO(), new JsonConfig());
-		for (TeacherPO e : baseTeacherList) {
-			List<String> zyls = e.getZyls();
-			List<String> zylsmc = e.getZylsmc();
-			if ("".equals(zyls.get(0))) {
-				break;
-			}
-			for (int i = 0; i < zyls.size(); i++) {
-				Edu205 save = new Edu205();
-				save.setEdu201_ID(edu201.getEdu201_ID());
-				save.setTeacherType("01");
-				save.setEdu101_ID(Long.parseLong(zyls.get(i)));
-				save.setTeacherName(zylsmc.get(i));
-				edu205DAO.save(save);
-			}
+		String[] zylsid = edu201.getZyls().split(",");
+		String[] zylsmc = edu201.getZylsmc().split(",");
+		for (int i = 0; i < zylsid.length; i++) {
+			Edu205 save = new Edu205();
+			save.setEdu201_ID(edu201.getEdu201_ID());
+			save.setTeacherType("02");
+			save.setEdu101_ID(Long.parseLong(zylsid[i]));
+			save.setTeacherName(zylsmc[i]);
+			edu205DAO.save(save);
+		}
+
+		edu600.setBusinessKey(edu201.getEdu201_ID());
+		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+		if(!isSuccess) {
+			edu201DAO.save(oledEdu201);
 		}
 
 
@@ -993,13 +980,12 @@ public class AdministrationPageService {
 
 	// 课程性质按钮检索待排课程列表 并且有教学班
 	public List<Edu201> kcxzBtnGetTaskWithJxb(String levelCode, String departmentCode, String gradeCode,
-											  String majorCode, String kcxz, String jxbID) {
+											  String majorCode, String kcxz, String classnName) {
 		List<Edu201> retrunList = new ArrayList();
-		List<Edu201> currentEdu201 = AdministrationPageService.this.getTaskByCulturePlan(levelCode, departmentCode,
-				gradeCode, majorCode);
+		List<Edu201> currentEdu201 = getTaskByCulturePlan(levelCode, departmentCode, gradeCode, majorCode);
 		for (int i = 0; i < currentEdu201.size(); i++) {
 			Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
-			if (edu108.getKcxzCode().equals(kcxz) && currentEdu201.get(i).getEdu301_ID().toString().equals(jxbID)) {
+			if (edu108.getKcxzCode().equals(kcxz) && currentEdu201.get(i).getClassName().contains(classnName)) {
 				retrunList.add(currentEdu201.get(i));
 			}
 		}

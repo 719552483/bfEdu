@@ -881,7 +881,6 @@ function stuffPuttedOutTable(tableInfo){
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 }
-
 //已排详情
 function puttedInfo(row){
 	$.ajax({
@@ -910,6 +909,7 @@ function puttedInfo(row){
 				toastr.warning('操作失败，请重试');
 			}
 		}
+
 	});
 }
 

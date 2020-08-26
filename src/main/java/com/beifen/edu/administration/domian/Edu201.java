@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Table(name = "Edu201")
 public class Edu201 {
 	private Long Edu201_ID; //任务书ID
-	private Long Edu301_ID;  //教学班ID
+	private Long classId;  //教学班ID
 	private Long Edu108_ID;  //培养计划ID
 	private String sffbjxrws;  //是否发布教学任务书
 	private	String classType; //班级类型
@@ -45,12 +45,15 @@ public class Edu201 {
 	public void setEdu201_ID(Long edu201_ID) {
 		Edu201_ID = edu201_ID;
 	}
-	public Long getEdu301_ID() {
-		return Edu301_ID;
+
+	public Long getClassId() {
+		return classId;
 	}
-	public void setEdu301_ID(Long edu301_ID) {
-		Edu301_ID = edu301_ID;
+
+	public void setClassId(Long classId) {
+		this.classId = classId;
 	}
+
 	public Long getEdu108_ID() {
 		return Edu108_ID;
 	}

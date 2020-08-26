@@ -1944,37 +1944,11 @@ public class AdministrationController {
 	@ResponseBody
 	public Object putOutTask(@RequestParam("taskInfo") String taskInfo,@RequestParam("approvalInfo") String approvalInfo) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONArray array = JSONArray.fromObject(taskInfo); // 解析任务书json字符
+		List<Edu201> edu201s = JSON.parseArray(taskInfo, Edu201.class);
 		JSONObject apprvalObject = JSONObject.fromObject(approvalInfo); // 解析审批流json字符
 		Edu600 edu600 = (Edu600) JSONObject.toBean(apprvalObject, Edu600.class);
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
-			TeachingTaskPO edu201 = new TeachingTaskPO();
-			edu201.setEdu201_ID(Long.parseLong("edu201_id"));
-			edu201.setEdu108_ID(jsonObject.getLong("edu108_ID"));
-			edu201.setEdu301_ID(jsonObject.getLong("edu301_ID"));
-			edu201.setClassType(jsonObject.getString("classType"));
-			edu201.setClassName(jsonObject.getString("className"));
-			edu201.setKcmc(jsonObject.getString("kcmc"));
-			edu201.setZymc(jsonObject.getString("zymc"));
-			edu201.setJxbrs(jsonObject.getString("jxbrs"));
-			edu201.setLs(jsonObject.getString("ls"));
-			edu201.setLsmc(jsonObject.getString("lsmc"));
-			edu201.setZyls(jsonObject.getString("zyls"));
-			edu201.setZylsmc(jsonObject.getString("zylsmc"));
-			edu201.setZxs(jsonObject.getString("zxs"));
-			edu201.setPkbm(jsonObject.getString("pkbm"));
-			edu201.setPkbmCode(jsonObject.getString("pkbmCode"));
-			edu201.setKkbm(jsonObject.getString("kkbm"));
-			edu201.setKkbmCode(jsonObject.getString("kkbmCode"));
-			edu201.setSfxylcj(jsonObject.getString("sfxylcj"));
-			edu201.setTeacherList(jsonObject.getJSONArray("teacherList"));
-			edu201.setBaseTeacherList(jsonObject.getJSONArray("baseTeacherList"));
-			edu201.setSszt("passing");
-			administrationPageService.putOutTask(edu201);
-			administrationPageService.putOutTaskAction(edu201.getEdu301_ID(),edu201.getEdu201_ID());
-			edu600.setBusinessKey(edu201.getEdu201_ID());
-			approvalProcessService.initiationProcess(edu600);
+		for (Edu201 edu201 : edu201s) {
+			administrationPageService.putOutTask(edu201,edu600);
 		}
 		returnMap.put("result", true);
 		return returnMap;
@@ -2177,13 +2151,22 @@ public class AdministrationController {
 		String departmentCode = searchObject.getString("department");
 		String gradeCode = searchObject.getString("grade");
 		String majorCode = searchObject.getString("major");
-		String jxbID = searchObject.getString("jxbID");
+		String className = searchObject.getString("className");
 		String kcxz = searchObject.getString("kcxz");
+
+		Edu201 edu201 = new Edu201();
+		edu201.setClassName(className);
+		Edu107 edu107 = new Edu107();
+		edu107.setEdu103(levelCode);
+		edu107.setEdu104(departmentCode);
+		edu107.setEdu105(gradeCode);
+		edu107.setEdu106(majorCode);
+
 		List<Edu201> taskInfo = new ArrayList<Edu201>();
-		if(jxbID.equals("")||jxbID==null){
+		if(className.equals("")||className==null){
 			taskInfo= administrationPageService.kcxzBtnGetTask(levelCode, departmentCode,gradeCode, majorCode,kcxz);
 		}else{
-			taskInfo= administrationPageService.kcxzBtnGetTaskWithJxb(levelCode, departmentCode,gradeCode, majorCode,kcxz,jxbID);
+			taskInfo= administrationPageService.kcxzBtnGetTaskWithJxb(levelCode, departmentCode,gradeCode, majorCode,kcxz,className);
 		}
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
