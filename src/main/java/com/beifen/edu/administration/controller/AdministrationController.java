@@ -373,14 +373,14 @@ public class AdministrationController {
 	 */
 	@RequestMapping("seacchRelation")
 	@ResponseBody
-	public ResultVO seacchRelation(@RequestParam String SearchCriteria) {
+	public ResultVO seacchRelation(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
 		JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
 		Edu107 edu107 = new Edu107();
 		edu107.setEdu103mc(jsonObject.getString("lvelName"));
 		edu107.setEdu104mc(jsonObject.getString("deaparmentName"));
 		edu107.setEdu105mc(jsonObject.getString("gradeName"));
 		edu107.setEdu106mc(jsonObject.getString("majorName"));
-		ResultVO result = administrationPageService.seacchRelation(edu107);
+		ResultVO result = administrationPageService.seacchRelation(edu107,userId);
 		return result;
 	}
 
@@ -1241,8 +1241,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("searchAdministrationClass")
 	@ResponseBody
-	public Object searchAdministrationClass(@RequestParam String SearchCriteria) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO searchAdministrationClass(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
 		// 根据层次等信息查出培养计划id
 		String levelCode = searchObject.getString("level");
@@ -1258,10 +1257,8 @@ public class AdministrationController {
 		edu300.setNjbm(gradeCode);
 		edu300.setZybm(majorCode);
 		edu300.setXzbmc(className);
-		List<Edu300> calssInfo = administrationPageService.searchAdministrationClass(edu300);
-		returnMap.put("calssInfo", calssInfo);
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.searchAdministrationClass(edu300,userId);
+		return result;
 	}
 
 	/**
@@ -1912,9 +1909,10 @@ public class AdministrationController {
 		JSONObject searchObject = JSONObject.fromObject(searchInfo);
 		String xzbmc = searchObject.getString("xzbmc");
 		String kcmc = searchObject.getString("kcmc");
-		Edu301 edu301=new Edu301();
-		edu301.setBhxzbmc(xzbmc);
-		ResultVO result = administrationPageService.getTaskInfo(edu301,userId);
+		Edu201 edu201 = new Edu201();
+		edu201.setClassName(xzbmc);
+		edu201.setKcmc(kcmc);
+		ResultVO result = administrationPageService.getTaskInfo(edu201,userId);
 		return result;
 	}
 
@@ -1962,12 +1960,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("queryPutedTasks")
 	@ResponseBody
-	public Object queryPutedTasks() {
-		Map<String, Object> returnMap = new HashMap();
-		List<Edu201> taskInfo = administrationPageService.queryPutedTasks();
-		returnMap.put("taskInfo", taskInfo);
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO queryPutedTasks(@RequestParam("userId") String userId) {
+		ResultVO result = administrationPageService.queryPutedTasks(userId);
+		return result;
 	}
 
 

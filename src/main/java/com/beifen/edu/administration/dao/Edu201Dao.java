@@ -78,6 +78,18 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 
 	//根据权限获未发布的教学任务书
-	@Query(value = "select a.* from edu201 a,edu108 b,edu107 c where a.EDU108_ID = b.EDU108_ID and b.EDU107_ID = c.EDU107_ID and a.sffbjxrws = 'F' and c.EDU104 in ?1", nativeQuery = true)
+	@Query(value = "select a.* from edu201 a,edu108 b,edu107 c " +
+			"where a.EDU108_ID = b.EDU108_ID " +
+			"and b.EDU107_ID = c.EDU107_ID " +
+			"and a.sffbjxrws = 'F' " +
+			"and c.EDU104 in ?1 ", nativeQuery = true)
 	List<Edu201> findTaskInfoByDepartments(List<String> departments);
+
+	//根据权限获已发布的教学任务书
+	@Query(value = "select a.* from edu201 a,edu108 b,edu107 c " +
+			"where a.EDU108_ID = b.EDU108_ID " +
+			"and b.EDU107_ID = c.EDU107_ID " +
+			"and a.sffbjxrws = 'T' " +
+			"and c.EDU104 in ?1 ", nativeQuery = true)
+	List<Edu201> findPutedTaskInfoByDepartments(List<String> departments);
 }

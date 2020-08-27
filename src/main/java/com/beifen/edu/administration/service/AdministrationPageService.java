@@ -820,13 +820,15 @@ public class AdministrationPageService {
 
 
 	// 根据教学班组装任务书信息
-	public ResultVO getTaskInfo(Edu301 edu301BO,String userId) {
+	public ResultVO getTaskInfo(Edu201 edu201,String userId) {
 		ResultVO resultVO;
-
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
+
 		List<Edu201> sendTaskList = edu201DAO.findTaskInfoByDepartments(departments);
+
+
 
 		if(sendTaskList.size() == 0) {
 			resultVO = ResultVO.setFailed("暂未找到任务书");
@@ -928,8 +930,21 @@ public class AdministrationPageService {
 	}
 
 	// 查询已发布任务书
-	public List<Edu201> queryPutedTasks() {
-		return edu201DAO.findAll();
+	public ResultVO queryPutedTasks(String userId) {
+		ResultVO resultVO;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		List<Edu201> edu201List = edu201DAO.findPutedTaskInfoByDepartments(departments);
+
+		if(edu201List.size() == 0) {
+			resultVO = ResultVO.setFailed("暂未找到任务书");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"条任务书",edu201List);
+		}
+		return resultVO;
+
 	}
 
 	// 删除教学任务书
@@ -1285,8 +1300,12 @@ public class AdministrationPageService {
 	}
 
 	// 搜索关系
-	public ResultVO seacchRelation(Edu107 edu107) {
+	public ResultVO seacchRelation(Edu107 edu107,String userId) {
 		ResultVO resultVO;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
 		Specification<Edu107> specification = new Specification<Edu107>() {
 			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1305,6 +1324,14 @@ public class AdministrationPageService {
 				if (edu107.getEdu106mc() != null && !"".equals(edu107.getEdu106mc())) {
 					predicates.add(cb.like(root.<String>get("edu106mc"), '%' + edu107.getEdu106mc() + '%'));
 				}
+				Path<Object> path = root.get("edu104");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+
+				predicates.add(cb.and(in));
+
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
@@ -1355,7 +1382,12 @@ public class AdministrationPageService {
 	}
 
 	// 搜索行政班
-	public List<Edu300> searchAdministrationClass(Edu300 edu300) {
+	public ResultVO searchAdministrationClass(Edu300 edu300,String userId) {
+		ResultVO resultVO;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
 		Specification<Edu300> specification = new Specification<Edu300>() {
 			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1374,11 +1406,27 @@ public class AdministrationPageService {
 				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
 					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
 				}
+
+				Path<Object> path = root.get("xbbm");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
 		List<Edu300> classEntities = edu300DAO.findAll(specification);
-		return classEntities;
+
+		if(classEntities.size() == 0 ){
+			resultVO = ResultVO.setFailed("暂未查到行政班信息");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+classEntities.size()+"个行政班",classEntities);
+		}
+
+		return resultVO;
 	}
 
 	public String getDepartmentCode (String edu104Id) {
@@ -1601,6 +1649,7 @@ public class AdministrationPageService {
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
 					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
+
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};

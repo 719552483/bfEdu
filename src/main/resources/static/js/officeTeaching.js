@@ -750,17 +750,17 @@ function getPuttedScheduleInfo(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				var str ="";
-				if(backjson.teachingClassList.length===0){
-					str = '<option value="seleceConfigTip">无可选教学班</option>';
-				}else{
-					str = '<option value="seleceConfigTip">请选择</option>';
-					for (var i = 0; i < backjson.teachingClassList.length; i++) {
-						str += '<option value="' + backjson.teachingClassList[i].edu301_ID + '">' +backjson.teachingClassList[i].jxbmc
-							+ '</option>';
-					}
-				}
-				stuffManiaSelect("#puttedjxb", str);
+				// var str ="";
+				// if(backjson.teachingClassList.length===0){
+				// 	str = '<option value="seleceConfigTip">无可选教学班</option>';
+				// }else{
+				// 	str = '<option value="seleceConfigTip">请选择</option>';
+				// 	for (var i = 0; i < backjson.teachingClassList.length; i++) {
+				// 		str += '<option value="' + backjson.teachingClassList[i].edu301_ID + '">' +backjson.teachingClassList[i].jxbmc
+				// 			+ '</option>';
+				// 	}
+				// }
+				// stuffManiaSelect("#puttedjxb", str);
 				stuffPuttedOutTable(backjson.taskList);
 			} else {
 				toastr.warning('操作失败，请重试');

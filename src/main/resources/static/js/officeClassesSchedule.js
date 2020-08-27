@@ -868,6 +868,9 @@ function showputedTask(IsmainAreaControl){
 		method : 'get',
 		cache : false,
 		url : "/queryPutedTasks",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -880,17 +883,13 @@ function showputedTask(IsmainAreaControl){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if (backjson.taskInfo.length===0) {
-					toastr.warning('暂无已发布任务书');
-					return;
-				}
-				stuffPutOutTaskTable(backjson.taskInfo);
+			if (backjson.code === 200) {
+				stuffPutOutTaskTable(backjson.data);
 				if (typeof(IsmainAreaControl) === "undefined") {
 					mainAreaControl();
 				}
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

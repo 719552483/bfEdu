@@ -81,6 +81,7 @@ function getAllRelationInfo(){
 				stuffAllRelationInfoTable(backjson.data);
 			} else {
 				toastr.warning(backjson.msg);
+				stuffAllRelationInfoTable(backjson.data);
 			}
 		}
 	});
@@ -538,7 +539,8 @@ function relationStartSearch(){
 		cache : false,
 		url : "/seacchRelation",
 		data: {
-			"SearchCriteria":JSON.stringify(serachObject)
+			"SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
