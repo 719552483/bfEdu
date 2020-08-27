@@ -671,8 +671,20 @@ public class AdministrationPageService {
 	}
 
 	// 查询所有教学班
-	public List<Edu301> getAllTeachingClasses() {
-		return edu301DAO.findAll();
+	public ResultVO getAllTeachingClasses(String userId) {
+		ResultVO resultVO;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		List<Edu301> edu301List = edu301DAO.findAllInDepartment(departments);
+
+		if (edu301List.size() == 0){
+			resultVO = ResultVO.setFailed("暂未找到教学班");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+edu301List.size()+"个教学班",edu301List);
+		}
+		return resultVO;
 	}
 
 	// 修改教学班名称
@@ -922,13 +934,6 @@ public class AdministrationPageService {
 
 	}
 
-	// 发布教学任务书时更改301的信息
-	public void putOutTaskAction(Long edu301_ID, Long edu201_ID) {
-		Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(edu301_ID.toString());
-		edu301.setEdu201_ID(edu201_ID);
-		edu301DAO.save(edu301);
-	}
-
 	// 查询已发布任务书
 	public ResultVO queryPutedTasks(String userId) {
 		ResultVO resultVO;
@@ -944,7 +949,6 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"条任务书",edu201List);
 		}
 		return resultVO;
-
 	}
 
 	// 删除教学任务书

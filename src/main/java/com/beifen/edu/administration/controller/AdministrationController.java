@@ -1539,12 +1539,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("getAllTeachingClasses2")
 	@ResponseBody
-	public Object getAllTeachingClasses2() {
-		Map<String, Object> returnMap = new HashMap();
-		List<Edu301> calssInfo = administrationPageService.getAllTeachingClasses();
-		returnMap.put("calssInfo", calssInfo);
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO getAllTeachingClasses2(@RequestParam("userId") String userId) {
+		ResultVO result = administrationPageService.getAllTeachingClasses(userId);
+		return result;
 	}
 
 	/**
