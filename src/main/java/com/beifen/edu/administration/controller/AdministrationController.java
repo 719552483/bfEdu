@@ -1417,10 +1417,6 @@ public class AdministrationController {
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
 			Edu301 verifyEdu301 = new Edu301();
-			String edu301_id = jsonObject.getString("edu301_ID");
-			if (!"".equals(edu301_id)) {
-				verifyEdu301.setEdu301_ID(Long.parseLong(edu301_id));
-			}
 			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
 			verifyEdu301.setPyccmc(jsonObject.getString("pyccmc"));
 			verifyEdu301.setPyccbm(jsonObject.getString("pyccbm"));

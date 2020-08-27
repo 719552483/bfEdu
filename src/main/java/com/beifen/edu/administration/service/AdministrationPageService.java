@@ -782,6 +782,7 @@ public class AdministrationPageService {
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
 		List<Edu200> edu200List = edu200DAO.queryAllPassCrouseByDepartment(departments);
+
 		if(edu200List.size() == 0){
 			resultVO = ResultVO.setFailed("暂未找到课程");
 		} else {
@@ -837,8 +838,8 @@ public class AdministrationPageService {
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-
 		List<Edu201> sendTaskList = edu201DAO.findTaskInfoByDepartments(departments);
+
 
 
 
