@@ -1010,6 +1010,7 @@ function combinedClass() {
 
 	var combinedClassObject=new Object();
 	combinedClassObject.jxbmc=jxbmc.substring(0,jxbmc.length-1);
+	combinedClassObject.jxbrs=combinedClassStudentNum;
 	combinedClassObject.pyccmc=choosedTeachingClass[0].pyccmc;
 	combinedClassObject.pyccbm=choosedTeachingClass[0].pyccbm;
 	combinedClassObject.xbmc=choosedTeachingClass[0].xbmc;
@@ -1023,13 +1024,15 @@ function combinedClass() {
 	combinedClassObject.bhxzbid=bhxzbid.toString();
 	combinedClassObject.bhxzbmc=bhxzbmc.toString();
 
+	var sendArray=new Array();
+	sendArray.push(combinedClassObject);
 	$("#combinedClassName").val(combinedClassObject.jxbmc);
 	$("#combinedClassHoldStudentNum").val(combinedClassStudentNum);
 	$.showModal("#combinedClassModal",true);
 	// 确定按钮
 	$('#confirmCombinedClass').unbind('click');
 	$('#confirmCombinedClass').bind('click', function(e) {
-		verifyCombinedClass(combinedClassObject);
+		verifyCombinedClass(sendArray);
 		e.stopPropagation();
 	});
 }
@@ -1065,6 +1068,7 @@ function verifyCombinedClass(choosedTeaching) {
 
 // 确认行政班操作
 function confirmClassAction(choosedTeaching) {
+
 	$.ajax({
 		method : 'get',
 		cache : false,
