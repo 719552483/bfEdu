@@ -20,8 +20,9 @@ $(function() {
 function loadUserInfo() {
 	//渲染用户信息
 	var userInfo = JSON.parse($.session.get('userInfo'));
+	var yhm=getFromRedis("userName:"+userInfo.bF990_ID);
 	$(parent.frames["topFrame"].document).find(".user").find("span").attr("userId",userInfo.bF990_ID); // frame获取父窗
-	$(parent.frames["topFrame"].document).find(".user").find("span").html(userInfo.yhm); // frame获取父窗
+	$(parent.frames["topFrame"].document).find(".user").find("span").html(yhm); // frame获取父窗
 	if(userInfo.scdlsj==="fristTime"){
 		$(".welinfo:eq(1)").hide();
 	}else{

@@ -12,6 +12,7 @@ function  getFromRedis(keName){
 		method: 'post',
 		cache: false,
 		url: "/getFromRedis",
+		async:false,
 		data: {
 			"key": keName
 		},

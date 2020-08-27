@@ -804,12 +804,12 @@ function putOutTasks(){
 //检查任务书信息
 function checkPutOutInfo(putOutArray){
 	for (var i = 0; i < putOutArray.length; i++) {
-		if(putOutArray[i].ls===""&&putOutArray[i].zyls===""){
+		if((putOutArray[i].ls===""||putOutArray[i].ls==null)&&(putOutArray[i].zyls===""||putOutArray[i].zyls==null)){
 			toastr.warning('有任务书暂未指定教师');
 			return;
 		}
 
-		if(typeof putOutArray[i].classId==="undefined"){
+		if(typeof putOutArray[i].classId==="undefined"||putOutArray[i].classId==null){
 			toastr.warning('有任务书暂未指定班级');
 			return;
 		}
@@ -1337,7 +1337,7 @@ function startSearchPutOutTasks(){
 
 //页面展示区域控制
 function mainAreaControl(){
-	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#putOutTasks,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.searchAreaWitheSelect").toggle();
+	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#putOutTasks,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
 	var reObject = new Object();
 	reObject.InputIds = "#xzbmc,#kcmc";
 	reReloadSearchsWithSelect(reObject);
