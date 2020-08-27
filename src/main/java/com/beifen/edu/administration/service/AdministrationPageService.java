@@ -874,9 +874,17 @@ public class AdministrationPageService {
 	public void putOutTask(Edu201 edu201,Edu600 edu600) {
 		//保留原始数据
 		Edu201 oledEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
-
+		Integer jxbrs = 0;
 		edu201.setSszt("passing");
 		edu201.setSffbjxrws("T");
+		if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
+			Edu300 one = edu300DAO.findOne(edu201.getClassId());
+			jxbrs += one.getZxrs();
+		} else {
+			Edu301 one = edu301DAO.findOne(edu201.getClassId());
+			jxbrs += one.getJxbrs();
+		}
+		edu201.setJxbrs(jxbrs.toString());
 		edu201DAO.save(edu201);
 
 		edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
