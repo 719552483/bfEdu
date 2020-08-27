@@ -58,7 +58,6 @@ function getTaskSelectInfo() {
 		if(typeof(SearchObject) === "undefined"){
 			return;
 		}
-		SearchObject.className=$("#jxb").val();
 		SearchObject.kcxz=getNormalSelectValue("kcxz");
 		
 		$.ajax({
@@ -92,61 +91,6 @@ function getTaskSelectInfo() {
 			}
 		});
 	});
-}
-
-//根据教学班名称过滤表格
-function contorlWaitTaskTableByJxb(choosedJxbMc){
-	var all = $("#WaitTaskTable").bootstrapTable("getData");
-	if(choosedJxbMc===""){
-		for (var i = 0; i < all.length; i++) {
-			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
-		}
-		return;
-	}
-	
-	var hideNum=0;
-	for (var i = 0; i < all.length; i++) {
-		if(choosedJxbMc===all[i].jxbmc){
-			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
-		}else if(choosedJxbMc!==all[i].jxbmc){
-			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").hide();
-			hideNum++;
-		}
-	}
-	
-	if(hideNum===all.length){
-		if($(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").length<=0){
-			$(".WaitTaskTableArea").find("table").find("tbody").append('<tr class="no-records-found"><td colspan="8">暂无数据.....</td></tr>');
-		}
-	}else{
-		$(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").remove();
-	}
-}
-
-//根据课程名称过滤表格
-function contorlWaitTaskTableBykcmc(choosedkcmc){
-	var all = $("#WaitTaskTable").bootstrapTable("getData");
-	if(choosedkcmc===""){
-		return;
-	}
-	
-	var hideNum=0;
-	for (var i = 0; i < all.length; i++) {
-		if(choosedkcmc===all[i].kcmc){
-			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").show();
-		}else if(choosedkcmc!==all[i].jxbmc){
-			$(".WaitTaskTableArea").find("table").find("tbody").find("tr:eq("+i+")").hide();
-			hideNum++;
-		}
-	}
-	
-	if(hideNum===all.length){
-		if($(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").length<=0){
-			$(".WaitTaskTableArea").find("table").find("tbody").append('<tr class="no-records-found"><td colspan="8">暂无数据.....</td></tr>');
-		}
-	}else{
-		$(".WaitTaskTableArea").find("table").find("tbody").find(".no-records-found").remove();
-	}
 }
 
 //渲染空待排课程表
@@ -1011,7 +955,6 @@ function getPuttedSelectValue(){
    searchObject.pyjhxb=getNormalSelectValue("putteddepartment");
    searchObject.pyjhnj=getNormalSelectValue("puttedgrade");
    searchObject.pyjhzy=getNormalSelectValue("puttedmajor");
-   searchObject.jxbid=getNormalSelectValue("puttedjxb");
    searchObject.kcxzid=getNormalSelectValue("puttedkcxz");
    return searchObject;
 }
