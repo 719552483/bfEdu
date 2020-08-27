@@ -1468,7 +1468,7 @@ function removeTeachingClass(row) {
 		cache : false,
 		url : "/checkTeachingClassInTask",
 		data: {
-			"classId":JSON.stringify(sendArray)
+			"classIds":JSON.stringify(sendArray)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1517,7 +1517,7 @@ function removeTeachingClasses() {
 		cache : false,
 		url : "/checkTeachingClassInTask",
 		data: {
-			"classId":JSON.stringify(sendArray)
+			"classIds":JSON.stringify(sendArray)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
