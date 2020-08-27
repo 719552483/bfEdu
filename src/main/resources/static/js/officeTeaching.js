@@ -130,10 +130,9 @@ function stuffWaitTaskTable(tableInfo){
 				},
 				{
 					field: 'jxbmc',
-					title: '教学班名称',
+					title: '班级名称',
 					align: 'left',
 					formatter: paramsMatter
-
 				}, 	{
 					field: 'kcmc',
 					title: '课程',
@@ -676,17 +675,6 @@ function getPuttedScheduleInfo(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				// var str ="";
-				// if(backjson.teachingClassList.length===0){
-				// 	str = '<option value="seleceConfigTip">无可选教学班</option>';
-				// }else{
-				// 	str = '<option value="seleceConfigTip">请选择</option>';
-				// 	for (var i = 0; i < backjson.teachingClassList.length; i++) {
-				// 		str += '<option value="' + backjson.teachingClassList[i].edu301_ID + '">' +backjson.teachingClassList[i].jxbmc
-				// 			+ '</option>';
-				// 	}
-				// }
-				// stuffManiaSelect("#puttedjxb", str);
 				stuffPuttedOutTable(backjson.taskList);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -736,7 +724,7 @@ function stuffPuttedOutTable(tableInfo){
 			},
 			{
 				field: 'jxbmc',
-				title: '教学班名称',
+				title: '班级名称',
 				align: 'left',
 				formatter: paramsMatter
 
@@ -940,6 +928,13 @@ function puttedScheduleBtnBind(){
 		e.stopPropagation();
 	});
 
+	//重置检索
+	$('#putted_reSearch').unbind('click');
+	$('#putted_reSearch').bind('click', function(e) {
+		putted_reSearch();
+		e.stopPropagation();
+	});
+
 	//批量删除
 	$('#removePutteds').unbind('click');
 	$('#removePutteds').bind('click', function(e) {
@@ -1001,6 +996,20 @@ function getPuttedNotNullSearchs() {
 	return returnObject;
 }
 
+//待排重置检索
+function research(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#level,#department,#grade,#major,#kcxz";
+	reReloadSearchsWithSelect(reObject);
+}
+
+//已排排重置检索
+function putted_reSearch(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz";
+	reReloadSearchsWithSelect(reObject);
+}
+
 //初始化页面按钮绑定事件
 function binBind(){
 	//提示框取消按钮
@@ -1021,6 +1030,13 @@ function binBind(){
 	$('#puttedSchedule').unbind('click');
 	$('#puttedSchedule').bind('click', function(e) {
 		puttedSchedule();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#research').unbind('click');
+	$('#research').bind('click', function(e) {
+		research();
 		e.stopPropagation();
 	});
 }
