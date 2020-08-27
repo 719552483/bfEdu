@@ -1431,7 +1431,6 @@ public class AdministrationController {
 			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbid"));
 			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
 			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
-			verifyEdu301.setYxbz(jsonObject.getString("yxbz"));
 			Edu301 edu301 = administrationPageService.classAction(verifyEdu301);
 			edu301List.add(edu301);
 		}

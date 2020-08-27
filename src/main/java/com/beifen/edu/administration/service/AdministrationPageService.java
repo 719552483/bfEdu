@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
@@ -590,6 +591,7 @@ public class AdministrationPageService {
 
 	// 教学班拆班 合班 生成的相关操作
 	public Edu301 classAction(Edu301 edu301) {
+		edu301.setYxbz("1");
 		edu301DAO.save(edu301);
 
 		String bhzymc = "";
@@ -838,10 +840,35 @@ public class AdministrationPageService {
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		List<Edu201> sendTaskList = edu201DAO.findTaskInfoByDepartments(departments);
+		List<String> edu201IdList = edu201DAO.findTaskIdByDepartments(departments,"F");
+		if (edu201IdList.size() == 0){
+			resultVO = ResultVO.setFailed("暂未找到任务书");
+			return resultVO;
+		}
 
+		Specification<Edu201> specification = new Specification<Edu201>() {
+			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu201.getClassName() != null && !"".equals(edu201.getClassName())) {
+					predicates.add(cb.like(root.<String>get("className"),"%"+edu201.getClassName()+'%'));
+				}
+				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
+					predicates.add(cb.like(root.<String>get("kcmc"), "%"+edu201.getKcmc()+'%'));
+				}
+				if(edu201IdList.size() != 0) {
+					Path<Object> path = root.get("edu201_ID");//定义查询的字段
+					CriteriaBuilder.In<Object> in = cb.in(path);
+					for (int i = 0; i <edu201IdList.size() ; i++) {
+						in.value(edu201IdList.get(i));//存入值
+					}
+					predicates.add(cb.and(in));
+				}
 
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
 
+		List<Edu201> sendTaskList = edu201DAO.findAll(specification);
 
 		if(sendTaskList.size() == 0) {
 			resultVO = ResultVO.setFailed("暂未找到任务书");
@@ -849,30 +876,6 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setSuccess("共找到"+sendTaskList.size()+"条任务书",sendTaskList);
 		}
 		return resultVO;
-
-//		List<Object> sendTaskList = new ArrayList();
-//		List<Edu201> currentTaskList = edu201DAO.findAll();
-//		for (int i = 0; i < jxbInfo.size(); i++) {
-//			Map<String, Object> taskObject = new HashMap();
-//			taskObject.put("jxbInfo", jxbInfo.get(i));
-//			Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(jxbInfo.get(i).getEdu108_ID().toString());
-//			taskObject.put("crouseInfo", edu108);
-//			sendTaskList.add(taskObject);
-//		}
-
-//		// 排除已发布的教学任务书(108ID和301ID都相同的)
-//		for (int s = 0; s < sendTaskList.size(); s++) {
-//			Map<String, Object> map = (HashMap) sendTaskList.get(s);
-//			Edu108 edu108 = (Edu108) map.get("crouseInfo");
-//			Edu301 edu301 = (Edu301) map.get("jxbInfo");
-//			for (int c = 0; c < currentTaskList.size(); c++) {
-//				Edu201 edu201 = currentTaskList.get(c);
-//				if (edu201.getEdu108_ID().equals(edu108.getEdu108_ID())
-//						&& edu201.getEdu301_ID().equals(edu301.getEdu301_ID())) {
-//					sendTaskList.remove(s);
-//				}
-//			}
-//		}
 
 	}
 
@@ -938,24 +941,21 @@ public class AdministrationPageService {
 	// 查询已发布任务书
 	public ResultVO queryPutedTasks(String userId) {
 		ResultVO resultVO;
-
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		List<Edu201> edu201List = edu201DAO.findPutedTaskInfoByDepartments(departments);
+		List<Edu201> sendTaskList = edu201DAO.findPutedTaskInfoByDepartments(departments);
 
-		if(edu201List.size() == 0) {
+		if(sendTaskList.size() == 0) {
 			resultVO = ResultVO.setFailed("暂未找到任务书");
 		} else {
-			resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"条任务书",edu201List);
+			resultVO = ResultVO.setSuccess("共找到"+sendTaskList.size()+"条任务书",sendTaskList);
 		}
 		return resultVO;
 	}
 
 	// 删除教学任务书
 	public void removeTasks(String edu201id) {
-		//更改教学班是否发布教学任务书字段
-
 		//删除任务书
 		edu201DAO.removeTasks(edu201id);
 	}
