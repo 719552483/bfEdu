@@ -16,14 +16,14 @@ function getTaskSelectInfo() {
 		if(getNormalSelectValue("major")===""){
 			return;
 		}
-		
+
 		$.ajax({
 			method : 'get',
 			cache : false,
 			url : "/getTaskByCulturePlan",
 			data: {
-	             "culturePlanInfo":JSON.stringify(getNotNullSearchs()) 
-	        },
+				"culturePlanInfo":JSON.stringify(getNotNullSearchs())
+			},
 			dataType : 'json',
 			beforeSend: function(xhr) {
 				requestErrorbeforeSend();
@@ -37,17 +37,6 @@ function getTaskSelectInfo() {
 			success : function(backjson) {
 				hideloding();
 				if (backjson.result) {
-					var str ="";
-					if(backjson.calssInfo.length===0){
-						str = '<option value="seleceConfigTip">无可选教学班</option>';
-					}else{
-						str = '<option value="seleceConfigTip">请选择</option>';
-						for (var i = 0; i < backjson.calssInfo.length; i++) {
-							str += '<option value="' + backjson.calssInfo[i].edu301_ID + '">' +backjson.calssInfo[i].jxbmc
-									+ '</option>';
-					     }
-					}
-					stuffManiaSelect("#jxb", str);
 					if(backjson.taskInfo.length===0){
 						toastr.info('暂无可排课程');
 						drawWaitTaskEmptyTable();
@@ -60,14 +49,7 @@ function getTaskSelectInfo() {
 			}
 		});
 	});
-	
-	$("#jxb").change(function() {
-		if(getNormalSelectValue("jxb")==""){
-			return;
-		}
-		contorlWaitTaskTableByJxb(getNormalSelectText("jxb"));
-	});
-	
+
 	$("#kcxz").change(function() {
 		if(getNormalSelectValue("kcxz")==""){
 			return;
@@ -76,7 +58,7 @@ function getTaskSelectInfo() {
 		if(typeof(SearchObject) === "undefined"){
 			return;
 		}
-		SearchObject.jxbID=getNormalSelectValue("jxb");
+		SearchObject.className=$("#jxb").val();
 		SearchObject.kcxz=getNormalSelectValue("kcxz");
 		
 		$.ajax({
