@@ -1427,7 +1427,7 @@ function modifyTeachingClass(row, index) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code) {
+			if (backjson.code===200) {
 				$.showModal("#modifyTeachingClassModal",true);
 				$('#newNAME').html(row.jxbmc);
 				stuffChoosendXzb(row,index);
@@ -1482,7 +1482,7 @@ function removeTeachingClass(row) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code) {
+			if (backjson.code===200) {
 				$.showModal("#remindModal",true);
 				$(".remindType").html("教学班");
 				$(".remindActionType").html("删除");
@@ -1531,7 +1531,7 @@ function removeTeachingClasses() {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code) {
+			if (backjson.code===200) {
 				$.showModal("#remindModal",true);
 				$(".remindType").html("教学班");
 				$(".remindActionType").html("删除");
