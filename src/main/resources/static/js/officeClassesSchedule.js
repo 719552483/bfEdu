@@ -195,7 +195,6 @@ function stuffTaskInfoTable(tableInfo) {
 	changeTableNoRsTip();
 	changeColumnsStyle( ".scheduleClassesTableArea", "教学任务书");
 	toolTipUp(".myTooltip");
-	btnControl();
 	sfxylcjControlBind();
 	$("#removePutOutTasks").hide();
 }
@@ -1338,20 +1337,10 @@ function startSearchPutOutTasks(){
 
 //页面展示区域控制
 function mainAreaControl(){
-	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#putOutTasks,#removePutOutTasks,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2").toggle();
+	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#putOutTasks,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.searchAreaWitheSelect").toggle();
 	var reObject = new Object();
 	reObject.InputIds = "#xzbmc,#kcmc";
 	reReloadSearchsWithSelect(reObject);
-	if($("#removePutOutTasks").length===0){
-		$(".appeendtoolbar").append('<li class="click deleteBtn" id="removePutOutTasks"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除任务书</li>')
-		$("#removePutOutTasks").show();
-	}
-	// 批量删除任务书
-	$('#removePutOutTasks').unbind('click');
-	$('#removePutOutTasks').bind('click', function(e) {
-		removePutOutTasks();
-		e.stopPropagation();
-	});
 }
 
 //任务书审批流对象
@@ -1379,13 +1368,7 @@ function allTaecherAreabtnBind(tableid,index,cellName) {
 		allTaecherReSearch();
 		e.stopPropagation();
 	});
-	
-	// 确认选择教师
-	$('#confirmChoosedTeacher').unbind('click');
-	$('#confirmChoosedTeacher').bind('click', function(e) {
-		confirmChoosedTeacher(tableid,index,cellName);
-		e.stopPropagation();
-	});
+
 }
 
 //已发布任务书区域按钮绑定事件
@@ -1404,6 +1387,22 @@ function putOutTaskAreabtnBind(tableid,index,cellName) {
 		reObject.InputIds = "#xzbmc,#kcmc";
 		reReloadSearchsWithSelect(reObject);
 		showputedTask(false);
+		e.stopPropagation();
+	});
+
+	// 重置检索已发布任务书
+	$('#research2').unbind('click');
+	$('#research2').bind('click', function(e) {
+		var reObject = new Object();
+		reObject.InputIds = "#xzbmc,#kcmc";
+		reReloadSearchsWithSelect(reObject);
+		showputedTask(false);
+		e.stopPropagation();
+	});
+
+	$('#removePutOutTasks').unbind('click');
+	$('#removePutOutTasks').bind('click', function(e) {
+		removePutOutTasks();
 		e.stopPropagation();
 	});
 }

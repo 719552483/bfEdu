@@ -933,7 +933,7 @@ function saveTeachingClass() {
 
 	var noGeneratedNum=0
 	for (var i = 0; i < allClass.length; i++) {
-		if((allClass[i].jxbrs===""||typeof allClass[i].jxbrs==="undefined")&&(allClass[i].jxbmc===""||typeof allClass[i].jxbmc==="undefined")
+		if((allClass[i].jxbrs===""||typeof allClass[i].jxbrs==="undefined")||(allClass[i].jxbmc===""||typeof allClass[i].jxbmc==="undefined")
 			){
 			noGeneratedNum++;
 		}
@@ -946,7 +946,7 @@ function saveTeachingClass() {
 
 	var choosedTeachingArray = new Array();
 	for (var i = 0; i < allClass.length; i++) {
-		if((allClass[i].jxbrs===""||typeof allClass[i].jxbrs==="undefined")&&(allClass[i].jxbmc===""||typeof allClass[i].jxbmc==="undefined")){
+		if((allClass[i].jxbrs!==""&&typeof allClass[i].jxbrs!=="undefined")&&(allClass[i].jxbmc!==""&&typeof allClass[i].jxbmc!=="undefined")){
 			var choosedTeaching = new Object();
 			choosedTeaching.pyccmc=allClass[i].pyccmc;
 			choosedTeaching.pyccbm=allClass[i].pyccbm;
@@ -956,7 +956,8 @@ function saveTeachingClass() {
 			choosedTeaching.njbm=allClass[i].njbm;
 			choosedTeaching.zymc=allClass[i].zymc;
 			choosedTeaching.zybm=allClass[i].zybm;
-			choosedTeaching.jxbmc=allClass[i].jxbmc;
+			choosedTeaching.jxbmc=allClass[i].xzbmc;
+			choosedTeaching.jxbrs=allClass[i].jxbrs;
 			choosedTeaching.bhzymc=allClass[i].zymc;
 			choosedTeaching.bhzyCode=allClass[i].zybm;
 			choosedTeaching.bhxzbid=allClass[i].edu300_ID;
@@ -1304,15 +1305,15 @@ function getAllTeachingClassInfo(isReturnLastPage) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if (backjson.code===200) {
 				stuffTeachingClassTable(backjson.calssInfo);
 				if (isReturnLastPage) {
 					changeClassManagementShowArea();
 					addTeachingClassBtnbind();
 				}
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
