@@ -1803,7 +1803,7 @@ public class AdministrationPageService {
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc = jsonObject.getString("lrr");
-		String userKey = jsonObject.getString("userKey");
+		String userKey = jsonObject.getString("userykey");
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
@@ -1875,7 +1875,7 @@ public class AdministrationPageService {
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc = jsonObject.getString("lrr");
-		String userKey = jsonObject.getString("userKey");
+		String userKey = jsonObject.getString("userykey");
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
