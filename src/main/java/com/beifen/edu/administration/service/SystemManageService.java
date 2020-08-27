@@ -156,6 +156,8 @@ public class SystemManageService {
                 return resultVO;
             }
 
+
+
             //将学院权限存入redis备用
             List<String> deparmentIds = new ArrayList<>();
             String userId = edu990.getBF990_ID().toString();
@@ -177,6 +179,19 @@ public class SystemManageService {
             }
             redisUtils.set("department:"+userId ,deparmentIds);
 
+
+            //保存用户信息
+            String userName = "";
+            if(edu990.getUserKey() != null) {
+                Edu101 edu101 = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                if (edu101 == null) {
+                    Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                    userName = edu001.getXm();
+                } else {
+                    userName = edu101.getXm();
+                }
+            }
+            redisUtils.set("userName:"+userId ,userName);
 
             returnMap.put("UserInfo", JSON.toJSONString(edu990));
             returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
