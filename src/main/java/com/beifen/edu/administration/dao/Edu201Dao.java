@@ -92,4 +92,9 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 			"and a.sffbjxrws = 'T' " +
 			"and c.EDU104 in ?1 ", nativeQuery = true)
 	List<Edu201> findPutedTaskInfoByDepartments(List<String> departments);
+
+
+	//检查教学班是否被使用
+	@Query(value = "select e.classId from Edu201 e where e.classId in ?1",nativeQuery = true)
+	List<Long> checkTeachingClassInTask(List<String> classIdList);
 }

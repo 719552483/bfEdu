@@ -2138,4 +2138,16 @@ public class AdministrationPageService {
 		}
 		return resultVO;
 	}
+
+	//检查教学班是否被使用
+	public ResultVO checkTeachingClassInTask(List<String> classIdList) {
+		ResultVO resultVO;
+		List<Long> classIds = edu201DAO.checkTeachingClassInTask(classIdList);
+		if(classIds.size() == 0) {
+			resultVO = ResultVO.setSuccess("没有正在使用的教学班，可以删除");
+		} else {
+			resultVO = ResultVO.setFailed("存在正在使用的教学班，无法删除");
+		}
+		return resultVO;
+	}
 }

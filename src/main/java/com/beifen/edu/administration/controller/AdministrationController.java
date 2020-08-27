@@ -1411,7 +1411,6 @@ public class AdministrationController {
 	@RequestMapping("confirmClassAction")
 	@ResponseBody
 	public ResultVO confirmClassAction(@RequestParam("classInfo") String classInfo) {
-		Map<String, Object> returnMap = new HashMap();
 		List<Edu301> edu301List = JSON.parseArray(classInfo, Edu301.class);
 		ResultVO result = administrationPageService.classAction(edu301List);
 		return  result;
@@ -2235,6 +2234,20 @@ public class AdministrationController {
 	@ResponseBody
 	public ResultVO getClassBytype(@RequestParam("classType") String classType,@RequestParam("userId") String userId) {
 		ResultVO result = administrationPageService.getClassBytype(classType,userId);
+		return result;
+	}
+
+
+	/**
+	 * 检查教学班是否被使用
+	 * @param classId
+	 * @return
+	 */
+	@RequestMapping("/checkTeachingClassInTask")
+	@ResponseBody
+	public ResultVO checkTeachingClassInTask(@RequestParam("classIds") String classIds) {
+		List<String> classIdList = JSON.parseArray(classIds, String.class);
+		ResultVO result = administrationPageService.checkTeachingClassInTask(classIdList);
 		return result;
 	}
 
