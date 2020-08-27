@@ -441,7 +441,6 @@ function stuffTaecherTable(tableInfo){
 				title : '二级学院',
 				align : 'left',
 				formatter : paramsMatter
-
 			}, {
 				field : 'xm',
 				title : '姓名',
