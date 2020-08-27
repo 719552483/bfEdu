@@ -1410,33 +1410,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("confirmClassAction")
 	@ResponseBody
-	public Object confirmClassAction(@RequestParam("classInfo") String classInfo) {
+	public ResultVO confirmClassAction(@RequestParam("classInfo") String classInfo) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONArray array = JSONArray.fromObject(classInfo); // 解析json字符
-		List<Edu301> edu301List = new ArrayList<>();
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject jsonObject = JSONObject.fromObject(array.getJSONObject(i));
-			Edu301 verifyEdu301 = new Edu301();
-			verifyEdu301.setJxbmc(jsonObject.getString("jxbmc"));
-			verifyEdu301.setPyccmc(jsonObject.getString("pyccmc"));
-			verifyEdu301.setPyccbm(jsonObject.getString("pyccbm"));
-			verifyEdu301.setXbmc(jsonObject.getString("xbmc"));
-			verifyEdu301.setXbbm(jsonObject.getString("xbbm"));
-			verifyEdu301.setNjmc(jsonObject.getString("njmc"));
-			verifyEdu301.setNjbm(jsonObject.getString("njbm"));
-			verifyEdu301.setZymc(jsonObject.getString("zymc"));
-			verifyEdu301.setZybm(jsonObject.getString("zybm"));
-			verifyEdu301.setBhzyCode(jsonObject.getString("bhzyCode"));
-			verifyEdu301.setBhzymc(jsonObject.getString("bhzymc"));
-			verifyEdu301.setBhxzbid(jsonObject.getString("bhxzbid"));
-			verifyEdu301.setBhxzbmc(jsonObject.getString("bhxzbmc"));
-			verifyEdu301.setJxbrs(jsonObject.getInt("jxbrs"));
-			Edu301 edu301 = administrationPageService.classAction(verifyEdu301);
-			edu301List.add(edu301);
-		}
-		returnMap.put("classList",edu301List);
-		returnMap.put("result", true);
-		return returnMap;
+		List<Edu301> edu301List = JSON.parseArray(classInfo, Edu301.class);
+		ResultVO result = administrationPageService.classAction(edu301List);
+		return  result;
 	}
 
 	/**

@@ -590,40 +590,31 @@ public class AdministrationPageService {
 	}
 
 	// 教学班拆班 合班 生成的相关操作
-	public Edu301 classAction(Edu301 edu301) {
-		edu301.setYxbz("1");
-		edu301DAO.save(edu301);
+	public ResultVO classAction(List<Edu301> edu301List) {
+		ResultVO resultVO;
+		List<Edu301> edu301s = new ArrayList<>();
+		for (Edu301 edu301 : edu301List) {
+			edu301.setYxbz("1");
+			edu301DAO.save(edu301);
 
-		String bhzymc = "";
-		String bhzyCode = "";
-		Integer jxbrs = 0;
+			edu301s.add(edu301);
 
-		String bhxzbid = edu301.getBhxzbid().substring(0, edu301.getBhxzbid().length() - 1);
-		String bhxzbmc = edu301.getBhxzbmc().substring(0, edu301.getBhxzbmc().length() - 1);
-		String[] bhxzbids = bhxzbid.split(",");
-		String[] bhxzbmcs = bhxzbmc.split(",");
+			String[] bhxzbids = edu301.getBhxzbid().split(",");
+			String[] bhxzbmcs = edu301.getBhxzbmc().split(",");
 
-		edu302DAO.removeByEdu301Id(edu301.getEdu301_ID().toString());
-		for (int i = 0; i < bhxzbids.length; i++) {
-			Edu300 edu300 = edu300DAO.findXzbByEdu300ID(bhxzbids[i]);
-			bhzymc += edu300.getZymc() + ",";
-			bhzyCode += edu300.getZybm() + ",";
-			jxbrs += edu300.getZxrs();
-
-			Edu302 save = new Edu302();
-			save.setEdu301_ID(edu301.getEdu301_ID());
-			save.setEdu300_ID(Long.parseLong(bhxzbids[i]));
-			save.setXzbmc(bhxzbmcs[i]);
-			edu302DAO.save(save);
+			edu302DAO.removeByEdu301Id(edu301.getEdu301_ID().toString());
+			for (int i = 0; i < bhxzbids.length; i++) {
+				Edu302 save = new Edu302();
+				save.setEdu301_ID(edu301.getEdu301_ID());
+				save.setEdu300_ID(Long.parseLong(bhxzbids[i]));
+				save.setXzbmc(bhxzbmcs[i]);
+				edu302DAO.save(save);
+			}
 		}
 
-		edu301.setBhzymc(bhzymc);
-		edu301.setBhzyCode(bhzyCode);
-		edu301.setJxbrs(jxbrs);
+		resultVO = ResultVO.setSuccess("教学班生成成功",edu301s);
 
-		edu301DAO.save(edu301);
-
-		return edu301;
+		return resultVO;
 	}
 
 	// 增加教学班

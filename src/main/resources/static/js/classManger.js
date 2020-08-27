@@ -1087,9 +1087,9 @@ function confirmClassAction(choosedTeaching) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				toastr.success('操作成功');
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.success(backjson.msg);
 				$('#classManagementTable').bootstrapTable('uncheckAll');
 				$.hideModal();
 			} else {
@@ -1885,11 +1885,11 @@ function confirmModifyTeachingClass(row){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				for (var i = 0; i < backjson.classList.length; i++) {
+			if (backjson.code === 200) {
+				for (var i = 0; i < backjson.data.length; i++) {
 					$("#teachingClassTable").bootstrapTable('updateByUniqueId', {
-						id: backjson.classList[i].edu301_ID,
-						row: backjson.classList[i]
+						id: backjson.data[i].edu301_ID,
+						row: backjson.data[i]
 					});
 				}
 				toolTipUp(".myTooltip");
