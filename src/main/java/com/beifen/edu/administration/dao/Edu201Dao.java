@@ -95,6 +95,6 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 
 	//检查教学班是否被使用
-	@Query(value = "select e.classId from Edu201 e where e.classId in ?1",nativeQuery = true)
+	@Query(value = "select e.class_id from Edu201 e where e.class_id in ?1",nativeQuery = true)
 	List<Long> checkTeachingClassInTask(List<String> classIdList);
 }
