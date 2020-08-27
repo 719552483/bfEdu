@@ -817,7 +817,7 @@ function checkPutOutInfo(putOutArray){
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选    "+putOutArray.length+"  条任务书");
 	$(".remindActionType").html("发布");
-	//确认删除学生
+	//确认发布任务书
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		sendPutOutInfo(putOutArray);
@@ -1369,6 +1369,12 @@ function allTaecherAreabtnBind(tableid,index,cellName) {
 		e.stopPropagation();
 	});
 
+	//确认选择教师
+	$('#confirmChoosedTeacher').unbind('click');
+	$('#confirmChoosedTeacher').bind('click', function(e) {
+		confirmChoosedTeacher(tableid,index,cellName);
+		e.stopPropagation();
+	});
 }
 
 //已发布任务书区域按钮绑定事件

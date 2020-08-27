@@ -2032,14 +2032,7 @@ public class AdministrationController {
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
 		List<Edu201> taskInfo = new ArrayList<Edu201>();
-		//培养计划下所有教学班
-		List<Edu301> calssInfo = administrationPageService.getCulturePlanAllTeachingClasses(levelCode, departmentCode,gradeCode, majorCode);
-		// 如果层次关系下有教学班查询所有教学班待排课程
-		if (calssInfo.size() > 0) {
-			taskInfo= administrationPageService.getTaskByCulturePlan(levelCode, departmentCode,gradeCode, majorCode);
-		}
-
-		returnMap.put("calssInfo", calssInfo);
+		taskInfo= administrationPageService.getTaskByCulturePlan(levelCode, departmentCode,gradeCode, majorCode);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
 		return returnMap;
@@ -2115,11 +2108,8 @@ public class AdministrationController {
 		String departmentCode = searchObject.getString("department");
 		String gradeCode = searchObject.getString("grade");
 		String majorCode = searchObject.getString("major");
-		String className = searchObject.getString("className");
 		String kcxz = searchObject.getString("kcxz");
 
-		Edu201 edu201 = new Edu201();
-		edu201.setClassName(className);
 		Edu107 edu107 = new Edu107();
 		edu107.setEdu103(levelCode);
 		edu107.setEdu104(departmentCode);
@@ -2127,11 +2117,7 @@ public class AdministrationController {
 		edu107.setEdu106(majorCode);
 
 		List<Edu201> taskInfo = new ArrayList<Edu201>();
-		if(className.equals("")||className==null){
-			taskInfo= administrationPageService.kcxzBtnGetTask(levelCode, departmentCode,gradeCode, majorCode,kcxz);
-		}else{
-			taskInfo= administrationPageService.kcxzBtnGetTaskWithJxb(levelCode, departmentCode,gradeCode, majorCode,kcxz,className);
-		}
+		taskInfo= administrationPageService.kcxzBtnGetTask(levelCode, departmentCode,gradeCode, majorCode,kcxz);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
 		return returnMap;

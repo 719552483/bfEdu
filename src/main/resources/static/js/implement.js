@@ -1046,7 +1046,7 @@ function scheduleFormatter(value, row, index) {
 					+ '" teacherID="' + value[i].teacherId + '" classTypeId="'
 					+ value[i].classTypeId + '" classID="' + value[i].classId
 					+ '" courseId="' + value[i].courseId
-					+ '"  class="singleSchedule singleScheduleHover '
+					+ '" crouseType="'+value[i].courseType+'"  class="singleSchedule singleScheduleHover '
 					+ changeClassAreaBg(value[i].classTypeId) + '">'
 					+ '<span class="scheduleClassName">'+ value[i].className+'</span>'
 				    + '<span class="scheduleClassName">'+ value[i].courseName+'</span>'

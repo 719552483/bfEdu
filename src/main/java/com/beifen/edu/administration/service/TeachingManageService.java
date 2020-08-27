@@ -7,6 +7,7 @@ import com.beifen.edu.administration.PO.StudentSchoolTimetablePO;
 import com.beifen.edu.administration.PO.TimeTablePO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.ClassPeriodConstant;
+import com.beifen.edu.administration.constant.SecondaryCodeConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
@@ -453,11 +454,19 @@ public class TeachingManageService {
      * @param edu108Id
      * @return
      */
-    public ResultVO getScheduleInfoDetail(String classId, String edu108Id) {
+    public ResultVO getScheduleInfoDetail(String classId,String courseType ,String edu_180Id) {
         ResultVO resultVO;
         Map<String, Object> returnMap = new HashMap();
 
-        List<String> edu300IdList = edu302Dao.findEdu300IdsByEdu301Id(classId);
+        List<String> edu300IdList = new ArrayList<>();
+
+        if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(courseType)) {
+            edu300IdList.add(classId);
+        } else {
+            edu300IdList= edu302Dao.findEdu300IdsByEdu301Id(classId);
+        }
+
+
         if (edu300IdList.size() == 0) {
             resultVO = ResultVO.setFailed("未找到符合要求的行政班");
             return resultVO;
@@ -469,7 +478,7 @@ public class TeachingManageService {
             return resultVO;
         }
 
-        Edu108 edu108 = edu108Dao.queryPlanByEdu108ID(edu108Id);
+        Edu108 edu108 = edu108Dao.queryPlanByEdu108ID(edu_180Id);
 
         returnMap.put("studentList", studentList);
         returnMap.put("planInfo", edu108);

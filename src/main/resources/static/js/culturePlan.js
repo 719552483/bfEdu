@@ -1748,7 +1748,7 @@ function sendGeneratCoursePalnInfo(sendObject) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				hideloding();
 				//更改培养计划下课程是否生成开课计划属性
 				for (var i = 0; i < sendObject.crouses.length; i++) {
@@ -1762,7 +1762,7 @@ function sendGeneratCoursePalnInfo(sendObject) {
 					});
 				}
 				$.hideModal("#remindModal");
-				toastr.success('生成开课计划成功');
+				toastr.success(backjson.msg);
 				drawPagination(".majorTrainingTableArea", "培养计划");
 				toolTipUp(".myTooltip");
 				$(".generatCoursePalnArea").hide();

@@ -232,15 +232,17 @@ function singleScheduleAction(eve) {
 
 //获取课程详情
 function getScheduleDetails(eve){
-	 var classId=eve.currentTarget.attributes[3].nodeValue;;
-     var edu108Id=eve.currentTarget.attributes[4].nodeValue;
+	 var classId=eve.currentTarget.attributes[3].nodeValue;
+	 var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
+	 var courseType=eve.currentTarget.attributes[5].nodeValue;
 	$.ajax({
 		method: 'get',
 		cache: false,
 		url: "/getScheduleInfoDetail",
 		data:{
 			"classId":classId,
-			"edu108Id":edu108Id
+			"courseType":courseType,
+			"edu_180Id":edu_180Id
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {

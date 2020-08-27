@@ -968,9 +968,13 @@ public class AdministrationPageService {
 
 	// 根据培养计划检索待排课程列表
 	public List<Edu201> getTaskByCulturePlan(String levelCode, String departmentCode, String gradeCode, String majorCode) {
-		long edu107id = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		List<Edu201> retrunList = new ArrayList<>();
+		Long edu107id = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		if(edu107id == null ) {
+			return retrunList;
+		}
 		List<String> current108s = edu108DAO.queryCulturePlanIds(edu107id);
-		List<Edu201> retrunList= edu201DAO.queryCulturePlanIds(current108s);
+		retrunList= edu201DAO.queryCulturePlanIds(current108s);
 		return retrunList;
 	}
 
@@ -1622,7 +1626,6 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap();
 
 		List<TeachingSchedulePO> taskList;
-		List<Edu301> teachingClassList = new ArrayList<>();
 
 		Specification<TeachingSchedulePO> specification = new Specification<TeachingSchedulePO>() {
 			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1639,9 +1642,6 @@ public class AdministrationPageService {
 				if (teachingSchedule.getPyjhzy() != null && !"".equals(teachingSchedule.getPyjhzy())) {
 					predicates.add(cb.equal(root.<String>get("pyjhzy"), teachingSchedule.getPyjhzy()));
 				}
-				if (teachingSchedule.getJxbid() != null && !"".equals(teachingSchedule.getJxbid())) {
-					predicates.add(cb.equal(root.<String>get("jxbid"), teachingSchedule.getJxbid()));
-				}
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
 					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
@@ -1652,14 +1652,8 @@ public class AdministrationPageService {
 
 		taskList = scheduleCompletedViewDao.findAll(specification);
 
-		for (TeachingSchedulePO e : taskList) {
-			Edu301 edu301 = edu301DAO.queryJXBByEdu301ID(e.getJxbid());
-			teachingClassList.add(edu301);
-		}
-
 		returnMap.put("result", true);
 		returnMap.put("taskList", taskList);
-		returnMap.put("teachingClassList", teachingClassList);
 		return returnMap;
 
 	}

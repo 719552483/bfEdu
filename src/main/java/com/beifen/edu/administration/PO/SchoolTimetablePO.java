@@ -34,6 +34,7 @@ public class SchoolTimetablePO {
     private String classTypeId;
     private String courseId;
     private String courseName;
+    private String courseType;
 
     @Id
     public String getID() {
@@ -241,5 +242,13 @@ public class SchoolTimetablePO {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(String courseType) {
+        this.courseType = courseType;
     }
 }

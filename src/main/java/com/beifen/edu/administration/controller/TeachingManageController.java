@@ -129,10 +129,10 @@ public class TeachingManageController {
      */
     @RequestMapping("/getScheduleInfoDetail")
     @ResponseBody
-    public ResultVO getScheduleInfoDetail(@RequestParam("classId") String classId, @RequestParam("edu108Id") String edu108Id) {
+    public ResultVO getScheduleInfoDetail(@RequestParam("classId") String classId, @RequestParam("courseType") String courseType, @RequestParam("edu_180Id") String edu_180Id) {
         ResultVO result;
         // 将收到的jsonObject转为javabean 关系管理实体类
-        result = teachingManageService.getScheduleInfoDetail(classId,edu108Id);
+        result = teachingManageService.getScheduleInfoDetail(classId,courseType,edu_180Id);
         return result;
     }
 

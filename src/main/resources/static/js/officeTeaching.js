@@ -129,7 +129,7 @@ function stuffWaitTaskTable(tableInfo){
 					visible: false
 				},
 				{
-					field: 'jxbmc',
+					field: 'className',
 					title: '班级名称',
 					align: 'left',
 					formatter: paramsMatter
@@ -723,7 +723,7 @@ function stuffPuttedOutTable(tableInfo){
 				visible: false
 			},
 			{
-				field: 'jxbmc',
+				field: 'className',
 				title: '班级名称',
 				align: 'left',
 				formatter: paramsMatter
