@@ -129,7 +129,7 @@ public class StudentManageService {
         edu001Dao.save(edu001);
 
         Edu990 edu990 = new Edu990();
-        edu990.setYhm("s" + edu001.getXh());
+        edu990.setYhm(edu001.getXh());
         edu990.setMm("123456");
         edu990.setUserKey(edu001.getEdu001_ID().toString());
         edu990Dao.save(edu990);

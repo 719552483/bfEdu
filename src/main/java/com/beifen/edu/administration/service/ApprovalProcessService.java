@@ -72,8 +72,7 @@ public class ApprovalProcessService {
         String keyWord = creatApprovalKeyWord(businessKey,businessType);
         edu600.setKeyWord(keyWord);
 
-        Edu101 edu101 = edu101Dao.getTeacherInfoByEdu990Id(edu600.getProposerKey().toString());
-        edu600.setDepartmentCode(edu101.getSzxb());
+        edu600.setDepartmentCode(searchBusinessDepartment(businessType,businessKey));
 
 
         //保存审批信息
@@ -97,6 +96,46 @@ public class ApprovalProcessService {
 
        return isSuccess;
 
+    }
+
+    public String searchBusinessDepartment(String businessType,Long businessKey) {
+        String department;
+        switch (businessType) {
+            case"01":
+            case"02":
+                Edu200 edu200 = edu200Dao.findOne(businessKey);
+                department = edu200.getDepartmentCode();
+                break;
+            case"03":
+                Edu108 edu108 = edu108Dao.findOne(businessKey);
+                Edu107 edu107 = edu107Dao.findOne(edu108.getEdu107_ID());
+                department = edu107.getEdu104();
+                break;
+            case"04":
+                Edu201 edu201 = edu201Dao.findOne(businessKey);
+                Edu108 edu1081 = edu108Dao.findOne(edu201.getEdu108_ID());
+                Edu107 edu1071 = edu107Dao.findOne(edu1081.getEdu107_ID());
+                department = edu1071.getEdu104();
+                break;
+            case"05":
+                Edu001 edu001 = edu001Dao.findOne(businessKey);
+                department = edu001.getSzxb();
+                break;
+            case"06":
+                Edu112 edu112 = edu112Dao.findOne(businessKey);
+                Edu101 one = edu101Dao.findOne(Long.parseLong(edu112.getTeacherId()));
+                department = one.getSzxb();
+                break;
+            case"07":
+                Edu101 edu101 = edu101Dao.findOne(businessKey);
+                department = edu101.getXm();
+                break;
+            default:
+                department = "0000";
+                break;
+        }
+
+        return department;
     }
 
 

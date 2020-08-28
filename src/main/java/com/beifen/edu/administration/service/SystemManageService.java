@@ -164,13 +164,11 @@ public class SystemManageService {
             if(edu990.getUserKey() != null) {
                 deparmentIds = edu994Dao.findAllDepartmentIds(userId);
                 if (deparmentIds.size() == 0) {
-                    Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                    if (one == null) {
+                    if(username.length() >= 11) {
                         Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                        if (edu001 != null) {
-                            deparmentIds.add(edu001.getSzxb());
-                        }
+                        deparmentIds.add(edu001.getSzxb());
                     } else {
+                        Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
                         deparmentIds.add(one.getSzxb());
                     }
                 }

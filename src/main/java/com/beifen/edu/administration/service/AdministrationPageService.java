@@ -1163,7 +1163,7 @@ public class AdministrationPageService {
 		//计算排课总课时
 		int ksz = Integer.parseInt(edu202.getKsz());
 		int jsz = Integer.parseInt(edu202.getJsz());
-		int plzks = (jsz - ksz + 1) * edu203List.size();
+		int plzks = (jsz - ksz + 1) * edu203List.size()*2;
 
 		if (plzks < zxs) {
 			isSuccess = false;
@@ -1199,8 +1199,8 @@ public class AdministrationPageService {
 					save.setXqid(e.getXqid());
 					save.setXqmc(e.getXqmc());
 					edu203Dao.save(save);
-					currentXs++;
-					if (currentXs == zxs) {
+					currentXs+=2;
+					if (currentXs >= zxs) {
 						break classCycle;
 					}
 				}
