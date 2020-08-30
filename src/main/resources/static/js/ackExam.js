@@ -115,12 +115,12 @@ function stuffTaskInfoTable(tableInfo) {
 	function sfxylcjMatter(value, row, index) {
 		if (row.sfxylcj==="T") {
 			return [
-				'<span class="noneStart">是</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="sfxylcjControl" id="sfxylcjControl'+index+'" type="checkbox" checked="checked"><label></label></div></section>'
+				'<section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="sfxylcjControl" id="sfxylcjControl'+index+'" type="checkbox" checked="checked"><label></label></div></section>'
 			]
 				.join('');
 		} else {
 			return [
-				'<span class="noneStart">否</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="sfxylcjControl" id="sfxylcjControl'+index+'" type="checkbox"><label></label></div></section>'
+				'<section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="sfxylcjControl" id="sfxylcjControl'+index+'" type="checkbox"><label></label></div></section>'
 			]
 				.join('');
 		}
@@ -135,16 +135,75 @@ function stuffTaskInfoTable(tableInfo) {
 
 //预备单个申请考试
 function askForExam(row,index){
-
+	$.showModal("#remindModal",true);
+	$(".remindType").html("课程-"+row.kcmc);
+	$(".remindActionType").html("  考试申请");
+	//确认发布任务书
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var sendArray=new Array();
+		sendArray.push(row.edu201_ID);
+		sendExamAsk(sendArray);
+		e.stopPropagation();
+	});
 }
 
 //预备批量申请考试
-function configExams(){
+function askForExams(){
 	var choosend = $("#askForExamTable").bootstrapTable("getSelections");
 	if(choosend.length===0){
 		toastr.warning('暂未选择课程');
 		return;
 	}
+	$.showModal("#remindModal",true);
+	$(".remindType").html("所选课程");
+	$(".remindActionType").html("考试申请");
+	//确认发布任务书
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var sendArray=new Array();
+		for (var i = 0; i < choosend.length; i++) {
+			sendArray.push(choosend[i].edu201_ID);
+		}
+		sendExamAsk(sendArray);
+		e.stopPropagation();
+	});
+
+}
+
+//发送考试申请
+function sendExamAsk(sendArray){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/askForExam",
+		data: {
+			"tasks":JSON.stringify(sendArray) ,
+			"approvalInfo":JSON.stringify(getApprovalobect())
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				for (var i = 0; i < sendArray.length; i++) {
+					$("#putOutTaskTable").bootstrapTable('removeByUniqueId', sendArray[i]);
+				}
+				$.hideModal("#remindModal");
+				toastr.success(backjson.msg);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //开始检索
@@ -171,7 +230,7 @@ function startSearch(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				stuffPutOutTaskTable(backjson.data);
+				stuffTaskInfoTable(backjson.data);
 			} else {
 				toastr.warning(backjson.msg);
 				drawTaskEmptyTable();
@@ -192,6 +251,16 @@ function getSearchObject(){
 	SearchObject.coursesNature=coursesNature;
 	SearchObject.className=className;
 	return SearchObject;
+}
+
+//获得审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="08";
+	approvalObject.proposerType=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
 }
 
 //重置检索
@@ -229,7 +298,7 @@ function btnBind() {
 	//提示框取消按钮
 	$('#configExams').unbind('click');
 	$('#configExams').bind('click', function(e) {
-		configExams();
+		askForExams();
 		e.stopPropagation();
 	});
 }

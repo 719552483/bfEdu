@@ -849,7 +849,7 @@ function sendPutOutInfo(putOutArray){
 			hideloding();
 			if (backjson.result) {
 				for (var i = 0; i < putOutArray.length; i++) {
-					$("#scheduleClassesTable").bootstrapTable("remove", {field: "jxbmc", values: putOutArray[i].jxbmc});
+					$("#scheduleClassesTable").bootstrapTable('removeByUniqueId', putOutArray[i].edu201_ID);
 				}
 				$.hideModal("#remindModal");
 				toastr.success('发布任务书成功');
