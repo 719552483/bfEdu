@@ -602,8 +602,11 @@ public class TeachingManageService {
             public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (testTaskSearchPO.getClassName() != null && !"".equals(testTaskSearchPO.getClassName())) {
-                    predicates.add(cb.like(root.<String>get("className"), "%"+testTaskSearchPO.getClassName()));
+                    predicates.add(cb.like(root.<String>get("className"), "%"+testTaskSearchPO.getClassName()+"%"));
                 }
+                predicates.add(cb.equal(root.<String>get("sfypk"), "T"));
+                predicates.add(cb.notEqual(root.<String>get("sfsqks"), "T"));
+
                 Path<Object> path = root.get("edu108_id");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
                 for (int i = 0; i <edu108IdList.size() ; i++) {
