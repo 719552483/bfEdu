@@ -42,9 +42,6 @@ function getSearchAreaSelectInfo(){
                     allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
                 }
                 stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
-                stuffManiaSelect("#employDepartment", allDepartmentStr);
-
-
 
             } else {
                 toastr.warning('操作失败，请重试');
@@ -352,9 +349,9 @@ function getnewlocalInfo(){
     var localAddress= $("#addLocalAddress").val();
     var city = getNormalSelectText("addCity");
     var cityCode = getNormalSelectValue("addCity");
-    var country = $("#country").val();
-    var townShip = $("#townShip").val();
-    var remarks = $("#remarks").val();
+    var country = $("#addCountry").val();
+    var townShip = $("#addTownShip").val();
+    var remarks = $("#addRemarks").val();
 
     var returnObject = new Object();
     if(localName == "" || localAddress == "" || city == "" || country == "") {

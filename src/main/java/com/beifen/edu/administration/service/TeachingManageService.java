@@ -607,7 +607,7 @@ public class TeachingManageService {
                 predicates.add(cb.equal(root.<String>get("sfypk"), "T"));
                 predicates.add(cb.notEqual(root.<String>get("sfsqks"), "T"));
 
-                Path<Object> path = root.get("edu108_id");//定义查询的字段
+                Path<Object> path = root.get("edu108_ID");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
                 for (int i = 0; i <edu108IdList.size() ; i++) {
                     in.value(edu108IdList.get(i));//存入值
