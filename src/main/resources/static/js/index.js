@@ -297,7 +297,7 @@ function drawAuthorityGroup() {
 	var allMenuParents = $(parent.frames["leftFrame"].document).find(".leftmenu").find('dd'); //frame获取父窗口中的menu
 	for (var i = 0; i < allMenuParents.length; i++) {
 		if (i !== 0&&allMenuParents[i].style.display!=="none") {
-			str += '<option value="' + allMenuParents[i].innerText + '">' + allMenuParents[i].innerText + '</option>';
+			str += '<option value="' + allMenuParents[i].firstElementChild.innerText + '">' + allMenuParents[i].firstElementChild.innerText + '</option>';
 		}
 	}
 	$("#authorityGroup").append(str);
