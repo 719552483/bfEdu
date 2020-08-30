@@ -254,9 +254,7 @@ public class AdministrationController {
 		returnMap.put("termInfo", administrationPageService.queryAllXn());
 		//获取课节
 		returnMap.put("kjInfo", administrationPageService.queryAllDeafultKj());
-		//过滤可选的教室  校区要一致
-		String current103Xq=administrationPageService.queryXqByPyccbm(2, edu103Id);
-		returnMap.put("jxdInfo", teachingPointService.querySiteBySsxqCode((current103Xq)));
+		returnMap.put("jxdInfo", teachingPointService.querySiteBySsxqCode());
 
 		returnMap.put("result", true);
 		return returnMap;

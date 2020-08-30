@@ -96,8 +96,8 @@ public class TeachingPointService {
     }
 
     //根据校区编码查询教学点
-    public List<Edu500> querySiteBySsxqCode(String xqCode) {
-        return edu500Dao.querySiteBySsxqCode(xqCode);
+    public List<Edu500> querySiteBySsxqCode() {
+        return edu500Dao.findAll();
     }
 
     //查询教学点是否被占用
