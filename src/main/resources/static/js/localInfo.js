@@ -148,7 +148,7 @@ function stufflocalInfoTable(tableInfo) {
             '<ul class="toolbar tabletoolbar">' +
             '<li id="localInfoDetails" class="queryBtn"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
             '<li id="modifySite" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-            '<li id="modifySite" class="pointBtn"><span><img src="images/t02.png" style="width:24px"></span>教学任务点信息</li>' +
+            '<li id="modifySite" class="pointBtn"><span><img src="img/culturePlanapproval.png" style="width:24px"></span>教学任务点信息</li>' +
             '<li id="removeSite" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
             '</ul>'
         ]
