@@ -52,12 +52,6 @@ public class TeachingPointService {
                 if (edu500.getEdu500Id() != null && !"".equals(edu500.getEdu500Id())) {
                     predicates.add(cb.notEqual(root.<String> get("edu500Id"), edu500.getEdu500Id()));
                 }
-                if (edu500.getSsxqCode() != null && !"".equals(edu500.getSsxqCode())) {
-                    predicates.add(cb.equal(root.<String> get("ssxqCode"), edu500.getSsxqCode()));
-                }
-                if (edu500.getJxdmc() != null && !"".equals(edu500.getJxdmc())) {
-                    predicates.add(cb.equal(root.<String> get("jxdmc"), edu500.getJxdmc()));
-                }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -92,25 +86,6 @@ public class TeachingPointService {
         Specification<Edu500> specification = new Specification<Edu500>() {
             public Predicate toPredicate(Root<Edu500> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                if (edu500.getJxdmc() != null && !"".equals(edu500.getJxdmc())) {
-                    predicates.add(cb.like(root.<String> get("jxdmc"),'%' + edu500.getJxdmc() + '%'));
-                }
-                if (edu500.getSsxq() != null && !"".equals(edu500.getSsxq())) {
-                    predicates.add(cb.equal(root.<String> get("ssxq"),edu500.getSsxq()));
-                }
-                if (edu500.getCdlx() != null && !"".equals(edu500.getCdlx())) {
-                    predicates.add(cb.equal(root.<String> get("cdlx"),edu500.getCdlx()));
-                }
-                if (edu500.getCdxz() != null && !"".equals(edu500.getCdxz())) {
-                    predicates.add(cb.equal(root.<String> get("cdxz"),edu500.getCdxz()));
-                }
-                if (edu500.getLc() != null && !"".equals(edu500.getLc())) {
-                    predicates.add(cb.equal(root.<String> get("lc"),edu500.getLc()));
-                }
-                if (edu500.getLf() != null && !"".equals(edu500.getLf())) {
-                    predicates.add(cb.equal(root.<String> get("lf"),edu500.getLf()));
-                }
-
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -183,7 +158,7 @@ public class TeachingPointService {
         List<LocalUsedPO> localUsedPOList = new ArrayList<>();
         for (Edu500 e : siteList) {
             LocalUsedPO save = new LocalUsedPO();
-            List<String> edu202Ids = edu200Dao.findIdByJxdmc(e.getJxdmc());
+            List<String> edu202Ids = edu200Dao.findIdByJxdmc(e.getLocalName());
             if(edu202Ids.size() != 0){
                 List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
                 NumberFormat nf = NumberFormat.getPercentInstance();
