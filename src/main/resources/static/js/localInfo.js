@@ -31,7 +31,6 @@ function getSearchAreaSelectInfo(){
             if (backjson.result) {
                 var showstr="暂无选择";
                 var allDepartmentStr="";
-                var allTeacherStr="";
                 if (backjson.allDepartment.length>0) {
                     showstr="请选择";
                     allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
@@ -45,18 +44,6 @@ function getSearchAreaSelectInfo(){
                 stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
                 stuffManiaSelect("#employDepartment", allDepartmentStr);
 
-                var showstr="暂无选择";
-                if (backjson.allTeacher.length>0) {
-                    showstr="请选择";
-                    allTeacherStr= '<option value="seleceConfigTip">'+showstr+'</option>';
-                    for (var i = 0; i < backjson.allTeacher.length; i++) {
-                        allTeacherStr += '<option value="' + backjson.allTeacher[i].edu101_ID + '">' + backjson.allTeacher[i].xm
-                            + '</option>';
-                    }
-                }else{
-                    allTeacherStr= '<option value="seleceConfigTip">'+showstr+'</option>';
-                }
-                stuffManiaSelect("#addSiteManager", allTeacherStr);
 
 
             } else {
@@ -117,75 +104,38 @@ function stufflocalInfoTable(tableInfo) {
                 title: '唯一标识',
                 align: 'center',
                 visible: false
-            },
-            {
-                field: 'jxdmc',
-                title: '教学任务点名称',
+            }, {
+                field: 'localName',
+                title: '教学点名称',
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'ssxq',
-                title: '所属校区',
+                field: 'city',
+                title: '地级市',
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'rnrs',
-                title: '容纳人数',
+                field: 'country',
+                title: '区/县',
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'glxb',
-                title: '管理二级学院',
-                align: 'left',
-                formatter: paramsMatter
-            },{
-                field: 'cdlx',
-                title: '场地类型',
-                align: 'left',
-                formatter: paramsMatter
-            },  {
-                field: 'cdxz',
-                title: '场地性质',
-                align: 'left',
-                formatter: paramsMatter,
-                visible: false
-            }, {
-                field: 'lf',
-                title: '楼房',
-                align: 'left',
-                formatter: paramsMatter
-            },{
-                field: 'lc',
-                title: '楼层',
+                field: 'townShip',
+                title: '乡/镇',
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'cdfzr',
-                title: '场地负责人',
+                field: 'localAddress',
+                title: '详细地址',
                 align: 'left',
-                formatter: paramsMatter,
-                visible: false
+                formatter: paramsMatter
             }, {
-                field: 'cdzt',
-                title: '场地状态',
-                align: 'left',
-                formatter: paramsMatter,
-                visible: false
-            },
-            {
-                field: 'bz',
+                field: 'remarks',
                 title: '备注',
                 align: 'left',
                 formatter: paramsMatter,
                 visible: false
-            },
-            {
-                field: 'xxdz',
-                title: '详细地址',
-                align: 'left',
-                formatter: paramsMatter
-            },
-            {
+            }, {
                 field: 'action',
                 title: '操作',
                 align: 'center',
@@ -218,7 +168,7 @@ function stufflocalInfoTable(tableInfo) {
 //单个删除教学点
 function removeSite(row){
     $.showModal("#remindModal",true);
-    $(".remindType").html('教学任务点- '+row.jxdmc+' ');
+    $(".remindType").html('教学点- '+row.localName+' ');
     $(".remindActionType").html("删除");
 
     //确认删除教学点
@@ -238,7 +188,7 @@ function removeSites(){
         toastr.warning('暂未选择任何数据');
     } else {
         $.showModal("#remindModal",true);
-        $(".remindType").html("所选教学任务点");
+        $(".remindType").html("所选教学点");
         $(".remindActionType").html("删除");
 
         //确认删除教学点
@@ -293,7 +243,7 @@ function sendRemoveInfo(removeArray){
 //展示教学点详情
 function localInfoDetails(row,index){
     $.showModal("#addSiteModal",false);
-    $("#addSiteModal").find(".moadalTitle").html(row.jxdmc+"-详细信息");
+    $("#addSiteModal").find(".moadalTitle").html(row.localName+"-详细信息");
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
     //清空模态框中元素原始值
     rebackSiteInfo();
@@ -310,8 +260,8 @@ function rebackSiteInfo(){
 
 //填充教学点信息
 function stufflocalInfoDetails(row){
-    $("#addTeachingPointName").val(row.jxdmc);
-    $("#addAddress").val(row.xxdz);
+    $("#addTeachingPointName").val(row.localName);
+    $("#addAddress").val(row.localAddress);
     stuffManiaSelectWithDeafult("#addSchool", row.ssxqCode);
     stuffManiaSelectWithDeafult("#addManagementDepartment", row.glxbCode);
     stuffManiaSelectWithDeafult("#addSiteType", row.cdlxCode);
@@ -398,53 +348,31 @@ function sendModifySite(row,modifylocalInfo){
 
 //获得新增教学点的信息
 function getnewlocalInfo(){
-    var jxdmc= $("#addTeachingPointName").val();
-    var xxdz= $("#addAddress").val();
-    var ssxq = getNormalSelectText("addSchool");
-    var ssxqCode = getNormalSelectValue("addSchool");
-    var rnrs = $("#addCapacity").val();
-    var glxb = getNormalSelectText("addManagementDepartment");
-    var glxbCode = getNormalSelectValue("addManagementDepartment");
-    var cdlx = getNormalSelectText("addSiteType");
-    var cdlxCode = getNormalSelectValue("addSiteType");
-    var cdxz = getNormalSelectText("addSiteNature");
-    var cdxzCode = getNormalSelectValue("addSiteNature");
-    var lf= getNormalSelectText("addSiteNature");
-    var lfCode = getNormalSelectValue("addSiteNature");
-    var lc = getNormalSelectText("addStorey");
-    var lcCode = getNormalSelectValue("addStorey");
-    var cdfzr = getNormalSelectText("addSiteManager");
-    var cdfzrCode = getNormalSelectValue("addSiteManager");
-    var bz = $("#addRemarks").val();
+    var localName= $("#addLocalName").val();
+    var localAddress= $("#addLocalAddress").val();
+    var city = getNormalSelectText("addCity");
+    var cityCode = getNormalSelectValue("addCity");
+    var country = $("#country").val();
+    var townShip = $("#townShip").val();
+    var remarks = $("#remarks").val();
 
     var returnObject = new Object();
-    if(jxdmc == "" || rnrs == 0 || cdlx == "" || cdxz == "") {
+    if(localName == "" || localAddress == "" || city == "" || country == "") {
         return undefined;
     }
 
 
-    returnObject.jxdmc=jxdmc;
-    returnObject.xxdz=xxdz;
-    returnObject.ssxq=ssxq;
-    returnObject.rnrs=rnrs;
-    returnObject.glxb=glxb;
-    returnObject.cdlx=cdlx;
-    returnObject.cdxz=cdxz;
-    returnObject.lf=lf;
-    returnObject.lc=lc;
-    returnObject.cdfzr=cdfzr;
-    returnObject.cdzt="空闲";
-    returnObject.bz=bz;
-    returnObject.ssxqCode=ssxqCode;
-    returnObject.glxbCode=glxbCode;
-    returnObject.cdlxCode=cdlxCode;
-    returnObject.cdxzCode=cdxzCode;
-    returnObject.lfCode=lfCode;
-    returnObject.lcCode=lcCode;
-    returnObject.cdfzrCode=cdfzrCode;
-    returnObject.cdztCode="0";
+    returnObject.localName=localName;
+    returnObject.localAddress=localAddress;
+    returnObject.city=city;
+    returnObject.cityCode=cityCode;
+    returnObject.country=country;
+    returnObject.townShip=townShip;
+    returnObject.remarks=remarks;
+
     return returnObject;
 }
+
 //预备添加教学点
 function wantAddSite(){
     rebackSiteInfo();

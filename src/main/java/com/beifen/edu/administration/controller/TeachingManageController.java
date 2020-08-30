@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.beifen.edu.administration.PO.ClassStudentViewPO;
+import com.beifen.edu.administration.PO.TestTaskSearchPO;
 import com.beifen.edu.administration.PO.TimeTablePO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
@@ -152,6 +153,21 @@ public class TeachingManageController {
         return result;
     }
 
+
+    /**
+     * 可申请考试任务书查询
+     * @param userId
+     * @param searchCriteria
+     * @return
+     */
+    @RequestMapping("/searchTaskCanTest")
+    @ResponseBody
+    public ResultVO searchTaskCanTest(@RequestParam("userId") String userId,@RequestParam("searchCriteria") String searchCriteria) {
+        JSONObject jsonObject = JSON.parseObject(searchCriteria);
+        TestTaskSearchPO testTaskSearchPO = JSON.toJavaObject(jsonObject, TestTaskSearchPO.class);
+        ResultVO result = teachingManageService.searchTaskCanTest(userId,testTaskSearchPO);
+        return result;
+    }
 
 
 

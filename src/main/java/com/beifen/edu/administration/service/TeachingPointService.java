@@ -65,14 +65,10 @@ public class TeachingPointService {
      */
     public ResultVO addSite(Edu500 newSite) {
         ResultVO resultVO;
-        // 判断同校区是否存在重复教学点
-        List<Edu500> edu500List = checkRepeatPoint(newSite);
-        if (edu500List.size() != 0) {
-            resultVO = ResultVO.setFailed("该校区存在相同教学任务点，请重新录入");
-        } else {
-            edu500Dao.save(newSite);
-            resultVO = ResultVO.setSuccess("操作成功",newSite.getEdu500Id());
-        }
+//        // 判断同校区是否存在重复教学点
+//        List<Edu500> edu500List = checkRepeatPoint(newSite);
+        edu500Dao.save(newSite);
+        resultVO = ResultVO.setSuccess("操作成功",newSite.getEdu500Id());
         return resultVO;
     }
 

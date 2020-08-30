@@ -9,9 +9,12 @@ public class Edu500 {
 
   private Long edu500Id;//主键
   private String city;//所属市
+  private String cityCode;//地级市代码
   private String county;//所属区县
   private String townShip;//所属县乡
   private String localName;//教学点名称
+  private String localAddress;//详细地址
+  private String remarks;//备注
 
 
   @Id
@@ -60,5 +63,29 @@ public class Edu500 {
 
   public void setLocalName(String localName) {
     this.localName = localName;
+  }
+
+  public String getLocalAddress() {
+    return localAddress;
+  }
+
+  public void setLocalAddress(String localAddress) {
+    this.localAddress = localAddress;
+  }
+
+  public String getRemarks() {
+    return remarks;
+  }
+
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
+  }
+
+  public String getCityCode() {
+    return cityCode;
+  }
+
+  public void setCityCode(String cityCode) {
+    this.cityCode = cityCode;
   }
 }

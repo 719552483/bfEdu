@@ -66,10 +66,18 @@
             <div class="col4 giveBottom">
                 <ul class="forminfo">
                     <div class="">
-                        <label class="selectName" style="margin-top: 14px;">市&#12288;&#8197;级</label>
-                        <select id="school" class="isSowIndex">
+                        <label class="selectName" style="margin-top: 14px;">地级市</label>
+                        <select id="city" class="isSowIndex">
                             <option value="seleceConfigTip">暂不可选</option>
                         </select>
+                    </div>
+                </ul>
+            </div>
+            <div class="col4 giveBottom">
+                <ul class="forminfo">
+                    <div class="">
+                        <label class="selectName" style="margin-top: 14px;">区/县</label>
+                        <input name="" type="text" class="myInput searchInput" id="country" placeholder="请填写名称..."/>
                     </div>
                 </ul>
             </div>
@@ -77,43 +85,8 @@
             <div class="col4 giveBottom">
                 <ul class="forminfo">
                     <div class="">
-                        <label class="selectName" style="margin-top: 14px;">场地类型</label>
-                        <select id="siteStype" class="isSowIndex">
-                            <option value="seleceConfigTip">暂不可选</option>
-                        </select>
-                    </div>
-                </ul>
-            </div>
-
-            <div class="col4 giveBottom">
-                <ul class="forminfo">
-                    <div class="">
-                        <label class="selectName" style="margin-top: 14px;">楼&#12288;&#8197;房</label>
-                        <select id="building" class="isSowIndex">
-                            <option value="seleceConfigTip">暂不可选</option>
-                        </select>
-                    </div>
-                </ul>
-            </div>
-
-            <div class="col4 giveBottom">
-                <ul class="forminfo">
-                    <div class="">
-                        <label class="selectName" style="margin-top: 14px;">楼&#12288;&#8197;层</label>
-                        <select id="storey" class="isSowIndex">
-                            <option value="seleceConfigTip">暂不可选</option>
-                        </select>
-                    </div>
-                </ul>
-            </div>
-
-            <div class="col4 giveBottom">
-                <ul class="forminfo">
-                    <div class="">
-                        <label class="selectName" style="margin-top: 14px;">场地性质</label>
-                        <select id="siteNature" class="isSowIndex">
-                            <option value="siteNature">暂不可选</option>
-                        </select>
+                        <label class="selectName" style="margin-top: 14px;">乡/镇</label>
+                        <input name="" type="text" class="myInput searchInput" id="townShip" placeholder="请填写名称..."/>
                     </div>
                 </ul>
             </div>
@@ -121,7 +94,7 @@
                 <ul class="forminfo">
                     <div class="">
                         <label class="selectName" style="margin-top: 14px;">教学点名称</label>
-                        <input name="" type="text" class="myInput searchInput" id="SiteName" placeholder="请填写名称..."/>
+                        <input name="" type="text" class="myInput searchInput" id="localName" placeholder="请填写名称..."/>
                     </div>
                 </ul>
             </div>
@@ -150,7 +123,36 @@
                             <ul class="forminfo">
                                 <div class="">
                                     <label class="selectName" style="margin-top: 14px;">教学点名称<b>*</b></label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addTeachingPointName" placeholder="请填写名称..."/>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addLocalName" placeholder="请填写名称..."/>
+                                </div>
+                            </ul>
+                        </div>
+
+                        <div class="col4 giveBottom">
+                            <ul class="forminfo">
+                                <div class="">
+                                    <label class="selectName" style="margin-top: 14px;">地级市<b>*</b></label>
+                                    <select class="isSowIndex" id="addCity">
+                                        <option value="seleceConfigTip">请选择</option>
+                                    </select>
+                                </div>
+                            </ul>
+                        </div>
+
+                        <div class="col4 giveBottom">
+                            <ul class="forminfo">
+                                <div class="">
+                                    <label class="selectName" style="margin-top: 14px;">区/县</label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addCountry" placeholder="请填写..."/>
+                                </div>
+                            </ul>
+                        </div>
+
+                        <div class="col4 giveBottom">
+                            <ul class="forminfo">
+                                <div class="">
+                                    <label class="selectName" style="margin-top: 14px;">乡/镇</label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addTownShip" placeholder="请填写..."/>
                                 </div>
                             </ul>
                         </div>
@@ -159,95 +161,7 @@
                             <ul class="forminfo">
                                 <div class="">
                                     <label class="selectName" style="margin-top: 14px;">详细地址<b>*</b></label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addAddress" placeholder="请填写地址..."/>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">校区<b>*</b></label>
-                                    <select class="isSowIndex" id="addSchool">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="MyspinnerStyle">
-                                    <label class="selectName">容纳人数<b>*</b></label> <input
-                                        type="number" value="0" min="0" step="1"
-                                        id="addCapacity" />
-                                </div>
-                            </ul>
-                        </div>
-                        <div class="clear"></div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">管理二级学院</label>
-                                    <select class="isSowIndex" id="addManagementDepartment">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">场地类型<b>*</b></label>
-                                    <select class="isSowIndex" id="addSiteType">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">场地性质<b>*</b></label>
-                                    <select class="isSowIndex" id="addSiteNature">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">楼房</label>
-                                    <select class="isSowIndex" id="addBuilding">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">楼层</label>
-                                    <select class="isSowIndex" id="addStorey">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">场地负责人</label>
-                                    <select class="isSowIndex" id="addSiteManager">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addLocalAddress" placeholder="请填写地址..."/>
                                 </div>
                             </ul>
                         </div>
@@ -260,6 +174,7 @@
                                 </div>
                             </ul>
                         </div>
+
                     </div>
                 </div>
                 <div class="clear"></div>

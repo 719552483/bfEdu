@@ -31,6 +31,7 @@ public class Edu201 {
 	private String kkbm;  //开课部门
 	private String kkbmCode;  //开课部门编码
 	private String sfxylcj;  //是否需要录成绩
+	private String sfsqks; //是否申请考试
 	private String sszt;  //审核状态
 	private String fkyj;  //反馈意见
 	private String sfypk;  //是否已排课
@@ -180,5 +181,13 @@ public class Edu201 {
 
 	public void setClassName(String className) {
 		this.className = className;
+	}
+
+	public String getSfsqks() {
+		return sfsqks;
+	}
+
+	public void setSfsqks(String sfsqks) {
+		this.sfsqks = sfsqks;
 	}
 }

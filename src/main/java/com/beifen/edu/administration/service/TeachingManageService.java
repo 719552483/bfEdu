@@ -1,30 +1,27 @@
 package com.beifen.edu.administration.service;
 
 
-import com.beifen.edu.administration.PO.ClassStudentViewPO;
-import com.beifen.edu.administration.PO.SchoolTimetablePO;
-import com.beifen.edu.administration.PO.StudentSchoolTimetablePO;
-import com.beifen.edu.administration.PO.TimeTablePO;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.ClassPeriodConstant;
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.constant.SecondaryCodeConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //教务管理业务层
 @Service
@@ -46,6 +43,12 @@ public class TeachingManageService {
     Edu302Dao edu302Dao;
     @Autowired
     Edu108Dao edu108Dao;
+    @Autowired
+    Edu200Dao edu200Dao;
+    @Autowired
+    RedisUtils redisUtils;
+    @Autowired
+    Edu201Dao edu201Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -543,6 +546,80 @@ public class TeachingManageService {
             }
             edu001List = edu001Dao.findStudentsByIds(studentIds);
             resultVO = ResultVO.setSuccess("共找到"+edu001List.size()+"个学生",edu001List);
+        }
+
+        return resultVO;
+    }
+
+
+    public ResultVO searchTaskCanTest(String userId, TestTaskSearchPO testTaskSearchPO) {
+        ResultVO resultVO;
+
+        //从redis中查询二级学院管理权限
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+        //根据权限查询课程
+        Specification<Edu200> edu200specification = new Specification<Edu200>() {
+            public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (testTaskSearchPO.getCourseCode() != null && !"".equals(testTaskSearchPO.getCourseCode())) {
+                    predicates.add(cb.like(root.<String>get("kcdm"), "%"+testTaskSearchPO.getCourseCode()+"%"));
+                }
+                if (testTaskSearchPO.getCourseName() != null && !"".equals(testTaskSearchPO.getCourseName())) {
+                    predicates.add(cb.like(root.<String>get("kcmc"), "%"+testTaskSearchPO.getCourseName()+"%"));
+                }
+                if (testTaskSearchPO.getCoursesNature() != null && !"".equals(testTaskSearchPO.getCoursesNature())) {
+                    predicates.add(cb.equal(root.<String>get("kcxzCode"), testTaskSearchPO.getCoursesNature()));
+                }
+                Path<Object> path = root.get("departmentCode");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <departments.size() ; i++) {
+                    in.value(departments.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu200> edu200List = edu200Dao.findAll(edu200specification);
+
+        if(edu200List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
+            return resultVO;
+        }
+
+        List<Long> edu200IdList = edu200List.stream().map(e -> e.getBF200_ID()).collect(Collectors.toList());
+
+        List<Long> edu108IdList = edu108Dao.findPlanByEdu200Ids(edu200IdList);
+
+        if(edu108IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
+            return resultVO;
+        }
+
+        //查询任务书
+        Specification<Edu201> edu201specification = new Specification<Edu201>() {
+            public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (testTaskSearchPO.getClassName() != null && !"".equals(testTaskSearchPO.getClassName())) {
+                    predicates.add(cb.like(root.<String>get("className"), "%"+testTaskSearchPO.getClassName()));
+                }
+                Path<Object> path = root.get("edu108_id");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <edu108IdList.size() ; i++) {
+                    in.value(edu108IdList.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu201> edu201List = edu201Dao.findAll(edu201specification);
+
+        if(edu201List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门课程");
         }
 
         return resultVO;
