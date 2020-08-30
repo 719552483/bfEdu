@@ -275,7 +275,7 @@ function stuffTermArae(termInfo,str){
 //填充教学点下拉框
 function stuffJxdArae(jxdInfo,str){
 	for (var i = 0; i < jxdInfo.length; i++) {
-		str += '<option value="' +jxdInfo[i].edu500Id + '">' + jxdInfo[i].jxdmc
+		str += '<option value="' +jxdInfo[i].edu500Id + '">' + jxdInfo[i].localName
 			+ '</option>';
 	}
 	stuffManiaSelect("#skdd", str);

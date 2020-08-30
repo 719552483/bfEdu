@@ -185,4 +185,9 @@ public class PageRelatedController {
 	public String teacherClassChangePage() {
 		return "teacherClassChange";
 	}
+
+	@RequestMapping("ackExam")
+	public String ackExamackExamPage() {
+		return "ackExam";
+	}
 }

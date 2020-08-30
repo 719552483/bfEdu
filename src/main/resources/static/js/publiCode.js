@@ -1632,7 +1632,7 @@ function confrimModifyXn(row,index){
 	var modifyXn_startTime=$("#modifyXn_startTime"+index).val();
 	var modifyXn_endTime=$("#modifyXn_endTime"+index).val();
 	var modifyXn_relaseTime=$("#modifyXn_relaseTime"+index).val();
-	if(modifyXn_name===row.xnmc&&modifyXn_startTime===row.kssj&&modifyXn_endTime===row.jssj){
+	if(modifyXn_name===row.xnmc&&modifyXn_startTime===row.kssj&&modifyXn_endTime===row.jssj&&modifyXn_relaseTime==row.relaseTime){
 		cancelModifyXn(row,index);
 	}else{
 		if(modifyXn_name===""){
@@ -1666,7 +1666,7 @@ function confrimModifyXn(row,index){
 		}
 
 		if(modifyXn_relaseTime!==""){
-			if(!checkTime(modifyXn_endTime,modifyXn_relaseTime)){
+			if(checkTime(modifyXn_endTime,modifyXn_relaseTime)){
 				toastr.warning("课表发布时间必须早于学年结束时间");
 				return;
 			}
@@ -1739,11 +1739,14 @@ function sendModifyXnInfo(xnObject){
 
 //预备新增学年
 function addXn(){
+	$('#addXnName,#addXn_startTime,#addXn_endTime,#relaseTime').val("");
 	$("#addXnModal").find(".moadalTitle").html("新增学年");
 	$.showModal("#addXnModal",true);
 	drawCalenr("#addXn_startTime",true);
 	drawCalenr("#addXn_endTime",true);
 	drawCalenr("#relaseTime",true);
+
+
 
 	//新增学年
 	$('.addXn_confimBtn').unbind('click');
@@ -1790,7 +1793,7 @@ function confimAddXn(){
 	}
 
 	if(relaseTime!==""){
-		if(!checkTime(endTime,relaseTime)){
+		if(checkTime(endTime,relaseTime)){
 			toastr.warning("课表发布时间必须早于学年结束时间");
 			return;
 		}
