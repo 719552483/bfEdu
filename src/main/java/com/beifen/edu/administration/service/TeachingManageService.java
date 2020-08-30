@@ -605,7 +605,7 @@ public class TeachingManageService {
                     predicates.add(cb.like(root.<String>get("className"), "%"+testTaskSearchPO.getClassName()+"%"));
                 }
                 predicates.add(cb.isNotNull(root.<String>get("sfypk")));
-                predicates.add(cb.notEqual(root.<String>get("sfsqks"), "T"));
+                predicates.add(cb.equal(root.<String>get("sfsqks"), "F"));
 
                 Path<Object> path = root.get("edu108_ID");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
@@ -625,6 +625,28 @@ public class TeachingManageService {
             resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门课程",edu201List);
         }
 
+        return resultVO;
+    }
+
+
+    //申请考试
+    public ResultVO askForExam(List<String> edu201IdList, Edu600 edu600) {
+        ResultVO resultVO;
+
+        for (String s : edu201IdList) {
+            edu201Dao.changeTestStatus(s,"passing");
+
+            edu600.setBusinessKey(Long.parseLong(s));
+            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+
+            if(!isSuccess) {
+                edu201Dao.changeTestStatus(s,"F");
+                resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+                return resultVO;
+            }
+        }
+
+        resultVO = ResultVO.setSuccess("申请成功");
         return resultVO;
     }
 }

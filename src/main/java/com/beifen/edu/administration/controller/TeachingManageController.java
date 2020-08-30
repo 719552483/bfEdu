@@ -171,5 +171,21 @@ public class TeachingManageController {
 
 
 
+    /**
+     * 申请考试
+     * @param tasks
+     * @param approvalInfo
+     * @return
+     */
+    @RequestMapping("/askForExam")
+    @ResponseBody
+    public ResultVO askForExam(@RequestParam("tasks") String tasks,@RequestParam("approvalInfo") String approvalInfo) {
+        List<String> edu201IdList = JSON.parseArray(tasks, String.class);
+        JSONObject jsonObject = JSON.parseObject(approvalInfo);
+        Edu600 edu600 = JSON.toJavaObject(jsonObject, Edu600.class);
+        ResultVO result = teachingManageService.askForExam(edu201IdList,edu600);
+        return result;
+    }
+
 
 }

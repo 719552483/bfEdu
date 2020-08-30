@@ -10,7 +10,7 @@ public class Edu500 {
   private Long edu500Id;//主键
   private String city;//所属市
   private String cityCode;//地级市代码
-  private String county;//所属区县
+  private String country;//所属区县
   private String townShip;//所属县乡
   private String localName;//教学点名称
   private String localAddress;//详细地址
@@ -41,12 +41,12 @@ public class Edu500 {
     this.city = city;
   }
 
-  public String getCounty() {
-    return county;
+  public String getCountry() {
+    return country;
   }
 
-  public void setCounty(String county) {
-    this.county = county;
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getTownShip() {

@@ -5,7 +5,7 @@ $(function() {
     $('.isSowIndex').selectMania(); //初始化下拉框
     $("input[type='number']").inputSpinner();
     drawlocalInfoTableEmptyTable();
-    getSearchAreaSelectInfo();
+    // getSearchAreaSelectInfo();
     binBind();
     stuffEJDElement(EJDMElementInfo);
 });
@@ -148,16 +148,17 @@ function stufflocalInfoTable(tableInfo) {
             '<ul class="toolbar tabletoolbar">' +
             '<li id="localInfoDetails" class="queryBtn"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
             '<li id="modifySite" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+            '<li id="modifySite" class="pointBtn"><span><img src="images/t02.png" style="width:24px"></span>教学任务点信息</li>' +
             '<li id="removeSite" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
             '</ul>'
         ]
             .join('');
     }
 
-    drawPagination(".localInfoTableArea", "教学任务点信息");
+    drawPagination(".localInfoTableArea", "教学点信息");
     drawSearchInput(".localInfoTableArea");
     changeTableNoRsTip();
-    changeColumnsStyle(".localInfoTableArea", "教学任务点信息");
+    changeColumnsStyle(".localInfoTableArea", "教学点信息");
     toolTipUp(".myTooltip");
     btnControl();
 }
@@ -250,31 +251,25 @@ function localInfoDetails(row,index){
 //重置教学点信息模态框
 function rebackSiteInfo(){
     var reObject = new Object();
-    reObject.InputIds = "#addTeachingPointName,#addCapacity,#addRemarks,#addAddress";
-    reObject.normalSelectIds = "#addSchool,#addManagementDepartment,#addSiteType,#addSiteNature,#addBuilding,#addStorey,#addSiteManager,#addSiteStatus";
+    reObject.InputIds = "#addLocalName,#addCountry,#addTownShip,#addLocalAddress,#remarks";
+    reObject.normalSelectIds = "#addCity";
     reReloadSearchsWithSelect(reObject);
 }
 
 //填充教学点信息
 function stufflocalInfoDetails(row){
-    $("#addTeachingPointName").val(row.localName);
-    $("#addAddress").val(row.localAddress);
-    stuffManiaSelectWithDeafult("#addSchool", row.ssxqCode);
-    stuffManiaSelectWithDeafult("#addManagementDepartment", row.glxbCode);
-    stuffManiaSelectWithDeafult("#addSiteType", row.cdlxCode);
-    stuffManiaSelectWithDeafult("#addSiteNature", row.cdxzCode);
-    stuffManiaSelectWithDeafult("#addBuilding", row.lfCode);
-    stuffManiaSelectWithDeafult("#addStorey", row.lcCode);
-    stuffManiaSelectWithDeafult("#addSiteManager", row.cdfzrCode);
-    stuffManiaSelectWithDeafult("#addSiteStatus", row.cdztCode);
-    $("#addRemarks").val(row.bz);
-    $("#addCapacity").val(row.rnrs);
+    $("#addCountry").val(row.country);
+    $("#addLocalName").val(row.localName);
+    $("#addTownShip").val(row.townShip);
+    $("#addLocalAddress").val(row.localAddress);
+    stuffManiaSelectWithDeafult("#addCity", row.cityCode);
+    $("#addRemarks").val(row.remarks);
 }
 
 //预备修改教学点
 function modifySite(row,index){
     $.showModal("#addSiteModal",true);
-    $("#addSiteModal").find(".moadalTitle").html("修改教学任务点-"+row.jxdmc);
+    $("#addSiteModal").find(".moadalTitle").html("修改教学点-"+row.localName);
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
     //清空模态框中元素原始值
     rebackSiteInfo();
@@ -295,7 +290,7 @@ function confirmmodifySite(row,index){
     }
     $.hideModal("#addSiteModal",false);
     $.showModal("#remindModal",true);
-    $(".remindType").html(row.jxdmc);
+    $(".remindType").html(row.localName);
     $(".remindActionType").html("修改");
 
     //确认按钮绑定事件
@@ -436,47 +431,30 @@ function startSearch(){
 
 //获得检索区域的值
 function getSearchValue(){
-    var jxdmc= $("#SiteName").val();
-    var ssxq = getNormalSelectText("school");
-    var ssxqCode = getNormalSelectValue("school");
-    var cdlx = getNormalSelectText("siteStype");
-    var cdlxCode = getNormalSelectValue("siteStype");
-    var cdxz = getNormalSelectText("siteNature");
-    var cdxzCode = getNormalSelectValue("siteNature");
-    var lf= getNormalSelectText("building");
-    var lfCode = getNormalSelectValue("building");
-    var lc = getNormalSelectText("storey");
-    var lcCode = getNormalSelectValue("storey");
+    var localName= $("#localName").val();
+    var country= $("#country").val();
+    var townShip= $("#townShip").val();
+    var city = getNormalSelectText("city");
+    var cityCode = getNormalSelectValue("city");
+
 
 
     var returnObject = new Object();
-    if(jxdmc!==""){
-        returnObject.jxdmc = jxdmc;
+    if(localName!==""){
+        returnObject.localName = localName;
     }
 
-    if(ssxq!==""){
-        returnObject.ssxq = ssxq;
-        returnObject.ssxqCode = ssxqCode;
+    if(country!==""){
+        returnObject.country = country;
     }
 
-    if(cdlx!==""){
-        returnObject.cdlx = cdlx;
-        returnObject.cdlxCode = cdlxCode;
+    if(townShip!==""){
+        returnObject.townShip = townShip;
     }
 
-    if(cdxz!==""){
-        returnObject.cdxz = cdxz;
-        returnObject.cdxzCode = cdxzCode;
-    }
-
-    if(lf!==""){
-        returnObject.lf = lf;
-        returnObject.lfCode = lfCode;
-    }
-
-    if(lc!==""){
-        returnObject.lc = lc;
-        returnObject.lcCode = lcCode;
+    if(city!==""){
+        returnObject.city = city;
+        returnObject.cityCode = cityCode;
     }
 
     return returnObject;
@@ -517,8 +495,8 @@ function searchAllSiteBy(searchObject){
 //重置检索
 function researchSites(){
     var reObject = new Object();
-    reObject.InputIds = "#SiteName";
-    reObject.normalSelectIds = "#school,#siteStype,#building,#storey,#siteNature,#employDepartment";
+    reObject.InputIds = "#localName,#country,#townShip";
+    reObject.normalSelectIds = "#city";
     reReloadSearchsWithSelect(reObject);
     drawlocalInfoTableEmptyTable();
 }

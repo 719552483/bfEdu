@@ -112,6 +112,7 @@ public class ApprovalProcessService {
                 department = edu107.getEdu104();
                 break;
             case"04":
+            case"08":
                 Edu201 edu201 = edu201Dao.findOne(businessKey);
                 Edu108 edu1081 = edu108Dao.findOne(edu201.getEdu108_ID());
                 Edu107 edu1071 = edu107Dao.findOne(edu1081.getEdu107_ID());
@@ -168,15 +169,15 @@ public class ApprovalProcessService {
                 Edu101 edu101 = edu101Dao.findOne(businessKey);
                 keyWord = edu101.getXm();
                 break;
+            case"08":
+                Edu201 edu2011 = edu201Dao.findOne(businessKey);
+                keyWord = edu2011.getClassName()+edu2011.getKcmc()+"考试申请";
+                break;
             default:
                 keyWord = "查无此类型";
                 break;
-
         }
-
-
         return keyWord;
-
     }
 
     /**
@@ -340,6 +341,9 @@ public class ApprovalProcessService {
                 case"07":
                     edu101Dao.updateState(businessKey, "pass");
                     break;
+                case"08":
+                    edu201Dao.changeTestStatus(businessKey,"T");
+                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -368,6 +372,9 @@ public class ApprovalProcessService {
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
                     break;
+                case"08":
+                    edu201Dao.changeTestStatus(businessKey,"F");
+                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -394,6 +401,9 @@ public class ApprovalProcessService {
                     break;
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
+                    break;
+                case"08":
+                    edu201Dao.changeTestStatus(businessKey,"F");
                     break;
                 default:
                     isSuccess = false;
@@ -468,13 +478,15 @@ public class ApprovalProcessService {
                 BeanUtils.copyProperties(approvalEx,e);
                 //查询申请人信息
                 Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
-                approvalEx.setProposerName(proposer.getYhm());
+                Edu101 edu101 = edu101Dao.findOne(Long.parseLong(proposer.getUserKey()));
+                approvalEx.setProposerName(edu101.getXm());
                 //获取上一步审批人信息
                 if(e.getLastExaminerKey() == null || "".equals(e.getExaminerkey())) {
                     approvalEx.setLastPersonName("");
                 }else {
                     Edu990 lastPerson = edu990Dao.queryUserById(e.getLastExaminerKey().toString());
-                    approvalEx.setLastPersonName(lastPerson.getYhm());
+                    Edu101 edu1011 = edu101Dao.findOne(Long.parseLong(lastPerson.getUserKey()));
+                    approvalEx.setLastPersonName(edu1011.getXm());
                 }
                 //获取业务类型信息
                 String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
@@ -574,13 +586,15 @@ public class ApprovalProcessService {
                 BeanUtils.copyProperties(approvalEx,e);
                 //查询申请人信息
                 Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
-                approvalEx.setProposerName(proposer.getYhm());
+                Edu101 edu101 = edu101Dao.findOne(Long.parseLong(proposer.getUserKey()));
+                approvalEx.setProposerName(edu101.getXm());
                 //获取上一步审批人信息
                 if(e.getLastExaminerKey() == null || "".equals(e.getExaminerkey())) {
                     approvalEx.setLastPersonName("");
                 }else {
                     Edu990 lastPerson = edu990Dao.queryUserById(e.getLastExaminerKey().toString());
-                    approvalEx.setLastPersonName(lastPerson.getYhm());
+                    Edu101 edu1011 = edu101Dao.findOne(Long.parseLong(lastPerson.getUserKey()));
+                    approvalEx.setLastPersonName(edu1011.getXm());
                 }
                 //获取业务类型信息
                 String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
@@ -620,6 +634,7 @@ public class ApprovalProcessService {
                 object = trainingPlanP0;
                 break;
             case"04":
+            case"08":
                 object = edu201Dao.getTaskById(businessKey);
                 break;
             case"05":
@@ -677,13 +692,15 @@ public class ApprovalProcessService {
                     BeanUtils.copyProperties(approvalEx,e);
                     //查询申请人信息
                     Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
-                    approvalEx.setProposerName(proposer.getYhm());
+                    Edu101 edu101 = edu101Dao.findOne(Long.parseLong(proposer.getUserKey()));
+                    approvalEx.setProposerName(edu101.getXm());
                     //获取当前审批人信息
                     if(e.getExaminerkey() == null || "".equals(e.getExaminerkey())) {
                         approvalEx.setExaminerName("");
                     }else {
                         Edu990 lastPerson = edu990Dao.queryUserById(e.getExaminerkey().toString());
-                        approvalEx.setExaminerName(lastPerson.getYhm());
+                        Edu101 edu1011 = edu101Dao.findOne(Long.parseLong(lastPerson.getUserKey()));
+                        approvalEx.setExaminerName(edu1011.getXm());
                     }
                     //获取业务类型信息
                     String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");
@@ -718,13 +735,15 @@ public class ApprovalProcessService {
                 BeanUtils.copyProperties(approvalEx,e);
                 //查询申请人信息
                 Edu990 proposer = edu990Dao.queryUserById(e.getProposerKey().toString());
-                approvalEx.setProposerName(proposer.getYhm());
+                Edu101 edu101 = edu101Dao.findOne(Long.parseLong(proposer.getUserKey()));
+                approvalEx.setProposerName(edu101.getXm());
                 //获取当前审批人信息
                 if(e.getExaminerkey() == null || "".equals(e.getExaminerkey())) {
                     approvalEx.setExaminerName("");
                 }else {
                     Edu990 lastPerson = edu990Dao.queryUserById(e.getExaminerkey().toString());
-                    approvalEx.setExaminerName(lastPerson.getYhm());
+                    Edu101 edu1011 = edu101Dao.findOne(Long.parseLong(lastPerson.getUserKey()));
+                    approvalEx.setExaminerName(edu1011.getXm());
                 }
                 //获取业务类型信息
                 String splx = edu000Dao.queryEjdmMcByEjdmZ(e.getBusinessType(), "splx");

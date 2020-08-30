@@ -103,4 +103,10 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Transactional
 	@Query(value = "UPDATE edu201 SET sffbjxrws = ?2 WHERE Edu201_ID =?1", nativeQuery = true)
 	void updateRwsState(String edu201id, String f);
+
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE edu201 SET sfsqks = ?2 WHERE Edu201_ID =?1", nativeQuery = true)
+	void changeTestStatus(String s, String testFlag);
 }

@@ -82,6 +82,18 @@ public class TeachingPointService {
         Specification<Edu500> specification = new Specification<Edu500>() {
             public Predicate toPredicate(Root<Edu500> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu500.getLocalName() != null && !"".equals(edu500.getLocalName())) {
+                    predicates.add(cb.like(root.<String> get("localName"), "%"+edu500.getLocalName()+"%"));
+                }
+                if (edu500.getCountry() != null && !"".equals(edu500.getCountry())) {
+                    predicates.add(cb.like(root.<String> get("country"), "%"+edu500.getCountry()+"%"));
+                }
+                if (edu500.getTownShip() != null && !"".equals(edu500.getTownShip())) {
+                    predicates.add(cb.like(root.<String> get("townShip"), "%"+edu500.getTownShip()+"%"));
+                }
+                if (edu500.getCityCode() != null && !"".equals(edu500.getCityCode())) {
+                    predicates.add(cb.equal(root.<String> get("cityCode"), edu500.getCityCode()));
+                }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -113,14 +125,6 @@ public class TeachingPointService {
     //删除教学点
     public ResultVO removeSite(List<String> deleteArray) {
         ResultVO resultVO;
-        for (String s : deleteArray) {
-            boolean isUsed = checkIsUsed(s);
-            if (isUsed) {
-                resultVO = ResultVO.setFailed("存在教学点被占用，无法进行删除操作");
-                return resultVO;
-            }
-        }
-
         for (String s : deleteArray) {
             edu500Dao.removeSite(s);
         }
