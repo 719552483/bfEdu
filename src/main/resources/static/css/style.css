@@ -380,6 +380,7 @@ h2 {
 	behavior: url(js/pie.htc);
 	white-space: nowrap;
 	position: relative;
+	padding-right: 11px;
 }
 
 .user span {
@@ -402,7 +403,7 @@ h2 {
 	font-weight: normal;
 	color: #fff;
 	font-size: 14px;
-	margin-right: 13px;
+	/*margin-right: 13px;*/
 	margin-top: 7px;
 	line-height: 18px;
 }
