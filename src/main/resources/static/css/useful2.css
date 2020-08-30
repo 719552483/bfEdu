@@ -430,6 +430,19 @@ float: left;
     font-weight: 600;
 }
 
+.sepcialManyInfoInput {
+	width: 79% !important;
+	margin-left: -1% !important;
+	text-indent: 13px;
+	color: #636363;
+	font-weight: 600;
+}
+
+@media screen and (max-width:630px) {
+	.sepcialManyInfoInput {
+		width:60% !important;
+	}
+}
 
 /*拆班表的多选select*/
 .multi-select-container {
@@ -467,6 +480,7 @@ float: left;
 }
 
 /*拆班表的多选select end*/
+.sepcialManyInfoInput::-webkit-input-placeholder,
 .colInput::-webkit-input-placeholder,
 .combinedClassTipInput::-webkit-input-placeholder,
 .allWidthInput::-webkit-input-placeholder,

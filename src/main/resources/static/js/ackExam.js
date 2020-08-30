@@ -195,7 +195,7 @@ function sendExamAsk(sendArray){
 			hideloding();
 			if (backjson.code===200) {
 				for (var i = 0; i < sendArray.length; i++) {
-					$("#putOutTaskTable").bootstrapTable('removeByUniqueId', sendArray[i]);
+					$("#askForExamTable").bootstrapTable('removeByUniqueId', sendArray[i]);
 				}
 				$.hideModal("#remindModal");
 				toastr.success(backjson.msg);
