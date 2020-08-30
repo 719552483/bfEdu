@@ -510,6 +510,7 @@ public class AdministrationPageService {
 			Edu201 edu201 = new Edu201();
 			edu201.setEdu108_ID(Long.parseLong(edu108Id));
 			edu201.setSffbjxrws("F");
+			edu201.setSfsqks("F");
 			edu201.setKcmc(edu108.getKcmc());
 			edu201.setZxs(edu108.getZxs().toString());
 			edu201DAO.save(edu201);

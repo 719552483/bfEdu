@@ -604,7 +604,7 @@ public class TeachingManageService {
                 if (testTaskSearchPO.getClassName() != null && !"".equals(testTaskSearchPO.getClassName())) {
                     predicates.add(cb.like(root.<String>get("className"), "%"+testTaskSearchPO.getClassName()+"%"));
                 }
-                predicates.add(cb.equal(root.<String>get("sfypk"), "T"));
+                predicates.add(cb.isNotNull(root.<String>get("sfypk")));
                 predicates.add(cb.notEqual(root.<String>get("sfsqks"), "T"));
 
                 Path<Object> path = root.get("edu108_ID");//定义查询的字段
@@ -622,7 +622,7 @@ public class TeachingManageService {
         if(edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门课程");
+            resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门课程",edu201List);
         }
 
         return resultVO;
