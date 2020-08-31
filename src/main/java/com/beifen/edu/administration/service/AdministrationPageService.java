@@ -1202,6 +1202,7 @@ public class AdministrationPageService {
 			edu005.setEdu001_ID(e.getEdu001_ID());
 			edu005.setStudentName(e.getXm());
 			edu005.setCourseName(edu201.getKcmc());
+			edu005.setStudentCode(e.getXh());
 			edu005.setEdu300_ID(Long.parseLong(e.getEdu300_ID()));
 			edu005.setClassName(e.getXzbname());
 			edu005.setEdu201_ID(Long.parseLong(edu201ID));

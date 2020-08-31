@@ -36,6 +36,10 @@ public class StaffManageService {
     @Autowired
     Edu005Dao edu005Dao;
     @Autowired
+    Edu108Dao edu108Dao;
+    @Autowired
+    Edu107Dao edu107Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     RedisUtils redisUtils;
@@ -168,41 +172,47 @@ public class StaffManageService {
         }
 
         //根据条件筛选学生
-        Specification<Edu001> specification = new Specification<Edu001>() {
-            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        Specification<Edu107> specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
-                    predicates.add(cb.equal(root.<String>get("pycc"), edu001.getPycc()));
+                    predicates.add(cb.equal(root.<String>get("edu103"), edu001.getPycc()));
                 }
                 if (edu001.getSzxb() != null && !"".equals(edu001.getSzxb())) {
-                    predicates.add(cb.equal(root.<String>get("szxb"), edu001.getSzxb()));
+                    predicates.add(cb.equal(root.<String>get("edu104"), edu001.getSzxb()));
                 }
                 if (edu001.getNj() != null && !"".equals(edu001.getNj())) {
-                    predicates.add(cb.like(root.<String>get("nj"), '%' + edu001.getNj() + '%'));
+                    predicates.add(cb.like(root.<String>get("edu105"), '%' + edu001.getNj() + '%'));
                 }
                 if (edu001.getZybm() != null && !"".equals(edu001.getZybm())) {
-                    predicates.add(cb.equal(root.<String>get("zybm"), edu001.getZybm()));
+                    predicates.add(cb.equal(root.<String>get("edu106"), edu001.getZybm()));
                 }
-                if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
-                    predicates.add(cb.like(root.<String>get("xm"),"%"+edu001.getXm()+"%"));
-                }
-                if (edu001.getXh() != null && !"".equals(edu001.getXh())) {
-                    predicates.add(cb.like(root.<String>get("xh"),"%"+edu001.getXh()+"%"));
-                }
+
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
 
-        List<Edu001> edu001List = edu001Dao.findAll(specification);
-        //取出学生ID集合
-        List<Long> studentIdList = edu001List.stream().map(e -> e.getEdu001_ID()).collect(Collectors.toList());
+        List<Edu107> edu107List = edu107Dao.findAll(specification);
+        List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).collect(Collectors.toList());
+        List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
+        List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+
+        //连个201id集合去交集
+        edu201IdList.retainAll(edu201Ids);
+
 
         //根据条件筛选成绩表
         Specification<Edu005> edu005Specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
-                    predicates.add(cb.like(root.<String>get("xh"), "%" + edu005.getCourseName() + "%"));
+                    predicates.add(cb.like(root.<String>get("courseName"), "%" + edu005.getCourseName() + "%"));
+                }
+                if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
+                    predicates.add(cb.like(root.<String>get("studentName"),"%"+edu001.getXm()+"%"));
+                }
+                if (edu001.getXh() != null && !"".equals(edu001.getXh())) {
+                    predicates.add(cb.like(root.<String>get("studentCode"),"%"+edu001.getXh()+"%"));
                 }
 
                 Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
@@ -210,15 +220,7 @@ public class StaffManageService {
                 for (int i = 0; i < edu201IdList.size(); i++) {
                     inEdu201.value(edu201IdList.get(i));//存入值
                 }
-
-                Path<Object> path = root.get("edu001_ID");//定义查询的字段
-                CriteriaBuilder.In<Object> inEdu001 = cb.in(path);
-                for (int i = 0; i < studentIdList.size(); i++) {
-                    inEdu001.value(studentIdList.get(i));//存入值
-                }
-
                 predicates.add(cb.and(inEdu201));
-                predicates.add(cb.and(inEdu001));
 
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

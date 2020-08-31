@@ -14,6 +14,7 @@ public class Edu005 {
     private String courseName;//课程名称
     private String className;//行政班名称
     private String StudentName;//学生姓名
+    private String studentCode;//学生学号
     private String gradeEnter;//录入人姓名
     private String entryDate;//录入日期
     private String isExamCrouse;//是否为考试课
@@ -119,5 +120,13 @@ public class Edu005 {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
     }
 }
