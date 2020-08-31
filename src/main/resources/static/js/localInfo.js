@@ -66,6 +66,9 @@ function stufflocalInfoTable(tableInfo) {
         },
         'click #removeSite': function(e, value, row, index) {
             removeSite(row);
+        },
+        'click #pointDetail': function(e, value, row, index) {
+            pointDetail(row);
         }
     };
 
@@ -148,7 +151,7 @@ function stufflocalInfoTable(tableInfo) {
             '<ul class="toolbar tabletoolbar">' +
             '<li id="localInfoDetails" class="queryBtn"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
             '<li id="modifySite" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-            '<li id="modifySite" class="pointBtn"><span><img src="img/culturePlanapproval.png" style="width:24px"></span>教学任务点信息</li>' +
+            '<li id="pointDetail" class="pointBtn"><span><img src="img/culturePlanapproval.png" style="width:24px"></span>教学任务点信息</li>' +
             '<li id="removeSite" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
             '</ul>'
         ]
@@ -161,6 +164,11 @@ function stufflocalInfoTable(tableInfo) {
     changeColumnsStyle(".localInfoTableArea", "教学点信息");
     toolTipUp(".myTooltip");
     btnControl();
+}
+
+//跳转教学任务点
+function pointDetail(row){
+    parent.rightFrame.location.href="localPointInfo.html?edu500Id="+row.edu500Id;
 }
 
 //单个删除教学点
@@ -178,6 +186,7 @@ function removeSite(row){
         e.stopPropagation();
     });
 }
+
 
 //批量删除教学点
 function removeSites(){
@@ -251,7 +260,7 @@ function localInfoDetails(row,index){
 //重置教学点信息模态框
 function rebackSiteInfo(){
     var reObject = new Object();
-    reObject.InputIds = "#addLocalName,#addCountry,#addTownShip,#addLocalAddress,#remarks";
+    reObject.InputIds = "#addLocalName,#addCountry,#addTownShip,#addLocalAddress,#addRemarks";
     reObject.normalSelectIds = "#addCity";
     reReloadSearchsWithSelect(reObject);
 }
@@ -368,7 +377,7 @@ function getnewlocalInfo(){
 //预备添加教学点
 function wantAddSite(){
     rebackSiteInfo();
-    $("#addSiteModal").find(".moadalTitle").html("新增教学任务点");
+    $("#addSiteModal").find(".moadalTitle").html("新增教学点");
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
     $.showModal("#addSiteModal",true);
     //确认按钮绑定事件

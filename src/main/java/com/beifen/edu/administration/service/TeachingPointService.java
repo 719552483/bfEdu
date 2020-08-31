@@ -3,12 +3,10 @@ package com.beifen.edu.administration.service;
 
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.dao.Edu200Dao;
-import com.beifen.edu.administration.dao.Edu203Dao;
-import com.beifen.edu.administration.dao.Edu400Dao;
-import com.beifen.edu.administration.dao.Edu500Dao;
+import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.Edu203;
 import com.beifen.edu.administration.domian.Edu500;
+import com.beifen.edu.administration.domian.Edu501;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,8 @@ public class TeachingPointService {
     Edu200Dao edu200Dao;
     @Autowired
     Edu203Dao edu203Dao;
+    @Autowired
+    Edu501Dao edu501Dao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -182,6 +182,50 @@ public class TeachingPointService {
 
         resultVO = ResultVO.setSuccess("共找到"+localUsedPOList.size()+"个教学点",localUsedPOList);
 
+        return resultVO;
+    }
+
+
+    //新增叫教学任务点
+    public ResultVO addLocalPointInfo(Edu501 edu501) {
+        ResultVO resultVO;
+        edu501Dao.save(edu501);
+        resultVO = ResultVO.setSuccess("操作成功",edu501.getEdu501Id());
+        return resultVO;
+    }
+
+
+
+    //搜索教学任务点
+    public ResultVO searchPointInfo(Edu501 edu501) {
+        ResultVO resultVO;
+        Specification<Edu501> specification = new Specification<Edu501>() {
+            public Predicate toPredicate(Root<Edu501> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu501.getPointName() != null && !"".equals(edu501.getPointName())) {
+                    predicates.add(cb.like(root.<String> get("localName"), "%"+edu501.getPointName()+"%"));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu501> pointList = edu501Dao.findAll(specification);
+
+        if(pointList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合要求的教学任务点",pointList);
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+pointList.size()+"个教学任务点",pointList);
+        }
+        return resultVO;
+    }
+
+
+    //删除教学任务点
+    public ResultVO removePoint(List<String> deleteArray) {
+        ResultVO resultVO;
+        for (String s : deleteArray) {
+            edu501Dao.removeSite(s);
+        }
+        resultVO = ResultVO.setSuccess("成功删除了"+deleteArray.size()+"个教学点");
         return resultVO;
     }
 }

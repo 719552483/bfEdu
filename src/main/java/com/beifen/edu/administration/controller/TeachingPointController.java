@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu500;
+import com.beifen.edu.administration.domian.Edu501;
 import com.beifen.edu.administration.service.TeachingPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,6 +75,50 @@ public class TeachingPointController {
         JSONObject jsonObject = JSONObject.parseObject(SearchCriteria);
         LocalUsedPO localUsedPO = JSON.toJavaObject(jsonObject,LocalUsedPO.class);
         ResultVO result = teachingPointService.searchLocalUsed(localUsedPO);
+        return result;
+    }
+
+
+    /**
+     * 新增教学任务点
+     * @param newSiteInfo
+     * @return returnMap
+     */
+    @RequestMapping("/addLocalPointInfo")
+    @ResponseBody
+    public ResultVO addLocalPointInfo(@RequestParam("newSiteInfo") String newSiteInfo) {
+        JSONObject jsonObject = JSONObject.parseObject(newSiteInfo);
+        Edu501 edu501 = JSON.toJavaObject(jsonObject,Edu501.class);
+        ResultVO result = teachingPointService.addLocalPointInfo(edu501);
+        return result;
+    }
+
+    /**
+     * 搜索教学点
+     * @param SearchCriteria
+     *            搜索条件
+     * @return returnMap
+     */
+    @RequestMapping("/searchPointInfo")
+    @ResponseBody
+    public Object searchPointInfo(@RequestParam String SearchCriteria) {
+        JSONObject jsonObject = JSONObject.parseObject(SearchCriteria);
+        Edu501 edu501 = JSON.toJavaObject(jsonObject,Edu501.class);
+        ResultVO result = teachingPointService.searchPointInfo(edu501);
+        return result;
+    }
+
+
+    /**
+     * 删除教学任务点
+     * @param removeIDs
+     * @return
+     */
+    @RequestMapping("/removePoint")
+    @ResponseBody
+    public ResultVO removePoint(@RequestParam String removeIDs) {
+        List<String> deleteArray = JSONObject.parseArray(removeIDs,String.class);
+        ResultVO result = teachingPointService.removePoint(deleteArray);
         return result;
     }
 }

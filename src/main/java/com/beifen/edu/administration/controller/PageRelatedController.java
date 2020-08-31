@@ -190,4 +190,9 @@ public class PageRelatedController {
 	public String ackExamackExamPage() {
 		return "ackExam";
 	}
+
+	@RequestMapping("localPointInfo")
+	public String localPointInfoPage() {
+		return "localPointInfo";
+	}
 }
