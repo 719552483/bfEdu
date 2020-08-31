@@ -200,11 +200,12 @@ public class StaffManageService {
         List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).collect(Collectors.toList());
         List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
         List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
-
         //两个201id集合去交集
         edu201IdList.retainAll(edu201Ids);
-
-
+        if(edu201IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
         //根据条件筛选成绩表
         Specification<Edu005> edu005Specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
