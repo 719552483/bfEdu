@@ -131,6 +131,8 @@ public class StudentManageService {
         Edu990 edu990 = new Edu990();
         edu990.setYhm(edu001.getXh());
         edu990.setMm("123456");
+        edu990.setJs("学生");
+        edu990.setJsId("8050");
         edu990.setUserKey(edu001.getEdu001_ID().toString());
         edu990Dao.save(edu990);
 
