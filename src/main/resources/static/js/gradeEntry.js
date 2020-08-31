@@ -1,10 +1,10 @@
 var EJDMElementInfo;
 $(function() {
-	$('.isSowIndex').selectMania(); //初始化下拉框
 	getMajorTrainingSelectInfo();
 	drawStudentBaseInfoEmptyTable();
 	btnControl();
 	binBind();
+	$('.isSowIndex').selectMania(); //初始化下拉框
 });
 
 //获取-专业培养计划- 有逻辑关系select信息
@@ -174,13 +174,17 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			}
 		}else{
 			var title="";
-			row.grade==="T"?title="通过":title="不通过";
+			if(row.grade==null){
+				title="暂无成绩";
+			}else{
+				row.grade==="T"?title="通过":title="不通过";
+			}
              var str='<option value="T">通过</option><option value="F">不通过</option>';
 			if(typeof value==="undefined"||value==null||value==="null"){
 				return [
 					'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
 					'<span class="grade grade'+index+'"></span>' +
-					'<select class="myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
+					'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
 						+ str +
 					'</select>'+
 					'</div>'
@@ -189,8 +193,8 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			}else{
 				return [
 					'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
-						'<span class="grade grade'+index+'"></span>' +
-						'<select class="myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
+						'<span class="grade grade'+index+'">'+title+'</span>' +
+						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
 						+ str +
 						'</select>'+
 					'</div>'
@@ -198,6 +202,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 					.join('');
 			}
 		}
+		$('.isSowIndex').selectMania(); // 初始化下拉框
 	}
 
 	function gradeEnterMatter(value, row, index) {
@@ -246,8 +251,8 @@ function wantGradeEntry(row,index){
 		$("#grade"+index).show();
 		row.grade!=null?$("#grade"+index).val(row.grade).focus():$("#grade"+index).val("").focus();
 	}else{
-		$("#grade"+index).selectMania();
-        $(".gradeArea").show();
+        $(".gradeArea"+index).show();
+        $(".myTableSelect"+index).show();
 	}
 }
 
@@ -261,7 +266,7 @@ function comfirmGradeEntry(row,index){
 			return;
 		}
 	}else{
-		 currentGrade=getNormalSelectValue("grade");
+		 currentGrade=$("#grade"+index).val();
 	}
 	sendGrade(currentGrade,row);
 }
@@ -276,7 +281,7 @@ function cancelGradeEntry(row,index){
 		$("#grade"+index).hide();
 		$("#grade"+index).val("");
 	}else{
-		$(".gradeArea").hide();
+		$(".myTableSelect"+index).hide();
 	}
 }
 
