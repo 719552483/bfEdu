@@ -171,7 +171,7 @@ public class StaffManageService {
             return resultVO;
         }
 
-        //根据条件筛选学生
+        //根据条件筛选培养计划
         Specification<Edu107> specification = new Specification<Edu107>() {
             public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -197,7 +197,7 @@ public class StaffManageService {
         List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
         List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
 
-        //连个201id集合去交集
+        //两个201id集合去交集
         edu201IdList.retainAll(edu201Ids);
 
 
