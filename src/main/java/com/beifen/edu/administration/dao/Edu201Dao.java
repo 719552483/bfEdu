@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.beifen.edu.administration.domian.Edu200;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -73,17 +72,9 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	void taskPutScheduleFalse(String edu201ID);
 
 	//根据108ID获取任务书集合
-	@Query(value = "select e.* from Edu201 e where e.edu108_ID in ?1 and e.sfypk is null ",nativeQuery = true)
+	@Query(value = "select e.* from Edu201 e where e.edu108_ID in ?1 and e.sfypk is null  and e.sszt = 'pass'",nativeQuery = true)
 	List<Edu201> queryCulturePlanIds(List<String> current108s);
 
-
-	//根据权限和发布标志获教学任务书ID
-	@Query(value = "select a.Edu201_ID from edu201 a,edu108 b,edu107 c " +
-			"where a.EDU108_ID = b.EDU108_ID " +
-			"and b.EDU107_ID = c.EDU107_ID " +
-			"and a.sffbjxrws = ?2 " +
-			"and c.EDU104 in ?1 ", nativeQuery = true)
-	List<String> findTaskIdByDepartments(List<String> departments,String flag);
 
 	//根据权限获已发布的教学任务书
 	@Query(value = "select a.* from edu201 a,edu108 b,edu107 c " +

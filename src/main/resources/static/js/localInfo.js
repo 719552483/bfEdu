@@ -358,7 +358,7 @@ function getnewlocalInfo(){
     var remarks = $("#addRemarks").val();
 
     var returnObject = new Object();
-    if(localName == "" || localAddress == "" || city == "" || country == "") {
+    if(localName == "" || localAddress == "" || city == "") {
         return undefined;
     }
 

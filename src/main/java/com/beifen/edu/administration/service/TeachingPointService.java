@@ -203,7 +203,10 @@ public class TeachingPointService {
             public Predicate toPredicate(Root<Edu501> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (edu501.getPointName() != null && !"".equals(edu501.getPointName())) {
-                    predicates.add(cb.like(root.<String> get("localName"), "%"+edu501.getPointName()+"%"));
+                    predicates.add(cb.like(root.<String> get("pointName"), "%"+edu501.getPointName()+"%"));
+                }
+                if (edu501.getEdu501Id() != null && !"".equals(edu501.getEdu501Id())) {
+                    predicates.add(cb.equal(root.<String> get("edu500Id"), edu501.getEdu501Id()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

@@ -5,7 +5,7 @@ $(function() {
     EJDMElementInfo=queryEJDMElementInfo();
     $('.isSowIndex').selectMania(); //初始化下拉框
     $("input[type='number']").inputSpinner();
-    edu500Id = getQueryVariable("edu500Id")
+    edu500Id = getQueryVariable("edu500Id");
     drawlocalInfoTableEmptyTable();
     // getSearchAreaSelectInfo();
     binBind();
@@ -118,7 +118,7 @@ function stufflocalInfoTable(tableInfo) {
                 title: '唯一标识',
                 align: 'center',
                 visible: false
-            }, {
+            },{
                 field: 'pointName',
                 title: '教学任务点名称',
                 align: 'left',
@@ -133,7 +133,6 @@ function stufflocalInfoTable(tableInfo) {
                 title: '备注',
                 align: 'left',
                 formatter: paramsMatter,
-                visible: false
             }, {
                 field: 'action',
                 title: '操作',
@@ -434,12 +433,13 @@ function getSearchValue(){
 
 //按条件检索教学点
 function searchAllSiteBy(searchObject){
+    searchObject.edu500Id = edu500Id;
     $.ajax({
         method : 'get',
         cache : false,
         url : "/searchPointInfo",
         data: {
-            "SearchCriteria":JSON.stringify(searchObject)
+            "SearchCriteria":JSON.stringify(searchObject),
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -485,6 +485,14 @@ function binBind() {
     $('#startSearch').unbind('click');
     $('#startSearch').bind('click', function(e) {
         startSearch();
+        e.stopPropagation();
+    });
+
+    //返回
+    $('#goBack').unbind('click');
+    $('#goBack').bind('click', function(e) {
+        // parent.rightFrame.location.href="localInfo.html";
+        window.history.back()
         e.stopPropagation();
     });
 

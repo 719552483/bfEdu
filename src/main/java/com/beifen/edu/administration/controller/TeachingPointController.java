@@ -101,7 +101,7 @@ public class TeachingPointController {
      */
     @RequestMapping("/searchPointInfo")
     @ResponseBody
-    public ResultVO searchPointInfo(@RequestParam String SearchCriteria) {
+    public ResultVO searchPointInfo(@RequestParam("SearchCriteria") String SearchCriteria) {
         JSONObject jsonObject = JSONObject.parseObject(SearchCriteria);
         Edu501 edu501 = JSON.toJavaObject(jsonObject,Edu501.class);
         ResultVO result = teachingPointService.searchPointInfo(edu501);

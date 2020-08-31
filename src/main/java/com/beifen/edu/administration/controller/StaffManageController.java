@@ -2,6 +2,8 @@ package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.domian.Edu001;
+import com.beifen.edu.administration.domian.Edu005;
 import com.beifen.edu.administration.domian.Edu101;
 import com.beifen.edu.administration.domian.Edu600;
 import com.beifen.edu.administration.service.AdministrationPageService;
@@ -448,4 +450,28 @@ public class StaffManageController {
         ResultVO result = administrationPageService.searchTeacher(edu101,userId);
         return result;
     }
+
+    /**
+     * 查询需要录入成绩的名单
+     * @param userId
+     * @param SearchCriteria
+     * @return
+     */
+    @RequestMapping("queryGrades")
+    @ResponseBody
+    public ResultVO queryGrades(@RequestParam("userId") String userId,@RequestParam("SearchCriteria") String SearchCriteria) {
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        Edu001 edu001 = new Edu001();
+        edu001.setPycc(jsonObject.getString("level"));
+        edu001.setSzxb(jsonObject.getString("department"));
+        edu001.setNj(jsonObject.getString("grade"));
+        edu001.setZybm(jsonObject.getString("major"));
+        edu001.setXm(jsonObject.getString("studentName"));
+        edu001.setXh(jsonObject.getString("studentNumber"));
+        Edu005 edu005 = new Edu005();
+        edu005.setClassName(jsonObject.getString("courseName"));
+        ResultVO result = staffManageService.queryGrades(userId,edu001,edu005);
+        return result;
+    }
+
 }

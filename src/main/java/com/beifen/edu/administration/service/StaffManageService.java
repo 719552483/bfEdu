@@ -2,22 +2,20 @@ package com.beifen.edu.administration.service;
 
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
-import com.beifen.edu.administration.dao.Edu101Dao;
-import com.beifen.edu.administration.dao.Edu201Dao;
-import com.beifen.edu.administration.dao.Edu990Dao;
-import com.beifen.edu.administration.dao.Edu992Dao;
-import com.beifen.edu.administration.domian.Edu101;
-import com.beifen.edu.administration.domian.Edu201;
-import com.beifen.edu.administration.domian.Edu990;
-import com.beifen.edu.administration.domian.Edu992;
+import com.beifen.edu.administration.dao.*;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //教职工管理业务层
 @Service
@@ -26,11 +24,17 @@ public class StaffManageService {
     @Autowired
     Edu101Dao edu101Dao;
     @Autowired
+    Edu001Dao edu001Dao;
+    @Autowired
     Edu201Dao edu201Dao;
     @Autowired
     Edu990Dao edu990Dao;
     @Autowired
     Edu992Dao edu992Dao;
+    @Autowired
+    Edu205Dao edu205Dao;
+    @Autowired
+    Edu005Dao edu005Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -144,6 +148,88 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("暂无教师信息");
         } else {
             resultVO = ResultVO.setSuccess("共找到"+teacherList.size()+"个教师",teacherList);
+        }
+
+        return resultVO;
+    }
+
+
+    //查询需要录入成绩学生
+    public ResultVO queryGrades(String userId, Edu001 edu001, Edu005 edu005) {
+        ResultVO resultVO;
+        String userKey = edu990Dao.findOne(Long.parseLong(userId)).getUserKey();
+
+        //查询教师任务书ID列表
+        List<String> edu201IdList = edu205Dao.findEdu201IdByTeacher(userKey);
+
+        if(edu201IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
+
+        //根据条件筛选学生
+        Specification<Edu001> specification = new Specification<Edu001>() {
+            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
+                    predicates.add(cb.equal(root.<String>get("pycc"), edu001.getPycc()));
+                }
+                if (edu001.getSzxb() != null && !"".equals(edu001.getSzxb())) {
+                    predicates.add(cb.equal(root.<String>get("szxb"), edu001.getSzxb()));
+                }
+                if (edu001.getNj() != null && !"".equals(edu001.getNj())) {
+                    predicates.add(cb.like(root.<String>get("nj"), '%' + edu001.getNj() + '%'));
+                }
+                if (edu001.getZybm() != null && !"".equals(edu001.getZybm())) {
+                    predicates.add(cb.equal(root.<String>get("zybm"), edu001.getZybm()));
+                }
+                if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
+                    predicates.add(cb.like(root.<String>get("xm"),"%"+edu001.getXm()+"%"));
+                }
+                if (edu001.getXh() != null && !"".equals(edu001.getXh())) {
+                    predicates.add(cb.like(root.<String>get("xh"),"%"+edu001.getXh()+"%"));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu001> edu001List = edu001Dao.findAll(specification);
+        //取出学生ID集合
+        List<Long> studentIdList = edu001List.stream().map(e -> e.getEdu001_ID()).collect(Collectors.toList());
+
+        //根据条件筛选成绩表
+        Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.like(root.<String>get("xh"), "%" + edu005.getCourseName() + "%"));
+                }
+
+                Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
+                CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
+                for (int i = 0; i < edu201IdList.size(); i++) {
+                    inEdu201.value(edu201IdList.get(i));//存入值
+                }
+
+                Path<Object> path = root.get("edu001_ID");//定义查询的字段
+                CriteriaBuilder.In<Object> inEdu001 = cb.in(path);
+                for (int i = 0; i < studentIdList.size(); i++) {
+                    inEdu001.value(studentIdList.get(i));//存入值
+                }
+
+                predicates.add(cb.and(inEdu201));
+                predicates.add(cb.and(inEdu001));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到符合要求的学生");
+        } else {
+            resultVO = ResultVO.setSuccess("查找成功",edu005List);
         }
 
         return resultVO;

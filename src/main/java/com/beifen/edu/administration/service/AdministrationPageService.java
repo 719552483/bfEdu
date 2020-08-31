@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,8 @@ public class AdministrationPageService {
 	private Edu001Dao edu001DAO;
 	@Autowired
 	private Edu000Dao edu000DAO;
+	@Autowired
+	private Edu005Dao edu005Dao;
 	@Autowired
 	private Edu993Dao edu993DAO;
 	@Autowired
@@ -79,6 +79,8 @@ public class AdministrationPageService {
 	private Edu205Dao edu205DAO;
 	@Autowired
 	private Edu302Dao edu302DAO;
+	@Autowired
+	private Edu206Dao edu206Dao;
 	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
@@ -507,13 +509,13 @@ public class AdministrationPageService {
 			String edu108Id = edu108Ids.get(i).toString();
 			edu108DAO.chengeCulturePlanCrouseFeedBack(edu108Id, classNames.toString(), classArray.toString(), isGeneratCoursePlan);
 			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108Id));
-			Edu201 edu201 = new Edu201();
-			edu201.setEdu108_ID(Long.parseLong(edu108Id));
-			edu201.setSffbjxrws("F");
-			edu201.setSfsqks("F");
-			edu201.setKcmc(edu108.getKcmc());
-			edu201.setZxs(edu108.getZxs().toString());
-			edu201DAO.save(edu201);
+			Edu206 edu206 = new Edu206();
+			edu206.setEdu108_ID(Long.parseLong(edu108Id));
+			edu206.setSffbjxrws("F");
+			edu206.setSfsqks("F");
+			edu206.setKcmc(edu108.getKcmc());
+			edu206.setZxs(edu108.getZxs().toString());
+			edu206Dao.save(edu206);
 		}
 
 		resultVO = ResultVO.setSuccess("开课计划生成成功");
@@ -832,49 +834,23 @@ public class AdministrationPageService {
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		List<String> edu201IdList = edu201DAO.findTaskIdByDepartments(departments,"F");
-		if (edu201IdList.size() == 0){
-			resultVO = ResultVO.setFailed("暂未找到任务书");
-			return resultVO;
-		}
-
-		Specification<Edu201> specification = new Specification<Edu201>() {
-			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu201.getClassName() != null && !"".equals(edu201.getClassName())) {
-					predicates.add(cb.like(root.<String>get("className"),"%"+edu201.getClassName()+'%'));
-				}
-				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
-					predicates.add(cb.like(root.<String>get("kcmc"), "%"+edu201.getKcmc()+'%'));
-				}
-				if(edu201IdList.size() != 0) {
-					Path<Object> path = root.get("edu201_ID");//定义查询的字段
-					CriteriaBuilder.In<Object> in = cb.in(path);
-					for (int i = 0; i <edu201IdList.size() ; i++) {
-						in.value(edu201IdList.get(i));//存入值
-					}
-					predicates.add(cb.and(in));
-				}
-
-				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-			}
-		};
-
-		List<Edu201> sendTaskList = edu201DAO.findAll(specification);
-
-		if(sendTaskList.size() == 0) {
+		List<Edu206> edu206IdList = edu206Dao.findTaskIdByDepartments(departments);
+		if (edu206IdList.size() == 0){
 			resultVO = ResultVO.setFailed("暂未找到任务书");
 		} else {
-			resultVO = ResultVO.setSuccess("共找到"+sendTaskList.size()+"条任务书",sendTaskList);
+			resultVO = ResultVO.setSuccess("共找到"+edu206IdList.size()+"条任务书",edu206IdList);
 		}
-		return resultVO;
 
+		return resultVO;
 	}
 
 	// 发布教学任务书
 	public void putOutTask(Edu201 edu201,Edu600 edu600) {
+		Edu201 oldEdu201 = new Edu201();
 		//保留原始数据
-		Edu201 oledEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
+		if(edu201.getEdu201_ID() != null) {
+			oldEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
+		}
 		Integer jxbrs = 0;
 		edu201.setSszt("passing");
 		edu201.setSffbjxrws("T");
@@ -932,9 +908,12 @@ public class AdministrationPageService {
 		edu600.setBusinessKey(edu201.getEdu201_ID());
 		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 		if(!isSuccess) {
-			edu201DAO.save(oledEdu201);
+			if (oldEdu201.getEdu201_ID() != null) {
+				edu201DAO.save(oldEdu201);
+			} else {
+				edu201DAO.delete(edu201.getEdu201_ID());
+			}
 		}
-
 
 	}
 
@@ -1210,9 +1189,25 @@ public class AdministrationPageService {
 		return isSuccess;
 	}
 
-	//排课后改变任务是是否已排课
+	//排课后改变任务是是否已排课，并生成成绩表
 	public void taskPutSchedule(String edu201ID) {
 		edu201DAO.taskPutSchedule(edu201ID);
+		Edu201 edu201 = edu201DAO.findOne(Long.parseLong(edu201ID));
+		//查找任务书内包含的学生
+		List<String> edu300IdList = edu204Dao.searchEdu300IdByEdu201Id(edu201ID);
+		List<Edu001> studentList = edu001DAO.getStudentInEdu300(edu300IdList);
+		//生成每个学生的成绩表
+		for (Edu001 e : studentList) {
+			Edu005 edu005 = new Edu005();
+			edu005.setEdu001_ID(e.getEdu001_ID());
+			edu005.setStudentName(e.getXm());
+			edu005.setCourseName(edu201.getKcmc());
+			edu005.setEdu300_ID(Long.parseLong(e.getEdu300_ID()));
+			edu005.setClassName(e.getXzbname());
+			edu005.setEdu201_ID(Long.parseLong(edu201ID));
+			edu005.setIsExamCrouse(edu201.getSfxylcj());
+			edu005Dao.save(edu005);
+		}
 	}
 
 	// 课程库搜索课程
@@ -1627,6 +1622,7 @@ public class AdministrationPageService {
 		Edu202 edu202 = edu202DAO.findEdu202ById(scheduleId);
 		edu201DAO.taskPutScheduleFalse(edu202.getEdu201_ID().toString());
 		edu203Dao.deleteByscheduleId(scheduleId);
+		edu005Dao.deleteByscheduleId(scheduleId);
 		edu202DAO.delete(Long.parseLong(scheduleId));
 	}
 

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface Edu205Dao extends JpaRepository<Edu205, Long>, JpaSpecificationExecutor<Edu205> {
 
     //根据任务书删除教师关联信息
@@ -15,10 +17,8 @@ public interface Edu205Dao extends JpaRepository<Edu205, Long>, JpaSpecification
     @Query(value = "delete from edu205 where Edu201_ID =?1", nativeQuery = true)
     void removeByEdu201Id(String edu201_id);
 
-    //根据排课ID删除关联
-    @Transactional
-    @Modifying
-    @Query(value = "delete from edu203 where Edu202_ID =?1", nativeQuery = true)
-    void deleteByscheduleId(String scheduleId);
 
+    //根据教师查询任务书id
+    @Query(value = "select distinct e.Edu201_ID from edu205 e where e.Edu101_ID =?1", nativeQuery = true)
+    List<String> findEdu201IdByTeacher(String userKey);
 }
