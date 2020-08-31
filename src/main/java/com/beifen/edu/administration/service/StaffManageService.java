@@ -12,8 +12,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -237,6 +239,18 @@ public class StaffManageService {
             resultVO = ResultVO.setSuccess("查找成功",edu005List);
         }
 
+        return resultVO;
+    }
+
+    //录入或修改成绩
+    public ResultVO giveGrade(Edu005 edu005) {
+        ResultVO resultVO;
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(currentTime);
+        edu005.setEntryDate(dateString);
+        edu005Dao.save(edu005);
+        resultVO = ResultVO.setSuccess("成绩录入成功",dateString);
         return resultVO;
     }
 }

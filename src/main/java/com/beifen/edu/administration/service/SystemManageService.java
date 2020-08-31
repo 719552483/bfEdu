@@ -298,13 +298,6 @@ public class SystemManageService {
             for (Edu990 edu990:edu990List) {
                 Edu990PO edu990PO = new Edu990PO();
                 String userId = edu990.getBF990_ID().toString();
-                List<String> deparmentIds = new ArrayList<>();
-                List<String> departmentNames = new ArrayList<>();
-                deparmentIds = edu994Dao.findAllDepartmentIds(userId);
-                departmentNames = edu994Dao.findAllDepartmentNames(userId);
-                String ids = utils.listToString(deparmentIds, ',');
-                String names = utils.listToString(departmentNames, ',');
-                
                 try {
                     utils.copyTargetSuper(edu990,edu990PO);
                 } catch (NoSuchMethodException e) {
@@ -314,8 +307,6 @@ public class SystemManageService {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
-                edu990PO.setDeparmentIds(ids);
-                edu990PO.setDeparmentNames(names);
                 edu990POS.add(edu990PO);
             }
             resultVO = ResultVO.setSuccess("共找到" + edu990List.size() + "个用户", edu990POS);
@@ -363,6 +354,12 @@ public class SystemManageService {
             resultVO = ResultVO.setFailed("用户名已存在,请重新输入");
         }else {
             //保存用户
+            List<String> departmentNames = new ArrayList<>();
+            departmentNames = edu994Dao.findAllDepartmentNames(edu990.getBF990_ID().toString());
+            String ids = utils.listToString(departmentList, ',');
+            String names = utils.listToString(departmentNames, ',');
+            edu990.setDeparmentIds(ids);
+            edu990.setDeparmentNames(names);
             edu990Dao.save(edu990);
             //删除已有关联
             edu992Dao.deleteByEdu990Id(edu990.getBF990_ID().toString());

@@ -9,6 +9,8 @@ public class Edu990 {
 	private Long BF990_ID;
 	private String js; // 角色名称
 	private String jsId; // 角色id
+	private String deparmentIds;//关联二级学院
+	private String deparmentNames;//关联二级学院名称
 	private String mm; // 密码
 	private String yhm; // 用户名
 	private String scdlsj; // 上次登录时间
@@ -61,6 +63,22 @@ public class Edu990 {
 
 	public void setScdlsj(String scdlsj) {
 		this.scdlsj = scdlsj;
+	}
+
+	public String getDeparmentIds() {
+		return deparmentIds;
+	}
+
+	public void setDeparmentIds(String deparmentIds) {
+		this.deparmentIds = deparmentIds;
+	}
+
+	public String getDeparmentNames() {
+		return deparmentNames;
+	}
+
+	public void setDeparmentNames(String deparmentNames) {
+		this.deparmentNames = deparmentNames;
 	}
 
 	public String getYxkjfs() {

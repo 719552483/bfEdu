@@ -475,4 +475,18 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 录入或修改成绩
+     *
+     * @return returnMap
+     */
+    @RequestMapping("giveGrade")
+    @ResponseBody
+    public ResultVO giveGrade(@RequestParam("gradeObject") String gradeObject) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(gradeObject);
+        Edu005 edu005 = JSON.toJavaObject(jsonObject, Edu005.class);
+        ResultVO result = staffManageService.giveGrade(edu005);
+        return result;
+    }
+
 }
