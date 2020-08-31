@@ -214,6 +214,9 @@ public class StaffManageService {
                 if (edu001.getXh() != null && !"".equals(edu001.getXh())) {
                     predicates.add(cb.like(root.<String>get("studentCode"),"%"+edu001.getXh()+"%"));
                 }
+                if (edu001.getXzbname() != null && !"".equals(edu001.getXzbname())) {
+                    predicates.add(cb.like(root.<String>get("className"),"%"+edu001.getXzbname()+"%"));
+                }
 
                 Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
                 CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
