@@ -311,8 +311,6 @@ function stuffStudentInfo(studentList){
 	}
 }
 
-
-
 //获得课表检索对象
 function getScheduleSearchInfo(){
 	var currentUserId= $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;

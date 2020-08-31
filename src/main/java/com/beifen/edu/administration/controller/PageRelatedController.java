@@ -195,4 +195,9 @@ public class PageRelatedController {
 	public String localPointInfoPage() {
 		return "localPointInfo";
 	}
+
+	@RequestMapping("gradeEntry")
+	public String gradeEntryPage() {
+		return "gradeEntry";
+	}
 }

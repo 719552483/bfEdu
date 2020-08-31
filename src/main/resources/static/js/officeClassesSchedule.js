@@ -1257,6 +1257,8 @@ function comfirmModifyTask(row,index){
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选任务书");
 	$(".remindActionType").html("修改");
+	var sendArray=new Array();
+	sendArray.push(row);
 
 	//确认修改任务书
 	$('.confirmRemind').unbind('click');
@@ -1266,7 +1268,7 @@ function comfirmModifyTask(row,index){
 			cache : false,
 			url : "/putOutTask",
 			data: {
-				"taskInfo":JSON.stringify(row) ,
+				"taskInfo":JSON.stringify(sendArray) ,
 				"approvalInfo":JSON.stringify(getApprovalobect())
 	        },
 			dataType : 'json',

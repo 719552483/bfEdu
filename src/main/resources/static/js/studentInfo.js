@@ -369,7 +369,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	function xzbnameMatter(value, row, index) {
 		if (value===""||value==null) {
 			return [
-					'<div class="myTooltip redTxt" title="行政班已删除">行政班已删除</div>'
+					'<div class="myTooltip redTxt" title="暂无行政班">暂无行政班</div>'
 				]
 				.join('');
 		} else {
@@ -393,7 +393,6 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				.join('');
 		}
 	}
-	
 
 	function marriageMatter(value, row, index) {
 		if (value==="T") {
@@ -410,7 +409,6 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 	
 	function ztMatter(value, row, index) {
-		EJDMElementInfo;
 		if (row.zt==="在读") {
 			return [
 					'<div class="myTooltip greenTxt" title="在读">在读</div>'
@@ -429,21 +427,6 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		}else{
 			return [
 					'<div class="myTooltip redTxt" title="'+row.zt+'">'+row.zt+'</div>'
-				]
-				.join('');
-		}
-	}
-	
-
-	function isFilingMatter(value, row, index) {
-		if (value) {
-			return [
-					'<div class="myTooltip greenTxt" title="已建档">已建档</div>'
-				]
-				.join('');
-		} else {
-			return [
-					'<div class="myTooltip redTxt" title="未建档">未建档</div>'
 				]
 				.join('');
 		}
