@@ -1623,7 +1623,7 @@ public class AdministrationPageService {
 		Edu202 edu202 = edu202DAO.findEdu202ById(scheduleId);
 		edu201DAO.taskPutScheduleFalse(edu202.getEdu201_ID().toString());
 		edu203Dao.deleteByscheduleId(scheduleId);
-		edu005Dao.deleteByscheduleId(scheduleId);
+		edu005Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 		edu202DAO.delete(Long.parseLong(scheduleId));
 	}
 
