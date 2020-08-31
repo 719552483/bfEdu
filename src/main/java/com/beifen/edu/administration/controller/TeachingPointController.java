@@ -101,7 +101,7 @@ public class TeachingPointController {
      */
     @RequestMapping("/searchPointInfo")
     @ResponseBody
-    public Object searchPointInfo(@RequestParam String SearchCriteria) {
+    public ResultVO searchPointInfo(@RequestParam String SearchCriteria) {
         JSONObject jsonObject = JSONObject.parseObject(SearchCriteria);
         Edu501 edu501 = JSON.toJavaObject(jsonObject,Edu501.class);
         ResultVO result = teachingPointService.searchPointInfo(edu501);
@@ -119,6 +119,18 @@ public class TeachingPointController {
     public ResultVO removePoint(@RequestParam String removeIDs) {
         List<String> deleteArray = JSONObject.parseArray(removeIDs,String.class);
         ResultVO result = teachingPointService.removePoint(deleteArray);
+        return result;
+    }
+
+    /**
+     * 根据教学点查询教学任务点
+     * @param edu500Id
+     * @return
+     */
+    @RequestMapping("/getPointBySite")
+    @ResponseBody
+    public ResultVO getPointBySite(@RequestParam("SearchObject") String edu500Id) {
+        ResultVO result = teachingPointService.getPointBySite(edu500Id);
         return result;
     }
 }

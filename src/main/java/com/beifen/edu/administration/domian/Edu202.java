@@ -20,8 +20,8 @@ public class Edu202 {
 	private String jsz; // 结束周
 	private String skddmc; // 授课地点名称
 	private String skddid; // 授课地点ID
-
-	
+	private String pointid; //教学任务点id
+	private String point; //教学任务点名称
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -75,5 +75,21 @@ public class Edu202 {
 
 	public void setXnmc(String xnmc) {
 		this.xnmc = xnmc;
+	}
+
+	public String getPointid() {
+		return pointid;
+	}
+
+	public void setPointid(String pointid) {
+		this.pointid = pointid;
+	}
+
+	public String getPoint() {
+		return point;
+	}
+
+	public void setPoint(String point) {
+		this.point = point;
 	}
 }

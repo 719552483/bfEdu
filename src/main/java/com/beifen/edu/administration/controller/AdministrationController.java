@@ -2224,7 +2224,7 @@ public class AdministrationController {
 
 	/**
 	 * 检查教学班是否被使用
-	 * @param classId
+	 * @param classIds
 	 * @return
 	 */
 	@RequestMapping("/checkTeachingClassInTask")

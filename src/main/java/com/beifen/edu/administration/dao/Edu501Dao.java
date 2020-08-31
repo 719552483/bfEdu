@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Configuration
 public interface Edu501Dao extends JpaRepository<Edu501, Long>, JpaSpecificationExecutor<Edu501> {
@@ -18,4 +20,7 @@ public interface Edu501Dao extends JpaRepository<Edu501, Long>, JpaSpecification
     @Query(value = "delete from edu501 where Edu501_ID =?1", nativeQuery = true)
     void removeSite(String edu500id);
 
+    //根据教学点查询教学任务点
+    @Query(value = "select * from Edu501 where Edu500ID =?1", nativeQuery = true)
+    List<Edu501> findAllByEdu501Id(String edu500Id);
 }

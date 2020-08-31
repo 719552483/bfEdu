@@ -16,7 +16,7 @@ public class TeachingSchedulePO {
     private String kcxz;
     private String kcxzid;
     private String kcmc;
-    private String jxbmc;
+    private String className;
     private String jxbid;
     private String ls;
     private String zyls;
@@ -24,6 +24,7 @@ public class TeachingSchedulePO {
     private String kkbm;
     private String EDU202_ID;
     private String id;
+    private String sfxylcj;
 
 
     public String getPyjhcc() {
@@ -74,12 +75,12 @@ public class TeachingSchedulePO {
         this.kcmc = kcmc;
     }
 
-    public String getJxbmc() {
-        return jxbmc;
+    public String getClassName() {
+        return className;
     }
 
-    public void setJxbmc(String jxbmc) {
-        this.jxbmc = jxbmc;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getLs() {
@@ -136,6 +137,14 @@ public class TeachingSchedulePO {
 
     public void setJxbid(String jxbid) {
         this.jxbid = jxbid;
+    }
+
+    public String getSfxylcj() {
+        return sfxylcj;
+    }
+
+    public void setSfxylcj(String sfxylcj) {
+        this.sfxylcj = sfxylcj;
     }
 
     public void setId(String id) {

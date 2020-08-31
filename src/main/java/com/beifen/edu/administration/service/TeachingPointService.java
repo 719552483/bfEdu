@@ -228,4 +228,18 @@ public class TeachingPointService {
         resultVO = ResultVO.setSuccess("成功删除了"+deleteArray.size()+"个教学点");
         return resultVO;
     }
+
+
+    //根据教学点查询教学任务点
+    public ResultVO getPointBySite(String edu500Id) {
+        ResultVO resultVO;
+        List<Edu501> pointList = edu501Dao.findAllByEdu501Id(edu500Id);
+
+        if(pointList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无教学任务点",pointList);
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+pointList.size()+"个教学任务点",pointList);
+        }
+        return resultVO;
+    }
 }
