@@ -278,7 +278,53 @@ function stuffJxdArae(jxdInfo,str){
 		str += '<option value="' +jxdInfo[i].edu500Id + '">' + jxdInfo[i].localName
 			+ '</option>';
 	}
-	stuffManiaSelect("#skdd", str);
+	stuffManiaSelect("#jxd", str);
+
+	$("#jxd").change(function() {
+		if(getNormalSelectValue("jxd")==""){
+			return;
+		}
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/getPointBySite",
+			data: {
+				"SearchObject":getNormalSelectValue("jxd")
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
+				if (backjson.code===500) {
+					toastr.warning(backjson.msg);
+					configSelectTxt='<option value="seleceConfigTip">暂无选择</option>'
+				}
+				stuffJxrud(backjson.data,configSelectTxt);
+			}
+		});
+	});
+}
+
+//填充教学任务点
+function  stuffJxrud(jxrudInfo,str){
+	if(typeof jxrudInfo==="undefined"){
+		stuffManiaSelect("#skdd", str);
+	}else{
+		for (var i = 0; i < jxrudInfo.length; i++) {
+			str += '<option value="' +jxrudInfo[i].edu501_ID + '">' + jxrudInfo[i].pointName
+				+ '</option>';
+		}
+		stuffManiaSelect("#skdd", str);
+	}
 }
 
 //填充课节下拉框
@@ -349,6 +395,7 @@ function scheduleSingleClassBtnBind(){
 	});
 
 }
+
 //课节下拉框事件
 function KjBtnschange(){
 	var currentXq=getNormalSelectValue("xq");
@@ -508,7 +555,8 @@ function getPKInfo(){
 	var termMc=getNormalSelectText("term");
 	var startWeek=getNormalSelectValue("startWeek");
 	var endWeek=getNormalSelectValue("endWeek");
-	var location=getNormalSelectValue("skdd");
+	var location=getNormalSelectValue("jxd");
+	var point=getNormalSelectValue("skdd");
 	var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
 
 	if(term===""){
@@ -524,6 +572,10 @@ function getPKInfo(){
 		return;
 	}
 	if(location===""){
+		toastr.warning('请选择教学点');
+		return;
+	}
+	if(point===""){
 		toastr.warning('请选择授课地点');
 		return;
 	}
@@ -533,8 +585,10 @@ function getPKInfo(){
 	returnObject.xnmc=termMc;
 	returnObject.ksz=startWeek;
 	returnObject.jsz=endWeek;
-	returnObject.skddmc=getNormalSelectText("skdd");
+	returnObject.skddmc=getNormalSelectText("jxd");
 	returnObject.skddid=location;
+	returnObject.pointid=point;
+	returnObject.point=getNormalSelectText("skdd");
 	returnObject.edu201_ID=taskId;
 	return returnObject;
 }
@@ -569,14 +623,15 @@ function weekChange(){
 
 //授课地点
 function skddChange(){
+	var choosendsite=getNormalSelectText("jxd");
 	var choosendLoaction=getNormalSelectText("skdd");
-	if(choosendLoaction===""){
+	if(choosendLoaction===""||choosendsite===""){
 		return;
 	}
 	if($(".choosendLoaction").length===0){
-		$(".choosendLoactionArea").append('<span class="choosendLoaction">在'+choosendLoaction+'授课</span>');
+		$(".choosendLoactionArea").append('<span class="choosendLoaction">在'+choosendsite+'-'+choosendLoaction+'授课</span>');
 	}else{
-		$(".choosendLoaction").html('在'+choosendLoaction+'授课');
+		$(".choosendLoaction").html('在'+choosendsite+'-'+choosendLoaction+'授课');
 	}
 
 }
