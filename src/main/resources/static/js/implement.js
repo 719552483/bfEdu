@@ -976,7 +976,7 @@ function calssNameMatter(value, row, index) {
 		return [ '<div class="myTooltip greenTxt" title="' + row.kcmc
 				+ '">' + row.kcmc + '</div>' ].join('');
 	} else {
-		return [ '<div class="myTooltip redTxt" title="' + row.kcmc
+		return [ '<div class="myTooltip normalTxt" title="' + row.kcmc
 				+ '">' + row.kcmc + '</div>' ].join('');
 	}
 }

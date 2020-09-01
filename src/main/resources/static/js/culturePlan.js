@@ -598,7 +598,7 @@ function makePlan(row){
 			$(".edu107Id").html(row.edu107_ID);
 			$(".planName").html(row.edu103mc+'/'+row.edu104mc+'/'+row.edu105mc+'/'+row.edu106mc);
 			$(".planStatus").html(row.xbsp);
-			for (var i = 0; i < backjson.data; i++) {
+			for (var i = 0; i < backjson.data.length; i++) {
 				backjson.data[i].xbsp=row.xbsp;
 			}
 			stuffMajorTrainingTable(backjson.data);
@@ -1681,7 +1681,7 @@ function showCourseInfo(row) {
 // 准备生成开课计划
 function startGeneratCourse() {
 	var courses = $('#generatCourseTable').bootstrapTable('getSelections');
-	if (getNormalSelectValue("generatCourse_xn")) {
+	if (getNormalSelectValue("generatCourse_xn")==="") {
 		toastr.warning('暂未选择学年');
 		return;
 	}
