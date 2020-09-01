@@ -200,4 +200,9 @@ public class PageRelatedController {
 	public String gradeEntryPage() {
 		return "gradeEntry";
 	}
+
+	@RequestMapping("gradeQuery")
+	public String gradeQueryPage() {
+		return "gradeQuery";
+	}
 }

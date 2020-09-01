@@ -953,7 +953,7 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails){
 
 	$("#puttedTerm").val(scheduleCompletedDetails.xnmc);
 	$("#puttedSkdd").val(scheduleCompletedDetails.skddmc);
-	$("#puttedJxbMC").val(puttedInfo.jxbmc);
+	$("#puttedJxbMC").val(puttedInfo.className);
 	$("#puttedkCMC").val(puttedInfo.kcmc);
 	$("#puttedZyls").val(puttedInfo.zyls);
 	$("#puttedLs").val(puttedInfo.ls);

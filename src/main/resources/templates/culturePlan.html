@@ -121,8 +121,8 @@
 							src="images/t01.png" style="width: 24px;" /></span>添加专业课程</li>
 					<li class="click insertBtn" id="wantGeneratCoursePaln"><span><img
 							src="images/t01.png" style="width: 24px;" /></span>生成班级开课计划</li>
-					<li class="click insertBtn" id="wantGeneratAllClassAllCourse"><span><img
-							src="images/t01.png" style="width: 24px;" /></span>生成专业下所有班级课程</li>
+					<li class="click insertBtn" id="startPlanApproval"><span><img
+							src="img/businessApproval.png" style="width: 24px;" /></span>发起培养计划申请</li>
 					<li class="click deleteBtn" id="removeRows"><span><img
 							src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
 					<li class="click" id="startSearch"><span><img
@@ -587,6 +587,26 @@
 				</ul>
 			</div>
 
+			<div class="xnArea">
+				<div class="formtitle" style="margin-bottom: 6px;">
+					<span>选择学年</span>
+				</div>
+				<div class="searchArea moreInfoSelectStyle">
+					<div class="col4 giveBottom">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">学年</label>
+								<select class="isSowIndex" id="generatCourse_xn">
+									<option value="seleceConfigTip">请选择</option>
+								</select>
+
+							</div>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+
 			<div class="checkArea">
 				<div class="formtitle" style="margin-bottom: 6px;">
 					<span>专业班级库</span>
@@ -635,7 +655,6 @@
 					</ul>
 				</div>
 			</div>
-
 
 			<div class="generatCourseArea searchGivePaddingR columnsStyle">
 				<table class="tablelist myTableStyle" id="generatCourseTable" data-unique-id="id" style="margin-top: 10px;"></table>

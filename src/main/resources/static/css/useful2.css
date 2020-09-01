@@ -1504,6 +1504,7 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.studentGradeTableArea .bootstrap4 .search,
 .askForExamTableArea .bootstrap4 .search,
 .puttedTableArea .bootstrap4 .search,
 .recordsTableArea .bootstrap4 .search,
