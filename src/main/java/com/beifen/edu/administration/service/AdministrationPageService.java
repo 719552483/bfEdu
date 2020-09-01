@@ -2021,20 +2021,12 @@ public class AdministrationPageService {
 
 
 	//新增培养计划专业课程
-	public ResultVO culturePlanAddCrouse(String edu107Id, Edu108 edu108, Edu600 edu600) {
+	public ResultVO culturePlanAddCrouse(String edu107Id, Edu108 edu108) {
 		ResultVO resultVO;
 		edu108.setEdu107_ID(Long.parseLong(edu107Id));
 		edu108.setSfsckkjh("F");// 初始化的是否生成开课计划
-		edu108.setXbsp("passing");// 初始化的系部审批
 		edu108DAO.save(edu108);
-		edu600.setBusinessKey(edu108.getEdu108_ID());
-		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-		if(!isSuccess) {
-			edu108DAO.delete(edu108.getEdu108_ID());
-			resultVO  = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
-		}else {
-			resultVO = ResultVO.setSuccess("保存成功",edu108);
-		}
+		resultVO = ResultVO.setSuccess("保存成功",edu108);
 		return resultVO;
 	}
 

@@ -887,14 +887,11 @@ public class AdministrationController {
 	@RequestMapping("/culturePlanAddCrouse")
 	@ResponseBody
 	public ResultVO culturePlanAddCrouse(@RequestParam("edu107Id") String edu107Id,
-									   @RequestParam("crouseInfo") String crouseInfo,
-									   @RequestParam("approvalInfo") String approvalObject) {
+									   @RequestParam("crouseInfo") String crouseInfo) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject crouse = JSONObject.fromObject(crouseInfo);
-		JSONObject approvalInfo = JSONObject.fromObject(approvalObject);
 		Edu108 edu108 = (Edu108) JSONObject.toBean(crouse, Edu108.class);
-		Edu600 edu600 = (Edu600) JSONObject.toBean(approvalInfo, Edu600.class);
-		ResultVO result = administrationPageService.culturePlanAddCrouse(edu107Id,edu108,edu600);
+		ResultVO result = administrationPageService.culturePlanAddCrouse(edu107Id,edu108);
 		return result;
 	}
 

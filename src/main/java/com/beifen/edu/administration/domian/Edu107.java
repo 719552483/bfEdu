@@ -26,6 +26,7 @@ public class Edu107 {
 	private  String edu106;//专业id
 	private  String edu106mc;//专业名称
 	private  String yxbz;//有效标志
+	private  String xbsp;//系部审批
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
