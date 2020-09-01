@@ -1899,6 +1899,10 @@ function generatCoursePalnBtnbind() {
 
 // 预备发起培养计划申请
 function startPlanApproval() {
+	if($(".planStatus")[0].innerText==="pass"){
+		toastr.warning('该培养计划已通过审批');
+		return;
+	}
 	generatAllClassAllCourse();
 }
 
