@@ -500,6 +500,10 @@ public class StudentManageService {
     public ResultVO studentGetSchoolYear(String userKey) {
         ResultVO resultVO;
         Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
+        if (one == null ) {
+            resultVO = ResultVO.setFailed("暂无学年信息");
+            return resultVO;
+        }
         List<String> edu201IdList = edu204Dao.searchEdu201IdByEdu300Id(one.getEdu300_ID());
         List<Edu400> edu400List = edu400Dao.getYearFromEdu201(edu201IdList);
         if(edu400List.size() == 0) {
