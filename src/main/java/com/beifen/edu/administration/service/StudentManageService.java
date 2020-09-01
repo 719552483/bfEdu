@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //学生管理业务层
 @Service
@@ -485,8 +486,10 @@ public class StudentManageService {
         };
 
         List<Edu005> all = edu005Dao.findAll(specification);
+        List<Long> edu201IdList = all.stream().map(e -> e.getEdu201_ID()).collect(Collectors.toList());
 
-        List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey);
+        List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey,edu201IdList);
+
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
         } else {
@@ -501,7 +504,7 @@ public class StudentManageService {
         ResultVO resultVO;
         Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
         if (one == null ) {
-            resultVO = ResultVO.setFailed("暂无学年信息");
+            resultVO = ResultVO.setFailed("您不是本校学生");
             return resultVO;
         }
         List<String> edu201IdList = edu204Dao.searchEdu201IdByEdu300Id(one.getEdu300_ID());
