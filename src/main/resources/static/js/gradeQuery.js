@@ -99,6 +99,16 @@ function stuffStudentGradeTable(tableInfo) {
 				align: 'left',
 				formatter: gradeMatter
 			}, {
+				field: 'credit',
+				title: '课程总学分',
+				align: 'left',
+				formatter: paramsMatter
+			},{
+				field: 'getCredit',
+				title: '课程已获学分',
+				align: 'left',
+				formatter: paramsMatter
+			},{
 				field: 'gradeEnter',
 				title: '录入人',
 				align: 'left',

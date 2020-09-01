@@ -1628,7 +1628,7 @@ margin: 0px 0px -14px -15px!important;
 	font-size: 13px;
 }
 
-.historyArea{
+.historyArea,.singlePlan{
 	background-color: rgb(199 208 214 / 15%);
 	border-radius: 4px;
 	box-shadow: inset 0px 3px 5px 0px #d5dee2;
@@ -1636,6 +1636,10 @@ margin: 0px 0px -14px -15px!important;
 	padding: 13px;
 	width: 94%;
 	margin: 0 auto;
+}
+
+.historyArea{
+	overflow: hidden;
 }
 
 .historyArea:last-child{
@@ -1948,6 +1952,31 @@ top角色切换滚动体样式
 	min-width: 100% !important;
 }
 
+
+.singlePlan{
+	float: left;
+	margin-left: 4%;
+	width: 90%;
+	margin-bottom: 5px;
+}
+
+.singlePlan:last-child{
+	margin-bottom: 10px;
+}
+
+.singlePlan span{
+	float: left;
+	width: 33.333%;
+	margin-bottom: 8px;
+}
+
+.singlePlan cite{
+	color: rgb(43 71 84 / 86%);
+}
+
+.singlePlan b{
+	color: rgb(22 56 72 / 92%);
+}
 
 @keyframes serachAnimation {
     10% {

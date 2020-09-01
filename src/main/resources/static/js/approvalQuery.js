@@ -280,27 +280,24 @@ function stuffClassInfoArea(businessInfo){
 
 //培养计划审批信息区域
 function stuffCulturePlanInfoArea(businessInfo){
-	var culturePlanInfo=businessInfo.edu108;
-	var relationInfo=businessInfo.edu107;
+	$(".culturePlanApprovalArea").empty();
+	var Str="";
+	for (var i = 0; i < businessInfo.length; i++) {
+		Str+='<div class="singlePlan">' +
+			'<span><cite>课程名称：</cite><b>'+businessInfo[i].kcmc+'</b></span>'+
+			'<span><cite>课程类型：</cite><b>'+businessInfo[i].kclx+'</b></span>'+
+			'<span><cite>考试方式：</cite><b>'+businessInfo[i].ksfs+'</b></span><div class="clear"></div>'+
+			'<span><cite>总学时：</cite><b>'+businessInfo[i].zxs+'</b></span>'+
+			'<span><cite>理论学时：</cite><b>'+businessInfo[i].llxs+'</b></span>'+
+			'<span><cite>实践学时：</cite><b>'+businessInfo[i].sjxs+'</b></span><div class="clear"></div>'+
+			'<span><cite>集中学时：</cite><b>'+businessInfo[i].jzxs+'</b></span>'+
+			'<span><cite>分散学时：</cite><b>'+businessInfo[i].fsxs+'</b></span>'+
+			'<span><cite>学分：</cite><b>'+businessInfo[i].xf+'</b></span><div><div class="clear"></div>'
+	}
+	$(".culturePlanApprovalArea").append(Str);
 	$("#approvalDetailsModal").find(".moadalTitle").html("培养计划审批详情");
 	$(".classApprovalArea,.studentStopApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
 	$(".culturePlanApprovalArea").show();
-	$("#culturePlan_cc").val(relationInfo.edu103mc);
-	$("#culturePlan_xb").val(relationInfo.edu104mc);
-	$("#culturePlan_nj").val(relationInfo.edu105mc);
-	$("#culturePlan_zy").val(relationInfo.edu106mc);
-	$("#culturePlan_kcmc").val(culturePlanInfo.kcmc);
-	$("#culturePlan_kcdm").val(culturePlanInfo.kcdm);
-	$("#culturePlan_llxs").val(culturePlanInfo.llxs);
-	$("#culturePlan_sjxs").val(culturePlanInfo.sjxs);
-	$("#culturePlan_fsxs").val(culturePlanInfo.fsxs);
-	$("#culturePlan_jzxs").val(culturePlanInfo.jzxs);
-	$("#culturePlan_zxs").val(culturePlanInfo.zxs);
-	$("#culturePlan_zzs").val(culturePlanInfo.zzs);
-	$("#culturePlan_zxs").val(culturePlanInfo.zhouxs);
-	$("#culturePlan_kclx").val(culturePlanInfo.kclx);
-	$("#culturePlan_kcxz").val(culturePlanInfo.kcxz);
-	$("#culturePlan_ksfs").val(culturePlanInfo.ksfs);
 }
 
 //教学任务书审批信息区域
