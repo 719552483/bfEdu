@@ -490,9 +490,25 @@ public class StudentManageService {
 
         List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey,edu201IdList);
 
+
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
         } else {
+            //添加已得学分
+            for (Edu005 e : edu005List) {
+                if("F".equals(e.getGrade())) {
+                    e.setGetCredit("0");
+                } else if ("T".equals(e.getGrade())) {
+                    e.setGetCredit(e.getCredit());
+                } else {
+                    int i = Integer.parseInt(e.getGrade());
+                    if (i < 60) {
+                        e.setGetCredit("0");
+                    } else {
+                        e.setGetCredit(e.getCredit());
+                    }
+                }
+            }
             resultVO = ResultVO.setSuccess("查询成功",edu005List);
         }
         return resultVO;

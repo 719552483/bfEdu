@@ -20,6 +20,7 @@ public class Edu005 {
     private String isExamCrouse;//是否为考试课
     private String grade;//成绩
     private String credit;//学分
+    private String getCredit;//已得学分
     private String xn;
     private String xnid;
 
@@ -155,5 +156,13 @@ public class Edu005 {
 
     public void setXnid(String xnid) {
         this.xnid = xnid;
+    }
+
+    public String getGetCredit() {
+        return getCredit;
+    }
+
+    public void setGetCredit(String getCredit) {
+        this.getCredit = getCredit;
     }
 }
