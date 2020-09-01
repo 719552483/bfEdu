@@ -15,6 +15,8 @@ public class Edu206 {
 	private String kcmc;  //课程名称
 	private String zymc;  //专业名称
 	private String jxbrs;  //教学班人数
+	private String xn;//学年
+	private String xnid;//学年ID
 	private String zxs;  //总学时
 	private  String ls;//老师
 	private  String lsmc;//老师姓名
@@ -186,5 +188,21 @@ public class Edu206 {
 
 	public void setSfsqks(String sfsqks) {
 		this.sfsqks = sfsqks;
+	}
+
+	public String getXn() {
+		return xn;
+	}
+
+	public void setXn(String xn) {
+		this.xn = xn;
+	}
+
+	public String getXnid() {
+		return xnid;
+	}
+
+	public void setXnid(String xnid) {
+		this.xnid = xnid;
 	}
 }

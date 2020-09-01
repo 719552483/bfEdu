@@ -2,10 +2,7 @@ package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.domian.Edu001;
-import com.beifen.edu.administration.domian.Edu004;
-import com.beifen.edu.administration.domian.Edu400;
-import com.beifen.edu.administration.domian.Edu600;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.StudentManageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
@@ -290,6 +287,34 @@ public class StudentManageController {
     public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo,@RequestParam("userKey") String userKey) {
         List<String> studnetIdList = JSON.parseArray(studentArray, String.class);
         ResultVO result =studentManageService.studentAppraise(studnetIdList,userKey,appraiseInfo);
+        return result;
+    }
+
+    /**
+     * 学生查询成绩
+     * @param userKey
+     * @return
+     */
+
+    @RequestMapping("/studentGetGrades")
+    @ResponseBody
+    public ResultVO studentGetGrades(@RequestParam("userKey") String userKey,@RequestParam("SearchCriteria") String searchCriteria) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(searchCriteria);
+        Edu005 edu005 = JSON.toJavaObject(jsonObject, Edu005.class);
+        ResultVO result =studentManageService.studentGetGrades(userKey,edu005);
+        return result;
+    }
+
+    /**
+     * 学生查询相关学年
+     * @param userKey
+     * @return
+     */
+
+    @RequestMapping("/studentGetSchoolYear")
+    @ResponseBody
+    public ResultVO studentGetSchoolYear(@RequestParam("userKey") String userKey) {
+        ResultVO result =studentManageService.studentGetSchoolYear(userKey);
         return result;
     }
 

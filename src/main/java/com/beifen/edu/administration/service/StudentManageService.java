@@ -8,11 +8,15 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +43,11 @@ public class StudentManageService {
     @Autowired
     private Edu004Dao edu004Dao;
     @Autowired
+    private Edu005Dao edu005Dao;
+    @Autowired
     private RedisUtils redisUtils;
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     // 查询所有学生信息
@@ -454,5 +462,25 @@ public class StudentManageService {
 
         resultVO = ResultVO.setSuccess("成功评价了"+studnetIdList.size()+"个学生");
         return resultVO;
+    }
+
+    //学生查询成绩
+    public ResultVO studentGetGrades(String userKey,Edu005 edu005) {
+        ResultVO resultVO;
+        List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey);
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无成绩信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu005List);
+        }
+        return resultVO;
+    }
+
+
+    //学生查询相关学年
+    public ResultVO studentGetSchoolYear(String userKey) {
+        ResultVO resultVO;
+        //Todo
+        return null;
     }
 }

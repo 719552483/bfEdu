@@ -7,9 +7,10 @@ $(function() {
     $("input[type='number']").inputSpinner();
     edu500Id = getQueryVariable("edu500Id");
     drawlocalInfoTableEmptyTable();
-    // getSearchAreaSelectInfo();
     binBind();
     stuffEJDElement(EJDMElementInfo);
+    // getSearchAreaSelectInfo();
+    searchAllSiteBy(new Object());
 });
 
 //获取url传递过来的参数

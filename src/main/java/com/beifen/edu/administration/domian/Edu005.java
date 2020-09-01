@@ -19,6 +19,7 @@ public class Edu005 {
     private String entryDate;//录入日期
     private String isExamCrouse;//是否为考试课
     private String grade;//成绩
+    private String credit;//学分
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -128,5 +129,13 @@ public class Edu005 {
 
     public void setStudentCode(String studentCode) {
         this.studentCode = studentCode;
+    }
+
+    public String getCredit() {
+        return credit;
+    }
+
+    public void setCredit(String credit) {
+        this.credit = credit;
     }
 }

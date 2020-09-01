@@ -19,6 +19,8 @@ public class Edu108 {
 	private String xzbmc;  //行政班名称
 	private String kcmc;  //课程名称
 	private String kcdm;  //课程代码
+	private String xn;//学年
+	private String xnid;//学年ID
 	private Double zxs;  //总学时
 	private Double xf;  //学分
 	private Double llxs;  //理论学时
@@ -350,5 +352,21 @@ public class Edu108 {
 
 	public void setXbsp(String xbsp) {
 		this.xbsp = xbsp;
+	}
+
+	public String getXn() {
+		return xn;
+	}
+
+	public void setXn(String xn) {
+		this.xn = xn;
+	}
+
+	public String getXnid() {
+		return xnid;
+	}
+
+	public void setXnid(String xnid) {
+		this.xnid = xnid;
 	}
 }

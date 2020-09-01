@@ -497,6 +497,8 @@ public class AdministrationPageService {
 		JSONArray classArray = culturePlan.getJSONArray("classIds");
 		JSONArray classNames = culturePlan.getJSONArray("classNames");
 		JSONArray edu108Ids = culturePlan.getJSONArray("crouses");
+		String xn = culturePlan.getString("xn");
+		String xnid = culturePlan.getString("xnid");
 
 		String isGeneratCoursePlan = "T";
 		// eud300 行政班更改开课计划属性
@@ -507,12 +509,20 @@ public class AdministrationPageService {
 		// eud108 课程更改开课计划属性
 		for (int i = 0; i < edu108Ids.size(); i++) {
 			String edu108Id = edu108Ids.get(i).toString();
-			edu108DAO.chengeCulturePlanCrouseFeedBack(edu108Id, classNames.toString(), classArray.toString(), isGeneratCoursePlan);
+
 			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108Id));
+			edu108.setXzbmc(classNames.toString());
+			edu108.setEdu300_ID(classArray.toString());
+			edu108.setSfsckkjh((isGeneratCoursePlan));
+			edu108.setXn(xn);
+			edu108.setXnid(xnid);
+
 			Edu206 edu206 = new Edu206();
 			edu206.setEdu108_ID(Long.parseLong(edu108Id));
 			edu206.setSffbjxrws("F");
 			edu206.setSfsqks("F");
+			edu206.setXn(xn);
+			edu206.setXnid(xnid);
 			edu206.setKcmc(edu108.getKcmc());
 			edu206.setZxs(edu108.getZxs().toString());
 			edu206Dao.save(edu206);
@@ -846,7 +856,7 @@ public class AdministrationPageService {
 
 	// 发布教学任务书
 	public void putOutTask(Edu201 edu201,Edu600 edu600) {
-		Edu201 oldEdu201 = new Edu201();
+		Edu201 oldEdu201 =null;
 		//保留原始数据
 		if(edu201.getEdu201_ID() != null) {
 			oldEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
@@ -2037,7 +2047,9 @@ public class AdministrationPageService {
 		List<Edu108> couserInfo = queryCulturePlanCouses(Long.parseLong(edu107_id));
 		// 培养计划下的行政班
 		List<Edu300> currentAllAdministrationClasses = queryCulturePlanAdministrationClasses(edu107.getEdu103(), edu107.getEdu104(), edu107.getEdu105(), edu107.getEdu106());
+		List<Edu400> xnInfo = queryAllXn();
 		returnMap.put("tableInfo", couserInfo);
+		returnMap.put("xnInfo", xnInfo);
 		returnMap.put("classInfo", currentAllAdministrationClasses);
 		resultVO = ResultVO.setSuccess("查询成功",returnMap);
 		return resultVO;

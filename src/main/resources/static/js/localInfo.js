@@ -8,6 +8,7 @@ $(function() {
     // getSearchAreaSelectInfo();
     binBind();
     stuffEJDElement(EJDMElementInfo);
+    searchAllSiteBy(new Object);
 });
 
 //获得检索区域下拉框数据
@@ -121,7 +122,7 @@ function stufflocalInfoTable(tableInfo) {
                 formatter: paramsMatter
             }, {
                 field: 'townShip',
-                title: '乡/镇',
+                title: '',
                 align: 'left',
                 formatter: paramsMatter
             }, {

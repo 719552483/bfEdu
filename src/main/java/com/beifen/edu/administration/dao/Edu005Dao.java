@@ -8,13 +8,18 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Configuration
 public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecificationExecutor<Edu005> {
-
     //根据排课ID删除关联
     @Transactional
     @Modifying
     @Query(value = "delete from edu005 where Edu201_ID =?1", nativeQuery = true)
     void deleteByscheduleId(String scheduleId);
+
+    //根据学生ID查询成绩和学分
+    @Query(value = "select f.*,(select e.xf from edu108 e ,edu201 d where e.EDU108_ID = d.EDU108_ID and d.EDU201_ID = f.EDU201_ID) credit from edu005 f where f.EDU001_ID = ?1", nativeQuery = true)
+    List<Edu005> findAllByStudent(String userKey);
 }
