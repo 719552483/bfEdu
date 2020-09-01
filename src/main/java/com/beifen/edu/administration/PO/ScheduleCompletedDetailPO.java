@@ -7,8 +7,6 @@ import java.util.List;
 
 public class ScheduleCompletedDetailPO extends Edu201 {
     private Long Edu202_ID;
-    private Long xnid; // 学年id
-    private String xnmc;// 学年名称
     private String ksz; // 开始周
     private String jsz; // 结束周
     private String skddmc; // 授课地点名称
@@ -21,22 +19,6 @@ public class ScheduleCompletedDetailPO extends Edu201 {
 
     public void setEdu202_ID(Long edu202_ID) {
         Edu202_ID = edu202_ID;
-    }
-
-    public Long getXnid() {
-        return xnid;
-    }
-
-    public void setXnid(Long xnid) {
-        this.xnid = xnid;
-    }
-
-    public String getXnmc() {
-        return xnmc;
-    }
-
-    public void setXnmc(String xnmc) {
-        this.xnmc = xnmc;
     }
 
     public String getKsz() {

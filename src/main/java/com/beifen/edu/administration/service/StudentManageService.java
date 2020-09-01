@@ -45,9 +45,10 @@ public class StudentManageService {
     @Autowired
     private Edu005Dao edu005Dao;
     @Autowired
+    private Edu204Dao edu204Dao;
+    @Autowired
     private RedisUtils redisUtils;
-    @PersistenceContext
-    private EntityManager entityManager;
+
 
 
     // 查询所有学生信息
@@ -480,7 +481,9 @@ public class StudentManageService {
     //学生查询相关学年
     public ResultVO studentGetSchoolYear(String userKey) {
         ResultVO resultVO;
-        //Todo
+        Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
+        List<String> edu201IdList = edu204Dao.searchEdu201IdByEdu300Id(one.getEdu300_ID());
+
         return null;
     }
 }
