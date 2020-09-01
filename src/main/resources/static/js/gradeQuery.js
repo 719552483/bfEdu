@@ -1,46 +1,46 @@
 var EJDMElementInfo;
 $(function() {
-	// stuffNj();
+	stuffNj();
 	drawStudentGradeEmptyTable();
 	binBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 });
 
-// //填充年级下拉框
-// function stuffNj(){
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/getStudentXn",
-// 		data: {
-// 			"userKey":JSON.parse($.session.get('userInfo')).userKey
-// 		},
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			hideloding();
-// 			var str = '';
-// 			if (backjson.code === 500) {
-// 				toastr.info(backjson.msg);
-// 				str = '<option value="seleceConfigTip">暂无选择</option>';
-// 			}else{
-// 				str = '<option value="seleceConfigTip">请选择</option>';
-// 			}
-// 			for (var i = 0; i < backjson.data.length; i++) {
-// 				str += '<option value="">'+ backjson.data[i]+'</option>';
-// 			}
-// 			stuffManiaSelect("#grade", str);
-// 		}
-// 	});
-// }
+//填充年级下拉框
+function stuffNj(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getStudentXn",
+		data: {
+			"userKey":JSON.parse($.session.get('userInfo')).userKey
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			var str = '';
+			if (backjson.code === 500) {
+				toastr.info(backjson.msg);
+				str = '<option value="seleceConfigTip">暂无选择</option>';
+			}else{
+				str = '<option value="seleceConfigTip">请选择</option>';
+			}
+			for (var i = 0; i < backjson.data.length; i++) {
+				str += '<option value="'+backjson.data[i].edu400_ID+'">'+ backjson.data[i].xnmc+'</option>';
+			}
+			stuffManiaSelect("#grade", str);
+		}
+	});
+}
 
 //填充空的学生表
 function drawStudentGradeEmptyTable() {
@@ -90,14 +90,14 @@ function stuffStudentGradeTable(tableInfo) {
 				formatter: paramsMatter
 			},  {
 				field: 'studentName',
-				title: '姓名',
+				title: '学生姓名',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
 				field: 'grade',
 				title: '成绩',
 				align: 'left',
-				formatter: paramsMatter
+				formatter: gradeMatter
 			}, {
 				field: 'gradeEnter',
 				title: '录入人',
@@ -123,6 +123,37 @@ function stuffStudentGradeTable(tableInfo) {
 					'<div class="myTooltip" title="'+value+'">'+value+'</div>'
 				]
 				.join('');
+		}
+	}
+
+
+	function gradeMatter(value, row, index) {
+		if (value==="T"||value==="F") {
+			var str="";
+			value==="T"?str="通过":str="不通过";
+			if(str==="通过"){
+				return [
+					'<div class="myTooltip greenTxt" title="'+str+'">'+str+'</div>'
+				]
+					.join('');
+			}else{
+				return [
+					'<div class="myTooltip redTxt" title="'+str+'">'+str+'</div>'
+				]
+					.join('');
+			}
+		} else {
+			if(parseInt(value)<60){
+				return [
+					'<div class="myTooltip redTxt" title="'+value+'">'+value+'</div>'
+				]
+					.join('');
+			}else{
+				return [
+					'<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
+				]
+					.join('');
+			}
 		}
 	}
 

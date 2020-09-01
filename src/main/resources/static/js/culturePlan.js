@@ -597,6 +597,10 @@ function makePlan(row){
 			$(".culturePlanArea").toggle();
 			$(".edu107Id").html(row.edu107_ID);
 			$(".planName").html(row.edu103mc+'/'+row.edu104mc+'/'+row.edu105mc+'/'+row.edu106mc);
+			$(".planStatus").html(row.xbsp);
+			for (var i = 0; i < backjson.data; i++) {
+				backjson.data[i].xbsp=row.xbsp;
+			}
 			stuffMajorTrainingTable(backjson.data);
 			binBind();
 			if(backjson.code===500){
@@ -761,7 +765,7 @@ function modifyMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
-	if(row.xbsp==="passing"){
+	if($("planStatus")[0].innerText==="passing"){
 		toastr.warning('该培养计划暂不可进行此操作');
 		return;
 	}
@@ -899,7 +903,7 @@ function getCrouseModifyInfo(row){
 	crouseInfoObject.kztrkc=getNormalSelectValue("majorTrainingDetails_isCalssTextual");
 	crouseInfoObject.jxgglxkc=getNormalSelectValue("majorTrainingDetails_isTeachingReform");
 	crouseInfoObject.sfsckkjh=row.sfsckkjh;
-	crouseInfoObject.xbsp=row.xbsp;
+	// crouseInfoObject.xbsp=row.xbsp;
 	return crouseInfoObject;
 }
 
@@ -909,7 +913,7 @@ function removeMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
-	if(row.xbsp==="passing"){
+	if($("planStatus")[0].innerText==="passing"){
 		toastr.warning('该培养计划暂不可进行此操作');
 		return;
 	}
@@ -1549,8 +1553,8 @@ function wantGeneratCoursePaln() {
 //填充学年区域
 function stuffXnArea(xnInfo){
 			var str = '<option value="seleceConfigTip">请选择</option>';
-			for (var i = 0; i < backjson.data.length; i++) {
-				str += '<option value="'+backjson.data[i].edu400_ID+'">'+ backjson.data[i].xnmc+'</option>';
+			for (var i = 0; i < xnInfo.length; i++) {
+				str += '<option value="'+xnInfo[i].edu400_ID+'">'+ xnInfo[i].xnmc+'</option>';
 			}
 	stuffManiaSelect("#generatCourse_xn", str);
 }
