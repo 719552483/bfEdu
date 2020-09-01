@@ -525,6 +525,7 @@ public class AdministrationPageService {
 			edu206.setXnid(xnid);
 			edu206.setKcmc(edu108.getKcmc());
 			edu206.setZxs(edu108.getZxs().toString());
+			edu206.setXf(edu108.getXf());
 			edu206Dao.save(edu206);
 		}
 
@@ -1219,6 +1220,7 @@ public class AdministrationPageService {
 			edu005.setXn(edu201.getXn());
 			edu005.setXn(edu201.getXnid());
 			edu005.setIsExamCrouse(edu201.getSfxylcj());
+			edu005.setCredit(edu201.getXf());
 			edu005Dao.save(edu005);
 		}
 	}

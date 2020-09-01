@@ -31,6 +31,7 @@ public class Edu206 {
 	private String sszt;  //审核状态
 	private String fkyj;  //反馈意见
 	private String sfypk;  //是否已排课
+	private Double xf;//学分
 
 
 
@@ -204,5 +205,13 @@ public class Edu206 {
 
 	public void setXnid(String xnid) {
 		this.xnid = xnid;
+	}
+
+	public Double getXf() {
+		return xf;
+	}
+
+	public void setXf(Double xf) {
+		this.xf = xf;
 	}
 }

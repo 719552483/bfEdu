@@ -19,10 +19,10 @@ public class Edu005 {
     private String entryDate;//录入日期
     private String isExamCrouse;//是否为考试课
     private String grade;//成绩
-    private String credit;//学分
-    private String getCredit;//已得学分
-    private String xn;
-    private String xnid;
+    private Double credit;//学分
+    private Double getCredit;//已得学分
+    private String xn;//学年
+    private String xnid;//学年id
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -70,6 +70,38 @@ public class Edu005 {
         Edu101_ID = edu101_ID;
     }
 
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getStudentName() {
+        return StudentName;
+    }
+
+    public void setStudentName(String studentName) {
+        StudentName = studentName;
+    }
+
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
+    }
+
     public String getGradeEnter() {
         return gradeEnter;
     }
@@ -102,44 +134,20 @@ public class Edu005 {
         this.grade = grade;
     }
 
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public String getStudentName() {
-        return StudentName;
-    }
-
-    public void setStudentName(String studentName) {
-        StudentName = studentName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getStudentCode() {
-        return studentCode;
-    }
-
-    public void setStudentCode(String studentCode) {
-        this.studentCode = studentCode;
-    }
-
-    public String getCredit() {
+    public Double getCredit() {
         return credit;
     }
 
-    public void setCredit(String credit) {
+    public void setCredit(Double credit) {
         this.credit = credit;
+    }
+
+    public Double getGetCredit() {
+        return getCredit;
+    }
+
+    public void setGetCredit(Double getCredit) {
+        this.getCredit = getCredit;
     }
 
     public String getXn() {
@@ -156,13 +164,5 @@ public class Edu005 {
 
     public void setXnid(String xnid) {
         this.xnid = xnid;
-    }
-
-    public String getGetCredit() {
-        return getCredit;
-    }
-
-    public void setGetCredit(String getCredit) {
-        this.getCredit = getCredit;
     }
 }

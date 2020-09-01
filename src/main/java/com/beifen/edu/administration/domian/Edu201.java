@@ -37,6 +37,7 @@ public class Edu201 {
 	private String sszt;  //审核状态
 	private String fkyj;  //反馈意见
 	private String sfypk;  //是否已排课
+	private Double xf;//学分
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -207,5 +208,13 @@ public class Edu201 {
 
 	public void setXnid(String xnid) {
 		this.xnid = xnid;
+	}
+
+	public Double getXf() {
+		return xf;
+	}
+
+	public void setXf(Double xf) {
+		this.xf = xf;
 	}
 }

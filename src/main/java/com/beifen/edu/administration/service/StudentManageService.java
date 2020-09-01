@@ -50,6 +50,8 @@ public class StudentManageService {
     @Autowired
     private Edu400Dao edu400Dao;
     @Autowired
+    private Edu108Dao edu108Dao;
+    @Autowired
     private RedisUtils redisUtils;
 
 
@@ -486,26 +488,33 @@ public class StudentManageService {
         };
 
         List<Edu005> all = edu005Dao.findAll(specification);
+        if (all.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无成绩信息");
+            return resultVO;
+        }
+
         List<Long> edu201IdList = all.stream().map(e -> e.getEdu201_ID()).collect(Collectors.toList());
-
         List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey,edu201IdList);
-
 
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
         } else {
             //添加已得学分
             for (Edu005 e : edu005List) {
-                if("F".equals(e.getGrade())) {
-                    e.setGetCredit("0");
-                } else if ("T".equals(e.getGrade())) {
-                    e.setGetCredit(e.getCredit());
+                if (edu005.getGrade() == null || "".equals(edu005.getGrade())){
+                    e.setGetCredit(0.00);
                 } else {
-                    int i = Integer.parseInt(e.getGrade());
-                    if (i < 60) {
-                        e.setGetCredit("0");
-                    } else {
+                    if ("F".equals(e.getGrade())) {
+                        e.setGetCredit(0.00);
+                    } else if ("T".equals(e.getGrade())) {
                         e.setGetCredit(e.getCredit());
+                    } else {
+                        int i = Integer.parseInt(e.getGrade());
+                        if (i < 60) {
+                            e.setGetCredit(0.00);
+                        } else {
+                            e.setGetCredit(e.getCredit());
+                        }
                     }
                 }
             }
