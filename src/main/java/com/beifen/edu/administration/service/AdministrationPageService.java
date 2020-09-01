@@ -1216,6 +1216,8 @@ public class AdministrationPageService {
 			edu005.setEdu300_ID(Long.parseLong(e.getEdu300_ID()));
 			edu005.setClassName(e.getXzbname());
 			edu005.setEdu201_ID(Long.parseLong(edu201ID));
+			edu005.setXn(edu201.getXn());
+			edu005.setXn(edu201.getXnid());
 			edu005.setIsExamCrouse(edu201.getSfxylcj());
 			edu005Dao.save(edu005);
 		}
@@ -2151,6 +2153,18 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setSuccess("没有正在使用的教学班，可以删除");
 		} else {
 			resultVO = ResultVO.setFailed("存在正在使用的教学班，无法删除");
+		}
+		return resultVO;
+	}
+
+	public ResultVO confirmStartPlan(Edu600 edu600) {
+		ResultVO resultVO;
+		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+		if (isSuccess) {
+			edu107DAO.changeProcessState("passing",edu600.getBusinessKey().toString());
+			resultVO = ResultVO.setSuccess("申请成功");
+		} else {
+			resultVO = ResultVO.setFailed("审批流程发起失败吗，请联系管理员");
 		}
 		return resultVO;
 	}

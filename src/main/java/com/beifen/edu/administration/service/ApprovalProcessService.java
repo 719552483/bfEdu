@@ -107,8 +107,7 @@ public class ApprovalProcessService {
                 department = edu200.getDepartmentCode();
                 break;
             case"03":
-                Edu108 edu108 = edu108Dao.findOne(businessKey);
-                Edu107 edu107 = edu107Dao.findOne(edu108.getEdu107_ID());
+                Edu107 edu107 = edu107Dao.findOne(businessKey);
                 department = edu107.getEdu104();
                 break;
             case"04":
@@ -149,9 +148,8 @@ public class ApprovalProcessService {
                 keyWord = edu200.getKcmc();
                 break;
             case"03":
-                Edu108 edu108 = edu108Dao.findOne(businessKey);
-                Edu107 edu107 = edu107Dao.findOne(edu108.getEdu107_ID());
-                keyWord = edu107.getPyjhmc()+"-"+edu108.getKcmc();
+                Edu107 edu107 = edu107Dao.findOne(businessKey);
+                keyWord = edu107.getPyjhmc();
                 break;
             case"04":
                 Edu201 edu201 = edu201Dao.findOne(businessKey);
@@ -327,7 +325,7 @@ public class ApprovalProcessService {
                     edu200Dao.updateState(businessKey, "stop");
                     break;
                 case"03":
-                    edu108Dao.updateState(businessKey, "pass");
+                    edu107Dao.changeProcessState("pass",businessKey);
                     break;
                 case"04":
                     edu201Dao.updateState(businessKey, "pass");
@@ -358,7 +356,7 @@ public class ApprovalProcessService {
                     edu200Dao.updateState(businessKey, "pass");
                     break;
                 case"03":
-                    edu108Dao.updateState(businessKey, "nopass");
+                    edu107Dao.changeProcessState("nopass",businessKey);
                     break;
                 case"04":
                     edu201Dao.updateState(businessKey, "nopass");
@@ -388,7 +386,7 @@ public class ApprovalProcessService {
                     edu200Dao.updateState(businessKey, "pass");
                     break;
                 case"03":
-                    edu108Dao.updateState(businessKey, "nopass");
+                    edu107Dao.changeProcessState("nopass",businessKey);
                     break;
                 case"04":
                     edu201Dao.updateState(businessKey, "nopass");
@@ -626,12 +624,8 @@ public class ApprovalProcessService {
                 object = edu200Dao.queryClassById(businessKey);
                 break;
             case"03":
-                Edu108 edu108 = edu108Dao.queryPlanByEdu108ID(businessKey);
-                Edu107 edu107 = edu107Dao.getEdu107ByID(edu108.getEdu107_ID().toString());
-                TrainingPlanP0 trainingPlanP0 = new TrainingPlanP0();
-                trainingPlanP0.setEdu107(edu107);
-                trainingPlanP0.setEdu108(edu108);
-                object = trainingPlanP0;
+                List<Edu108> edu108List = edu108Dao.getEdu108ByEdu107Id(businessKey);
+                object = edu108List;
                 break;
             case"04":
             case"08":

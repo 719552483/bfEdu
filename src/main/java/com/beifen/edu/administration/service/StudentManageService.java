@@ -47,6 +47,8 @@ public class StudentManageService {
     @Autowired
     private Edu204Dao edu204Dao;
     @Autowired
+    private Edu400Dao edu400Dao;
+    @Autowired
     private RedisUtils redisUtils;
 
 
@@ -468,6 +470,22 @@ public class StudentManageService {
     //学生查询成绩
     public ResultVO studentGetGrades(String userKey,Edu005 edu005) {
         ResultVO resultVO;
+
+        Specification<Edu005> specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.like(root.<String>get("courseName"),"%"+edu005.getCourseName()+"%"));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"), edu005.getXnid()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> all = edu005Dao.findAll(specification);
+
         List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey);
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
@@ -483,7 +501,12 @@ public class StudentManageService {
         ResultVO resultVO;
         Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
         List<String> edu201IdList = edu204Dao.searchEdu201IdByEdu300Id(one.getEdu300_ID());
-
-        return null;
+        List<Edu400> edu400List = edu400Dao.getYearFromEdu201(edu201IdList);
+        if(edu400List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无学年信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu400List);
+        }
+        return resultVO;
     }
 }

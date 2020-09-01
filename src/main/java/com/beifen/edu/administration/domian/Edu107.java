@@ -101,7 +101,11 @@ public class Edu107 {
 		this.yxbz = yxbz;
 	}
 
-	
-	
-	
+	public String getXbsp() {
+		return xbsp;
+	}
+
+	public void setXbsp(String xbsp) {
+		this.xbsp = xbsp;
+	}
 }

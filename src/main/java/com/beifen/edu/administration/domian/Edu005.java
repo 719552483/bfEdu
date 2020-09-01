@@ -20,6 +20,8 @@ public class Edu005 {
     private String isExamCrouse;//是否为考试课
     private String grade;//成绩
     private String credit;//学分
+    private String xn;
+    private String xnid;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -137,5 +139,21 @@ public class Edu005 {
 
     public void setCredit(String credit) {
         this.credit = credit;
+    }
+
+    public String getXn() {
+        return xn;
+    }
+
+    public void setXn(String xn) {
+        this.xn = xn;
+    }
+
+    public String getXnid() {
+        return xnid;
+    }
+
+    public void setXnid(String xnid) {
+        this.xnid = xnid;
     }
 }

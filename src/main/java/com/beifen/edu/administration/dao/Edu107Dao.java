@@ -54,5 +54,8 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	@Query(value = "select * from edu107 e where e.Edu107_ID=?1", nativeQuery = true)
     Edu107 getEdu107ByID(String edu107_id);
 
-
+	@Transactional
+	@Modifying
+	@Query(value = "update edu107 set xbsp = ?1 where Edu107_ID =?2", nativeQuery = true)
+    void changeProcessState(String passing, String edu107Id);
 }

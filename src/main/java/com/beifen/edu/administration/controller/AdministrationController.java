@@ -2232,5 +2232,20 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 * 检查教学班是否被使用
+	 * @param classIds
+	 * @return
+	 */
+	@RequestMapping("/confirmStartPlan")
+	@ResponseBody
+	public ResultVO confirmStartPlan(@RequestParam("edu107") String edu107,@RequestParam("approvalInfo") String approvalInfo) {
+		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(approvalInfo);
+		Edu600 edu600 = JSON.toJavaObject(jsonObject, Edu600.class);
+		edu600.setBusinessKey(Long.parseLong(edu107));
+		ResultVO result = administrationPageService.confirmStartPlan(edu600);
+		return result;
+	}
+
 
 }
