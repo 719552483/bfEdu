@@ -311,7 +311,7 @@ public class StudentManageController {
      * @return
      */
 
-    @RequestMapping("/studentGetSchoolYear")
+    @RequestMapping("/getStudentXn")
     @ResponseBody
     public ResultVO studentGetSchoolYear(@RequestParam("userKey") String userKey) {
         ResultVO result =studentManageService.studentGetSchoolYear(userKey);
