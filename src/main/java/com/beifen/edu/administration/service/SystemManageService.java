@@ -9,6 +9,9 @@ import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -400,16 +403,51 @@ public class SystemManageService {
     //分页查询用户信息
     public ResultVO queryUserList(PageRequestPO pageRequest) {
         ResultVO resultVO;
+
         Map<String, Object> returnMap = new HashMap<>();
-        List<Edu990> edu990List = edu990Dao.findAllInPage(pageRequest.getPageNum(),pageRequest.getPageSize());
-        long count = edu990Dao.count();
-        if(edu990List.size() == 0) {
+
+        Integer pageNumber = pageRequest.getPageNum();
+        Integer pageSize = pageRequest.getPageSize();
+
+        pageNumber = pageNumber < 0 ? 0 : pageNumber;
+        pageSize = pageSize < 0 ? 10 : pageSize;
+
+        Specification<Edu990> specification = new Specification<Edu990>() {
+            @Override
+            public Predicate toPredicate(Root<Edu990> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb)
+            {
+                //page : 0 开始, limit : 默认为 10
+                List<Predicate> predicates = new ArrayList<>();
+                if (pageRequest.getDepartmentName() != null && !"".equals(pageRequest.getDepartmentName())) {
+                    predicates.add(cb.like(root.<String> get("deparmentNames"),"%"+pageRequest.getDepartmentName()+"%"));
+                }
+                if (pageRequest.getUserName() != null && !"".equals(pageRequest.getUserName())) {
+                    predicates.add(cb.like(root.<String> get("userName"), "%"+pageRequest.getUserName()+"%"));
+                }
+                if (pageRequest.getRoleName() != null && !"".equals(pageRequest.getRoleName())) {
+                    predicates.add(cb.like(root.<String> get("js"), "%"+pageRequest.getRoleName()+"%"));
+                }
+                if (pageRequest.getYhm() != null && !"".equals(pageRequest.getYhm())) {
+                    predicates.add(cb.like(root.<String> get("yhm"),"%"+pageRequest.getYhm()+"%"));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        PageRequest page = new PageRequest(pageNumber, pageSize, Sort.Direction.ASC,"edu990_ID");
+        Page<Edu990> pages = edu990Dao.findAll(specification,page);
+
+        List<Edu990> edu990s = pages.getContent();
+        long count = pages.getSize();
+
+        if(edu990s.size() == 0) {
             resultVO = ResultVO.setFailed("暂无用户信息");
         } else {
-            returnMap.put("rows",edu990List);
+            returnMap.put("rows",edu990s);
             returnMap.put("total",count);
             resultVO = ResultVO.setSuccess("查询成功",returnMap);
         }
+
         return resultVO;
     }
 }

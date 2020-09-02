@@ -3,6 +3,11 @@ package com.beifen.edu.administration.PO;
 public class PageRequestPO {
     private Integer pageNum;
     private Integer pageSize;
+    private String departmentName;
+    private String roleName;
+    private String userName;
+    private String yhm;
+
 
     public Integer getPageNum() {
         return pageNum;
@@ -18,5 +23,37 @@ public class PageRequestPO {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getYhm() {
+        return yhm;
+    }
+
+    public void setYhm(String yhm) {
+        this.yhm = yhm;
     }
 }
