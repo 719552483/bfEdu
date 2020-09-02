@@ -20,6 +20,5 @@ public interface Edu994Dao extends JpaRepository<Edu994, Long>, JpaSpecification
 	@Query(value = "select e.Edu104_ID from Edu994 e where e.edu990_ID = ?1",nativeQuery = true)
 	List<String> findAllDepartmentIds(String userId);
 
-	@Query(value = "select f.xbmc from Edu994 e,Edu104 f where e.edu104_ID = to_char(f.edu104_ID) and e.edu990_ID = ?1",nativeQuery = true)
-	List<String> findAllDepartmentNames(String userId);
+
 }

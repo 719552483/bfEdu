@@ -355,11 +355,16 @@ public class SystemManageService {
         }else {
             //保存用户
             List<String> departmentNames = new ArrayList<>();
-            departmentNames = edu994Dao.findAllDepartmentNames(edu990.getBF990_ID().toString());
-            String ids = utils.listToString(departmentList, ',');
-            String names = utils.listToString(departmentNames, ',');
-            edu990.setDeparmentIds(ids);
-            edu990.setDeparmentNames(names);
+            if(departmentList.size() != 0) {
+                departmentNames = edu104Dao.queryXbNameByIds(departmentList);
+                String ids = utils.listToString(departmentList, ',');
+                String names = utils.listToString(departmentNames, ',');
+                edu990.setDeparmentIds(ids);
+                edu990.setDeparmentNames(names);
+            } else {
+                edu990.setDeparmentIds(null);
+                edu990.setDeparmentNames(null);
+            }
             edu990Dao.save(edu990);
             //删除已有关联
             edu992Dao.deleteByEdu990Id(edu990.getBF990_ID().toString());
