@@ -88,4 +88,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//根据id集合查学生
 	@Query(value = "select e.* from edu001 e where e.Edu001_ID in ?1", nativeQuery = true)
     List<Edu001> findStudentsByIds(List<String> studentIds);
+
+	@Query(value = "SELECT * FROM (SELECT t.*,ROWNUM r FROM EDU001 t WHERE ROWNUM <= ?1*?2) WHERE r > (?1-1)*?2 and js != 'sys'",nativeQuery = true)
+	List<Edu001> findAllInPage(Integer pageNum, Integer pageSize);
 }

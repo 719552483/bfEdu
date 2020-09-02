@@ -154,11 +154,10 @@ public class SystemManageController {
      */
     @RequestMapping("/newUser")
     @ResponseBody
-    public ResultVO newUser(@RequestParam("newUserInfo") String newUserInfo,@RequestParam String departments) {
+    public ResultVO newUser(@RequestParam("newUserInfo") String newUserInfo) {
         JSONObject jsonObject = JSONObject.fromObject(newUserInfo);
         Edu990 edu990 = (Edu990) JSONObject.toBean(jsonObject, Edu990.class);
-        List<String> departmentList = JSON.parseArray(departments, String.class);
-        ResultVO result = systemManageService.newUser(edu990,departmentList);
+        ResultVO result = systemManageService.newUser(edu990);
         return result;
     }
 
@@ -175,6 +174,20 @@ public class SystemManageController {
         return result;
     }
 
+    /**
+     * 分页查询用户信息
+     * @param queryParams
+     * @return
+     */
+    @RequestMapping("/queryUserList")
+    @ResponseBody
+    public ResultVO queryUserList(@RequestParam("queryParams") String queryParams) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(queryParams);
+        Integer pageNum = jsonObject.getInteger("pageNum");
+        Integer pageSize = jsonObject.getInteger("pageSize");
+        ResultVO result = systemManageService.queryUserList(pageNum,pageSize);
+        return result;
+    }
 
 
 }

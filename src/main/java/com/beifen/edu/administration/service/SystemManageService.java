@@ -346,7 +346,7 @@ public class SystemManageService {
     }
 
     // 新建或修改用户
-    public ResultVO newUser(Edu990 edu990,List<String> departmentList) {
+    public ResultVO newUser(Edu990 edu990) {
         ResultVO resultVO;
         // 判断用户名是否存在
         List<Edu990> edu990List = checkUserName(edu990);
@@ -354,17 +354,6 @@ public class SystemManageService {
             resultVO = ResultVO.setFailed("用户名已存在,请重新输入");
         }else {
             //保存用户
-            List<String> departmentNames = new ArrayList<>();
-            if(departmentList.size() != 0) {
-                departmentNames = edu104Dao.queryXbNameByIds(departmentList);
-                String ids = utils.listToString(departmentList, ',');
-                String names = utils.listToString(departmentNames, ',');
-                edu990.setDeparmentIds(ids);
-                edu990.setDeparmentNames(names);
-            } else {
-                edu990.setDeparmentIds(null);
-                edu990.setDeparmentNames(null);
-            }
             edu990Dao.save(edu990);
             //删除已有关联
             edu992Dao.deleteByEdu990Id(edu990.getBF990_ID().toString());
@@ -379,11 +368,14 @@ public class SystemManageService {
 
             //添加用户与学院关系
             edu994Dao.deleteByEdu990Id(edu990.getBF990_ID().toString());
-            for(String s: departmentList) {
-                Edu994 edu994 = new Edu994();
-                edu994.setEdu990_ID(edu990.getBF990_ID());
-                edu994.setEdu104_ID(s);
-                edu994Dao.save(edu994);
+            if(edu990.getDeparmentIds() != null) {
+                String[] departmentList = edu990.getDeparmentIds().split(",");
+                for(String s: departmentList) {
+                    Edu994 edu994 = new Edu994();
+                    edu994.setEdu990_ID(edu990.getBF990_ID());
+                    edu994.setEdu104_ID(s);
+                    edu994Dao.save(edu994);
+                }
             }
 
             resultVO = ResultVO.setSuccess("操作已成功",edu990.getBF990_ID());
@@ -404,4 +396,19 @@ public class SystemManageService {
     }
 
 
+    //分页查询用户信息
+    public ResultVO queryUserList(Integer pageNum, Integer pageSize) {
+        ResultVO resultVO;
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Edu001> edu001List = edu001Dao.findAllInPage(pageNum,pageSize);
+        long count = edu001Dao.count();
+        if(edu001List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无用户信息");
+        } else {
+            returnMap.put("rows",edu001List);
+            returnMap.put("total",count);
+            resultVO = ResultVO.setSuccess("查询成功",returnMap);
+        }
+        return resultVO;
+    }
 }
