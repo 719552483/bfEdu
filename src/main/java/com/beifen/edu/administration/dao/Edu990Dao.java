@@ -60,4 +60,8 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	//查询除系统用户以外的用户
 	@Query(value = "select e.* from Edu990 e where e.yhm != 'admin'",nativeQuery = true)
 	List<Edu990> findUserWithoutSys();
+
+	//分页查询用户
+	@Query(value = "SELECT * FROM (SELECT t.*,ROWNUM r FROM EDU990 t WHERE ROWNUM <= ?1*?2) WHERE r > (?1-1)*?2",nativeQuery = true)
+	List<Edu990> findAllInPage(Integer pageNum, Integer pageSize);
 }

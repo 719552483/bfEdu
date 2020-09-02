@@ -400,12 +400,12 @@ public class SystemManageService {
     public ResultVO queryUserList(Integer pageNum, Integer pageSize) {
         ResultVO resultVO;
         Map<String, Object> returnMap = new HashMap<>();
-        List<Edu001> edu001List = edu001Dao.findAllInPage(pageNum,pageSize);
-        long count = edu001Dao.count();
-        if(edu001List.size() == 0) {
+        List<Edu990> edu990List = edu990Dao.findAllInPage(pageNum,pageSize);
+        long count = edu990Dao.count();
+        if(edu990List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无用户信息");
         } else {
-            returnMap.put("rows",edu001List);
+            returnMap.put("rows",edu990List);
             returnMap.put("total",count);
             resultVO = ResultVO.setSuccess("查询成功",returnMap);
         }
