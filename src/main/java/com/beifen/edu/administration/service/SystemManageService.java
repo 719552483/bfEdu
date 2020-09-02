@@ -2,6 +2,7 @@ package com.beifen.edu.administration.service;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.Edu990PO;
+import com.beifen.edu.administration.PO.PageRequestPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
@@ -397,10 +398,10 @@ public class SystemManageService {
 
 
     //分页查询用户信息
-    public ResultVO queryUserList(Integer pageNum, Integer pageSize) {
+    public ResultVO queryUserList(PageRequestPO pageRequest) {
         ResultVO resultVO;
         Map<String, Object> returnMap = new HashMap<>();
-        List<Edu990> edu990List = edu990Dao.findAllInPage(pageNum,pageSize);
+        List<Edu990> edu990List = edu990Dao.findAllInPage(pageRequest.getPageNum(),pageRequest.getPageSize());
         long count = edu990Dao.count();
         if(edu990List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无用户信息");
