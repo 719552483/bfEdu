@@ -434,7 +434,7 @@ public class SystemManageService {
             }
         };
 
-        PageRequest page = new PageRequest(pageNumber, pageSize, Sort.Direction.ASC,"yhm");
+        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"yhm");
         Page<Edu990> pages = edu990Dao.findAll(specification,page);
 
         List<Edu990> edu990s = pages.getContent();
