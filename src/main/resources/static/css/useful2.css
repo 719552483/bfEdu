@@ -1978,6 +1978,31 @@ top角色切换滚动体样式
 	color: rgb(22 56 72 / 92%);
 }
 
+.allUserTableArea .fixed-table-pagination .page-list{
+	display: inline-block!important;
+}
+
+.allUserTableArea .fixed-table-pagination .page-list .btn-group,
+.allUserTableArea .fixed-table-pagination .page-list .dropdown,
+.allUserTableArea .fixed-table-pagination .page-list .page-size,
+.allUserTableArea .fixed-table-pagination .page-list .caret{
+	display: inline-block!important;
+}
+
+.allUserTableArea .fixed-table-pagination .page-list .btn-secondary{
+	background: none!important;
+	background-color: rgb(50 132 202 / 89%)!important;
+}
+
+
+.allUserTableArea .fixed-table-pagination .page-list .dropdown-menu a{
+padding-left: 10px!important;
+}
+
+.allUserTableArea .fixed-table-pagination .page-list .btn-secondary{
+	width: 70px!important;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

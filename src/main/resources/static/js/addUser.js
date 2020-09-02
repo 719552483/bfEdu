@@ -257,8 +257,8 @@ function stuffTable() {
 			queryParams: queryParams,//请求服务器时所传的参数
 			sidePagination: 'server',//指定服务器端分页
 			pageSize: 10,//单页记录数
-			pageList: [10],//分页步进值
-			search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+			pageList: [10,20,30,40],//分页步进值
+			search: false,
 			silent: false,
 			showRefresh: false,                  //是否显示刷新按钮
 			showToggle: false,
@@ -313,6 +313,13 @@ function stuffTable() {
 						total: res.data.total,
 						rows: res.data.rows
 					};
+					return data;
+				}else{
+					var data = {
+						total: 0,
+						rows:[]
+					};
+					toastr.warning(res.msg);
 					return data;
 				}
 			}
@@ -660,7 +667,7 @@ function reReloadSearchs(){
 	var reObject = new Object();
 	reObject.InputIds = "#yhm,#userName,#roleName,#departmentName";
 	reReloadSearchsWithSelect(reObject);
-	$("#allUserTable").bootstrapTable("selectPage", 1);
+	getUserInfo();
 }
 
 //按钮事件绑定
