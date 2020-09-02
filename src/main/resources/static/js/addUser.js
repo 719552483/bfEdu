@@ -220,14 +220,14 @@ function saveNewUser(username, newRole, pwd,roleBtnDepartment) {
 }
 
 //获取所有用户
-function getUserInfo(searchInfo) {
+function getUserInfo() {
 	//初始化表格
-	var oTable = new stuffTable(searchInfo);
+	var oTable = new stuffTable();
 	oTable.Init();
 }
 
 //填充所有用户table
-function stuffTable(searchInfo) {
+function stuffTable() {
 	window.allUserEvents = {
 		'click #modifiRole': function(e, value, row, index) {
 			modifiRole(row);
@@ -245,7 +245,7 @@ function stuffTable(searchInfo) {
 	var oTableInit = new Object();
 	//初始化Table
 	oTableInit.Init = function () {
-		$('#allUserTable').bootstrapTable({
+		$('#allUserTable').bootstrapTable('destroy').bootstrapTable({
 			url:'/queryUserList',         //请求后台的URL（*）
 			method: 'POST',                      //请求方式（*）
 			striped: true,                      //是否显示行间隔色
@@ -321,23 +321,14 @@ function stuffTable(searchInfo) {
 
 	// 得到查询的参数
 	function queryParams(params) {
-		var temp={};
-		if(typeof searchInfo==="undefined"||searchInfo==null){
-			temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-				pageNum: params.pageNumber,
-				pageSize: params.pageSize
-			};
-		}else{
-			temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-				pageNum: params.pageNumber,
-				pageSize: params.pageSize,
-				departmentName: params.departmentName,
-				roleName: params.roleName,
-				userName: params.userName,
-				yhm:searchInfo.yhm
-			};
-		}
-
+		var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+			pageNum: params.pageNumber,
+			pageSize: params.pageSize,
+			departmentName: $("#departmentName").val(),
+			roleName: $("#roleName").val(),
+			userName: $("#userName").val(),
+			yhm:$("#yhm").val()
+		};
 		return JSON.stringify(temp);
 	}
 
@@ -653,26 +644,7 @@ function getxBMoreSelectVALUES(id) {
 
 //开始检索
 function startSearch(){
-	var searchInfo=getSearchObject();
-	if(searchInfo.yhm===""&&searchInfo.userName===""&&searchInfo.departmentName===""&&searchInfo.roleName===""){
-		return;
-	}else{
-		stuffTable(searchInfo)
-	}
-}
-
-//获得检索对象
-function getSearchObject(){
-	var yhm=$("#yhm").val();
-	var userName=$("#userName").val();
-	var roleName=$("#roleName").val();
-	var departmentName=$("#departmentName").val();
-	var returnObject=new Object();
-	returnObject.yhm=yhm;
-	returnObject.userName=userName;
-	returnObject.roleName=roleName;
-	returnObject.departmentName=departmentName;
-	return returnObject;
+	getUserInfo();
 }
 
 //重置检索
