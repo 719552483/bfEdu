@@ -220,34 +220,14 @@ function saveNewUser(username, newRole, pwd,roleBtnDepartment) {
 }
 
 //获取所有用户
-function getAllUserInfo() {
-	var isFirst=$(".isFirstLoad")[0].innerText;
-	if(isFirst==="T"){
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/getAllUser",
-			async:false,
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				hideloding();
-				stuffTable(backjson.data);
-			}
-		});
-	}
+function getUserInfo() {
+	//初始化表格
+	var oTable = new stuffTable();
+	oTable.Init();
 }
 
 //填充所有用户table
-function stuffTable(tableInfo) {
+function stuffTable() {
 	window.allUserEvents = {
 		'click #modifiRole': function(e, value, row, index) {
 			modifiRole(row);
@@ -262,84 +242,113 @@ function stuffTable(tableInfo) {
 			okModify(row, index);
 		}
 	};
-
-	$('#allUserTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo,
-		pagination: true,
-		pageNumber: 1,
-		pageSize: 10,
-		pageList: [10],
-		showToggle: false,
-		showFooter: false,
-		search: true,
-		editable: false,
-		striped: true,
-		toolbar: '#toolbar',
-		showColumns: true,
-		onPageChange: function() {
-			drawPagination(".allUserTableArea", "用户信息");
-		},
-		columns: [
-			{
-				field: 'check',
-				checkbox: true
-			},{
-				field: 'bf990_ID',
-				title: '唯一标识',
-				align: 'center',
-				visible: false
+	var oTableInit = new Object();
+	//初始化Table
+	oTableInit.Init = function () {
+		$('#allUserTable').bootstrapTable({
+			url:'/queryUserList',         //请求后台的URL（*）
+			method: 'POST',                      //请求方式（*）
+			striped: true,                      //是否显示行间隔色
+			cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			pagination: true,                   //是否显示分页（*）
+			queryParamsType: '',
+			dataType: 'json',
+			pageNumber: 1, //初始化加载第一页，默认第一页
+			queryParams: queryParams,//请求服务器时所传的参数
+			sidePagination: 'server',//指定服务器端分页
+			pageSize: 10,//单页记录数
+			pageList: [10],//分页步进值
+			search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+			silent: false,
+			showRefresh: false,                  //是否显示刷新按钮
+			showToggle: false,
+			onPostBody: function() {
+				drawPagination(".allUserTableArea", "用户信息");
+				drawSearchInput(".allUserTableArea");
+				changeTableNoRsTip();
+				toolTipUp(".myTooltip");
+				changeColumnsStyle(".allUserTableArea", "用户信息");
 			},
-			{
-				field: 'yhm',
-				title: '用户名',
-				formatter: userNameFormatter,
-				align: 'left'
-			},{
-				field: 'userName',
-				title: '用户名称',
-				formatter: paramsMatter,
-				align: 'left'
-			}, {
-				field: 'js',
-				title: '用户角色',
-				align: 'left',
-				formatter: userRoleFormatter,
-			}, {
-				field: 'deparmentNames',
-				title: '分管二级学院',
-				align: 'left',
-				formatter: deparmentNamesFormatter,
-			},{
-				field: 'action',
-				title: '操作',
-				align: 'center',
-				width: '16%',
-				formatter: allUserFormatter,
-				events: allUserEvents,
+			onPageChange: function() {drawPagination(".allUserTableArea", "用户信息");},
+			columns: [	{
+							field: 'check',
+							checkbox: true
+						},{
+							field: 'bf990_ID',
+							title: '唯一标识',
+							align: 'center',
+							visible: false
+						},
+						{
+							field: 'yhm',
+							title: '用户名',
+							formatter: userNameFormatter,
+							align: 'left'
+						},{
+							field: 'userName',
+							title: '用户名称',
+							formatter: paramsMatter,
+							align: 'left'
+						}, {
+							field: 'js',
+							title: '用户角色',
+							align: 'left',
+							formatter: userRoleFormatter,
+						}, {
+							field: 'deparmentNames',
+							title: '分管二级学院',
+							align: 'left',
+							formatter: deparmentNamesFormatter,
+						},{
+							field: 'action',
+							title: '操作',
+							align: 'center',
+							width: '16%',
+							formatter: allUserFormatter,
+							events: allUserEvents,
+						}],
+			responseHandler: function (res) {  //后台返回的结果
+				if(res.code == 200){
+					var data = {
+						total: res.data.total,
+						rows: res.data.rows
+					};
+					return data;
+				}
 			}
-		]
-	});
+		});
+	};
+
+	// 得到查询的参数
+	function queryParams(params) {
+		var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+			pageNum: params.pageNumber,
+			pageSize: params.pageSize
+		};
+
+		return JSON.stringify(temp);
+	}
 
 	function allUserFormatter(value, row, index) {
 		return [
-				'<ul class="toolbar tabletoolbar">' +
-				'<li id="modifiRole" class="blockStart blockStart' + row.bf990_ID +
-				'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
-				'<li id="removeUser" class="blockStart blockStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>删除用户</li>' +
-				'<li id="tableOk" class="noneStart noneStart' + row.bf990_ID +
-				'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
-				'<li id="tableCanle" class="noneStart noneStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>取消</li>' +
-				'</ul>'
-			]
+			'<ul class="toolbar tabletoolbar">' +
+			'<li id="modifiRole" class="blockStart blockStart' + row.bf990_ID +
+			'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
+			'<li id="removeUser" class="blockStart blockStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>删除用户</li>' +
+			'<li id="tableOk" class="noneStart noneStart' + row.bf990_ID +
+			'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+			'<li id="tableCanle" class="noneStart noneStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>取消</li>' +
+			'</ul>'
+		]
 			.join('');
 	}
 
 	function userRoleFormatter(value, row, index) {
 		return [
-				'<div class="multipleInTableArea multipleInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip roleTxt roleTxt' + row.bf990_ID + '">' + row.js + '</span>' +
-				'<select class="myTableSelect myTableSelect' +row.bf990_ID + '" id="userRol'+row.bf990_ID+'" multiple="true">' + roleOptionStr + '' +
-				'</select></div>'
-			]
+			'<div class="multipleInTableArea multipleInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip roleTxt roleTxt' + row.bf990_ID + '">' + row.js + '</span>' +
+			'<select class="myTableSelect myTableSelect' +row.bf990_ID + '" id="userRol'+row.bf990_ID+'" multiple="true">' + roleOptionStr + '' +
+			'</select></div>'
+		]
 			.join('');
 	}
 
@@ -363,18 +372,16 @@ function stuffTable(tableInfo) {
 
 	function userNameFormatter(value, row, index) {
 		return [
-				'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable Mydfinput" value="' + row.yhm +
-				'"><span title="'+row.yhm+'" class="myTooltip blockName' +
-				row.bf990_ID + '">' + row.yhm + '</span>'
-			]
+			'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable Mydfinput" value="' + row.yhm +
+			'"><span title="'+row.yhm+'" class="myTooltip blockName' +
+			row.bf990_ID + '">' + row.yhm + '</span>'
+		]
 			.join('');
 	}
-	drawPagination(".allUserTableArea", "用户信息");
-	drawSearchInput(".allUserTableArea");
-	changeTableNoRsTip();
-	toolTipUp(".myTooltip");
-	changeColumnsStyle(".allUserTableArea", "用户信息");
+
+	return oTableInit;
 }
+
 
 //修改用户
 function modifiRole(row) {
