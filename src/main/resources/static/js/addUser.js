@@ -291,8 +291,13 @@ function stuffTable(tableInfo) {
 			},
 			{
 				field: 'yhm',
-				title: '用户名称',
+				title: '用户名',
 				formatter: userNameFormatter,
+				align: 'left'
+			},{
+				field: 'userName',
+				title: '用户名称',
+				formatter: paramsMatter,
 				align: 'left'
 			}, {
 				field: 'js',
@@ -301,7 +306,7 @@ function stuffTable(tableInfo) {
 				formatter: userRoleFormatter,
 			}, {
 				field: 'deparmentNames',
-				title: '绑定的二级学院',
+				title: '分管二级学院',
 				align: 'left',
 				formatter: deparmentNamesFormatter,
 			},{
@@ -339,7 +344,7 @@ function stuffTable(tableInfo) {
 	}
 
 	function deparmentNamesFormatter(value, row, index) {
-		if(value===""){
+		if(value===""||value==null||typeof value==="undefined"){
 			return [
 				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">暂未绑定</span>' +
 				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
@@ -491,21 +496,27 @@ function confirmodifyUser(row, index) {
 	var roleInSelect = getRoleMoreSelectVALUES("#userRol"+row.bf990_ID);
 	var deparmentSelect = $('#userDeparment' + row.bf990_ID).val();
 	var modifyObject =row;
+
+	if(deparmentSelect==null){
+		modifyObject.deparmentIds =null;
+		modifyObject.deparmentNames =null;
+	}else{
+		deparmentSelect=getxBMoreSelectVALUES("#userDeparment"+row.bf990_ID)
+		modifyObject.deparmentIds =deparmentSelect.name;;
+		modifyObject.deparmentNames = deparmentSelect.value;
+	}
+
 	modifyObject.BF990_ID = row.bf990_ID;
 	modifyObject.yhm = usernameInInput;
 	modifyObject.js = roleInSelect.name;
 	modifyObject.jsId = roleInSelect.value;
-	if(deparmentSelect==null){
-		deparmentSelect=[]
-	}
 
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/newUser",
 		data: {
-            "newUserInfo":JSON.stringify(modifyObject),
-			"departments":JSON.stringify(deparmentSelect)
+            "newUserInfo":JSON.stringify(modifyObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -520,10 +531,7 @@ function confirmodifyUser(row, index) {
 		success : function(backjson) {
 			hideloding();
 			$.hideModal("#remindModal");
-			$('#allUserTable').bootstrapTable('updateRow', {
-				index: index,
-				row: modifyObject
-			});
+			$("#allUserTable").bootstrapTable("updateByUniqueId", {id: row.bf990_ID, row: modifyObject});
 			$(".tip").hide();
 			toolTipUp(".myTooltip");
 			toastr.success(backjson.msg);
@@ -579,6 +587,36 @@ function getRoleMoreSelectVALUES(id) {
 		for (var v = 0; v < values.length; v++) {
 			if(roleOption[r].bf991_ID===parseInt(values[v])){
 				valuesNames.push(roleOption[r].js);
+			}
+		}
+	}
+
+	var nameStr="";
+	for (var i = 0; i < valuesNames.length; i++) {
+		nameStr+=valuesNames[i]+',';
+	}
+
+	var returnObject=new Object();
+	returnObject.value=valuesTxt.substring(0,valuesTxt.length-1);
+	returnObject.name=nameStr.substring(0,nameStr.length-1);
+
+	return returnObject;
+}
+
+//获得系部多选的值
+function getxBMoreSelectVALUES(id) {
+	var values =$(id).val();
+	var valuesTxt = "";
+	if(values!=null){
+		for (var i = 0; i < values.length; ++i) {
+			valuesTxt+=values[i]+',';
+		}
+	}
+	var valuesNames =new Array();
+	for (var r = 0; r < departmentOption.length; r++) {
+		for (var v = 0; v < values.length; v++) {
+			if(departmentOption[r].edu104_ID===parseInt(values[v])){
+				valuesNames.push(departmentOption[r].xbmc);
 			}
 		}
 	}
