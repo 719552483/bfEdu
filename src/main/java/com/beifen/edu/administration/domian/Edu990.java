@@ -14,10 +14,9 @@ public class Edu990 {
 	private String mm; // 密码
 	private String yhm; // 用户名
 	private String scdlsj; // 上次登录时间
-
 	private String yxkjfs; //已选快捷方式
-
 	private String userKey;//系统内人员主键
+	private String userName;//系统内人员名称
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -104,5 +103,13 @@ public class Edu990 {
 
 	public void setJsId(String jsId) {
 		this.jsId = jsId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }
