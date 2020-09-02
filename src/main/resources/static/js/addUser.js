@@ -644,6 +644,14 @@ function getxBMoreSelectVALUES(id) {
 
 //开始检索
 function startSearch(){
+	var yhm=$("#yhm").val();
+	var userName=$("#userName").val();
+	var roleName=$("#roleName").val();
+	var departmentName=$("#departmentName").val();
+	if(yhm===""&&userName===""&&roleName===""&&departmentName===""){
+		toastr.warning('请输入检索条件');
+		return;
+	}
 	getUserInfo();
 }
 
