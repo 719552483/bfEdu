@@ -220,14 +220,14 @@ function saveNewUser(username, newRole, pwd,roleBtnDepartment) {
 }
 
 //获取所有用户
-function getUserInfo() {
+function getUserInfo(searchInfo) {
 	//初始化表格
-	var oTable = new stuffTable();
+	var oTable = new stuffTable(searchInfo);
 	oTable.Init();
 }
 
 //填充所有用户table
-function stuffTable() {
+function stuffTable(searchInfo) {
 	window.allUserEvents = {
 		'click #modifiRole': function(e, value, row, index) {
 			modifiRole(row);
@@ -321,10 +321,22 @@ function stuffTable() {
 
 	// 得到查询的参数
 	function queryParams(params) {
-		var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-			pageNum: params.pageNumber,
-			pageSize: params.pageSize
-		};
+		var temp={};
+		if(typeof searchInfo==="undefined"||searchInfo==null){
+			temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+				pageNum: params.pageNumber,
+				pageSize: params.pageSize
+			};
+		}else{
+			temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+				pageNum: params.pageNumber,
+				pageSize: params.pageSize,
+				departmentName: params.departmentName,
+				roleName: params.roleName,
+				userName: params.userName,
+				yhm:searchInfo.yhm
+			};
+		}
 
 		return JSON.stringify(temp);
 	}
@@ -381,7 +393,6 @@ function stuffTable() {
 
 	return oTableInit;
 }
-
 
 //修改用户
 function modifiRole(row) {
@@ -640,6 +651,38 @@ function getxBMoreSelectVALUES(id) {
 	return returnObject;
 }
 
+//开始检索
+function startSearch(){
+	var searchInfo=getSearchObject();
+	if(searchInfo.yhm===""&&searchInfo.userName===""&&searchInfo.departmentName===""&&searchInfo.roleName===""){
+		return;
+	}else{
+		stuffTable(searchInfo)
+	}
+}
+
+//获得检索对象
+function getSearchObject(){
+	var yhm=$("#yhm").val();
+	var userName=$("#userName").val();
+	var roleName=$("#roleName").val();
+	var departmentName=$("#departmentName").val();
+	var returnObject=new Object();
+	returnObject.yhm=yhm;
+	returnObject.userName=userName;
+	returnObject.roleName=roleName;
+	returnObject.departmentName=departmentName;
+	return returnObject;
+}
+
+//重置检索
+function reReloadSearchs(){
+	var reObject = new Object();
+	reObject.InputIds = "#yhm,#userName,#roleName,#departmentName";
+	reReloadSearchsWithSelect(reObject);
+	$("#allUserTable").bootstrapTable("selectPage", 1);
+}
+
 //按钮事件绑定
 function btnBind() {
 	//确认新增用户按钮
@@ -660,6 +703,20 @@ function btnBind() {
 	$('.removeUsersBtn').unbind('click');
 	$('.removeUsersBtn').bind('click', function(e) {
 		removeUsersBtn();
+		e.stopPropagation();
+	});
+
+	//开始检索
+	$('#startSearch').unbind('click');
+	$('#startSearch').bind('click', function(e) {
+		startSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#reReloadSearchs').unbind('click');
+	$('#reReloadSearchs').bind('click', function(e) {
+		reReloadSearchs();
 		e.stopPropagation();
 	});
 }
