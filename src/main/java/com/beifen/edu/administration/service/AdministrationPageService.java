@@ -1858,7 +1858,7 @@ public class AdministrationPageService {
 					}
 					return resultVO;
 				} else if (result.getCode() == 501) {
-					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员",returnMap);
 					if (saveIds.size() != 0) {
 						edu200DAO.deleteByIds(saveIds);
 					}
@@ -1937,7 +1937,7 @@ public class AdministrationPageService {
 					}
 					return resultVO;
 				} else if (result.getCode() == 501) {
-					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+					resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员",returnMap);
 					if (saveList.size() != 0) {
 						for (Edu200 e : saveList) {
 							edu200DAO.save(e);
