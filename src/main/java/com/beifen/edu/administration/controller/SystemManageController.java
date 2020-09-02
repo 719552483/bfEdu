@@ -176,15 +176,13 @@ public class SystemManageController {
 
     /**
      * 分页查询用户信息
-     * @param queryParams
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     @RequestMapping("/queryUserList")
     @ResponseBody
-    public ResultVO queryUserList(@RequestParam("queryParams") String queryParams) {
-        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(queryParams);
-        Integer pageNum = jsonObject.getInteger("pageNum");
-        Integer pageSize = jsonObject.getInteger("pageSize");
+    public ResultVO queryUserList(@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize) {
         ResultVO result = systemManageService.queryUserList(pageNum,pageSize);
         return result;
     }
