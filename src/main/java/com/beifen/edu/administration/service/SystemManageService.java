@@ -434,11 +434,11 @@ public class SystemManageService {
             }
         };
 
-        PageRequest page = new PageRequest(pageNumber, pageSize, Sort.Direction.ASC,"edu990_ID");
+        PageRequest page = new PageRequest(pageNumber, pageSize, Sort.Direction.ASC,"yhm");
         Page<Edu990> pages = edu990Dao.findAll(specification,page);
 
         List<Edu990> edu990s = pages.getContent();
-        long count = pages.getSize();
+        long count = edu990Dao.count(specification);
 
         if(edu990s.size() == 0) {
             resultVO = ResultVO.setFailed("暂无用户信息");
