@@ -384,6 +384,34 @@ function modifiRole(row) {
 	$(".currentId").html(row.bf990_ID);
 	$("#userRol"+row.bf990_ID).multiSelect();
 	$("#userDeparment"+row.bf990_ID).multiSelect();
+	var jsIdARRAY=row.jsId.split(",");
+	var jsSelect=$(".multipleInTableArea"+row.bf990_ID).find(".multi-select-menuitems").find("input");
+
+	var stuffArray=new Array();
+	for (var i = 0; i < jsSelect.length; i++) {
+		var currentJs=jsSelect[i].attributes[2].nodeValue;
+		if(jsIdARRAY.indexOf(currentJs)!=-1){
+			jsSelect[i].checked = "checked";
+			stuffArray.push(currentJs);
+		}else{
+			jsSelect[i].checked = "";
+		}
+	}
+	$("#userRol"+row.bf990_ID).val(stuffArray);
+
+	var stuffArray2=new Array();
+	var XBIdARRAY=row.deparmentIds.split(",");
+	var xbSelect=$(".deparmentInTableArea"+row.bf990_ID).find(".multi-select-menuitems").find("input");
+	for (var i = 0; i < xbSelect.length; i++) {
+		var currentXb=xbSelect[i].attributes[2].nodeValue;
+		if(XBIdARRAY.indexOf(currentXb)!=-1){
+			xbSelect[i].checked = "checked";
+			stuffArray2.push(currentXb);
+		}else{
+			xbSelect[i].checked = "";
+		}
+	}
+	$("#userDeparment"+row.bf990_ID).val(stuffArray2);
 }
 
 //单个删除用户
@@ -436,7 +464,7 @@ function canleModify(row) {
 //确认修改用户
 function okModify(row, index) {
 	var usernameInInput = $("#userNameInTable" + row.bf990_ID).val();
-	var roleInSelect = $('#userRol' + row.bf990_ID).val();
+	var roleInSelect =$('#userRol' + row.bf990_ID).val();
 	if (usernameInInput === "") {
 		toastr.warning('用户名不能为空');
 		return;
