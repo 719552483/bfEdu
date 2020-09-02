@@ -356,7 +356,7 @@ function stuffTable() {
 	function userRoleFormatter(value, row, index) {
 		return [
 			'<div class="multipleInTableArea multipleInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip roleTxt roleTxt' + row.bf990_ID + '">' + row.js + '</span>' +
-			'<select class="myTableSelect myTableSelect' +row.bf990_ID + '" id="userRol'+row.bf990_ID+'" multiple="true">' + roleOptionStr + '' +
+			'<select class="myTableSelect myTableSelect' +row.bf990_ID + '" name="userRol'+row.bf990_ID+'"  id="userRol'+row.bf990_ID+'" multiple="true">' + roleOptionStr + '' +
 			'</select></div>'
 		]
 			.join('');
@@ -366,14 +366,14 @@ function stuffTable() {
 		if(value===""||value==null||typeof value==="undefined"){
 			return [
 				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">暂未绑定</span>' +
-				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
+				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" name="userDeparment'+row.bf990_ID+'" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
 				'</select></div>'
 			]
 				.join('');
 		}else{
 			return [
 				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="'+row.js+'" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">' + row.deparmentNames + '</span>' +
-				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
+				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" name="userDeparment'+row.bf990_ID+'" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
 				'</select></div>'
 			]
 				.join('');
