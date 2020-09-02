@@ -14,9 +14,7 @@ public class Edu990 {
 	private String mm; // 密码
 	private String yhm; // 用户名
 	private String scdlsj; // 上次登录时间
-	// 指定blob字段
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
+
 	private String yxkjfs; //已选快捷方式
 
 	private String userKey;//系统内人员主键
@@ -81,6 +79,9 @@ public class Edu990 {
 		this.deparmentNames = deparmentNames;
 	}
 
+	// 指定blob字段
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	public String getYxkjfs() {
 		return yxkjfs;
 	}
