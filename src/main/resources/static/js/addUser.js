@@ -212,18 +212,35 @@ function saveNewUser(username, newRole, pwd) {
 		},
 		success : function(backjson) {
 			hideloding();
-			$.hideModal("#remindModal");
-			newUserObject.bf990_ID = backjson.data; //数据库生成的id
-			$('#allUserTable').bootstrapTable('append', newUserObject);
-			drawPagination(".allUserTableArea", "用户信息");
-			var reObject = new Object();
-			reObject.InputIds = "#add_username,#add_pwd,#add_confirmPwd";
-			reObject.numberInputs = "#newRole";
-			reReloadSearchsWithSelect(reObject);
-			toolTipUp(".myTooltip");
-			toastr.success(backjson.msg);
+			if(backjson.code===200){
+				$.hideModal("#remindModal");
+				var reObject = new Object();
+				reObject.InputIds = "#add_username,#add_pwd,#add_confirmPwd";
+				reReloadSearchsWithSelect(reObject);
+				emptyMUtiSelect();
+				toastr.success(backjson.msg);
+			}else{
+				toastr.warning(backjson.msg);
+			}
 		}
 	});
+}
+
+//清空多选框
+function emptyMUtiSelect(){
+	var jsSelect=$(".AuthorityArae").find(".multi-select-menuitems").find("input");
+	for (var i = 0; i < jsSelect.length; i++) {
+		jsSelect[i].checked = "";
+	}
+	$("#newRole").val(null);
+
+	var dbSelect=$(".newUserBtnDepartment").find(".multi-select-menuitems").find("input");
+	for (var i = 0; i < dbSelect.length; i++) {
+		dbSelect[i].checked = "";
+	}
+	$("#roleBtnDepartment").val(null);
+
+	$(".newUserBtnDepartment,.AuthorityArae").find(".multi-select-button").html("-- 请选择 --");
 }
 
 //获取所有用户
