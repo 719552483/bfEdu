@@ -162,8 +162,13 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment)
 		return;
 	}
 
-	if(roleBtnDepartment==null){
-		roleBtnDepartment=[];
+	var deparmentSelect = $("#roleBtnDepartment").val();
+	//密码特殊字符验证
+	if (deparmentSelect==null) {
+		toastr.warning('请选择分管二级学院');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
 	}
 
 	$.showModal("#remindModal",true);
@@ -172,26 +177,28 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment)
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		//保存新用户设置
-		saveNewUser(username, newRole, pwd,roleBtnDepartment);
+		saveNewUser(username, newRole, pwd);
 		e.stopPropagation();
 	});
 }
 
 //发送新用户保存数据库
-function saveNewUser(username, newRole, pwd,roleBtnDepartment) {
+function saveNewUser(username, newRole, pwd) {
 	var newUserObject = new Object();
 	newUserObject.yhm = username;
 	newUserObject.js = newRole.name;
 	newUserObject.jsId = newRole.value;
 	newUserObject.mm = pwd;
+	var deparmentSelect =getxBMoreSelectVALUES("#roleBtnDepartment");
+	newUserObject.deparmentIds =deparmentSelect.value;
+	newUserObject.deparmentNames =deparmentSelect.name;
 
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/newUser",
 		data: {
-            "newUserInfo":JSON.stringify(newUserObject),
-			"departments":JSON.stringify(roleBtnDepartment)
+            "newUserInfo":JSON.stringify(newUserObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
