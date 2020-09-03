@@ -518,8 +518,8 @@ function confirmodifyUser(row, index) {
 		modifyObject.deparmentNames =null;
 	}else{
 		deparmentSelect=getxBMoreSelectVALUES("#userDeparment"+row.bf990_ID)
-		modifyObject.deparmentIds =deparmentSelect.name;;
-		modifyObject.deparmentNames = deparmentSelect.value;
+		modifyObject.deparmentIds =deparmentSelect.value;
+		modifyObject.deparmentNames =deparmentSelect.name;
 	}
 
 	modifyObject.BF990_ID = row.bf990_ID;
