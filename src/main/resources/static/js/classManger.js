@@ -15,6 +15,9 @@ $(function() {
 function getMajorAdministrationClassSelectInfo() {
 	LinkageSelectPublic("#level","#department","#grade","#major");
 	$("#major").change(function() {
+		if(typeof getNotNullSearchs()==="undefined"){
+			return;
+		}
 		$.ajax({
 			method : 'get',
 			cache : false,
