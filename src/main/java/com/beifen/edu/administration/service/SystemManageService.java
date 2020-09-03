@@ -521,7 +521,7 @@ public class SystemManageService {
         if (edu700List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无通知");
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+edu700List.size()+"条通知");
+            resultVO = ResultVO.setSuccess("共找到"+edu700List.size()+"条通知",edu700List);
         }
 
         return resultVO;
