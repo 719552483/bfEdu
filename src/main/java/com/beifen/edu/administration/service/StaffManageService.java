@@ -120,26 +120,7 @@ public class StaffManageService {
     // 为教师生成学号
     public String getNewTeacherJzgh() {
         String jzgh_before =utils.getRandom(2);
-        String newXh = "";
-        List<Edu101> allTeacher = edu101Dao.findAll();
-        if (allTeacher.size() != 0) {
-            List<Long> currentjzghs = new ArrayList<Long>();
-            for (int i = 0; i < allTeacher.size(); i++) {
-                currentjzghs.add(Long.parseLong(allTeacher.get(i).getJzgh().substring(2, allTeacher.get(i).getJzgh().length())));
-            }
-            int newXhSuffix = 0;
-            String maxjzgh = String.valueOf(Collections.max(currentjzghs));
-            newXhSuffix = Integer.parseInt(maxjzgh) + 1;
-            if (newXhSuffix <= 9) {
-                newXh = jzgh_before + "00" +  newXhSuffix;
-            } else if (newXhSuffix > 9 && newXhSuffix <= 99) {
-                newXh = jzgh_before + "0" +  newXhSuffix;
-            } else {
-                newXh = jzgh_before + newXhSuffix;
-            }
-        } else {
-            newXh = jzgh_before + "001";
-        }
+        String newXh = "1"+jzgh_before+utils.getRandom(3);
         return newXh;
     }
 
