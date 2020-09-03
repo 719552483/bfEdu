@@ -381,8 +381,10 @@ function loadNotices(){
 function drawNotices(allNotices){
 	$(".newlist").empty();
 	var str="";
+	var stffNum=0;
 	for (var i = 0; i < allNotices.length; i++) {
-		if(allNotices[i].showInIndex==="T"){
+		if(allNotices[i].showInIndex==="T"&&stffNum<=6){
+			stffNum++;
 			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu700_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu700_ID+'">'+allNotices[i].title+'<b>'+allNotices[i].sendDate+'</b></li></a>';
 		}
 	}
@@ -418,14 +420,17 @@ function moreNotices(){
 			hideloding();
 			if (backjson.code===200) {
 				var isShowNum=$(".newlist").find("a").length;
-				if(isShowNum===backjson.data.length){
-					toastr.warning("暂无更多通知");
-					return;
-				}else{
-					stuffMoreNoctices(backjson.data);
-					$(".moreNoticeArea").show();
-					$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
-				}
+				// if(isShowNum===backjson.data.length){
+				// 	toastr.warning("暂无更多通知");
+				// 	return;
+				// }else{
+				// 	stuffMoreNoctices(backjson.data);
+				// 	$(".moreNoticeArea").show();
+				// 	$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
+				// }
+				stuffMoreNoctices(backjson.data);
+				$(".moreNoticeArea").show();
+				$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
 			} else {
 				toastr.warning(backjson.msg);
 			}

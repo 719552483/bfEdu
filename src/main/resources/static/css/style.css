@@ -927,15 +927,27 @@ h2 {
 	padding-left: 10px;
 }
 
-.leftinfos,.leftinfos2 {
+.leftinfos {
 	height: 238px;
 	margin-top: 8px;
 }
 
-.infoleft,.infoleft2 {
+.leftinfos2 {
+	height: auto;
+	margin-top: 8px;
+}
+
+.infoleft {
 	border: #d3dbde solid 1px;
 	float: left;
 	height: 238px;
+}
+
+.infoleft2 {
+	border: #d3dbde solid 1px;
+	float: left;
+	height: auto;
+	min-height: 238px;
 }
 
 .inforight {
