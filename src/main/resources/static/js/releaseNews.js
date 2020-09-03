@@ -133,6 +133,7 @@ function getTableInfo() {
 			if (backjson.code===200) {
 				stuffReleaseNewsTable(backjson.data);
 			} else {
+				stuffReleaseNewsTable({});
 				toastr.warning(backjson.msg);
 			}
 		}

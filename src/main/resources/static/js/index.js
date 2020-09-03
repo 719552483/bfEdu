@@ -372,6 +372,8 @@ function loadNotices(){
 			hideloding();
 			if (backjson.code===200) {
 			    drawNotices(backjson.data);
+			}else{
+				drawNotices([]);
 			}
 		}
 	});
