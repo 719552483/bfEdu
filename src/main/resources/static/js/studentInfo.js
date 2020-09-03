@@ -13,7 +13,7 @@ $(function() {
 function getMajorTrainingSelectInfo() {
 	LinkageSelectPublic("#level","#department","#grade","#major");
 	$("#major").change(function() {
-		if(getNormalSelectValue("major")===""){
+		if(typeof getNotNullSearchs()==="undefined"){
 			return;
 		}
 		$.ajax({
