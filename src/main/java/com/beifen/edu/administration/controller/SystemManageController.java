@@ -234,11 +234,21 @@ public class SystemManageController {
      * 获取所有通知
      * @return returnMap
      */
+    @RequestMapping("getMoreNotice")
+    @ResponseBody
+    public ResultVO getMoreNotice(@RequestParam("userId") String userId) {
+        ResultVO resultVO = systemManageService.getMoreNotice(userId);
+        return resultVO;
+    }
+
+    /**
+     * 获取所有通知
+     * @return returnMap
+     */
     @RequestMapping("getNotices")
     @ResponseBody
     public ResultVO getNotices(@RequestParam("userId") String userId) {
         ResultVO resultVO = systemManageService.getNotices(userId);
         return resultVO;
     }
-
 }

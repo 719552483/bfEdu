@@ -190,19 +190,21 @@ public class SystemManageService {
         Map<String,Object> redisMap = new HashMap<>();
         //将学院权限存入redis
         List<String> deparmentIds = new ArrayList<>();
+        String userType = "";
         String userId = edu990.getBF990_ID().toString();
         if(edu990.getUserKey() != null) {
             deparmentIds = edu994Dao.findAllDepartmentIds(userId);
-            redisUtils.set("userType:"+userId ,"02");
+            userType = "02";
+            redisUtils.set("userType:"+userId ,userType);
             if (deparmentIds.size() == 0) {
                 if(edu990.getYhm().length() >= 11) {
                     Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
                     deparmentIds.add(edu001.getSzxb());
-                    redisUtils.set("userType:"+userId ,"01");
+                    userType = "01";
+                    redisUtils.set("userType:"+userId ,userType);
                 } else {
                     Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
                     deparmentIds.add(one.getSzxb());
-                    redisUtils.set("userType:"+userId ,"02");
                 }
             }
         } else {
@@ -504,19 +506,34 @@ public class SystemManageService {
     }
 
     //获取所有通知
-    public ResultVO getNotices(String userId) {
+    public ResultVO getMoreNotice(String userId) {
         ResultVO resultVO;
         //从redis获取二级学院权限
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
         String userType = redisUtils.get(RedisDataConstant.USER_TYPE + userId).toString();
-        List<Edu700> edu700List = new ArrayList<>();
+        List<Edu700> edu700List;
 
         if ("01".equals(userType)) {
             edu700List = edu700Dao.getNoticesForStudent(departments);
         } else {
             edu700List = edu700Dao.getNoticesForTeacher(departments,userId);
         }
+
+        if (edu700List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无通知");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu700List.size()+"条通知",edu700List);
+        }
+
+        return resultVO;
+    }
+
+
+    //获取用户发布的通知
+    public ResultVO getNotices(String userId) {
+        ResultVO resultVO;
+        List<Edu700> edu700List = edu700Dao.getNoticesByUserId(userId);
 
         if (edu700List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无通知");
