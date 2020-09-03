@@ -443,8 +443,8 @@ public class SystemManageService {
                 if (pageRequest.getDepartmentName() != null && !"".equals(pageRequest.getDepartmentName())) {
                     predicates.add(cb.like(root.<String> get("deparmentNames"),"%"+pageRequest.getDepartmentName()+"%"));
                 }
-                if (pageRequest.getUserName() != null && !"".equals(pageRequest.getUserName())) {
-                    predicates.add(cb.like(root.<String> get("userName"), "%"+pageRequest.getUserName()+"%"));
+                if (pageRequest.getPersonName() != null && !"".equals(pageRequest.getPersonName())) {
+                    predicates.add(cb.like(root.<String> get("personName"), "%"+pageRequest.getPersonName()+"%"));
                 }
                 if (pageRequest.getRoleName() != null && !"".equals(pageRequest.getRoleName())) {
                     predicates.add(cb.like(root.<String> get("js"), "%"+pageRequest.getRoleName()+"%"));

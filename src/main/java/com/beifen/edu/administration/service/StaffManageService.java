@@ -61,7 +61,7 @@ public class StaffManageService {
         edu990.setJs("教职工");
         edu990.setJsId("8050");
         edu990.setUserKey(edu101.getEdu101_ID().toString());
-        edu990.setUserName(edu101.getXm());
+        edu990.setPersonName(edu101.getXm());
         edu990Dao.save(edu990);
 
         Edu992 edu992 = new Edu992();

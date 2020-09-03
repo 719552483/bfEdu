@@ -32,7 +32,7 @@ function getProposerInfo(){
 				}
 				var str = '<option value="seleceConfigTip">请选择</option>';
 				for (var i = 0; i < backjson.proposerList.length; i++) {
-					str += '<option value="' + backjson.proposerList[i].bf990_ID + '">' + backjson.proposerList[i].yhm+ '</option>';
+					str += '<option value="' + backjson.proposerList[i].bf990_ID + '">' + backjson.proposerList[i].personName+ '</option>';
 				}
 				stuffManiaSelect("#sqrID", str);
 				stuffManiaSelect("#fqrID", str);

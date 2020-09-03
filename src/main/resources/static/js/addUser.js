@@ -309,7 +309,7 @@ function stuffTable() {
 							formatter: userNameFormatter,
 							align: 'left'
 						},{
-							field: 'userName',
+							field: 'personName',
 							title: '用户名称',
 							formatter: paramsMatter,
 							align: 'left'
@@ -357,7 +357,7 @@ function stuffTable() {
 			pageSize: params.pageSize,
 			departmentName: $("#departmentName").val(),
 			roleName: $("#roleName").val(),
-			userName: $("#userName").val(),
+			personName: $("#userName").val(),
 			yhm:$("#yhm").val()
 		};
 		return JSON.stringify(temp);

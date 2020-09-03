@@ -8,6 +8,7 @@ import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
+import com.beifen.edu.administration.utility.ReflectUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -53,6 +54,8 @@ public class ApprovalProcessService {
     private Edu112Dao edu112Dao;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private ReflectUtils utils;
 
     /**
      * 发起审批流程
@@ -509,7 +512,8 @@ public class ApprovalProcessService {
     public List<Edu990> getProposerList() {
         //查找申请表中涉及到的审批人
         List<Edu990> proposerList = edu990Dao.selectProposer();
-        return proposerList;
+        List list = utils.heavyListMethod(proposerList);
+        return list;
     }
 
     /**

@@ -5,7 +5,7 @@ public class PageRequestPO {
     private Integer pageSize;
     private String departmentName;
     private String roleName;
-    private String userName;
+    private String personName;
     private String yhm;
 
 
@@ -41,12 +41,12 @@ public class PageRequestPO {
         this.roleName = roleName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getPersonName() {
+        return personName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setPersonName(String personName) {
+        this.personName = personName;
     }
 
     public String getYhm() {

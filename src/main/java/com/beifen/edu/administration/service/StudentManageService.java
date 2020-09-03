@@ -148,7 +148,7 @@ public class StudentManageService {
         edu990.setJs("学生");
         edu990.setJsId("8050");
         edu990.setUserKey(edu001.getEdu001_ID().toString());
-        edu990.setUserName(edu001.getXm());
+        edu990.setPersonName(edu001.getXm());
         edu990Dao.save(edu990);
 
         Edu992 edu992 = new Edu992();

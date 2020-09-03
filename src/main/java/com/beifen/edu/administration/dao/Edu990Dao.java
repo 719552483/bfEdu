@@ -53,7 +53,7 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	public Edu990 queryUserById(String userId);
 
 	//查询申请人信息
-	@Query(value = "select DISTINCT d.* from edu600 e, edu990 d where e.PROPOSER_KEY = d.BF990_ID", nativeQuery = true)
+	@Query(value = "select d.* from edu600 e, edu990 d where e.proposer_key = d.BF990_ID",nativeQuery = true)
 	@Nullable
 	List<Edu990> selectProposer();
 
