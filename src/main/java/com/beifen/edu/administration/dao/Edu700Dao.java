@@ -30,6 +30,6 @@ public interface Edu700Dao extends JpaRepository<Edu700, Long>, JpaSpecification
 
 
     //获取用户发布的通知
-    @Query(value = "select select e.* from Edu700 e where e.edu101_ID = ?1",nativeQuery = true)
+    @Query(value = "select e.* from Edu700 e where e.edu101_ID = ?1",nativeQuery = true)
     List<Edu700> getNoticesByUserId(String userId);
 }
