@@ -477,7 +477,7 @@ public class SystemManageService {
     public ResultVO sendNotice(Edu700 edu700) {
         ResultVO resultVO;
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(currentTime);
         edu700.setSendDate(dateString);
         edu700Dao.save(edu700);
