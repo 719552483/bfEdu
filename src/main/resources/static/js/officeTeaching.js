@@ -951,7 +951,7 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails){
 	//清空已有课节安排区域
 	$(".puttedKjArea").find(".PuttedKjArea").remove();
 
-	$("#puttedTerm").val(scheduleCompletedDetails.xnmc);
+	$("#puttedTerm").val(scheduleCompletedDetails.xn);
 	$("#puttedSkdd").val(scheduleCompletedDetails.skddmc);
 	$("#puttedJxbMC").val(puttedInfo.className);
 	$("#puttedkCMC").val(puttedInfo.kcmc);
