@@ -1,8 +1,10 @@
 $(function() {
 	drawEditor();
 	btnBind();
-	$('.isSowIndex').selectMania(); //初始化下拉框11
+	getUsefulDepartment();
+	getSendArea();
 	hideloding();
+	$('.isSowIndex').selectMania(); //初始化下拉框
 });
 
 var editor1;
@@ -29,6 +31,80 @@ function drawEditor(){
 						'advtable', 'hr', 'emoticons', 'link', 'unlink', '|'
 					]
 	    	});
+	});
+}
+
+//根据当前角色获取可选系部
+function getUsefulDepartment(){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getUsefulDepartment",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var str='';
+				if(backjson.data.length===0){
+					toastr.warning("暂无可选系部");
+				}else{
+					str='<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < backjson.data.length; i++) {
+						str += '<option value="' + backjson.data[i].edu104_ID + '">' + backjson.data[i].xbmc
+							+ '</option>';
+					}
+				}
+				stuffManiaSelect("#department", str);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获取发送范围
+function getSendArea(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		async :false,
+		url : "/getEJDM",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code == 200) {
+				var str='<option value="seleceConfigTip">请选择</option>';
+				var fsfw=backjson.data.allEJDM.fsfw;
+				for (var i = 0; i < fsfw.length; i++) {
+						str += '<option value="' + fsfw[i].ejdm + '">' + fsfw[i].ejdmz
+							+ '</option>';
+				}
+				stuffManiaSelect("#sendArea", str);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
 	});
 }
 
@@ -472,7 +548,9 @@ function returnAaaNews() {
 function pushNews() {
 	var newsTitle = $("#newTitle").val();
 	var isShow = $('#isSowIndex').selectMania('get')[0].value;
-	var newsBody = $('#newsBody').val(); 
+	var newsBody = $('#newsBody').val();
+	var department = getNormalSelectValue("department");
+	var sendArea =getNormalSelectValue("#sendArea");
 	if (newsTitle === "") {
 		toastr.warning('通知标题不能为空');
 		$(".submitNews").addClass("animated shake");
@@ -487,12 +565,31 @@ function pushNews() {
 		reomveAnimation('.submitNews', "animated shake");
 		return;
 	}
+	if (department === "") {
+		toastr.warning('请选择消息发送的二级学院');
+		$(".submitNews").addClass("animated shake");
+		//动画执行完后删除类名
+		reomveAnimation('.submitNews', "animated shake");
+		return;
+	}
+	if (sendArea === "") {
+		toastr.warning('请选择消息的发送范围');
+		$(".submitNews").addClass("animated shake");
+		//动画执行完后删除类名
+		reomveAnimation('.submitNews', "animated shake");
+		return;
+	}
 
 	var pushNewsObject = new Object();
-	pushNewsObject.tzbt = newsTitle;
-	isShow === "true" ? pushNewsObject.sfsyzs = "T" : pushNewsObject.sfsyzs = "F";
-	pushNewsObject.tzzt = newsBody;
-	
+	pushNewsObject.Edu104_ID = department;
+	pushNewsObject.Edu101_ID = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	pushNewsObject.departmentName=getNormalSelectValue("department");
+	pushNewsObject.senderName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
+	pushNewsObject.noticeType = sendArea;
+	isShow === "true" ? pushNewsObject.showInIndex = "T" : pushNewsObject.showInIndex = "F";
+	pushNewsObject.title = newsTitle;
+	pushNewsObject.noticeContent = newsBody;
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("新通知");
 	$(".remindActionType").html("发布");

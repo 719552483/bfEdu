@@ -52,6 +52,21 @@
 					<cite class="selectName">通知标题 <b>*</b>:</cite>
 					<input name="" type="text" class="myInput" id="newTitle" placeholder="请填写通知标题..." />
 				</div>
+				<div class="clear"></div>
+				<div class="selectArea">
+					<cite class="selectName">二级学院 <b>*</b>:</cite>
+					<select class="isSowIndex" id="department">
+						<option value="seleceConfigTip">暂无学院</option>
+					</select>
+				</div>
+				<div class="clear"></div>
+				<div class="selectArea">
+					<cite class="selectName">发送范围 <b>*</b>:</cite>
+					<select class="isSowIndex" id="sendArea">
+						<option value="seleceConfigTip">暂无选择</option>
+					</select>
+				</div>
+				<div class="clear"></div>
 				<div class="selectArea">
 					<cite class="selectName">是否在首页显示 <b>*</b>:</cite>
 					<select class="isSowIndex" id="isSowIndex">
@@ -60,9 +75,8 @@
 					</select>
 				</div>
 
-
 				<textarea id="newsBody" spellcheck="false" name="content" style="width:100%;height:300px;visibility:hidden;"></textarea>
-				<cite class="tipTxt">tips:请不要再文本编辑区重复键入通知标题....</cite>
+				<cite class="tipTxt">tips:请不要在文本编辑区重复键入通知标题....</cite>
 				<div class="selectArea">
 					<input type="button" class="btn submitBtn submitNews" value="马上发布" />
 				</div>

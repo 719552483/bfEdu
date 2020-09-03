@@ -371,7 +371,13 @@ float: left;
 	float: left !important;
 }
 
-.newsInfoArea .selectName,
+.newsInfoArea .selectName{
+	line-height: 40px;
+	font-weight: bold;
+	width: 178px!important;
+}
+
+
 .newsDetailsArea .selectName {
 	line-height: 40px;
 	padding-right: 15px;

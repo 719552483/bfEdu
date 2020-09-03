@@ -57,10 +57,6 @@ function drawNewsBySession(){
 	 //url拦截  无session转登录页
 	 if(typeof userInfo == "undefined" ){
 		 top.location = "login.html";
-     }else{
-    	 if(JSON.parse($.session.get('userInfo')).js!=="sys"){
-    		 $(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").hide(); // 用户不是管理员则隐藏发布通知
-    	 }
      }
 }
 
