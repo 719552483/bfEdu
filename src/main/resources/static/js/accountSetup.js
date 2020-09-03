@@ -1,4 +1,5 @@
 $(function() {
+	$(".currentUserName").html($(parent.frames["topFrame"].document).find(".userName")[0].innerText);
 	btnBind();
 	stuffTimeStamp();
 });
