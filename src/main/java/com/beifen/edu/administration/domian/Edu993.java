@@ -21,6 +21,7 @@ public class Edu993 {
 	private String tzbt;// 通知标题
 	private String fbsj;// 发布时间
 
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")

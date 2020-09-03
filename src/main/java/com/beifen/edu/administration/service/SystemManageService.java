@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.Edu990PO;
 import com.beifen.edu.administration.PO.PageRequestPO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
@@ -39,6 +40,8 @@ public class SystemManageService {
     Edu104Dao edu104Dao;
     @Autowired
     Edu101Dao edu101Dao;
+    @Autowired
+    Edu700Dao edu700Dao;
     @Autowired
     Edu001Dao edu001Dao;
     @Autowired
@@ -136,7 +139,7 @@ public class SystemManageService {
 
     //验证用户登陆
     public ResultVO verifyUser(String username, String password) {
-        ResultVO resultVO = new ResultVO();
+        ResultVO resultVO;
         Map<String, Object> returnMap = new HashMap();
 
         Edu990 checkIsHaveUser = edu990Dao.checkIsHaveUser(username);
@@ -160,40 +163,15 @@ public class SystemManageService {
                 return resultVO;
             }
 
+            //登陆存储redis信息
+            Boolean redisSuccess = saveRedisInfo(edu990);
 
-
-            //将学院权限存入redis备用
-            List<String> deparmentIds = new ArrayList<>();
-            String userId = edu990.getBF990_ID().toString();
-            if(edu990.getUserKey() != null) {
-                deparmentIds = edu994Dao.findAllDepartmentIds(userId);
-                if (deparmentIds.size() == 0) {
-                    if(username.length() >= 11) {
-                        Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                        deparmentIds.add(edu001.getSzxb());
-                    } else {
-                        Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                        deparmentIds.add(one.getSzxb());
-                    }
-                }
-            } else {
-                deparmentIds.add("0");
+            if (!redisSuccess) {
+                resultVO = ResultVO.setFailed("登陆信息存储失败，请联系管理员");
+                return resultVO;
             }
-            redisUtils.set("department:"+userId ,deparmentIds);
 
 
-            //保存用户信息
-            String userName = "";
-            if(edu990.getUserKey() != null) {
-                Edu101 edu101 = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                if (edu101 == null) {
-                    Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                    userName = edu001.getXm();
-                } else {
-                    userName = edu101.getXm();
-                }
-            }
-            redisUtils.set("userName:"+userId ,userName);
 
             returnMap.put("UserInfo", JSON.toJSONString(edu990));
             returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
@@ -204,6 +182,48 @@ public class SystemManageService {
         }
         resultVO = ResultVO.setSuccess("登陆成功",returnMap);
         return resultVO;
+    }
+
+    //登陆存储redis信息
+    public Boolean saveRedisInfo(Edu990 edu990) {
+        Boolean isSuccess = true;
+        Map<String,Object> redisMap = new HashMap<>();
+        //将学院权限存入redis
+        List<String> deparmentIds = new ArrayList<>();
+        String userId = edu990.getBF990_ID().toString();
+        if(edu990.getUserKey() != null) {
+            deparmentIds = edu994Dao.findAllDepartmentIds(userId);
+            redisUtils.set("userType:"+userId ,"02");
+            if (deparmentIds.size() == 0) {
+                if(edu990.getYhm().length() >= 11) {
+                    Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                    deparmentIds.add(edu001.getSzxb());
+                    redisUtils.set("userType:"+userId ,"01");
+                } else {
+                    Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                    deparmentIds.add(one.getSzxb());
+                    redisUtils.set("userType:"+userId ,"02");
+                }
+            }
+        } else {
+            deparmentIds.add("0");
+        }
+        redisUtils.set("department:"+userId ,deparmentIds);
+
+
+        //保存用户信息
+        String userName = "";
+        if(edu990.getUserKey() != null) {
+            Edu101 edu101 = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
+            if (edu101 == null) {
+                Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
+                userName = edu001.getXm();
+            } else {
+                userName = edu101.getXm();
+            }
+        }
+        redisUtils.set("userName:"+userId ,userName);
+        return isSuccess;
     }
 
     // 修改首页快捷方式
@@ -446,6 +466,62 @@ public class SystemManageService {
             returnMap.put("rows",edu990s);
             returnMap.put("total",count);
             resultVO = ResultVO.setSuccess("查询成功",returnMap);
+        }
+
+        return resultVO;
+    }
+
+    //发送通知
+    public ResultVO sendNotice(Edu700 edu700) {
+        ResultVO resultVO;
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String dateString = formatter.format(currentTime);
+        edu700.setSendDate(dateString);
+        edu700Dao.save(edu700);
+        resultVO = ResultVO.setSuccess("通知发布成功",edu700);
+        return resultVO;
+    }
+
+    //根据id获取通知
+    public ResultVO getNoteInfoById(String noteId) {
+        ResultVO resultVO;
+        Edu700 one = edu700Dao.findOne(Long.parseLong(noteId));
+        if (one != null) {
+            resultVO = ResultVO.setSuccess("获取通知成功",one);
+        } else {
+            resultVO = ResultVO.setFailed("通知已过期");
+        }
+        return resultVO;
+    }
+
+    //根据id集合删除通知
+    public ResultVO removeNotices(List<String> removeIds) {
+        ResultVO resultVO;
+        edu700Dao.deleteByIds(removeIds);
+        resultVO = ResultVO.setSuccess("共删除了"+removeIds.size()+"条通知");
+        return resultVO;
+    }
+
+    //获取所有通知
+    public ResultVO getNotices(String userId) {
+        ResultVO resultVO;
+        //从redis获取二级学院权限
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+        String userType = redisUtils.get(RedisDataConstant.USER_TYPE + userId).toString();
+        List<Edu700> edu700List = new ArrayList<>();
+
+        if ("01".equals(userType)) {
+            edu700List = edu700Dao.getNoticesForStudent(departments);
+        } else {
+            edu700List = edu700Dao.getNoticesForTeacher(departments,userId);
+        }
+
+        if (edu700List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无通知");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu700List.size()+"条通知");
         }
 
         return resultVO;

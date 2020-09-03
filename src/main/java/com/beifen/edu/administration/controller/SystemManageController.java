@@ -3,8 +3,10 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.PageRequestPO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.domian.Edu700;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.domian.Edu991;
+import com.beifen.edu.administration.domian.Edu993;
 import com.beifen.edu.administration.service.SystemManageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONObject;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //系统管理控制层
 @Controller
@@ -188,5 +192,53 @@ public class SystemManageController {
         return result;
     }
 
+    /**
+     * 发布通知
+     * @param noticDetail
+     * @return
+     */
+    @RequestMapping("/issueNotice")
+    @ResponseBody
+    public ResultVO sendNotice(@RequestParam("noticDetail") String noticDetail) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(noticDetail);
+        Edu700 edu700 = JSON.toJavaObject(jsonObject, Edu700.class);
+        ResultVO result = systemManageService.sendNotice(edu700);
+        return result;
+    }
+
+    /**
+     * 根据id获取通知
+     * @return returnMap
+     */
+    @RequestMapping("getNoteInfoById")
+    @ResponseBody
+    public ResultVO getNoteInfoById(@RequestParam("noteId") String noteId) {
+        ResultVO resultVO = systemManageService.getNoteInfoById(noteId);
+        return resultVO;
+    }
+
+    /**
+     * 根据id集合删除通知
+     * @param removeInfo
+     * @return
+     */
+    @RequestMapping("removeNotices")
+    @ResponseBody
+    public ResultVO removeNotices(@RequestParam("removeInfo") String removeInfo) {
+        List<String> removeIds = JSON.parseArray(removeInfo, String.class);
+        ResultVO resultVO = systemManageService.removeNotices(removeIds);
+        return resultVO;
+    }
+
+    /**
+     * 获取所有通知
+     * @return returnMap
+     */
+    @RequestMapping("getNotices")
+    @ResponseBody
+    public ResultVO getNotices(@RequestParam("userId") String userId) {
+        ResultVO resultVO = systemManageService.getNotices(userId);
+        return resultVO;
+    }
 
 }

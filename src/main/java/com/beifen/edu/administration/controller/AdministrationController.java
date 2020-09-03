@@ -45,8 +45,6 @@ public class AdministrationController {
 	@Autowired
 	private AdministrationPageService administrationPageService;
 	@Autowired
-	private ApprovalProcessService approvalProcessService;
-	@Autowired
 	private StudentManageService studentManageService;
 	@Autowired
 	private TeachingPointService teachingPointService;
@@ -1766,58 +1764,6 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 获取所有通知
-	 * @return returnMap
-	 */
-	@RequestMapping("getNotices")
-	@ResponseBody
-	public Object getNotices() {
-		Map<String, Object> returnMap = new HashMap();
-		List<Edu993> allNotices=administrationPageService.getNotices();
-		returnMap.put("allNotices", allNotices);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-
-	/**
-	 * 根据id获取通知
-	 * @return returnMap
-	 */
-	@RequestMapping("getNoteInfoById")
-	@ResponseBody
-	public Object getNoteInfoById(@RequestParam("noteId") String noteId) {
-		Map<String, Object> returnMap = new HashMap();
-		Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(noteId);
-		returnMap.put("currentNoteInfo", currentNoteInfo);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-	/**
-	 * 发布通知
-	 * @param noticeInfo
-	 * @param request
-	 * @return
-	 * @throws java.lang.IllegalArgumentException
-	 */
-	@RequestMapping("issueNotice")
-	@ResponseBody
-	public Object issueNotice(@RequestParam("noticeInfo") String noticeInfo,HttpServletRequest request)throws java.lang.IllegalArgumentException{
-		Map<String, Object> returnMap = new HashMap();
-		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(noticeInfo);
-		Edu993 edu993 = (Edu993) JSONObject.toBean(jsonObject, Edu993.class);
-		Date date = new Date();
-		SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		edu993.setFbsj(dateFormat.format(date));
-		administrationPageService.issueNotice(edu993);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-
-	/**
 	 * 改变消息是否在首页展示
 	 * @return returnMap
 	 */
@@ -1830,37 +1776,37 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-	/**
-	 * 删除通知
-	 * @return returnMap
-	 */
-	@RequestMapping("removeNotices")
-	@ResponseBody
-	public Object removeNotices(@RequestParam("removeInfo") String removeInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
-		String imgRootPath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
-
-		for (int i = 0; i < deleteArray.size(); i++) {
-			Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(deleteArray.get(i).toString());
-			String noticeBody=currentNoteInfo.getTzzt();
-			List<String> imgSrcs=utils.getImgSrc(noticeBody);
-			for (int img = 0; img < imgSrcs.size(); img++) {
-				//只删除插入的图片 不删除表情
-				if(imgSrcs.get(img).startsWith("image")){
-					File file = new File(imgRootPath+imgSrcs.get(img));
-					if (file.exists()) {
-						if (file.delete()) {
-							System.out.println("通知附带图片删除成功");
-						}
-					}
-				}
-			}
-			administrationPageService.removeNotices(deleteArray.get(i).toString());
-		}
-		returnMap.put("result", true);
-		return returnMap;
-	}
+//	/**
+//	 * 删除通知
+//	 * @return returnMap
+//	 */
+//	@RequestMapping("removeNotices")
+//	@ResponseBody
+//	public Object removeNotices(@RequestParam("removeInfo") String removeInfo) {
+//		Map<String, Object> returnMap = new HashMap();
+//		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
+//		String imgRootPath = new File(this.getClass().getResource("/").getPath()).toString()+"/static/";
+//
+//		for (int i = 0; i < deleteArray.size(); i++) {
+//			Edu993 currentNoteInfo=administrationPageService.getNoteInfoById(deleteArray.get(i).toString());
+//			String noticeBody=currentNoteInfo.getTzzt();
+//			List<String> imgSrcs=utils.getImgSrc(noticeBody);
+//			for (int img = 0; img < imgSrcs.size(); img++) {
+//				//只删除插入的图片 不删除表情
+//				if(imgSrcs.get(img).startsWith("image")){
+//					File file = new File(imgRootPath+imgSrcs.get(img));
+//					if (file.exists()) {
+//						if (file.delete()) {
+//							System.out.println("通知附带图片删除成功");
+//						}
+//					}
+//				}
+//			}
+//			administrationPageService.removeNotices(deleteArray.get(i).toString());
+//		}
+//		returnMap.put("result", true);
+//		return returnMap;
+//	}
 
 
 	/**

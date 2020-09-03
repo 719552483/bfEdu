@@ -731,15 +731,6 @@ public class AdministrationPageService {
 		}
 	}
 
-	// 发布通知
-	public void issueNotice(Edu993 edu993) {
-		edu993DAO.save(edu993);
-	}
-
-	// 根据id获取通知
-	public Edu993 getNoteInfoById(String noteId) {
-		return edu993DAO.getNoteInfoById(noteId);
-	}
 
 	// 改变消息是否在首页展示
 	public void changeNoticeIsShowIndex(String noticeId, String isShow) {
