@@ -2009,6 +2009,14 @@ padding-left: 10px!important;
 	width: 70px!important;
 }
 
+.btn:focus{
+	outline: none!important;
+}
+
+input:focus{
+	outline:rgb(13 96 115 / 26%) auto 1px!important;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

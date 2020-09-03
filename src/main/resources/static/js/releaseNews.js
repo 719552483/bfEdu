@@ -550,7 +550,7 @@ function pushNews() {
 	var isShow = $('#isSowIndex').selectMania('get')[0].value;
 	var newsBody = $('#newsBody').val();
 	var department = getNormalSelectValue("department");
-	var sendArea =getNormalSelectValue("#sendArea");
+	var sendArea =getNormalSelectValue("sendArea");
 	if (newsTitle === "") {
 		toastr.warning('通知标题不能为空');
 		$(".submitNews").addClass("animated shake");
