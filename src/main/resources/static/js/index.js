@@ -420,17 +420,14 @@ function moreNotices(){
 			hideloding();
 			if (backjson.code===200) {
 				var isShowNum=$(".newlist").find("a").length;
-				// if(isShowNum===backjson.data.length){
-				// 	toastr.warning("暂无更多通知");
-				// 	return;
-				// }else{
-				// 	stuffMoreNoctices(backjson.data);
-				// 	$(".moreNoticeArea").show();
-				// 	$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
-				// }
-				stuffMoreNoctices(backjson.data);
-				$(".moreNoticeArea").show();
-				$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
+				if(isShowNum===backjson.data.length){
+					toastr.warning("暂无更多通知");
+					return;
+				}else{
+					stuffMoreNoctices(backjson.data);
+					$(".moreNoticeArea").show();
+					$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
+				}
 			} else {
 				toastr.warning(backjson.msg);
 			}
