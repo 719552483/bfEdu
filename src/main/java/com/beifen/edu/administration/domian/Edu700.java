@@ -13,6 +13,7 @@ public class Edu700 {
     private String senderName;//发件人姓名
     private String sendDate;//发送日期
     private String noticeType;//通知类型
+    private String noticeTypeName;//通知类型名称
     private String showInIndex;//是否首页展示
     private String title;//标题
     private String noticeContent;//通知内容
@@ -92,6 +93,14 @@ public class Edu700 {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getNoticeTypeName() {
+        return noticeTypeName;
+    }
+
+    public void setNoticeTypeName(String noticeTypeName) {
+        this.noticeTypeName = noticeTypeName;
     }
 
     // 指定blob字段
