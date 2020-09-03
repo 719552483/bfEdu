@@ -882,7 +882,7 @@ h2 {
 	margin-top: 8px;
 }
 
-.listtitle {
+.listtitle,.listtitle2{
 	background: url(../images/tbg.png) repeat-x;
 	height: 36px;
 	line-height: 36px;
@@ -903,12 +903,12 @@ h2 {
 	text-align: center;
 }
 
-.newlist {
+.newlist,.newlist2{
 	padding-left: 14px;
 	padding-top: 15px;
 }
 
-.newlist li {
+.newlist li,.newlist2 li {
 	line-height: 25px;
 	background: url(../images/list2.png) no-repeat 0px 8px;
 	text-indent: 11px;
@@ -921,18 +921,18 @@ h2 {
 	font-style: normal;
 }
 
-.newlist b {
+.newlist b,.newlist2 b {
 	font-weight: normal;
 	color: #7b7b7b;
 	padding-left: 10px;
 }
 
-.leftinfos {
+.leftinfos,.leftinfos2 {
 	height: 238px;
 	margin-top: 8px;
 }
 
-.infoleft {
+.infoleft,.infoleft2 {
 	border: #d3dbde solid 1px;
 	float: left;
 	height: 238px;

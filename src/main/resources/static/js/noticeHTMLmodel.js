@@ -42,9 +42,9 @@ function getNoticeInfo() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
+			if (backjson.code===200) {
 				hideloding();
-				stuffNotices(backjson.currentNoteInfo);
+				stuffNotices(backjson.data);
 				editor1.readonly(); 
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -55,8 +55,8 @@ function getNoticeInfo() {
 
 //填充通知
 function stuffNotices(currentNoteInfo){
-	$(".noticeTitleArea").html(currentNoteInfo.tzbt);
-	KindEditor.html("#newsInfoBody", currentNoteInfo.tzzt);
+	$(".noticeTitleArea").html(currentNoteInfo.title);
+	KindEditor.html("#newsInfoBody", currentNoteInfo.noticeContent);
 }
 
 //为已知行为的按钮绑定事件
@@ -67,6 +67,4 @@ function btnBind() {
 		backToIndex();
 		e.stopPropagation();
 	});
-
-
 }

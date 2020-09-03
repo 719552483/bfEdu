@@ -5,6 +5,7 @@ $(function() {
 	getSendArea();
 	hideloding();
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	$(".pushNewsUserName").html($(parent.frames["topFrame"].document).find(".userName")[0].innerText);
 });
 
 var editor1;
@@ -128,11 +129,11 @@ function getTableInfo() {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				stuffReleaseNewsTable(backjson.allNotices);
+			hideloding();
+			if (backjson.code===200) {
+				stuffReleaseNewsTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -172,24 +173,39 @@ function stuffReleaseNewsTable(tableInfo) {
 				field: 'check',
 				checkbox: true
 			},{
-				field: 'edu993_ID',
+				field: 'edu700_ID',
 				title: '唯一标识',
 				align: 'center',
 				visible: false
 			},
 			{
-				field: 'tzbt',
+				field: 'title',
 				title: '通知名称',
 				align: 'left',
 				formatter: paramsMatter
 			}, {
-				field: 'fbsj',
+				field: 'departmentName',
+				title: '接收的二级学院',
+				align: 'left',
+				formatter: paramsMatter,
+			}, {
+				field: 'noticeTypeName',
+				title: '接收范围',
+				align: 'left',
+				formatter: paramsMatter,
+			}, {
+				field: 'senderName',
+				title: '发件人',
+				align: 'left',
+				formatter: paramsMatter,
+			},  {
+				field: 'sendDate',
 				title: '发布日期',
 				align: 'left',
 				formatter: paramsMatter,
 			}, {
-				field: 'sfsyzs',
-				title: '页面是否显示',
+				field: 'showInIndex',
+				title: '首页是否显示',
 				formatter: switchFormatter,
 				align: 'center',
 				width: '10%'
@@ -205,24 +221,17 @@ function stuffReleaseNewsTable(tableInfo) {
 	});
 
 	function switchFormatter(value, row, index) {
-		if (row.sfsyzs==="T") {
+		if (row.showInIndex==="T") {
 			return [
-					'<section newsId="' + row.edu993_ID +'" currentStatus="'+row.sfsyzs+'" class="model-1"><div class="checkbox mycheckbox"><input class="isShowControl" type="checkbox" checked="checked"><label></label></div></section>'
+					'<section newsId="' + row.edu700_ID +'" currentStatus="'+row.showInIndex+'" class="model-1"><div class="checkbox mycheckbox"><input class="isShowControl" type="checkbox" checked="checked"><label></label></div></section>'
 				]
 				.join('');
 		} else {
 			return [
-					'<section newsId="' + row.edu993_ID +'" currentStatus="'+row.sfsyzs+'" class="model-1"><div class="checkbox mycheckbox"><input class="isShowControl" type="checkbox"><label></label></div></section>'
+					'<section newsId="' + row.edu700_ID +'" currentStatus="'+row.showInIndex+'" class="model-1"><div class="checkbox mycheckbox"><input class="isShowControl" type="checkbox"><label></label></div></section>'
 				]
 				.join('');
 		}
-	}
-
-	function dateFormatter(value, row, index) {
-		return [
-				'<cite class="myTooltip" title="'+formatterTimeToPage(row.releaseDate, true)+'">' + formatterTimeToPage(row.releaseDate, true) + '</cite>'
-			]
-			.join('');
 	}
 
 	function releaseNewsFormatter(value, row, index) {
@@ -250,13 +259,15 @@ function modifyNews(row,index){
 	$(".tableArea,.newsManger,.formtext,.removeChoosedNews").hide();
 	$(".newsInfoArea,.submitNews").show();
 	$(".placeul").find("li:eq(2)").find("a").html("修改通知");
-	$("#newTitle").val(row.tzbt);
-	KindEditor.html("#newsBody", row.tzzt);
+	$("#newTitle").val(row.title);
+	KindEditor.html("#newsBody", row.noticeContent);
 	var isShow;
-	row.sfsyzs==="T"?isShow=true:isShow=false;
+	row.showInIndex==="T"?isShow=true:isShow=false;
 	stuffSelect(isShow);
+	stuffManiaSelectWithDeafult("#department",row.edu104_ID.toString(),row.departmentName);
+	stuffManiaSelectWithDeafult("#sendArea",row.noticeType);
 	$(".submitNews")[0].defaultValue="确认修改";
-	
+
 	//返回按钮
 	$('.return').unbind('click');
 	$('.return').bind('click', function(e) {
@@ -275,35 +286,60 @@ function modifyNews(row,index){
 
 /*检查是否对通知进项了更改*/
 function checkIsModify(currentNoteInfo,index) {
-	if ($("#newTitle").val() === "") {
+	var newsTitle = $("#newTitle").val();
+	var newsBody = editor1.html();
+	var department = getNormalSelectValue("department");
+	var sendArea =getNormalSelectValue("sendArea");
+	var isShowIndex=$('#isSowIndex').selectMania('get')[0].value;
+	if (newsTitle === "") {
 		toastr.warning('通知标题不能为空');
 		$(".submitNews").addClass("animated shake");
 		//动画执行完后删除类名
 		reomveAnimation('.submitNews', "animated shake");
 		return;
 	}
-	if (editor1.html() === "") {
+	if (newsBody === "") {
 		toastr.warning('通知主体不能为空');
 		$(".submitNews").addClass("animated shake");
 		//动画执行完后删除类名
 		reomveAnimation('.submitNews', "animated shake");
 		return;
 	}
-	
-	var currentNewsInfo = new Object();
-	currentNewsInfo.edu993_ID = currentNoteInfo.edu993_ID;
-	currentNewsInfo.tzbt = $("#newTitle").val();
-	currentNewsInfo.sfsyzs=$('#isSowIndex').selectMania('get')[0].value
-	currentNewsInfo.tzzt =editor1.html(); 
-	
-	if (currentNoteInfo.tzbt !== currentNewsInfo.tzbt || currentNoteInfo.sfsyzs !== currentNewsInfo.sfsyzs || currentNoteInfo.tzzt !==currentNewsInfo.tzzt) {
+	if (department === "") {
+		toastr.warning('请选择消息发送的二级学院');
+		$(".submitNews").addClass("animated shake");
+		//动画执行完后删除类名
+		reomveAnimation('.submitNews', "animated shake");
+		return;
+	}
+	if (sendArea === "") {
+		toastr.warning('请选择消息的发送范围');
+		$(".submitNews").addClass("animated shake");
+		//动画执行完后删除类名
+		reomveAnimation('.submitNews', "animated shake");
+		return;
+	}
+
+	var removeObject = new Object();
+	removeObject.edu700_ID = currentNoteInfo.edu700_ID;
+	removeObject.edu104_ID = department;
+	removeObject.edu101_ID = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	removeObject.departmentName=getNormalSelectText("department");
+	removeObject.senderName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
+	removeObject.noticeType = sendArea;
+	removeObject.noticeTypeName = getNormalSelectText("sendArea");
+	removeObject.showInIndex = isShowIndex;
+	removeObject.title = newsTitle;
+	removeObject.noticeContent = newsBody;
+
+	if (currentNoteInfo!=removeObject) {
 		$.showModal("#remindModal",true);
 		$(".remindType").html("通知");
 		$(".remindActionType").html("修改");
 		//修改通知按钮
 		$('.confirmRemind').unbind('click');
 		$('.confirmRemind').bind('click', function(e) {
-			confirmModify(currentNewsInfo,index);
+			confirmModify(removeObject,index);
 			e.stopPropagation();
 		});
 	} else {
@@ -314,19 +350,6 @@ function checkIsModify(currentNoteInfo,index) {
 	}
 }
 
-/*根据值填充下拉框*/
-function stuffSelect(isShow) {
-	var trueHtml = '<option value="T">在首页显示</option>';
-	var falseHtml = '<option value="F">不在首页显示</option>';
-	var optionHtml;
-	if (isShow) {
-		optionHtml = trueHtml + falseHtml;
-	} else {
-		optionHtml = falseHtml + trueHtml;
-	}
-	stuffManiaSelect("#isSowIndex", optionHtml);
-}
-
 //确认修改通知
 function confirmModify(currentNewsInfo,index){
 	$.ajax({
@@ -334,7 +357,7 @@ function confirmModify(currentNewsInfo,index){
 		cache : false,
 		url : "/issueNotice",
 		data: {
-             "noticeInfo":JSON.stringify(currentNewsInfo) 
+             "noticDetail":JSON.stringify(currentNewsInfo)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -348,7 +371,7 @@ function confirmModify(currentNewsInfo,index){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				$('#releaseNewsTable').bootstrapTable('updateRow', {
 					index: index,
 					row: currentNewsInfo
@@ -356,7 +379,7 @@ function confirmModify(currentNewsInfo,index){
 				$.hideModal();
 				newsManger(false,false);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -396,12 +419,12 @@ function changNewsIshow(currentNewId,currentStatus,e) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				//不确定是否在Index页面已删除???
 				toastr.success('操作成功');
 				e.currentTarget.parentNode.parentNode.attributes[1].nodeValue=newStatus;
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -416,7 +439,7 @@ function removeNews(row) {
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeNewsArray = new Array;
-		removeNewsArray.push(row.edu993_ID);
+		removeNewsArray.push(row.edu700_ID);
 		sendStudentRemoveInfo(removeNewsArray);
 		e.stopPropagation();
 	});
@@ -435,7 +458,7 @@ function removeChoosedNews() {
 		$(".remindActionType").html("删除");
 
 		for (var i = 0; i < chosenNews.length; i++) {
-			removeNewsArray.push(chosenNews[i].edu993_ID);
+			removeNewsArray.push(chosenNews[i].edu700_ID);
 		}
 		$('.confirmRemind').unbind('click');
 		$('.confirmRemind').bind('click', function(e) {
@@ -467,11 +490,11 @@ function sendStudentRemoveInfo(removeArray){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				tableRemoveAction("#releaseNewsTable", removeArray, ".tableArea", "通知");
 				$.hideModal("#remindModal");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -483,10 +506,10 @@ function newsDetails(row) {
 	$(".tableArea,.newsManger,.formtext,.removeChoosedNews,.submitNews,.tipTxt").hide();
 	$(".newsInfoArea").show();
 	$(".placeul").find("li").last()[0].innerText="通知详情";
-	$("#newTitle").val(row.tzbt);
-	KindEditor.html("#newsBody", row.tzzt);
+	$("#newTitle").val(row.title);
+	KindEditor.html("#newsBody", row.noticeContent);
 	var isShow;
-	row.sfsyzs==="T"?isShow=true:isShow=false;
+	row.showInIndex==="T"?isShow=true:isShow=false;
 	stuffSelect(isShow);
 	$(".submitNews")[0].defaultValue="确认修改";
 	
@@ -498,6 +521,19 @@ function newsDetails(row) {
 		editor1.readonly(false);  
 		e.stopPropagation();
 	});
+}
+
+/*根据值填充下拉框*/
+function stuffSelect(isShow) {
+	var trueHtml = '<option value="T">在首页显示</option>';
+	var falseHtml = '<option value="F">不在首页显示</option>';
+	var optionHtml;
+	if (isShow) {
+		optionHtml = trueHtml + falseHtml;
+	} else {
+		optionHtml = falseHtml + trueHtml;
+	}
+	stuffManiaSelect("#isSowIndex", optionHtml);
 }
 
 /*管理通知按钮*/
@@ -586,9 +622,10 @@ function pushNews() {
 	var pushNewsObject = new Object();
 	pushNewsObject.Edu104_ID = department;
 	pushNewsObject.Edu101_ID = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
-	pushNewsObject.departmentName=getNormalSelectValue("department");
+	pushNewsObject.departmentName=getNormalSelectText("department");
 	pushNewsObject.senderName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
 	pushNewsObject.noticeType = sendArea;
+	pushNewsObject.noticeTypeName = getNormalSelectText("sendArea");
 	isShow === "true" ? pushNewsObject.showInIndex = "T" : pushNewsObject.showInIndex = "F";
 	pushNewsObject.title = newsTitle;
 	pushNewsObject.noticeContent = newsBody;
@@ -611,7 +648,7 @@ function confirmPushNews(pushNewsObject) {
 		cache : false,
 		url : "/issueNotice",
 		data: {
-             "noticeInfo":JSON.stringify(pushNewsObject) 
+             "noticDetail":JSON.stringify(pushNewsObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -624,13 +661,13 @@ function confirmPushNews(pushNewsObject) {
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if (backjson.code===200) {
 				window.location.href = "index.html";
 				//首页消息表根据新通知的是否首页展示新增消息
 				backToIndex();
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

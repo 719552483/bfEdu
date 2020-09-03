@@ -11,7 +11,7 @@ function showAllShortcuts() {
 	if ($(".placeul").find("li").length < 2) {
 		$(".placeul").append('<li><a>添加常用快捷键</a></li>'); //更改位置
 	}
-	$(".configIndexPage").hide();
+	$(".configIndexPage,.moreNoticeArea").hide();
 	$(".allShortcuts").show();
 	drawAllShortcuts();
 	allShortcutsDrawChoosend();
@@ -248,7 +248,7 @@ function readyToReloadShortcutsList() {
 					$.session.set('userInfo', JSON.stringify(userInfo));
 					
 					$.hideModal();
-					$(".allShortcuts").hide();
+					$(".allShortcuts,.moreNoticeArea").hide();
 					$(".configIndexPage").show();
 					$(".placeul").find("li:eq(1)").remove();
 				}
@@ -369,11 +369,9 @@ function loadNotices(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-			    drawNotices(backjson.allNotices);
-			} else {
-				toastr.warning('操作失败，请重试');
+			hideloding();
+			if (backjson.code===200) {
+			    drawNotices(backjson.data);
 			}
 		}
 	});
@@ -381,12 +379,11 @@ function loadNotices(){
 
 //渲染通知区域
 function drawNotices(allNotices){
-	$(".newlist").find("li").remove();
+	$(".newlist").empty();
 	var str="";
-	var Typestr="show";
 	for (var i = 0; i < allNotices.length; i++) {
-		if(allNotices[i].sfsyzs==="T"){
-			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu993_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu993_ID+'">'+allNotices[i].tzbt+'<b>'+allNotices[i].fbsj+'</b></li></a>';
+		if(allNotices[i].showInIndex==="T"){
+			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu700_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu700_ID+'">'+allNotices[i].title+'<b>'+allNotices[i].sendDate+'</b></li></a>';
 		}
 	}
 	
@@ -396,19 +393,55 @@ function drawNotices(allNotices){
 	}
 	
 	$(".newlist").append(str);
-	//发布通知按钮
-	$('.NoticeChildren').unbind('click');
-	$('.NoticeChildren').bind('click', function(e) {
-		getNoticeInfo(e.currentTarget.id);
-		e.stopPropagation();
+}
+
+//更多按钮
+function moreNotices(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getMoreNotice",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var isShowNum=$(".newlist").find("a").length;
+				if(isShowNum===backjson.data.length){
+					toastr.warning("暂无更多通知");
+					return;
+				}else{
+					stuffMoreNoctices(backjson.data);
+					$(".moreNoticeArea").show();
+					$(".allShortcuts,.configIndexPage,.versionInfo,.xline:last").hide();
+				}
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
 	});
 }
 
-//查看通知详情
-function getNoticeInfo(id){
-	
+//加载更多通知
+function stuffMoreNoctices(moreInfo){
+	$(".newlist2").empty();
+	var str="";
+	for (var i = 0; i < moreInfo.length; i++) {
+		str+='<a href="noticeHTMLmodel.html?newId=' + moreInfo[i].edu700_ID +'"><li class="NoticeChildren" id="'+moreInfo[i].edu700_ID+'">'+moreInfo[i].title+'<b>'+moreInfo[i].sendDate+'</b></li></a>';
+	}
+	$(".newlist2").append(str);
 }
-
 
 /*
 加载用户信息
@@ -424,6 +457,12 @@ function loadUserScdlsj() {
 	}
 }
 
+//返回按钮
+function returnBack(){
+	$(".configIndexPage,.versionInfo,.xline:last").show();
+	$(".allShortcuts,.moreNoticeArea").hide();
+}
+
 $(function() {
 	loadUserScdlsj();
 	ShortcutsButtonBind();
@@ -436,7 +475,14 @@ $(function() {
 		backToIndex();
 		e.stopPropagation();
 	});
-	
+
+	//返回按钮
+	$('.returnBackBtn').unbind('click');
+	$('.returnBackBtn').bind('click', function(e) {
+		returnBack();
+		e.stopPropagation();
+	});
+
 	//权限分类下拉框事件绑定
 	$("#authorityGroup").change(function() {
 		groupChangeAction();
@@ -448,7 +494,14 @@ $(function() {
 		shortcutsAllChose();
 		e.stopPropagation();
 	});
-	
+
+	//更多通知
+	$('.moreNotices').unbind('click');
+	$('.moreNotices').bind('click', function(e) {
+		moreNotices();
+		e.stopPropagation();
+	});
+
 	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
