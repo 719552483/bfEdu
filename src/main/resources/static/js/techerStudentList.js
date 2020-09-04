@@ -640,6 +640,15 @@ function startSearch(){
     });
 }
 
+//重置检索
+function reReloadSearchs(){
+    var reObject = new Object();
+    reObject.InputIds = "#name,#AdministrationClassName";
+    reObject.normalSelectIds = "#level,#department,#grade,#major,#sex";
+    reReloadSearchsWithSelect(reObject);
+    drawStudentBaseInfoEmptyTable();
+}
+
 //初始化页面按钮绑定事件
 function btnBind(){
     //提示框取消按钮
@@ -653,6 +662,13 @@ function btnBind(){
     $('#startSearch').unbind('click');
     $('#startSearch').bind('click', function(e) {
         startSearch();
+        e.stopPropagation();
+    });
+
+    //重置检索
+    $('#reReloadSearchs').unbind('click');
+    $('#reReloadSearchs').bind('click', function(e) {
+        reReloadSearchs();
         e.stopPropagation();
     });
 
