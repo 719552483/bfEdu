@@ -2300,16 +2300,14 @@ public class AdministrationPageService {
 
 
 	//撤销违纪记录
-	public ResultVO cancelBreakInfo(Edu006 edu006) {
+	public ResultVO cancelBreakInfo(String cancelId) {
 		ResultVO resultVO;
 		Date currentTime = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(currentTime);
-		edu006.setCancelDate(dateString);
-		edu006.setCancelState("T");
-		edu006Dao.save(edu006);
+		edu006Dao.cancelBreakByEdu006Id(dateString,cancelId);
 
-		resultVO = ResultVO.setSuccess("撤销违纪成功",edu006);
+		resultVO = ResultVO.setSuccess("撤销违纪成功",dateString);
 		return resultVO;
 	}
 }
