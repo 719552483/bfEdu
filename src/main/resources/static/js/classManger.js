@@ -691,6 +691,7 @@ function drawClassManagementEmptyTable() {
 	stuffClassManagementTable({});
 }
 
+var choosendClass=new Array();
 // 填充班级管理表格
 function stuffClassManagementTable(tableInfo) {
 	window.classManagementEvents = {
@@ -724,6 +725,18 @@ function stuffClassManagementTable(tableInfo) {
 		striped : true,
 		toolbar : '#toolbar',
 		showColumns : true,
+		onCheck : function(row) {
+			onCheck(row);
+		},
+		onUncheck : function(row) {
+			onUncheck(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAll(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAll(rows2);
+		},
 		onDblClickRow : function(row, $element, field) {
 			if(field==="jxbmc"){
 				editorClassName(row,parseInt($element[0].dataset.index));
@@ -731,6 +744,9 @@ function stuffClassManagementTable(tableInfo) {
 		},
 		onPageChange : function() {
 			drawPagination(".classManagementTableArea", "行政班信息");
+			for (var i = 0; i < choosendClass.length; i++) {
+				$("#classManagementTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendClass[i].edu300_ID]})
+			}
 		},
 		columns : [ {
 			field : 'check',
@@ -819,6 +835,61 @@ function stuffClassManagementTable(tableInfo) {
 	toolTipUp(".myTooltip")
 	changeColumnsStyle(".classManagementTableArea", "行政班信息");
 }
+
+//单选学生
+function onCheck(row){
+	if(choosendClass.length<=0){
+		choosendClass.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendClass.length; i++) {
+			if(choosendClass[i].edu300_ID===row.edu300_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendClass.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheck(row){
+	if(choosendClass.length<=1){
+		choosendClass.length=0;
+	}else{
+		for (var i = 0; i < choosendClass.length; i++) {
+			if(choosendClass[i].edu300_ID===row.edu300_ID){
+				choosendClass.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendClass.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu300_ID);
+	}
+
+
+	for (var i = 0; i < choosendClass.length; i++) {
+		if(a.indexOf(choosendClass[i].edu300_ID)!==-1){
+			choosendClass.splice(i,1);
+			i--;
+		}
+	}
+}
+
 
 //生成教学班名称
 function generateClassName(row,index,showToastr){
@@ -959,7 +1030,7 @@ function verifySaveClass(choosedTeaching) {
 
 // 合班
 function combinedClass() {
-	var choosedTeachingClass = $("#classManagementTable").bootstrapTable("getSelections");
+	var choosedTeachingClass = choosendClass;
 	if (!tableIsChecked("#classManagementTable", '班级')) {
 		return;
 	}
@@ -1872,19 +1943,19 @@ function confirmModifyTeachingClass(row){
 		bhxzbCode+=ids[i].id+',';
 	}
 
-    var modifyInfo=new Object();
-	modifyInfo.combinedClassName=$('#newNAME').val();
+    var modifyInfo=row;
+	modifyInfo.jxbmc=$('#newNAME').val();
 	row.bhxzbmc=bhxzbmc;
 	row.bhxzbid=bhxzbCode;
+	var sendArray=new Array();
+	sendArray.push(modifyInfo);
 
-	var SendArray=new Array(row);
-	SendArray.push()
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/confirmClassAction",
 		data: {
-			"classInfo":JSON.stringify(SendArray)
+			"classInfo":JSON.stringify(sendArray)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
