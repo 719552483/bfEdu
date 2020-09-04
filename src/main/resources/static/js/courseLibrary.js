@@ -736,15 +736,13 @@ function removeClasses(){
 
 //删除检查课程是否有存在培养计划的
 function removeClassesCheckCrouseIsInPlan(idArray){
-	 var deleteIds=new Object();
-	 deleteIds.deleteIdArray=idArray;
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/checkCrouseIsInPlan",
 		data: {
-          "deleteIds":JSON.stringify(deleteIds) 
+          "deleteIds":JSON.stringify(idArray)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
