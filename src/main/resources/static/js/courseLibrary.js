@@ -758,14 +758,7 @@ function removeClassesCheckCrouseIsInPlan(idArray){
 			if (backjson.result) {
 				hideloding();
 				if(backjson.isInPlan){
-					$.showModal("#actionModal",true);
-					$("#actionModal").find(".actionTxt").html("有课程存在培养计划,是否确定删除？");
-					// 确认删除事件
-					$('.confirmAction').unbind('click');
-					$('.confirmAction').bind('click', function(e) {
-						confirmRemoveClasses(idArray);
-						e.stopPropagation();
-					});
+					toastr.warning('不能删除有培养计划的课程');
 				}else{
 					$.showModal("#remindModal",true);
 					$(".remindType").html("课程");
@@ -786,15 +779,13 @@ function removeClassesCheckCrouseIsInPlan(idArray){
 
 //确认删除课程
 function confirmRemoveClasses(idArray){
-	 var deleteIds=new Object();
-	 deleteIds.deleteIdArray=idArray;
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/libraryReomveClassByID",
 		data: {
-          "deleteIds":JSON.stringify(deleteIds) 
+          "deleteIds":JSON.stringify(idArray)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
