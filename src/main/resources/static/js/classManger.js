@@ -14,16 +14,21 @@ $(function() {
 //获取-行政班管理- 有逻辑关系select信息
 function getMajorAdministrationClassSelectInfo() {
 	LinkageSelectPublic("#level","#department","#grade","#major");
+
 	$("#major").change(function() {
-		if(typeof getNotNullSearchs()==="undefined"){
+		var nouNullSearch=getNotNullSearchs();
+		var className = $("#AdministrationClassName").val();
+		if(typeof nouNullSearch ==='undefined'){
 			return;
 		}
+		className===""?nouNullSearch.className="":nouNullSearch.className=className;
 		$.ajax({
 			method : 'get',
 			cache : false,
-			url : "/queryCulturePlanAdministrationClasses",
+			url : "/searchAdministrationClass",
 			data: {
-	             "culturePlanInfo":JSON.stringify(getNotNullSearchs())
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+				"SearchCriteria":JSON.stringify(nouNullSearch)
 	        },
 			dataType : 'json',
 			beforeSend: function(xhr) {
