@@ -765,7 +765,7 @@ function modifyMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
-	if($("planStatus")[0].innerText==="passing"){
+	if($(".planStatus")[0].innerText==="passing"){
 		toastr.warning('该培养计划暂不可进行此操作');
 		return;
 	}
@@ -913,7 +913,7 @@ function removeMajorTraining(row) {
 		toastr.warning('不能修改已生成开课计划的课程');
 		return;
 	}
-	if($("planStatus")[0].innerText==="passing"){
+	if($(".planStatus")[0].innerText==="passing"){
 		toastr.warning('该培养计划暂不可进行此操作');
 		return;
 	}
