@@ -72,8 +72,7 @@ public class TeachingPointController {
     @RequestMapping("/searchLocalUsed")
     @ResponseBody
     public ResultVO searchLocalUsed(@RequestParam String SearchCriteria) {
-        JSONObject jsonObject = JSONObject.parseObject(SearchCriteria);
-        LocalUsedPO localUsedPO = JSON.toJavaObject(jsonObject,LocalUsedPO.class);
+        LocalUsedPO localUsedPO = JSON.parseObject(SearchCriteria,LocalUsedPO.class);
         ResultVO result = teachingPointService.searchLocalUsed(localUsedPO);
         return result;
     }

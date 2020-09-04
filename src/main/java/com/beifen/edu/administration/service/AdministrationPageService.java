@@ -612,14 +612,16 @@ public class AdministrationPageService {
 	public ResultVO classAction(List<Edu301> edu301List) {
 		ResultVO resultVO;
 		List<Edu301> edu301s = new ArrayList<>();
+
 		for (Edu301 edu301 : edu301List) {
+			String[] bhxzbids = edu301.getBhxzbid().split(",");
+			String[] bhxzbmcs = edu301.getBhxzbmc().split(",");
+			int count = edu300DAO.queryZXRSByEdu300Ids(bhxzbids);
 			edu301.setYxbz("1");
+			edu301.setJxbrs(count);
 			edu301DAO.save(edu301);
 
 			edu301s.add(edu301);
-
-			String[] bhxzbids = edu301.getBhxzbid().split(",");
-			String[] bhxzbmcs = edu301.getBhxzbmc().split(",");
 
 			edu302DAO.removeByEdu301Id(edu301.getEdu301_ID().toString());
 			for (int i = 0; i < bhxzbids.length; i++) {

@@ -1,11 +1,84 @@
 package com.beifen.edu.administration.PO;
 
-import com.beifen.edu.administration.domian.Edu500;
 
-public class LocalUsedPO extends Edu500 {
+public class LocalUsedPO {
+    private String city;//所属市
+    private String cityCode;//地级市代码
+    private String localName;//教学点名称
+    private String localAddress;//详细地址
+    private String capacity;//容量
+    private String pointName;//任务点名称
+    private String remarks;
     private String siteUtilization;//场地使用率
     private String academicYearId;//学年id
 
+    public LocalUsedPO(){}
+
+    public LocalUsedPO(String city, String cityCode, String localName, String localAddress, String capacity, String pointName,String remarks) {
+        this.city = city;
+        this.cityCode = cityCode;
+        this.localName = localName;
+        this.localAddress = localAddress;
+        this.capacity = capacity;
+        this.pointName = pointName;
+        this.remarks = remarks;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getLocalName() {
+        return localName;
+    }
+
+    public void setLocalName(String localName) {
+        this.localName = localName;
+    }
+
+    public String getLocalAddress() {
+        return localAddress;
+    }
+
+    public void setLocalAddress(String localAddress) {
+        this.localAddress = localAddress;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getPointName() {
+        return pointName;
+    }
+
+    public void setPointName(String pointName) {
+        this.pointName = pointName;
+    }
 
     public String getSiteUtilization() {
         return siteUtilization;

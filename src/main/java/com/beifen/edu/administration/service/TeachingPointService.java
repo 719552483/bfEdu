@@ -13,14 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 //教学任务点业务层
@@ -33,6 +32,8 @@ public class TeachingPointService {
     Edu400Dao edu400Dao;
     @Autowired
     Edu200Dao edu200Dao;
+    @Autowired
+    Edu202Dao edu202Dao;
     @Autowired
     Edu203Dao edu203Dao;
     @Autowired
@@ -136,51 +137,60 @@ public class TeachingPointService {
     public ResultVO searchLocalUsed(LocalUsedPO localUsedPO) {
         ResultVO resultVO;
         Edu500 edu500 = new Edu500();
-        try {
-            utils.copy(localUsedPO,edu500);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        edu500.setCityCode(localUsedPO.getCityCode());
+        edu500.setLocalName(localUsedPO.getLocalName());
+        ResultVO searchResult = searchSite(edu500);
+        if(searchResult.getCode() == 500) {
+            resultVO = ResultVO.setFailed("暂无符合要求的教学点");
+            return resultVO;
         }
-        List<Edu500> siteList =(List<Edu500>) searchSite(edu500).getData();
+        List<Edu500> edu500List = (List<Edu500>) searchResult.getData();
+
+        Specification<Edu501> specification = new Specification<Edu501>() {
+            public Predicate toPredicate(Root<Edu501> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (localUsedPO.getPointName() != null && !"".equals(localUsedPO.getPointName())) {
+                    predicates.add(cb.like(root.<String> get("pointName"), "%"+localUsedPO.getPointName()+"%"));
+                }
+                Path<Object> path = root.get("edu500Id");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <edu500List.size() ; i++) {
+                    in.value(edu500List.get(i).getEdu500Id());//存入值
+                }
+                predicates.add(cb.and(in));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu501> siteList = edu501Dao.findAll(specification);
 
         if(siteList.size() == 0){
             resultVO = ResultVO.setFailed("暂无符合要求的教学点");
             return resultVO;
         }
 
+        List<Long> edu501Ids=siteList.stream().map(Edu501::getEdu501Id).collect(Collectors.toList());
+
+        List<LocalUsedPO> localUsedPOS = edu501Dao.findLocalUsedPOBy501Ids(edu501Ids);
+
         //查找学年总周数
         int weeks = Integer.parseInt(edu400Dao.getWeekByYear(localUsedPO.getAcademicYearId()));
-        Integer countUsed = weeks * 12;
-        List<LocalUsedPO> localUsedPOList = new ArrayList<>();
-        for (Edu500 e : siteList) {
-            LocalUsedPO save = new LocalUsedPO();
-            List<String> edu202Ids = edu200Dao.findIdByJxdmc(e.getLocalName());
+        Integer countUsed = weeks * 6;
+        List<String> edu202Ids = edu202Dao.findEdu202IdsByEdu501Ids(edu501Ids);
+        for (LocalUsedPO e : localUsedPOS) {
             if(edu202Ids.size() != 0){
                 List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
+                BigDecimal bigDecimal = BigDecimal.valueOf(usedList.size() / countUsed);
                 NumberFormat nf = NumberFormat.getPercentInstance();
                 nf.setMinimumFractionDigits(2);//设置保留小数位
-                String usedPercent = nf.format(usedList.size() / countUsed);
-                save.setSiteUtilization(usedPercent);
+                String usedPercent = nf.format(bigDecimal);
+                e.setSiteUtilization(usedPercent);
             } else {
-                save.setSiteUtilization("0.00%");
+                e.setSiteUtilization("0.00%");
             }
-            try {
-                utils.copyTargetSuper(e,save);
-            } catch (NoSuchMethodException noSuchMethodException) {
-                noSuchMethodException.printStackTrace();
-            } catch (IllegalAccessException illegalAccessException) {
-                illegalAccessException.printStackTrace();
-            } catch (InvocationTargetException invocationTargetException) {
-                invocationTargetException.printStackTrace();
-            }
-            localUsedPOList.add(save);
         }
 
-        resultVO = ResultVO.setSuccess("共找到"+localUsedPOList.size()+"个教学点",localUsedPOList);
+        resultVO = ResultVO.setSuccess("共找到"+localUsedPOS.size()+"个教学点",localUsedPOS);
 
         return resultVO;
     }

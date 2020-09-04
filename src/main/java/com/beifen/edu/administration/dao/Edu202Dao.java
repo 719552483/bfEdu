@@ -23,4 +23,6 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 	@Query(value = "select * from edu202 e where e.Edu202_ID = ?1", nativeQuery = true)
 	Edu202 findEdu202ById(String edu202Id);
 
+	@Query(value = "select e.Edu202_ID from Edu202 e where e.pointid in to_char(?1)",nativeQuery = true)
+	List<String> findEdu202IdsByEdu501Ids(List<Long> edu501Ids);
 }
