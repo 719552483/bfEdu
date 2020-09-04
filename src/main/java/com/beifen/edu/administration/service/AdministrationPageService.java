@@ -2285,7 +2285,7 @@ public class AdministrationPageService {
 		if (edu600IdList.size() == 0) {
 			resultVO = ResultVO.setFailed("未找到学生违纪记录");
 		} else {
-			resultVO = ResultVO.setSuccess("共找到"+edu600IdList.size()+"条违纪记录");
+			resultVO = ResultVO.setSuccess("共找到"+edu600IdList.size()+"条违纪记录",edu600IdList);
 		}
 
 		return resultVO;
