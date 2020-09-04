@@ -1,5 +1,6 @@
 package com.beifen.edu.administration.service;
 
+import com.beifen.edu.administration.PO.StudentBreakPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
@@ -545,12 +546,38 @@ public class StudentManageService {
 
 
     //根据用户二级学院权限查询学生
-    public ResultVO getStudentByUserDepartment(String userId) {
+    public ResultVO getStudentByUserDepartment(String userId, StudentBreakPO studentBreakPO) {
         ResultVO resultVO;
         //根据用户ID查询二级学院权限信息
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
         //根据用户二级学院权限查询学生
-        List<Edu001> edu001List = edu001Dao.findAllByDepartments(departments);
+        Specification<Edu001> specification = new Specification<Edu001>() {
+            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (studentBreakPO.getLevel() != null && !"".equals(studentBreakPO.getLevel())) {
+                    predicates.add(cb.equal(root.<String> get("pycc"), studentBreakPO.getLevel()));
+                }
+                if (studentBreakPO.getDepartment() != null && !"".equals(studentBreakPO.getDepartment())) {
+                    predicates.add(cb.equal(root.<String> get("szxb"), studentBreakPO.getDepartment()));
+                }
+                if (studentBreakPO.getGrade() != null && !"".equals(studentBreakPO.getGrade())) {
+                    predicates.add(cb.equal(root.<String> get("nj"), studentBreakPO.getGrade()));
+                }
+                if (studentBreakPO.getMajor() != null && !"".equals(studentBreakPO.getMajor())) {
+                    predicates.add(cb.equal(root.<String> get("zybm"), studentBreakPO.getMajor()));
+                }
+                Path<Object> path = root.get("szxb");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <departments.size() ; i++) {
+                    in.value(departments.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu001> edu001List = edu001Dao.findAll(specification);
 
         if (edu001List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无学生信息");

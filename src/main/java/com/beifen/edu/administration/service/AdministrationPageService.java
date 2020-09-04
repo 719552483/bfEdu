@@ -3,6 +3,7 @@ package com.beifen.edu.administration.service;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.persistence.criteria.*;
@@ -2247,7 +2248,30 @@ public class AdministrationPageService {
 		} else {
 			resultVO = ResultVO.setFailed("共找到"+classesEntities.size()+"个违纪学生",classesEntities);
 		}
-		
+
+		return resultVO;
+	}
+
+	//新增学生违纪
+	public ResultVO addStudentBreak(Edu006 edu006) {
+		ResultVO resultVO;
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(currentTime);
+		edu006.setCreatDate(dateString);
+		edu006Dao.save(edu006);
+
+		String[] studentIds = edu006.getEdu001_ID().split(",");
+		String[] studentName = edu006.getStudentName().split(",");
+		for (int i = 0; i < studentIds.length; i++) {
+			Edu007 edu007 = new Edu007();
+			edu007.setEdu006_ID(edu006.getEdu006_ID());
+			edu007.setEdu001_ID(Long.parseLong(studentIds[i]));
+			edu007.setStudentName(studentName[i]);
+			edu007Dao.save(edu007);
+		}
+
+		resultVO = ResultVO.setSuccess("保存违纪信息成功",edu006);
 		return resultVO;
 	}
 }

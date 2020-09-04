@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.PO.StudentBreakPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.StudentManageService;
@@ -326,8 +327,9 @@ public class StudentManageController {
 
     @RequestMapping("/getStudentByUserDepartment")
     @ResponseBody
-    public ResultVO getStudentByUserDepartment(@RequestParam("userId") String userId) {
-        ResultVO result =studentManageService.getStudentByUserDepartment(userId);
+    public ResultVO getStudentByUserDepartment(@RequestParam("userId") String userId,@RequestParam("searchsObject") String searchsObject) {
+        StudentBreakPO studentBreakPO = JSON.parseObject(searchsObject, StudentBreakPO.class);
+        ResultVO result =studentManageService.getStudentByUserDepartment(userId,studentBreakPO);
         return result;
     }
 

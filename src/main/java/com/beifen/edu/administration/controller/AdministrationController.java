@@ -2203,6 +2203,20 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 *新增学生违纪
+	 * @param BreakDetail
+	 * @return
+	 */
+	@RequestMapping("/addStudentBreak")
+	@ResponseBody
+	public ResultVO addStudentBreak(@RequestParam("BreakDetail") String BreakDetail) {
+		Edu006 edu006 = JSON.parseObject(BreakDetail, Edu006.class);
+		ResultVO result = administrationPageService.addStudentBreak(edu006);
+		return result;
+	}
+
+
 
 
 

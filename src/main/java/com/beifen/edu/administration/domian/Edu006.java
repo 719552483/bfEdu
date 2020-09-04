@@ -10,6 +10,8 @@ public class Edu006 {
 
     private Long Edu006_ID;//主键
     private Long Edu101_ID;//录入人主键
+    private String Edu001_ID;//学生ID
+    private String studentName;//学生姓名
     private String creatUser;//录入人姓名
     private String breachType;//违纪类型
     private String breachName;//违纪类型名称
@@ -39,6 +41,22 @@ public class Edu006 {
 
     public void setEdu101_ID(Long edu101_ID) {
         Edu101_ID = edu101_ID;
+    }
+
+    public String getEdu001_ID() {
+        return Edu001_ID;
+    }
+
+    public void setEdu001_ID(String edu001_ID) {
+        Edu001_ID = edu001_ID;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public String getCreatUser() {
