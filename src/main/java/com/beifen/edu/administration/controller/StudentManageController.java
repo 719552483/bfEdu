@@ -318,4 +318,17 @@ public class StudentManageController {
         return result;
     }
 
+    /**
+     * 根据二级学院权限查询学生
+     * @param userId
+     * @return
+     */
+
+    @RequestMapping("/getStudentByUserDepartment")
+    @ResponseBody
+    public ResultVO getStudentByUserDepartment(@RequestParam("userId") String userId) {
+        ResultVO result =studentManageService.getStudentByUserDepartment(userId);
+        return result;
+    }
+
 }

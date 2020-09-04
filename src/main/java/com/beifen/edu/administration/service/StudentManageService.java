@@ -542,4 +542,22 @@ public class StudentManageService {
         }
         return resultVO;
     }
+
+
+    //根据用户二级学院权限查询学生
+    public ResultVO getStudentByUserDepartment(String userId) {
+        ResultVO resultVO;
+        //根据用户ID查询二级学院权限信息
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+        //根据用户二级学院权限查询学生
+        List<Edu001> edu001List = edu001Dao.findAllByDepartments(departments);
+
+        if (edu001List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无学生信息");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu001List.size()+"个学生",edu001List);
+        }
+
+        return resultVO;
+    }
 }
