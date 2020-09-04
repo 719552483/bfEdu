@@ -2230,8 +2230,8 @@ public class AdministrationController {
 
 
 	/**
-	 *根据学生查找违纪记录
-	 * @param breakInfoId
+	 *撤销违纪记录
+	 * @param breakInfo
 	 * @return
 	 */
 	@RequestMapping("/cancelBreakInfo")
