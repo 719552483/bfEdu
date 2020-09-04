@@ -648,26 +648,6 @@ function getNotNullSearchs() {
 	var departmentValue = getNormalSelectValue("department");
 	var gradeValue =getNormalSelectValue("grade");
 	var majorValue =getNormalSelectValue("major");
-
-	if (levelValue == "") {
-		toastr.warning('层次不能为空');
-		return;
-	}
-
-	if (departmentValue == "") {
-		toastr.warning('二级学院不能为空');
-		return;
-	}
-
-	if (gradeValue == "") {
-		toastr.warning('年级不能为空');
-		return;
-	}
-
-	if (majorValue == "") {
-		toastr.warning('专业不能为空');
-		return;
-	}
 	var levelText = getNormalSelectText("level");
 	var departmentText = getNormalSelectText("department");
 	var gradeText =getNormalSelectText("grade");
