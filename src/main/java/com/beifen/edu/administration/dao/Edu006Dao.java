@@ -4,8 +4,11 @@ import com.beifen.edu.administration.domian.Edu006;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,4 +22,10 @@ public interface Edu006Dao extends JpaRepository<Edu006, Long>, JpaSpecification
     //根据edu600ID集合查询违纪记录
     @Query(value = "select e.* from Edu006 e where e.edu006_ID in ?1",nativeQuery = true)
     List<Edu006> findAllByEdu006Ids(List<String> edu006IdList);
+
+    //根据edu006ID撤销违纪记录
+    @Transactional
+    @Modifying
+    @Query(value = "update edu006 set cancel_date = ?1, cancel_state = ?2 where Edu006_ID =?1", nativeQuery = true)
+    void cancelBreakByEdu006Id(String currentTime, String cancelId);
 }

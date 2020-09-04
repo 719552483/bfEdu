@@ -2231,14 +2231,13 @@ public class AdministrationController {
 
 	/**
 	 *撤销违纪记录
-	 * @param breakInfo
+	 * @param cancelId
 	 * @return
 	 */
 	@RequestMapping("/cancelBreakInfo")
 	@ResponseBody
-	public ResultVO cancelBreakInfo(@RequestParam("breakInfo") String breakInfo) {
-		Edu006 edu006 = JSON.parseObject(breakInfo, Edu006.class);
-		ResultVO result = administrationPageService.cancelBreakInfo(edu006);
+	public ResultVO cancelBreakInfo(@RequestParam("cancelId") String cancelId) {
+		ResultVO result = administrationPageService.cancelBreakInfo(cancelId);
 		return result;
 	}
 
