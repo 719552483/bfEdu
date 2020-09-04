@@ -1703,12 +1703,12 @@ function startGeneratCourse() {
 		}
 	}
 	
-	for (var i = 0; i < courses.length; i++) {
-		if(courses[i].xbsp!=="pass"){
-			toastr.warning('不能选择未通过审核的课程');
-			return;
-		}
-	}
+	// for (var i = 0; i < courses.length; i++) {
+	// 	if(courses[i].xbsp!=="pass"){
+	// 		toastr.warning('不能选择未通过审核的课程');
+	// 		return;
+	// 	}
+	// }
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选班级");
 	$(".remindActionType").html("开课计划");

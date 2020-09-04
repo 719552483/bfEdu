@@ -847,76 +847,88 @@ public class AdministrationPageService {
 	}
 
 	// 发布教学任务书
-	public void putOutTask(Edu201 edu201,Edu600 edu600) {
-		Edu201 oldEdu201 =null;
-		//保留原始数据
-		if(edu201.getEdu201_ID() != null) {
-			oldEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
-		}
-		Integer jxbrs = 0;
-		edu201.setSszt("passing");
-		edu201.setSffbjxrws("T");
-		if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
-			Edu300 one = edu300DAO.findOne(edu201.getClassId());
-			jxbrs += one.getZxrs();
-		} else {
-			Edu301 one = edu301DAO.findOne(edu201.getClassId());
-			jxbrs += one.getJxbrs();
-		}
-		edu201.setJxbrs(jxbrs.toString());
-		edu201DAO.save(edu201);
+	public ResultVO putOutTask(List<Edu201> edu201s,Edu600 edu600) {
+		ResultVO resultVO;
+		for (Edu201 edu201 : edu201s) {
+			Edu201 oldEdu201 =null;
+			//保留原始数据
+			if(edu201.getEdu201_ID() != null) {
+				oldEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
+			}
+			Integer jxbrs = 0;
+			edu201.setSszt("passing");
+			edu201.setSffbjxrws("T");
+			if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
+				Edu300 one = edu300DAO.findOne(edu201.getClassId());
+				jxbrs += one.getZxrs();
+			} else {
+				Edu301 one = edu301DAO.findOne(edu201.getClassId());
+				jxbrs += one.getJxbrs();
+			}
+			edu201.setJxbrs(jxbrs.toString());
+			edu201DAO.save(edu201);
 
-		edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
-		Edu204 edu204 = new Edu204();
-		if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
-			edu204.setClassName(edu201.getClassName());
-			edu204.setEdu201_ID(edu201.getEdu201_ID());
-			edu204.setEdu300_ID(edu201.getClassId());
-			edu204Dao.save(edu204);
-		} else {
-			List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu201.getClassId().toString());
-			for (Edu302 e : edu302List) {
+			edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
+			Edu204 edu204 = new Edu204();
+			if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
 				edu204.setClassName(edu201.getClassName());
 				edu204.setEdu201_ID(edu201.getEdu201_ID());
-				edu204.setEdu300_ID(e.getEdu300_ID());
+				edu204.setEdu300_ID(edu201.getClassId());
 				edu204Dao.save(edu204);
-			}
-		}
-
-
-		edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
-		String[] lsid = edu201.getLs().split(",");
-		String[] lsmc = edu201.getLsmc().split(",");
-		for (int i = 0; i < lsid.length; i++) {
-			Edu205 save = new Edu205();
-			save.setEdu201_ID(edu201.getEdu201_ID());
-			save.setTeacherType("01");
-			save.setEdu101_ID(Long.parseLong(lsid[i]));
-			save.setTeacherName(lsmc[i]);
-			edu205DAO.save(save);
-		}
-
-		String[] zylsid = edu201.getZyls().split(",");
-		String[] zylsmc = edu201.getZylsmc().split(",");
-		for (int i = 0; i < zylsid.length; i++) {
-			Edu205 save = new Edu205();
-			save.setEdu201_ID(edu201.getEdu201_ID());
-			save.setTeacherType("02");
-			save.setEdu101_ID(Long.parseLong(zylsid[i]));
-			save.setTeacherName(zylsmc[i]);
-			edu205DAO.save(save);
-		}
-
-		edu600.setBusinessKey(edu201.getEdu201_ID());
-		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-		if(!isSuccess) {
-			if (oldEdu201.getEdu201_ID() != null) {
-				edu201DAO.save(oldEdu201);
 			} else {
-				edu201DAO.delete(edu201.getEdu201_ID());
+				List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu201.getClassId().toString());
+				for (Edu302 e : edu302List) {
+					edu204.setClassName(edu201.getClassName());
+					edu204.setEdu201_ID(edu201.getEdu201_ID());
+					edu204.setEdu300_ID(e.getEdu300_ID());
+					edu204Dao.save(edu204);
+				}
+			}
+
+			edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
+
+			if (edu201.getLs() != null) {
+				String[] lsid = edu201.getLs().split(",");
+				String[] lsmc = edu201.getLsmc().split(",");
+				for (int i = 0; i < lsid.length; i++) {
+					Edu205 save = new Edu205();
+					save.setEdu201_ID(edu201.getEdu201_ID());
+					save.setTeacherType("01");
+					save.setEdu101_ID(Long.parseLong(lsid[i]));
+					save.setTeacherName(lsmc[i]);
+					edu205DAO.save(save);
+				}
+			}
+
+
+			if (edu201.getZyls() != null) {
+				String[] zylsid = edu201.getZyls().split(",");
+				String[] zylsmc = edu201.getZylsmc().split(",");
+				for (int i = 0; i < zylsid.length; i++) {
+					Edu205 save = new Edu205();
+					save.setEdu201_ID(edu201.getEdu201_ID());
+					save.setTeacherType("02");
+					save.setEdu101_ID(Long.parseLong(zylsid[i]));
+					save.setTeacherName(zylsmc[i]);
+					edu205DAO.save(save);
+				}
+			}
+
+
+			edu600.setBusinessKey(edu201.getEdu201_ID());
+			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+			if(!isSuccess) {
+				if (oldEdu201 != null) {
+					edu201DAO.save(oldEdu201);
+				} else {
+					edu201DAO.delete(edu201.getEdu201_ID());
+				}
+				resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+				return resultVO;
 			}
 		}
-
+		resultVO = ResultVO.setSuccess("教学任务书发布成功");
+		return resultVO;
 	}
 
 	// 查询已发布任务书

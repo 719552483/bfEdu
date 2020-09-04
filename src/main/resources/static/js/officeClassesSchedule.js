@@ -847,14 +847,14 @@ function sendPutOutInfo(putOutArray){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code === 200) {
 				for (var i = 0; i < putOutArray.length; i++) {
 					$("#scheduleClassesTable").bootstrapTable('removeByUniqueId', putOutArray[i].edu201_ID);
 				}
 				$.hideModal("#remindModal");
-				toastr.success('发布任务书成功');
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -1283,13 +1283,13 @@ function comfirmModifyTask(row,index){
 			},
 			success : function(backjson) {
 				hideloding();
-				if (backjson.result) {
+				if (backjson.code === 200) {
 					$('#putOutTaskTable').bootstrapTable("updateRow", {index: index, row: row});
 					$.hideModal("#remindModal");
-					toastr.success('修改成功');
+					toastr.success(backjson.msg);
 					$(".myTooltip").tooltipify();
 				} else {
-					toastr.warning('操作失败，请重试');
+					toastr.warning(backjson.msg);
 				}
 			}
 		});

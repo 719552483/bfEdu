@@ -10,6 +10,7 @@ import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
 
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
@@ -1850,16 +1851,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("putOutTask")
 	@ResponseBody
-	public Object putOutTask(@RequestParam("taskInfo") String taskInfo,@RequestParam("approvalInfo") String approvalInfo) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO putOutTask(@RequestParam("taskInfo") String taskInfo, @RequestParam("approvalInfo") String approvalInfo) {
 		List<Edu201> edu201s = JSON.parseArray(taskInfo, Edu201.class);
 		JSONObject apprvalObject = JSONObject.fromObject(approvalInfo); // 解析审批流json字符
 		Edu600 edu600 = (Edu600) JSONObject.toBean(apprvalObject, Edu600.class);
-		for (Edu201 edu201 : edu201s) {
-			administrationPageService.putOutTask(edu201,edu600);
-		}
-		returnMap.put("result", true);
-		return returnMap;
+		ResultVO result = administrationPageService.putOutTask(edu201s,edu600);
+		return result;
 	}
 
 
