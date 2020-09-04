@@ -41,16 +41,14 @@ function getMajorAdministrationClassSelectInfo() {
 				requestComplete();
 			},
 			success : function(backjson) {
-				if (backjson.result) {
-					hideloding();
+				hideloding();
+				if (backjson.code === 200) {
 					dropConfigOption("#major");
-					if(backjson.classesInfo.length===0){
-						toastr.info('暂无行政班');
-						drawAdministrationClassEmptyTable();
-					}
-					stuffAdministrationClassTable(backjson.classesInfo);
+					toastr.info(backjson.msg);
+					stuffAdministrationClassTable(backjson.data);
 				} else {
-					toastr.warning('操作失败，请重试');
+					drawAdministrationClassEmptyTable();
+					toastr.warning(backjson.msg);
 				}
 			}
 		});
@@ -538,7 +536,8 @@ function startSearchAdministrationClass(){
 		cache : false,
 		url : "/searchAdministrationClass",
 		data: {
-             "SearchCriteria":JSON.stringify(serachObject)
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(serachObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -551,16 +550,13 @@ function startSearchAdministrationClass(){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if(backjson.calssInfo.length===0){
-					toastr.warning('暂无数据');
-					drawAdministrationClassEmptyTable();
-					return;
-				}
-				stuffAdministrationClassTable(backjson.calssInfo);
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.info(backjson.msg);
+				stuffAdministrationClassTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				drawAdministrationClassEmptyTable();
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

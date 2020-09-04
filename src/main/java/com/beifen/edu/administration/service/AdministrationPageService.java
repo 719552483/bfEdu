@@ -837,6 +837,8 @@ public class AdministrationPageService {
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
 		List<Edu206> edu206IdList = edu206Dao.findTaskIdByDepartments(departments);
+
+
 		if (edu206IdList.size() == 0){
 			resultVO = ResultVO.setFailed("暂未找到任务书");
 		} else {
@@ -976,6 +978,9 @@ public class AdministrationPageService {
 			return retrunList;
 		}
 		List<String> current108s = edu108DAO.queryCulturePlanIds(edu107id);
+		if (current108s.size() == 0) {
+			return retrunList;
+		}
 		retrunList= edu201DAO.queryCulturePlanIds(current108s);
 		return retrunList;
 	}
@@ -1723,10 +1728,8 @@ public class AdministrationPageService {
 		//如果为新增，赋予必要属性
 		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
-			String newClassStatus = "passing";
 			String newkcdm = creatCourseCode(userKey);
 			edu200.setKcdm(newkcdm);
-			edu200.setZt(newClassStatus);
 		} else {
 			//保留原始数据
 			oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
@@ -1740,9 +1743,11 @@ public class AdministrationPageService {
 
 		long currentTimeStamp = System.currentTimeMillis();
 		edu200.setLrsj(currentTimeStamp);
+
 		edu200DAO.save(edu200);
 		edu600.setBusinessKey(edu200.getBF200_ID());
-
+		String newClassStatus = "passing";
+		edu200.setZt(newClassStatus);
 		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 		if (!isSuccess) {
 			if (isAdd) {
