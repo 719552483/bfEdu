@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Result;
 
+import com.beifen.edu.administration.PO.StudentBreakPO;
 import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.PO.TeachingTaskPO;
 import com.beifen.edu.administration.VO.ResultVO;
@@ -2175,7 +2176,8 @@ public class AdministrationController {
 
 	/**
 	 * 检查教学班是否被使用
-	 * @param classIds
+	 * @param edu107
+	 * @param approvalInfo
 	 * @return
 	 */
 	@RequestMapping("/confirmStartPlan")
@@ -2187,6 +2189,20 @@ public class AdministrationController {
 		ResultVO result = administrationPageService.confirmStartPlan(edu600);
 		return result;
 	}
+
+	/**
+	 *违纪学生查询
+	 * @param searchsObject
+	 * @return
+	 */
+	@RequestMapping("/findBreakStudent")
+	@ResponseBody
+	public ResultVO findBreakStudent(@RequestParam("searchsObject") String searchsObject) {
+		StudentBreakPO studentBreakPO = JSON.parseObject(searchsObject, StudentBreakPO.class);
+		ResultVO result = administrationPageService.findBreakStudent(studentBreakPO);
+		return result;
+	}
+
 
 
 }

@@ -82,6 +82,10 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu206Dao edu206Dao;
 	@Autowired
+	private Edu006Dao edu006Dao;
+	@Autowired
+	private Edu007Dao edu007Dao;
+	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
@@ -2176,6 +2180,74 @@ public class AdministrationPageService {
 		} else {
 			resultVO = ResultVO.setFailed("审批流程发起失败吗，请联系管理员");
 		}
+		return resultVO;
+	}
+
+
+	//违纪学生查询
+	public ResultVO findBreakStudent(StudentBreakPO studentBreakPO) {
+		ResultVO resultVO;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + studentBreakPO.getUserId());
+		
+		List<String> studentIdList = edu006Dao.findStudentIdList();
+		
+		if (studentIdList.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无违纪学生");
+			return resultVO;
+		}
+
+		Specification<Edu001> specification = new Specification<Edu001>() {
+			public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (studentBreakPO.getLevel() != null && !"".equals(studentBreakPO.getLevel())) {
+					predicates.add(cb.equal(root.<String> get("pycc"), studentBreakPO.getLevel()));
+				}
+				if (studentBreakPO.getDepartment() != null && !"".equals(studentBreakPO.getDepartment())) {
+					predicates.add(cb.equal(root.<String> get("szxb"), studentBreakPO.getDepartment()));
+				}
+				if (studentBreakPO.getGrade() != null && !"".equals(studentBreakPO.getGrade())) {
+					predicates.add(cb.equal(root.<String> get("nj"), studentBreakPO.getGrade()));
+				}
+				if (studentBreakPO.getMajor() != null && !"".equals(studentBreakPO.getMajor())) {
+					predicates.add(cb.equal(root.<String> get("zybm"), studentBreakPO.getMajor()));
+				}
+				if (studentBreakPO.getSex() != null && !"".equals(studentBreakPO.getSex())) {
+					predicates.add(cb.equal(root.<String> get("xb"), studentBreakPO.getSex()));
+				}
+				if (studentBreakPO.getName() != null && !"".equals(studentBreakPO.getName())) {
+					predicates.add(cb.like(root.<String> get("xm"), '%' + studentBreakPO.getName() + '%'));
+				}
+				if (studentBreakPO.getClassName() != null && !"".equals(studentBreakPO.getClassName())) {
+					predicates.add(cb.like(root.<String> get("xzbname"), '%' + studentBreakPO.getClassName() + '%'));
+				}
+
+				Path<Object> path = root.get("szxb");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+				Path<Object> idPath = root.get("Edu001_ID");//定义查询的字段
+				CriteriaBuilder.In<Object> idIn = cb.in(idPath);
+				for (int i = 0; i <studentIdList.size() ; i++) {
+					in.value(studentIdList.get(i));//存入值
+				}
+				predicates.add(cb.and(idIn));
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu001> classesEntities = edu001DAO.findAll(specification);
+
+		if (classesEntities.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无违纪学生");
+		} else {
+			resultVO = ResultVO.setFailed("共找到"+classesEntities.size()+"个违纪学生",classesEntities);
+		}
+		
 		return resultVO;
 	}
 }
