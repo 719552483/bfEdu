@@ -2280,12 +2280,19 @@ public class AdministrationPageService {
 	public ResultVO searchBreakInfoByStudent(String studentId) {
 		ResultVO resultVO;
 
-		List<String> edu600IdList = edu007Dao.findEdu006IdsByStudentId(studentId);
+		List<String> edu006IdList = edu007Dao.findEdu006IdsByStudentId(studentId);
 
-		if (edu600IdList.size() == 0) {
+		if (edu006IdList.size() == 0) {
+			resultVO = ResultVO.setFailed("未找到学生违纪记录");
+			return resultVO;
+		}
+
+		List<Edu006> edu006List = edu006Dao.findAllByEdu006Ids(edu006IdList);
+
+		if (edu006List.size() == 0) {
 			resultVO = ResultVO.setFailed("未找到学生违纪记录");
 		} else {
-			resultVO = ResultVO.setSuccess("共找到"+edu600IdList.size()+"条违纪记录",edu600IdList);
+			resultVO = ResultVO.setSuccess("共找到"+edu006List.size()+"条违纪记录",edu006List);
 		}
 
 		return resultVO;
