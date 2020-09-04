@@ -1686,20 +1686,27 @@ margin: 0px 0px -14px -15px!important;
 .historyArea span{
 	font-size: 12px;
 	margin-bottom: 3px;
-	margin-left: 39%;
-	width: 100%;
+	margin-left: 29%;
+	width: 73%;
+	padding-bottom: 20px;
 }
 
 .historyArea cite{
  color: rgb(43 71 84 / 86%);
+	float: left;
+	width: 20%;
 }
 
 .historyArea b{
     color: rgb(22 56 72 / 92%);
+	float: left;
+	width: 75%;
+	text-align: justify;
 }
 
 .spiltImg{
     margin-left: 48%;
+	margin-top: 5px;
 }
 
 .Historystep{
@@ -2058,7 +2065,19 @@ input:focus{
 	outline:rgb(13 96 115 / 26%) auto 1px!important;
 }
 
+.removeBreakBtn{
+	margin-bottom: 11px;
+	background: #4da5d8;
+	color: white;
+	position: relative;
+	left: 43%;
+}
 
+.removeBreakBtn:hover{
+	color: rgb(53 51 51);
+	font-weight: 600;
+	background: rgb(55 160 210);
+}
 
 @keyframes serachAnimation {
     10% {

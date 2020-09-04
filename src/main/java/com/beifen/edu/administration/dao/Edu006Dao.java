@@ -26,6 +26,6 @@ public interface Edu006Dao extends JpaRepository<Edu006, Long>, JpaSpecification
     //根据edu006ID撤销违纪记录
     @Transactional
     @Modifying
-    @Query(value = "update edu006 set cancel_date = ?1, cancel_state = ?2 where Edu006_ID =?1", nativeQuery = true)
+    @Query(value = "update edu006 set cancel_date = ?1, cancel_state = 'T' where Edu006_ID =?2", nativeQuery = true)
     void cancelBreakByEdu006Id(String currentTime, String cancelId);
 }

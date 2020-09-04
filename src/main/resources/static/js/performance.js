@@ -403,17 +403,71 @@ function stuffDeatils(info,isRemoveAction){
     $(".breakDetailsArea").empty();
     var str=""
     for (var i = 0; i <info.length ; i++) {
-        str+='<div class="historyArea"><p class="Historystep">违纪记录'+(i+1)+'</p><div>' +
-            '<span><cite>学生姓名：</cite><b>'+nullMatter(currentHistory.businessName)+'</b></span>'+
-            '<span><cite>违纪类型：</cite><b>'+nullMatter(timeStamp2String(currentHistory.creatDate))+'</b></span>'+
-            '<span><cite>违纪时间：</cite><b>'+nullMatter(currentHistory.proposerName)+'</b></span>'+
-            '<span><cite>录入时间：</cite><b>'+nullMatter(currentHistory.approvalOpinions)+'</b></span>'+
-            '<span><cite>录入人：</cite><b>'+nullMatter(currentHistory.examinerName)+'</b></span>'+
-            '<span><cite>详细说明：</cite><b>'+nullMatter(timeStamp2String(currentHistory.updateDate))+'</b></span>'+
-            '<span><cite>审批状态：</cite><b>'+nullMatter(ejdm2txt(currentHistory.approvalState))+'</b></span>'+
+        var currentHistory=info[i];
+        var isRemove="";
+        var cancelDate=info[i].cancelDate;
+        var className="";
+        info[i].cancelState!=null&&info[i].cancelState==="T"?isRemove="已撤销":isRemove="未撤销";
+        info[i].cancelState!=null&&info[i].cancelState==="T"?className="noNone":className="noneStart";
+        str+='<div class="historyArea" style="margin-bottom: 10px;"><p class="Historystep">违纪记录'+(i+1)+'</p><div>' +
+            '<span><cite>学生姓名：</cite><b>'+nullMatter(currentHistory.studentName)+'</b></span>'+
+            '<span><cite>违纪类型：</cite><b>'+nullMatter(currentHistory.breachName)+'</b></span>'+
+            '<span><cite>违纪时间：</cite><b>'+nullMatter(currentHistory.breachDate)+'</b></span>'+
+            '<span><cite>录入时间：</cite><b>'+nullMatter(currentHistory.creatDate)+'</b></span>'+
+            '<span><cite>录入人：</cite><b>'+nullMatter(currentHistory.creatUser)+'</b></span>'+
+            '<span><cite>详细说明：</cite><b>'+nullMatter(currentHistory.handlingOpinions)+'</b></span>'+
+            '<span><cite>是否已撤销：</cite><b class="isRemove'+info[i].edu006_ID+'">'+isRemove+'</b></span>'+
+            '<span class="'+className+' cancelDate'+info[i].edu006_ID+'"><cite>撤销时间：</cite><b class="showDate'+info[i].edu006_ID+'">'+nullMatter(cancelDate)+'</b></span>'+
             '</div></div>' ;
+        if(isRemoveAction){
+            str+='<input type="button" class="cancel removeBreakBtn" state="'+info[i].cancelState+'" id="'+info[i].edu006_ID+'" value="撤销违纪记录"/>';
+        }
     }
     $(".breakDetailsArea").append(str);
+
+    //撤销违纪
+    $('.removeBreakBtn').unbind('click');
+    $('.removeBreakBtn').bind('click', function(e) {
+        removeBreakBtn(e.currentTarget.id,e.currentTarget.attributes[2].nodeValue);
+        e.stopPropagation();
+    });
+}
+
+//撤销违纪
+function removeBreakBtn(id,state){
+    if(state==="T"){
+        toastr.warning("该记录已撤销");
+        return;
+    }
+
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/cancelBreakInfo",
+        data: {
+            "cancelId":id
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                $(".cancelDate"+id).show();
+                $(".showDate"+id).html(backjson.data);
+                $(".isRemove"+id).html("已撤销");
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
 }
 
 //预备新增违纪
