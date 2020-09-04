@@ -16,7 +16,7 @@ public class Edu006 {
     private String breachType;//违纪类型
     private String breachName;//违纪类型名称
     private String breachDate;//违纪日期
-    private String HandlingOpinions;//处理意见
+    private String handlingOpinions;//处理意见
     private String creatDate;//录入日期
     private String cancelState;//撤销标识
     private String cancelDate;//撤销日期
@@ -92,11 +92,11 @@ public class Edu006 {
     }
 
     public String getHandlingOpinions() {
-        return HandlingOpinions;
+        return handlingOpinions;
     }
 
     public void setHandlingOpinions(String handlingOpinions) {
-        HandlingOpinions = handlingOpinions;
+        this.handlingOpinions = handlingOpinions;
     }
 
     public String getCreatDate() {
