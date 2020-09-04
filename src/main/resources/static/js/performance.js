@@ -358,22 +358,22 @@ function stuffStudentBaseInfoTable(tableInfo) {
 
 //违纪详情
 function breakDeatils(row){
-    getDeatils(row.edu001_ID,false);
+    getDeatils(row,false);
 }
 
 //预备撤销违纪
 function wantRemoveBreak(row){
-    getDeatils(row.edu001_ID,true);
+    getDeatils(row,true);
 }
 
 //获取详情
-function getDeatils(studentId,isRemoveAction) {
+function getDeatils(row,isRemoveAction) {
     $.ajax({
         method : 'get',
         cache : false,
         url : "/searchBreakInfoByStudent",
         data: {
-            "studentId":studentId.toString()
+            "studentId":row.edu001_ID.toString()
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -390,6 +390,7 @@ function getDeatils(studentId,isRemoveAction) {
             if (backjson.code===200) {
                 stuffDeatils(backjson.data,isRemoveAction);
                 $.showModal("#breakDetailsModal",false);
+                $("#breakDetailsModal").find(".moadalTitle").html(row.xm+"-违纪记录详情");
             } else {
                 toastr.warning(backjson.msg);
             }

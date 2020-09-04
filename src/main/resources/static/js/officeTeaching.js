@@ -320,7 +320,7 @@ function  stuffJxrud(jxrudInfo,str){
 		stuffManiaSelect("#skdd", str);
 	}else{
 		for (var i = 0; i < jxrudInfo.length; i++) {
-			str += '<option value="' +jxrudInfo[i].edu501_ID + '">' + jxrudInfo[i].pointName
+			str += '<option value="' +jxrudInfo[i].edu501Id + '">' + jxrudInfo[i].pointName
 				+ '</option>';
 		}
 		stuffManiaSelect("#skdd", str);
