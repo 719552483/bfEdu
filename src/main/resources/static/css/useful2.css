@@ -27,6 +27,31 @@ input::-webkit-input-placeholder {
 	text-indent: -10em
 }
 
+textarea:-ms-input-placeholder {
+	/* Internet Explorer 10-11 */
+	font-size: 10px;
+	color: gray;
+	text-indent: 5px;
+	color: rgb(82 98 103 / 52%);
+	font-weight: 600;
+}
+
+textarea::-ms-input-placeholder {
+	font-size: 10px;
+	color: gray;
+	text-indent: 5px;
+	color: rgb(82 98 103 / 52%);
+	font-weight: 600;
+}
+
+textarea::-webkit-input-placeholder {
+	font-size: 10px;
+	color: gray;
+	text-indent: 5px;
+	color: rgb(82 98 103 / 52%);
+	font-weight: 600;
+}
+
 .giveBottom .multi-select-container{
     margin-left: 17px;
     margin-top: 0px;
@@ -234,6 +259,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格多个操作*/
+#breakTable td:last-child,
 #recordsTable td:last-child,
 #approvalMangerTable td:last-child,
 #localInfoTable td:last-child,
@@ -567,9 +593,14 @@ float: left;
     margin-bottom: 0px;
 }
 
+
+.techerStudentListTableArea .bs-bars,
+.techerStudentListTableArea .columns,
 .techerStudentListTableArea .search {
-	margin-top: 12px !important;
+	margin-top: 0px !important;
 }
+
+
 
 .majorTrainingTableArea .search {
 	    margin-top: 2px !important;
@@ -1928,7 +1959,7 @@ top角色切换滚动体样式
 	padding-bottom: 5px;
 }
 
-.appraiseTextArea{
+.appraiseTextArea,.breakOptionTextArea{
 	width: 100%;
 	min-height: 200px;
 	background-color: rgba(183, 215, 232, 0.050980392156862744);
@@ -1940,6 +1971,15 @@ top角色切换滚动体样式
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
+}
+
+.breakOptionTextArea{
+	width: 80%;
+	margin-top: 10px;
+	color: rgb(6 6 6 / 65%);
+	text-indent: 5px;
+	font-weight: 600;
+	font-size: 13px;
 }
 
 .allClassTableArea .fixed-table-container{
@@ -2013,9 +2053,12 @@ padding-left: 10px!important;
 	outline: none!important;
 }
 
+textarea:focus,
 input:focus{
 	outline:rgb(13 96 115 / 26%) auto 1px!important;
 }
+
+
 
 @keyframes serachAnimation {
     10% {

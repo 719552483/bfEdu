@@ -205,4 +205,9 @@ public class PageRelatedController {
 	public String gradeQueryPage() {
 		return "gradeQuery";
 	}
+
+	@RequestMapping("performance")
+	public String performancePage() {
+		return "performance";
+	}
 }

@@ -13,6 +13,6 @@ import java.util.List;
 public interface Edu006Dao extends JpaRepository<Edu006, Long>, JpaSpecificationExecutor<Edu006> {
 
     //查询违纪学生ID
-    @Query(value = "select distinct e.Edu001_ID from Edu007 e",nativeQuery = true)
+    @Query(value = "select distinct to_char(e.Edu001_ID) from Edu007 e",nativeQuery = true)
     List<String> findStudentIdList();
 }

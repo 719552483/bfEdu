@@ -196,12 +196,6 @@ function ejdm2txt(str){
 	return returnStr;
 }
 
-//空字符串处理
-function nullMatter(str){
-	str==null||str===""?str="暂无":str=str;
-	return str;
-}
-
 //查看审批详情
 function approvalInfo(row) {
 	$.ajax({

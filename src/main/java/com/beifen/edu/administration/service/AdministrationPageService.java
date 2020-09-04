@@ -2231,10 +2231,10 @@ public class AdministrationPageService {
 				}
 				predicates.add(cb.and(in));
 
-				Path<Object> idPath = root.get("Edu001_ID");//定义查询的字段
+				Path<Object> idPath = root.get("edu001_ID");//定义查询的字段
 				CriteriaBuilder.In<Object> idIn = cb.in(idPath);
 				for (int i = 0; i <studentIdList.size() ; i++) {
-					in.value(studentIdList.get(i));//存入值
+					idIn.value(Long.parseLong(studentIdList.get(i)));//存入值
 				}
 				predicates.add(cb.and(idIn));
 
@@ -2246,7 +2246,7 @@ public class AdministrationPageService {
 		if (classesEntities.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无违纪学生");
 		} else {
-			resultVO = ResultVO.setFailed("共找到"+classesEntities.size()+"个违纪学生",classesEntities);
+			resultVO = ResultVO.setSuccess("共找到"+classesEntities.size()+"个违纪学生",classesEntities);
 		}
 
 		return resultVO;

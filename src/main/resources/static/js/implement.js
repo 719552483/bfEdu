@@ -1435,9 +1435,28 @@ function timeStamp2String(time){
 	return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
 }
 
+//使用字符unicode判断长度
+function getByteLen(val) {
+	var len = 0;
+	for (var i = 0; i < val.length; i++) {
+		var length = val.charCodeAt(i);
+		if(length>=0&&length<=128)
+		{
+			len += 1;
+		}
+		else
+		{
+			len += 2;
+		}
+	}
+	return len;
+}
 
-
-
+//空字符串处理
+function nullMatter(str){
+	str==null||str===""?str="暂无":str=str;
+	return str;
+}
 
 /*
 加载已选的快捷方式

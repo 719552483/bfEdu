@@ -549,23 +549,6 @@ function confirmAppraise(sendArray){
     });
 }
 
-//使用字符unicode判断长度
-function getByteLen(val) {
-    var len = 0;
-    for (var i = 0; i < val.length; i++) {
-        var length = val.charCodeAt(i);
-        if(length>=0&&length<=128)
-        {
-            len += 1;
-        }
-        else
-        {
-            len += 2;
-        }
-    }
-    return len;
-}
-
 //获得所有检索条件
 function getAllSearchsObject(){
     var allSearchsObject=getNotNullSearchs();
