@@ -2216,7 +2216,31 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 *根据学生查找违纪记录
+	 * @param studentId
+	 * @return
+	 */
+	@RequestMapping("/searchBreakInfoByStudent")
+	@ResponseBody
+	public ResultVO searchBreakInfoByStudent(@RequestParam("studentId") String studentId) {
+		ResultVO result = administrationPageService.searchBreakInfoByStudent(studentId);
+		return result;
+	}
 
+
+	/**
+	 *根据学生查找违纪记录
+	 * @param breakInfoId
+	 * @return
+	 */
+	@RequestMapping("/cancelBreakInfo")
+	@ResponseBody
+	public ResultVO cancelBreakInfo(@RequestParam("breakInfo") String breakInfo) {
+		Edu006 edu006 = JSON.parseObject(breakInfo, Edu006.class);
+		ResultVO result = administrationPageService.cancelBreakInfo(edu006);
+		return result;
+	}
 
 
 
