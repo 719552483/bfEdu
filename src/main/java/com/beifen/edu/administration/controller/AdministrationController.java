@@ -105,13 +105,11 @@ public class AdministrationController {
 	@ResponseBody
 	public Object checkCrouseIsInPlan(@RequestParam String deleteIds) {
 		Map<String, Object> returnMap = new HashMap();
-		JSONObject jsonObject = new JSONObject().fromObject(deleteIds);
+		List<String> classArray = JSON.parseArray(deleteIds, String.class);
 		boolean isInPlan;
-		// 获得更改的课程
-		JSONArray classArray = jsonObject.getJSONArray("deleteIdArray");
 		// 查询课程是否存在培养计划
 		for (int i = 0; i < classArray.size(); i++) {
-			isInPlan = administrationPageService.classIsInCurturePlan(classArray.get(i).toString());
+			isInPlan = administrationPageService.classIsInCurturePlan(classArray.get(i));
 			if (isInPlan) {
 				returnMap.put("isInPlan", isInPlan);
 				returnMap.put("result", true);
