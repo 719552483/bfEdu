@@ -2,6 +2,7 @@ package com.beifen.edu.administration.PO;
 
 
 public class LocalUsedPO {
+    private Long edu501Id;//教学任务点id
     private String city;//所属市
     private String cityCode;//地级市代码
     private String localName;//教学点名称
@@ -14,7 +15,8 @@ public class LocalUsedPO {
 
     public LocalUsedPO(){}
 
-    public LocalUsedPO(String city, String cityCode, String localName, String localAddress, String capacity, String pointName,String remarks) {
+    public LocalUsedPO(Long edu501Id,String city, String cityCode, String localName, String localAddress, String capacity, String pointName,String remarks) {
+        this.edu501Id = edu501Id;
         this.city = city;
         this.cityCode = cityCode;
         this.localName = localName;
@@ -22,6 +24,14 @@ public class LocalUsedPO {
         this.capacity = capacity;
         this.pointName = pointName;
         this.remarks = remarks;
+    }
+
+    public Long getEdu501Id() {
+        return edu501Id;
+    }
+
+    public void setEdu501Id(Long edu501Id) {
+        this.edu501Id = edu501Id;
     }
 
     public String getRemarks() {
