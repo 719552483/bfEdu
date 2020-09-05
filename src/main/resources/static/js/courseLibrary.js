@@ -649,7 +649,8 @@ function classDetailsConfirmBtnAction(){
 //	newClassObject.kcdm=$("#addNewClass_calssCode").val();
 //	newClassObject.ywmc=$("#addNewClass_enName").val();
 	newClassObject.kcfzr=$("#addNewClass_calssManger").val();
-	newClassObject.departmentCode=$("#addNewClass_department").val();
+	newClassObject.departmentCode=getNormalSelectValue("addNewClass_department");
+	newClassObject.departmentName=getNormalSelectText("addNewClass_department");
 	newClassObject.kcfzrID=$("#addNewClass_calssManger").attr("mangerId");
 	newClassObject.kclx=getNormalSelectText("addNewClass_classType");
 	newClassObject.kclxCode=getNormalSelectValue("addNewClass_classType");
