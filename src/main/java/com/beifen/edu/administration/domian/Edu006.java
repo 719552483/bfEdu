@@ -22,6 +22,29 @@ public class Edu006 {
     private String cancelDate;//撤销日期
     private String approvalState;//审批状态
 
+    public Edu006() {}
+
+    public Edu006(Long Edu006_ID,Long Edu101_ID,String Edu001_ID,String studentName,
+                      String creatUser,String breachType, String breachName,String breachDate,
+                        String handlingOpinions,String creatDate,String cancelState,String cancelDate,
+                          String approvalState) {
+        this.Edu006_ID = Edu006_ID;
+        this.Edu101_ID = Edu101_ID;
+        this.Edu001_ID = Edu001_ID;
+        this.studentName = studentName;
+        this.creatUser = creatUser;
+        this.breachType = breachType;
+        this.breachName = breachName;
+        this.breachDate = breachDate;
+        this.handlingOpinions = handlingOpinions;
+        this.creatDate = creatDate;
+        this.cancelState = cancelState;
+        this.cancelDate = cancelDate;
+        this.approvalState = approvalState;
+    }
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
