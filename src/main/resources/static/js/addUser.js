@@ -389,7 +389,7 @@ function stuffTable() {
 	function deparmentNamesFormatter(value, row, index) {
 		if(value===""||value==null||typeof value==="undefined"){
 			return [
-				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="'+row.deparmentNames+'" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">暂未绑定</span>' +
+				'<div class="multipleInTableArea deparmentInTableArea'+row.bf990_ID+'"><span title="暂未绑定" class="myTooltip deparmentTxt deparmentTxt' + row.bf990_ID + '">暂未绑定</span>' +
 				'<select class="myTableSelect mydeparmentTableSelect' +row.bf990_ID + '" name="userDeparment'+row.bf990_ID+'" id="userDeparment'+row.bf990_ID+'" multiple="true">' + departmentOptionStr + '' +
 				'</select></div>'
 			]
