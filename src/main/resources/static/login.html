@@ -8,6 +8,7 @@
 	<link href="img/titleLogo.ico" rel="shortcut icon" type="image/x-icon" />
 	<link rel="stylesheet" type="text/css" href="css/toastr.min.css" />
 	<link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/loading.css" rel="stylesheet" type="text/css" />
 	<script src='sripts/jquery.min.js' type='text/javascript'></script>
     <script src="sripts/cloud.js" type="text/javascript"></script>
 	<script src="sripts/jquerySession.js"></script>
@@ -50,15 +51,23 @@
     <span class="systemlogo"></span> 
        
     <div class="loginbox">
-    
     <ul>
     <li><input name="" type="text" class="loginuser" value="admin" onclick="JavaScript:this.value=''"/></li>
     <li><input name="" type="password" class="loginpwd" value="密码" onclick="JavaScript:this.value=''"/></li>
     <li><input name="" type="button" class="loginbtn" value="登录" id="confrimLogin"/><!-- <label><input name="" type="checkbox" value="" checked="checked" />记住密码</label> --><label><a href="#">忘记密码？</a></label></li>
     </ul>
-    
-    
     </div>
+
+        <div class="fileLoadingArea" style="position: absolute;left: 48%;top: 44%;display: none">
+            <div class="spinner-box">
+                <div class="pulse-container">
+                    <div class="pulse-bubble pulse-bubble-1"></div>
+                    <div class="pulse-bubble pulse-bubble-2"></div>
+                    <div class="pulse-bubble pulse-bubble-3"></div>
+                </div>
+                <div class="loadingtxt" style="color: gray;padding-left: 23px">登陆中，请稍后...</div>
+            </div>
+        </div>
     
     </div>
     <div class="loginbm">Copyright © 2020 Beifeninfo Co.,Ltd. All Rights Reserved.</div>

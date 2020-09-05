@@ -55,6 +55,10 @@ function comfirmLogin(username,password) {
 			"password":  password
 		},
 		dataType: 'json',
+		beforeSend: function(xhr) {
+			$(".loginbox").find("li:eq(2)").hide();
+			$(".fileLoadingArea").show();
+		},
 		success: function(backjson) {
 			if(backjson.code===200) {
 				var userInfo = $.session.get('userInfo');
@@ -72,6 +76,8 @@ function comfirmLogin(username,password) {
 				window.location.href = "main.html";
 			} else {
 				toastr.warning(backjson.msg);
+				$(".fileLoadingArea").hide();
+				$(".loginbox").find("li:eq(2)").show();
 			}
 		}
 	});
