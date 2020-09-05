@@ -170,20 +170,20 @@ public class TeachingPointService {
         }
 
         List<Long> edu501Ids=siteList.stream().map(Edu501::getEdu501Id).collect(Collectors.toList());
-
+        String[] edu501Id = utils.listToString(edu501Ids, ',').split(",");
         List<LocalUsedPO> localUsedPOS = edu501Dao.findLocalUsedPOBy501Ids(edu501Ids);
 
         //查找学年总周数
         int weeks = Integer.parseInt(edu400Dao.getWeekByYear(localUsedPO.getAcademicYearId()));
         Integer countUsed = weeks * 6;
-        List<String> edu202Ids = edu202Dao.findEdu202IdsByEdu501Ids(edu501Ids);
+        List<String> edu202Ids = edu202Dao.findEdu202IdsByEdu501Ids(edu501Id);
         for (LocalUsedPO e : localUsedPOS) {
             if(edu202Ids.size() != 0){
                 List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
-                BigDecimal bigDecimal = BigDecimal.valueOf(usedList.size() / countUsed);
+                double v = usedList.size() / Double.parseDouble(countUsed.toString());
                 NumberFormat nf = NumberFormat.getPercentInstance();
                 nf.setMinimumFractionDigits(2);//设置保留小数位
-                String usedPercent = nf.format(bigDecimal);
+                String usedPercent = nf.format(v);
                 e.setSiteUtilization(usedPercent);
             } else {
                 e.setSiteUtilization("0.00%");
