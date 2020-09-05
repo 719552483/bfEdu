@@ -17,9 +17,9 @@ public interface Edu006Dao extends JpaRepository<Edu006, Long>, JpaSpecification
     List<String> findStudentIdList();
 
     //根据edu600ID集合查询违纪记录
-    @Query(value = "select new com.beifen.edu.administration.domian.Edu006(e.edu006_ID,e.edu101_ID,e.edu001_ID,e.studentName," +
+    @Query(value = "select new com.beifen.edu.administration.domian.Edu006(e.edu006_ID,e.edu101_ID,f.edu001_ID,f.studentName," +
             "e.creatUser,e.breachType,e.breachName,e.breachDate,e.handlingOpinions,e.creatDate,f.cancelState,f.cancelDate,e.approvalState) " +
-            "from Edu006 e, Edu007 f where e.edu006_ID = f.edu006_ID and e.edu006_ID in ?1")
-    List<Edu006> findAllByEdu006Ids(List<Long> edu006IdList);
+            "from Edu006 e, Edu007 f where e.edu006_ID = f.edu006_ID and f.edu001_ID = ?1")
+    List<Edu006> findAllByEdu006Ids(String studentId);
 
 }

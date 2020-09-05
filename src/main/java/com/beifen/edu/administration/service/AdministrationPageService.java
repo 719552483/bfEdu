@@ -2264,7 +2264,7 @@ public class AdministrationPageService {
 		for (int i = 0; i < studentIds.length; i++) {
 			Edu007 edu007 = new Edu007();
 			edu007.setEdu006_ID(edu006.getEdu006_ID());
-			edu007.setEdu001_ID(Long.parseLong(studentIds[i]));
+			edu007.setEdu001_ID(studentIds[i]);
 			edu007.setStudentName(studentName[i]);
 			edu007Dao.save(edu007);
 		}
@@ -2278,15 +2278,7 @@ public class AdministrationPageService {
 	public ResultVO searchBreakInfoByStudent(String studentId) {
 		ResultVO resultVO;
 
-		List<Edu007> edu007List = edu007Dao.findEdu006IdsByStudentId(studentId);
-		List<Long> edu006IdList = edu007List.stream().map(Edu007::getEdu006_ID).collect(Collectors.toList());
-
-		if (edu006IdList.size() == 0) {
-			resultVO = ResultVO.setFailed("未找到学生违纪记录");
-			return resultVO;
-		}
-
-		List<Edu006> edu006List = edu006Dao.findAllByEdu006Ids(edu006IdList);
+		List<Edu006> edu006List = edu006Dao.findAllByEdu006Ids(studentId);
 
 		if (edu006List.size() == 0) {
 			resultVO = ResultVO.setFailed("未找到学生违纪记录");

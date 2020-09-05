@@ -9,7 +9,7 @@ public class Edu007 {
 
     private Long Edu007_ID; //主键
     private Long Edu006_ID; //违纪主表主键
-    private Long Edu001_ID; //违纪学生主键
+    private String Edu001_ID; //违纪学生主键
     private String studentName; //违纪学生姓名
     private String cancelState;//撤销标识
     private String cancelDate;//撤销日期
@@ -35,11 +35,11 @@ public class Edu007 {
         Edu006_ID = edu006_ID;
     }
 
-    public Long getEdu001_ID() {
+    public String getEdu001_ID() {
         return Edu001_ID;
     }
 
-    public void setEdu001_ID(Long edu001_ID) {
+    public void setEdu001_ID(String edu001_ID) {
         Edu001_ID = edu001_ID;
     }
 
