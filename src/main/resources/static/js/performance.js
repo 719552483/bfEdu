@@ -429,7 +429,7 @@ function stuffDeatils(info,isRemoveAction){
     //撤销违纪
     $('.removeBreakBtn').unbind('click');
     $('.removeBreakBtn').bind('click', function(e) {
-        removeBreakBtn(e.currentTarget.id,e.currentTarget.attributes[2].nodeValue,e.currentTarget.attributes[3].nodeValue);
+        removeBreakBtn(e.currentTarget.id,e.currentTarget.attributes[2].nodeValue,e.currentTarget.attributes[4].nodeValue);
         e.stopPropagation();
     });
 }

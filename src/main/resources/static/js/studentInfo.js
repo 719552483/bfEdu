@@ -106,6 +106,7 @@ function drawStudentBaseInfoEmptyTable() {
 	stuffStudentBaseInfoTable({});
 }
 
+var choosendStudent=new Array();
 //渲染学生表
 function stuffStudentBaseInfoTable(tableInfo) {
 	window.releaseNewsEvents = {
@@ -140,8 +141,23 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	    sidePagination: "client",   
 		toolbar: '#toolbar',
 		showColumns: true,
+		onCheck : function(row) {
+			onCheck(row);
+		},
+		onUncheck : function(row) {
+			onUncheck(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAll(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAll(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".studentBaseInfoTableArea", "学生信息");
+			for (var i = 0; i < choosendStudent.length; i++) {
+				$("#studentBaseInfoTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
+			}
 		},
 		columns: [
 			{
@@ -440,6 +456,61 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	btnControl();
 }
 
+//单选学生
+function onCheck(row){
+	if(choosendStudent.length<=0){
+		choosendStudent.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendStudent.length; i++) {
+			if(choosendStudent[i].edu001_ID===row.edu001_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendStudent.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheck(row){
+	if(choosendStudent.length<=1){
+		choosendStudent.length=0;
+	}else{
+		for (var i = 0; i < choosendStudent.length; i++) {
+			if(choosendStudent[i].edu001_ID===row.edu001_ID){
+				choosendStudent.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendStudent.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu001_ID);
+	}
+
+
+	for (var i = 0; i < choosendStudent.length; i++) {
+		if(a.indexOf(choosendStudent[i].edu001_ID)!==-1){
+			choosendStudent.splice(i,1);
+			i--;
+		}
+	}
+}
+
+
 //展示学生详情
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
@@ -665,7 +736,7 @@ function removeStudent(row) {
 
 //多选删除学生
 function removeStudents() {
-	var chosenStudents = $('#studentBaseInfoTable').bootstrapTable('getAllSelections');
+	var chosenStudents = choosendStudent;
 	for (var i = 0; i < chosenStudents.length; i++) {
 		if(chosenStudents[i].ztCode==="007"){
 			toastr.warning('有学生暂不可进行此操作');
@@ -1077,7 +1148,7 @@ function importStudentInfo() {
 
 //预备批量更新学生
 function modifyStudents(){
-	var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+	var choosendStudents = choosendStudent;
 	if(choosendStudents.length===0){
 		toastr.warning('暂未选择学生');
 		return;
@@ -1114,7 +1185,7 @@ function modifyStudents(){
 
 //预备批量发放毕业证
 function graduationStudents(){
-	var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+	var choosendStudents = choosendStudent;
 	for (var i = 0; i < choosendStudents.length; i++) {
 		if(choosendStudents[i].zt==="007"){
 			toastr.warning('有学生暂不可进行此操作');
@@ -1439,7 +1510,7 @@ function confirmGraduationStudents(choosendStudents){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				var choosendStudents = $("#studentBaseInfoTable").bootstrapTable("getSelections");
+				var choosendStudents = choosendStudent;
 				for (var i = 0; i < choosendStudents.length; i++) {
 					choosendStudents[i].zt="毕业";
 					choosendStudents[i].ztCode="graduation";

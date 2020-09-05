@@ -50,6 +50,7 @@ function drawJiaoWuPublicCodeTables(backjson){
 	stuffAllMajorTable(backjson.allMajor);
 }
 
+var choosendLevel=new Array();
 //填充层次表
 function stuffAllLevelTable(allLevel){
 	window.releaseNewsEvents = {
@@ -75,8 +76,23 @@ function stuffAllLevelTable(allLevel){
 			striped: true,
 			toolbar: '#toolbar',
 			showColumns: false,
+			onCheck : function(row) {
+				onCheckLevel(row);
+			},
+			onUncheck : function(row) {
+				onUncheckLevel(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllLevel(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllLevel(rows2);
+			},
 			onPageChange: function() {
 				drawPagination(".allLevlTableArea", "培养层次信息");
+				for (var i = 0; i < choosendLevel.length; i++) {
+					$("#allLevlTable").bootstrapTable("checkBy", {field:"edu103_ID", values:[choosendLevel[i].edu103_ID]})
+				}
 			},
 			columns: [{
 					field: 'edu103_ID',
@@ -160,6 +176,61 @@ function stuffAllLevelTable(allLevel){
 		btnControl();
 }
 
+//单选学生
+function onCheckLevel(row){
+	if(choosendLevel.length<=0){
+		choosendLevel.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendLevel.length; i++) {
+			if(choosendLevel[i].edu103_ID===row.edu103_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendLevel.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckLevel(row){
+	if(choosendLevel.length<=1){
+		choosendLevel.length=0;
+	}else{
+		for (var i = 0; i < choosendLevel.length; i++) {
+			if(choosendLevel[i].edu103_ID===row.edu103_ID){
+				choosendLevel.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllLevel(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendLevel.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllLevel(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu103_ID);
+	}
+
+
+	for (var i = 0; i < choosendLevel.length; i++) {
+		if(a.indexOf(choosendLevel[i].edu103_ID)!==-1){
+			choosendLevel.splice(i,1);
+			i--;
+		}
+	}
+}
+
+var choosendDepartment=new Array();
 //填充二级学院表
 function stuffAllDepartmentTable(allDepartment){
 	window.releaseNewsEvents = {
@@ -185,8 +256,23 @@ function stuffAllDepartmentTable(allDepartment){
 			striped: true,
 			toolbar: '#toolbar',
 			showColumns: false,
+			onCheck : function(row) {
+				onCheckDepartment(row);
+			},
+			onUncheck : function(row) {
+				onUncheckDepartment(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllDepartment(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllDepartment(rows2);
+			},
 			onPageChange: function() {
 				drawPagination(".allDepartmentTableArea", "二级学院信息");
+				for (var i = 0; i < choosendDepartment.length; i++) {
+					$("#allDepartmentTable").bootstrapTable("checkBy", {field:"edu104_ID", values:[choosendDepartment[i].edu104_ID]})
+				}
 			},
 			columns: [{
 					field: 'edu104_ID',
@@ -240,6 +326,62 @@ function stuffAllDepartmentTable(allDepartment){
 		btnControl();
 }
 
+//单选学生
+function onCheckDepartment(row){
+	if(choosendDepartment.length<=0){
+		choosendDepartment.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendDepartment.length; i++) {
+			if(choosendDepartment[i].edu104_ID===row.edu104_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendDepartment.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckDepartment(row){
+	if(choosendDepartment.length<=1){
+		choosendDepartment.length=0;
+	}else{
+		for (var i = 0; i < choosendDepartment.length; i++) {
+			if(choosendDepartment[i].edu104_ID===row.edu104_ID){
+				choosendDepartment.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllDepartment(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendDepartment.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllDepartment(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu104_ID);
+	}
+
+
+	for (var i = 0; i < choosendDepartment.length; i++) {
+		if(a.indexOf(choosendDepartment[i].edu104_ID)!==-1){
+			choosendDepartment.splice(i,1);
+			i--;
+		}
+	}
+}
+
+
+var choosendGrade=new Array();
 //填充年级表
 function stuffAllGradeTable(allGrade){
 	window.releaseNewsEvents = {
@@ -265,8 +407,23 @@ function stuffAllGradeTable(allGrade){
 			striped: true,
 			toolbar: '#toolbar',
 			showColumns: false,
+			onCheck : function(row) {
+				onCheckGrade(row);
+			},
+			onUncheck : function(row) {
+				onUncheckGrade(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllGrade(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllGrade(rows2);
+			},
 			onPageChange: function() {
 				drawPagination(".allGradeTableArea", "年级信息");
+				for (var i = 0; i < choosendGrade.length; i++) {
+					$("#allGradeTable").bootstrapTable("checkBy", {field:"edu105_ID", values:[choosendGrade[i].edu105_ID]})
+				}
 			},
 			columns: [{
 					field: 'edu105_ID',
@@ -320,6 +477,62 @@ function stuffAllGradeTable(allGrade){
 		btnControl();
 }
 
+//单选学生
+function onCheckGrade(row){
+	if(choosendGrade.length<=0){
+		choosendGrade.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendGrade.length; i++) {
+			if(choosendGrade[i].edu105_ID===row.edu105_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendGrade.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckGrade(row){
+	if(choosendGrade.length<=1){
+		choosendGrade.length=0;
+	}else{
+		for (var i = 0; i < choosendGrade.length; i++) {
+			if(choosendGrade[i].edu105_ID===row.edu105_ID){
+				choosendGrade.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllGrade(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendGrade.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllGrade(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu105_ID);
+	}
+
+
+	for (var i = 0; i < choosendGrade.length; i++) {
+		if(a.indexOf(choosendGrade[i].edu105_ID)!==-1){
+			choosendGrade.splice(i,1);
+			i--;
+		}
+	}
+}
+
+
+var choosendMajor=new Array();
 //填充专业表
 function stuffAllMajorTable(allMajor){
 	window.releaseNewsEvents = {
@@ -345,8 +558,23 @@ function stuffAllMajorTable(allMajor){
 			striped: true,
 			toolbar: '#toolbar',
 			showColumns: false,
+			onCheck : function(row) {
+				onCheckMajor(row);
+			},
+			onUncheck : function(row) {
+				onUncheckMajor(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllMajor(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllMajor(rows2);
+			},
 			onPageChange: function() {
 				drawPagination(".allMajorTableArea", "专业信息");
+				for (var i = 0; i < choosendMajor.length; i++) {
+					$("#allMajorTable").bootstrapTable("checkBy", {field:"edu106_ID", values:[choosendMajor[i].edu106_ID]})
+				}
 			},
 			columns: [{
 					field: 'edu106_ID',
@@ -398,6 +626,60 @@ function stuffAllMajorTable(allMajor){
 		drawPagination(".allMajorTableArea", "专业信息");
 		toolTipUp(".myTooltip");
 		btnControl();
+}
+
+//单选学生
+function onCheckMajor(row){
+	if(choosendMajor.length<=0){
+		choosendMajor.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendMajor.length; i++) {
+			if(choosendMajor[i].edu106_ID===row.edu106_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendMajor.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckMajor(row){
+	if(choosendMajor.length<=1){
+		choosendMajor.length=0;
+	}else{
+		for (var i = 0; i < choosendMajor.length; i++) {
+			if(choosendMajor[i].edu106_ID===row.edu106_ID){
+				choosendMajor.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllMajor(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendMajor.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllMajor(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu106_ID);
+	}
+
+
+	for (var i = 0; i < choosendMajor.length; i++) {
+		if(a.indexOf(choosendMajor[i].edu106_ID)!==-1){
+			choosendMajor.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //预备新增培养层次
@@ -609,7 +891,7 @@ function removeLevle(removeID){
 
 //批量删除培养层次
 function reomoveLevels(){
-	var chosenLevels = $('#allLevlTable').bootstrapTable('getAllSelections');
+	var chosenLevels = choosendLevel;
 	if (chosenLevels.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
@@ -868,7 +1150,7 @@ function removeDepartment(removeID){
 
 //批量删除二级学院
 function reomoveDepartments(){
-	var chosenDepartments = $('#allDepartmentTable').bootstrapTable('getAllSelections');
+	var chosenDepartments = choosendDepartment;
 	if (chosenDepartments.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
@@ -1107,7 +1389,7 @@ function removeGrade(removeID){
 
 //批量删除年级
 function reomoveGrades(){
-	var chosenGrades = $('#allGradeTable').bootstrapTable('getAllSelections');
+	var chosenGrades = choosendGrade;
 	if (chosenGrades.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
@@ -1340,7 +1622,7 @@ function removeMajor(removeID){
 
 //批量删除专业
 function  reomoveMajors(){
-	var chosenMajors = $('#allMajorTable').bootstrapTable('getAllSelections');
+	var chosenMajors =choosendMajor;
 	if (chosenMajors.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;

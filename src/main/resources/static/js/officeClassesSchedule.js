@@ -41,6 +41,7 @@ function drawTaskEmptyTable() {
 	stuffTaskInfoTable({});
 }
 
+var choosendCanPutTask=new Array();
 //渲染可发布任务书表
 function stuffTaskInfoTable(tableInfo) {
 	window.scheduleClassesEvents = {
@@ -69,8 +70,23 @@ function stuffTaskInfoTable(tableInfo) {
 	    sidePagination: "client",   
 		toolbar: '#toolbar',
 		showColumns: true,
+		onCheck : function(row) {
+			onCheckCanPutTask(row);
+		},
+		onUncheck : function(row) {
+			onUncheckCanPutTask(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllCanPutTask(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllCanPutTask(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".scheduleClassesTableArea", "教学任务书");
+			for (var i = 0; i < choosendCanPutTask.length; i++) {
+				$("#scheduleClassesTable").bootstrapTable("checkBy", {field:"edu206_ID", values:[choosendCanPutTask[i].edu206_ID]})
+			}
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;
@@ -197,6 +213,60 @@ function stuffTaskInfoTable(tableInfo) {
 	toolTipUp(".myTooltip");
 	sfxylcjControlBind();
 	$("#removePutOutTasks").hide();
+}
+
+//单选学生
+function onCheckCanPutTask(row){
+	if(choosendCanPutTask.length<=0){
+		choosendCanPutTask.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendCanPutTask.length; i++) {
+			if(choosendCanPutTask[i].edu206_ID===row.edu206_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendCanPutTask.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckCanPutTask(row){
+	if(choosendCanPutTask.length<=1){
+		choosendCanPutTask.length=0;
+	}else{
+		for (var i = 0; i < choosendCanPutTask.length; i++) {
+			if(choosendCanPutTask[i].edu206_ID===row.edu206_ID){
+				choosendCanPutTask.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllCanPutTask(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendCanPutTask.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllCanPutTask(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu206_ID);
+	}
+
+
+	for (var i = 0; i < choosendCanPutTask.length; i++) {
+		if(a.indexOf(choosendCanPutTask[i].edu206_ID)!==-1){
+			choosendCanPutTask.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //任务书表双击事件
@@ -681,7 +751,7 @@ function allTaecherReSearch(){
 
 //确认选择教师事件
 function confirmChoosedTeacher(tableId,index,cellName){
-	var choosedTeacher = $("#allTeacherTable").bootstrapTable("getSelections");
+	var choosedTeacher = choosendTeachers;
 	if(choosedTeacher.length===0){
 		toastr.warning('暂未选择教师');
 		return;
@@ -792,7 +862,7 @@ function putOut(row){
 
 //批量发布任务书
 function putOutTasks(){
-	var choosedTasks = $("#scheduleClassesTable").bootstrapTable("getSelections");
+	var choosedTasks = choosendCanPutTask;
 	if (choosedTasks.length === 0) {
 		toastr.warning('暂未选择任务书');
 		return;
@@ -893,6 +963,7 @@ function showputedTask(IsmainAreaControl){
 	});
 }
 
+var choosendPutOutTask=new Array();
 //渲染已发布任务书表
 function stuffPutOutTaskTable(tableInfo) {
 	window.putOutTaskEvents = {
@@ -923,8 +994,23 @@ function stuffPutOutTaskTable(tableInfo) {
 	    sidePagination: "client",   
 		toolbar: '#toolbar',
 		showColumns: true,
+		onCheck : function(row) {
+			onCheckPutOutTask(row);
+		},
+		onUncheck : function(row) {
+			onUncheckPutOutTask(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllPutOutTask(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllPutOutTask(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".putOutTaskTableArea", "教学任务书");
+			for (var i = 0; i < choosendPutOutTask.length; i++) {
+				$("#putOutTaskTable").bootstrapTable("checkBy", {field:"edu201_ID", values:[choosendPutOutTask[i].edu201_ID]})
+			}
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;
@@ -1083,6 +1169,60 @@ function stuffPutOutTaskTable(tableInfo) {
 	putOutTasksfxylcjControlBind();
 }
 
+//单选学生
+function onCheckPutOutTask(row){
+	if(choosendPutOutTask.length<=0){
+		choosendPutOutTask.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendPutOutTask.length; i++) {
+			if(choosendPutOutTask[i].edu201_ID===row.edu201_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendPutOutTask.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckPutOutTask(row){
+	if(choosendPutOutTask.length<=1){
+		choosendPutOutTask.length=0;
+	}else{
+		for (var i = 0; i < choosendPutOutTask.length; i++) {
+			if(choosendPutOutTask[i].edu201_ID===row.edu201_ID){
+				choosendPutOutTask.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllPutOutTask(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendPutOutTask.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllPutOutTask(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu201_ID);
+	}
+
+
+	for (var i = 0; i < choosendPutOutTask.length; i++) {
+		if(a.indexOf(choosendPutOutTask[i].edu201_ID)!==-1){
+			choosendPutOutTask.splice(i,1);
+			i--;
+		}
+	}
+}
+
 //已发布任务书表双击事件
 function onDblClickputOutTaskTable(row, $element, field){
 	if(row.sszt==="passing"){
@@ -1121,7 +1261,7 @@ function wantChangePutOutKKBM(index,cellName){
 
 //批量删除任务书
 function removePutOutTasks(){
-	var chosenTask = $('#putOutTaskTable').bootstrapTable('getAllSelections');
+	var chosenTask = choosendPutOutTask;
 	for (var i = 0; i < chosenTask.length; i++) {
 		if(chosenTask[i].sszt==="pass"){
 			toastr.warning('不能删除已通过审核的教学任务书');

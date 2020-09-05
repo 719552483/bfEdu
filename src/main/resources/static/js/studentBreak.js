@@ -122,7 +122,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 function breakDeatils(row){
     stuffDeatils(row);
     $.showModal("#breakDetailsModal",false);
-    $("#breakDetailsModal").find(".moadalTitle").html(row.xm+"-违纪记录详情");
+    $("#breakDetailsModal").find(".moadalTitle").html(row.studentName+"-"+row.breachName+"详情");
 }
 
 //渲染详情

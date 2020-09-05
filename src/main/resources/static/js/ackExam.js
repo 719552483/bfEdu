@@ -11,6 +11,7 @@ function drawTaskEmptyTable() {
 	stuffTaskInfoTable({});
 }
 
+var choosendCourse=new Array();
 //渲染可申请表
 function stuffTaskInfoTable(tableInfo) {
 	window.scheduleClassesEvents = {
@@ -39,8 +40,23 @@ function stuffTaskInfoTable(tableInfo) {
 		sidePagination: "client",
 		toolbar: '#toolbar',
 		showColumns: true,
+		onCheck : function(row) {
+			onCheck(row);
+		},
+		onUncheck : function(row) {
+			onUncheck(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAll(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAll(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".askForExamTableArea", "可申请课程");
+			for (var i = 0; i < choosendCourse.length; i++) {
+				$("#askForExamTable").bootstrapTable("checkBy", {field:"edu201_ID", values:[choosendCourse[i].edu201_ID]})
+			}
 		},
 		columns: [
 			{
@@ -133,6 +149,60 @@ function stuffTaskInfoTable(tableInfo) {
 	toolTipUp(".myTooltip");
 }
 
+//单选学生
+function onCheck(row){
+	if(choosendCourse.length<=0){
+		choosendCourse.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendCourse.length; i++) {
+			if(choosendCourse[i].edu201_ID===row.edu201_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendCourse.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheck(row){
+	if(choosendCourse.length<=1){
+		choosendCourse.length=0;
+	}else{
+		for (var i = 0; i < choosendCourse.length; i++) {
+			if(choosendCourse[i].edu201_ID===row.edu201_ID){
+				choosendCourse.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendCourse.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu201_ID);
+	}
+
+
+	for (var i = 0; i < choosendCourse.length; i++) {
+		if(a.indexOf(choosendCourse[i].edu201_ID)!==-1){
+			choosendCourse.splice(i,1);
+			i--;
+		}
+	}
+}
+
 //预备单个申请考试
 function askForExam(row,index){
 	$.showModal("#remindModal",true);
@@ -150,7 +220,7 @@ function askForExam(row,index){
 
 //预备批量申请考试
 function askForExams(){
-	var choosend = $("#askForExamTable").bootstrapTable("getSelections");
+	var choosend =choosendCourse;
 	if(choosend.length===0){
 		toastr.warning('暂未选择课程');
 		return;

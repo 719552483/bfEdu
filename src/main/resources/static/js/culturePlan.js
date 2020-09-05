@@ -87,6 +87,7 @@ function getAllRelationInfo(){
 	});
 }
 
+var choosendRelation=new Array();
 //填充层次关系管理表
 function stuffAllRelationInfoTable(allRelationInfo){
 	window.releaseNewsEvents = {
@@ -120,8 +121,23 @@ function stuffAllRelationInfoTable(allRelationInfo){
 		exportOptions:{
 			fileName: '培养计划导出'  //文件名称
 		},
+		onCheck : function(row) {
+			onCheckRelation(row);
+		},
+		onUncheck : function(row) {
+			onUncheckRelation(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllRelation(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllRelation(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".relationTableArea", "培养计划信息");
+			for (var i = 0; i < choosendRelation.length; i++) {
+				$("#relationTable").bootstrapTable("checkBy", {field:"edu107_ID", values:[choosendRelation[i].edu107_ID]})
+			}
 		},
 		columns: [{
 			field: 'edu107_ID',
@@ -216,6 +232,60 @@ function stuffAllRelationInfoTable(allRelationInfo){
 	drawPagination(".relationTableArea", "培养计划信息");
 	toolTipUp(".myTooltip");
 	btnControl();
+}
+
+//单选学生
+function onCheckRelation(row){
+	if(choosendRelation.length<=0){
+		choosendRelation.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendRelation.length; i++) {
+			if(choosendRelation[i].edu107_ID===row.edu107_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendRelation.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckRelation(row){
+	if(choosendRelation.length<=1){
+		choosendRelation.length=0;
+	}else{
+		for (var i = 0; i < choosendRelation.length; i++) {
+			if(choosendRelation[i].edu107_ID===row.edu107_ID){
+				choosendRelation.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllRelation(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendRelation.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllRelation(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu107_ID);
+	}
+
+
+	for (var i = 0; i < choosendRelation.length; i++) {
+		if(a.indexOf(choosendRelation[i].edu107_ID)!==-1){
+			choosendRelation.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //预备修改关系
@@ -460,7 +530,7 @@ function removeRelation(removeID){
 
 //批量删除关系
 function removeRelations() {
-	var chosenRelations = $('#relationTable').bootstrapTable('getAllSelections');
+	var chosenRelations = choosendRelation;
 	if (chosenRelations.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
@@ -625,6 +695,7 @@ function drawMajorTrainingEmptyTable() {
 	stuffMajorTrainingTable({});
 }
 
+var choosendMajorTraining=new Array();
 // 渲染培养计划表格
 function stuffMajorTrainingTable(tableInfo) {
 	window.releaseNewsEvents = {
@@ -658,8 +729,23 @@ function stuffMajorTrainingTable(tableInfo) {
 		striped : true,
 		toolbar : '#toolbar',
 		showColumns : true,
+		onCheck : function(row) {
+			onCheckMajorTraining(row);
+		},
+		onUncheck : function(row) {
+			onUncheckMajorTraining(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllMajorTraining(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllMajorTraining(rows2);
+		},
 		onPageChange : function() {
 			drawPagination(".majorTrainingTableArea", "培养计划");
+			for (var i = 0; i < choosendMajorTraining.length; i++) {
+				$("#majorTrainingTable").bootstrapTable("checkBy", {field:"edu108_ID", values:[choosendMajorTraining[i].edu108_ID]})
+			}
 		},
 		columns : [ {
 			field : 'check',
@@ -742,14 +828,66 @@ function stuffMajorTrainingTable(tableInfo) {
 				+ '</ul>' ].join('');
 	}
 
-
-
 	drawPagination(".majorTrainingTableArea", "培养计划");
 	drawSearchInput(".majorTrainingTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".majorTrainingTableArea", "培养计划");
 	btnControl();
+}
+
+//单选学生
+function onCheckMajorTraining(row){
+	if(choosendMajorTraining.length<=0){
+		choosendMajorTraining.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendMajorTraining.length; i++) {
+			if(choosendMajorTraining[i].edu108_ID===row.edu108_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendMajorTraining.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckMajorTraining(row){
+	if(choosendMajorTraining.length<=1){
+		choosendMajorTraining.length=0;
+	}else{
+		for (var i = 0; i < choosendMajorTraining.length; i++) {
+			if(choosendMajorTraining[i].edu108_ID===row.edu108_ID){
+				choosendMajorTraining.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllMajorTraining(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendMajorTraining.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllMajorTraining(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu108_ID);
+	}
+
+
+	for (var i = 0; i < choosendMajorTraining.length; i++) {
+		if(a.indexOf(choosendMajorTraining[i].edu108_ID)!==-1){
+			choosendMajorTraining.splice(i,1);
+			i--;
+		}
+	}
 }
 
 // 查看培养计划详情
@@ -931,7 +1069,7 @@ function removeMajorTraining(row) {
 
 // 多选删除培养计划
 function removeChoosedMajorTraining() {
-	var chosenCrouse = $('#majorTrainingTable').bootstrapTable('getAllSelections');
+	var chosenCrouse = choosendMajorTraining;
 	if (chosenCrouse.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
@@ -1576,6 +1714,7 @@ function stuffAllClassArea(classInfo) {
 	}
 }
 
+var choosendCourse=new Array();
 // 填充开课计划课程库表格
 function stuffGeneratCoursePalnTable(tableInfo) {
 	window.generatCourseEvents = {
@@ -1598,8 +1737,23 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 		toolbar : '#toolbar',
 		showColumns : true,
 		clickToSelect : true,
+		onCheck : function(row) {
+			onCheckCourse(row);
+		},
+		onUncheck : function(row) {
+			onUncheckCourse(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllCourse(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllCourse(rows2);
+		},
 		onPageChange : function() {
 			drawPagination(".generatCourseArea", "课程");
+			for (var i = 0; i < choosendCourse.length; i++) {
+				$("#generatCourseTable").bootstrapTable("checkBy", {field:"edu108_ID", values:[choosendCourse[i].edu108_ID]})
+			}
 		},
 		columns : [ {
 			field : 'check',
@@ -1669,6 +1823,61 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".generatCourseArea", "课程");
 }
+
+//单选学生
+function onCheckCourse(row){
+	if(choosendCourse.length<=0){
+		choosendCourse.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendCourse.length; i++) {
+			if(choosendCourse[i].edu108_ID===row.edu108_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendCourse.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckCourse(row){
+	if(choosendCourse.length<=1){
+		choosendCourse.length=0;
+	}else{
+		for (var i = 0; i < choosendCourse.length; i++) {
+			if(choosendCourse[i].edu108_ID===row.edu108_ID){
+				choosendCourse.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllCourse(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendCourse.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllCourse(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu108_ID);
+	}
+
+
+	for (var i = 0; i < choosendCourse.length; i++) {
+		if(a.indexOf(choosendCourse[i].edu108_ID)!==-1){
+			choosendCourse.splice(i,1);
+			i--;
+		}
+	}
+}
+
 
 //展示课程信息
 function showCourseInfo(row) {

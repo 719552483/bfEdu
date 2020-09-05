@@ -38,6 +38,7 @@ function drawCourseLibraryEmptyTable(){
 	stuffCourseLibraryTable({});
 }
 
+var choosendCrouse=new Array();
 //渲染课程库表格
 function stuffCourseLibraryTable(tableInfo){
 	window.releaseNewsEvents = {
@@ -71,8 +72,23 @@ function stuffCourseLibraryTable(tableInfo){
 			striped : true,
 			toolbar : '#toolbar',
 			showColumns : true,
+			onCheck : function(row) {
+				onCheck(row);
+			},
+			onUncheck : function(row) {
+				onUncheck(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAll(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAll(rows2);
+			},
 			onPageChange : function() {
 				drawPagination(".courseLibraryTableArea", "课程信息");
+				for (var i = 0; i < choosendCrouse.length; i++) {
+					$("#courseLibraryTable").bootstrapTable("checkBy", {field:"bf200_ID", values:[choosendCrouse[i].bf200_ID]})
+				}
 			},
 			columns : [ {
 				field : 'check',
@@ -204,6 +220,60 @@ function stuffCourseLibraryTable(tableInfo){
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 		btnControl();
+}
+
+//单选学生
+function onCheck(row){
+	if(choosendCrouse.length<=0){
+		choosendCrouse.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendCrouse.length; i++) {
+			if(choosendCrouse[i].bf200_ID===row.bf200_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendCrouse.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheck(row){
+	if(choosendCrouse.length<=1){
+		choosendCrouse.length=0;
+	}else{
+		for (var i = 0; i < choosendCrouse.length; i++) {
+			if(choosendCrouse[i].bf200_ID===row.bf200_ID){
+				choosendCrouse.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendCrouse.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].bf200_ID);
+	}
+
+
+	for (var i = 0; i < choosendCrouse.length; i++) {
+		if(a.indexOf(choosendCrouse[i].bf200_ID)!==-1){
+			choosendCrouse.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //课程详情
@@ -726,7 +796,7 @@ function removeCourse(row){
 
 //多选删除课程
 function removeClasses(){
-	var choosedClass = $("#courseLibraryTable").bootstrapTable("getSelections");
+	var choosedClass =choosendCrouse;
 	if(choosedClass.length==0){
 		toastr.warning('请选择课程');
 		return;
@@ -1099,7 +1169,7 @@ function confirmImportNewClass(){
 
 //预备批量更新课程
 function modifyClasses(){
-	var choosendClasses = $("#courseLibraryTable").bootstrapTable("getSelections");
+	var choosendClasses =  choosendCrouse;
 	if(choosendClasses.length===0){
 		toastr.warning('暂未选择课程');
 		return;

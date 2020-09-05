@@ -60,6 +60,7 @@ function drawAdministrationClassEmptyTable(){
 	stuffAdministrationClassTable({});
 }
 
+var choosendXzb=new Array();
 //填充行政班表
 function stuffAdministrationClassTable(tableInfo){
 	window.releaseNewsEvents = {
@@ -93,8 +94,23 @@ function stuffAdministrationClassTable(tableInfo){
 			striped : true,
 			toolbar : '#toolbar',
 			showColumns : true,
+			onCheck : function(row) {
+				onCheckXZB(row);
+			},
+			onUncheck : function(row) {
+				onUncheckXZB(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllXZB(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllXZB(rows2);
+			},
 			onPageChange : function() {
 				drawPagination(".administrationClassTableArea", "行政班信息");
+				for (var i = 0; i < choosendXzb.length; i++) {
+					$("#administrationClassTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendXzb[i].edu300_ID]})
+				}
 			},
 			columns : [ {
 				field : 'check',
@@ -181,13 +197,66 @@ function stuffAdministrationClassTable(tableInfo){
 			}
 		}
 
-
 		drawPagination(".administrationClassTableArea", "行政班信息");
 		drawSearchInput(".administrationClassTableArea");
 		changeTableNoRsTip();
 		toolTipUp(".myTooltip");
 		changeColumnsStyle(".administrationClassTableArea", "行政班信息");
 		btnControl();
+}
+
+//单选学生
+function onCheckXZB(row){
+	if(choosendXzb.length<=0){
+		choosendXzb.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(choosendXzb[i].edu300_ID===row.edu300_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendXzb.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckXZB(row){
+	if(choosendXzb.length<=1){
+		choosendXzb.length=0;
+	}else{
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(choosendXzb[i].edu300_ID===row.edu300_ID){
+				choosendXzb.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllXZB(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendXzb.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllXZB(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu300_ID);
+	}
+
+
+	for (var i = 0; i < choosendXzb.length; i++) {
+		if(a.indexOf(choosendXzb[i].edu300_ID)!==-1){
+			choosendXzb.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //查看行政班详情
@@ -457,7 +526,7 @@ function removeAdministrationClass(row){
 
 //多选删除行政班
 function removeAdministrationClasses() {
-	var chosenclasses = $('#administrationClassTable').bootstrapTable('getAllSelections');
+	var chosenclasses = choosendXzb;
 	if (chosenclasses.length === 0) {
 		toastr.warning('暂未选择任何班级');
 		return;
@@ -737,15 +806,15 @@ function stuffClassManagementTable(tableInfo) {
 		onUncheckAll : function(rows,rows2) {
 			onUncheckAll(rows2);
 		},
-		onDblClickRow : function(row, $element, field) {
-			if(field==="jxbmc"){
-				editorClassName(row,parseInt($element[0].dataset.index));
-			}
-		},
 		onPageChange : function() {
 			drawPagination(".classManagementTableArea", "行政班信息");
 			for (var i = 0; i < choosendClass.length; i++) {
 				$("#classManagementTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendClass[i].edu300_ID]})
+			}
+		},
+		onDblClickRow : function(row, $element, field) {
+			if(field==="jxbmc"){
+				editorClassName(row,parseInt($element[0].dataset.index));
 			}
 		},
 		columns : [ {
@@ -1378,6 +1447,7 @@ function getAllTeachingClassInfo(isReturnLastPage) {
 	});
 }
 
+var choosendJxb=new Array();
 // 填充教学班列表
 function stuffTeachingClassTable(tableInfo) {
 	window.teachingClassEvents = {
@@ -1408,12 +1478,32 @@ function stuffTeachingClassTable(tableInfo) {
 		striped : true,
 		toolbar : '#toolbar',
 		showColumns : true,
+		onCheck : function(row) {
+			onCheckJxb(row);
+		},
+		onUncheck : function(row) {
+			onUncheckJxb(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllJxb(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllJxb(rows2);
+		},
 		onPageChange : function() {
 			drawPagination(".teachingClassTableArea", "教学班信息");
+			for (var i = 0; i < choosendJxb.length; i++) {
+				$("#teachingClassTable").bootstrapTable("checkBy", {field:"edu301_ID", values:[choosendJxb[i].edu301_ID]})
+			}
 		},
 		columns : [ {
 			field : 'check',
 			checkbox : true
+		},	{
+			field: 'edu301_ID',
+			title: '唯一标识',
+			align: 'center',
+			visible: false
 		},{
 			field : 'jxbmc',
 			title : '教学班名称',
@@ -1457,6 +1547,60 @@ function stuffTeachingClassTable(tableInfo) {
 	drawSearchInput(".teachingClassTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+}
+
+//单选学生
+function onCheckJxb(row){
+	if(choosendJxb.length<=0){
+		choosendJxb.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendJxb.length; i++) {
+			if(choosendJxb[i].edu301_ID===row.edu301_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendJxb.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckJxb(row){
+	if(choosendJxb.length<=1){
+		choosendJxb.length=0;
+	}else{
+		for (var i = 0; i < choosendJxb.length; i++) {
+			if(choosendJxb[i].edu301_ID===row.edu301_ID){
+				choosendJxb.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllJxb(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendJxb.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllJxb(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu301_ID);
+	}
+
+
+	for (var i = 0; i < choosendJxb.length; i++) {
+		if(a.indexOf(choosendJxb[i].edu301_ID)!==-1){
+			choosendJxb.splice(i,1);
+			i--;
+		}
+	}
 }
 
 // 修改教学班
@@ -1557,7 +1701,7 @@ function removeTeachingClass(row) {
 
 // 批量删除教学班
 function removeTeachingClasses() {
-	var chosenTeachingClasses = $('#teachingClassTable').bootstrapTable('getAllSelections');
+	var chosenTeachingClasses =choosendJxb;
 	if (chosenTeachingClasses.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
