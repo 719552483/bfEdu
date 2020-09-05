@@ -11,6 +11,8 @@ public class Edu007 {
     private Long Edu006_ID; //违纪主表主键
     private Long Edu001_ID; //违纪学生主键
     private String studentName; //违纪学生姓名
+    private String cancelState;//撤销标识
+    private String cancelDate;//撤销日期
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -47,5 +49,21 @@ public class Edu007 {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public String getCancelState() {
+        return cancelState;
+    }
+
+    public void setCancelState(String cancelState) {
+        this.cancelState = cancelState;
+    }
+
+    public String getCancelDate() {
+        return cancelDate;
+    }
+
+    public void setCancelDate(String cancelDate) {
+        this.cancelDate = cancelDate;
     }
 }

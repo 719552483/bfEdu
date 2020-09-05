@@ -2236,8 +2236,8 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/cancelBreakInfo")
 	@ResponseBody
-	public ResultVO cancelBreakInfo(@RequestParam("cancelId") String cancelId) {
-		ResultVO result = administrationPageService.cancelBreakInfo(cancelId);
+	public ResultVO cancelBreakInfo(@RequestParam("cancelId") String cancelId,@RequestParam("studentId") String studentId) {
+		ResultVO result = administrationPageService.cancelBreakInfo(cancelId,studentId);
 		return result;
 	}
 

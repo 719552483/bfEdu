@@ -604,12 +604,14 @@ public class StudentManageService {
 
         Edu990 edu990 = edu990Dao.queryUserById(userId);
 
-        List<String> edu006IdList = edu007Dao.findEdu006IdsByStudentId(edu990.getUserKey());
+        List<Edu007> edu007List = edu007Dao.findEdu006IdsByStudentId(edu990.getUserKey());
+        List<Long> edu006IdList = edu007List.stream().map(Edu007::getEdu006_ID).collect(Collectors.toList());
+
         if(edu006IdList.size() == 0) {
             resultVO = ResultVO.setFailed("未找到违纪记录");
         } else{
             List<Edu006> edu006List = edu006Dao.findAllByEdu006Ids(edu006IdList);
-            resultVO = ResultVO.setSuccess("共找到"+edu006IdList.size()+"条违纪记录",edu006List);
+            resultVO = ResultVO.setSuccess("共找到"+edu006List.size()+"条违纪记录",edu006List);
         }
 
         return resultVO;

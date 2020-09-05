@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
@@ -2277,7 +2278,8 @@ public class AdministrationPageService {
 	public ResultVO searchBreakInfoByStudent(String studentId) {
 		ResultVO resultVO;
 
-		List<String> edu006IdList = edu007Dao.findEdu006IdsByStudentId(studentId);
+		List<Edu007> edu007List = edu007Dao.findEdu006IdsByStudentId(studentId);
+		List<Long> edu006IdList = edu007List.stream().map(Edu007::getEdu006_ID).collect(Collectors.toList());
 
 		if (edu006IdList.size() == 0) {
 			resultVO = ResultVO.setFailed("未找到学生违纪记录");
@@ -2297,12 +2299,12 @@ public class AdministrationPageService {
 
 
 	//撤销违纪记录
-	public ResultVO cancelBreakInfo(String cancelId) {
+	public ResultVO cancelBreakInfo(String cancelId,String studentId) {
 		ResultVO resultVO;
 		Date currentTime = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(currentTime);
-		edu006Dao.cancelBreakByEdu006Id(dateString,cancelId);
+		edu007Dao.cancelBreakByEdu006Id(dateString,cancelId,studentId);
 
 		resultVO = ResultVO.setSuccess("撤销违纪成功",dateString);
 		return resultVO;
