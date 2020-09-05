@@ -206,15 +206,13 @@ function modifyCourseLibrary(row){
 
 //检查课程是否有存在培养计划的
 function modifyClassesCheckCrouseIsInPlan(idArray,row){
-	 var deleteIds=new Object();
-	 deleteIds.deleteIdArray=idArray;
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/checkCrouseIsInPlan",
 		data: {
-          "deleteIds":JSON.stringify(deleteIds) 
+          "deleteIds":JSON.stringify(idArray)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -415,7 +413,7 @@ function droawAddModal(departmentData){
 function  drawUsefulDepartment(departmentData){
 	var str = '<option value="seleceConfigTip">请选择</option>';
 	for (var g = 0; g < departmentData.length; g++) {
-		str += '<option value="' + departmentData[g].edu104_ID + '">' + departmentData[g].xbmc
+		str += '<option value="' + departmentData[g].departmentCode + '">' + departmentData[g].departmentName
 			+ '</option>';
 	}
 	stuffManiaSelect("#addNewClass_department", str);
