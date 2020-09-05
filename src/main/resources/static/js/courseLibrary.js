@@ -7,7 +7,31 @@ $(function() {
 	drawCourseLibraryEmptyTable();
 	binBind();
 	stuffEJDElement(EJDMElementInfo);
+	getXbInfo();
 });
+
+//获取系部信息
+function getXbInfo(){
+	var xbData=new Object();
+	$.ajax({
+		method: 'post',
+		cache: false,
+		url: "/getUsefulDepartment",
+		async:false,
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType: 'json',
+		success: function(backjson) {
+			if(backjson.code===200) {
+				xbData=backjson.data;
+			}else{
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+	return xbData;
+}
 
 //渲染空课程库表格
 function drawCourseLibraryEmptyTable(){
@@ -201,11 +225,12 @@ function modifyCourseLibrary(row){
 	$('#addNewClassModal').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	var idArray=new Array();
 	idArray.push(row.bf200_ID);
-	modifyClassesCheckCrouseIsInPlan(idArray,row);
+	var xbInfo=getXbInfo();
+	modifyClassesCheckCrouseIsInPlan(idArray,row,xbInfo);
 }
 
 //检查课程是否有存在培养计划的
-function modifyClassesCheckCrouseIsInPlan(idArray,row){
+function modifyClassesCheckCrouseIsInPlan(idArray,row,xbInfo){
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
@@ -230,13 +255,14 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 				if(backjson.isInPlan){
 					$.showModal("#actionModal",true);
 					$("#actionModal").find(".actionTxt").html("该课程存在培养计划,是否还要修改？");
-					// 确认删除事件
+					// 确认按钮绑定事件
 					$('.confirmAction').unbind('click');
 					$('.confirmAction').bind('click', function(e) {
 						$.hideModal("#actionModal",false);
 						$.showModal("#addNewClassModal",true);
 						$("#addNewClassModal").find(".moadalTitle").html("修改课程-"+row.kcmc);
 						$(".comfirmAddNewClass").attr("value","确定");
+						drawUsefulDepartment(xbInfo);
 						stuffclassDetailsArea(row);
 						$("#addNewClass_calssManger").attr("mangerId",row.kcfzrID);
 						// 确认按钮绑定事件
@@ -248,6 +274,7 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row){
 						e.stopPropagation();
 					});
 				}else{
+					drawUsefulDepartment(xbInfo);
 					stuffclassDetailsArea(row);
 					$.showModal("#addNewClassModal",true);
 					$("#addNewClassModal").find(".moadalTitle").html("修改课程-"+row.kcmc);
@@ -360,22 +387,8 @@ function comfirmmodifyCourseInfo(row){
 
 //新增课程
 function wantAddClass() {
-	$.ajax({
-		method: 'post',
-		cache: false,
-		url: "/getUsefulDepartment",
-		data: {
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-		},
-		dataType: 'json',
-		success: function(backjson) {
-			if(backjson.code===200) {
-				droawAddModal(backjson.data);
-			}else{
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
+	var xbInfo=getXbInfo();
+	droawAddModal(xbInfo);
 }
 
 //获取系部成功或的回调
@@ -413,7 +426,7 @@ function droawAddModal(departmentData){
 function  drawUsefulDepartment(departmentData){
 	var str = '<option value="seleceConfigTip">请选择</option>';
 	for (var g = 0; g < departmentData.length; g++) {
-		str += '<option value="' + departmentData[g].departmentCode + '">' + departmentData[g].departmentName
+		str += '<option value="' + departmentData[g].edu104_ID + '">' + departmentData[g].xbmc
 			+ '</option>';
 	}
 	stuffManiaSelect("#addNewClass_department", str);
