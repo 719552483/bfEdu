@@ -421,7 +421,7 @@ function stuffDeatils(info,isRemoveAction){
             '<span class="'+className+' cancelDate'+info[i].edu006_ID+'"><cite>撤销时间：</cite><b class="showDate'+info[i].edu006_ID+'">'+nullMatter(cancelDate)+'</b></span>'+
             '</div></div>' ;
         if(isRemoveAction){
-            str+='<input type="button" class="cancel removeBreakBtn" state="'+info[i].cancelState+'" id="'+info[i].edu006_ID+'" value="撤销违纪记录"/>';
+            str+='<input type="button" class="cancel removeBreakBtn" state="'+info[i].cancelState+'" id="'+info[i].edu006_ID+'" studentId="'+info[i].edu001_ID+'" value="撤销违纪记录"/>';
         }
     }
     $(".breakDetailsArea").append(str);
@@ -429,13 +429,13 @@ function stuffDeatils(info,isRemoveAction){
     //撤销违纪
     $('.removeBreakBtn').unbind('click');
     $('.removeBreakBtn').bind('click', function(e) {
-        removeBreakBtn(e.currentTarget.id,e.currentTarget.attributes[2].nodeValue);
+        removeBreakBtn(e.currentTarget.id,e.currentTarget.attributes[2].nodeValue,e.currentTarget.attributes[3].nodeValue);
         e.stopPropagation();
     });
 }
 
 //撤销违纪
-function removeBreakBtn(id,state){
+function removeBreakBtn(id,state,studentId){
     if(state==="T"){
         toastr.warning("该记录已撤销");
         return;
@@ -446,7 +446,8 @@ function removeBreakBtn(id,state){
         cache : false,
         url : "/cancelBreakInfo",
         data: {
-            "cancelId":id
+            "cancelId":id,
+            "studentId":studentId
         },
         dataType : 'json',
         beforeSend: function(xhr) {
