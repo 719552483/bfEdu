@@ -210,4 +210,9 @@ public class PageRelatedController {
 	public String performancePage() {
 		return "performance";
 	}
+
+	@RequestMapping("studentBreak")
+	public String studentBreakPage() {
+		return "studentBreak";
+	}
 }

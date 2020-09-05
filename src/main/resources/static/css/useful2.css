@@ -594,13 +594,16 @@ float: left;
 }
 
 
+
+.studentStudentListTableArea .search {
+	margin-top: 10px !important;
+}
+
 .techerStudentListTableArea .bs-bars,
 .techerStudentListTableArea .columns,
 .techerStudentListTableArea .search {
 	margin-top: 0px !important;
 }
-
-
 
 .majorTrainingTableArea .search {
 	    margin-top: 2px !important;
