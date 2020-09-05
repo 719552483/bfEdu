@@ -1735,7 +1735,7 @@ public class AdministrationPageService {
 		//如果为新增，赋予必要属性
 		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
-			String newkcdm = creatCourseCode(userKey);
+			String newkcdm = creatCourseCode(edu200.getDepartmentCode());
 			edu200.setKcdm(newkcdm);
 		} else {
 			//保留原始数据
@@ -1771,15 +1771,10 @@ public class AdministrationPageService {
 	}
 
 	//生成课程代码
-	public String creatCourseCode(String userKey) {
+	public String creatCourseCode(String departmentId) {
 		String courseCode = "";
-		if(userKey == "") {
-			courseCode = utils.getRandom(6);
-		} else {
-			Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
-			String departmentCode = getDepartmentCode(edu101.getSzxb());
-			courseCode= departmentCode+utils.getRandom(4);
-		}
+		String departmentCode = getDepartmentCode(departmentId);
+		courseCode= departmentCode+utils.getRandom(4);
 		return courseCode;
 	}
 

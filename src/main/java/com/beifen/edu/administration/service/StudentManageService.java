@@ -51,9 +51,12 @@ public class StudentManageService {
     @Autowired
     private Edu400Dao edu400Dao;
     @Autowired
-    private Edu108Dao edu108Dao;
+    private Edu006Dao edu006Dao;
+    @Autowired
+    private Edu007Dao edu007Dao;
     @Autowired
     private RedisUtils redisUtils;
+
 
 
 
@@ -586,5 +589,30 @@ public class StudentManageService {
         }
 
         return resultVO;
+    }
+
+    //学生查询违纪记录
+    public ResultVO studentFindBreak(String userId) {
+        ResultVO resultVO;
+
+        String userType = redisUtils.get(RedisDataConstant.USER_TYPE + userId).toString();
+
+        if ("02".equals(userType)) {
+            resultVO = ResultVO.setFailed("您不是本校学生，无法查找违纪记录");
+            return resultVO;
+        }
+
+        Edu990 edu990 = edu990Dao.queryUserById(userId);
+
+        List<String> edu006IdList = edu007Dao.findEdu006IdsByStudentId(edu990.getUserKey());
+        if(edu006IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到违纪记录");
+        } else{
+            List<Edu006> edu006List = edu006Dao.findAllByEdu006Ids(edu006IdList);
+            resultVO = ResultVO.setSuccess("共找到"+edu006IdList.size()+"条违纪记录",edu006List);
+        }
+
+        return resultVO;
+
     }
 }

@@ -333,4 +333,18 @@ public class StudentManageController {
         return result;
     }
 
+    /**
+     * 学生查询违纪记录
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/studentFindBreak")
+    @ResponseBody
+    public ResultVO studentFindBreak(@RequestParam("userId") String userId) {
+        ResultVO result =studentManageService.studentFindBreak(userId);
+        return result;
+    }
+
+
+
 }
