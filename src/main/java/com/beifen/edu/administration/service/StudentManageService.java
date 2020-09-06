@@ -615,4 +615,25 @@ public class StudentManageService {
         return resultVO;
 
     }
+
+    //学生评价查询
+    public ResultVO studentGetAppraise(String userId) {
+        ResultVO resultVO;
+
+        String userType = redisUtils.get(RedisDataConstant.USER_TYPE + userId).toString();
+
+        if ("02".equals(userType)) {
+            resultVO = ResultVO.setFailed("您不是本校学生，无法查找违纪记录");
+            return resultVO;
+        }
+
+        Edu990 edu990 = edu990Dao.queryUserById(userId);
+        List<Edu004> edu004List = edu004Dao.findAllByEdu006Ids(edu990.getUserKey());
+        if(edu004List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到违纪记录");
+        } else{
+            resultVO = ResultVO.setSuccess("共找到"+edu004List.size()+"条评价记录",edu004List);
+        }
+        return resultVO;
+    }
 }

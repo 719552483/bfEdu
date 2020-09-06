@@ -345,7 +345,17 @@ public class StudentManageController {
         return result;
     }
 
-
+    /**
+     * 学生评价查询
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/studentGetAppraise")
+    @ResponseBody
+    public ResultVO studentGetAppraise(@RequestParam("userId") String userId) {
+        ResultVO result =studentManageService.studentGetAppraise(userId);
+        return result;
+    }
 
 
 }
