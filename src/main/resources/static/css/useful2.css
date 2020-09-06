@@ -249,6 +249,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格单个操作*/
+#studentAppraisalsTable td:last-child,
 #xnTable td:last-child,
 #taskApprovalTable td:last-child,
 #courseLibraryApprovalTable td:last-child,
@@ -1981,13 +1982,17 @@ top角色切换滚动体样式
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
+	text-align:left;
+	text-indent:2em;
 }
 
 .breakOptionTextArea{
 	width: 80%;
 	margin-top: 10px;
 	color: rgb(6 6 6 / 65%);
-	text-indent: 5px;
+	text-align: left;
+	text-indent: 2em;
+	padding-bottom: 10px;
 	font-weight: 600;
 	font-size: 13px;
 }

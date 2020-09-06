@@ -76,8 +76,7 @@
 		</div>
 
 
-
-	<!-- 学生评价Modal -->
+	<!-- 详情Modal -->
 	<div class="modal fade bs-example-modal-lg" id="studentAppraiseModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -85,36 +84,40 @@
 					<div class="tiptop"><span class="moadalTitle">评价详情</span><a class="cancel" shape="rect"></a></div>
 				</div>
 				<div class="modal-body">
-					<div class="searchArea searchAreaWitheSelect">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle" style="margin-left: 20px;!important;">
 						<div class="col1 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;width:11%;" >评价人</label>
-									<input name="" type="text" class="myInput searchInput"
+									<label class="selectName" style="margin-top: 14px;margin-right: 5px;">评价人</label>
+									<input name="" type="text" class="myInput colInput"
 										   id="studentAppraise_name" placeholder="暂无评价人..." />
 								</div>
 							</ul>
 						</div>
+
 						<div class="col1 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;width:11%;" >评价时间</label>
-									<input name="" type="text" class="myInput searchInput"
+									<label class="selectName" style="margin-top: 14px;margin-right: 5px;">评价时间</label>
+									<input name="" type="text" class="myInput colInput"
 										   id="studentAppraise_data" placeholder="暂无评价时间..." />
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;margin-right: 5px;">评价详情</label>
+									<textarea name="" maxlength="255" type="text" class="breakOptionTextArea" id="AppraiseTxt" placeholder="暂无评价详情..." />
 								</div>
 							</ul>
 						</div>
 					</div>
 					<div class="clear"></div>
-
-					<div style="padding-left: 20px; padding-right: 20px;">
-						<label class="selectName" style="margin-top: 14px;">评价内容:</label>
-						<textarea id="AppraiseTxt" maxlength="255" class="appraiseTextArea"></textarea>
-					</div>
-					<div class="clear"></div>
 				</div>
 				<div class="modal-footer tipbtn">
-					<input name="" type="button" class="sure" value="确定"/>&nbsp;
+					<input name="" type="button" class="sure confirmAddBreak" value="确定"/>&nbsp;
 					<input name="" type="button" class="cancel" value="取消"/>
 				</div>
 			</div>

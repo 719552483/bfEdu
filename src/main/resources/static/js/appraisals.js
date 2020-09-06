@@ -111,14 +111,12 @@ function stuffAppraisalsTable(tableInfo) {
                 field: 'teacherName',
                 title: '评价人',
                 align: 'left',
-                formatter: paramsMatter,
-                visible: false
+                formatter: paramsMatter
             }, {
                 field: 'creatDate',
                 title: '评价时间',
                 align: 'left',
-                formatter: paramsMatter,
-                visible: false
+                formatter: paramsMatter
             } ,{
                 field: 'action',
                 title: '操作',
@@ -205,7 +203,7 @@ function appraisalsDetails(row){
     $("#studentAppraise_name").val(row.teacherName);
     $("#studentAppraise_data").val(row.creatDate);
     $("#AppraiseTxt").val(row.appraiseText);
-    $('#studentAppraiseModal').find(".myInput,.appraiseTextArea").attr("disabled", true) // 将input元素设置为readonly
+    $('#studentAppraiseModal').find(".myInput,.breakOptionTextArea").attr("disabled", true) // 将input元素设置为readonly
     $.showModal("#studentAppraiseModal",false);
 }
 
