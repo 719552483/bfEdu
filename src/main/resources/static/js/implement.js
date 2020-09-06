@@ -329,12 +329,14 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 	//年级change
 	$(gradeInputId).change(function() {
 		var choosedGrade=getNormalSelectValue(gradeInputId.substring(1, gradeInputId.length));
+		var choosedDepartment=getNormalSelectValue(departmentInputId.substring(1, departmentInputId.length));
 		$.ajax({
 			method : 'get',
 			cache : false,
 			url : "/gradeMatchMajor",
 			data: {
-	             "gradeCode":choosedGrade 
+				"departmentCode":choosedDepartment,
+				"gradeCode":choosedGrade
 	        },
 			dataType : 'json',
 			beforeSend: function(xhr) {
