@@ -20,7 +20,7 @@ function drawEditor(){
 				allowImageRemote : false, //上传图片框网络图片的功能，false为隐藏，默认为true
 				formatUploadUrl:false,
 			    uploadJson : '/newsImgUpload',//文件上传请求后台路径
-			    afterUpload: function(url){this.sync();toastr.warning("a:"+url);}, //图片上传后，将上传内容同步到textarea中
+			    afterUpload: function(url){this.sync();/*toastr.warning("a:"+url);*/}, //图片上传后，将上传内容同步到textarea中
 	            afterBlur: function(){this.sync();},   ////失去焦点时，将上传内容同步到textarea中
                 allowFileManager : true,
 					items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',

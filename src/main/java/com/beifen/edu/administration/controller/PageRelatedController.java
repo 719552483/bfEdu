@@ -220,4 +220,10 @@ public class PageRelatedController {
 	public String appraisalsPage() {
 		return "appraisals";
 	}
+
+
+	@RequestMapping("leaderLog")
+	public String leaderLogPage() {
+		return "leaderLog";
+	}
 }
