@@ -852,9 +852,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/gradeMatchMajor")
 	@ResponseBody
-	public Object gradeMatchMajor(@RequestParam String gradeCode) {
+	public Object gradeMatchMajor(@RequestParam("gradeCode") String gradeCode,@RequestParam("departmentCode") String departmentCode) {
 		Map<String, Object> returnMap = new HashMap();
-		returnMap.put("major", administrationPageService.gradeMatchMajor(gradeCode));
+		returnMap.put("major", administrationPageService.gradeMatchMajor(gradeCode,departmentCode));
 		returnMap.put("result", true);
 		return returnMap;
 	}

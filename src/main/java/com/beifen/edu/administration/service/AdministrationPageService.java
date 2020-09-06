@@ -388,7 +388,7 @@ public class AdministrationPageService {
 	public boolean verifyGrade(String edu105id) {
 		boolean canRemove = true;
 		Edu105 edu105 = edu105DAO.query105BYID(edu105id);
-		List<Edu107> grades = edu107DAO.gradeMatchMajor(edu105.getNjbm());
+		List<Edu107> grades = edu107DAO.gradeMatchMajorUsed(edu105.getNjbm());
 		if (grades.size() > 0) {
 			canRemove = false;
 		}
@@ -451,8 +451,8 @@ public class AdministrationPageService {
 	}
 
 	// 查询某年级下的专业
-	public List<Edu107> gradeMatchMajor(String gradeCode) {
-		List<Edu107> edu107s = edu107DAO.gradeMatchMajor(gradeCode);
+	public List<Edu107> gradeMatchMajor(String gradeCode,String departmentCode) {
+		List<Edu107> edu107s = edu107DAO.gradeMatchMajor(gradeCode, departmentCode);
 		return edu107s;
 	}
 

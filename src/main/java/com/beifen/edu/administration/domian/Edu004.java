@@ -10,7 +10,9 @@ public class Edu004 {
     private Long Edu004_ID;//主键
     private Long Edu001_ID;//学生id
     private Long Edu101_ID;//老师id
+    private String teacherName;//教师姓名
     private String appraiseText;//评价文本
+    private String creatDate;//评价创建时间
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -47,5 +49,21 @@ public class Edu004 {
 
     public void setEdu101_ID(Long edu101_ID) {
         Edu101_ID = edu101_ID;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getCreatDate() {
+        return creatDate;
+    }
+
+    public void setCreatDate(String creatDate) {
+        this.creatDate = creatDate;
     }
 }

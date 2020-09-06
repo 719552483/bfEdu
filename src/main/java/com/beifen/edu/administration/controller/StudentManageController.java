@@ -285,9 +285,9 @@ public class StudentManageController {
 
     @RequestMapping("/studentAppraise")
     @ResponseBody
-    public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo,@RequestParam("userKey") String userKey) {
+    public ResultVO studentAppraise(@RequestParam("studentArray") String studentArray,@RequestParam("appraiseInfo") String appraiseInfo,@RequestParam("userKey") String userKey,@RequestParam("userName") String userName) {
         List<String> studnetIdList = JSON.parseArray(studentArray, String.class);
-        ResultVO result =studentManageService.studentAppraise(studnetIdList,userKey,appraiseInfo);
+        ResultVO result =studentManageService.studentAppraise(studnetIdList,userKey,appraiseInfo,userName);
         return result;
     }
 
@@ -344,6 +344,7 @@ public class StudentManageController {
         ResultVO result =studentManageService.studentFindBreak(userId);
         return result;
     }
+
 
 
 

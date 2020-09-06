@@ -34,9 +34,9 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	@Query(value = "select * from edu107 e where e.edu104=?1", nativeQuery = true)
 	public List<Edu107> departmentMatchGrade(String departmentCode);
 
-	//查询某年级下的专业
-	@Query(value = "select * from edu107 e where e.edu105=?1", nativeQuery = true)
-	public List<Edu107> gradeMatchMajor(String gradeCode);
+	//查询年级和系部下的专业
+	@Query(value = "select * from edu107 e where e.edu105 = ?1 and e.edu104 = ?2", nativeQuery = true)
+	public List<Edu107> gradeMatchMajor(String gradeCode,String departmentCode);
 	
 	// 根据专业编码查培养计划
 	@Query(value = "select * from edu107 e where e.edu106=?1", nativeQuery = true)
@@ -58,4 +58,8 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	@Modifying
 	@Query(value = "update edu107 set xbsp = ?1 where Edu107_ID =?2", nativeQuery = true)
     void changeProcessState(String passing, String edu107Id);
+
+	//查询年级下的专业
+	@Query(value = "select * from edu107 e where e.edu105 = ?1", nativeQuery = true)
+	List<Edu107> gradeMatchMajorUsed(String njbm);
 }

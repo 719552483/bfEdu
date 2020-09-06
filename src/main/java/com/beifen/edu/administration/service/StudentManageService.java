@@ -19,10 +19,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //学生管理业务层
@@ -454,7 +452,7 @@ public class StudentManageService {
 
 
     //增改学生评价
-    public ResultVO studentAppraise(List<String> studnetIdList, String userKey,String appraiseInfo) {
+    public ResultVO studentAppraise(List<String> studnetIdList, String userKey,String appraiseInfo,String userName) {
         ResultVO resultVO;
 
         for (String s : studnetIdList) {
@@ -466,7 +464,12 @@ public class StudentManageService {
                 Edu004 edu004 = new Edu004();
                 edu004.setEdu001_ID(Long.parseLong(s));
                 edu004.setEdu101_ID(Long.parseLong(userKey));
+                edu004.setTeacherName(userName);
                 edu004.setAppraiseText(appraiseInfo);
+                Date currentTime = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateString = formatter.format(currentTime);
+                edu004.setCreatDate(dateString);
                 edu004Dao.save(edu004);
             }
         }
