@@ -215,4 +215,9 @@ public class PageRelatedController {
 	public String studentBreakPage() {
 		return "studentBreak";
 	}
+
+	@RequestMapping("appraisals")
+	public String appraisalsPage() {
+		return "appraisals";
+	}
 }

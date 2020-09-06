@@ -596,6 +596,7 @@ function confirmAppraise(sendArray){
         data: {
             "studentArray":JSON.stringify(sendArray),
             "appraiseInfo":AppraiseTxt,
+            "username": JSON.parse($.session.get('userInfo')),
             "userKey":JSON.parse($.session.get('userInfo')).userKey
         },
         dataType : 'json',
