@@ -6,6 +6,7 @@ import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu500;
 import com.beifen.edu.administration.domian.Edu501;
+import com.beifen.edu.administration.domian.Edu502;
 import com.beifen.edu.administration.service.TeachingPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -130,6 +131,43 @@ public class TeachingPointController {
     @ResponseBody
     public ResultVO getPointBySite(@RequestParam("SearchObject") String edu500Id) {
         ResultVO result = teachingPointService.getPointBySite(edu500Id);
+        return result;
+    }
+
+    /**
+     * 根据教学点查询固定资产
+     * @param edu500Id
+     * @return
+     */
+    @RequestMapping("/getLocalAssets")
+    @ResponseBody
+    public ResultVO getLocalAssets(@RequestParam("edu500Id") String edu500Id) {
+        ResultVO result = teachingPointService.getLocalAssets(edu500Id);
+        return result;
+    }
+
+    /**
+     * 根据教学任务点查询固定资产
+     * @param edu501Id
+     * @return
+     */
+    @RequestMapping("/getLocalPoingAssets")
+    @ResponseBody
+    public ResultVO getLocalPoingAssets(@RequestParam("edu501Id") String edu501Id) {
+        ResultVO result = teachingPointService.getLocalPoingAssets(edu501Id);
+        return result;
+    }
+
+    /**
+     * 保存教学任务点物资信息
+     * @param assetsDetails
+     * @return
+     */
+    @RequestMapping("/saveAssets")
+    @ResponseBody
+    public ResultVO saveAssets(@RequestParam("assetsDetails") String assetsDetails) {
+        List<Edu502> edu502List = JSON.parseArray(assetsDetails, Edu502.class);
+        ResultVO result = teachingPointService.saveAssets(edu502List);
         return result;
     }
 }

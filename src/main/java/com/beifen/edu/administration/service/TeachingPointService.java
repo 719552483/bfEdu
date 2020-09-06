@@ -4,10 +4,7 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
-import com.beifen.edu.administration.domian.Edu203;
-import com.beifen.edu.administration.domian.Edu500;
-import com.beifen.edu.administration.domian.Edu501;
-import com.beifen.edu.administration.domian.Edu990;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,6 +35,9 @@ public class TeachingPointService {
     Edu203Dao edu203Dao;
     @Autowired
     Edu501Dao edu501Dao;
+    @Autowired
+    Edu502Dao edu502Dao;
+
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -252,6 +252,50 @@ public class TeachingPointService {
         } else {
             resultVO = ResultVO.setSuccess("共找到"+pointList.size()+"个教学任务点",pointList);
         }
+        return resultVO;
+    }
+
+    //根据教学点查询固定资产
+    public ResultVO getLocalAssets(String edu500Id) {
+        ResultVO resultVO;
+        List<Edu502> edu502List = edu502Dao.findAllByEdu500Id(Long.parseLong(edu500Id));
+
+        if(edu502List.size() == 0) {
+            resultVO = ResultVO.setFailed("该教学点未录入物资信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu502List);
+        }
+
+        return resultVO;
+    }
+
+    //根据教学任务点查询固定资产
+    public ResultVO getLocalPoingAssets(String edu501Id) {
+        ResultVO resultVO;
+        List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501Id);
+
+        if(edu502List.size() == 0) {
+            resultVO = ResultVO.setFailed("该教学点未录入物资信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu502List);
+        }
+
+        return resultVO;
+    }
+
+
+    //保存教学任务点物资信息
+    public ResultVO saveAssets(List<Edu502> edu502List) {
+        ResultVO resultVO;
+        List<Long> edu501Ids = edu502List.stream().map(Edu502::getEdu501Id).collect(Collectors.toList());
+        edu502Dao.deleteByEdu501Ids(edu501Ids);
+
+        for (Edu502 edu502 : edu502List) {
+            edu502Dao.save(edu502);
+        }
+
+        resultVO = ResultVO.setSuccess("固定资产更新成功");
+
         return resultVO;
     }
 }

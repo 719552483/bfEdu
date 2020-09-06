@@ -24,6 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -2081,20 +2082,12 @@ public class AdministrationController {
 	 * @return returnMap
 	 */
 
-	public List<String> queryEdu000(String ejdmglzd) {
+
+	@RequestMapping("/queryEdu000")
+	@ResponseBody
+	public List<Edu000> queryEdu000(@RequestParam String ejdmglzd) {
 		List<Edu000> ejdm = administrationPageService.queryEjdm(ejdmglzd);
-		List<String> relist = new ArrayList<String>();
-
-
-		if (ejdm.size() > 0) {
-
-			for (int i = 0; i < ejdm.size(); i++) {
-
-				relist.add(String.valueOf(ejdm.get(i).getEjdmz()));
-
-			}
-		}
-		return relist;
+		return ejdm;
 	}
 
 	/**

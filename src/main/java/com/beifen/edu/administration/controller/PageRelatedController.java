@@ -221,6 +221,16 @@ public class PageRelatedController {
 		return "appraisals";
 	}
 
+	@RequestMapping("localAssets")
+	public String localAssetsPage() {
+		return "localAssets";
+	}
+
+	@RequestMapping("localPointAssets")
+	public String localPointAssetsPage() {
+		return "localPointAssets";
+	}
+
 
 	@RequestMapping("leaderLog")
 	public String leaderLogPage() {
