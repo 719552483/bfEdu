@@ -17,10 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //教务管理业务层
@@ -49,6 +48,8 @@ public class TeachingManageService {
     RedisUtils redisUtils;
     @Autowired
     Edu201Dao edu201Dao;
+    @Autowired
+    Edu114Dao edu114Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -454,7 +455,8 @@ public class TeachingManageService {
     /**
      * 课表详情查询
      * @param classId
-     * @param edu108Id
+     * @param courseType
+     * @param edu_180Id
      * @return
      */
     public ResultVO getScheduleInfoDetail(String classId,String courseType ,String edu_180Id) {
@@ -647,6 +649,71 @@ public class TeachingManageService {
         }
 
         resultVO = ResultVO.setSuccess("申请成功");
+        return resultVO;
+    }
+
+
+    //班主任日志查询
+    public ResultVO searchTeacherLog(TeacherLogSerachPO teacherLogSerach) {
+        ResultVO resultVO;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Specification<Edu114> specification = new Specification<Edu114>() {
+                public Predicate toPredicate(Root<Edu114> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (teacherLogSerach.getLogType() != null && !"".equals(teacherLogSerach.getLogType())) {
+                    predicates.add(cb.equal(root.<String>get("logType"), teacherLogSerach.getLogType()));
+                }
+                if (teacherLogSerach.getEdu101_ID() != null && !"".equals(teacherLogSerach.getEdu101_ID())) {
+                    predicates.add(cb.equal(root.<String>get("Edu101_ID"), teacherLogSerach.getEdu101_ID()));
+                }
+                if (teacherLogSerach.getStartDate() != null && !"".equals(teacherLogSerach.getStartDate())) {
+                    Date startDate = null;
+                    try {
+                        startDate = sdf.parse(teacherLogSerach.getStartDate());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    predicates.add(cb.greaterThanOrEqualTo(root.get("creatDate"), startDate));
+                }
+                if (teacherLogSerach.getEndDate() != null && !"".equals(teacherLogSerach.getEndDate())) {
+                    Date endDate = null;
+                    try {
+                        endDate = sdf.parse(teacherLogSerach.getEndDate());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    predicates.add(cb.lessThanOrEqualTo(root.get("creatDate"), endDate));
+                }
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu114> edu114List = edu114Dao.findAll(specification);
+
+        if(edu114List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂未找到日志");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu114List.size()+"条日志",edu114List);
+        }
+
+        return resultVO;
+    }
+
+    //保存修改教师日志
+    public ResultVO teacherAddLog(Edu114 edu114) {
+        ResultVO resultVO;
+        edu114Dao.save(edu114);
+        resultVO = ResultVO.setSuccess("操作成功",edu114);
+        return resultVO;
+    }
+
+    //班主任日志删除
+    public ResultVO removeTeacherLog(List<String> deleteIdList) {
+        ResultVO resultVO;
+        edu114Dao.deleteByEdu114IdList(deleteIdList);
+        resultVO = ResultVO.setSuccess("成功删除了"+deleteIdList.size()+"条日志");
         return resultVO;
     }
 }

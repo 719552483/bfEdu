@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.beifen.edu.administration.PO.ClassStudentViewPO;
+import com.beifen.edu.administration.PO.TeacherLogSerachPO;
 import com.beifen.edu.administration.PO.TestTaskSearchPO;
 import com.beifen.edu.administration.PO.TimeTablePO;
 import com.beifen.edu.administration.VO.ResultVO;
@@ -170,7 +171,6 @@ public class TeachingManageController {
     }
 
 
-
     /**
      * 申请考试
      * @param tasks
@@ -184,6 +184,46 @@ public class TeachingManageController {
         JSONObject jsonObject = JSON.parseObject(approvalInfo);
         Edu600 edu600 = JSON.toJavaObject(jsonObject, Edu600.class);
         ResultVO result = teachingManageService.askForExam(edu201IdList,edu600);
+        return result;
+    }
+
+    /**
+     * 班主任日志查询
+     * @param searchCriteria
+     * @return
+     */
+    @RequestMapping("/searchTeacherLog")
+    @ResponseBody
+    public ResultVO searchTeacherLog(@RequestParam("searchCriteria") String searchCriteria) {
+        TeacherLogSerachPO teacherLogSerach = JSON.parseObject(searchCriteria, TeacherLogSerachPO.class);
+        ResultVO result = teachingManageService.searchTeacherLog(teacherLogSerach);
+        return result;
+    }
+
+
+    /**
+     * 班主任日志保存
+     * @param newLogInfo
+     * @return
+     */
+    @RequestMapping("/teacherAddLog")
+    @ResponseBody
+    public ResultVO teacherAddLog(@RequestParam("newLogInfo") String newLogInfo) {
+        Edu114 edu114 = JSON.parseObject(newLogInfo, Edu114.class);
+        ResultVO result = teachingManageService.teacherAddLog(edu114);
+        return result;
+    }
+
+    /**
+     * 班主任日志删除
+     * @param deleteIdArray
+     * @return
+     */
+    @RequestMapping("/removeTeacherLog")
+    @ResponseBody
+    public ResultVO removeTeacherLog(@RequestParam("deleteIdArray") String deleteIdArray) {
+        List<String> deleteIdList = JSON.parseArray(deleteIdArray, String.class);
+        ResultVO result = teachingManageService.removeTeacherLog(deleteIdList);
         return result;
     }
 
