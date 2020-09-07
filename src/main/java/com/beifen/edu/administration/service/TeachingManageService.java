@@ -656,36 +656,29 @@ public class TeachingManageService {
     //班主任日志查询
     public ResultVO searchTeacherLog(TeacherLogSerachPO teacherLogSerach) {
         ResultVO resultVO;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Specification<Edu114> specification = new Specification<Edu114>() {
                 public Predicate toPredicate(Root<Edu114> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                if (teacherLogSerach.getLogType() != null && !"".equals(teacherLogSerach.getLogType())) {
-                    predicates.add(cb.equal(root.<String>get("logType"), teacherLogSerach.getLogType()));
-                }
-                if (teacherLogSerach.getEdu101_ID() != null && !"".equals(teacherLogSerach.getEdu101_ID())) {
-                    predicates.add(cb.equal(root.<String>get("Edu101_ID"), teacherLogSerach.getEdu101_ID()));
-                }
-                if (teacherLogSerach.getStartDate() != null && !"".equals(teacherLogSerach.getStartDate())) {
-                    Date startDate = null;
                     try {
-                        startDate = sdf.parse(teacherLogSerach.getStartDate());
+                        if (teacherLogSerach.getLogType() != null && !"".equals(teacherLogSerach.getLogType())) {
+                            predicates.add(cb.equal(root.<String>get("logType"), teacherLogSerach.getLogType()));
+                        }
+                        if (teacherLogSerach.getEdu101_ID() != null && !"".equals(teacherLogSerach.getEdu101_ID())) {
+                            predicates.add(cb.equal(root.<String>get("edu101_ID"), teacherLogSerach.getEdu101_ID()));
+                        }
+                        if (teacherLogSerach.getStartDate() != null && !"".equals(teacherLogSerach.getStartDate())) {
+                            Date startDate = sdf.parse(teacherLogSerach.getStartDate());
+                            predicates.add(cb.greaterThanOrEqualTo(root.get("creatDate"), startDate));
+                        }
+                        if (teacherLogSerach.getEndDate() != null && !"".equals(teacherLogSerach.getEndDate())) {
+                            Date endDate = sdf.parse(teacherLogSerach.getEndDate());
+                            predicates.add(cb.lessThanOrEqualTo(root.get("creatDate"), endDate));
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    predicates.add(cb.greaterThanOrEqualTo(root.get("creatDate"), startDate));
-                }
-                if (teacherLogSerach.getEndDate() != null && !"".equals(teacherLogSerach.getEndDate())) {
-                    Date endDate = null;
-                    try {
-                        endDate = sdf.parse(teacherLogSerach.getEndDate());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    predicates.add(cb.lessThanOrEqualTo(root.get("creatDate"), endDate));
-                }
-
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -704,6 +697,7 @@ public class TeachingManageService {
     //保存修改教师日志
     public ResultVO teacherAddLog(Edu114 edu114) {
         ResultVO resultVO;
+        edu114.setCreatDate(new Date());
         edu114Dao.save(edu114);
         resultVO = ResultVO.setSuccess("操作成功",edu114);
         return resultVO;

@@ -231,9 +231,13 @@ public class PageRelatedController {
 		return "localPointAssets";
 	}
 
-
 	@RequestMapping("leaderLog")
 	public String leaderLogPage() {
 		return "leaderLog";
+	}
+
+	@RequestMapping("SecondaryCodeManagement")
+	public String SecondaryCodeManagementPage() {
+		return "SecondaryCodeManagement";
 	}
 }

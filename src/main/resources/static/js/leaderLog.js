@@ -333,8 +333,8 @@ function getAllSearchsObject(){
         return;
     }
     returnObject.logType=logType;
-    returnObject.startTime=startTime;
-    returnObject.endTime=endTime;
+    returnObject.startDate=startTime;
+    returnObject.endDate=endTime;
     return returnObject;
 }
 
