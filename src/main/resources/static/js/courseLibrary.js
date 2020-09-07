@@ -1404,13 +1404,13 @@ function confirmModifyClasses(){
 
 //预备停用课程
 function stopClass(){
-	var choosedCrouse=$("#courseLibraryTable").bootstrapTable("getSelections");
-	if(choosedCrouse.length===0){
+	var choosed=choosendCrouse;
+	if(choosed.length===0){
 		toastr.warning('请选择课程');
 		return ;
 	}
-	for (var i = 0; i < choosedCrouse.length; i++) {
-		if(choosedCrouse[i].zt==="passing"||choosedCrouse[i].zt==="stop"||choosedCrouse[i].zt==="nopass"){
+	for (var i = 0; i < choosed.length; i++) {
+		if(choosed[i].zt==="passing"||choosed[i].zt==="stop"||choosed[i].zt==="nopass"){
 			toastr.warning('有课程不可进行此操作');
 			return;
 		}
@@ -1423,10 +1423,10 @@ function stopClass(){
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var choosedCrouseArray=new Array();
-		for (var i = 0; i < choosedCrouse.length; i++) {
-			choosedCrouseArray.push(choosedCrouse[i].bf200_ID);
+		for (var i = 0; i < choosed.length; i++) {
+			choosedCrouseArray.push(choosed[i].bf200_ID);
 		}
-		confirmStopClass(choosedCrouseArray,choosedCrouse);
+		confirmStopClass(choosedCrouseArray,choosed);
 		e.stopPropagation();
 	});
 }
@@ -1438,7 +1438,8 @@ function confirmStopClass(choosedCrouseArray,choosedCrouse){
 		cache : false,
 		url : "/stopClass",
 		data: {
-			"choosedCrouse":JSON.stringify(choosedCrouseArray)
+			"choosedCrouse":JSON.stringify(choosedCrouseArray),
+			"approvalobect":JSON.stringify(getApprovalobect("02"))
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
