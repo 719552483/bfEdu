@@ -1,4 +1,5 @@
 var EJDMElementInfo;
+var choosendTeacherLog=new Array();
 $(function() {
     $('.isSowIndex').selectMania(); //初始化下拉框
     EJDMElementInfo=queryEJDMElementInfo();
@@ -16,18 +17,17 @@ function drawLogEmptyTable() {
     stuffLogTable({});
 }
 
-var choosendLog=new Array();
 //渲染学生表
 function stuffLogTable(tableInfo) {
     window.releaseNewsEvents = {
         'click #logDetails': function(e, value, row, index) {
-            // logDetails(row);
+            logDetails(row);
         },
         'click #removeLog': function(e, value, row, index) {
             removeLog(row,index);
         },
         'click #modifyLog': function(e, value, row, index) {
-            // modifyLog(row,index);
+            modifyLog(row,index);
         }
     };
 
@@ -65,8 +65,8 @@ function stuffLogTable(tableInfo) {
         },
         onPageChange: function() {
             drawPagination(".techerLogTableArea", "日志信息");
-            for (var i = 0; i < choosendLog.length; i++) {
-                $("#techerLogTable").bootstrapTable("checkBy", {field:"edu114_ID", values:[choosendLog[i].edu114_ID]})
+            for (var i = 0; i < choosendTeacherLog.length; i++) {
+                $("#techerLogTable").bootstrapTable("checkBy", {field:"edu114_ID", values:[choosendTeacherLog[i].edu114_ID]})
             }
         },
         columns: [
@@ -76,7 +76,8 @@ function stuffLogTable(tableInfo) {
             },{
                 field: 'edu114_ID',
                 title: '唯一标识',
-                align: 'center'
+                align: 'center',
+                visible: false
             },
             {
                 field: 'logTitle',
@@ -92,7 +93,7 @@ function stuffLogTable(tableInfo) {
                 field: 'creatDate',
                 title: '发布时间',
                 align: 'left',
-                formatter: paramsMatter
+                formatter: creatDateMatter
             },  {
                 field: 'action',
                 title: '操作',
@@ -115,6 +116,14 @@ function stuffLogTable(tableInfo) {
             .join('');
     }
 
+    function creatDateMatter(value, row, index) {
+        var date=stampToDatetimeString(value,true);
+        return [
+            '<div class="myTooltip" title="'+date+'">'+date+'</div>'
+        ]
+            .join('');
+    }
+
     drawPagination(".techerLogTableArea", "日志信息");
     drawSearchInput(".techerLogTableArea");
     changeTableNoRsTip();
@@ -125,30 +134,30 @@ function stuffLogTable(tableInfo) {
 
 //单选学生
 function onCheck(row){
-    if(choosendLog.length<=0){
-        choosendLog.push(row);
+    if(choosendTeacherLog.length<=0){
+        choosendTeacherLog.push(row);
     }else{
         var add=true;
-        for (var i = 0; i < choosendLog.length; i++) {
-            if(choosendLog[i].edu114_ID===row.edu114_ID){
+        for (var i = 0; i < choosendTeacherLog.length; i++) {
+            if(choosendTeacherLog[i].edu114_ID===row.edu114_ID){
                 add=false;
                 break;
             }
         }
         if(add){
-            choosendLog.push(row);
+            choosendTeacherLog.push(row);
         }
     }
 }
 
 //单反选学生
 function onUncheck(row){
-    if(choosendLog.length<=1){
-        choosendLog.length=0;
+    if(choosendTeacherLog.length<=1){
+        choosendTeacherLog.length=0;
     }else{
-        for (var i = 0; i < choosendLog.length; i++) {
-            if(choosendLog[i].edu114_ID===row.edu114_ID){
-                choosendLog.splice(i,1);
+        for (var i = 0; i < choosendTeacherLog.length; i++) {
+            if(choosendTeacherLog[i].edu114_ID===row.edu114_ID){
+                choosendTeacherLog.splice(i,1);
             }
         }
     }
@@ -157,21 +166,20 @@ function onUncheck(row){
 //全选学生
 function onCheckAll(row){
     for (var i = 0; i < row.length; i++) {
-        choosendLog.push(row[i]);
+        choosendTeacherLog.push(row[i]);
     }
 }
 
 //全反选学生
 function onUncheckAll(row){
-    var a=new Array();
     for (var i = 0; i < row.length; i++) {
         a.push(row[i].edu114_ID);
     }
 
 
-    for (var i = 0; i < choosendLog.length; i++) {
-        if(a.indexOf(choosendLog[i].edu114_ID)!==-1){
-            choosendLog.splice(i,1);
+    for (var i = 0; i < choosendTeacherLog.length; i++) {
+        if(a.indexOf(choosendTeacherLog[i].edu114_ID)!==-1){
+            choosendTeacherLog.splice(i,1);
             i--;
         }
     }
@@ -204,6 +212,34 @@ function drawEditor(){
     });
 }
 
+//查看日志详情
+function logDetails(row){
+    $("#newTitle").val(row.logTitle);
+    KindEditor.html("#logBody", row.logDetail);
+    stuffManiaSelectWithDeafult("#newLogType", row.logType);
+    editor1.readonly(true);
+    $('.logArea').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+    $(".submitLog").hide();
+    areaControl();
+}
+
+//预备修改日志
+function modifyLog(row,index){
+    $("#newTitle").val(row.logTitle);
+    KindEditor.html("#logBody", row.logDetail);
+    stuffManiaSelectWithDeafult("#newLogType", row.logType);
+    editor1.readonly(false);
+    $('.logArea').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
+    $(".submitLog").attr("value","确认修改");
+    areaControl();
+    $(".submitLog").show();
+    $('.submitLog').unbind('click');
+    $('.submitLog').bind('click', function(e) {
+        submitLog(true,row);
+        e.stopPropagation();
+    });
+}
+
 //单个删除日志
 function removeLog(row,index){
     $.showModal("#remindModal",true);
@@ -221,9 +257,9 @@ function removeLog(row,index){
 }
 
 //批量删除日志
-function removeLogs(row,index){
-    var choosendLog = choosendLog;
-    if (choosendLog.length === 0) {
+function removeLogs(){
+    var choosend=choosendTeacherLog;
+    if (choosend.length === 0) {
         toastr.warning('暂未选择任何数据');
     } else {
         $.showModal("#remindModal",true);
@@ -234,8 +270,8 @@ function removeLogs(row,index){
         $('.confirmRemind').unbind('click');
         $('.confirmRemind').bind('click', function(e) {
             var removeArray = new Array;
-            for (var i = 0; i < choosendLog.length; i++) {
-                removeArray.push(choosendLog[i].edu114_ID);
+            for (var i = 0; i < choosend.length; i++) {
+                removeArray.push(choosend[i].edu114_ID);
             }
             sendReomveInfo(removeArray);
             e.stopPropagation();
@@ -379,18 +415,23 @@ function areaControl(){
 //预备新增日志
 function wantAdddlong(){
     areaControl();
+    $(".submitLog").show();
+    $(".submitLog").attr("value","确认新增");
     $('.submitLog').unbind('click');
     $('.submitLog').bind('click', function(e) {
-        submitLog();
+        submitLog(false);
         e.stopPropagation();
     });
 }
 
 //确认新增日志
-function submitLog(){
+function submitLog(idModify,row){
     var newLogInfo=getNewLogInfo();
     if(typeof  newLogInfo==="undefined"){
         return;
+    }
+    if(idModify){
+        newLogInfo.Edu114_ID=row.edu114_ID;
     }
     $.ajax({
         method : 'get',
@@ -412,7 +453,11 @@ function submitLog(){
         success : function(backjson) {
             hideloding();
             if (backjson.code===200) {
-                $('#techerLogTable').bootstrapTable("prepend", backjson.data);
+                if(!idModify){
+                    $('#techerLogTable').bootstrapTable("prepend", backjson.data);
+                }else{
+                    $("#techerLogTable").bootstrapTable("updateByUniqueId", {id: newLogInfo.Edu114_ID, row: newLogInfo});
+                }
                 areaControl();
                 toastr.success(backjson.msg);
                 $(".myTooltip").tooltipify();
