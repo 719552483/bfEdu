@@ -1620,12 +1620,18 @@ public class AdministrationPageService {
 	}
 
 	//停用课程
-	public ResultVO stopClass(List<String> stopList) {
+	public ResultVO stopClass(List<String> stopList,Edu600 edu600) {
 		ResultVO resultVO;
 		for (String s : stopList) {
-			edu200DAO.updateState(s, "stop");
+			edu200DAO.updateState(s, "passing");
+			edu600.setBusinessKey(Long.parseLong(s));
+			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+			if (!isSuccess) {
+				resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+				return resultVO;
+			}
 		}
-		resultVO = ResultVO.setSuccess("停用了" + stopList.size() + "个课程");
+		resultVO = ResultVO.setSuccess("发起了" + stopList.size() + "个停课申请");
 		return resultVO;
 	}
 

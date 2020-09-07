@@ -78,9 +78,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("stopClass")
 	@ResponseBody
-	public ResultVO  stopClass(@RequestParam("choosedCrouse") String choosedCrouse) {
+	public ResultVO stopClass(@RequestParam("choosedCrouse") String choosedCrouse,@RequestParam("approvalobect") String approvalobect) {
 		List<String> stopList = JSON.parseArray(choosedCrouse, String.class);
-		ResultVO resultVO = administrationPageService.stopClass(stopList);
+		Edu600 edu600 = JSON.parseObject(approvalobect, Edu600.class);
+		ResultVO resultVO = administrationPageService.stopClass(stopList,edu600);
 		return resultVO;
 	}
 
