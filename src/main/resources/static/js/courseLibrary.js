@@ -903,12 +903,7 @@ function startSearch(){
 	var markName=$("#markName").val();
 	var coursesNature=getNormalSelectValue("coursesNature");
 	var status=getNormalSelectValue("status");
-	
-	if(courseCode===""&&courseName===""&&markName===""&&coursesNature===""&&status===""){
-		toastr.warning('请输入检索条件');
-		return;
-	}
-	
+
 	var serachObject=new Object();
 	courseCode===""?serachObject.kcdm="":serachObject.kcdm=courseCode;
 	courseName===""?serachObject.kcmc="":serachObject.kcmc=courseName;

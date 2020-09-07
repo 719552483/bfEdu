@@ -1302,7 +1302,7 @@ function addCulturePlan(){
 				crouseInfo.edu108_ID=backjson.data.edu108_ID;
 				crouseInfo.edu107_ID=backjson.data.edu107_ID;
 				crouseInfo.sfsckkjh=backjson.data.sfsckkjh;
-				crouseInfo.xbsp=backjson.data.xbsp;
+				crouseInfo.xbsp=$(".planStatus")[0].innerText;
 				$('#majorTrainingTable').bootstrapTable('prepend', crouseInfo);
 				toolTipUp(".myTooltip");
 				$(".addClassArea").hide();
@@ -1628,13 +1628,6 @@ function addClassAreaBtnbind() {
 	$('#addClassArea_rebackSearch').unbind('click');
 	$('#addClassArea_rebackSearch').bind('click', function(e) {
 		addClassArea_rebackSearch(true);
-		e.stopPropagation();
-	});
-
-	// 新增课程按钮
-	$('#addClassArea_addNewClass').unbind('click');
-	$('#addClassArea_addNewClass').bind('click', function(e) {
-		addClassArea_addNewClass();
 		e.stopPropagation();
 	});
 }
