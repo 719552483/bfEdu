@@ -341,7 +341,7 @@ function getAllSearchsObject(){
 //获得新的日志对象
 function getNewLogInfo(){
     var returnObject=new Object();
-    var Edu101_ID=JSON.parse($.session.get('userInfo')).userKey;;
+    var Edu101_ID=JSON.parse($.session.get('userInfo')).userKey;
     var teacherName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
     var logType=getNormalSelectValue("newLogType");
     var typeName=getNormalSelectText("newLogType");
