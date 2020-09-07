@@ -102,7 +102,34 @@
 		</div>
 
 		<div class="logArea noneStart">
-			<textarea id="logBody" spellcheck="false" name="content" style="width:100%;height:300px;visibility:hidden;"></textarea>
+			<div class="tools">
+				<ul class="toolbar">
+					<li class="return" id="returnMainArea"><span><img src="img/back.png" style="width: 24px;" /></span>返回</li>
+				</ul>
+			</div>
+			<div class="selectArea">
+				<cite class="selectName" style="width: 7%;min-width: 87px;margin-top: 13px;padding-left: 21px;font-weight: 600">日志标题 <b style="color: red">*</b></cite>
+				<input style="width: 69% !important;margin-left: inherit!important;" name="" type="text" class="myInput" id="newTitle" placeholder="请填写日志标题..." />
+			</div>
+			<div class="selectArea">
+				<div class="searchArea searchAreaWitheSelect">
+					<div class="col1 giveBottom">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="width: 7%;min-width: 87px;margin-top: 13px;font-weight: 600">日志类型<b style="color: red">*</b></label>
+								<select class="isSowIndex" id="newLogType">
+									<option value="seleceConfigTip">请选择</option>
+								</select>
+							</div>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<textarea id="logBody" spellcheck="false" name="content" style="width:100%;height:500px;visibility:hidden;"></textarea>
+			<cite  style="text-align: center" class="tipTxt">tips:请不要在文本编辑区重复键入日志标题....</cite>
+			<div class="selectArea">
+				<input type="button" class="btn submitBtn submitLog" value="确认新增" />
+			</div>
 		</div>
 	</div>
 

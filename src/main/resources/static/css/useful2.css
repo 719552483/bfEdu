@@ -2090,6 +2090,10 @@ input:focus{
 	background: rgb(55 160 210);
 }
 
+.logArea .searchAreaWitheSelect .select-mania {
+	margin-left: -21px !important;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

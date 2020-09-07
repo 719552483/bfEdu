@@ -178,13 +178,6 @@ function onUncheckAll(row){
     }
 }
 
-
-
-
-
-
-
-
 var editor1;
 //渲染编辑器
 function drawEditor(){
@@ -212,16 +205,92 @@ function drawEditor(){
     });
 }
 
-//开始检索
-function startSearch(){
-    var allSearchsObject=getAllSearchsObject();
-    allSearchsObject.userKey=JSON.parse($.session.get('userInfo')).userKey;
+
+//单个删除日志
+function removeLog(row,index){
+    $.showModal("#remindModal",true);
+    $(".remindType").html('- '+row.logTitle+' ');
+    $(".remindActionType").html("删除");
+
+    //确认删除学生
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeArray = new Array;
+        removeArray.push(row.edu114_ID);
+        sendReomveInfo(removeArray);
+        e.stopPropagation();
+    });
+}
+
+//批量删除日志
+function removeLogs(row,index){
+    var choosendLog = choosendLog;
+    if (choosendLog.length === 0) {
+        toastr.warning('暂未选择任何数据');
+    } else {
+        $.showModal("#remindModal",true);
+        $(".remindType").html("所选日志");
+        $(".remindActionType").html("删除");
+
+        //确认删除学生
+        $('.confirmRemind').unbind('click');
+        $('.confirmRemind').bind('click', function(e) {
+            var removeArray = new Array;
+            for (var i = 0; i < choosendLog.length; i++) {
+                removeArray.push(choosendLog[i].edu114_ID);
+            }
+            sendReomveInfo(removeArray);
+            e.stopPropagation();
+        });
+    }
+}
+
+//发送删除信息
+function sendReomveInfo(removeArray){
     $.ajax({
         method : 'get',
         cache : false,
-        url : "/teacherGetLog",
+        url : "/removeTeacherLog",
         data: {
-            "searchsObject":JSON.stringify(allSearchsObject)
+            "deleteIdArray":JSON.stringify(removeArray)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                for (var i = 0; i < removeArray.length; i++) {
+                    $("#techerLogTable").bootstrapTable('removeByUniqueId', removeArray[i]);
+                }
+                drawPagination(".techerLogTableArea", "日志信息");
+                $(".myTooltip").tooltipify();
+                $.hideModal("#remindModal");
+                toastr.success(backjson.msg);
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//开始检索
+function startSearch(){
+    var allSearchsObject=getAllSearchsObject();
+    allSearchsObject.Edu101_ID=JSON.parse($.session.get('userInfo')).userKey;
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchTeacherLog",
+        data: {
+            "searchCriteria":JSON.stringify(allSearchsObject)
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -271,17 +340,94 @@ function getAllSearchsObject(){
     return returnObject;
 }
 
+//获得新的日志对象
+function getNewLogInfo(){
+    var returnObject=new Object();
+    var Edu101_ID=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+    var teacherName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
+    var logType=getNormalSelectValue("newLogType");
+    var typeName=getNormalSelectText("newLogType");
+    var logTitle=$("#newTitle").val();
+    var logDetail=$("#logBody").val();
+
+    if(logTitle===""){
+        toastr.warning("日志标题不能为空");
+        return;
+    }
+    if(logType===""){
+        toastr.warning("日志类型不能为空");
+        return;
+    }
+    if(logDetail===""){
+        toastr.warning("日志内容不能为空");
+        return;
+    }
+
+    returnObject.Edu101_ID=Edu101_ID;
+    returnObject.teacherName=teacherName;
+    returnObject.logType=logType;
+    returnObject.typeName=typeName;
+    returnObject.logTitle=logTitle;
+    returnObject.logDetail=logDetail;
+    return returnObject;
+}
+
 //区域显示隐藏控制
 function areaControl(){
-    $(".logArea").show();
-    $(".mainArea").hide();
+    $(".logArea").toggle();
+    $(".mainArea").toggle();
 }
 
+//预备新增日志
 function wantAdddlong(){
     areaControl();
+    $('#submitLog').unbind('click');
+    $('#submitLog').bind('click', function(e) {
+        submitLog();
+        e.stopPropagation();
+    });
 }
 
+//确认新增日志
+function submitLog(){
+    var newLogInfo=getNewLogInfo();
+    if(typeof  newLogInfo==="undefined"){
+        return;
+    }
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/teacherAddLog",
+        data: {
+            "newLogInfo":JSON.stringify(newLogInfo)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                $('#techerLogTable').bootstrapTable("prepend", backjson.data);
+                areaControl();
+                toastr.success(backjson.msg);
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
 
+//返回按钮
+function returnMainArea(){
+    areaControl();
+}
 
 //初始化页面按钮绑定事件
 function btnBind(){
@@ -310,6 +456,20 @@ function btnBind(){
     $('#adddlog').unbind('click');
     $('#adddlog').bind('click', function(e) {
         wantAdddlong();
+        e.stopPropagation();
+    });
+
+    //预备新增日志
+    $('#returnMainArea').unbind('click');
+    $('#returnMainArea').bind('click', function(e) {
+        returnMainArea();
+        e.stopPropagation();
+    });
+
+    //批量删除日志
+    $('#removeLogs').unbind('click');
+    $('#removeLogs').bind('click', function(e) {
+        removeLogs();
         e.stopPropagation();
     });
 }
