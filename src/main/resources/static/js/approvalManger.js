@@ -251,7 +251,7 @@ function approvalInfo(row) {
 //根据业务类型展示相应的业务详情区域
 function judgmentBusinessShowArea(businessType,businessInfo){
 	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
-   if(businessType==="01"||businessType==="002"){//课程审批
+   if(businessType==="01"||businessType==="02"){//课程审批
 	   stuffClassInfoArea(businessInfo);
    }else if(businessType==="03"){//培养计划审批
 	   stuffCulturePlanInfoArea(businessInfo);

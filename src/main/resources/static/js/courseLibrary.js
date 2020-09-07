@@ -1455,6 +1455,7 @@ function confirmStopClass(choosedCrouseArray,choosedCrouse){
 			hideloding();
 			if (backjson.code === 200) {
 				for (var i = 0; i < choosedCrouse.length; i++) {
+					choosedCrouse[i].zt="passing";
 					$("#courseLibraryTable").bootstrapTable("updateByUniqueId", {id: choosedCrouse[i], row: choosedCrouse[i]});
 				}
 				$.hideModal("#remindModal");
