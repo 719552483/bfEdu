@@ -21,13 +21,13 @@ var choosendLog=new Array();
 function stuffLogTable(tableInfo) {
     window.releaseNewsEvents = {
         'click #logDetails': function(e, value, row, index) {
-            logDetails(row);
+            // logDetails(row);
         },
         'click #removeLog': function(e, value, row, index) {
             removeLog(row,index);
         },
         'click #modifyLog': function(e, value, row, index) {
-            modifyLog(row,index);
+            // modifyLog(row,index);
         }
     };
 
@@ -76,21 +76,20 @@ function stuffLogTable(tableInfo) {
             },{
                 field: 'edu114_ID',
                 title: '唯一标识',
-                align: 'center',
-                visible: false
+                align: 'center'
             },
             {
-                field: 'pyccmc',
+                field: 'logTitle',
                 title: '日志标题',
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'szxbmc',
+                field: 'typeName',
                 title: '日志类型',
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'szxbmc',
+                field: 'creatDate',
                 title: '发布时间',
                 align: 'left',
                 formatter: paramsMatter
@@ -204,7 +203,6 @@ function drawEditor(){
         });
     });
 }
-
 
 //单个删除日志
 function removeLog(row,index){
@@ -381,8 +379,8 @@ function areaControl(){
 //预备新增日志
 function wantAdddlong(){
     areaControl();
-    $('#submitLog').unbind('click');
-    $('#submitLog').bind('click', function(e) {
+    $('.submitLog').unbind('click');
+    $('.submitLog').bind('click', function(e) {
         submitLog();
         e.stopPropagation();
     });
@@ -417,6 +415,8 @@ function submitLog(){
                 $('#techerLogTable').bootstrapTable("prepend", backjson.data);
                 areaControl();
                 toastr.success(backjson.msg);
+                $(".myTooltip").tooltipify();
+                drawPagination(".techerLogTableArea", "日志信息");
             } else {
                 toastr.warning(backjson.msg);
             }
