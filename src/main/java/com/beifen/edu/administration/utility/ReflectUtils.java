@@ -632,7 +632,7 @@ public class ReflectUtils {
 				edu200.setKcxzCode(kcxzCode);
 			}
 			
-			//判断考试方式是否存在  不需要填充code
+			//判断考试方式是否存在
 			String ksfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKsfs(),"ksfs");
 			if (ksfsCode == null) {
 				chaeckPass = false;
@@ -640,29 +640,37 @@ public class ReflectUtils {
 				returnMap.put("chaeckPass", chaeckPass);
 				returnMap.put("checkTxt", checkTxt);
 				break;
+			}else{
+				edu200.setKsfs(ksfsCode);
 			}
-			
-			//判断模块类别是否存在  不需要填充code
+
+			String mklbCode="";
+			//判断模块类别是否存在
 			if(edu200.getMklb()!=null){
-				String mklbCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getMklb(),"mklb");
+				mklbCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getMklb(),"mklb");
 				if (mklbCode == null) {
 					chaeckPass = false;
 					checkTxt = "第" + (i + 1) + "行-模块类别不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu200.setMklb(mklbCode);
 				}
 			}
-			
-			//判断课程属性是否存在  不需要填充code
+
+			String kcsxCode="";
+			//判断课程属性是否存在
 			if(edu200.getKcsx()!=null){
-				String kcsxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKcsx(),"kcsx");
+				kcsxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKcsx(),"kcsx");
 				if (kcsxCode == null) {
 					chaeckPass = false;
 					checkTxt = "第" + (i + 1) + "行-课程属性不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu200.setKcsx(kcsxCode);
 				}
 			}
 			
@@ -682,16 +690,18 @@ public class ReflectUtils {
 					}
 				}
 			}
-			
+			String skfsCode="";
 			//判断授课方式是否存在  不需要填充code
 			if(edu200.getSkfs()!=null){
-				String skfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getSkfs(),"skfs");
+				skfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getSkfs(),"skfs");
 				if (skfsCode == null) {
 					chaeckPass = false;
 					checkTxt = "第" + (i + 1) + "行-授课方式不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu200.setSkfs(skfsCode);
 				}
 			}
 			
@@ -706,16 +716,19 @@ public class ReflectUtils {
 //					break;
 //				}
 //			}
-			
+
+			String jpkcdjCode="";
 			//判断精品课程是否存在  不需要填充code
 			if(edu200.getJpkcdj()!=null){
-				String jpkcdjCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getJpkcdj(),"jpkcdj");
+				jpkcdjCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getJpkcdj(),"jpkcdj");
 				if (jpkcdjCode == null) {
 					chaeckPass = false;
 					checkTxt = "第" + (i + 1) + "行-精品课程等级不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
+				}else{
+					edu200.setJpkcdj(jpkcdjCode);
 				}
 			}
 			

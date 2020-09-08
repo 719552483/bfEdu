@@ -343,7 +343,7 @@ function stuffTaskInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("教学任务书审批详情");
 	$(".classApprovalArea,.culturePlanApprovalArea,.studentStopApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
 	$(".taskApprovalArea").show();
-	$("#task_jxbmc").val(businessInfo.jxbmc);
+	$("#task_jxbmc").val(businessInfo.className);
 	$("#task_kcmc").val(businessInfo.kcmc);
 	$("#task_jxbrs").val(businessInfo.jxbrs);
 	$("#task_ls").val(businessInfo.lsmc);
