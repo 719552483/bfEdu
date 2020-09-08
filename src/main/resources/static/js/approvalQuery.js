@@ -6,7 +6,51 @@ $(function() {
 	drawApprovalMangerEmptyTable();
 	getProposerInfo();
 	btnBind();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var searchObjet=new Object();
+	searchObjet.currentUserRole="";
+	searchObjet.proposerKey="";
+	searchObjet.businessType="";
+	searchObjet.examinerkey= "";
+
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getApprovalHistory",
+		data: {
+			"approvalText":JSON.stringify(searchObjet)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				if (backjson.approvalHistory.length === 0) {
+					toastr.info('暂无数据');
+					drawApprovalMangerEmptyTable();
+					return;
+				}
+				toastr.info("共找到"+backjson.approvalHistory.length+"条审批记录");
+				stuffApprovalMangerTable(backjson.approvalHistory);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
 
 //获取声请人下拉框信息
 function getProposerInfo(){

@@ -4,7 +4,46 @@ $(function() {
 	stuffEJDElement(EJDMElementInfo)
 	drawTaskEmptyTable();
 	btnBind();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var SearchObject=new Object();
+	SearchObject.courseCode="";
+	SearchObject.courseName="";
+	SearchObject.coursesNature="";
+	SearchObject.className="";
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTaskCanTest",
+		data: {
+			"searchCriteria":JSON.stringify(SearchObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffTaskInfoTable(backjson.data);
+				toastr.info(backjson.msg);
+			} else {
+				toastr.warning(backjson.msg);
+				drawTaskEmptyTable();
+			}
+		}
+	});
+}
 
 //填充空的可申请表
 function drawTaskEmptyTable() {

@@ -6,7 +6,46 @@ $(function() {
 	drawApprovalMangerEmptyTable();
 	getProposerInfo();
 	btnBind();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var searchObjet=new Object();
+	searchObjet.currentUserRole="";
+	searchObjet.proposerKey="";
+	searchObjet.businessType="";
+	searchObjet.examinerkey = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/searchApproval",
+		data: {
+			"approvalText":JSON.stringify(searchObjet)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.info(backjson.msg);
+				stuffApprovalMangerTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+				drawApprovalMangerEmptyTable();
+			}
+		}
+	});
+}
 
 /*tab1 start*/
 //获取声请人下拉框信息

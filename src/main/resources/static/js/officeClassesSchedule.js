@@ -4,7 +4,43 @@ $(function() {
 	binBind();
 	getBmInfo();
 	$('.isSowIndex').selectMania(); // 初始化下拉框
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var returnObject=new Object();
+	returnObject.xzbmc="";
+	returnObject.kcmc="";
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getTaskInfo",
+		data: {
+			"searchInfo":JSON.stringify(returnObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.info(backjson.msg);
+				stuffTaskInfoTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
 
 //获取部门信息
 function getBmInfo(){

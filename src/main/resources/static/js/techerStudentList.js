@@ -6,7 +6,52 @@ $(function() {
     getMajorTrainingSelectInfo();
     drawStudentBaseInfoEmptyTable();
     btnBind();
+    deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+    var allSearchsObject=new Object();
+    allSearchsObject.gradation = "";
+    allSearchsObject.department = "";
+    allSearchsObject.grade = "";
+    allSearchsObject.major = "";
+    allSearchsObject.levelTxt = "";
+    allSearchsObject.departmentTxt = "";
+    allSearchsObject.gradeTxt = "";
+    allSearchsObject.majorTxt = "";
+    allSearchsObject.sex="";
+    allSearchsObject.name="";
+    allSearchsObject.className="";
+    allSearchsObject.userKey=JSON.parse($.session.get('userInfo')).userKey;
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/findStudentInTeaching",
+        data: {
+            "searchsObject":JSON.stringify(allSearchsObject)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                stuffStudentBaseInfoTable(backjson.data);
+            } else {
+                drawStudentBaseInfoEmptyTable();
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
 
 // 获取-专业培养计划- 有逻辑关系select信息
 function getMajorTrainingSelectInfo() {

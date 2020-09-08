@@ -2094,6 +2094,10 @@ input:focus{
 	margin-left: -21px !important;
 }
 
+.bootstrap4 .loading-wrap .loading-text{
+	color: #1c92b5;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

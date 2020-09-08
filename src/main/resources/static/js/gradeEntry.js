@@ -5,7 +5,49 @@ $(function() {
 	btnControl();
 	binBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var returnObject = new Object();
+	returnObject.level = "";
+	returnObject.department = "";
+	returnObject.grade = "";
+	returnObject.major = "";
+	returnObject.className = "";
+	returnObject.courseName = "";
+	returnObject.studentNumber = "";
+	returnObject.studentName = "";
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryGrades",
+		data: {
+			"SearchCriteria":JSON.stringify(returnObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffStudentBaseInfoTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+				drawStudentBaseInfoEmptyTable();
+			}
+		}
+	});
+}
 
 //获取-专业培养计划- 有逻辑关系select信息
 function getMajorTrainingSelectInfo() {

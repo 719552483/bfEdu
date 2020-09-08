@@ -9,8 +9,45 @@ $(function() {
     drawLogEmptyTable();
     drawEditor();
     btnBind();
+    deafultSearch();
 });
 
+//初始化检索
+function deafultSearch(){
+    var returnObject=new Object();
+    returnObject.logType="";
+    returnObject.startDate="";
+    returnObject.endDate="";
+    returnObject.Edu101_ID=JSON.parse($.session.get('userInfo')).userKey;
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchTeacherLog",
+        data: {
+            "searchCriteria":JSON.stringify(returnObject)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                stuffLogTable(backjson.data);
+                toastr.info(backjson.msg);
+            } else {
+                drawLogEmptyTable();
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
 
 //填充空的学生表
 function drawLogEmptyTable() {

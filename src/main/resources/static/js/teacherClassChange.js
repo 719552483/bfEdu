@@ -90,7 +90,7 @@ function getAllWeeks(){
 
 //填充空的课程表
 function drawScheduleClassesEmptyTable() {
-	var defaultClassPeriod = 12;
+	var defaultClassPeriod = 6;
 	var tableInfo = new Array();
 	for (var i = 0; i < defaultClassPeriod; i++) {
 		var scheduleClassesInfoObject = new Object();

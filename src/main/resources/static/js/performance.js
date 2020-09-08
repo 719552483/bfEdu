@@ -6,7 +6,49 @@ $(function() {
     getMajorTrainingSelectInfo();
     drawStudentBaseInfoEmptyTable();
     btnBind();
+    deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+    var returnObject = new Object();
+    returnObject.level = "";
+    returnObject.department = "";
+    returnObject.grade = "";
+    returnObject.major = "";
+    returnObject.sex="";
+    returnObject.name="";
+    returnObject.className="";
+    returnObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/findBreakStudent",
+        data: {
+            "searchsObject":JSON.stringify(returnObject)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                stuffStudentBaseInfoTable(backjson.data);
+                toastr.info(backjson.msg);
+            } else {
+                drawStudentBaseInfoEmptyTable();
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
 
 // 获取-专业培养计划- 有逻辑关系select信息
 function getMajorTrainingSelectInfo() {

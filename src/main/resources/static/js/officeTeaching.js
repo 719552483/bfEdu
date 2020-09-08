@@ -7,7 +7,54 @@ $(function() {
 	drawWaitTaskEmptyTable();
 	btnControl();
 	binBind();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var returnObject = new Object();
+	returnObject.level = "";
+	returnObject.department = "";
+	returnObject.grade = "";
+	returnObject.major = "";
+	returnObject.levelTxt = "";
+	returnObject.departmentTxt = "";
+	returnObject.gradeTxt = "";
+	returnObject.majorTxt = "";
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getTaskByCulturePlan",
+		data: {
+			"culturePlanInfo":JSON.stringify(returnObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if(backjson.taskInfo.length===0){
+					toastr.info('暂无可排课程');
+					drawWaitTaskEmptyTable();
+				}else{
+					toastr.info('共找到'+backjson.taskInfo.length+'条可排课程');
+					stuffWaitTaskTable(backjson.taskInfo);
+				}
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
 //获取-专业培养计划- 有逻辑关系select信息
 function getTaskSelectInfo() {

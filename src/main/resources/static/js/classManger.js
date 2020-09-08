@@ -7,7 +7,49 @@ $(function() {
 	drawAdministrationClassEmptyTable();
 	btnBind();
 	$("input[type='number']").inputSpinner();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var serachObject=new Object();
+	serachObject.level="";
+	serachObject.department="";
+	serachObject.grade="";
+	serachObject.major="";
+	serachObject.className="";
+
+	// 发送查询所有用户请求
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAdministrationClass",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(serachObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.info(backjson.msg);
+				stuffAdministrationClassTable(backjson.data);
+			} else {
+				drawAdministrationClassEmptyTable();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
 /*
  * tab1
  */

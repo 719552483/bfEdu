@@ -7,7 +7,13 @@ $(function() {
 	drawTeacherBaseInfoEmptyTable();
 	btnControl();
 	binBind();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	searchAllTeacher();
+}
 
 //获得检索区域下拉框数据
 function getSearchAreaSelectInfo(){

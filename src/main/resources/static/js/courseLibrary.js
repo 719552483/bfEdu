@@ -8,7 +8,49 @@ $(function() {
 	binBind();
 	stuffEJDElement(EJDMElementInfo);
 	getXbInfo();
+	deafultSearch();
 });
+
+//初始化检索
+function deafultSearch(){
+	var serachObject=new Object();
+	serachObject.kcdm="";
+	serachObject.kcmc="";
+	serachObject.bzzymc="";
+	serachObject.ccxzCode="";
+	serachObject.zt="";
+
+	// 发送查询所有用户请求
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/librarySeacchClass",
+		data: {
+			"SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.info(backjson.msg);
+				stuffCourseLibraryTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+				drawCourseLibraryEmptyTable();
+			}
+		}
+	});
+}
 
 //获取系部信息
 function getXbInfo(){
