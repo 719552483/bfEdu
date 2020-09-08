@@ -101,11 +101,6 @@ public class AdministrationPageService {
 		return edu103DAO.queryAllLevel();
 	}
 
-	// 按层次编码查询层次
-	public List<Edu103> queryAllLevelByPcccbm(String pcccbm) {
-		return edu103DAO.queryAllLevelByPcccbm(pcccbm);
-	}
-
 	// 按名称查培养层次编码
 	public String queryLevelCodeByLevelName(String pyccmc) {
 		return edu103DAO.queryLevelCodeByLevelName(pyccmc);
@@ -132,10 +127,6 @@ public class AdministrationPageService {
 		return edu104DAO.queryAllDepartment();
 	}
 
-	// 按系部编码查询系部
-	public List<Edu104> queryAllDepartmentByXbbm(String xbbm) {
-		return edu104DAO.queryAllDepartmentByXbbm(xbbm);
-	}
 
 	// 按名称查系部编码
 	public String queryXbCodeByXbName(String xbmc) {
@@ -147,10 +138,6 @@ public class AdministrationPageService {
 		return edu105DAO.queryAllGrade();
 	}
 
-	// 按年级编码查年级
-	public List<Edu105> queryAllGradeByNjbm(String njbm) {
-		return edu105DAO.queryAllGradeByNjbm(njbm);
-	}
 
 	// 按年级名称查年级编码
 	public String queryNjCodeByNjName(String njmc) {
@@ -162,10 +149,6 @@ public class AdministrationPageService {
 		return edu106DAO.queryAllMajor();
 	}
 
-	// 按专业编码查专业
-	public List<Edu106> queryAllMajorByZybm(String zybm) {
-		return edu106DAO.queryAllMajorByZybm(zybm);
-	}
 
 	// 按专业名称查专业编码
 	public String queryZyCodeByZyName(String zymc) {
@@ -192,12 +175,6 @@ public class AdministrationPageService {
 	public List<Edu107> queryPyjh(String levelCode, String departmentCode, String gradeCode, String majorCode) {
 		List<Edu107> edu107s = edu107DAO.queryPyjh(levelCode, departmentCode, gradeCode, majorCode);
 		return edu107s;
-	}
-
-	// 根据层次 系部 年级 专业定位培养计划
-	public Long queryEdu107ID(String levelCode, String departmentCode, String gradeCode, String majorCode) {
-		Long aLong = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-		return aLong;
 	}
 
 	//查询是否有重复的培养计划
@@ -618,6 +595,11 @@ public class AdministrationPageService {
 			String[] bhxzbids = edu301.getBhxzbid().split(",");
 			String[] bhxzbmcs = edu301.getBhxzbmc().split(",");
 			int count = edu300DAO.queryZXRSByEdu300Ids(bhxzbids);
+			List<Edu300> edu300List = edu300DAO.findAllByEdu300Ids(bhxzbids);
+			List<String> zybmList = edu300List.stream().map(Edu300::getZybm).collect(Collectors.toList());
+			List<String> zymcList = edu300List.stream().map(Edu300::getZymc).collect(Collectors.toList());
+			edu301.setZybm(utils.listToString(utils.heavyListMethod(zybmList),','));
+			edu301.setZymc(utils.listToString(utils.heavyListMethod(zymcList),','));
 			edu301.setYxbz("1");
 			edu301.setJxbrs(count);
 			edu301DAO.save(edu301);
@@ -639,30 +621,12 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
-	// 增加教学班
-	public void addTeachingClass(Edu301 edu301) {
-		edu301DAO.save(edu301);
-	}
-
 	// 删除教学班
 	public void removeTeachingClassByID(String edu301ID) {
 		edu301DAO.removeTeachingClassByID(edu301ID);
 		//删除教学班行政班关联
 		edu302DAO.removeByEdu301Id(edu301ID);
 	}
-
-
-	// 查询所有教学班
-	public List<Edu301> queryAllTeachingClass() {
-		return edu301DAO.findAll();
-	}
-
-	// 添加教学班同时更新学生教学班信息
-	// public void stuffStudentTeachingClassInfoBy300id(String jxbname, Long
-	// edu301_ID, String xzbcode) {
-	// edu001DAO.stuffStudentTeachingClassInfoBy300id(jxbname, edu301_ID,
-	// xzbcode);
-	// }
 
 	// 根据行政班查询学生信息
 	public List<Edu001> queryStudentInfoByAdministrationClass(String xzbCode) {
@@ -702,26 +666,12 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
-	// 修改教学班名称
-	public void modifyTeachingClassName(String teachingClassID, String newName) {
-		edu301DAO.modifyTeachingClassName(teachingClassID, newName);
-	}
-
 	// 查询培养计划下所有学生
 	public List<Edu001> queryCulturePlanStudent(String levelCode, String departmentCode, String gradeCode,
 												String majorCode) {
 		return edu001DAO.queryCulturePlanStudent(levelCode, departmentCode, gradeCode, majorCode);
 	}
 
-	// 根据行政班查询教学班信息
-	public List<Edu301> queryTeachingClassByXzbCode(String edu300Id) {
-		return edu301DAO.queryTeachingClassByXzbCode(edu300Id);
-	}
-
-	// 根据学生查询教学班信息
-	public List<Edu301> queryTeachingClassByXSCode(String edu001Id) {
-		return edu301DAO.queryTeachingClassByXSCode(edu001Id);
-	}
 
 	// 增加行政班在校人数
 	public void addAdministrationClassesZXRS(String xzbcode) {
@@ -745,24 +695,10 @@ public class AdministrationPageService {
 		edu993DAO.changeNoticeIsShowIndex(noticeId, isShow);
 	}
 
-	// 获取所有通知
-	public List<Edu993> getNotices() {
-		return edu993DAO.findAll();
-	}
-
-	// 删除通知
-	public void removeNotices(String edu990id) {
-		edu993DAO.removeNotices(edu990id);
-	}
 
 	// 根据二级代码关联字段获取二级代码
 	public List<Edu000> queryEjdm(String ejdmGlzd) {
 		return edu000DAO.queryejdm(ejdmGlzd);
-	}
-
-	// 根据二级代码关联字段和值获取二级代码
-	public List<Edu000> queryEjdmByGroupAndValue(String groupName, String value) {
-		return edu000DAO.queryEjdmByGroupAndValue(groupName, value);
 	}
 
 	public String queryEjdmByEjdmZ(String ejdmz, String ejdmGlzd) {
@@ -787,7 +723,7 @@ public class AdministrationPageService {
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		List<Edu200> edu200List = edu200DAO.queryAllPassCrouseByDepartment(departments);
+		List<Edu200> edu200List = edu200DAO.queryAllPassCrouse();
 
 		if(edu200List.size() == 0){
 			resultVO = ResultVO.setFailed("暂未找到课程");
@@ -797,25 +733,9 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
-	// 修改课程
-	public Edu200 updateClass(Edu200 du200) {
-		return edu200DAO.save(du200);
-	}
-
 	// 根据Id查询课程
 	public Edu200 queryClassById(String edu200id) {
 		return edu200DAO.queryClassById(edu200id);
-	}
-	//
-	// // 根据代码查询课程
-	// public List<Edu200> queryClassByCode(String calssCode) {
-	// return edu200DAO.queryClassByCode(calssCode);
-	// }
-
-	// 根据id修改课程状态
-	public void modifyClassById(String id, String status, String approvalPerson, long approvalPersonId,
-								long approvalTime) {
-		edu200DAO.modifyClassById(id, status, approvalPerson, approvalPersonId, approvalTime);
 	}
 
 	// 根据id删除课程
@@ -2294,7 +2214,6 @@ public class AdministrationPageService {
 
 		return resultVO;
 	}
-
 
 	//撤销违纪记录
 	public ResultVO cancelBreakInfo(String cancelId,String studentId) {

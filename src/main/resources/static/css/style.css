@@ -275,8 +275,8 @@ h2 {
 	*/
 	margin-top: 0%;
 	margin-left: 9%;
-	width: 38%;
-	height: 100%;
+	width: 125%;
+	height: 105%;
 	background-size: 80px;}
 
 .topright {
@@ -287,7 +287,7 @@ h2 {
 
 .nav {
 	float: left;
-	margin-left: -115px;
+	margin-left: 120px;
 }
 
 

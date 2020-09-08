@@ -79,4 +79,7 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select sum(e.zxrs) from edu300 e where Edu300_ID  in ?1", nativeQuery = true)
 	int queryZXRSByEdu300Ids(String[] xzbcode);
 
+	// 根据行政班id集合查询行政班
+	@Query(value = "select * from edu300 e where Edu300_ID  in ?1", nativeQuery = true)
+	List<Edu300> findAllByEdu300Ids(String[] xzbcode);
 }
