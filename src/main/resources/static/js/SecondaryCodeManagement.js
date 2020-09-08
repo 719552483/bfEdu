@@ -190,7 +190,7 @@ function sendRemoveInfo(removeArray){
 //展示教学点详情
 function localInfoDetails(row,index){
     $.showModal("#addSiteModal",false);
-    $("#addSiteModal").find(".moadalTitle").html(row.localName+"-详细信息");
+    $("#addSiteModal").find(".moadalTitle").html(row.ejdmz+"-详细信息");
     $('#addSiteModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
     //清空模态框中元素原始值
     rebackSiteInfo();
@@ -361,7 +361,7 @@ function sendNewSiteInfo(newSiteInfo){
     });
 }
 
-//开始检索教学点
+//开始检索耳机代码
 function startSearch(){
     var searchObject = getSearchValue();
     searchAllSiteBy(searchObject);
@@ -435,7 +435,7 @@ function binBind() {
         e.stopPropagation();
     });
 
-    //新增二级代码点
+    //新增二级代码
     $('#addSite').unbind('click');
     $('#addSite').bind('click', function(e) {
         wantAddSite();
