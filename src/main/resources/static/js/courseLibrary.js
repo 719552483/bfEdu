@@ -211,17 +211,7 @@ function stuffCourseLibraryTable(tableInfo){
 				title : '录入时间',
 				align : 'left',
 				formatter : timeFormatter
-			},  {
-				field : 'shr',
-				title : '审核人',
-				align : 'left',
-				formatter : paramsMatter
 			}, {
-				field : 'shsj',
-				title : '审核时间',
-				align : 'left',
-				formatter : timeFormatter
-			},{
 				field : 'action',
 				title : '操作',
 				align : 'center',
