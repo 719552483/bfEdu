@@ -543,4 +543,44 @@ public class SystemManageService {
 
         return resultVO;
     }
+
+
+    //搜索二级代码
+    public ResultVO searchSecondaryCode(Edu000 edu000) {
+        ResultVO resultVO;
+        Specification<Edu000> specification = new Specification<Edu000>() {
+            public Predicate toPredicate(Root<Edu000> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu000.getEjdmmc() != null && !"".equals(edu000.getEjdmmc())) {
+                    predicates.add(cb.like(root.get("ejdmmc"), "%"+edu000.getEjdmmc()+"%"));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu000> edu000List = edu000Dao.findAll(specification);
+
+        if(edu000List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到二级代码",edu000List);
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu000List.size()+"个二级代码",edu000List);
+        }
+        return resultVO;
+    }
+
+
+    //新增修改二级代码
+    public ResultVO addSecondaryCode(Edu000 edu000) {
+        ResultVO resultVO;
+        edu000Dao.save(edu000);
+        resultVO = ResultVO.setSuccess("操作成功",edu000);
+        return resultVO;
+    }
+
+    //删除二级代码
+    public ResultVO removeSecondaryCode(List<String> deleteArray) {
+        ResultVO resultVO;
+        edu000Dao.deleteInEdu000Ids(deleteArray);
+        resultVO = ResultVO.setSuccess("共删除了"+deleteArray.size()+"个教学点");
+        return resultVO;
+    }
 }

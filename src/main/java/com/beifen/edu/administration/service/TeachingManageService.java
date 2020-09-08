@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -667,12 +668,14 @@ public class TeachingManageService {
                     predicates.add(cb.equal(root.<String>get("edu101_ID"), teacherLogSerach.getEdu101_ID()));
                 }
                 if (teacherLogSerach.getStartDate() != null && !"".equals(teacherLogSerach.getStartDate())) {
-                    Date startDate = java.sql.Date.valueOf(teacherLogSerach.getStartDate());
-                    predicates.add(cb.greaterThanOrEqualTo(root.get("creatDate"), startDate));
+                    Timestamp startTime = Timestamp.valueOf(teacherLogSerach.getStartDate()+" 00:00:00.000000");
+                    predicates.add(cb.greaterThanOrEqualTo(root.get("creatDate"), startTime));
                 }
                 if (teacherLogSerach.getEndDate() != null && !"".equals(teacherLogSerach.getEndDate())) {
-                    Date endDate = java.sql.Date.valueOf(teacherLogSerach.getEndDate());
-                    predicates.add(cb.lessThan(root.get("creatDate"), endDate));
+                    Timestamp endTime = Timestamp.valueOf(teacherLogSerach.getEndDate()+" 00:00:00.000000");
+                    long et = endTime.getTime() + (long) 1000 * 3600 * 24 - 1;
+                    endTime = new Timestamp(et);
+                    predicates.add(cb.lessThan(root.get("creatDate"), endTime));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>教学点基本信息</title>
+    <title>二级代码管理</title>
     <link href="css/loading.css" rel="stylesheet" type="text/css" />
     <link href='css/bootstrap.min.css' media='all' rel='stylesheet' type='text/css' />
     <link href='css/bootstrap-table.css' media='all' rel='stylesheet' type='text/css' />
@@ -34,7 +34,7 @@
     <script type="text/javascript" src="js/implement.js"></script>
     <script type="text/javascript" src="sripts/tableExport.js"></script>
     <script type="text/javascript" src="sripts/bootstrap-table-export.js"></script>
-    <script type="text/javascript" src="js/localInfo.js"></script>
+    <script type="text/javascript" src="js/SecondaryCodeManagement.js"></script>
 
 </head>
 
@@ -44,8 +44,8 @@
     <span>位置：</span>
     <ul class="placeul myPlaceul">
         <li><a href="index.html">首页</a></li>
-        <li><a>教学点管理</a></li>
-        <li><a>教学点基本信息</a></li>
+        <li><a>系统管理</a></li>
+        <li><a>二级代码管理</a></li>
     </ul>
 </div>
 
@@ -53,8 +53,8 @@
     <div class="scheduleClassesMainArea">
         <div class="tools">
             <ul class="toolbar">
-                <li class="click insertBtn" id="addSite"><span><img src="images/t01.png" style="width: 24px;"/></span>新增教学点</li>
-                <li class="click deleteBtn" id="removeSites"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除教学点</li>
+                <li class="click insertBtn" id="addSite"><span><img src="images/t01.png" style="width: 24px;"/></span>新增二级代码</li>
+                <li class="click deleteBtn" id="removeSites"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除二级代码</li>
                 <li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
             </ul>
             <ul class="toolbar1">
@@ -66,43 +66,15 @@
             <div class="col4 giveBottom">
                 <ul class="forminfo">
                     <div class="">
-                        <label class="selectName" style="margin-top: 14px;">地级市</label>
-                        <select id="city" class="isSowIndex">
-                            <option value="seleceConfigTip">暂不可选</option>
-                        </select>
+                        <label class="selectName" style="margin-top: 14px;">二级代码名称</label>
+                        <input name="" type="text" class="myInput searchInput" id="ejdmmc" placeholder="请填写名称..."/>
                     </div>
                 </ul>
             </div>
-            <div class="col4 giveBottom">
-                <ul class="forminfo">
-                    <div class="">
-                        <label class="selectName" style="margin-top: 14px;">区/县</label>
-                        <input name="" type="text" class="myInput searchInput" id="country" placeholder="请填写名称..."/>
-                    </div>
-                </ul>
-            </div>
-
-            <div class="col4 giveBottom">
-                <ul class="forminfo">
-                    <div class="">
-                        <label class="selectName" style="margin-top: 14px;">乡/镇</label>
-                        <input name="" type="text" class="myInput searchInput" id="townShip" placeholder="请填写名称..."/>
-                    </div>
-                </ul>
-            </div>
-            <div class="col4 giveBottom">
-                <ul class="forminfo">
-                    <div class="">
-                        <label class="selectName" style="margin-top: 14px;">教学点名称</label>
-                        <input name="" type="text" class="myInput searchInput" id="localName" placeholder="请填写名称..."/>
-                    </div>
-                </ul>
-            </div>
-
         </div>
 
         <div class="localInfoTableArea columnsStyle searchGivePaddingR">
-            <table class="tablelist myTableStyle" id="localInfoTable" data-unique-id="edu500Id" style="margin-top: 10px;"></table>
+            <table class="tablelist myTableStyle" id="localInfoTable" data-unique-id="bf000_ID" style="margin-top: 10px;"></table>
         </div>
     </div>
 </div>
@@ -113,7 +85,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="tiptop"><span class="moadalTitle">新增教学点</span><a class="cancel" shape="rect"></a></div>
+                <div class="tiptop"><span class="moadalTitle">新增二级代码</span><a class="cancel" shape="rect"></a></div>
             </div>
 
             <div class="modal-body">
@@ -122,8 +94,8 @@
                         <div class="col4 giveBottom">
                             <ul class="forminfo">
                                 <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">教学点名称<b>*</b></label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addLocalName" placeholder="请填写名称..."/>
+                                    <label class="selectName" style="margin-top: 14px;">二级代码名称<b>*</b></label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addEjdmmc" placeholder="请填写..."/>
                                 </div>
                             </ul>
                         </div>
@@ -131,10 +103,8 @@
                         <div class="col4 giveBottom">
                             <ul class="forminfo">
                                 <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">地级市<b>*</b></label>
-                                    <select class="isSowIndex" id="addCity">
-                                        <option value="seleceConfigTip">请选择</option>
-                                    </select>
+                                    <label class="selectName" style="margin-top: 14px;">二级代码关联字段<b>*</b></label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addEjdmglzd" placeholder="请填写..."/>
                                 </div>
                             </ul>
                         </div>
@@ -142,35 +112,18 @@
                         <div class="col4 giveBottom">
                             <ul class="forminfo">
                                 <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">区/县</label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addCountry" placeholder="请填写..."/>
+                                    <label class="selectName" style="margin-top: 14px;">二级代码<b>*</b></label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addEjdm" placeholder="请填写..."/>
                                 </div>
                             </ul>
                         </div>
 
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">乡/镇</label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addTownShip" placeholder="请填写..."/>
-                                </div>
-                            </ul>
-                        </div>
 
                         <div class="col4 giveBottom">
                             <ul class="forminfo">
                                 <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">详细地址<b>*</b></label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addLocalAddress" placeholder="请填写地址..."/>
-                                </div>
-                            </ul>
-                        </div>
-
-                        <div class="col4 giveBottom">
-                            <ul class="forminfo">
-                                <div class="">
-                                    <label class="selectName" style="margin-top: 14px;">备注</label>
-                                    <input name="" type="text" class="myInput manyInfoInput" id="addRemarks" placeholder="请填写备注..."/>
+                                    <label class="selectName" style="margin-top: 14px;">二级代码值<b>*</b></label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addEjdmz" placeholder="请填写..."/>
                                 </div>
                             </ul>
                         </div>

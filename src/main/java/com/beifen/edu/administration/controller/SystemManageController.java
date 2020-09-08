@@ -3,10 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.PageRequestPO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.domian.Edu700;
-import com.beifen.edu.administration.domian.Edu990;
-import com.beifen.edu.administration.domian.Edu991;
-import com.beifen.edu.administration.domian.Edu993;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.SystemManageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONObject;
@@ -250,5 +247,46 @@ public class SystemManageController {
     public ResultVO getNotices(@RequestParam("userId") String userId) {
         ResultVO resultVO = systemManageService.getNotices(userId);
         return resultVO;
+    }
+
+
+    /**
+     * 新增二级代码
+     * @param newCodeInfo
+     * @return returnMap
+     */
+    @RequestMapping("/addSecondaryCode")
+    @ResponseBody
+    public ResultVO addSecondaryCode(@RequestParam("newCodeInfo") String newCodeInfo) {
+        Edu000 edu000 = JSON.parseObject(newCodeInfo, Edu000.class);
+        ResultVO result = systemManageService.addSecondaryCode(edu000);
+        return result;
+    }
+
+    /**
+     * 搜索二级代码
+     * @param searchCriteria
+     *            搜索条件
+     * @return returnMap
+     */
+    @RequestMapping("/searchSecondaryCode")
+    @ResponseBody
+    public ResultVO searchSecondaryCode(@RequestParam String searchCriteria) {
+        Edu000 edu000 = JSON.parseObject(searchCriteria, Edu000.class);
+        ResultVO result = systemManageService.searchSecondaryCode(edu000);
+        return result;
+    }
+
+    /**
+     * 删除二级代码
+     * @param removeIDs
+     * @return
+     */
+    @RequestMapping("/removeSecondaryCode")
+    @ResponseBody
+    public ResultVO removeSecondaryCode(@RequestParam String removeIDs) {
+        List<String> deleteArray = com.alibaba.fastjson.JSONObject.parseArray(removeIDs,String.class);
+        ResultVO result = systemManageService.removeSecondaryCode(deleteArray);
+        return result;
     }
 }

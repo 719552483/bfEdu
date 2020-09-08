@@ -6,9 +6,11 @@ import com.sun.istack.internal.Nullable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.beifen.edu.administration.domian.Edu000;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecificationExecutor<Edu000>{
@@ -35,12 +37,14 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	@Query(value = "select * from edu000", nativeQuery = true)
 	public List<Edu000> queryejdm();
 
-	// 根据二级代码关联字段和值获取二级代码
-	@Query(value = "select * from edu000 b where b.ejdmGlzd=?1 and b.ejdm=?2", nativeQuery = true)
-	public List<Edu000> queryEjdmByGroupAndValue(String groupName, String value);
-	
 	//根据培养层次查校区名称
 	@Query(value = "select e.ejdmz from edu000 e where e.ejdmGlzd='xq' and e.ejdm=?1", nativeQuery = true)
 	public String queryXqmcByPyccbm(String xqbm);
 
+
+	//根据edu000ID删除二级代码
+	@Transactional
+	@Modifying
+	@Query(value = "delete from edu000 where BF000_ID in ?1", nativeQuery = true)
+    void deleteInEdu000Ids(List<String> deleteArray);
 }
