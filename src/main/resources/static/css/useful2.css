@@ -747,7 +747,7 @@ float: left;
 }
 
 .myformtextTipArea b:not(:first-child){
-	margin-left: 36px;
+	margin-left: 41px;
 }
 
 .col4 {
@@ -2096,6 +2096,10 @@ input:focus{
 
 .bootstrap4 .loading-wrap .loading-text{
 	color: #1c92b5;
+}
+
+#ChooseModal .searchAreaWitheSelect .select-mania{
+	width: 80% !important;
 }
 
 @keyframes serachAnimation {

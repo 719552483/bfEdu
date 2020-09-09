@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>调/停/串课</title>
+		<title>授课任务调整</title>
 		<link href="css/loading.css" rel="stylesheet" type="text/css" />
 		<link href='css/bootstrap.min.css' media='all' rel='stylesheet' type='text/css' />
 		<link href='css/bootstrap-table.css' media='all' rel='stylesheet' type='text/css' />
@@ -38,7 +38,7 @@
 			<ul class="placeul myPlaceul">
 				<li><a href="index.html">首页</a></li>
 				<li><a>教师管理</a></li>
-				<li><a>调/停/串课</a></li>
+				<li><a>授课任务调整</a></li>
 			</ul>
 		</div>
 
@@ -80,8 +80,7 @@
 								<select id="classActionType" class="isSowIndex">
 									<option value="seleceConfigTip">请选择</option>
 									<option value="1">调课</option>
-									<option value="2">串课</option>
-									<option value="3">停课</option>
+<!--									<option value="2">串课</option>-->
 								</select>
 							</div>
 						</ul>
@@ -95,301 +94,57 @@
 			</div>
 </div>
 
-
-		<!-- 课表详情Modal -->
-		<div class="modal fade bs-example-modal-lg" id="scheduleInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<!-- 选择Modal -->
+		<div class="modal fade bs-example-modal-lg" id="ChooseModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">课程详情</span><a class="cancel" shape="rect"></a></div>
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
 					</div>
-
 					<div class="modal-body">
-						<div id="usual1" class="usual">
-							<div class="itab">
-								<ul>
-									<li><a href="#tab1" class="selected">课程信息</a></li>
-									<li><a href="#tab2">学生名单</a></li>
+						<div class="searchArea searchAreaWitheSelect">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;width: 9%!important;">周数<b>*</b></label>
+										<select id="choose_weekTime" class="isSowIndex">
+											<option value="seleceConfigTip">暂无选择</option>
+										</select>
+									</div>
 								</ul>
 							</div>
-
-							<div id="tab1" class="tabson myTabson">
-								<div class="manyInfoShow">
-									<div class="searchArea moreInfoSelectStyle">
-										<div class="formtitle" style="margin-bottom: 6px;"><span>基本信息：</span></div>
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">课程代码<b>*</b></label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_code" placeholder="暂无课程代码..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">课程名称<b>*</b></label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_coursesName"
-														   placeholder="暂无课程名字..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">总学时<b>*</b></label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_allhours" placeholder="暂无总学时..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">学分<b>*</b></label> <input
-														id="majorTrainingDetails_credits" type="number" value="0" data-decimals="1" min="0" max="100" step="0.1" />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">理论学时<b>*</b></label> <input
-														id="majorTrainingDetails_theoryHours" type="number" min="0"
-														step="1"  />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">实践学时<b>*</b></label> <input
-														id="majorTrainingDetails_practiceHours" type="number" min="0"
-														step="1" />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">分散学时<b>*</b></label> <input
-														id="majorTrainingDetails_disperseHours" type="number" min="0"
-														step="1" />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">集中学时<b>*</b></label> <input
-														id="majorTrainingDetails_centralizedHours" type="number" min="0"
-														step="1" />
-												</div>
-											</ul>
-										</div>
-
-										<div class="clear"></div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">周学时<b>*</b></label> <input
-														id="majorTrainingDetails_weekHours" type="number" min="0"
-														step="1" />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="MyspinnerStyle">
-													<label class="selectName">总周数<b>*</b></label> <input
-														id="majorTrainingDetails_weekCounts" type="number" min="0"
-														step="1" />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">课程类型</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_classType" placeholder="暂无课程类型..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">课程性质</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_coursesNature" placeholder="暂无课程性质..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">考试方式</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_testWay" placeholder="暂无考试方式..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">课程属性</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_classQuality" placeholder="暂无课程属性..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">反馈意见</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_feedback" placeholder="暂无反馈意见..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="clear"></div>
-										<div class="formtitle" style="margin-bottom: 6px;"><span>其它信息：</span></div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">期中成绩比例</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_midtermPrcent"
-														   placeholder="暂无期中成绩比例..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">期末成绩比例</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_endtermPrcent"
-														   placeholder="暂无期末成绩比例..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">是否新课</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_isNewClass" placeholder="暂无是否新课..." />
-												</div>
-											</ul>
-										</div>
-										<div class="clear"></div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">授课方式</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_calssWay" placeholder="暂无授课方式..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">是否校企合作</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_isSchoolBusiness" placeholder="暂无是否校企合作..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">精品课程等级</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_signatureCourseLevel" placeholder="暂无精品课程等级..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">是否核心课程</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_isKernelClass" placeholder="暂无是否核心课程..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">职业资格考证课程</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_isTextual" placeholder="暂无职业资格考证课程..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">是否课证融通</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_isCalssTextual" placeholder="暂无是否课证融通..." />
-												</div>
-											</ul>
-										</div>
-
-										<div class="col4 giveBottom">
-											<ul class="forminfo">
-												<div class="">
-													<label class="selectName" style="margin-top: 14px;">教学改革立项课程</label>
-													<input name="" type="text" class="myInput manyInfoInput"
-														   id="majorTrainingDetails_isTeachingReform" placeholder="暂无教学改革立项课程..." />
-												</div>
-											</ul>
-										</div>
-										<div class="clear"></div>
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;width: 9%!important;">星期<b>*</b></label>
+										<select class="isSowIndex xqSowIndex" id="xq">
+											<option value="seleceConfigTip">请选择</option>
+											<option value="01">星期一</option>
+											<option value="02">星期二</option>
+											<option value="03">星期三</option>
+											<option value="04">星期四</option>
+											<option value="05">星期五</option>
+											<option value="06">星期六</option>
+											<option value="07">星期日</option>
+										</select>
 									</div>
-								</div>
+								</ul>
 							</div>
-
-							<div id="tab2" class="tabson myTabson" style="padding-top:4px;">
-								<div class="recordsInfoArea">
-									<div class="singleRecordsArea" style="padding: 10px;"></div>
-								</div>
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;width: 9%!important;">课节<b>*</b></label>
+										<select class="isSowIndex kjSowIndex" id="kj">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
 							</div>
 						</div>
 						<div class="clear"></div>
 					</div>
-
 					<div class="modal-footer tipbtn">
-						<input name="" type="button" class="sure confirmModifyBtn" value="确定"/>&nbsp;
+						<input name="" type="button" class="sure confirmChoose" value="确定"/>&nbsp;
 						<input name="" type="button" class="cancel" value="取消"/>
 					</div>
 				</div>

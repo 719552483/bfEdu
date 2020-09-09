@@ -1,9 +1,11 @@
+var rediesValue;
 $(function() {
 	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
 	btnBind();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	$("input[type='number']").inputSpinner();
+	rediesValue=getFromRedis("classPeriod");
 });
 
 //获取学期信息
@@ -77,6 +79,7 @@ function getAllWeeks(){
 					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
 				}
 				stuffManiaSelect("#weekTime", configStr);
+				stuffManiaSelect("#choose_weekTime", configStr);
 				//changge事件
 				$("#weekTime").change(function() {
 					getScheduleClassesInfo();
@@ -110,7 +113,7 @@ function drawScheduleClassesEmptyTable() {
 
 //获取课程表信息
 function getScheduleClassesInfo() {
-	var searchObject=getScheduleSearchInfo();
+	var searchObject=getScheduleSearchInfo(false);
 	if(typeof(searchObject) === "undefined"){
 		return;
 	}
@@ -227,20 +230,95 @@ function singleScheduleAction(eve) {
 	if (eve.currentTarget.childNodes.length === 0) {
 		return;
 	}
-	getScheduleDetails(eve);
+	showChooseModal(eve);
 }
 
 //获取课程详情
-function getScheduleDetails(eve){
-	 var classId=eve.currentTarget.attributes[3].nodeValue;;
-     var edu108Id=eve.currentTarget.attributes[4].nodeValue;
+function showChooseModal(eve){
+	if(rediesValue.length===0){
+		toastr.warning('暂无学年');
+		return;
+	}
+
+	var searchInfo=getScheduleSearchInfo(true);
+	if(typeof searchInfo==="undefined"){
+		return;
+	}
+	emptyChoose();
+	var titletxt="";
+	if(searchInfo.classActionType==="1"){
+		titletxt="选择调课信息";
+	}else if(searchInfo.classActionType==="2"){
+		titletxt="选择串课信息";
+	}
+
+	$("#ChooseModal").find(".moadalTitle").html(titletxt);
+	stuffKjArae();
+	$.showModal("#ChooseModal",true);
+	var changInfo=getChangeInfo();
+	changInfo.Edu203_ID=eve.currentTarget.childNodes[1].id;
+	//提示框取消按钮
+	$('.confirmChoose').unbind('click');
+	$('.confirmChoose').bind('click', function(e) {
+		confirmChoose(changInfo);
+		e.stopPropagation();
+	});
+}
+
+//填充课节下拉框
+function stuffKjArae(){
+	var str='<option value="seleceConfigTip">请选择</option>'
+	for (var i = 0; i < rediesValue.length; i++) {
+		str += '<option value="' +rediesValue[i].edu401_ID + '">' + rediesValue[i].kjmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#kj", str);
+}
+
+//清空选择域的值
+function emptyChoose(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#choose_weekTime,#xq,#kj";
+	reReloadSearchsWithSelect(reObject);
+}
+
+//获得改变的信息
+function getChangeInfo(){
+	var choose_weekTime=getNormalSelectValue("choose_weekTime");
+	var xq=getNormalSelectValue("xq");
+	var kj=getNormalSelectValue("kj");
+	if(choose_weekTime===""){
+		toastr.warning('请选择周数');
+		return ;
+	}
+
+	if(xq===""){
+		toastr.warning('请选择星期');
+		return ;
+	}
+
+	if(kj===""){
+		toastr.warning('请选择课节');
+		return ;
+	}
+
+	var returnObject=new Object();
+	returnObject.week=choose_weekTime;
+	returnObject.xqid=xq;
+	returnObject.xqmc=getNormalSelectValue("xq");
+	returnObject.kjid=kj;
+	returnObject.kjmc=getNormalSelectText("kj");
+	return returnObject;
+}
+
+//确认操作
+function confirmChoose(changInfo) {
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getScheduleInfoDetail",
+		url: "/changeSchedule",
 		data:{
-			"classId":classId,
-			"edu108Id":edu108Id
+			"changInfo":JSON.stringify(changInfo)
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -250,12 +328,12 @@ function getScheduleDetails(eve){
 			requestError();
 		},
 		complete: function (xhr, status) {
-			requestComplete();
+			getScheduleClassesInfo();
 		},
 		success: function (backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				stuffScheduleDetails(backjson.data);
+				toastr.success(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -263,59 +341,12 @@ function getScheduleDetails(eve){
 	});
 }
 
-//渲染课表详情
-function stuffScheduleDetails(data){
-	$.showModal("#scheduleInfoModal",false);
-	stuffStudentInfo(data.studentList);
-	stuffPlanDetails(data.planInfo);
-}
-
-// 显示详细信息并填充内容
-function stuffPlanDetails(row) {
-	$('#scheduleInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
-	$("#majorTrainingDetails_code").val(row.kcdm);
-	$("#majorTrainingDetails_coursesName").val(row.kcmc);
-	$("#majorTrainingDetails_allhours").val(row.zxs);
-	$("#majorTrainingDetails_credits").val(row.xf);
-	$("#majorTrainingDetails_theoryHours").val(row.llxs);
-	$("#majorTrainingDetails_practiceHours").val(row.sjxs);
-	$("#majorTrainingDetails_disperseHours").val(row.fsxs);
-	$("#majorTrainingDetails_centralizedHours").val(row.jzxs);
-	$("#majorTrainingDetails_weekHours").val(row.zhouxs);
-	$("#majorTrainingDetails_weekCounts").val(row.zzs);
-	$("#majorTrainingDetails_classType").val(row.kclx);
-	$("#majorTrainingDetails_coursesNature").val(row.kcxz);
-	$("#majorTrainingDetails_testWay").val(row.ksfs);
-	$("#majorTrainingDetails_classQuality").val(row.kcsx);
-	$("#majorTrainingDetails_feedback").val(row.fkyj);
-	// $("#majorTrainingDetails_startEndWeek").val(row.qzz);
-	$("#majorTrainingDetails_midtermPrcent").val(row.qzcjbl);
-	$("#majorTrainingDetails_endtermPrcent").val(row.qmcjbl);
-	$("#majorTrainingDetails_isNewClass").val(row.sfxk);
-	$("#majorTrainingDetails_calssWay").val(row.skfs);
-	$("#majorTrainingDetails_isSchoolBusiness").val(row.xqhz);
-	$("#majorTrainingDetails_signatureCourseLevel").val(row.jpkcdj);
-	$("#majorTrainingDetails_isKernelClass").val(row.zyhxkc);
-	$("#majorTrainingDetails_isTextual").val(row.zyzgkzkc);
-	$("#majorTrainingDetails_isCalssTextual").val(row.kztrkc);
-	$("#majorTrainingDetails_isTeachingReform").val(row.jxgglxkc);
-}
-
-//填充学生
-function stuffStudentInfo(studentList){
-	$(".singleRecordsArea").empty();
-	for (var i = 0; i < studentList.length; i++) {
-		$(".singleRecordsArea").append('<div id="'+studentList[i].edu001_ID+'" class="col5 singleTeacher'+studentList[i].edu001_ID+' singleTeacher recordsImg2">'+studentList[i].xm+'</div>');
-	}
-}
-
-
-
 //获得课表检索对象
-function getScheduleSearchInfo(){
+function getScheduleSearchInfo(needType){
 	var currentUserId= $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	var semester=getNormalSelectValue("semester");
 	var weekTime=getNormalSelectValue("weekTime");
+	var classActionType=getNormalSelectValue("classActionType");
 	if(semester===""){
 		toastr.warning('请选择学年');
 		return ;
@@ -325,10 +356,22 @@ function getScheduleSearchInfo(){
 		toastr.warning('请选择周数');
 		return ;
 	}
+
+	if(semester===""){
+		toastr.warning('请选择学年');
+		return ;
+	}
+
+	if(classActionType===""&&needType){
+		toastr.warning('请选择操作类型');
+		return ;
+	}
+
 	var returnObject=new Object();
 	returnObject.currentUserId=currentUserId;
 	returnObject.semester=semester;
 	returnObject.weekTime=weekTime;
+	returnObject.classActionType=classActionType;
 	return returnObject;
 }
 
