@@ -322,6 +322,8 @@ h2 {
 
 .nav li img {
 	margin-top: 10px;
+	width: 40px;
+	height: 40px;
 }
 
 .nav li a {
@@ -331,6 +333,7 @@ h2 {
 .nav a h2 {
 	font-size: 14px;
 	color: #d6e8f1;
+	margin-top: 10px;
 }
 
 .nav a:hover h2 {
@@ -928,7 +931,7 @@ h2 {
 }
 
 .leftinfos {
-	height: 238px;
+	height: 278px;
 	margin-top: 8px;
 }
 
@@ -940,7 +943,7 @@ h2 {
 .infoleft {
 	border: #d3dbde solid 1px;
 	float: left;
-	height: 238px;
+	height: 270px;
 }
 
 .infoleft2 {

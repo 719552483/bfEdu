@@ -12,7 +12,7 @@ $(function() {
 //初始化检索
 function deafultSearch(){
 	var searchObjet=new Object();
-	searchObjet.currentUserRole="";
+	searchObjet.currentUserRole=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;;
 	searchObjet.proposerKey="";
 	searchObjet.businessType="";
 	searchObjet.examinerkey = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
@@ -456,7 +456,7 @@ function startSearch(){
 	  searchObjet.currentUserRole=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
 	  searchObjet.proposerKey=getNormalSelectValue("sqrID");
 	  searchObjet.businessType=getNormalSelectValue("splx");
-	  searchObjet.examinerkey = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+	  searchObjet.examinerkey = $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 
 		$.ajax({
 			method: 'get',
