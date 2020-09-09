@@ -1659,6 +1659,13 @@ public class AdministrationPageService {
 		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
 
+		List<Edu200> edu200s = edu200DAO.queryAllByName(edu200.getKcmc());
+
+		if (edu200s.size() != 0) {
+			resultVO = ResultVO.setFailed("课程名称重复，无法添加");
+			return resultVO;
+		}
+
 		//如果为新增，赋予必要属性
 		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
