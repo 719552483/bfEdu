@@ -255,11 +255,17 @@ function showChooseModal(eve){
 	$("#ChooseModal").find(".moadalTitle").html(titletxt);
 	stuffKjArae();
 	$.showModal("#ChooseModal",true);
-	var changInfo=getChangeInfo();
-	changInfo.Edu203_ID=eve.currentTarget.childNodes[1].id;
+
+
 	//提示框取消按钮
 	$('.confirmChoose').unbind('click');
 	$('.confirmChoose').bind('click', function(e) {
+		var changInfo=getChangeInfo();
+		if(typeof changInfo==="undefined"){
+			return;
+		}
+		changInfo.Edu203_ID=eve.currentTarget.childNodes[1].id;
+		changInfo.Edu202_ID=eve.currentTarget.childNodes[1].attributes[2].nodeValue;
 		confirmChoose(changInfo);
 		e.stopPropagation();
 	});
@@ -305,7 +311,7 @@ function getChangeInfo(){
 	var returnObject=new Object();
 	returnObject.week=choose_weekTime;
 	returnObject.xqid=xq;
-	returnObject.xqmc=getNormalSelectValue("xq");
+	returnObject.xqmc=getNormalSelectText("xq");
 	returnObject.kjid=kj;
 	returnObject.kjmc=getNormalSelectText("kj");
 	return returnObject;
@@ -334,6 +340,7 @@ function confirmChoose(changInfo) {
 			hideloding();
 			if (backjson.code===200) {
 				toastr.success(backjson.msg);
+				$.hideModal("#ChooseModal");
 			} else {
 				toastr.warning(backjson.msg);
 			}

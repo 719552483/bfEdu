@@ -1048,7 +1048,7 @@ function scheduleFormatter(value, row, index) {
 					+ '" crouseType="'+value[i].courseType+'"  class="singleSchedule singleScheduleHover '
 					+ changeClassAreaBg(value[i].classTypeId) + '">'
 					+ '<span class="scheduleClassName">'+ value[i].className+'</span>'
-				    + '<span class="scheduleClassName" id="'+value[i].edu203_id+'">'+ value[i].courseName+'</span>'
+				    + '<span class="scheduleClassName" id="'+value[i].edu203_id+'" edu202id="'+value[i].edu202_id+'">'+ value[i].courseName+'</span>'
 				    + '<span class="scheduleClassName">'+ charSpiltMatter(value[i].teacherName)+'</span>'
 				    + '<span class="lastscheduleClassName">'+ value[i].classRoom+'</span>'
 					+  '</div>'
