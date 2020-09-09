@@ -1,12 +1,12 @@
 package com.beifen.edu.administration.utility;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -4235,6 +4235,34 @@ public class ReflectUtils {
 		return join;
 	}
 
+
+	//根据url获取返回的结果
+	//geturl为外部接口地址
+	public String getURL(String geturl) throws IOException{
+		URL url = new URL(geturl);
+		StringBuffer buffer = new StringBuffer();
+		//http协议传输
+		HttpURLConnection httpUrlConn = (HttpURLConnection) url.openConnection();
+		httpUrlConn.setDoOutput(true);
+		httpUrlConn.setDoInput(true);
+		httpUrlConn.setUseCaches(false);
+		httpUrlConn.connect();
+		//将返回的输入流转换成字符串
+		InputStream inputStream = httpUrlConn.getInputStream();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+		String str = null;
+		while ((str = bufferedReader.readLine()) != null) {
+			buffer.append(str);
+		}
+		bufferedReader.close();
+		inputStreamReader.close();
+		//释放资源
+		inputStream.close();
+		inputStream = null;
+		httpUrlConn.disconnect();
+		return buffer.toString();
+	}
 }
 	
 	

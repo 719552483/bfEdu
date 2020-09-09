@@ -583,4 +583,11 @@ public class SystemManageService {
         resultVO = ResultVO.setSuccess("共删除了"+deleteArray.size()+"个教学点");
         return resultVO;
     }
+
+    //获取系统基础信息存入redis
+    public void getSysInfo() {
+        //查询二级代码
+        List<Edu000> edu000List = edu000Dao.findAll();
+        redisUtils.lSet("secondaryCode",edu000List);
+    }
 }
