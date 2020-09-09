@@ -53,7 +53,10 @@ function changeRCurrentRole(eve){
 	var display =$(".canChooseRoleArea").css('display');
 	if(display !== 'none'){
 		$(".canChooseRoleArea,.arrow-right").hide();
+		$(".user").removeClass("choseingClass");
 		return;
+	}else{
+		$(".user").addClass("choseingClass");
 	}
 	$(".canChooseRoleArea,.arrow-right").show();
 	$(".canChooseRoles").find("cite").remove();
@@ -88,5 +91,7 @@ function  confirmChangeRole(eve){
 	$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)").html(eve.currentTarget.innerText);
 	changeMenu();
 	btnControl();
+	$(".user").removeClass("choseingClass");
 	parent.rightFrame.location.href="index.html";
+
 }

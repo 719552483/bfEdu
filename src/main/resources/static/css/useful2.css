@@ -2139,6 +2139,14 @@ input:focus{
 	}
 }
 
+.choseingClass{
+	margin-top: -33px;
+	margin-right: 12px;
+	padding-right: 11px;
+	padding-right: -7px;
+	left: 2%;
+}
+
 
 @keyframes serachAnimation {
     10% {
