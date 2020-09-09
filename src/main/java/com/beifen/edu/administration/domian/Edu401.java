@@ -7,11 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 //课节表
 @Entity
 @Table(name = "Edu401")
-public class Edu401 {
+public class Edu401 implements Serializable {
 	private Long Edu401_ID;
 	private String kjsx; //课节顺序
 	private String kjmc; //课节名称
