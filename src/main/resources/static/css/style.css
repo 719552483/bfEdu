@@ -273,11 +273,17 @@ h2 {
 	    height: 76%;
 	    background-size: 80px;
 	*/
+	/*margin-top: 0%;*/
+	/*margin-left: 9%;*/
+	/*width: 125%;*/
+	/*height: 105%;*/
+	/*background-size: 80px;*/
 	margin-top: 0%;
-	margin-left: 9%;
+	margin-left: 15%;
 	width: 125%;
 	height: 105%;
-	background-size: 80px;}
+	background-size: 80px;
+}
 
 .topright {
 	height: 88px;
@@ -287,7 +293,8 @@ h2 {
 
 .nav {
 	float: left;
-	margin-left: 120px;
+	margin-left: 160px;
+	padding-top: 5px;
 }
 
 
@@ -324,6 +331,7 @@ h2 {
 	margin-top: 10px;
 	width: 40px;
 	height: 40px;
+	margin-bottom: 6px;
 }
 
 .nav li a {
@@ -333,7 +341,7 @@ h2 {
 .nav a h2 {
 	font-size: 14px;
 	color: #d6e8f1;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 }
 
 .nav a:hover h2 {
@@ -427,13 +435,14 @@ h2 {
 	color: #fff;
 	font-size: 14px;
 	line-height: 40px;
+	text-indent: 31px;
 }
 
 .lefttop span {
 	margin-left: 8px;
 	margin-top: 10px;
 	margin-right: 8px;
-	background: url(../images/leftico.png) no-repeat;
+	/*background: url(../images/leftico.png) no-repeat;*/
 	width: 20px;
 	height: 21px;
 	float: left;
@@ -448,16 +457,21 @@ h2 {
 }
 
 .leftmenu dd {
-	background: url(../images/leftmenubg.gif) repeat-x;
-	line-height: 35px;
+	/*background: url(../images/leftmenubg.gif) repeat-x;*/
+	/*line-height: 35px;*/
+	/*font-weight: bold;*/
+	/*font-size: 14px;*/
+	/*border-right: solid 1px #b7d5df;*/
+	 line-height: 35px;
 	font-weight: bold;
 	font-size: 14px;
 	border-right: solid 1px #b7d5df;
+	background-color: rgba(68, 228, 214, 0.10196078431372549);
 }
 
 .leftmenu dd span {
 	float: left;
-	margin: 10px 8px 0 12px;
+	margin: 10px 5px 0 12px;
 }
 
 .leftmenu dd .menuson {
@@ -522,13 +536,26 @@ h2 {
 
 .title {
 	cursor: pointer;
+	font-size: 10pt;
+	border-bottom: 1px rgba(183,213,223) solid;
+	/*border-top: 1px #5db6e4 solid;*/
+	/*letter-spacing: 3px;*/
+	/*font-weight: 500;*/
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 
 /*right.html*/
 .place {
-	height: 40px;
-	background: url(../images/righttop.gif) repeat-x;
+	/*height: 40px;*/
+	/*background: url(../images/righttop.gif) repeat-x;*/
+	height: 46px;
+	/* background: url(../images/righttop.gif) repeat-x; */
+	/* background-size: 280px; */
+	background-color: rgba(68, 228, 214, 0.10196078431372549);
+	padding-top: 4px;
+	border-bottom: 1px rgba(183,213,223) solid;
 }
 
 .place span {
@@ -738,6 +765,7 @@ h2 {
 	height: 32px;
 	line-height: 32px;
 	padding-bottom: 8px;
+	padding-left: 18px;
 }
 
 .welinfo span {
@@ -770,13 +798,14 @@ h2 {
 .iconlist {
 	padding-left: 40px;
 	overflow: hidden;
+	padding-top: 10px;
 }
 
 .iconlist li {
 	text-align: center;
 	float: left;
-	margin-right: 25px;
-	margin-top: 25px;
+	/*margin-right: 25px;*/
+	margin-top: 15px;
 }
 
 .iconlist li p {
@@ -785,7 +814,7 @@ h2 {
 
 .ibox {
 	clear: both;
-	padding-left: 40px;
+	padding-left: 3.5%;
 	padding-top: 18px;
 	overflow: hidden;
 	padding-bottom: 18px;
@@ -944,6 +973,8 @@ h2 {
 	border: #d3dbde solid 1px;
 	float: left;
 	height: 270px;
+	width: 90%;
+	margin-left: 3.5%;
 }
 
 .infoleft2 {

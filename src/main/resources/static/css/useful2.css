@@ -2102,6 +2102,29 @@ input:focus{
 	width: 80% !important;
 }
 
+.leftmenu .title i{
+	padding-left: 17px;
+}
+
+.leftmenu dd:hover,.menuson li:hover{
+	 background-color: rgba(230, 247, 255, 0.79);
+}
+
+.leftmenu dd:first-child .menuson {
+	display: none;
+}
+
+/*.leftmenu dd:first-child{*/
+/*	padding-top: 0px!important;*/
+/*}*/
+
+.menuson li{
+	background-color: white;
+}
+
+.menuson li{
+	padding-left: 15px;
+}
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
