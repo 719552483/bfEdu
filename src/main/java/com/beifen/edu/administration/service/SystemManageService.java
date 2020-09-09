@@ -45,6 +45,8 @@ public class SystemManageService {
     @Autowired
     Edu001Dao edu001Dao;
     @Autowired
+    Edu401Dao edu401Dao;
+    @Autowired
     RedisUtils redisUtils;
     @Autowired
     Edu994Dao edu994Dao;
@@ -589,5 +591,8 @@ public class SystemManageService {
         //查询二级代码
         List<Edu000> edu000List = edu000Dao.findAll();
         redisUtils.lSet("secondaryCode",edu000List);
+        //查询默认课节
+        List<Edu401> edu401List = edu401Dao.findAll();
+        redisUtils.lSet("classPeriod",edu401List);
     }
 }
