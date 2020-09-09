@@ -2125,6 +2125,21 @@ input:focus{
 .menuson li{
 	padding-left: 15px;
 }
+
+@media screen and (max-width:1176px) {
+	.topleft{
+		display: none;
+	}
+	.nav{
+		margin-left: 0px;
+	}
+	.topright{
+		float: left;
+		background: none;
+	}
+}
+
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
