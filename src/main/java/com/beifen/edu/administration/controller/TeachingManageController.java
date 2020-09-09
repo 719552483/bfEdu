@@ -126,7 +126,8 @@ public class TeachingManageController {
     /**
      * 课表详情查询
      * @param classId
-     * @param edu108Id
+     * @param courseType
+     * @param edu_180Id
      * @return
      */
     @RequestMapping("/getScheduleInfoDetail")
@@ -227,5 +228,17 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教师调课
+     * @param changInfo
+     * @return
+     */
+    @RequestMapping("/changeSchedule")
+    @ResponseBody
+    public ResultVO changeSchedule(@RequestParam("changInfo") String changInfo) {
+        Edu203 edu203 = JSON.parseObject(changInfo, Edu203.class);
+        ResultVO result = teachingManageService.changeSchedule(edu203);
+        return result;
+    }
 
 }

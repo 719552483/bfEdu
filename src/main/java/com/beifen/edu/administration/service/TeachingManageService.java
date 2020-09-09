@@ -46,6 +46,8 @@ public class TeachingManageService {
     @Autowired
     Edu200Dao edu200Dao;
     @Autowired
+    Edu203Dao edu203Dao;
+    @Autowired
     RedisUtils redisUtils;
     @Autowired
     Edu201Dao edu201Dao;
@@ -706,6 +708,14 @@ public class TeachingManageService {
         ResultVO resultVO;
         edu114Dao.deleteByEdu114IdList(deleteIdList);
         resultVO = ResultVO.setSuccess("成功删除了"+deleteIdList.size()+"条日志");
+        return resultVO;
+    }
+
+    //教师调课
+    public ResultVO changeSchedule(Edu203 edu203) {
+        ResultVO resultVO;
+        edu203Dao.save(edu203);
+        resultVO = ResultVO.setSuccess("调整成功");
         return resultVO;
     }
 }
