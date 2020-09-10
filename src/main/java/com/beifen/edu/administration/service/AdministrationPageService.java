@@ -710,6 +710,11 @@ public class AdministrationPageService {
 		return edu000DAO.queryEjdmZByEjdm(ejdm, ejdmmc);
 	}
 
+	// 根据二级代码获取二级代码值
+	public String queryEjdmMcByEjdmZ(String ejdm, String ejdmmc) {
+		return edu000DAO.queryEjdmMcByEjdmZ(ejdm, ejdmmc);
+	}
+
 
 	// 查询课程库所有课程
 	public List<Edu200> queryAllClass() {

@@ -2683,10 +2683,8 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getSjxs()),-1,7,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getFsxs()),-1,8,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getJzxs()),-1,9,false);
-			String skfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(chosedClasses.get(i).getKsfs(),"ksfs");
-			String ksfs=reflectUtils.administrationPageService.queryEjdmZByEjdm(skfsCode,"考试方式");
-			
-			
+			String ksfs=reflectUtils.administrationPageService.queryEjdmMcByEjdmZ(chosedClasses.get(i).getKsfs(),"ksfs");
+
 			appendCell(sheet,i,"",ksfs,-1,10,false);
 			appendCell(sheet,i,"",String.valueOf(chosedClasses.get(i).getXf()),-1,11,false);
 			appendCell(sheet,i,"",chosedClasses.get(i).getMklb(),-1,12,false);
