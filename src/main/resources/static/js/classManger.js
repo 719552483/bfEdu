@@ -1176,10 +1176,9 @@ function sendTeachingClassRemoveInfo(removeArray){
 // 开始检索
 function allteachingClassAreaStartSearch() {
 	var className = $("#allteachingClass_className").val();
-	var coursesName = $("#allteachingClass_coursesName").val();
+
 	var searchObject = new Object();
 	searchObject.className=className;
-	searchObject.coursesName=coursesName;
 
 	$.ajax({
 		method : 'get',
@@ -1212,7 +1211,7 @@ function allteachingClassAreaStartSearch() {
 // 重置检索
 function allteachingClassAreaReSearch() {
 	var reObject = new Object();
-	reObject.InputIds = "#allteachingClass_className,#allteachingClass_coursesName";
+	reObject.InputIds = "#allteachingClass_className";
 	reReloadSearchsWithSelect(reObject);
 	getAllTeachingClassInfo(false);
 }
