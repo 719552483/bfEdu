@@ -493,7 +493,7 @@ function reReloadSearchs(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#sqrID,#splx";
 	reReloadSearchsWithSelect(reObject);
-	drawApprovalMangerEmptyTable();
+	deafultSearch();
 }
 /*tab1 end*/
 
@@ -672,7 +672,7 @@ function reReloadSearchsTab2(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#fqrID,#splxForTab2";
 	reReloadSearchsWithSelect(reObject);
-	drawApprovalBackEmptyTable();
+	startSearchTab2();
 }
 /*tab2 end*/
 

@@ -188,7 +188,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			}, {
 				field: 'zymc',
 				title: '专业名称',
-				align: 'center',
+				align: 'left',
 				formatter: paramsMatter
 			}, {
 				field: 'xzbname',

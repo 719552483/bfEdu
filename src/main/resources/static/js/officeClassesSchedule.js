@@ -1628,7 +1628,7 @@ function binBind() {
 		var reObject = new Object();
 		reObject.InputIds = "#xzbmc,#kcmc";
 		reReloadSearchsWithSelect(reObject);
-		drawTaskEmptyTable();
+		deafultSearch();
 		e.stopPropagation();
 	});
 	

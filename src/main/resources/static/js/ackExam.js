@@ -378,7 +378,7 @@ function reSearch(){
 	reObject.InputIds = "#courseCode,#courseName,#className";
 	reObject.normalSelectIds = "#coursesNature";
 	reReloadSearchsWithSelect(reObject);
-	drawTaskEmptyTable();
+	deafultSearch();
 }
 
 //初始化页面按钮绑定事件

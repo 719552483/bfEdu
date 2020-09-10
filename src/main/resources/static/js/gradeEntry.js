@@ -424,7 +424,7 @@ function research(){
 	reObject.actionSelectIds = "#department,#grade,#major";
 	reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
 	reReloadSearchsWithSelect(reObject);
-	drawStudentBaseInfoEmptyTable();
+	deafultSearch();
 }
 
 //初始化页面按钮绑定事件

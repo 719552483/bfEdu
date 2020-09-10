@@ -680,7 +680,7 @@ function reReloadAdministrationClassSearchs() {
 	reObject.InputIds = "#AdministrationClassName";
 	reObject.actionSelectIds = "#department,#grade,#major";
 	reReloadSearchsWithSelect(reObject);
-	drawAdministrationClassEmptyTable();
+	deafultSearch();
 }
 
 //必选检索条件检查

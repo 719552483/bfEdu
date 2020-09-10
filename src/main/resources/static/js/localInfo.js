@@ -508,7 +508,7 @@ function researchSites(){
     reObject.InputIds = "#localName,#country,#townShip";
     reObject.normalSelectIds = "#city";
     reReloadSearchsWithSelect(reObject);
-    drawlocalInfoTableEmptyTable();
+    searchAllSiteBy(new Object);
 }
 
 //初始化页面按钮绑定事件

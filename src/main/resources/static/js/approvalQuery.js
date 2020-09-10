@@ -456,7 +456,7 @@ function reReloadSearchs(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#sqrID,#splx";
 	reReloadSearchsWithSelect(reObject);
-	drawApprovalMangerEmptyTable();
+	deafultSearch();
 }
 
 //页面按钮时间绑定
@@ -492,7 +492,7 @@ function btnBind(){
 	// 追回重置检索
 	$('#reReloadSearchsTab2').unbind('click');
 	$('#reReloadSearchsTab2').bind('click', function(e) {
-		reReloadSearchsTab2();
+		reReloadSearchs();
 		e.stopPropagation();
 	});
 }

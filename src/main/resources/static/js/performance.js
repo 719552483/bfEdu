@@ -943,7 +943,7 @@ function reReloadSearchs(){
     reObject.InputIds = "#name,#AdministrationClassName";
     reObject.normalSelectIds = "#level,#department,#grade,#major,#sex";
     reReloadSearchsWithSelect(reObject);
-    drawStudentBaseInfoEmptyTable();
+    deafultSearch();
 }
 
 //确认选择学生

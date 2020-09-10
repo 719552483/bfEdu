@@ -1067,7 +1067,7 @@ function researchTeachers(){
 	reObject.InputIds = "#teacherName,#teacherJzgh";
 	reObject.normalSelectIds = "#department,#major,#teacherZc";
 	reReloadSearchsWithSelect(reObject);
-	drawTeacherBaseInfoEmptyTable();
+	deafultSearch();
 }
 
 //外聘教师审批流对象

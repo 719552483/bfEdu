@@ -391,7 +391,7 @@ function reReloadSearchs(){
     reObject.InputIds = "#startTime,#endTime";
     reObject.normalSelectIds = "#logType";
     reReloadSearchsWithSelect(reObject);
-    drawLogEmptyTable();
+    deafultSearch();
 }
 
 //获得检索对象

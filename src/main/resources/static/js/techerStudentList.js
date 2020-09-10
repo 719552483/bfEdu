@@ -746,7 +746,7 @@ function reReloadSearchs(){
     reObject.InputIds = "#name,#AdministrationClassName";
     reObject.normalSelectIds = "#level,#department,#grade,#major,#sex";
     reReloadSearchsWithSelect(reObject);
-    drawStudentBaseInfoEmptyTable();
+    deafultSearch();
 }
 
 //初始化页面按钮绑定事件

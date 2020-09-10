@@ -398,6 +398,8 @@ function modifyClassesCheckCrouseIsInPlan(idArray,row,xbInfo){
 
 //填充课程详情tip内容
 function stuffclassDetailsArea(row){
+	var xinbinf=getXbInfo();
+	drawUsefulDepartment(xinbinf);
 	$("#addNewClass_calssName").val(row.kcmc);//填充默认课程名称
 	$("#addNewClass_calssCode").val(row.kcdm);//填充默认课程代码
 //	$("#addNewClass_enName").val(row.ywmc);//填充默认英文名称
@@ -1031,7 +1033,7 @@ function reReloadSearchs(){
 	reObject.InputIds = "#courseCode,#courseName,#markName";
 	reObject.normalSelectIds = "#coursesNature,#status";
 	reReloadSearchsWithSelect(reObject);
-	drawCourseLibraryEmptyTable();
+	deafultSearch();
 }
 
 //批量导入课程
