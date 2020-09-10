@@ -22,6 +22,7 @@ public class Edu600 {
     private String approvalOpinions;//审批意见
     private String approvalState;//审批状态
     private String approvalStyl;//审批类型
+    private String approvalEnd;//审批是否结束
     private String departmentCode;//归属二级学院
     private String keyWord;//审批关键词
     private Date creatDate;//发起时间
@@ -166,5 +167,13 @@ public class Edu600 {
 
     public void setKeyWord(String keyWord) {
         this.keyWord = keyWord;
+    }
+
+    public String getApprovalEnd() {
+        return approvalEnd;
+    }
+
+    public void setApprovalEnd(String approvalEnd) {
+        this.approvalEnd = approvalEnd;
     }
 }

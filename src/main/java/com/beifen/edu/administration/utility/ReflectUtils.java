@@ -409,11 +409,7 @@ public class ReflectUtils {
 				}
 			}
 		}
-		
 
-		
-		
-		
 		if(chaeckPass){
 			//组装上传课程对象
 			for (int i = 0; i < importClassess.size(); i++) {
@@ -598,7 +594,7 @@ public class ReflectUtils {
 
 			//判断课程所属二级学院是否存在
 			String XbCode=reflectUtils.administrationPageService.queryXbCodeByXbName(edu200.getDepartmentName());
-			if (XbCode == null) {
+			if (XbCode == null&&!isNull(edu200.getDepartmentName())) {
 				chaeckPass = false;
 				checkTxt = "第" + (i + 1) + "行-所属二级学院不存在";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -610,7 +606,7 @@ public class ReflectUtils {
 			
 			//判断课程类型是否存在
 			String kclxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKclx(),"cklx");
-			if (kclxCode == null) {
+			if (kclxCode == null&&!isNull(edu200.getKclx())) {
 				chaeckPass = false;
 				checkTxt = "第" + (i + 1) + "行-课程类型不存在";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -622,7 +618,7 @@ public class ReflectUtils {
 			
 			//判断课程性质是否存在
 			String kcxzCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKcxz(),"ckxz");
-			if (kcxzCode == null) {
+			if (kcxzCode == null&&!isNull(edu200.getKcxz())) {
 				chaeckPass = false;
 				checkTxt = "第" + (i + 1) + "行-课程性质不存在";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -634,7 +630,7 @@ public class ReflectUtils {
 			
 			//判断考试方式是否存在
 			String ksfsCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKsfs(),"ksfs");
-			if (ksfsCode == null) {
+			if (ksfsCode == null&&!isNull(edu200.getKsfs())) {
 				chaeckPass = false;
 				checkTxt = "第" + (i + 1) + "行-考试方式不存在";
 				returnMap.put("chaeckPass", chaeckPass);
@@ -648,7 +644,7 @@ public class ReflectUtils {
 			//判断模块类别是否存在
 			if(edu200.getMklb()!=null){
 				mklbCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getMklb(),"mklb");
-				if (mklbCode == null) {
+				if (mklbCode == null&&!isNull(edu200.getMklb())) {
 					chaeckPass = false;
 					checkTxt = "第" + (i + 1) + "行-模块类别不存在";
 					returnMap.put("chaeckPass", chaeckPass);
@@ -663,7 +659,7 @@ public class ReflectUtils {
 			//判断课程属性是否存在
 			if(edu200.getKcsx()!=null){
 				kcsxCode=reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu200.getKcsx(),"kcsx");
-				if (kcsxCode == null) {
+				if (kcsxCode == null&&!isNull(edu200.getKcsx())) {
 					chaeckPass = false;
 					checkTxt = "第" + (i + 1) + "行-课程属性不存在";
 					returnMap.put("chaeckPass", chaeckPass);

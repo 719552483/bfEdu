@@ -67,6 +67,7 @@ public class ApprovalProcessService {
         edu600.setCurrentRole(edu600.getProposerType());
         edu600.setExaminerkey(edu600.getProposerKey());
         edu600.setApprovalState("0");
+        edu600.setApprovalEnd("F");
         edu600.setCreatDate(new Date());
         edu600.setUpdateDate(new Date());
 
@@ -259,6 +260,7 @@ public class ApprovalProcessService {
            Edu600 eud600select = new Edu600();
            eud600select.setLastExaminerKey(edu600.getExaminerkey());
            eud600select.setBusinessKey(edu600.getBusinessKey());
+           eud600select.setEdu600Id(edu600.getEdu600Id());
            Specification<Edu601> specification = new Specification<Edu601>() {
                public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                    List<Predicate> predicates = new ArrayList<Predicate>();
@@ -267,6 +269,9 @@ public class ApprovalProcessService {
                    }
                    if (eud600select.getLastExaminerKey() != null && !"".equals(eud600select.getLastExaminerKey())) {
                        predicates.add(cb.equal(root.<String> get("lastExaminerKey"), eud600select.getLastExaminerKey()));
+                   }
+                   if (eud600select.getEdu600Id() != null && !"".equals(eud600select.getEdu600Id())) {
+                       predicates.add(cb.equal(root.<String> get("edu600Id"), eud600select.getEdu600Id()));
                    }
                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                }
@@ -301,7 +306,9 @@ public class ApprovalProcessService {
        }
 
 
-       if ("0".equals(edu600.getCurrentRole().toString()) || !"1".equals(approvalFlag)){
+       if ("0".equals(edu600.getCurrentRole().toString()) || !"1".equals(approvalFlag) || edu600.getCurrentRole().equals(edu600.getProposerType())){
+           edu600.setApprovalEnd("T");
+           edu600DAO.save(edu600);
            isSuccess=writeBackData(edu600,approvalFlag);
        }
 
@@ -572,9 +579,11 @@ public class ApprovalProcessService {
                     }
                     if (edu600.getLastRole() != null && !"".equals(edu600.getLastRole())) {
                         predicates.add(cb.equal(root.<String> get("lastRole"), edu600.getLastRole()));
+                        predicates.add(cb.notEqual(root.<String> get("currentRole"),edu600.getLastRole()));
                     }
                     predicates.add(cb.notEqual(root.<String> get("currentRole"),"0"));
                     predicates.add(cb.notEqual(root.<String> get("currentRole"),root.<String> get("proposerType")));
+                    predicates.add(cb.notEqual(root.<String> get("approvalEnd"),"T"));
 
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }

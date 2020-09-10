@@ -1656,7 +1656,7 @@ public class AdministrationPageService {
 		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
 
-		if(edu200.getBF200_ID() != null) {
+		if(edu200.getBF200_ID() == null) {
 			List<Edu200> edu200s = edu200DAO.queryAllByName(edu200.getKcmc());
 
 			if (edu200s.size() != 0) {
@@ -1684,11 +1684,10 @@ public class AdministrationPageService {
 
 		long currentTimeStamp = System.currentTimeMillis();
 		edu200.setLrsj(currentTimeStamp);
-
-		edu200DAO.save(edu200);
-		edu600.setBusinessKey(edu200.getBF200_ID());
 		String newClassStatus = "passing";
 		edu200.setZt(newClassStatus);
+		edu200DAO.save(edu200);
+		edu600.setBusinessKey(edu200.getBF200_ID());
 		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 		if (!isSuccess) {
 			if (isAdd) {

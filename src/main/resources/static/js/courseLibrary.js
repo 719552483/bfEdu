@@ -469,8 +469,8 @@ function comfirmmodifyCourseInfo(row){
 			hideloding();
 			if (backjson.code === 200) {
 				$.hideModal("#addNewClassModal");
-				newClassObject.lrsj=backjson.date.currentTimeStamp;
-				newClassObject.zt="noStatus";
+				newClassObject.lrsj=timeStamp2String(backjson.data.lrsj);
+				newClassObject.zt="passing";
 				newClassObject.shr=null;
 				newClassObject.shrID=null;
 				newClassObject.shsj=null;
@@ -1208,16 +1208,13 @@ function modifyClasses(){
 	for (var i = 0; i < choosendClasses.length; i++) {
 		checkIdArray.push(choosendClasses[i].bf200_ID);
 	}
-	
-	 var checkIds=new Object();
-	 checkIds.deleteIdArray=checkIdArray;
 	 
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/checkCrouseIsInPlan",
 		data: {
-          "deleteIds":JSON.stringify(checkIds) 
+          "deleteIds":JSON.stringify(checkIdArray)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
