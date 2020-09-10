@@ -17,7 +17,7 @@ function deafultSearch(){
 	serachObject.kcdm="";
 	serachObject.kcmc="";
 	serachObject.bzzymc="";
-	serachObject.ckxzCode="";
+	serachObject.kcxzCode="";
 	serachObject.zt="";
 
 	// 发送查询所有用户请求
@@ -942,7 +942,7 @@ function startSearch(){
 	courseCode===""?serachObject.kcdm="":serachObject.kcdm=courseCode;
 	courseName===""?serachObject.kcmc="":serachObject.kcmc=courseName;
 	markName===""?serachObject.bzzymc="":serachObject.bzzymc=markName;
-	coursesNature==="seleceConfigTip"?serachObject.ckxzCode="":serachObject.ckxzCode=coursesNature;
+	coursesNature==="seleceConfigTip"?serachObject.kcxzCode="":serachObject.kcxzCode=coursesNature;
 	status==="seleceConfigTip"?serachObject.zt="":serachObject.zt=status;
 	
 	// 发送查询所有用户请求
