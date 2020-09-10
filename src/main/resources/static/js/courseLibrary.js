@@ -478,7 +478,7 @@ function comfirmmodifyCourseInfo(row){
 					id: row.bf200_ID,
 					row: newClassObject
 				});
-				toastr.success(backjson.mg);
+				toastr.success(backjson.msg);
 				$("#addNewClass_calssManger").removeAttr("mangerId");
 				$(".myTooltip").tooltipify();
 				drawPagination(".courseLibraryTableArea", "课程信息");
