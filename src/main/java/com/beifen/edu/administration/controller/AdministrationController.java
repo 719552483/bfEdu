@@ -1542,7 +1542,6 @@ public class AdministrationController {
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
 		// 根据层次等信息查出培养计划id
 		String className = searchObject.getString("className");
-		String coursesName = searchObject.getString("coursesName");
 
 		// 填充搜索对象
 		Edu301 edu301 = new Edu301();

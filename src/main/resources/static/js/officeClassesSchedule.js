@@ -471,10 +471,7 @@ function getLsInfo(tableid,index,cellName){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/queryAllTeacher",
-		data: {
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-		},
+		url : "/queryAllTeachers",
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();

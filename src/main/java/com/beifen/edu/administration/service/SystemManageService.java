@@ -589,10 +589,10 @@ public class SystemManageService {
     //获取系统基础信息存入redis
     public void getSysInfo() {
         //查询二级代码
-//        List<Edu000> edu000List = edu000Dao.findAll();
+        List<Edu000> edu000List = edu000Dao.findAll();
         //查询默认课节
         List<Edu401> edu401List = edu401Dao.findAll();
-//        redisUtils.set("secondaryCode",edu000List);
+        redisUtils.set("secondaryCode",edu000List);
         redisUtils.set("classPeriod",edu401List);
     }
 }

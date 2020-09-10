@@ -1397,7 +1397,6 @@ public class AdministrationPageService {
 	public ResultVO addCrouseSeacch(Edu200 edu200,String userKey) {
 		ResultVO resultVO;
 		Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
-		String departmentCode = getDepartmentCode(edu101.getSzxb());
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1409,9 +1408,6 @@ public class AdministrationPageService {
 				}
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
 					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
-				}
-				if (departmentCode != null && !"00".equals(departmentCode)) {
-					predicates.add(cb.like(root.<String>get("kcdm"),  departmentCode + '%'));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -1659,12 +1655,15 @@ public class AdministrationPageService {
 		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
 
-		List<Edu200> edu200s = edu200DAO.queryAllByName(edu200.getKcmc());
+		if(edu200.getBF200_ID() != null) {
+			List<Edu200> edu200s = edu200DAO.queryAllByName(edu200.getKcmc());
 
-		if (edu200s.size() != 0) {
-			resultVO = ResultVO.setFailed("课程名称重复，无法添加");
-			return resultVO;
+			if (edu200s.size() != 0) {
+				resultVO = ResultVO.setFailed("课程名称重复，无法添加");
+				return resultVO;
+			}
 		}
+
 
 		//如果为新增，赋予必要属性
 		if (edu200.getBF200_ID() == null) {

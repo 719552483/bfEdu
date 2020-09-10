@@ -238,4 +238,17 @@ public class StaffManageService {
         resultVO = ResultVO.setSuccess("成绩录入成功",dateString);
         return resultVO;
     }
+
+
+    //查询所有老师
+    public ResultVO queryAllTeachers() {
+        ResultVO resultVO;
+        List<Edu101> edu101List = edu101Dao.findAll();
+        if(edu101List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可选老师");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu101List);
+        }
+        return resultVO;
+    }
 }

@@ -391,14 +391,26 @@ public class StaffManageController {
 
 
     /**
-     * 查询所有教师
-     *
-     * @return returnMap
+     * 根据权限查询所有教师
+     * @param userId
+     * @return
      */
     @RequestMapping("queryAllTeacher")
     @ResponseBody
     public ResultVO queryAllTeacher(@RequestParam("userId") String userId) {
         ResultVO result = staffManageService.queryAllTeacherByUserId(userId);
+        return result;
+    }
+
+    /**
+     * 查询所有教师
+     *
+     * @return returnMap
+     */
+    @RequestMapping("queryAllTeachers")
+    @ResponseBody
+    public ResultVO queryAllTeacher() {
+        ResultVO result = staffManageService.queryAllTeachers();
         return result;
     }
 
@@ -412,7 +424,6 @@ public class StaffManageController {
     @RequestMapping("searchTeacher")
     @ResponseBody
     public ResultVO SeacchTeacher(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
-        Map<String, Object> returnMap = new HashMap();
         JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
         String szxb ="";
         String zy = "";
