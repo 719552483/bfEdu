@@ -1409,6 +1409,7 @@ public class AdministrationPageService {
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
 					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
 				}
+				predicates.add(cb.equal(root.<String>get("zt"), "pass"));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
