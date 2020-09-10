@@ -439,7 +439,7 @@ h2 {
 }
 
 .lefttop span {
-	margin-left: 8px;
+	margin-left: 4px;
 	margin-top: 10px;
 	margin-right: 8px;
 	/*background: url(../images/leftico.png) no-repeat;*/
@@ -548,13 +548,13 @@ h2 {
 
 /*right.html*/
 .place {
-	/*height: 40px;*/
-	/*background: url(../images/righttop.gif) repeat-x;*/
-	height: 46px;
+	/* height: 40px; */
+	/* background: url(../images/righttop.gif) repeat-x; */
+	height: 40px;
 	/* background: url(../images/righttop.gif) repeat-x; */
 	/* background-size: 280px; */
 	background-color: rgba(68, 228, 214, 0.10196078431372549);
-	padding-top: 4px;
+	/* padding-top: 0px; */
 	border-bottom: 1px rgba(183,213,223) solid;
 }
 
