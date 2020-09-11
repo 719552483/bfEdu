@@ -456,7 +456,7 @@ function loadUserScdlsj() {
 	if(userInfo.scdlsj==="fristTime"){
 		$(".welinfo:eq(1)").hide();
 	}else{
-		$(".welinfo:eq(1)").find("i").html("您上次登录的时间："+userInfo.scdlsj);
+		$(".welinfo:eq(1)").find("i").html("您上次登录的时间：<br>"+userInfo.scdlsj);
 		$(".welinfo:eq(1)").show();
 	}
 }
@@ -467,12 +467,207 @@ function returnBack(){
 	$(".allShortcuts,.moreNoticeArea").hide();
 }
 
+//填充chart
+function stuffChart(){
+     // getChartInfo();
+	stuffChart1();
+	stuffChart2();
+}
+
+//chart1
+function  stuffChart1(){
+	// 基于准备好的dom，初始化echarts实例
+	var myChart = echarts.init(document.getElementById("chart1"));
+	option = {
+		title: {
+			text: '专业基础信息',
+			textStyle: {
+				color: 'rgba(94, 173, 197, 0.81)',
+				fontSize: '18'
+			},
+			padding: [5, 10],
+			left: 'left'
+		},
+		tooltip: {
+			trigger: 'axis'
+		},
+		dataZoom : [
+			{
+				type: 'slider',
+				show: true,
+				start: 0,
+				end: 30,
+				xAxisIndex: [0],
+			},
+		],
+		legend: {},
+		tooltip: {},
+		dataset: {
+			source: [
+				['product', '行政班数量', '学生数量', '老师数量'],
+				['畜牧兽医', 10, 85,50],
+				['会计', 43, 85, 93],
+				['电气自动化技术', 43, 85, 93],
+				['高尔夫球运动与管理', 43, 85, 93],
+				['计算机网络技术', 43, 85, 93],
+				['信息安全与管理', 43, 85, 93],
+				['园艺技术', 43, 85, 93],
+				['电子商务', 43, 85, 93],
+				['作物生产技术', 43, 85, 93],
+				['农村金融', 43, 85, 93],
+				['食品加工技术', 43, 85, 97]
+			]
+		},
+		xAxis: {
+			type: 'category'
+		},
+		yAxis: {},
+		series: [
+			{
+				type: 'bar',
+				itemStyle: {
+					normal: {
+						label: {
+							show: true, //开启显示
+							position: 'top', //在上方显示
+							textStyle: { //数值样式
+								color: 'rgb(22,178,209)',
+								fontSize: 12
+							}
+						}
+					}
+				},
+				color: 'rgba(22,178,209,0.66)'
+			},
+			{
+				type: 'bar',
+				itemStyle: {
+					normal: {
+						label: {
+							show: true, //开启显示
+							position: 'top', //在上方显示
+							textStyle: { //数值样式
+								color: 'rgb(248,89,12)',
+								fontSize: 12
+							}
+						}
+					}
+				},
+				color: 'rgba(248,89,12,0.64)'
+			},
+			{
+				type: 'bar',
+				itemStyle: {
+					normal: {
+						label: {
+							show: true, //开启显示
+							position: 'top', //在上方显示
+							textStyle: { //数值样式
+								color: 'rgb(143,201,22)',
+								fontSize: 12
+							}
+						}
+					}
+				},
+				color: 'rgba(143,201,22,0.64)'
+			},
+		]
+	};
+
+	// 使用刚指定的配置项和数据显示图表
+	myChart.setOption(option);
+}
+
+//chart2
+function  stuffChart2(){
+	// 基于准备好的dom，初始化echarts实例
+	var myChart = echarts.init(document.getElementById("chart2"));
+	option = {
+		title: {
+			text: '课时分布',
+			textStyle: {
+				color: 'rgba(94, 173, 197, 0.81)',
+				fontSize: '18'
+			}
+		},
+		color: 'rgba(22,178,209,0.66)',
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+			},
+			formatter: function (params) {
+				var tar = params[1];
+				return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+			}
+		},
+		grid: {
+			left: '7%',
+			right: '10%',
+			bottom: '3%',
+			containLabel: true
+		},
+		xAxis: {
+			type: 'category',
+			splitLine: {show: false},
+			data: ['总学时','理论学时', '实践学时', '分散学时', '实践学时']
+		},
+		yAxis: {
+			type: 'value'
+		},
+		series: [
+			{
+				name: '辅助',
+				type: 'bar',
+				stack: '总量',
+				itemStyle: {
+					barBorderColor: 'rgba(0,0,0,0)',
+					color: 'rgba(0,0,0,0)'
+				},
+				emphasis: {
+					itemStyle: {
+						barBorderColor: 'rgba(0,0,0,0)',
+						color: 'rgba(0,0,0,0)'
+					}
+				},
+				data: [0, 320, 220, 100, 0]
+			},
+			{
+				name: '学时',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'inside'
+				},
+				data: [400, 80, 100, 120, 100]
+			}
+		]
+	};
+	// 使用刚指定的配置项和数据显示图表
+	myChart.setOption(option);
+}
+
+// chart自适应
+function chartListener(){
+	// chart自适应
+	window.addEventListener("resize", function() {
+		var myChart = echarts.init(document.getElementById('chart1'));
+		myChart.resize();
+		var myChart = echarts.init(document.getElementById('chart2'));
+		myChart.resize();
+	});
+}
+
 $(function() {
 	loadUserScdlsj();
 	ShortcutsButtonBind();
 	drawAuthorityGroup();
 	loadNotices();
 	loadChoosendShortcuts();
+	stuffChart();
+	chartListener();
+
 	//返回首页事件绑定
 	$('.backIndex').unbind('click');
 	$('.backIndex').bind('click', function(e) {

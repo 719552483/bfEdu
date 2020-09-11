@@ -325,9 +325,37 @@ function stuffAdministrationClassDetails(row){
 	$("#addAdministrationClass_selfNum").val(row.zdybjxh);
 }
 
+//检查是否能操作行政班
+function checkAdministrationClass(edu300ids){
+	var returnData="";
+	$.ajax({
+		method: 'post',
+		cache: false,
+		url: "/checkClassUsed",
+		data:{
+			"classIds": JSON.stringify(edu300ids)
+		},
+		async:false,
+		data: {
+			"key": keName
+		},
+		dataType: 'json',
+		success: function(backjson) {
+			if(backjson.code===200) {
+				returnData="T"
+			}else{
+				returnData="F"
+			}
+		}
+	});
+	return returnData;
+}
+
+
 //预备修改行政班
 function modifyAdministrationClass(row){
-	if(row.sfsckkjh==="T"){
+    var sfsckkjh=checkAdministrationClass();
+	if(sfsckkjh==="T"){
 		toastr.warning('不能修改已生成开课计划的班级');
 		return;
 	}
@@ -550,7 +578,8 @@ function emptyAdministrationClassDetailsArea(){
 
 //单个删除行政班
 function removeAdministrationClass(row){
-	if(row.sfsckkjh==="T"){
+	var sfsckkjh=checkAdministrationClass();
+	if(sfsckkjh==="T"){
 		toastr.warning('不能删除已生成开课计划的班级');
 		return;
 	}

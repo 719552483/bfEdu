@@ -16,9 +16,9 @@
 		<script src="sripts/select-mania.js" type="text/javascript"></script>
 		<script src="sripts/toastr.min.js" type="text/javascript"></script>
 		<script src="sripts/jquerySession.js"></script>
+		<script src='sripts/echarts.min.js' type='text/javascript'></script>
 </head>
 	<body>
-
 		<div class="place">
 			<span>位置：</span>
 			<ul class="placeul myPlaceul">
@@ -35,36 +35,62 @@
 					<a href="accountSetup.html">帐号设置</a>
 				</div>
 
-				<div class="welinfo" style="margin-top: 19px;">
-					<span><img src="images/time.png" alt="时间" /></span>
-					<i></i> （不是您登录的？<a href="accountSetup.html">请点这里</a>）
-				</div>
+				<div class="xline" style="width: 97%;margin-left: 15px;"></div>
+				<div class="bodyLeft">
+					<ul class="iconlist choosendShortcuts">
+					</ul>
 
-				<div class="xline" style="width: 90%;margin-left: 3.5%;"></div>
+					<div class="ibox"><a class="ibtn" onclick="showAllShortcuts()"><img src="images/iadd.png" />添加常用快捷功能</a></div>
 
-				<ul class="iconlist choosendShortcuts">
-				</ul>
-
-				<div class="ibox"><a class="ibtn" onclick="showAllShortcuts()"><img src="images/iadd.png" />添加常用快捷功能</a></div>
-
-				<div class="xline" style="width: 90%;margin-left: 3.5%;"></div>
-
-				<div class="leftinfos infoCenter">
-					<div class="infoleft noFloat">
-						<div class="listtitle"><a class="more1 moreNotices">更多</a>重要通知</div>
-						<ul class="newlist">
-								
-						</ul>
+					<div class="leftinfos infoCenter" style="height: 312px;">
+						<div class="infoleft noFloat" style="height: 312px;">
+							<div class="charArea col1 chart1" id="chart1"></div>
+						</div>
+					</div>
+					<div class="leftinfos infoCenter" style="height: 312px;">
+						<div class="infoleft noFloat" style="height: 312px;">
+							<div class="charArea col1 chart3" id="chart2"></div>
+						</div>
 					</div>
 				</div>
 
-				<div class="xline" style="width: 90%;margin-left: 3.5%;"></div>
+				<div class="bodyRight">
 
-				<div class="leftinfos infoCenter">
-					<div class="infoleft noFloat">
-						<div class="listtitle">课程安排总览</div>
 
+					<div class="leftinfos infoCenter">
+						<div class="infoleft noFloat">
+							<div class="listtitle">登录信息</div>
+							<div class="welinfo" style="padding-top: 10px">
+								<span><img src="images/time.png" alt="时间" /></span>
+								<i></i> <br/><cite style="padding-left: 23px;">（不是您登录的？<a href="accountSetup.html">请点这里</a>）</cite>
+							</div>
+						</div>
 					</div>
+
+					<div class="clear"></div>
+					<div class="leftinfos infoCenter">
+						<div class="infoleft noFloat">
+							<div class="listtitle"><a class="more1 moreNotices">更多</a>重要通知</div>
+							<ul class="newlist">
+
+							</ul>
+						</div>
+					</div>
+
+					<div class="clear"></div>
+					<div class="leftinfos infoCenter">
+						<div class="infoleft noFloat">
+							<div class="listtitle">个人消息</div>
+
+						</div>
+					</div>
+
+				</div>
+
+
+<!--				<div class="xline"></div>-->
+				<div class="versionInfo">
+					CopyRight ©2019倍奋软件科技 (上海) 有限公司
 				</div>
 			</div>
 
@@ -107,10 +133,7 @@
 				</div>
 			</div>
 
-			<div class="xline"></div>
-			<div class="versionInfo">
-				CopyRight ©2019倍奋软件科技 (上海) 有限公司
-			</div>
+
 
 		
 		</div>

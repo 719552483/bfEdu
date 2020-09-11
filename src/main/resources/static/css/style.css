@@ -761,10 +761,11 @@ h2 {
 }
 
 .welinfo {
-	height: 32px;
+	min-height: 32px;
 	line-height: 32px;
 	padding-bottom: 8px;
 	padding-left: 18px;
+	padding-right: 15px;
 }
 
 .welinfo span {
@@ -959,7 +960,7 @@ h2 {
 }
 
 .leftinfos {
-	height: 278px;
+	height: 232px;
 	margin-top: 8px;
 }
 
@@ -971,9 +972,13 @@ h2 {
 .infoleft {
 	border: #d3dbde solid 1px;
 	float: left;
-	height: 270px;
+	height: 230px;
 	width: 90%;
 	margin-left: 3.5%;
+}
+
+.bodyLeft .infoleft {
+	padding: 15px;
 }
 
 .infoleft2 {
