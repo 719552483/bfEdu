@@ -336,9 +336,6 @@ function checkAdministrationClass(edu300ids){
 			"classIds": JSON.stringify(edu300ids)
 		},
 		async:false,
-		data: {
-			"key": keName
-		},
 		dataType: 'json',
 		success: function(backjson) {
 			if(backjson.code===200) {
@@ -831,6 +828,7 @@ function addTeachingClass(){
 	stuffChoosendXzb({});
 	$("#newNAME").val("");
 	$.showModal("#modifyTeachingClassModal",true);
+	$("#modifyTeachingClassModal").find(".moadalTitle").html("新增教学班");
 	//确认按钮
 	$('.confirmModifyTeachingClass').unbind('click');
 	$('.confirmModifyTeachingClass').bind('click', function(e) {
@@ -1062,6 +1060,7 @@ function modifyTeachingClass(row, index) {
 			hideloding();
 			if (backjson.code===200) {
 				$.showModal("#modifyTeachingClassModal",true);
+				$("#modifyTeachingClassModal").find(".moadalTitle").html("修改教学班");
 				$("#newNAME").val(row.jxbmc);
 				stuffChoosendXzb(row,index);
 				stuffAllXzb(row,index);
@@ -1433,6 +1432,10 @@ function confirmModifyTeachingClass(isModify,row){
 	}
 	if(bhxzbCode.length==0){
 		toastr.warning("请选择行政班");
+		return
+	}
+	if(bhxzbCode.length>0&&bhxzbCode.length<=1){
+		toastr.warning("至少选择两个行政班");
 		return
 	}
 
