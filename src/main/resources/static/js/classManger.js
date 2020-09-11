@@ -351,7 +351,11 @@ function checkAdministrationClass(edu300ids){
 
 //预备修改行政班
 function modifyAdministrationClass(row){
-    var sfsckkjh=checkAdministrationClass();
+	var checkArray=new Array();
+	for (var i = 0; i < row.length; i++) {
+		checkArray.push(row[i].edu300_ID);
+	}
+    var sfsckkjh=checkAdministrationClass(checkArray);
 	if(sfsckkjh==="T"){
 		toastr.warning('不能修改已生成开课计划的班级');
 		return;
@@ -575,6 +579,10 @@ function emptyAdministrationClassDetailsArea(){
 
 //单个删除行政班
 function removeAdministrationClass(row){
+	var checkArray=new Array();
+	for (var i = 0; i < row.length; i++) {
+		checkArray.push(row[i].edu300_ID);
+	}
 	var sfsckkjh=checkAdministrationClass();
 	if(sfsckkjh==="T"){
 		toastr.warning('不能删除已生成开课计划的班级');
