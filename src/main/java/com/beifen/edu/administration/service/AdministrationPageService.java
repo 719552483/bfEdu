@@ -500,8 +500,10 @@ public class AdministrationPageService {
 			edu108.setXn(xn);
 			edu108.setXnid(xnid);
 
+			Edu107 edu107 = edu107DAO.findOne(edu108.getEdu107_ID());
 			Edu206 edu206 = new Edu206();
 			edu206.setEdu108_ID(Long.parseLong(edu108Id));
+			edu206.setPyjhmc(edu107.getPyjhmc());
 			edu206.setSffbjxrws("F");
 			edu206.setSfsqks("F");
 			edu206.setXn(xn);

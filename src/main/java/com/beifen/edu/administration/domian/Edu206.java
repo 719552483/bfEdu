@@ -9,6 +9,7 @@ public class Edu206 {
 	private Long Edu206_ID; //任务书ID
 	private Long classId;  //教学班ID
 	private Long Edu108_ID;  //培养计划ID
+	private String pyjhmc;//培养计划名称
 	private String sffbjxrws;  //是否发布教学任务书
 	private	String classType; //班级类型
 	private String className;  //班级名称
@@ -213,5 +214,13 @@ public class Edu206 {
 
 	public void setXf(Double xf) {
 		this.xf = xf;
+	}
+
+	public String getPyjhmc() {
+		return pyjhmc;
+	}
+
+	public void setPyjhmc(String pyjhmc) {
+		this.pyjhmc = pyjhmc;
 	}
 }

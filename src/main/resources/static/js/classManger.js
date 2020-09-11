@@ -916,7 +916,7 @@ function stuffTeachingClassTable(tableInfo) {
 			align : 'left',
 			formatter : paramsMatter,
 		},{
-			field : 'bhzymc',
+			field : 'zymc',
 			title : '专业',
 			align : 'left',
 			formatter : paramsMatter

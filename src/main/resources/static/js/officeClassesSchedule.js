@@ -145,8 +145,8 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'left',
 				formatter: paramsMatter
 			},	{
-				field: 'zymc',
-				title: '专业',
+				field: 'pyjhmc',
+				title: '培养计划名称',
 				align: 'left',
 				formatter: paramsMatter
 			},	{
@@ -1065,7 +1065,13 @@ function stuffPutOutTaskTable(tableInfo) {
 				align: 'left',
 				clickToSelect: false,
 				formatter: classNameMatter
-			}, 	{
+			},
+			{
+				field: 'pyjhmc',
+				title: '培养计划名称',
+				align: 'left',
+				formatter: paramsMatter
+			},{
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
