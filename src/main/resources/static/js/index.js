@@ -483,7 +483,7 @@ function  stuffChart1(){
 			text: '专业基础信息',
 			textStyle: {
 				color: 'rgba(94, 173, 197, 0.81)',
-				fontSize: '18'
+				fontSize: '14'
 			},
 			padding: [5, 10],
 			left: 'left'
@@ -500,7 +500,11 @@ function  stuffChart1(){
 				xAxisIndex: [0],
 			},
 		],
-		legend: {},
+		legend: {
+			textStyle: { //图例文字的样式
+				fontSize: 10
+			},
+		},
 		tooltip: {},
 		dataset: {
 			source: [
@@ -587,8 +591,13 @@ function  stuffChart2(){
 			text: '课时分布',
 			textStyle: {
 				color: 'rgba(94, 173, 197, 0.81)',
-				fontSize: '18'
+				fontSize: '14'
 			}
+		},
+		legend: {
+			textStyle: { //图例文字的样式
+				fontSize: 10
+			},
 		},
 		color: 'rgba(22,178,209,0.66)',
 		tooltip: {
