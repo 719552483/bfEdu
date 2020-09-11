@@ -121,8 +121,8 @@ function stufflocalInfoTable(tableInfo) {
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'townShip',
-                title: '乡/镇',
+                field: 'pointCount',
+                title: '教学任务点数量',
                 align: 'left',
                 formatter: paramsMatter
             }, {
@@ -261,7 +261,7 @@ function localInfoDetails(row,index){
 //重置教学点信息模态框
 function rebackSiteInfo(){
     var reObject = new Object();
-    reObject.InputIds = "#addLocalName,#addCountry,#addTownShip,#addLocalAddress,#addRemarks";
+    reObject.InputIds = "#addLocalName,#addCountry,#addLocalAddress,#addRemarks";
     reObject.normalSelectIds = "#addCity";
     reReloadSearchsWithSelect(reObject);
 }
@@ -270,7 +270,6 @@ function rebackSiteInfo(){
 function stufflocalInfoDetails(row){
     $("#addCountry").val(row.country);
     $("#addLocalName").val(row.localName);
-    $("#addTownShip").val(row.townShip);
     $("#addLocalAddress").val(row.localAddress);
     stuffManiaSelectWithDeafult("#addCity", row.cityCode);
     $("#addRemarks").val(row.remarks);
@@ -355,7 +354,6 @@ function getnewlocalInfo(){
     var city = getNormalSelectText("addCity");
     var cityCode = getNormalSelectValue("addCity");
     var country = $("#addCountry").val();
-    var townShip = $("#addTownShip").val();
     var remarks = $("#addRemarks").val();
 
     var returnObject = new Object();
@@ -369,7 +367,6 @@ function getnewlocalInfo(){
     returnObject.city=city;
     returnObject.cityCode=cityCode;
     returnObject.country=country;
-    returnObject.townShip=townShip;
     returnObject.remarks=remarks;
 
     return returnObject;
@@ -443,7 +440,6 @@ function startSearch(){
 function getSearchValue(){
     var localName= $("#localName").val();
     var country= $("#country").val();
-    var townShip= $("#townShip").val();
     var city = getNormalSelectText("city");
     var cityCode = getNormalSelectValue("city");
 
@@ -456,10 +452,6 @@ function getSearchValue(){
 
     if(country!==""){
         returnObject.country = country;
-    }
-
-    if(townShip!==""){
-        returnObject.townShip = townShip;
     }
 
     if(city!==""){
@@ -505,7 +497,7 @@ function searchAllSiteBy(searchObject){
 //重置检索
 function researchSites(){
     var reObject = new Object();
-    reObject.InputIds = "#localName,#country,#townShip";
+    reObject.InputIds = "#localName,#country";
     reObject.normalSelectIds = "#city";
     reReloadSearchsWithSelect(reObject);
     searchAllSiteBy(new Object);

@@ -11,10 +11,26 @@ public class Edu500 {
   private String city;//所属市
   private String cityCode;//地级市代码
   private String country;//所属区县
-  private String townShip;//所属县乡
+  private Long pointCount;//教学任务点数量
   private String localName;//教学点名称
   private String localAddress;//详细地址
   private String remarks;//备注
+
+  public Edu500(){}
+
+  public Edu500(Long edu500Id,String city,String cityCode,String country,Long pointCount,String localName,String localAddress,String remarks) {
+    this.edu500Id = edu500Id;
+    this.city = city;
+    this.cityCode = cityCode;
+    this.country = country;
+    this.pointCount = pointCount;
+    this.localName = localName;
+    this.localAddress = localAddress;
+    this.remarks = remarks;
+  }
+
+
+
 
 
   @Id
@@ -49,12 +65,12 @@ public class Edu500 {
     this.country = country;
   }
 
-  public String getTownShip() {
-    return townShip;
+  public Long getPointCount() {
+    return pointCount;
   }
 
-  public void setTownShip(String townShip) {
-    this.townShip = townShip;
+  public void setPointCount(Long pointCount) {
+    this.pointCount = pointCount;
   }
 
   public String getLocalName() {
@@ -88,4 +104,6 @@ public class Edu500 {
   public void setCityCode(String cityCode) {
     this.cityCode = cityCode;
   }
+
+
 }

@@ -89,21 +89,27 @@ public class TeachingPointService {
                 if (edu500.getCountry() != null && !"".equals(edu500.getCountry())) {
                     predicates.add(cb.like(root.<String> get("country"), "%"+edu500.getCountry()+"%"));
                 }
-                if (edu500.getTownShip() != null && !"".equals(edu500.getTownShip())) {
-                    predicates.add(cb.like(root.<String> get("townShip"), "%"+edu500.getTownShip()+"%"));
-                }
                 if (edu500.getCityCode() != null && !"".equals(edu500.getCityCode())) {
                     predicates.add(cb.equal(root.<String> get("cityCode"), edu500.getCityCode()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
-        List<Edu500> teacherEntities = edu500Dao.findAll(specification);
+        List<Edu500> edu500s = edu500Dao.findAll(specification);
 
-        if(teacherEntities.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无符合要求的教学点",teacherEntities);
+        if(edu500s.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合要求的教学点",edu500s);
+            return resultVO;
+        }
+
+        List<Long> edu500Ids = edu500s.stream().map(Edu500::getEdu500Id).collect(Collectors.toList());
+
+        List<Edu500> edu500List = edu500Dao.findAllByEdu500Ids(edu500Ids);
+
+        if(edu500List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合要求的教学点",edu500List);
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+teacherEntities.size()+"个教学点",teacherEntities);
+            resultVO = ResultVO.setSuccess("共找到"+edu500List.size()+"个教学点",edu500List);
         }
         return resultVO;
     }
@@ -195,7 +201,7 @@ public class TeachingPointService {
     }
 
 
-    //新增叫教学任务点
+    //新增教学任务点
     public ResultVO addLocalPointInfo(Edu501 edu501) {
         ResultVO resultVO;
         edu501Dao.save(edu501);
