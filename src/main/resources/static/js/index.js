@@ -496,7 +496,8 @@ function  stuffChart1(){
 				type: 'slider',
 				show: true,
 				start: 0,
-				end: 30,
+				end: 60, //默认展示的个数
+				height: 20,//这里可以设置dataZoom的尺寸
 				xAxisIndex: [0],
 			},
 		],
