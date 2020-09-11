@@ -620,7 +620,7 @@ function  stuffChart2(){
 		xAxis: {
 			type: 'category',
 			splitLine: {show: false},
-			data: ['总学时','理论学时', '实践学时', '分散学时', '实践学时']
+			data: ['总学时','理论学时', '实践学时', '分散学时', '集中学时']
 		},
 		yAxis: {
 			type: 'value'
@@ -640,7 +640,7 @@ function  stuffChart2(){
 						color: 'rgba(0,0,0,0)'
 					}
 				},
-				data: [0, 320, 220, 100, 0]
+				data: [0, 220, 0, 220, 0]
 			},
 			{
 				name: '学时',
@@ -650,7 +650,7 @@ function  stuffChart2(){
 					show: true,
 					position: 'inside'
 				},
-				data: [400, 80, 100, 120, 100]
+				data: [400, 180, 220, 180, 220]
 			}
 		]
 	};
