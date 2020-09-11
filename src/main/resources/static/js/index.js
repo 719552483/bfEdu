@@ -393,7 +393,7 @@ function drawNotices(allNotices){
 	
 	if(str.length===0){
 		str='<li class="NoNotice">暂未发布任何重要通知...</li>';
-		$(".leftinfos").find("a").remove();
+		$(".noticeArea").find("a").remove();
 	}
 	
 	$(".newlist").append(str);
@@ -454,10 +454,10 @@ function loadUserScdlsj() {
 	//渲染用户信息
 	var userInfo = JSON.parse($.session.get('userInfo'));
 	if(userInfo.scdlsj==="fristTime"){
-		$(".welinfo:eq(1)").hide();
+		$(".longinInfo").hide();
 	}else{
-		$(".welinfo:eq(1)").find("i").html("您上次登录的时间：<br>"+userInfo.scdlsj);
-		$(".welinfo:eq(1)").show();
+		$(".longinInfo").find("i").html("您上次登录的时间：<br>"+userInfo.scdlsj);
+		$(".longinInfo").show();
 	}
 }
 
