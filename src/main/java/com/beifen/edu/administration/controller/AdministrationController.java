@@ -2235,5 +2235,18 @@ public class AdministrationController {
 	}
 
 
+	/**
+	 *查询班级是否排课
+	 * @param classIds
+	 * @return
+	 */
+	@RequestMapping("/checkClassUsed")
+	@ResponseBody
+	public ResultVO checkClassUsed(@RequestParam("classIds") String classIds) {
+		List<String> classIdList = JSON.parseArray(classIds, String.class);
+		ResultVO result = administrationPageService.checkClassUsed(classIdList);
+		return result;
+	}
+
 
 }

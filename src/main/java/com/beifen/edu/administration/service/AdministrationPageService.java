@@ -2102,9 +2102,9 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		List<Long> classIds = edu201DAO.checkTeachingClassInTask(classIdList);
 		if(classIds.size() == 0) {
-			resultVO = ResultVO.setSuccess("没有正在使用的教学班，可以删除");
+			resultVO = ResultVO.setSuccess("没有正在使用的教学班，可以操作");
 		} else {
-			resultVO = ResultVO.setFailed("存在正在使用的教学班，无法删除");
+			resultVO = ResultVO.setFailed("存在正在使用的教学班，无法操作");
 		}
 		return resultVO;
 	}
@@ -2116,7 +2116,7 @@ public class AdministrationPageService {
 			edu107DAO.changeProcessState("passing",edu600.getBusinessKey().toString());
 			resultVO = ResultVO.setSuccess("申请成功");
 		} else {
-			resultVO = ResultVO.setFailed("审批流程发起失败吗，请联系管理员");
+			resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
 		}
 		return resultVO;
 	}
@@ -2237,6 +2237,18 @@ public class AdministrationPageService {
 		edu007Dao.cancelBreakByEdu006Id(dateString,cancelId,studentId);
 
 		resultVO = ResultVO.setSuccess("撤销违纪成功",dateString);
+		return resultVO;
+	}
+
+	//检查行政班是否生成任务书
+	public ResultVO checkClassUsed(List<String> classIdList) {
+		ResultVO resultVO;
+		List<Edu204> edu204List = edu204Dao.findAllbyEdu300Ids(classIdList);
+		if (edu204List.size() != 0) {
+			resultVO = ResultVO.setSuccess("行政班不可修改");
+		} else {
+			resultVO = ResultVO.setFailed("行政可以修改");
+		}
 		return resultVO;
 	}
 }

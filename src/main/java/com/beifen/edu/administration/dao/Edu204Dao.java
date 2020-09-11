@@ -1,5 +1,6 @@
 package com.beifen.edu.administration.dao;
 
+import com.beifen.edu.administration.domian.Edu203;
 import com.beifen.edu.administration.domian.Edu204;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -24,4 +25,8 @@ public interface Edu204Dao extends JpaRepository<Edu204, Long>, JpaSpecification
     //根据行政班查询任务书
     @Query(value = "select e.Edu201_ID from edu204 e where e.Edu300_ID =?1", nativeQuery = true)
     List<String> searchEdu201IdByEdu300Id(String edu301ID);
+
+    //根据班级id查询关联表
+    @Query(value = "select * from Edu204 where edu300_ID = ?1", nativeQuery = true)
+    List<Edu204> findAllbyEdu300Ids(List<String> classIdList);
 }
