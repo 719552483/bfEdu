@@ -19,6 +19,10 @@ public class Edu206 {
 	private String xn;//学年
 	private String xnid;//学年ID
 	private String zxs;  //总学时
+	private Double llxs;  //理论学时
+	private Double sjxs;  //实践学时
+	private Double fsxs;  //分散学时
+	private Double jzxs;  //集中学时
 	private  String ls;//老师
 	private  String lsmc;//老师姓名
 	private  String zyls;//主要老师
@@ -222,5 +226,37 @@ public class Edu206 {
 
 	public void setPyjhmc(String pyjhmc) {
 		this.pyjhmc = pyjhmc;
+	}
+
+	public Double getLlxs() {
+		return llxs;
+	}
+
+	public void setLlxs(Double llxs) {
+		this.llxs = llxs;
+	}
+
+	public Double getSjxs() {
+		return sjxs;
+	}
+
+	public void setSjxs(Double sjxs) {
+		this.sjxs = sjxs;
+	}
+
+	public Double getFsxs() {
+		return fsxs;
+	}
+
+	public void setFsxs(Double fsxs) {
+		this.fsxs = fsxs;
+	}
+
+	public Double getJzxs() {
+		return jzxs;
+	}
+
+	public void setJzxs(Double jzxs) {
+		this.jzxs = jzxs;
 	}
 }
