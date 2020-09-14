@@ -289,4 +289,16 @@ public class SystemManageController {
         ResultVO result = systemManageService.removeSecondaryCode(deleteArray);
         return result;
     }
+
+    /**
+     * 获取首页图表数据
+     * @param departmentIds
+     * @return
+     */
+    @RequestMapping("/getIndexChart")
+    @ResponseBody
+    public ResultVO getIndexChart() {
+        ResultVO result = systemManageService.getIndexChart();
+        return result;
+    }
 }
