@@ -186,16 +186,7 @@ public class AdministrationPageService {
 					predicates.add(cb.notEqual(root.<String>get("edu107_ID"), edu107.getEdu107_ID()));
 				}
 				if (edu107.getEdu103() != null && !"".equals(edu107.getEdu103())) {
-					predicates.add(cb.equal(root.<String>get("edu103"), edu107.getEdu103()));
-				}
-				if (edu107.getEdu104() != null && !"".equals(edu107.getEdu104())) {
-					predicates.add(cb.equal(root.<String>get("edu104"), edu107.getEdu104()));
-				}
-				if (edu107.getEdu105() != null && !"".equals(edu107.getEdu105())) {
-					predicates.add(cb.equal(root.<String>get("edu105"), edu107.getEdu105()));
-				}
-				if (edu107.getEdu106() != null && !"".equals(edu107.getEdu106())) {
-					predicates.add(cb.equal(root.<String>get("edu106"), edu107.getEdu106()));
+					predicates.add(cb.equal(root.<String>get("pyjhmc"), edu107.getPyjhmc()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -209,7 +200,7 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		List<Edu107> edu107List = checkRelation(edu107);
 		if (edu107List.size() != 0) {
-			resultVO = ResultVO.setFailed("存在相同的培养计划，请重新输入");
+			resultVO = ResultVO.setFailed("培养计划名称重复，请重新输入");
 			return resultVO;
 		}
 
