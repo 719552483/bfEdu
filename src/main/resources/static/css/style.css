@@ -777,7 +777,7 @@ h2 {
 }
 
 .welinfo a {
-	padding-left: 15px;
+	/*padding-left: 15px;*/
 	color: #3186c8;
 }
 
@@ -944,6 +944,8 @@ h2 {
 	line-height: 25px;
 	background: url(../images/list2.png) no-repeat 0px 8px;
 	text-indent: 11px;
+	text-overflow: ellipsis;
+	white-space: normal;
 }
 
 .newlist i {

@@ -1944,6 +1944,26 @@ margin: 0px 0px -14px -15px!important;
 	z-index: 999!important;
 }
 
+/*
+通知滚动体样式
+*/
+.infoleft::-webkit-scrollbar {/*滚动条整体样式*/
+	width: 6px;
+	height: 1px;
+}
+
+.infoleft::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+	border-radius: 10px;
+	-webkit-box-shadow: -3px 2px 12px 9px hsl(194deg 35% 24% / 85%);
+	background: rgb(104 198 234 / 95%);
+	-webkit-box-shadow: inset 0 0 19px 3px rgb(133 195 214)
+}
+
+.infoleft::-webkit-scrollbar-track {/*滚动条里面轨道*/
+	-webkit-box-shadow: inset 0 0 5px rgb(49 87 173 / 20%);
+	border-radius: 10px;
+	background: #ffffff;
+}
 
 /*
 top角色切换滚动体样式
@@ -2170,6 +2190,24 @@ input:focus{
 
 .chart1,.chart3{
 	margin-right: 2%;
+}
+
+
+.right_infoleft{
+	border: #d3dbde solid 1px;
+	float: left;
+	height: 230px;
+	width: 90%;
+	margin-left: 3.5%;
+	overflow-x: hidden;
+}
+
+.right_infoleft .newlist li{
+	overflow: hidden;
+}
+
+.noticeArea .newlist li{
+	max-width: 313px;
 }
 
 @keyframes serachAnimation {

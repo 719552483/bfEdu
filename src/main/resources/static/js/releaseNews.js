@@ -114,7 +114,7 @@ function getTableInfo() {
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/getNotices",
+		url : "/getNoticeByUser",
 		data: {
 			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
