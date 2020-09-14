@@ -387,7 +387,7 @@ function drawNotices(allNotices){
 	for (var i = 0; i < allNotices.length; i++) {
 		if(allNotices[i].showInIndex==="T"&&stffNum<=6){
 			stffNum++;
-			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu700_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu700_ID+'">'+allNotices[i].title+'<b>'+allNotices[i].sendDate+'</b></li></a>';
+			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu700_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu700_ID+'">'+allNotices[i].title+'<br><b>'+allNotices[i].sendDate+'</b></li></a>';
 		}
 	}
 	
@@ -421,7 +421,7 @@ function moreNotices(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				var isShowNum=$(".newlist").find("a").length;
+				var isShowNum=$(".noticeArea").find(".newlist").find("a").length;
 				if(isShowNum===backjson.data.length){
 					toastr.warning("暂无更多通知");
 					return;
@@ -442,7 +442,7 @@ function stuffMoreNoctices(moreInfo){
 	$(".newlist2").empty();
 	var str="";
 	for (var i = 0; i < moreInfo.length; i++) {
-		str+='<a href="noticeHTMLmodel.html?newId=' + moreInfo[i].edu700_ID +'"><li class="NoticeChildren" id="'+moreInfo[i].edu700_ID+'">'+moreInfo[i].title+'<b>'+moreInfo[i].sendDate+'</b></li></a>';
+		str+='<a href="noticeHTMLmodel.html?newId=' + moreInfo[i].edu700_ID +'"><li class="NoticeChildren" id="'+moreInfo[i].edu700_ID+'">'+moreInfo[i].title+'<br><b>'+moreInfo[i].sendDate+'</b></li></a>';
 	}
 	$(".newlist2").append(str);
 }

@@ -1347,8 +1347,8 @@ function getNewCulturePlanInfo(crouseID){
 		return;
 	}
 	
-	if(parseFloat($("#classBaseInfo_weekHours").val())*parseFloat($("#classBaseInfo_countWeeks").val())!==allHosrs){
-		toastr.warning('周学时*总周数不等于总学时');
+	if(parseFloat($("#classBaseInfo_weekHours").val())*parseFloat($("#classBaseInfo_countWeeks").val())<allHosrs){
+		toastr.warning('周学时*总周数必须大于等于总学时');
 		return;
 	}
 
