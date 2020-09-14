@@ -185,6 +185,100 @@ function drawEJDMselect(EJDMInfo){
 	}
 }
 
+//填充可选默认关系
+function stuffRelationSelect(levelInputId,departmentInputId,gradeInputId,majorInputId,pycc,szxb,nj,zybm){
+	/*默认填充*/
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getJwPublicCodes",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				//层次
+				var str = '';
+				var allLevel=backjson.allLevel;
+				for (var i = 0; i < allLevel.length; i++) {
+					if(allLevel[i].edu103_ID===parseInt(pycc)){
+						str += '<option value="' + allLevel[i].edu103_ID + '">' + allLevel[i].pyccmc
+							+ '</option>';
+					}
+				}
+				for (var i = 0; i < allLevel.length; i++) {
+					if(allLevel[i].edu103_ID!==parseInt(pycc)){
+						str += '<option value="' + allLevel[i].edu103_ID + '">' + allLevel[i].pyccmc
+							+ '</option>';
+					}
+				}
+				stuffManiaSelect(levelInputId, str);
+
+				//系部
+				var str = '';
+				var allDepartment=backjson.allDepartment;
+				for (var i = 0; i < allDepartment.length; i++) {
+					if(allDepartment[i].edu104_ID===parseInt(szxb)){
+						str += '<option value="' + allDepartment[i].edu104_ID + '">' + allDepartment[i].xbmc
+							+ '</option>';
+					}
+				}
+				for (var i = 0; i < allDepartment.length; i++) {
+					if(allDepartment[i].edu104_ID!==parseInt(szxb)){
+						str += '<option value="' + allDepartment[i].edu104_ID + '">' + allDepartment[i].xbmc
+							+ '</option>';
+					}
+				}
+				stuffManiaSelect(departmentInputId, str);
+
+				//年级
+				var str = '';
+				var allGrade=backjson.allGrade;
+				for (var i = 0; i < allGrade.length; i++) {
+					if(allGrade[i].edu105_ID===parseInt(nj)){
+						str += '<option value="' + allGrade[i].edu105_ID + '">' + allGrade[i].njmc
+							+ '</option>';
+					}
+				}
+				for (var i = 0; i < allGrade.length; i++) {
+					if(allGrade[i].edu105_ID!==parseInt(nj)){
+						str += '<option value="' + allGrade[i].edu105_ID + '">' + allGrade[i].njmc
+							+ '</option>';
+					}
+				}
+				stuffManiaSelect(gradeInputId, str);
+
+				//专业
+				var str = '';
+				var allMajor=backjson.allMajor;
+				for (var i = 0; i < allMajor.length; i++) {
+					if(allMajor[i].edu106_ID===parseInt(zybm)){
+						str += '<option value="' + allMajor[i].edu106_ID + '">' + allMajor[i].zymc
+							+ '</option>';
+					}
+				}
+				for (var i = 0; i < allMajor.length; i++) {
+					if(allMajor[i].edu106_ID!==parseInt(zybm)){
+						str += '<option value="' + allMajor[i].edu106_ID + '">' + allMajor[i].zymc
+							+ '</option>';
+					}
+				}
+				stuffManiaSelect(majorInputId, str);
+			} else {
+				toastr.warning('获取培养计划关系失败，请重试');
+			}
+		}
+	});
+}
+
 //联动select公共方法
 function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId,configValue){
 	//获取层次

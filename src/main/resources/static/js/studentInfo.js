@@ -510,7 +510,6 @@ function onUncheckAll(row){
 	}
 }
 
-
 //展示学生详情
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
@@ -532,10 +531,6 @@ function stuffStudentDetails(row){
 	stuffManiaSelectWithDeafult("#addStudentSex", row.xb);
 	stuffManiaSelectWithDeafult("#addStudentStatus", row.ztCode);
 	$("#dateOfBrith").val(row.csrq);
-	stuffManiaSelectWithDeafult("#addStudentpycc", row.pycc,row.pyccmc);
-	stuffManiaSelectWithDeafult("#addStudentxb", row.szxb,row.szxbmc);
-	stuffManiaSelectWithDeafult("#addStudentnj", row.nj,row.njmc);
-	stuffManiaSelectWithDeafult("#addStudentzy", row.zybm,row.zymc);
 	stuffManiaSelectWithDeafult("#addStudentxzb", row.edu300_ID,row.xzbname);
 	$("#addStudentIDNum").val(row.sfzh);
 	stuffManiaSelectWithDeafult("#addStudentNation", row.mzbm);
@@ -563,6 +558,63 @@ function stuffStudentDetails(row){
 	$("#addStudentjtzz").val(row.jtzz);
 	$("#addStudentzjxy").val(row.zjxy);
 	$("#addStudentbz").val(row.bz);
+	stuffCanChooseClass(row.pycc,row.szxb,row.nj,row.zybm,row.edu300_ID);
+	stuffRelationSelect("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy",row.pycc,row.szxb,row.nj,row.zybm);
+}
+
+//填充可选行政阿布呢
+function stuffCanChooseClass(pycc,szxb,nj,zybm,edu300_ID){
+	var culturePlanObject=new Object();
+	culturePlanObject.level=pycc;
+	culturePlanObject.department=szxb;
+	culturePlanObject.grade=nj;
+	culturePlanObject.major=zybm;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryCulturePlanAdministrationClasses",
+		data: {
+			"culturePlanInfo":JSON.stringify(culturePlanObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				//层次
+				var str = '';
+				var classesInfo=backjson.classesInfo;
+				if (backjson.classesInfo.length===0) {
+					str = '<option value="seleceConfigTip">暂无选择</option>';
+					toastr.warning('暂无班级');
+				}else{
+					for (var i = 0; i < classesInfo.length; i++) {
+						if(classesInfo[i].edu300_ID===parseInt(edu300_ID)){
+							str += '<option value="' + classesInfo[i].edu300_ID + '">' + classesInfo[i].xzbmc
+								+ '</option>';
+						}
+					}
+					for (var i = 0; i < classesInfo.length; i++) {
+						if(classesInfo[i].edu300_ID!==parseInt(edu300_ID)){
+							str += '<option value="' + classesInfo[i].edu300_ID + '">' + classesInfo[i].xzbmc
+								+ '</option>';
+						}
+					}
+				}
+				stuffManiaSelect("#addStudentxzb", str);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //修改学生信息
@@ -611,16 +663,17 @@ function modifyStudent(row,index){
 				requestComplete();
 			},
 			success : function(backjson) {
+				hideloding();
 				if (backjson.result) {
-					hideloding();
+					var str = '<option value="seleceConfigTip">暂无选择</option>';
 					if (backjson.classesInfo.length===0) {
-						toastr.warning('暂无班级信息');
-						return;
-					}
-					var str = '<option value="seleceConfigTip">请选择</option>';
-					for (var i = 0; i < backjson.classesInfo.length; i++) {
-						str += '<option value="' + backjson.classesInfo[i].edu300_ID + '">' + backjson.classesInfo[i].xzbmc
+						toastr.warning('暂无班级');
+					}else{
+						str = '<option value="seleceConfigTip">请选择</option>';
+						for (var i = 0; i < backjson.classesInfo.length; i++) {
+							str += '<option value="' + backjson.classesInfo[i].edu300_ID + '">' + backjson.classesInfo[i].xzbmc
 								+ '</option>';
+						}
 					}
 					stuffManiaSelect("#addStudentxzb", str);
 				} else {
