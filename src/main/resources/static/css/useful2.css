@@ -1513,6 +1513,8 @@ background: rgba(36, 138, 187, 0.77);
     font-weight: 500;
     font-size: 35px;
     padding-bottom: 17px;
+	word-break: break-all;
+	width: 100%;
  }
 
 .noticeBodyArea .ke-toolbar,.noticeBodyArea .ke-statusbar{
