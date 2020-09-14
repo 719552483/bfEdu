@@ -1887,8 +1887,8 @@ function modifyXn(row,index){
 	$(".xnmcTxt"+index).hide();
 	$(".fbsjTxt"+index).hide();
 	drawCalenr("#modifyXn_startTime"+index);
-	drawCalenr("#modifyXn_endTime"+index,true);
-	drawCalenr("#modifyXn_relaseTime"+index,true);
+	drawCalenr("#modifyXn_endTime"+index);
+	drawCalenr("#modifyXn_relaseTime"+index);
 	$("#xnTable td:last-child").addClass("actionChangeLastTD");
 }
 
@@ -2025,8 +2025,8 @@ function addXn(){
 	$("#addXnModal").find(".moadalTitle").html("新增学年");
 	$.showModal("#addXnModal",true);
 	drawCalenr("#addXn_startTime");
-	drawCalenr("#addXn_endTime",true);
-	drawCalenr("#relaseTime",true);
+	drawCalenr("#addXn_endTime");
+	drawCalenr("#relaseTime");
 
 	//新增学年
 	$('.addXn_confimBtn').unbind('click');
