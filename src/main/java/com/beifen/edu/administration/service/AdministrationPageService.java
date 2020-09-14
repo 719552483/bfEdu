@@ -510,6 +510,10 @@ public class AdministrationPageService {
 			edu206.setXnid(xnid);
 			edu206.setKcmc(edu108.getKcmc());
 			edu206.setZxs(edu108.getZxs().toString());
+			edu206.setLlxs(edu108.getLlxs());
+			edu206.setSjxs(edu108.getSjxs());
+			edu206.setJzxs(edu108.getJzxs());
+			edu206.setFsxs(edu108.getFsxs());
 			edu206.setXf(edu108.getXf());
 			edu206Dao.save(edu206);
 		}
