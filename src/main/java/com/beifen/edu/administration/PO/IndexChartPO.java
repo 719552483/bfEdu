@@ -4,8 +4,8 @@ import java.util.List;
 
 public class IndexChartPO {
     private List<List> source;
-    private List<List> dataOne;
-    private List<List> dataTwo;
+    private List dataOne;
+    private List dataTwo;
 
     public List<List> getSource() {
         return source;
@@ -15,19 +15,19 @@ public class IndexChartPO {
         this.source = source;
     }
 
-    public List<List> getDataOne() {
+    public List getDataOne() {
         return dataOne;
     }
 
-    public void setDataOne(List<List> dataOne) {
+    public void setDataOne(List dataOne) {
         this.dataOne = dataOne;
     }
 
-    public List<List> getDataTwo() {
+    public List getDataTwo() {
         return dataTwo;
     }
 
-    public void setDataTwo(List<List> dataTwo) {
+    public void setDataTwo(List dataTwo) {
         this.dataTwo = dataTwo;
     }
 }
