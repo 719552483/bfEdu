@@ -239,7 +239,7 @@ public class SystemManageController {
     }
 
     /**
-     * 获取所有通知
+     * 获取首页通知
      * @return returnMap
      */
     @RequestMapping("getNotices")
@@ -249,7 +249,16 @@ public class SystemManageController {
         return resultVO;
     }
 
-
+    /**
+     * 获取用户发布的通知
+     * @return returnMap
+     */
+    @RequestMapping("getNoticeByUser")
+    @ResponseBody
+    public ResultVO getNoticeByUser(@RequestParam("userId") String userId) {
+        ResultVO resultVO = systemManageService.getNoticeByUser(userId);
+        return resultVO;
+    }
     /**
      * 新增二级代码
      * @param newCodeInfo

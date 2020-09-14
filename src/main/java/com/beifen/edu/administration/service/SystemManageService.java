@@ -541,7 +541,7 @@ public class SystemManageService {
     }
 
 
-    //获取用户发布的通知
+    //获取首页的通知
     public ResultVO getNotices(String userId) {
         ResultVO resultVO;
 
@@ -564,6 +564,22 @@ public class SystemManageService {
 
         return resultVO;
     }
+
+    //获取用户发布的通知
+    public ResultVO getNoticeByUser(String userId) {
+        ResultVO resultVO;
+
+        List<Edu700> edu700List = edu700Dao.getNoticesByUserId(userId);
+
+        if (edu700List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无通知");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu700List.size()+"条通知",edu700List);
+        }
+
+        return resultVO;
+    }
+
 
 
     //搜索二级代码
