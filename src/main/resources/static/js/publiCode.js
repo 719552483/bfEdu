@@ -1886,9 +1886,9 @@ function modifyXn(row,index){
 	$(".jssjTxt"+index).hide();
 	$(".xnmcTxt"+index).hide();
 	$(".fbsjTxt"+index).hide();
-	drawCalenr("#modifyXn_startTime"+index);
-	drawCalenr("#modifyXn_endTime"+index);
-	drawCalenr("#modifyXn_relaseTime"+index);
+	selfDrawCalenr("#modifyXn_startTime"+index);
+	selfDrawCalenr("#modifyXn_endTime"+index);
+	selfDrawCalenr("#modifyXn_relaseTime"+index);
 	$("#xnTable td:last-child").addClass("actionChangeLastTD");
 }
 
@@ -2024,15 +2024,31 @@ function addXn(){
 	$('#addXnName,#addXn_startTime,#addXn_endTime,#relaseTime').val("");
 	$("#addXnModal").find(".moadalTitle").html("新增学年");
 	$.showModal("#addXnModal",true);
-	drawCalenr("#addXn_startTime");
-	drawCalenr("#addXn_endTime");
-	drawCalenr("#relaseTime");
+	selfDrawCalenr("#addXn_startTime");
+	selfDrawCalenr("#addXn_endTime");
+	selfDrawCalenr("#relaseTime");
 
 	//新增学年
 	$('.addXn_confimBtn').unbind('click');
 	$('.addXn_confimBtn').bind('click', function(e) {
 		confimAddXn();
 		e.stopPropagation();
+	});
+}
+
+// 日期选择初始化
+function selfDrawCalenr(id) {
+	$(id).datetimepicker({
+		format : 'yyyy-mm-dd',
+		language:'zh-CN',
+		initialDate:new Date(),
+		weekStart: 1,
+		autoclose :true,
+		minView :2,
+		todayHighlight:true,
+		startView:2,
+		// endDate:new Date(),
+		todayBtn: "linked",
 	});
 }
 

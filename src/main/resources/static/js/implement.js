@@ -1318,7 +1318,7 @@ function drawCalenr(id,isSplitToday) {
 			  minView :2,
 			  todayHighlight:true,
 			  startView:2,
-			  // endDate:new Date(),
+			  endDate:new Date(),
 	          todayBtn: "linked",
 		});
 	}else{
