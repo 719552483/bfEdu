@@ -468,14 +468,35 @@ function returnBack(){
 }
 
 //填充chart
-function stuffChart(){
-     // getChartInfo();
-	stuffChart1();
-	stuffChart2();
+function getChartInfo(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getIndexChart",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffChart1(backjson.data.source);
+				stuffChart2(backjson.data.dataOne,backjson.data.dataTwo);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //chart1
-function  stuffChart1(){
+function  stuffChart1(source){
 	// 基于准备好的dom，初始化echarts实例
 	var myChart = echarts.init(document.getElementById("chart1"));
 	option = {
@@ -508,20 +529,7 @@ function  stuffChart1(){
 		},
 		tooltip: {},
 		dataset: {
-			source: [
-				['product', '行政班数量', '学生数量', '老师数量'],
-				['畜牧兽医', 10, 85,50],
-				['会计', 43, 85, 93],
-				['电气自动化技术', 43, 85, 93],
-				['高尔夫球运动与管理', 43, 85, 93],
-				['计算机网络技术', 43, 85, 93],
-				['信息安全与管理', 43, 85, 93],
-				['园艺技术', 43, 85, 93],
-				['电子商务', 43, 85, 93],
-				['作物生产技术', 43, 85, 93],
-				['农村金融', 43, 85, 93],
-				['食品加工技术', 43, 85, 97]
-			]
+			source: source
 		},
 		xAxis: {
 			type: 'category'
@@ -584,7 +592,7 @@ function  stuffChart1(){
 }
 
 //chart2
-function  stuffChart2(){
+function  stuffChart2(dataOne,dataTwo){
 	// 基于准备好的dom，初始化echarts实例
 	var myChart = echarts.init(document.getElementById("chart2"));
 	option = {
@@ -640,7 +648,7 @@ function  stuffChart2(){
 						color: 'rgba(0,0,0,0)'
 					}
 				},
-				data: [0, 220, 0, 220, 0]
+				data: dataOne
 			},
 			{
 				name: '学时',
@@ -650,7 +658,7 @@ function  stuffChart2(){
 					show: true,
 					position: 'inside'
 				},
-				data: [400, 180, 220, 180, 220]
+				data: dataTwo
 			}
 		]
 	};
@@ -675,7 +683,7 @@ $(function() {
 	drawAuthorityGroup();
 	loadNotices();
 	loadChoosendShortcuts();
-	stuffChart();
+	getChartInfo();
 	chartListener();
 
 	//返回首页事件绑定
