@@ -16,10 +16,11 @@ import javax.persistence.Table;
 @Table(name = "Edu993")
 public class Edu993 {
 	private Long Edu993_ID;
-	private String sfsyzs; // 是否首页展示
-	private String tzzt; // 通知主体
-	private String tzbt;// 通知标题
-	private String fbsj;// 发布时间
+	private String isRead; // 是否已读
+	private String noticeText; // 提醒内容
+	private String noticeType;// 提醒类型
+	private String TypeName;//类型名称
+	private String createDate;// 发布时间
 
 
 	@Id
@@ -34,39 +35,43 @@ public class Edu993 {
 		Edu993_ID = edu993_ID;
 	}
 
-	public String getSfsyzs() {
-		return sfsyzs;
+	public String getIsRead() {
+		return isRead;
 	}
 
-	public void setSfsyzs(String sfsyzs) {
-		this.sfsyzs = sfsyzs;
+	public void setIsRead(String isRead) {
+		this.isRead = isRead;
 	}
 
-	// 指定blob字段
-	@Lob
-	@Basic(fetch = FetchType.LAZY)
-	public String getTzzt() {
-		return tzzt;
+	public String getNoticeText() {
+		return noticeText;
 	}
 
-	public void setTzzt(String tzzt) {
-		this.tzzt = tzzt;
+	public void setNoticeText(String noticeText) {
+		this.noticeText = noticeText;
 	}
 
-	public String getTzbt() {
-		return tzbt;
+	public String getNoticeType() {
+		return noticeType;
 	}
 
-	public void setTzbt(String tzbt) {
-		this.tzbt = tzbt;
+	public void setNoticeType(String noticeType) {
+		this.noticeType = noticeType;
 	}
 
-	public String getFbsj() {
-		return fbsj;
+	public String getTypeName() {
+		return TypeName;
 	}
 
-	public void setFbsj(String fbsj) {
-		this.fbsj = fbsj;
+	public void setTypeName(String typeName) {
+		TypeName = typeName;
 	}
 
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
 }
