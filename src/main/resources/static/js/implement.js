@@ -1308,7 +1308,6 @@ function checkTime(startTime,endTime){
 
 // 日期选择初始化
 function drawCalenr(id,isSplitToday) {
-	var endDateParams;
 	if (typeof(isSplitToday) === "undefined") {
 		$(id).datetimepicker({
 			  format : 'yyyy-mm-dd',
@@ -1319,7 +1318,7 @@ function drawCalenr(id,isSplitToday) {
 			  minView :2,
 			  todayHighlight:true,
 			  startView:2,
-			  endDate:new Date(),
+			  // endDate:new Date(),
 	          todayBtn: "linked",
 		});
 	}else{
