@@ -627,7 +627,7 @@ function  stuffChart2(){
 		},
 		series: [
 			{
-				name: '辅助',
+				name: '',
 				type: 'bar',
 				stack: '总量',
 				itemStyle: {

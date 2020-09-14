@@ -122,7 +122,7 @@ function stufflocalInfoTable(tableInfo) {
                 formatter: paramsMatter
             }, {
                 field: 'pointCount',
-                title: '教学任务点数量',
+                title: '任务点',
                 align: 'left',
                 formatter: paramsMatter
             }, {

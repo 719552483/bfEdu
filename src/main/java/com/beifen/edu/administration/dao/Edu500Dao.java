@@ -24,7 +24,7 @@ public interface Edu500Dao extends JpaRepository<Edu500, Long>, JpaSpecification
 
     //根据教学点ID集合查询教学点
     @Query(value = "select new com.beifen.edu.administration.domian.Edu500(e.edu500Id,e.city,e.cityCode,e.country," +
-            "(select count(f.edu501Id) from Edu501 f where f.edu500Id = e.edu500Id),e.localName,e.localAddress,e.remarks" +
-            ") from Edu500 e where e.edu500Id in ?1")
+            "(select count(f.edu501Id) from Edu501 f where f.edu500Id = e.edu500Id),e.localName,e.localAddress,e.remarks) " +
+            "from Edu500 e where e.edu500Id in ?1")
     List<Edu500> findAllByEdu500Ids(List<Long> edu500Ids);
 }
