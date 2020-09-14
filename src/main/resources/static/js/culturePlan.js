@@ -1210,7 +1210,6 @@ function startSearch() {
 //重置检索
 function reReloadSearchs() {
 	var reObject = new Object();
-	var reObject = new Object();
 	reObject.InputIds = "#coursesName";
 	reObject.normalSelectIds = "#coursesNature,#suditStatus,#testWay,#coursesSemester";
 	reReloadSearchsWithSelect(reObject);
