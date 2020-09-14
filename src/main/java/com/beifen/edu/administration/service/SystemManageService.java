@@ -1,7 +1,9 @@
 package com.beifen.edu.administration.service;
 
 import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.PO.ClassHourPO;
 import com.beifen.edu.administration.PO.Edu990PO;
+import com.beifen.edu.administration.PO.IndexChartPO;
 import com.beifen.edu.administration.PO.PageRequestPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
@@ -20,6 +22,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,6 +49,12 @@ public class SystemManageService {
     Edu001Dao edu001Dao;
     @Autowired
     Edu401Dao edu401Dao;
+    @Autowired
+    Edu106Dao edu106Dao;
+    @Autowired
+    Edu300Dao edu300Dao;
+    @Autowired
+    Edu200Dao edu200Dao;
     @Autowired
     RedisUtils redisUtils;
     @Autowired
@@ -594,5 +603,54 @@ public class SystemManageService {
         List<Edu401> edu401List = edu401Dao.findAll();
         redisUtils.set("secondaryCode",edu000List);
         redisUtils.set("classPeriod",edu401List);
+    }
+
+    //获取首页图表数据
+    public ResultVO getIndexChart() {
+        ResultVO resultVO;
+        IndexChartPO indexChartPO = new IndexChartPO();
+        List<List> source = new ArrayList<>();
+        List<Edu106> edu106List = edu106Dao.findAll();
+        String s = "product,行政班数量,学生数量,老师数量";
+        List<String> firstSet = new ArrayList<>(Arrays.asList(s.split(",")));
+        source.add(firstSet);
+        if(edu106List.size() != 0) {
+            for (Edu106 edu106 : edu106List) {
+                List<Object> set = new ArrayList<>();
+                String name = edu106.getZymc();
+                Integer edu300Count = edu300Dao.countByEdu106Id(edu106.getEdu106_ID());
+                Integer edu001Count = edu001Dao.countByEdu106Id(edu106.getEdu106_ID());
+                Integer edu101Count = edu101Dao.countByEdu106Id(edu106.getEdu106_ID());
+                set.add(name);
+                set.add(edu300Count);
+                set.add(edu001Count);
+                set.add(edu101Count);
+                source.add(set);
+            }
+            indexChartPO.setSource(source);
+        }
+
+        ClassHourPO classHourPO = edu200Dao.findSumClassHours();
+
+        int totleHours = classHourPO.getTheoreticalClassHours() + classHourPO.getPracticeClassHours();
+
+        List dataOne = new ArrayList();
+        dataOne.add(0);
+        dataOne.add(totleHours - classHourPO.getTheoreticalClassHours());
+        dataOne.add(0);
+        dataOne.add(totleHours-classHourPO.getScatteredClassHours());
+        dataOne.add(0);
+        indexChartPO.setDataOne(dataOne);
+
+        List dataTwo = new ArrayList();
+        dataTwo.add(totleHours);
+        dataTwo.add(classHourPO.getTheoreticalClassHours());
+        dataTwo.add(classHourPO.getPracticeClassHours());
+        dataTwo.add(classHourPO.getScatteredClassHours());
+        dataTwo.add(classHourPO.getConcentratedClassHours());
+        indexChartPO.setDataTwo(dataTwo);
+
+        resultVO = ResultVO.setSuccess("查询成功",indexChartPO);
+        return resultVO;
     }
 }

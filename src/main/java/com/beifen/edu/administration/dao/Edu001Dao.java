@@ -93,4 +93,8 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//根据用户二级学院权限查询学生
 	@Query(value = "select e.* from edu001 e where e.szxb in ?1",nativeQuery = true)
 	List<Edu001> findAllByDepartments(List<String> departments);
+
+	//根据专业查找学生人数
+	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.zybm = ?1",nativeQuery = true)
+    Integer countByEdu106Id(Long edu106_id);
 }

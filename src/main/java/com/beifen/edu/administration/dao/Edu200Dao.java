@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.beifen.edu.administration.PO.ClassHourPO;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -59,4 +60,7 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	@Query(value = "select e.* from edu200 e where e.kcmc = ?1", nativeQuery = true)
 	public List<Edu200> queryAllByName(String courseName);
 
+	//查询各类学时总和
+	@Query(value = "select new com.beifen.edu.administration.PO.ClassHourPO(sum(e.llxs),sum(e.sjxs),sum(e.jzxs),sum(e.fsxs)) from Edu200 e")
+	ClassHourPO findSumClassHours();
 }
