@@ -1645,6 +1645,7 @@ public class AdministrationPageService {
 		edu203Dao.deleteByscheduleId(scheduleId);
 		edu005Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 		edu202DAO.delete(Long.parseLong(scheduleId));
+		edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 	}
 
 	//根据条件检索已排课信息
