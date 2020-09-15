@@ -20,6 +20,9 @@ function deafultSearch(){
 function getTaskSelectInfo() {
 	LinkageSelectPublic("#level","#department","#grade","#major");
 	$("#major").change(function() {
+		if(getNormalSelectValue("major")===""){
+			return;
+		}
 		startSearch();
 	});
 
