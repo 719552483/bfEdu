@@ -283,6 +283,12 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 					toastr.warning('暂无可选教学点场地信息');
 					return;
 				}
+				if(choosedTask[0].fsxs===0){
+					$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").hide();
+				}else{
+					$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").show();
+				}
+
 				stuffTitle(culturePlanInfo,choosedTask[0]);
 				destoryLastStuff();
 				//渲染各个下拉框
@@ -482,42 +488,48 @@ function scheduleSingleClassBtnBind(){
 
 //tab1的下一步
 function configedJz(){
-	var PKInfo=getJzPKInfo();
-	if(typeof PKInfo ==='undefined'){
-		return;
+	if($(".fsxsSpan")[0].innerText!=="0"){
+		var PKInfo=getJzPKInfo();
+		if(typeof PKInfo ==='undefined'){
+			return;
+		}
+
+		var scheduleInfo=scheduleDetailInfo();
+		if(scheduleInfo.length==0){
+			return;
+		}
+
+		//根据开始结束周渲染可选分散周数
+		var startWeek=parseInt(PKInfo.ksz);
+		var endWeek=parseInt(PKInfo.jsz);
+		var stuffArray=new Array();
+		stuffArray.push(startWeek);
+		stuffArray.push(endWeek);
+
+		var currentNum=startWeek;
+		for (var g = 0; g < (endWeek-startWeek)-1; g++) {
+			currentNum=currentNum+1;
+			stuffArray.push(currentNum);
+		}
+		stuffArray=stuffArray.sort(function(a,b){return a-b});
+
+		var str = '<option value="seleceConfigTip">请选择</option>';
+		for (var g = 0; g < stuffArray.length; g++) {
+			str += '<option value="' + stuffArray[g] + '">第' + stuffArray[g]+'周</option>';
+		}
+		stuffManiaSelect("#fsxq", str);
+
+		var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
+		if(!checkJzPkRs){
+			return;
+		}
+
+		$(".itab").find("li:eq(1)").find("a").trigger('click');
+	}else{
+		$(".itab").find("li:eq(2)").find("a").trigger('click');
 	}
 
-	var scheduleInfo=scheduleDetailInfo();
-	if(scheduleInfo.length==0){
-		return;
-	}
 
-	//根据开始结束周渲染可选分散周数
-	var startWeek=parseInt(PKInfo.ksz);
-	var endWeek=parseInt(PKInfo.jsz);
-	var stuffArray=new Array();
-	stuffArray.push(startWeek);
-	stuffArray.push(endWeek);
-
-	var currentNum=startWeek;
-	for (var g = 0; g < (endWeek-startWeek)-1; g++) {
-		currentNum=currentNum+1;
-		stuffArray.push(currentNum);
-	}
-	stuffArray=stuffArray.sort(function(a,b){return a-b});
-
-	var str = '<option value="seleceConfigTip">请选择</option>';
-	for (var g = 0; g < stuffArray.length; g++) {
-		str += '<option value="' + stuffArray[g] + '">第' + stuffArray[g]+'周</option>';
-	}
-	stuffManiaSelect("#fsxq", str);
-
-	var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
-	if(!checkJzPkRs){
-		return;
-	}
-
-	$(".itab").find("li:eq(1)").find("a").trigger('click');
 }
 
 //tab2的上一步
@@ -753,9 +765,13 @@ function confirmPk(){
 		return;
 	}
 
-	var checkSFxsRs=checkSFxs();
-	if(!checkSFxsRs){
-		return;
+	var fsxsInfo=new Array();
+	if($(".fsxsSpan")[0].innerText!=="0"){
+		var checkSFxsRs=checkSFxs();
+		if(!checkSFxsRs){
+			return;
+		}
+		fsxsInfo=getfsxs();
 	}
 
 	$.ajax({
@@ -765,7 +781,7 @@ function confirmPk(){
 		data:{
 			"scheduleInfo":JSON.stringify(PKInfo),
 			"scheduleDetail":JSON.stringify(scheduleInfo),
-			"scatteredClass":JSON.stringify(getfsxs())
+			"scatteredClass":JSON.stringify(fsxsInfo)
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -1161,7 +1177,7 @@ function puttedInfo(row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				stuffPuttedInfo(row,backjson.scheduleCompletedDetails);
+				stuffPuttedInfo(row,backjson.scheduleCompletedDetails,backjson.scatterList);
 				$.showModal("#puttedInfoModal",false);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1236,9 +1252,10 @@ function confirmRmovePutted(removeArray){
 }
 
 //填充已排详情
-function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails){
+function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	//清空已有课节安排区域
 	$(".puttedKjArea").find(".PuttedKjArea").remove();
+	$(".puttedfsKjArea").find(".PuttedfsKjArea").remove();
 
 	$("#puttedTerm").val(scheduleCompletedDetails.xn);
 	$("#puttedSkdd").val(scheduleCompletedDetails.skddmc);
@@ -1253,6 +1270,15 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails){
 	var classPeriodList=scheduleCompletedDetails.classPeriodList;
 	for (var i = 0; i < classPeriodList.length; i++) {
 		$(".puttedKjArea").append('<div class="PuttedKjArea">'+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+'</div>');
+	}
+
+	if(scatterList.length===0){
+		$(".fsformtitle,.puttedfsKjArea").hide();
+	}else{
+		for (var i = 0; i < scatterList.length; i++) {
+			$(".puttedfsKjArea").append('<div class="PuttedfsKjArea">第'+scatterList[i].week+'周 '+scatterList[i].classHours+'学时</div>');
+		}
+		$(".fsformtitle,.puttedfsKjArea").show();
 	}
 }
 
