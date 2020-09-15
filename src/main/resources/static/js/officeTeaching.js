@@ -749,7 +749,7 @@ function checkJzPk(PKInfo,scheduleInfo){
 
 	var shouldJzxs=parseInt($(".jzxsSpan")[0].innerText);
 	var allWeek=(endWeek-startWeek)+1;
-	if(shouldJzxs!=(allWeek*scheduleInfo.length)*2){
+	if(shouldJzxs<(allWeek*scheduleInfo.length)*2){
 		rs=false;
 		toastr.warning('集中学时不正确');
 		return rs;
