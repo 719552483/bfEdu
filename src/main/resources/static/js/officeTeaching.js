@@ -13,133 +13,21 @@ $(function() {
 
 //初始化检索
 function deafultSearch(){
-	var returnObject = new Object();
-	returnObject.level = "";
-	returnObject.department = "";
-	returnObject.grade = "";
-	returnObject.major = "";
-	returnObject.levelTxt = "";
-	returnObject.departmentTxt = "";
-	returnObject.gradeTxt = "";
-	returnObject.majorTxt = "";
-
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/getTaskByCulturePlanByUser",
-		data: {
-			"culturePlanInfo":JSON.stringify(returnObject),
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.result) {
-				if(backjson.taskInfo.length===0){
-					toastr.info('暂无可排课程');
-					drawWaitTaskEmptyTable();
-				}else{
-					toastr.info('共找到'+backjson.taskInfo.length+'条可排课程');
-					stuffWaitTaskTable(backjson.taskInfo);
-				}
-			} else {
-				toastr.warning('操作失败，请重试');
-			}
-		}
-	});
+	startSearch();
 }
 
 //获取-专业培养计划- 有逻辑关系select信息
 function getTaskSelectInfo() {
 	LinkageSelectPublic("#level","#department","#grade","#major");
 	$("#major").change(function() {
-		if(typeof getNotNullSearchs()==="undefined"){
-			return;
-		}
-
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/getTaskByCulturePlanByUser",
-			data: {
-				"culturePlanInfo":JSON.stringify(getNotNullSearchs()),
-				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-			},
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				hideloding();
-				if (backjson.result) {
-					if(backjson.taskInfo.length===0){
-						toastr.info('暂无可排课程');
-						drawWaitTaskEmptyTable();
-					}else{
-						stuffWaitTaskTable(backjson.taskInfo);
-					}
-				} else {
-					toastr.warning('操作失败，请重试');
-				}
-			}
-		});
+		startSearch();
 	});
 
 	$("#kcxz").change(function() {
-		if(getNormalSelectValue("kcxz")==""){
+		if(getNormalSelectValue("kcxz")===""){
 			return;
 		}
-		var SearchObject=getNotNullSearchs();
-		if(typeof(SearchObject) === "undefined"){
-			return;
-		}
-		SearchObject.kcxz=getNormalSelectValue("kcxz");
-		
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/kcxzBtnGetTask",
-			data: {
-	             "SearchObject":JSON.stringify(SearchObject)
-	        },
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				hideloding();
-				if (backjson.result) {
-					if(backjson.taskInfo.length===0){
-						drawWaitTaskEmptyTable();
-					}else{
-						stuffWaitTaskTable(backjson.taskInfo);
-					}
-				} else {
-					toastr.warning('操作失败，请重试');
-				}
-			}
-		});
+		startSearch();
 	});
 }
 
@@ -975,10 +863,13 @@ function getNotNullSearchs() {
 	var departmentValue = getNormalSelectValue("department");
 	var gradeValue =getNormalSelectValue("grade");
 	var majorValue =getNormalSelectValue("major");
+	var kcxz =getNormalSelectValue("kcxz");
 	var levelText = getNormalSelectText("level");
 	var departmentText = getNormalSelectText("department");
 	var gradeText =getNormalSelectText("grade");
 	var majorText =getNormalSelectText("major");
+	var kcxzText =getNormalSelectText("kcxz");
+
 	
 	var returnObject = new Object();
 	returnObject.level = levelValue;
@@ -989,6 +880,8 @@ function getNotNullSearchs() {
 	returnObject.departmentTxt = departmentText;
 	returnObject.gradeTxt = gradeText;
 	returnObject.majorTxt = majorText;
+	returnObject.kcxz=kcxz;
+	returnObject.kcxzTxt=kcxzText
 	return returnObject;
 }
 
@@ -1362,15 +1255,12 @@ function startSearch(){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				if(backjson.taskInfo.length===0){
-					toastr.info('暂无可排课程');
-					drawWaitTaskEmptyTable();
-				}else{
-					stuffWaitTaskTable(backjson.taskInfo);
-				}
+			if (backjson.code===200) {
+				toastr.info(backjson.msg);
+				stuffWaitTaskTable(backjson.data);
 			} else {
-				toastr.warning('操作失败，请重试');
+				drawWaitTaskEmptyTable();
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
