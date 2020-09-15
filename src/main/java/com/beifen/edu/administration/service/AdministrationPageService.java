@@ -1653,6 +1653,7 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap();
 
 		List<TeachingSchedulePO> taskList;
+		List<Edu207> edu207List= new ArrayList<>();
 
 		Specification<TeachingSchedulePO> specification = new Specification<TeachingSchedulePO>() {
 			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1679,10 +1680,16 @@ public class AdministrationPageService {
 
 		taskList = scheduleCompletedViewDao.findAll(specification);
 
+		if(taskList.size() != 0) {
+			List<String> edu201Ids = taskList.stream().map(TeachingSchedulePO::getId).collect(Collectors.toList());
+			edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids);
+		}
+
+
 		returnMap.put("result", true);
 		returnMap.put("taskList", taskList);
+		returnMap.put("scatterList",edu207List);
 		return returnMap;
-
 	}
 
 	public Map<String, Object> searchScheduleCompletedDetail(String edu202Id) {
