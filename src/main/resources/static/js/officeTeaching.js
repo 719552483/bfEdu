@@ -7,13 +7,53 @@ $(function() {
 	drawWaitTaskEmptyTable();
 	btnControl();
 	binBind();
-	deafultSearch();
 	$("input[type='number']").inputSpinner();
+	deafultSearch();
 });
 
 //初始化检索
 function deafultSearch(){
-	startSearch();
+	var returnObject = new Object();
+	returnObject.level = "";
+	returnObject.department = "";
+	returnObject.grade = "";
+	returnObject.major = "";
+	returnObject.levelTxt = "";
+	returnObject.departmentTxt = "";
+	returnObject.gradeTxt = "";
+	returnObject.majorTxt = "";
+	returnObject.kcxz="";
+	returnObject.kcxzTxt="";
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getTaskByCulturePlanByUser",
+		data: {
+			"culturePlanInfo":JSON.stringify(returnObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				toastr.info(backjson.msg);
+				stuffWaitTaskTable(backjson.data);
+			} else {
+				drawWaitTaskEmptyTable();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //获取-专业培养计划- 有逻辑关系select信息
