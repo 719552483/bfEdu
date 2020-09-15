@@ -160,7 +160,7 @@ function stuffApprovalMangerTable(tableInfo){
 			formatter : creatDateMatter
 		},{
 			field : 'lastPersonName',
-			title : '上一步审批人',
+			title : '上一步执行人',
 			align : 'left',
 			formatter : paramsMatter
 		},{

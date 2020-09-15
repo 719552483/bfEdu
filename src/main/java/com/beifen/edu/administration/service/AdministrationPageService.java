@@ -88,6 +88,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu007Dao edu007Dao;
 	@Autowired
+	private Edu207Dao edu207Dao;
+	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
@@ -1111,23 +1113,33 @@ public class AdministrationPageService {
 
 
 	//确认排课
-	public boolean saveSchedule(Edu202 edu202, List<Edu203> edu203List) {
+	public boolean saveSchedule(Edu202 edu202, List<Edu203> edu203List, List<Edu207> edu207List) {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
 		//总学时
-		double zxs = Double.parseDouble(edu201.getZxs());
+		Double zxs = Double.parseDouble(edu201.getZxs());
+		//集中学时
 		Double jzxs = edu201.getJzxs();
-		Double fsxs = edu201.getFsxs();
 		//计算排课总课时
-		int ksz = Integer.parseInt(edu202.getKsz());
-		int jsz = Integer.parseInt(edu202.getJsz());
-		int plzks = (jsz - ksz + 1) * edu203List.size()*2;
+		Integer ksz = Integer.parseInt(edu202.getKsz());
+		Integer jsz = Integer.parseInt(edu202.getJsz());
+		Integer plzks = (jsz - ksz + 1) * edu203List.size()*2;
+		Integer sumFsxs = 0;
 
+		if(edu207List.size() != 0) {
+			//计算分散课时
+			sumFsxs = edu207List.stream().collect(Collectors.summingInt(Edu207::getClassHours));
+		}
 
-		if (plzks < zxs) {
+		if (plzks + sumFsxs < zxs) {
 			isSuccess = false;
 		} else {
+			if(edu207List.size() != 0) {
+				for (Edu207 edu207 : edu207List) {
+					edu207Dao.save(edu207);
+				}
+			}
 			edu202DAO.save(edu202);
 			String edu202_id = edu202.getEdu202_ID().toString();
 			//重新排列课节集合
@@ -1160,7 +1172,7 @@ public class AdministrationPageService {
 					save.setXqmc(e.getXqmc());
 					edu203Dao.save(save);
 					currentXs+=2;
-					if (currentXs >= zxs) {
+					if (currentXs >= jzxs) {
 						break classCycle;
 					}
 				}
