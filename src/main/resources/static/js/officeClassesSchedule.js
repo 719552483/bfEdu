@@ -10,7 +10,7 @@ $(function() {
 //初始化检索
 function deafultSearch(){
 	var returnObject=new Object();
-	returnObject.xzbmc="";
+	returnObject.pyjhmc="";
 	returnObject.kcmc="";
 	$.ajax({
 		method : 'get',
@@ -36,6 +36,7 @@ function deafultSearch(){
 				toastr.info(backjson.msg);
 				stuffTaskInfoTable(backjson.data);
 			} else {
+				drawTaskEmptyTable();
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -656,6 +657,7 @@ function searchTask(){
 				toastr.info(backjson.msg);
 				stuffTaskInfoTable(backjson.data);
 			} else {
+				drawTaskEmptyTable();
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -664,10 +666,10 @@ function searchTask(){
 
 //得到检索任务书的检索条件
 function getSearchInfo(){
-	var xzbmc=$("#xzbmc").val();
+	var pyjhmc=$("#pyjhmc").val();
 	var kcmc=$("#kcmc").val();
 	var returnObject=new Object();
-	returnObject.xzbmc=xzbmc;
+	returnObject.pyjhmc=pyjhmc;
 	returnObject.kcmc=kcmc;
 	return returnObject;
 }
@@ -1478,14 +1480,14 @@ function comfirmModifyTask(row,index){
 
 //检索已发布任务书
 function startSearchPutOutTasks(){
-	var xzbmc=$("#xzbmc").val();
+	var pyjhmc=$("#pyjhmc").val();
 	var kcmc=$("#kcmc").val();
-	if(xzbmc===""&&kcmc===""){
+	if(pyjhmc===""&&kcmc===""){
 		toastr.warning('检索条件为空');
 		return;
 	}
 	var serachObject=new Object();
-	xzbmc===""?serachObject.xzbmc="":serachObject.xzbmc=xzbmc;
+	pyjhmc===""?serachObject.pyjhmc="":serachObject.pyjhmc=pyjhmc;
 	kcmc===""?serachObject.kcmc="":serachObject.kcmc=kcmc;
 	serachObject.sszt="";
 	$.ajax({
@@ -1493,7 +1495,8 @@ function startSearchPutOutTasks(){
 		cache : false,
 		url : "/searchPutOutTasks",
 		data: {
-            "SearchCriteria":JSON.stringify(serachObject) 
+            "SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
        },
 		dataType : 'json',
 		beforeSend: function(xhr) {

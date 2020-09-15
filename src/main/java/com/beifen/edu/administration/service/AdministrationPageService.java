@@ -761,12 +761,35 @@ public class AdministrationPageService {
 
 
 	// 根据教学班组装任务书信息
-	public ResultVO getTaskInfo(Edu201 edu201,String userId) {
+	public ResultVO getTaskInfo(Edu206 edu206,String userId) {
 		ResultVO resultVO;
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-		List<Edu206> edu206IdList = edu206Dao.findTaskIdByDepartments(departments);
+		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
+
+
+		Specification<Edu206> specification = new Specification<Edu206>() {
+			public Predicate toPredicate(Root<Edu206> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu206.getKcmc() != null && !"".equals(edu206.getKcmc())) {
+					predicates.add(cb.like(root.<String>get("kcmc"), "%"+edu206.getKcmc()+"%"));
+				}
+				if (edu206.getPyjhmc() != null && !"".equals(edu206.getPyjhmc())) {
+					predicates.add(cb.like(root.<String>get("pyjhmc"), "%"+edu206.getPyjhmc()+"%"));
+				}
+				Path<Object> path = root.get("edu108_ID");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <edu108Ids.size() ; i++) {
+					in.value(edu108Ids.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+
+		List<Edu206> edu206IdList = edu206Dao.findAll(specification);
 
 
 		if (edu206IdList.size() == 0){
@@ -1516,12 +1539,19 @@ public class AdministrationPageService {
 
 
 	// 检索已发布的教学任务书
-	public List<Edu201> searchPutOutTasks(Edu201 edu201) {
+	public List<Edu201> searchPutOutTasks(Edu201 edu201,String userId) {
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
+
+
 		Specification<Edu201> specification = new Specification<Edu201>() {
 			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu201.getClassName() != null && !"".equals(edu201.getClassName())) {
-					predicates.add(cb.like(root.<String>get("className"), '%' + edu201.getClassName() + '%'));
+				if (edu201.getPyjhmc() != null && !"".equals(edu201.getPyjhmc())) {
+					predicates.add(cb.like(root.<String>get("pyjhmc"), '%' + edu201.getPyjhmc() + '%'));
 				}
 
 				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
@@ -1531,9 +1561,18 @@ public class AdministrationPageService {
 				if (edu201.getSszt() != null && !"".equals(edu201.getSszt())) {
 					predicates.add(cb.equal(root.<String>get("sszt"), edu201.getSszt()));
 				}
+
+				Path<Object> path = root.get("edu108_ID");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <edu108Ids.size() ; i++) {
+					in.value(edu108Ids.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
+
 		List<Edu201> entities = edu201DAO.findAll(specification);
 		return entities;
 	}

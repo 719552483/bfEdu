@@ -1818,12 +1818,12 @@ public class AdministrationController {
 	@ResponseBody
 	public ResultVO getTaskInfo(@RequestParam("searchInfo") String searchInfo,@RequestParam("userId") String userId) {
 		JSONObject searchObject = JSONObject.fromObject(searchInfo);
-		String xzbmc = searchObject.getString("xzbmc");
+		String pyjhmc = searchObject.getString("pyjhmc");
 		String kcmc = searchObject.getString("kcmc");
-		Edu201 edu201 = new Edu201();
-		edu201.setClassName(xzbmc);
-		edu201.setKcmc(kcmc);
-		ResultVO result = administrationPageService.getTaskInfo(edu201,userId);
+		Edu206 edu206 = new Edu206();
+		edu206.setPyjhmc(pyjhmc);
+		edu206.setKcmc(kcmc);
+		ResultVO result = administrationPageService.getTaskInfo(edu206,userId);
 		return result;
 	}
 
@@ -1910,16 +1910,17 @@ public class AdministrationController {
 	 */
 	@RequestMapping("searchPutOutTasks")
 	@ResponseBody
-	public Object searchPutOutTasks(@RequestParam("SearchCriteria") String SearchCriteria) {
+	public Object searchPutOutTasks(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userId") String userId) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
-		String xzbmc = searchObject.getString("xzbmc");
+		String pyjhmc = searchObject.getString("pyjhmc");
 		String kcmc = searchObject.getString("kcmc");
 		String sszt = searchObject.getString("sszt");
 		Edu201 edu201=new Edu201();
+		edu201.setPyjhmc(pyjhmc);
 		edu201.setKcmc(kcmc);
 		edu201.setSszt(sszt);
-		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201);
+		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201,userId);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
 		return returnMap;
