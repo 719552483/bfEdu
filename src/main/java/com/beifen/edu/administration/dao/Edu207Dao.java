@@ -20,6 +20,6 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
     @Query(value = "delete from edu207 where Edu201_ID =?1", nativeQuery = true)
     void deleteByscheduleId(String edu201Id);
 
-    @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1", nativeQuery = true)
-    List<Edu207> findAllByEdu201Ids(List<String> edu201Ids);
+    @Query(value = "select e.* from Edu207 e where e.edu201_ID = ?1", nativeQuery = true)
+    List<Edu207> findAllByEdu201Ids(String edu201Ids);
 }

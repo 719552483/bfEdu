@@ -1653,7 +1653,6 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap();
 
 		List<TeachingSchedulePO> taskList;
-		List<Edu207> edu207List= new ArrayList<>();
 
 		Specification<TeachingSchedulePO> specification = new Specification<TeachingSchedulePO>() {
 			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1680,15 +1679,9 @@ public class AdministrationPageService {
 
 		taskList = scheduleCompletedViewDao.findAll(specification);
 
-		if(taskList.size() != 0) {
-			List<String> edu201Ids = taskList.stream().map(TeachingSchedulePO::getId).collect(Collectors.toList());
-			edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids);
-		}
-
 
 		returnMap.put("result", true);
 		returnMap.put("taskList", taskList);
-		returnMap.put("scatterList",edu207List);
 		return returnMap;
 	}
 
@@ -1698,6 +1691,7 @@ public class AdministrationPageService {
 
 		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+		List<Edu207> edu207List = new ArrayList<>();
 
 		try {
 			utils.copyTargetSuper(edu201, scheduleCompletedDetails);
@@ -1711,9 +1705,12 @@ public class AdministrationPageService {
 		}
 
 		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id, edu202.getKsz()));
+		edu207List = edu207Dao.findAllByEdu201Ids(edu202Id);
 
 		returnMap.put("result", true);
 		returnMap.put("scheduleCompletedDetails", scheduleCompletedDetails);
+		returnMap.put("scatterList",edu207List);
+
 		return returnMap;
 	}
 
