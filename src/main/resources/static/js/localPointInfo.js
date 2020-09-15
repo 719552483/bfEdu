@@ -254,6 +254,7 @@ function localInfoDetails(row,index){
 function rebackSiteInfo(){
     var reObject = new Object();
     reObject.InputIds = "#addPointName,#addCapacity,#addRemarks";
+    $("#addCapacity").val(0);
     reReloadSearchsWithSelect(reObject);
 }
 
