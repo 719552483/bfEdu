@@ -10,7 +10,7 @@ public class Edu207 {
     private Long Edu207_ID;//主键
     private String Edu201_ID; //任务书ID
     private String week;//所在周
-    private String classHours; //课时
+    private Integer classHours; //课时
     private String courseName;//课程名称
     private String courseContent;//课程内容
     private String teachingPlatform;//授课平台
@@ -44,11 +44,11 @@ public class Edu207 {
         this.week = week;
     }
 
-    public String getClassHours() {
+    public Integer getClassHours() {
         return classHours;
     }
 
-    public void setClassHours(String classHours) {
+    public void setClassHours(Integer classHours) {
         this.classHours = classHours;
     }
 

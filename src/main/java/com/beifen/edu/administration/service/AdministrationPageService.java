@@ -768,6 +768,11 @@ public class AdministrationPageService {
 
 		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
 
+		if(edu108Ids.size() == 0) {
+			resultVO = ResultVO.setFailed("暂未找到任务书");
+			return resultVO;
+		}
+
 
 		Specification<Edu206> specification = new Specification<Edu206>() {
 			public Predicate toPredicate(Root<Edu206> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1112,10 +1117,13 @@ public class AdministrationPageService {
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
 		//总学时
 		double zxs = Double.parseDouble(edu201.getZxs());
+		Double jzxs = edu201.getJzxs();
+		Double fsxs = edu201.getFsxs();
 		//计算排课总课时
 		int ksz = Integer.parseInt(edu202.getKsz());
 		int jsz = Integer.parseInt(edu202.getJsz());
 		int plzks = (jsz - ksz + 1) * edu203List.size()*2;
+
 
 		if (plzks < zxs) {
 			isSuccess = false;
