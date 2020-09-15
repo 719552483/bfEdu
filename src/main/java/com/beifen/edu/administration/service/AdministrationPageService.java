@@ -926,11 +926,11 @@ public class AdministrationPageService {
 	// 根据培养计划检索待排课程列表
 	public List<Edu201> getTaskByCulturePlan(String levelCode, String departmentCode, String gradeCode, String majorCode) {
 		List<Edu201> retrunList = new ArrayList<>();
-		Long edu107id = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-		if(edu107id == null ) {
+		List<Long> edu107ids = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
+		if(edu107ids.size() == 0 ) {
 			return retrunList;
 		}
-		List<String> current108s = edu108DAO.queryCulturePlanIds(edu107id);
+		List<String> current108s = edu108DAO.queryCulturePlanIds(edu107ids);
 		if (current108s.size() == 0) {
 			return retrunList;
 		}

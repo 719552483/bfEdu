@@ -10,6 +10,7 @@ import javax.persistence.Table;
 public class StudentSchoolTimetablePO {
     private String ID;
     private String edu203_id;
+    private String edu201_id;
     private String kjid;
     private String kjmc;
     private String xqid;
@@ -232,5 +233,13 @@ public class StudentSchoolTimetablePO {
 
     public void setCourseType(String courseType) {
         this.courseType = courseType;
+    }
+
+    public String getEdu201_id() {
+        return edu201_id;
+    }
+
+    public void setEdu201_id(String edu201_id) {
+        this.edu201_id = edu201_id;
     }
 }
