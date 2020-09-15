@@ -930,75 +930,6 @@ public class AdministrationPageService {
 		edu201DAO.changeTaskStatus(id, status);
 	}
 
-	// 根据培养计划检索待排课程列表
-	public List<Edu201> getTaskByCulturePlan(String levelCode, String departmentCode, String gradeCode, String majorCode) {
-		List<Edu201> retrunList = new ArrayList<>();
-		List<Long> edu107ids = edu107DAO.queryEdu107ID(levelCode, departmentCode, gradeCode, majorCode);
-		if(edu107ids.size() == 0 ) {
-			return retrunList;
-		}
-		List<String> current108s = edu108DAO.queryCulturePlanIds(edu107ids);
-		if (current108s.size() == 0) {
-			return retrunList;
-		}
-		retrunList= edu201DAO.queryCulturePlanIds(current108s);
-		return retrunList;
-	}
-
-	// 课程性质按钮检索待排课程列表
-	public List<Edu201> kcxzBtnGetTask(String levelCode, String departmentCode, String gradeCode, String majorCode,
-									   String kcxz) {
-		List<Edu201> retrunList = new ArrayList();
-		List<Edu201> currentEdu201 = AdministrationPageService.this.getTaskByCulturePlan(levelCode, departmentCode,
-				gradeCode, majorCode);
-		for (int i = 0; i < currentEdu201.size(); i++) {
-			Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
-			if (edu108.getKcxzCode().equals(kcxz)) {
-				retrunList.add(currentEdu201.get(i));
-			}
-		}
-		return retrunList;
-	}
-
-	// 课程性质按钮检索待排课程列表 并且有教学班
-	public List<Edu201> kcxzBtnGetTaskWithJxb(String levelCode, String departmentCode, String gradeCode,
-											  String majorCode, String kcxz, String classnName) {
-		List<Edu201> retrunList = new ArrayList();
-		List<Edu201> currentEdu201 = getTaskByCulturePlan(levelCode, departmentCode, gradeCode, majorCode);
-		for (int i = 0; i < currentEdu201.size(); i++) {
-			Edu108 edu108 = edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
-			if (edu108.getKcxzCode().equals(kcxz) && currentEdu201.get(i).getClassName().contains(classnName)) {
-				retrunList.add(currentEdu201.get(i));
-			}
-		}
-		return retrunList;
-	}
-
-	// //排课页面开始检索按钮
-	// public List<Edu201> startSearchSchedule(String searchObject) {
-	// JSONObject SearchObject = JSONObject.fromObject(searchObject);
-	// String levelCode = SearchObject.getString("level");
-	// String departmentCode = SearchObject.getString("department");
-	// String gradeCode = SearchObject.getString("grade");
-	// String majorCode = SearchObject.getString("major");
-	// String jxbID = SearchObject.getString("jxbID");
-	// String kcxz = SearchObject.getString("kcxz");
-	// String kcmc = SearchObject.getString("kcmc");
-	// List<Edu201> currentEdu201=
-	// AdministrationPageService.this.getTaskByCulturePlan(levelCode,departmentCode,gradeCode,majorCode);
-	// List<Edu201> retrunList=new ArrayList();
-	// for (int i = 0; i< currentEdu201.size(); i++) {
-	// Edu108
-	// edu108=edu108DAO.queryPlanByEdu108ID(currentEdu201.get(i).getEdu108_ID().toString());
-	// if(!jxbID.equals("")){
-	//
-	// }
-	// }
-	//
-	//
-	// return null;
-	// }
-
 	// 查询所有学年
 	public List<Edu400> queryAllXn() {
 		return edu400DAO.findAll();
@@ -2313,6 +2244,80 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setSuccess("行政班不可修改");
 		} else {
 			resultVO = ResultVO.setFailed("行政可以修改");
+		}
+		return resultVO;
+	}
+
+
+	//查询已排课程
+	public ResultVO getTaskByCulturePlanByUser(Edu107 edu107, Edu108 edu108, String userId) {
+		ResultVO resultVO;
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		Specification<Edu107> Edu107Specification = new Specification<Edu107>() {
+			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu107.getEdu103() != null && !"".equals(edu107.getEdu103())) {
+					predicates.add(cb.equal(root.<String>get("edu103"), edu107.getEdu103()));
+				}
+				if (edu107.getEdu104() != null && !"".equals(edu107.getEdu104())) {
+					predicates.add(cb.equal(root.<String>get("edu104"), edu107.getEdu104()));
+				}
+				if (edu107.getEdu105() != null && !"".equals(edu107.getEdu105())) {
+					predicates.add(cb.equal(root.<String>get("edu105"), edu107.getEdu105()));
+				}
+				if (edu107.getEdu106() != null && !"".equals(edu107.getEdu106())) {
+					predicates.add(cb.equal(root.<String>get("edu106"),  edu107.getEdu106()));
+				}
+				Path<Object> path = root.get("edu104");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu107> relationEntities = edu107DAO.findAll(Edu107Specification);
+
+		if (relationEntities.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无可排课程");
+			return resultVO;
+		}
+		List<Long> edu107Ids = relationEntities.stream().map(Edu107::getEdu107_ID).collect(Collectors.toList());
+
+		Specification<Edu108> edu108specification = new Specification<Edu108>() {
+			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu108.getKcxzCode() != null && !"".equals(edu108.getKcxzCode())) {
+					predicates.add(cb.equal(root.<String>get("kcxzCode"), edu108.getKcxzCode()));
+				}
+				Path<Object> path = root.get("edu107_ID");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <edu107Ids.size() ; i++) {
+					in.value(edu107Ids.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu108> edu108List = edu108DAO.findAll(edu108specification);
+
+		if(edu108List.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无可排课程");
+			return resultVO;
+		}
+
+		List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
+		List<Edu201> edu201List = edu201DAO.queryCulturePlanIds(edu108Ids);
+
+		if(edu201List.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无可排课程");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门可排课程",edu201List);
 		}
 		return resultVO;
 	}

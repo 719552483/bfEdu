@@ -1956,25 +1956,34 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-
 	/**
-	 * 根据层次关系查询待排课程列表
-	 * @return returnMap
+	 * 查询待排课程列表
+	 * @param culturePlanInfo
+	 * @param userId
+	 * @return
 	 */
-	@RequestMapping("getTaskByCulturePlan")
+	@RequestMapping("getTaskByCulturePlanByUser")
 	@ResponseBody
-	public Object getTaskByCulturePlan(@RequestParam String culturePlanInfo) {
-		Map<String, Object> returnMap = new HashMap();
+	public ResultVO getTaskByCulturePlanByUser(@RequestParam("culturePlanInfo") String culturePlanInfo,@RequestParam("userId") String userId) {
 		JSONObject culturePlan = JSONObject.fromObject(culturePlanInfo);
 		String levelCode = culturePlan.getString("level");
 		String departmentCode = culturePlan.getString("department");
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
-		List<Edu201> taskInfo = new ArrayList<Edu201>();
-		taskInfo= administrationPageService.getTaskByCulturePlan(levelCode, departmentCode,gradeCode, majorCode);
-		returnMap.put("taskInfo", taskInfo);
-		returnMap.put("result", true);
-		return returnMap;
+		String kcxz = culturePlan.getString("kcxz");
+
+		Edu107 edu107 = new Edu107();
+		edu107.setEdu103(levelCode);
+		edu107.setEdu104(departmentCode);
+		edu107.setEdu105(gradeCode);
+		edu107.setEdu106(majorCode);
+
+		Edu108 edu108 = new Edu108();
+		edu108.setKcxzCode(kcxz);
+
+
+		ResultVO result= administrationPageService.getTaskByCulturePlanByUser(edu107,edu108,userId);
+		return result;
 	}
 
 	/**
@@ -2032,57 +2041,6 @@ public class AdministrationController {
 		returnMap.put("result", true);
 		return returnMap;
 	}
-
-
-	/**
-	 *  课程性质按钮获取待排课程列表
-	 * @return returnMap
-	 */
-	@RequestMapping("kcxzBtnGetTask")
-	@ResponseBody
-	public Object kcxzBtnGetTask(@RequestParam("SearchObject") String SearchObject) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONObject searchObject = JSONObject.fromObject(SearchObject);
-		String levelCode = searchObject.getString("level");
-		String departmentCode = searchObject.getString("department");
-		String gradeCode = searchObject.getString("grade");
-		String majorCode = searchObject.getString("major");
-		String kcxz = searchObject.getString("kcxz");
-
-		Edu107 edu107 = new Edu107();
-		edu107.setEdu103(levelCode);
-		edu107.setEdu104(departmentCode);
-		edu107.setEdu105(gradeCode);
-		edu107.setEdu106(majorCode);
-
-		List<Edu201> taskInfo = new ArrayList<Edu201>();
-		taskInfo= administrationPageService.kcxzBtnGetTask(levelCode, departmentCode,gradeCode, majorCode,kcxz);
-		returnMap.put("taskInfo", taskInfo);
-		returnMap.put("result", true);
-		return returnMap;
-	}
-
-
-//	/**
-//	 *  排课页面开始检索按钮
-//	 * @return returnMap
-//	 */
-//	@RequestMapping("startSearchSchedule")
-//	@ResponseBody
-//	public Object startSearchSchedule(@RequestParam("SearchObject") String SearchObject) {
-//		Map<String, Object> returnMap = new HashMap();
-//		List<Edu201> taskInfo = administrationPageService.startSearchSchedule(SearchObject);
-//		returnMap.put("taskInfo", taskInfo);
-//		returnMap.put("result", true);
-//		return returnMap;
-//	}
-
-	/*
-	 * 根据传入的二级代码参数 获取二级代码将二级代码装入LIST中返回前台
-	 *
-	 * @return returnMap
-	 */
-
 
 	@RequestMapping("/queryEdu000")
 	@ResponseBody
