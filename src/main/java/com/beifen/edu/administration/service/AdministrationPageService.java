@@ -1549,10 +1549,16 @@ public class AdministrationPageService {
 	// 检索已发布的教学任务书
 	public List<Edu201> searchPutOutTasks(Edu201 edu201,String userId) {
 
+		List<Edu201> entities = new ArrayList<>();
+
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
 		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
+
+		if(edu108Ids.size() == 0) {
+			return entities;
+		}
 
 
 		Specification<Edu201> specification = new Specification<Edu201>() {
@@ -1581,7 +1587,7 @@ public class AdministrationPageService {
 			}
 		};
 
-		List<Edu201> entities = edu201DAO.findAll(specification);
+		entities = edu201DAO.findAll(specification);
 		return entities;
 	}
 
