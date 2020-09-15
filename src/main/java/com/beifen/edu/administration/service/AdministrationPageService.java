@@ -1705,7 +1705,7 @@ public class AdministrationPageService {
 		}
 
 		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id, edu202.getKsz()));
-		edu207List = edu207Dao.findAllByEdu201Ids(edu202Id);
+		edu207List = edu207Dao.findAllByEdu201Ids(edu201.getEdu201_ID().toString());
 
 		returnMap.put("result", true);
 		returnMap.put("scheduleCompletedDetails", scheduleCompletedDetails);
