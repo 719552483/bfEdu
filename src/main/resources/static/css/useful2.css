@@ -1654,7 +1654,7 @@ margin: 0px 0px -14px -15px!important;
 /*	margin-left: -0.5%;*/
 /*}*/
 
-.kjArea .searchAreaWitheSelect .select-mania{
+.kjArea .searchAreaWitheSelect .select-mania,.fskjArea .searchAreaWitheSelect .select-mania{
 	margin-left:-5%!important;
 }
 
@@ -1737,13 +1737,13 @@ margin: 0px 0px -14px -15px!important;
 	color: rgb(50 107 134 / 95%);
 }
 
-.choosendTerm,.choosendWeekArea,.choosendKjArea,.choosendLoactionArea{
+.choosendTerm,.choosendWeekArea,.choosendKjArea,.choosendfsKjArea,.choosendLoactionArea{
 	margin-top: 5px;
 	font-size: 15px;
 	color: rgb(50 107 134 / 95%);
 }
 
-.choosendKjImg{
+.choosendKjImg,.choosendfsKjImg{
 	padding-left: 13px;
 	padding-right: -24px;
 	width: 30px;
@@ -2210,6 +2210,39 @@ input:focus{
 
 .noticeArea .newlist li{
 	max-width: 313px;
+}
+
+.nextSetp{
+	padding: 19px 20px 20px;
+	margin-top: 15px;
+	text-align: center!important;
+	border-top: none!important;
+}
+
+.kjRsArea,.fskjRsArea{
+	text-align: left;
+	padding-left: 21px;
+	padding-bottom: 20px;
+	color: rgb(50 107 134 / 95%);
+}
+
+.kjRsAreaTitle,.fskjRsAreaTitle{
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.choosendKjInfo,.choosendfsKjInfo{
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+.cannottxt{
+	padding-top: 32px;
+	color: gray;
+}
+
+.lastStepBtn{
+	background:url(../images/btnbg2.png) repeat-x!important;
 }
 
 @keyframes serachAnimation {

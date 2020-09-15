@@ -33,6 +33,7 @@
 		<script type="text/javascript" src="js/officeTeaching.js"></script>
 		<script type="text/javascript" src="sripts/tableExport.js"></script>
 		<script type="text/javascript" src="sripts/bootstrap-table-export.js"></script>
+		<script src="sripts/bootstrap-input-spinner.js" type="text/javascript"></script>
 		
 	</head>
 
@@ -139,154 +140,224 @@
 			</div>
 
 			<div class="scheduleSingleClassArea noneStart">
-				<div class="tools scheduleToolsArea">
-					<ul class="toolbar" style="padding-top: 12px;">
-						<li class="click" id="returnStartSchedule"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
-					</ul>
-				</div>
-
-				<div class="formtext myformtext">
-					当前排课 - <b class="scheduleInfoTxt"></b>
-				</div>
-
-				<div class="scheduleMainArea">
-					<div class="formtitle" style="clear:both;margin-bottom: 25px;">
-						<span>一、选择学年</span>
-					</div>
-					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
-						<div class="col4 giveBottom departmentSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年<b>*</b></label>
-									<select class="isSowIndex" id="term">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-					</div>
-					<div class="clear"></div>
-
-					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
-						<span>二、选择开始/结束周</span>
-					</div>
-					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">开始周<b>*</b></label>
-									<select class="isSowIndex" id="startWeek">
-										<option value="seleceConfigTip">暂无选择</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">结束周<b>*</b></label>
-									<select class="isSowIndex" id="endWeek">
-										<option value="seleceConfigTip">暂无选择</option>
-									</select>
-								</div>
-							</ul>
-						</div>
+				<div id="usual1" class="usual">
+					<div class="tools scheduleToolsArea">
+						<ul class="toolbar" style="padding-top: 12px;">
+							<li class="click" id="returnStartSchedule"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+						</ul>
 					</div>
 
-					<div class="formtitle" style="clear:both;margin-bottom: 25px;">
-						<span>三、选择课节</span>
+					<div class="formtext myformtext">
+						当前排课 - <b class="scheduleInfoTxt"></b>
 					</div>
-					<div class="kjArea">
-						<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;margin-right: 10%;">星&#12288;&#8197;期<b>*</b></label>
-										<select class="isSowIndex xqSowIndex" id="xq">
-											<option value="seleceConfigTip">请选择</option>
-											<option value="01">星期一</option>
-											<option value="02">星期二</option>
-											<option value="03">星期三</option>
-											<option value="04">星期四</option>
-											<option value="05">星期五</option>
-											<option value="06">星期六</option>
-											<option value="07">星期日</option>
-										</select>
-									</div>
-								</ul>
+
+					<span class="fsxsSpan noneStart"></span>
+					<span class="jzxsSpan noneStart"></span>
+					<div class="itab">
+						<ul>
+							<li><a href="#tab1" class="selected">集中学时排课</a></li>
+							<li><a href="#tab2" onclick="checkJzPK()">分散学时排课</a></li>
+							<li><a href="#tab3" onclick="checkAllPK()">排课结果</a></li>
+						</ul>
+					</div>
+
+					<div id="tab1" class="tabson myTabson">
+						<div style="padding: 0px 20px 0px 20px" class="scheduleMainArea">
+							<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+								<span>一、选择学年</span>
 							</div>
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;margin-right: 10%;">课&#12288;&#8197;节<b>*</b></label>
-										<select class="isSowIndex kjSowIndex" id="kj">
-											<option value="seleceConfigTip">请选择</option>
-										</select>
-									</div>
-								</ul>
+							<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+								<div class="col4 giveBottom departmentSelectArea">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年<b>*</b></label>
+											<select class="isSowIndex" id="term">
+												<option value="seleceConfigTip">暂不可选</option>
+											</select>
+										</div>
+									</ul>
+								</div>
 							</div>
-							<div class="col4 giveBottom addBTnArea">
-								<div class="tools scheduleToolsArea">
-									<ul class="toolbar" style="padding-top: 6px;margin-left: 16px;">
-										<li class="click" id="addnewKj"><span><img src="images/t01.png" style="width: 24px;"/></span>增加课节</li>
+							<div class="clear"></div>
+
+							<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
+								<span>二、选择开始/结束周</span>
+							</div>
+							<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">开始周<b>*</b></label>
+											<select class="isSowIndex" id="startWeek">
+												<option value="seleceConfigTip">暂无选择</option>
+											</select>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col4 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">结束周<b>*</b></label>
+											<select class="isSowIndex" id="endWeek">
+												<option value="seleceConfigTip">暂无选择</option>
+											</select>
+										</div>
+									</ul>
+								</div>
+							</div>
+
+							<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+								<span>三、选择课节</span>
+							</div>
+							<div class="kjArea">
+								<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+									<div class="col4 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;margin-right: 10%;">星&#12288;&#8197;期<b>*</b></label>
+												<select class="isSowIndex xqSowIndex" id="xq">
+													<option value="seleceConfigTip">请选择</option>
+													<option value="01">星期一</option>
+													<option value="02">星期二</option>
+													<option value="03">星期三</option>
+													<option value="04">星期四</option>
+													<option value="05">星期五</option>
+													<option value="06">星期六</option>
+													<option value="07">星期日</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+									<div class="col4 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;margin-right: 10%;">课&#12288;&#8197;节<b>*</b></label>
+												<select class="isSowIndex kjSowIndex" id="kj">
+													<option value="seleceConfigTip">请选择</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+									<div class="col4 giveBottom addBTnArea">
+										<div class="tools scheduleToolsArea">
+											<ul class="toolbar" style="padding-top: 6px;margin-left: 16px;">
+												<li class="click" id="addnewKj"><span><img src="images/t01.png" style="width: 24px;"/></span>增加课节</li>
+											</ul>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</div>
+							</div>
+							<div class="kjRsArea">
+								<div class="kjRsAreaTitle">已选课节</div>
+								<div class="singleKj"></div>
+							</div>
+							<div class="clear"></div>
+
+							<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
+								<span>四、选择上课地点</span>
+							</div>
+							<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+								<div class="col4 giveBottom departmentSelectArea">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">教学点<b>*</b></label>
+											<select class="isSowIndex" id="jxd">
+												<option value="seleceConfigTip">暂不可选</option>
+											</select>
+										</div>
+									</ul>
+								</div>
+								<div class="col4 giveBottom departmentSelectArea">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">授课地点<b>*</b></label>
+											<select class="isSowIndex" id="skdd">
+												<option value="seleceConfigTip">暂不可选</option>
+											</select>
+										</div>
 									</ul>
 								</div>
 							</div>
 							<div class="clear"></div>
 						</div>
+						<div class="modal-footer tipbtn nextSetp">
+							<input name="" type="button" style="width: 145px;" class="sure configedJz" value="下一步"/>&nbsp;
+						</div>
 					</div>
-					<div class="clear"></div>
 
-					<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
-						<span>四、选择上课地点</span>
-					</div>
-					<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
-						<div class="col4 giveBottom departmentSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">教学点<b>*</b></label>
-									<select class="isSowIndex" id="jxd">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-						<div class="col4 giveBottom departmentSelectArea">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">授课地点<b>*</b></label>
-									<select class="isSowIndex" id="skdd">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-					</div>
-					<div class="clear"></div>
+					<div id="tab2" class="tabson myTabson">
+						<div class="cannottxt">暂不可进行分散学时排课    请先进行 -集中学时排课-</div>
+						<div class="fsMainArea" style="padding: 0px 20px 0px 20px">
+							<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+								<span>选择分散学时安排</span>
+							</div>
 
-					<div class="rsArea noneStart">
-						<div class="formtitle" style="clear:both;margin-bottom: 25px;">
-							<span>排课结果</span>
-						</div>
-						<div class="rsInfoArea">
-							<div class="rsInfoTXtArea">
-								<b class="scheduleRsTitle"></b>
-								<div class="choosendTermArea"><span class="choosendTerm"></span></div>
-								<div class="choosendWeekArea"><span class="choosendWeek"><cite class="choosendStartWeek"></cite><cite class="choosendEndWeek"></cite></span></div>
-								<div class="choosendKjArea"></div>
-								<div class="choosendLoactionArea"></div>
+							<div class="fskjArea">
+								<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
+									<div class="col4 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;margin-right: 10%;">周&#12288;&#8197;数<b>*</b></label>
+												<select class="isSowIndex xqSowIndex" id="fsxq">
+													<option value="seleceConfigTip">请选择</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+									<div class="col4 giveBottom">
+										<ul class="forminfo">
+											<div class="MyspinnerStyle">
+												<label class="selectName" style="width: 32%;margin-top: 14px;margin-right: 10%;">分&#12288;&#8197;散&#12288;&#8197;学&#12288;&#8197;时<b>*</b></label>
+												<input value="0" type="number" min="0" step="1" id="fsXs" />
+											</div>
+										</ul>
+									</div>
+									<div class="col4 giveBottom addBTnArea" style="margin-top: -2px;">
+										<div class="tools scheduleToolsArea">
+											<ul class="toolbar" style="padding-top: 6px;margin-left: 16px;">
+												<li class="click" id="addNewFsKj"><span><img src="images/t01.png" style="width: 24px;"/></span>增加课节</li>
+											</ul>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</div>
+							</div>
+
+							<div class="fskjRsArea noneStart">
+								<div class="fskjRsAreaTitle">已选学时安排</div>
+								<div class="singlefsKj"></div>
+							</div>
+							<div class="modal-footer tipbtn nextSetp">
+								<input name="" type="button" style="width: 145px;" class="sure configedFs_lastStep lastStepBtn" value="上一步"/>&nbsp;
+								<input name="" type="button" style="width: 145px;" class="sure configedFs_NextStep" value="下一步"/>&nbsp;
 							</div>
 						</div>
-						<div class="clear"></div>
-						<div class="tools scheduleToolsArea">
-							<ul class="toolbar" style="padding-top: 12px;">
-								<li class="click" id="confirm"><span><img src="img/right.png" style="width: 24px;"/></span>确认排课</li>
-							</ul>
-						</div>
 					</div>
 
+					<div id="tab3" class="tabson myTabson">
+						<div class="cannottxt">暂无排课结果...</div>
+						<div class="rsArea">
+							<div class="rsInfoArea">
+								<div class="rsInfoTXtArea">
+									<b class="scheduleRsTitle"></b>
+									<div class="choosendTermArea"><span class="choosendTerm"></span></div>
+									<div class="choosendWeekArea"><span class="choosendWeek"><cite class="choosendStartWeek"></cite><cite class="choosendEndWeek"></cite></span></div>
+									<div class="choosendKjArea"></div>
+									<div class="choosendfsKjArea"></div>
+									<div class="choosendLoactionArea"></div>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="modal-footer tipbtn nextSetp">
+								<input name="" type="button" style="width: 145px;" class="sure configedAll_lastStep lastStepBtn" value="上一步"/>&nbsp;
+								<input name="" type="button" style="width: 145px;" id="confirm" class="sure" value="确认排课"/>&nbsp;
+							</div>
+						</div>
+					</div>
 				</div>
+
 			</div>
 
 			<div class="puttedScheduleArea noneStart">
