@@ -26,9 +26,10 @@ function deafultSearch(){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/getTaskByCulturePlan",
+		url : "/getTaskByCulturePlanByUser",
 		data: {
-			"culturePlanInfo":JSON.stringify(returnObject)
+			"culturePlanInfo":JSON.stringify(returnObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -68,9 +69,10 @@ function getTaskSelectInfo() {
 		$.ajax({
 			method : 'get',
 			cache : false,
-			url : "/getTaskByCulturePlan",
+			url : "/getTaskByCulturePlanByUser",
 			data: {
-				"culturePlanInfo":JSON.stringify(getNotNullSearchs())
+				"culturePlanInfo":JSON.stringify(getNotNullSearchs()),
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 			},
 			dataType : 'json',
 			beforeSend: function(xhr) {
@@ -1338,6 +1340,42 @@ function putted_reSearch(){
 	reReloadSearchsWithSelect(reObject);
 }
 
+//开始检索
+function startSearch(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getTaskByCulturePlanByUser",
+		data: {
+			"culturePlanInfo":JSON.stringify(getNotNullSearchs()),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				if(backjson.taskInfo.length===0){
+					toastr.info('暂无可排课程');
+					drawWaitTaskEmptyTable();
+				}else{
+					stuffWaitTaskTable(backjson.taskInfo);
+				}
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
 //初始化页面按钮绑定事件
 function binBind(){
 	//提示框取消按钮
@@ -1346,7 +1384,14 @@ function binBind(){
 		$.hideModal();
 		e.stopPropagation();
 	});
-	
+
+	//开始检索
+	$('#startSearch').unbind('click');
+	$('#startSearch').bind('click', function(e) {
+		startSearch();
+		e.stopPropagation();
+	});
+
 	//开始排课按钮
 	$('#startSchedule').unbind('click');
 	$('#startSchedule').bind('click', function(e) {
