@@ -750,7 +750,6 @@ public class TeachingManageService {
     //学生检索分散学时课表
     public ResultVO searchScatteredClassByStudent(TimeTablePO timeTablePO) {
         ResultVO resultVO;
-        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
         Edu001 edu001 = edu001Dao.getStudentInfoByEdu990Id(timeTablePO.getCurrentUserId());
         if(edu001 == null) {
             resultVO = ResultVO.setFailed("您不是本校学生，无法查看您的课程");
@@ -762,7 +761,7 @@ public class TeachingManageService {
         if(studentSchoolTimetableList.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
         } else {
-            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
+            List<String> edu201Ids = studentSchoolTimetableList.stream().map(StudentSchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
             List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTablePO.getWeekTime());
             if (edu207List.size() == 0) {
                 resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
