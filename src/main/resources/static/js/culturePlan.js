@@ -957,7 +957,7 @@ function confirmModifyMajorTraining(row) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if(backjson.code===500){
+			if(backjson.code===200){
 				$("#majorTrainingTable").bootstrapTable('updateByUniqueId', {
 					id : row.edu108_ID,
 					row : crouseModifyInfo
