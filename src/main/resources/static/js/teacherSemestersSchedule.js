@@ -340,6 +340,7 @@ function sendModifyInfo(modifyInfo) {
 				});
 				toastr.success(backjson.msg);
 				$.hideModal("#remindModal");
+				toolTipUp(".myTooltip");
 			} else {
 				toastr.warning(backjson.msg);
 			}
