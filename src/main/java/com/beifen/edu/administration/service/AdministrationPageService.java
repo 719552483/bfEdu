@@ -1960,19 +1960,8 @@ public class AdministrationPageService {
 	//修改培养计划课程
 	public ResultVO modifyCultureCrose(String edu107Id, Edu108 edu108, Edu600 edu600) {
 		ResultVO resultVO;
-		//保存原始信息
-		Edu108 one = edu108DAO.findOne(edu108.getEdu108_ID());
 		edu108DAO.save(edu108);
-		edu108DAO.chengeCulturePlanCrouseStatus(edu108.getEdu108_ID().toString(), "passing");
-		//发起审批
-		edu600.setBusinessKey(edu108.getEdu108_ID());
-		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-		if(!isSuccess) {
-			edu108DAO.save(one);
-			resultVO  = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
-		}else {
-			resultVO = ResultVO.setSuccess("修改成功",edu108);
-		}
+		resultVO = ResultVO.setSuccess("修改成功",edu108);
 		return resultVO;
 	}
 
