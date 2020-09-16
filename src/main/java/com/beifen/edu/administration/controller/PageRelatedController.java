@@ -240,4 +240,9 @@ public class PageRelatedController {
 	public String SecondaryCodeManagementPage() {
 		return "SecondaryCodeManagement";
 	}
+
+	@RequestMapping("allSchedule")
+	public String allSchedulePage() {
+		return "allSchedule";
+	}
 }

@@ -756,10 +756,10 @@ function stuffMajorTrainingTable(tableInfo) {
 			align : 'center',
 			visible : false
 		}, {
-			field : 'xbsp',
-			title : '二级学院审批',
+			field : 'sfsckkjh',
+			title : '是否生成开课计划',
 			align : 'center',
-			formatter :approvalMatter
+			formatter : sfsckkjhMatter
 		}, {
 			field : 'kcmc',
 			title : '课程名称',
@@ -826,6 +826,16 @@ function stuffMajorTrainingTable(tableInfo) {
 				+ '<li class="modifyBtn" id="modifyMajorTraining"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'
 				+ '<li class="deleteBtn" id="removeMajorTraining"><span><img src="images/t03.png"></span>删除</li>'
 				+ '</ul>' ].join('');
+	}
+
+	function sfsckkjhMatter(value, row, index) {
+		if(value !== 'T'){
+			return [ '<div class="myTooltip normalTxt" title="暂未生成"><i class="iconfont icon-chacha redTxt"></i></div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip greenTxt" title="已生成"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
+				.join('');
+		}
 	}
 
 	drawPagination(".majorTrainingTableArea", "培养计划");
@@ -948,7 +958,6 @@ function confirmModifyMajorTraining(row) {
 		success : function(backjson) {
 			hideloding();
 			if(backjson.code===500){
-				crouseModifyInfo.xbsp="noStatus";
 				$("#majorTrainingTable").bootstrapTable('updateByUniqueId', {
 					id : row.edu108_ID,
 					row : crouseModifyInfo
@@ -1048,7 +1057,7 @@ function getCrouseModifyInfo(row){
 // 单个删除培养计划
 function removeMajorTraining(row) {
 	if(row.sfsckkjh==="T"){
-		toastr.warning('不能修改已生成开课计划的课程');
+		toastr.warning('不能删除已生成开课计划的课程');
 		return;
 	}
 	if($(".planStatus")[0].innerText==="passing"){
@@ -1077,10 +1086,6 @@ function removeChoosedMajorTraining() {
 	for (var i = 0; i < chosenCrouse.length; i++) {
 		if(chosenCrouse[i].sfsckkjh==="T"){
 			toastr.warning('不能删除已生成开课计划的课程');
-			return;
-		}
-		if(chosenCrouse[i].xbsp==="passing"){
-			toastr.warning('有培养计划暂不可进行此操作');
 			return;
 		}
 	}
@@ -1301,7 +1306,6 @@ function addCulturePlan(){
 				crouseInfo.edu108_ID=backjson.data.edu108_ID;
 				crouseInfo.edu107_ID=backjson.data.edu107_ID;
 				crouseInfo.sfsckkjh=backjson.data.sfsckkjh;
-				crouseInfo.xbsp=$(".planStatus")[0].innerText;
 				$('#majorTrainingTable').bootstrapTable('prepend', crouseInfo);
 				toolTipUp(".myTooltip");
 				$(".addClassArea").hide();
