@@ -1569,10 +1569,10 @@ function loadChoosendShortcuts() {
 		for (var k = 0; k < currentMenus.length; ++k) {
 			for (var i = 0; i < allChoosedShortcuts.length; ++i) {
 				if (allChoosedShortcuts[i] === currentMenus[k].id&&currentMenus[k].parentElement.style.display!=="none") {
-					$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +
-						'"><img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +
-						'.png" />' +
-						'<p>' + currentMenus[k].innerText + '</a></p>' +
+					$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append(
+						'<li onclick="pointPage(this)" class="' + allChoosedShortcuts[i] +'">' +
+						'<img class="choosedShortcutsIcon" src="img/' + allChoosedShortcuts[i] +'.png" />' +
+						'<p><a>' + currentMenus[k].innerText + '</a></p>' +
 						'</li>');
 				}
 			}
@@ -1581,10 +1581,10 @@ function loadChoosendShortcuts() {
 		//默认显示6个快捷方式
 		for (var k = 0; k < currentMenus.length; ++k) {
 			if(k<=5&&currentMenus[k].parentElement.style.display!=="none"){
-				$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append('<li class="' + currentMenus[k].id +
-					'"><img class="choosedShortcutsIcon" onclick="pointPage(this)" src="img/' + currentMenus[k].id +
-					'.png" />' +
-					'<p>' + currentMenus[k].innerText + '</a></p>' +
+				$(parent.frames["rightFrame"].document).find(".choosendShortcuts").append(
+					'<li onclick="pointPage(this)" class="' + currentMenus[k].id +'">' +
+					'<img class="choosedShortcutsIcon" src="img/' + currentMenus[k].id +'.png" />' +
+					'<p><a>' + currentMenus[k].innerText + '</a></p>' +
 					'</li>');
 			}
 		}

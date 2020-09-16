@@ -277,10 +277,9 @@ function reloadShortcutsList(thisShortcuts, currentShortcutList, index) {
 添加已选快捷方式至list
 */
 function addChoosendShortcut(className, TextName) {
-	$(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + className +
-		'"><img class="choosedShortcutsIcon" src="img/' + className +
-		'.png" />' +
-		'<p>' + TextName + '</a></p>' +
+	$(".choosendShortcuts").append('<li onclick="pointPage(this)" class="' + className +'">' +
+		'<img class="choosedShortcutsIcon" src="img/' + className +'.png" />' +
+		'<p><a>' + TextName + '</a></p>' +
 		'</li>');
 }
 
