@@ -1179,13 +1179,13 @@ function startSearch() {
 	var coursesNature = getNormalSelectValue("coursesNature");
 	var coursesName = $("#coursesName").val();
 	var testWay = getNormalSelectValue("testWay");
-	var suditStatus = getNormalSelectValue("suditStatus");
+	var isSckkjh = getNormalSelectValue("isSckkjh");
 	var serachObject=new Object();
 	serachObject.edu107_ID=$(".edu107Id")[0].innerText;
 	coursesNature===""?serachObject.coursesNature="":serachObject.coursesNature=coursesNature;
 	coursesName===""?serachObject.coursesName="":serachObject.coursesName=coursesName;
 	testWay===""?serachObject.testWay="":serachObject.testWay=testWay;
-	suditStatus===""?serachObject.suditStatus="":serachObject.suditStatus=suditStatus;
+	isSckkjh===""?serachObject.isSckkjh="":serachObject.isSckkjh=isSckkjh;
 	
 	// 发送查询所有用户请求
 	$.ajax({
@@ -1221,7 +1221,7 @@ function startSearch() {
 function reReloadSearchs() {
 	var reObject = new Object();
 	reObject.InputIds = "#coursesName";
-	reObject.normalSelectIds = "#coursesNature,#suditStatus,#testWay,#coursesSemester";
+	reObject.normalSelectIds = "#coursesNature,#isSckkjh,#testWay,#coursesSemester";
 	reReloadSearchsWithSelect(reObject);
 	drawMajorTrainingEmptyTable();
 }
