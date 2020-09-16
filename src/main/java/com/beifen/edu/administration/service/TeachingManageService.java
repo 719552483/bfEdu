@@ -772,5 +772,13 @@ public class TeachingManageService {
         }
         return resultVO;
     }
+
+    //保存分散学士属性
+    public ResultVO saveScatteredClass(Edu207 edu207) {
+        ResultVO resultVO;
+        edu207Dao.save(edu207);
+        resultVO = ResultVO.setSuccess("保存成功",edu207);
+        return resultVO;
+    }
 }
 

@@ -267,4 +267,17 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教师是保存分散学时授课信息
+     * @param ScatteredClass
+     * @return
+     */
+    @RequestMapping("/saveScatteredClass")
+    @ResponseBody
+    public ResultVO saveScatteredClass(@RequestParam("ScatteredClass") String ScatteredClass) {
+        Edu207 edu207 = JSON.parseObject(ScatteredClass, Edu207.class);
+        ResultVO result = teachingManageService.saveScatteredClass(edu207);
+        return result;
+    }
+
 }
