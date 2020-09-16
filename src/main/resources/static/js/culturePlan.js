@@ -153,13 +153,18 @@ function stuffAllRelationInfoTable(allRelationInfo){
 			{
 				field: 'check',
 				checkbox: true
+			},{
+				field: 'xbsp',
+				title: '二级学院审批',
+				align: 'left',
+				width:"20",
+				formatter: approvalMatter
 			},
 			{
 				field: 'pyjhmc',
 				title: '培养计划名称',
 				align: 'left',
 				formatter: paramsMatter
-
 			},
 			{
 				field: 'edu103mc',
