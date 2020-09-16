@@ -592,7 +592,7 @@ function getBreakInfo(){
     }
 
     if(getByteLen(handlingOpinions)>255){
-        toastr.warning('详细说明超过255个字符(中文2个，英文一个)');
+        toastr.warning('详细说明超过255个字符(中文2个，英文1个)');
         return;
     }
 
