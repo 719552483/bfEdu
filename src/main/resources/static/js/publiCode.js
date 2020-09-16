@@ -18,6 +18,9 @@ function getJiaoWuInfo(){
 		method : 'get',
 		cache : false,
 		url : "/getJwPublicCodes",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();

@@ -126,7 +126,14 @@ public class AdministrationPageService {
 
 	// 查询所有系部
 	public List<Edu104> queryAllDepartment() {
-		return edu104DAO.queryAllDepartment();
+		return edu104DAO.findAll();
+	}
+
+	// 根据用户查询所有系部
+	public List<Edu104> queryAllDepartmentByUser(String userId) {
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		return edu104DAO.query104BYdepartments(departments);
 	}
 
 
