@@ -77,10 +77,6 @@ function getAllWeeks(){
 					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
 				}
 				stuffManiaSelect("#weekTime", configStr);
-				//changge事件
-				$("#weekTime").change(function() {
-					getScheduleClassesInfo();
-				});
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -88,7 +84,270 @@ function getAllWeeks(){
 	});
 }
 
-//填充空的课程表
+//改变授课类型
+function getSchedule(){
+	var currentType=getNormalSelectValue("crouseType");
+	if(currentType===""){
+		return;
+	}
+
+	if(currentType==="type2"){
+		getFsScheduleInfo();
+	}else{
+		getScheduleClassesInfo();
+	}
+}
+
+//获取分散课表信息
+function getFsScheduleInfo(){
+	var searchObject=getScheduleSearchInfo();
+	if(typeof(searchObject) === "undefined"){
+		return;
+	}
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/searchScatteredClassByTeacher",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			$(".scheduleClassesTableArea,.myformtextTipArea").hide();
+			$(".fsScheduleAreaTableArea").show();
+			if (backjson.code===200) {
+				stuffFsSchedule(backjson.data);
+				toastr.info(backjson.msg);
+			} else {
+				drawFsSchedule();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充空的分散课表
+function drawFsSchedule(){
+	stuffFsSchedule({});
+}
+
+//渲染分散课表
+function stuffFsSchedule(tableInfo){
+	window.releaseNewsEvents = {
+		'click #modifyFsSchedule' : function(e, value, row, index) {
+			modifyFsSchedule(row,index);
+		},
+		'click #cancelModify' : function(e, value, row, index) {
+			cancelModify(row,index);
+		},
+		'click #confriModify' : function(e, value, row, index) {
+			confriModify(row,index);
+		}
+	};
+
+	$('#fsScheduleTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: '分散课表导出'  //文件名称
+		},
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".fsScheduleAreaTableArea", "已排分散授课课表");
+		},
+		columns : [
+				{
+				field : 'edu207_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
+				},{
+				field : 'courseName',
+				title : '课程名称',
+				align : 'left',
+				formatter :paramsMatter
+				}, {
+				field : 'week',
+				title : '周数',
+				align : 'left',
+				formatter : paramsMatter
+				},{
+				field : 'classHours',
+				title : '学时',
+				align : 'left',
+				formatter : paramsMatter
+				},{
+				field : 'courseContent',
+				title : '课程内容',
+				align : 'left',
+				formatter : courseContentMatter
+				},{
+				field : 'teachingPlatform',
+				title : '授课平台',
+				align : 'left',
+				formatter : teachingPlatformMatter
+				},{
+				field : 'action',
+				title : '操作',
+				align : 'center',
+				clickToSelect : false,
+				formatter : releaseNewsFormatter,
+				events : releaseNewsEvents,
+			}]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'+
+			'<li id="modifyFsSchedule" class="modifyBtn modifyBtn'+index+'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'+
+			'<li id="confriModify" class="noneStart confrim'+index+'"><span><img src="img/right.png" style="width:24px"></span>确定</li>' +
+			'<li id="cancelModify" class="noneStart cancel'+index+'"><span><img src="images/t03.png" style="width:24px"></span>取消</li>' +
+			'</ul>' ].join('');
+	}
+
+	function courseContentMatter(value, row, index) {
+		var stufTxt="";
+		var TxtClass="";
+		value!=null&&value!==""?TxtClass="blackTxt":TxtClass="normalTxt";
+		value!=null&&value!==""?stufTxt=value:stufTxt="暂无";
+		return [
+			'<div class="myTooltip '+TxtClass+' courseContentTxt'+index+'" title="'+stufTxt+'">'+stufTxt+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modify_courseContent'+index+'" spellcheck="false">'
+		]
+			.join('');
+	}
+
+	function teachingPlatformMatter(value, row, index) {
+		var stufTxt="";
+		var TxtClass="";
+		value!=null&&value!==""?TxtClass="blackTxt":TxtClass="normalTxt";
+		value!=null&&value!==""?stufTxt=value:stufTxt="暂无";
+		return [
+			'<div class="myTooltip '+TxtClass+' teachingPlatformTxt'+index+'" title="'+stufTxt+'">'+stufTxt+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modify_teachingPlatform'+index+'" spellcheck="false">'
+		]
+			.join('');
+	}
+
+	drawPagination(".fsScheduleAreaTableArea", "已排分散授课课表");
+	drawSearchInput(".fsScheduleAreaTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".fsScheduleAreaTableArea", "已排分散授课课表");
+	btnControl();
+}
+
+//预备修改
+function modifyFsSchedule(row,index){
+   	$(".modifyBtn"+index).hide();
+	$(".courseContentTxt"+index).hide();
+	$(".teachingPlatformTxt"+index).hide();
+	$("#modify_courseContent"+index).show().val(row.courseContent);
+	$("#modify_teachingPlatform"+index).show().val(row.teachingPlatform);
+	$(".confrim"+index).show();
+	$(".cancel"+index).show();
+}
+
+//取消修改
+function cancelModify(row,index){
+	$(".modifyBtn"+index).show();
+	$(".courseContentTxt"+index).show();
+	$(".teachingPlatformTxt"+index).show();
+	$("#modify_courseContent"+index).hide();
+	$("#modify_teachingPlatform"+index).hide();
+	$(".confrim"+index).hide();
+	$(".cancel"+index).hide();
+}
+
+//预备确认修改
+function confriModify(row,index){
+	var newCourseContent=$("#modify_courseContent"+index).val();
+	var newTeachingPlatform=$("#modify_teachingPlatform"+index).val();
+	if(newCourseContent===""){
+		toastr.warning('课程内容不能为空');
+		return;
+	}
+	if(newTeachingPlatform===""){
+		toastr.warning('授课平台不能为空');
+		return;
+	}
+	if(getByteLen(newCourseContent)>255){
+		toastr.warning('课程内容超过255个字符(中文2个，英文1个)');
+		return;
+	}
+	if(getByteLen(newTeachingPlatform)>255){
+		toastr.warning('授课平台超过255个字符(中文2个，英文1个)');
+		return;
+	}
+
+	row.courseContent=newCourseContent;
+	row.teachingPlatform=newTeachingPlatform;
+	$("#remindModal").find(".remindType").html("分散授课课程- "+row.courseName);
+	$("#remindModal").find(".remindActionType").html("修改");
+	$.showModal("#remindModal",true);
+	//二次确认修改
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendModifyInfo(row);
+		e.stopPropagation();
+	});
+}
+
+//发送修改信息
+function sendModifyInfo(modifyInfo) {
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/saveScatteredClass",
+		data:{
+			"ScatteredClass":JSON.stringify(modifyInfo)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$("#fsScheduleTable").bootstrapTable('updateByUniqueId', {
+					id: modifyInfo.edu207_ID,
+					row: modifyInfo
+				});
+				toastr.success(backjson.msg);
+				$.hideModal("#remindModal");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充空的集中课程表
 function drawScheduleClassesEmptyTable() {
 	var defaultClassPeriod = 6;
 	var tableInfo = new Array();
@@ -108,7 +367,7 @@ function drawScheduleClassesEmptyTable() {
 	stuffScheduleClassesTable(tableInfo);
 }
 
-//获取课程表信息
+//获取集中课程表信息
 function getScheduleClassesInfo() {
 	var searchObject=getScheduleSearchInfo();
 	if(typeof(searchObject) === "undefined"){
@@ -133,8 +392,11 @@ function getScheduleClassesInfo() {
 		},
 		success: function (backjson) {
 			hideloding();
+			$(".scheduleClassesTableArea,.myformtextTipArea").show();
+			$(".fsScheduleAreaTableArea").hide();
 			if (backjson.code===200) {
 				stuffScheduleClassesTable(backjson.data.newInfo);
+				toastr.info(backjson.msg);
 			} else {
 				drawScheduleClassesEmptyTable()
 				toastr.warning(backjson.msg);
@@ -144,7 +406,7 @@ function getScheduleClassesInfo() {
 
 }
 
-//渲染课程表
+//渲染集中课程表
 function stuffScheduleClassesTable(tableInfo) {
 	$('#scheduleClassesTable').bootstrapTable('destroy').bootstrapTable({
 		data: tableInfo,
@@ -209,7 +471,7 @@ function stuffScheduleClassesTable(tableInfo) {
 			}
 		]
 	});
-	changeColumnsStyle(".scheduleClassesTableArea", "已排课表");
+	changeColumnsStyle(".scheduleClassesTableArea", "已排集中授课课表");
 	drawSearchInput(".scheduleClassesTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
@@ -222,7 +484,7 @@ function stuffScheduleClassesTable(tableInfo) {
 	});
 }
 
-//课程点击事件
+//集中课程点击事件
 function singleScheduleAction(eve) {
 	if (eve.currentTarget.childNodes.length === 0) {
 		return;
@@ -230,7 +492,7 @@ function singleScheduleAction(eve) {
 	getScheduleDetails(eve);
 }
 
-//获取课程详情
+//获取集中课程详情
 function getScheduleDetails(eve){
 	 var classId=eve.currentTarget.attributes[3].nodeValue;
 	 var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
@@ -265,14 +527,14 @@ function getScheduleDetails(eve){
 	});
 }
 
-//渲染课表详情
+//渲染集中课表详情
 function stuffScheduleDetails(data){
 	$.showModal("#scheduleInfoModal",false);
 	stuffStudentInfo(data.studentList);
 	stuffPlanDetails(data.planInfo);
 }
 
-// 显示详细信息并填充内容
+// 显示集中详细信息并填充内容
 function stuffPlanDetails(row) {
 	$('#scheduleInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 	$("#majorTrainingDetails_code").val(row.kcdm);
@@ -339,5 +601,10 @@ function btnBind() {
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
 		$.hideModal();
 		e.stopPropagation();
+	});
+
+	//changge事件
+	$("#crouseType,#semester,#weekTime").change(function() {
+		getSchedule();
 	});
 }

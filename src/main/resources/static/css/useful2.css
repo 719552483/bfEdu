@@ -285,6 +285,7 @@ padding:1.6em 0em 0.6em 31px !important
 /*表格2个操作 按钮字数不超过2个*/
 .actionChangeLastTD,
 #gradeEntryTable td:last-child,
+#fsScheduleTable td:last-child,
 #teachingClassTable td:last-child,
 #kjTable td:last-child,
 #putOutTaskTable td:last-child,
@@ -964,6 +965,10 @@ float: left;
 	overflow-y: auto;
 }
 
+.blackTxt {
+	color: black;
+}
+
 .greenTxt {
 	color: green;
 	    line-height: 42px;
@@ -1587,6 +1592,14 @@ background: rgba(36, 138, 187, 0.77);
 .teachingClassTableArea .bootstrap4 .columns,
 .culturePlanVerifyTableArea  .bootstrap4 .columns{
     margin-top: 3px;
+}
+
+.fsScheduleAreaTableArea .search{
+	margin-top: 6px;
+}
+
+.fsScheduleAreaTableArea .columns {
+	margin-top: 5px;
 }
 
 .noActionText{
