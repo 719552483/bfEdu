@@ -241,4 +241,30 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 老师检索分散学时课表
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/searchScatteredClassByTeacher")
+    @ResponseBody
+    public ResultVO searchScatteredClassByTeacher(@RequestParam("searchObject") String searchObject) {
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        ResultVO result = teachingManageService.searchScatteredClassByTeacher(timeTablePO);
+        return result;
+    }
+
+    /**
+     * 学生检索分散学时课表
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/searchScatteredClassByStudent")
+    @ResponseBody
+    public ResultVO searchScatteredClassByStudent(@RequestParam("searchObject") String searchObject) {
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        ResultVO result = teachingManageService.searchScatteredClassByStudent(timeTablePO);
+        return result;
+    }
+
 }

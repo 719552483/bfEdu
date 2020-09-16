@@ -54,6 +54,8 @@ public class TeachingManageService {
     @Autowired
     Edu114Dao edu114Dao;
     @Autowired
+    Edu207Dao edu207Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     TeachingScheduleViewDao teachingScheduleViewDao;
@@ -261,7 +263,7 @@ public class TeachingManageService {
         }
 
         //根据信息查询所有课表信息
-        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu001.getEdu300_ID().toString(),
+        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu001.getEdu300_ID(),
                 timeTable.getWeekTime(), timeTable.getSemester());
         if(studentSchoolTimetableList.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
@@ -716,6 +718,58 @@ public class TeachingManageService {
         ResultVO resultVO;
         edu203Dao.save(edu203);
         resultVO = ResultVO.setSuccess("调整成功");
+        return resultVO;
+    }
+
+    //老师检索分散学时课表
+    public ResultVO searchScatteredClassByTeacher(TimeTablePO timeTablePO) {
+        ResultVO resultVO;
+        Edu101 edu101 = edu101Dao.getTeacherInfoByEdu990Id(timeTablePO.getCurrentUserId());
+        if(edu101 == null) {
+            resultVO = ResultVO.setFailed("您不是本校教师，无法查看您的课程");
+            return resultVO;
+        }
+        //根据信息查询所有课表信息
+        List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101Id(edu101.getEdu101_ID().toString(),
+                timeTablePO.getWeekTime(), timeTablePO.getSemester());
+        if(schoolTimetableList.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到您的课程");
+        } else {
+            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
+            List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTablePO.getWeekTime());
+            if (edu207List.size() == 0) {
+                resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
+            } else {
+                resultVO = ResultVO.setSuccess("当前周共找到"+edu207List.size()+"条分散学识安排",edu207List);
+            }
+        }
+        return resultVO;
+    }
+
+
+    //学生检索分散学时课表
+    public ResultVO searchScatteredClassByStudent(TimeTablePO timeTablePO) {
+        ResultVO resultVO;
+        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+        Edu001 edu001 = edu001Dao.getStudentInfoByEdu990Id(timeTablePO.getCurrentUserId());
+        if(edu001 == null) {
+            resultVO = ResultVO.setFailed("您不是本校学生，无法查看您的课程");
+            return resultVO;
+        }
+        //根据信息查询所有课表信息
+        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu001.getEdu300_ID(),
+                timeTablePO.getWeekTime(), timeTablePO.getSemester());
+        if(studentSchoolTimetableList.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到您的课程");
+        } else {
+            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
+            List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTablePO.getWeekTime());
+            if (edu207List.size() == 0) {
+                resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
+            } else {
+                resultVO = ResultVO.setSuccess("当前周共找到"+edu207List.size()+"条分散学识安排",edu207List);
+            }
+        }
         return resultVO;
     }
 }

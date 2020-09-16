@@ -152,17 +152,6 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				title: '教职工号',
 				align: 'left',
 				formatter: paramsMatter
-			},  {
-				field: 'csrq',
-				title: '出生日期',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'nl',
-				title: '年龄',
-				align: 'left',
-				formatter: paramsMatter
 			},{
 				field: 'zc',
 				title: '职称',
@@ -194,13 +183,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				align: 'left',
 				formatter: paramsMatter,
 				visible: false
-			}, {
-				field: 'lxfs',
-				title: '联系方式',
-				align: 'left',
-				formatter: paramsMatter,
-				visible: false
-			}, {
+			},{
 				field: 'action',
 				title: '操作',
 				align: 'center',
