@@ -1228,6 +1228,10 @@ function reReloadSearchs() {
 
 // 预备添加专业课程
 function wantAddClass() {
+	if($(".planStatus ")[0].innerText!=="pass"){
+		toastr.warning("该培养计划暂未通过审核");
+		return;
+	}
 	getAllClassInfo($(".planName")[0].innerText);
 	$("#classBaseInfo_classSemesters").multiSelect();
 }
@@ -1642,6 +1646,11 @@ function addClassAreaBtnbind() {
 
 // 生成班级开课计划
 function wantGeneratCoursePaln() {
+	if($(".planStatus ")[0].innerText!=="pass"){
+		toastr.warning("该培养计划暂未通过审核");
+		return;
+	}
+
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
