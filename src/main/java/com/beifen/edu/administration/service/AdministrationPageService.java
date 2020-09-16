@@ -1301,8 +1301,8 @@ public class AdministrationPageService {
 				if (edu108.getKsfsCode() != null && !"".equals(edu108.getKsfsCode())) {
 					predicates.add(cb.equal(root.<String>get("ksfsCode"), edu108.getKsfsCode()));
 				}
-				if (edu108.getXbsp() != null && !"".equals(edu108.getXbsp())) {
-					predicates.add(cb.equal(root.<String>get("xbsp"), edu108.getXbsp()));
+				if (edu108.getSfsckkjh() != null && !"".equals(edu108.getSfsckkjh())) {
+					predicates.add(cb.equal(root.<String>get("sfsckkjh"), edu108.getSfsckkjh()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
