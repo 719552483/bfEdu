@@ -290,13 +290,14 @@ public class AdministrationController {
 
 	/**
 	 * 获得教务相关公共代码信息
+	 * @return
 	 */
 	@RequestMapping("/getJwPublicCodes")
 	@ResponseBody
-	public Object getJwPublicCodes() {
+	public Object getJwPublicCodes(@RequestParam("userId") String userId) {
 		Map<String, Object> returnMap = new HashMap();
 		returnMap.put("allLevel", administrationPageService.queryAllLevel());
-		returnMap.put("allDepartment", administrationPageService.queryAllDepartment());
+		returnMap.put("allDepartment", administrationPageService.queryAllDepartmentByUser(userId));
 		returnMap.put("allGrade", administrationPageService.queryAllGrade());
 		returnMap.put("allMajor", administrationPageService.queryAllMajor());
 		returnMap.put("allTeacher", staffManageService.queryAllTeacher());
