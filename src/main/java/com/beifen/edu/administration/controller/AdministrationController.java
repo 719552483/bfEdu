@@ -970,7 +970,7 @@ public class AdministrationController {
 		edu108.setKcxzCode(searchObject.getString("coursesNature"));
 		edu108.setKcmc(searchObject.getString("coursesName"));
 		edu108.setKsfsCode(searchObject.getString("testWay"));
-		edu108.setSfsckkjh(searchObject.getString("suditStatus"));
+		edu108.setSfsckkjh(searchObject.getString("isSckkjh"));
 		ResultVO result = administrationPageService.culturePlanSeacchCrouse(edu108);
 		return result;
 	}
