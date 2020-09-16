@@ -4,6 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>学生课表查询</title>
 	<link href="css/loading.css" rel="stylesheet" type="text/css" />
+	<link href="css/icon.css" rel="stylesheet" type="text/css" />
 	<link href='css/bootstrap.min.css' media='all' rel='stylesheet' type='text/css' />
 	<link href='css/bootstrap-table.css' media='all' rel='stylesheet' type='text/css' />
 	<link href="css/example-styles.css" rel="stylesheet" type="text/css" />
@@ -28,7 +29,9 @@
 	<script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
 	<script src="sripts/jquerySession.js"></script>
 	<script type="text/javascript" src="js/implement.js"></script>
-		<script type="text/javascript" src="js/studentClass.js"></script>
+	<script type="text/javascript" src="js/studentClass.js"></script>
+	<script type="text/javascript" src="sripts/tableExport.js"></script>
+	<script type="text/javascript" src="sripts/bootstrap-table-export.js"></script>
 	</head>
 
 	<body>
@@ -69,10 +72,26 @@
 							</div>
 						</ul>
 					</div>
+					<div class="col4 giveBottom">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">授课类型</label>
+								<select id="crouseType" class="isSowIndex">
+									<option value="seleceConfigTip">请选择</option>
+									<option value="type1">集中授课</option>
+									<option value="type2">分散授课</option>
+								</select>
+							</div>
+						</ul>
+					</div>
 				</div>
 
 				<div class="scheduleClassesTableArea searchGivePaddingR scheduleTableStyle">
 					<table class="tablelist myTableStyle" id="scheduleClassesTable" data-unique-id="id" style="margin-top: 10px;"></table>
+				</div>
+
+				<div class="fsScheduleAreaTableArea searchGivePaddingR columnsStyle noneStart">
+					<table class="tablelist myTableStyle" id="studentfsScheduleTable" data-unique-id="edu207_ID" style="margin-top: 10px;"></table>
 				</div>
 
 			</div>
@@ -365,7 +384,7 @@
 
 
 		<!-- 提示Modal -->
-		<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal fade bs-example-modal-lg" id="fsDetailsModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
