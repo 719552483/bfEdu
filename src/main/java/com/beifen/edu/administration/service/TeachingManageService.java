@@ -263,8 +263,11 @@ public class TeachingManageService {
             return resultVO;
         }
 
+        List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(edu001.getEdu300_ID());
+        classIds.add(Long.parseLong(edu001.getEdu300_ID()));
+        String[] classIdList = utils.listToString(classIds, ',').split(",");
         //根据信息查询所有课表信息
-        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu001.getEdu300_ID(),
+        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(classIdList,
                 timeTable.getWeekTime(), timeTable.getSemester());
         if(studentSchoolTimetableList.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
@@ -756,8 +759,12 @@ public class TeachingManageService {
             resultVO = ResultVO.setFailed("您不是本校学生，无法查看您的课程");
             return resultVO;
         }
+
+        List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(edu001.getEdu300_ID());
+        classIds.add(Long.parseLong(edu001.getEdu300_ID()));
+        String[] classIdList = utils.listToString(classIds, ',').split(",");
         //根据信息查询所有课表信息
-        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(edu001.getEdu300_ID(),
+        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(classIdList,
                 timeTablePO.getWeekTime(), timeTablePO.getSemester());
         if(studentSchoolTimetableList.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");

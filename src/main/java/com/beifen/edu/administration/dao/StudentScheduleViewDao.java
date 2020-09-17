@@ -10,7 +10,7 @@ import java.util.List;
 public interface StudentScheduleViewDao extends JpaRepository<StudentSchoolTimetablePO, Long>, JpaSpecificationExecutor<StudentSchoolTimetablePO> {
 
 
-    @Query(value = "select e.* from STUDENT_SCHEDULE_VIEW e where e.class_id = ?1 and e.week = ?2 and e.xnid = ?3",nativeQuery = true)
-    List<StudentSchoolTimetablePO> findAllByEdu301Ids(String edu300id, String weekTime, String semester);
+    @Query(value = "select e.* from STUDENT_SCHEDULE_VIEW e where e.class_id in ?1 and e.week = ?2 and e.xnid = ?3",nativeQuery = true)
+    List<StudentSchoolTimetablePO> findAllByEdu301Ids(String[] classIds, String weekTime, String semester);
 }
 
