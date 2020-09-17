@@ -8,8 +8,21 @@ $(function() {
 	binBind();
 	stuffEJDElement(EJDMElementInfo);
 	getXbInfo();
+	stuffDepartmentSelect();
 	deafultSearch();
 });
+
+//填充和系部下拉框
+function stuffDepartmentSelect(){
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	//系部
+	var allDepartment=getXbInfo();
+	for (var i = 0; i < allDepartment.length; i++) {
+		str += '<option value="' + allDepartment[i].edu104_ID + '">' + allDepartment[i].xbmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#department", str);
+}
 
 //初始化检索
 function deafultSearch(){
@@ -19,6 +32,7 @@ function deafultSearch(){
 	serachObject.bzzymc="";
 	serachObject.kcxzCode="";
 	serachObject.zt="";
+	serachObject.department="";
 
 	// 发送查询所有用户请求
 	$.ajax({
@@ -937,14 +951,17 @@ function startSearch(){
 	var markName=$("#markName").val();
 	var coursesNature=getNormalSelectValue("coursesNature");
 	var status=getNormalSelectValue("status");
+	var department=getNormalSelectValue("department");
+
 
 	var serachObject=new Object();
-	courseCode===""?serachObject.kcdm="":serachObject.kcdm=courseCode;
-	courseName===""?serachObject.kcmc="":serachObject.kcmc=courseName;
-	markName===""?serachObject.bzzymc="":serachObject.bzzymc=markName;
-	coursesNature==="seleceConfigTip"?serachObject.kcxzCode="":serachObject.kcxzCode=coursesNature;
-	status==="seleceConfigTip"?serachObject.zt="":serachObject.zt=status;
-	
+	serachObject.kcdm=courseCode;
+	serachObject.kcmc=courseName;
+	serachObject.bzzymc=markName;
+	serachObject.kcxzCode=coursesNature
+	serachObject.zt=status;
+	serachObject.department=department;
+
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',

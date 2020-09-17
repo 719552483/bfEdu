@@ -221,6 +221,11 @@ function drawFsSchedule(){
 
 //渲染分散课表
 function stuffFsSchedule(tableInfo){
+	window.releaseNewsEvents = {
+		'click #deatils' : function(e, value, row, index) {
+			getScheduleDetails(row.classId,row.edu108_ID,row.courseType);
+		}
+	};
 	$('#fsScheduleTable').bootstrapTable('destroy').bootstrapTable({
 		data : tableInfo,
 		pagination : true,
@@ -274,8 +279,21 @@ function stuffFsSchedule(tableInfo){
 				title : '授课平台',
 				align : 'left',
 				formatter : paramsMatter
-				}]
+				},{
+				field : 'action',
+				title : '操作',
+				align : 'center',
+				clickToSelect : false,
+				formatter : releaseNewsFormatter,
+				events : releaseNewsEvents,
+			}]
 	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li class="queryBtn" id="deatils"><span><img src="img/info.png" style="width:24px"></span>分散授课详情</li>'
+		+ '</ul>' ].join('');
+	}
 
 	drawPagination(".fsScheduleAreaTableArea", "已排分散授课课表");
 	drawSearchInput(".fsScheduleAreaTableArea");
@@ -514,7 +532,7 @@ function startSearch(needToastr){
 			hideloding();
 			if (backjson.code===200) {
 				if(searchInfo.crouseType==="type2"){
-					stuffFsArea(backjson.data.newInfo);
+					stuffFsArea(backjson.data);
 				}else{
 					stuffJzScheduleArea(backjson.data.newInfo);
 				}

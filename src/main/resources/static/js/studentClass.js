@@ -144,8 +144,8 @@ function drawFsSchedule(){
 //渲染分散课表
 function stuffFsSchedule(tableInfo){
 	window.releaseNewsEvents = {
-		'click #modifyFsSchedule' : function(e, value, row, index) {
-			modifyFsSchedule(row,index);
+		'click #deatils' : function(e, value, row, index) {
+			getScheduleDetails(row.classId,row.edu108_ID,row.courseType);
 		}
 	};
 
@@ -202,8 +202,21 @@ function stuffFsSchedule(tableInfo){
 				title : '授课平台',
 				align : 'left',
 				formatter : paramsMatter
+			},{
+				field : 'action',
+				title : '操作',
+				align : 'center',
+				clickToSelect : false,
+				formatter : releaseNewsFormatter,
+				events : releaseNewsEvents,
 			}]
 	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li class="queryBtn" id="deatils"><span><img src="img/info.png" style="width:24px"></span>分散授课详情</li>'
+		+ '</ul>' ].join('');
+	}
 
 	drawPagination(".fsScheduleAreaTableArea", "已排分散授课课表");
 	drawSearchInput(".fsScheduleAreaTableArea");
@@ -376,14 +389,14 @@ function singleScheduleAction(eve) {
 	if (eve.currentTarget.childNodes.length === 0) {
 		return;
 	}
-	getScheduleDetails(eve);
+	var classId=eve.currentTarget.attributes[3].nodeValue;
+	var edu108_ID = eve.currentTarget.attributes[4].nodeValue;
+	var courseType=eve.currentTarget.attributes[5].nodeValue;
+	getScheduleDetails(classId,edu108_ID,courseType);
 }
 
 //获取课程详情
-function getScheduleDetails(eve){
-	var classId=eve.currentTarget.attributes[3].nodeValue;
-	var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
-	var courseType=eve.currentTarget.attributes[5].nodeValue;
+function getScheduleDetails(classId,edu108_ID,courseType){
 	$.ajax({
 		method: 'get',
 		cache: false,
@@ -391,7 +404,7 @@ function getScheduleDetails(eve){
 		data:{
 			"classId":classId,
 			"courseType":courseType,
-			"edu_180Id":edu_180Id
+			"edu_180Id":edu108_ID
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
