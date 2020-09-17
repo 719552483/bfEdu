@@ -152,6 +152,9 @@ function stuffFsSchedule(tableInfo){
 		},
 		'click #confriModify' : function(e, value, row, index) {
 			confriModify(row,index);
+		},
+		'click #deatils' : function(e, value, row, index) {
+			getScheduleDetails(row.classId,row.edu108_ID,row.courseType);
 		}
 	};
 
@@ -220,6 +223,7 @@ function stuffFsSchedule(tableInfo){
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'+
+			'<li  id="deatils"  class="queryBtn deatils'+index+'"><span><img src="img/info.png" style="width:24px"></span>详情</li>'+
 			'<li id="modifyFsSchedule" class="modifyBtn modifyBtn'+index+'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>'+
 			'<li id="confriModify" class="noneStart confrim'+index+'"><span><img src="img/right.png" style="width:24px"></span>确定</li>' +
 			'<li id="cancelModify" class="noneStart cancel'+index+'"><span><img src="images/t03.png" style="width:24px"></span>取消</li>' +
@@ -258,6 +262,7 @@ function stuffFsSchedule(tableInfo){
 
 //预备修改
 function modifyFsSchedule(row,index){
+	$(".deatils"+index).hide();
    	$(".modifyBtn"+index).hide();
 	$(".courseContentTxt"+index).hide();
 	$(".teachingPlatformTxt"+index).hide();
@@ -269,6 +274,7 @@ function modifyFsSchedule(row,index){
 
 //取消修改
 function cancelModify(row,index){
+	$(".deatils"+index).show();
 	$(".modifyBtn"+index).show();
 	$(".courseContentTxt"+index).show();
 	$(".teachingPlatformTxt"+index).show();
