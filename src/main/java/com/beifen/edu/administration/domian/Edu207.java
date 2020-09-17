@@ -14,6 +14,10 @@ public class Edu207 {
     private String courseName;//课程名称
     private String courseContent;//课程内容
     private String teachingPlatform;//授课平台
+    private String classId;//班级id
+    private String className;//班级名称
+    private String Edu108_ID;//授课平台
+    private String courseType;//授课平台
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -74,5 +78,37 @@ public class Edu207 {
 
     public void setTeachingPlatform(String teachingPlatform) {
         this.teachingPlatform = teachingPlatform;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getEdu108_ID() {
+        return Edu108_ID;
+    }
+
+    public void setEdu108_ID(String edu108_ID) {
+        Edu108_ID = edu108_ID;
+    }
+
+    public String getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(String courseType) {
+        this.courseType = courseType;
     }
 }

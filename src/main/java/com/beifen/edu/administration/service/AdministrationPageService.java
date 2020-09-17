@@ -1079,6 +1079,11 @@ public class AdministrationPageService {
 		} else {
 			if(edu207List.size() != 0) {
 				for (Edu207 edu207 : edu207List) {
+					Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
+					edu207.setClassName(edu201.getClassName());
+					edu207.setClassId(edu201.getClassId().toString());
+					edu207.setEdu108_ID(edu108.getEdu108_ID().toString());
+					edu207.setCourseType(edu108.getKcxzCode());
 					edu207Dao.save(edu207);
 				}
 			}
