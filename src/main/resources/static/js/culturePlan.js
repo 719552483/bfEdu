@@ -747,7 +747,7 @@ function stuffMajorTrainingTable(tableInfo) {
 			onUncheckAllMajorTraining(rows2);
 		},
 		onPageChange : function() {
-			drawPagination(".majorTrainingTableArea", "培养计划");
+			drawPagination(".majorTrainingTableArea", "专业课程");
 			for (var i = 0; i < choosendMajorTraining.length; i++) {
 				$("#majorTrainingTable").bootstrapTable("checkBy", {field:"edu108_ID", values:[choosendMajorTraining[i].edu108_ID]})
 			}
@@ -843,11 +843,11 @@ function stuffMajorTrainingTable(tableInfo) {
 		}
 	}
 
-	drawPagination(".majorTrainingTableArea", "培养计划");
+	drawPagination(".majorTrainingTableArea", "专业课程");
 	drawSearchInput(".majorTrainingTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
-	changeColumnsStyle(".majorTrainingTableArea", "培养计划");
+	changeColumnsStyle(".majorTrainingTableArea", "专业课程");
 	btnControl();
 }
 
