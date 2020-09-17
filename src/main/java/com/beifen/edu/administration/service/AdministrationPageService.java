@@ -840,8 +840,9 @@ public class AdministrationPageService {
 			edu201DAO.save(edu201);
 
 			edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
-			Edu204 edu204 = new Edu204();
+
 			if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
+				Edu204 edu204 = new Edu204();
 				edu204.setClassName(edu201.getClassName());
 				edu204.setEdu201_ID(edu201.getEdu201_ID());
 				edu204.setEdu300_ID(edu201.getClassId());
@@ -849,7 +850,8 @@ public class AdministrationPageService {
 			} else {
 				List<Edu302> edu302List = edu302DAO.findClassByEdu301ID(edu201.getClassId().toString());
 				for (Edu302 e : edu302List) {
-					edu204.setClassName(edu201.getClassName());
+					Edu204 edu204 = new Edu204();
+					edu204.setClassName(e.getXzbmc());
 					edu204.setEdu201_ID(edu201.getEdu201_ID());
 					edu204.setEdu300_ID(e.getEdu300_ID());
 					edu204Dao.save(edu204);
