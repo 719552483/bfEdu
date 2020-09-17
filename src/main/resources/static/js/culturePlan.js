@@ -1228,10 +1228,10 @@ function reReloadSearchs() {
 
 // 预备添加专业课程
 function wantAddClass() {
-	if($(".planStatus ")[0].innerText!=="pass"){
-		toastr.warning("该培养计划暂未通过审核");
-		return;
-	}
+	// if($(".planStatus ")[0].innerText!=="pass"){
+	// 	toastr.warning("该培养计划暂未通过审核");
+	// 	return;
+	// }
 	getAllClassInfo($(".planName")[0].innerText);
 	$("#classBaseInfo_classSemesters").multiSelect();
 }
