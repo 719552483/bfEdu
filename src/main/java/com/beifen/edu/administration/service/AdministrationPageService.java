@@ -90,6 +90,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu207Dao edu207Dao;
 	@Autowired
+	private Edu500Dao edu500Dao;
+	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
@@ -2316,5 +2318,10 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门可排课程",edu201List);
 		}
 		return resultVO;
+	}
+
+	public List<Edu500> queryAllLocal() {
+		List<Edu500> edu500List = edu500Dao.findAll();
+		return edu500List;
 	}
 }

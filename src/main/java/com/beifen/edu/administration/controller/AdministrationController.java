@@ -302,6 +302,7 @@ public class AdministrationController {
 		returnMap.put("allMajor", administrationPageService.queryAllMajor());
 		returnMap.put("allTeacher", staffManageService.queryAllTeacher());
 		returnMap.put("allTerm", administrationPageService.queryAllXn());
+		returnMap.put("AllLocal", administrationPageService.queryAllLocal());
 		returnMap.put("result", true);
 		return returnMap;
 	}
