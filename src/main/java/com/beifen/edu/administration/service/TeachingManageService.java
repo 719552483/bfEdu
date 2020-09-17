@@ -845,7 +845,7 @@ public class TeachingManageService {
                     Path<Object> classPath = root.get("classId");//定义查询的字段
                     CriteriaBuilder.In<Object> classIn = cb.in(classPath);
                     for (int i = 0; i <classIds.size() ; i++) {
-                        classIn.value(classIds.get(i).toString());//存入值
+                        classIn.value(classIds.get(i));//存入值
                     }
                     predicates.add(cb.and(classIn));
                 }
