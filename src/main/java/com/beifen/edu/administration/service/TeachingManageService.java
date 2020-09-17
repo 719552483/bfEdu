@@ -10,7 +10,6 @@ import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +41,8 @@ public class TeachingManageService {
     @Autowired
     Edu108Dao edu108Dao;
     @Autowired
+    Edu107Dao edu107Dao;
+    @Autowired
     Edu200Dao edu200Dao;
     @Autowired
     Edu203Dao edu203Dao;
@@ -63,6 +62,8 @@ public class TeachingManageService {
     StudentScheduleViewDao studentScheduleViewDao;
     @Autowired
     ClassStudentViewDao classStudentViewDao;
+    @Autowired
+    ScheduleViewDao scheduleViewDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -777,6 +778,129 @@ public class TeachingManageService {
         ResultVO resultVO;
         edu207Dao.save(edu207);
         resultVO = ResultVO.setSuccess("保存成功",edu207);
+        return resultVO;
+    }
+
+
+    //教务查询课表
+    public ResultVO getSchedule(SchedulePO schedulePO) {
+        ResultVO resultVO;
+        TimeTablePO timeTable = new TimeTablePO();
+        //从redis中查询二级学院管理权限
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + schedulePO.getCurrentUserId());
+
+        Specification<Edu107> Edu107Specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (schedulePO.getLevel() != null && !"".equals(schedulePO.getLevel())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), schedulePO.getLevel()));
+                }
+                if (schedulePO.getDepartment() != null && !"".equals(schedulePO.getDepartment())) {
+                    predicates.add(cb.equal(root.<String>get("edu104"), schedulePO.getDepartment()));
+                }
+                if (schedulePO.getGrade() != null && !"".equals(schedulePO.getGrade())) {
+                    predicates.add(cb.equal(root.<String>get("edu105"), schedulePO.getGrade()));
+                }
+                if (schedulePO.getMajor() != null && !"".equals(schedulePO.getMajor())) {
+                    predicates.add(cb.equal(root.<String>get("edu106"),  schedulePO.getMajor()));
+                }
+                Path<Object> path = root.get("edu104");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <departments.size() ; i++) {
+                    in.value(departments.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu107> relationEntities = edu107Dao.findAll(Edu107Specification);
+
+        if (relationEntities.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周暂无符合要求的课表");
+            return resultVO;
+        }
+        List<Long> edu107Ids = relationEntities.stream().map(Edu107::getEdu107_ID).collect(Collectors.toList());
+
+        List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107Ids);
+        if(edu108IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周暂无符合要求的课表");
+            return resultVO;
+        }
+
+        Specification<ScheduleViewPO> scheduleViewPOSpecification = new Specification<ScheduleViewPO>() {
+            public Predicate toPredicate(Root<ScheduleViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(cb.equal(root.<String>get("xnid"),  schedulePO.getSemester()));
+                predicates.add(cb.equal(root.<String>get("week"),  schedulePO.getWeekTime()));
+                if (schedulePO.getLocal() != null && !"".equals(schedulePO.getLocal())) {
+                    predicates.add(cb.equal(root.<String>get("classRoomId"),  schedulePO.getLocal()));
+                }
+                if (schedulePO.getLocation() != null && !"".equals(schedulePO.getLocation())) {
+                    predicates.add(cb.equal(root.<String>get("pointId"),  schedulePO.getLocation()));
+                }
+                if (schedulePO.getClassId() != null && !"".equals(schedulePO.getClassId())) {
+                    List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(schedulePO.getClassId());
+                    classIds.add(Long.parseLong(schedulePO.getClassId()));
+                    Path<Object> classPath = root.get("classId");//定义查询的字段
+                    CriteriaBuilder.In<Object> classIn = cb.in(classPath);
+                    for (int i = 0; i <classIds.size() ; i++) {
+                        classIn.value(classIds.get(i).toString());//存入值
+                    }
+                    predicates.add(cb.and(classIn));
+                }
+                if (schedulePO.getTeacherId() != null && !"".equals(schedulePO.getTeacherId())) {
+                    predicates.add(cb.or(cb.like(root.<String>get("teacherId"), "%"+schedulePO.getTeacherId()+"%"),cb.like(root.<String>get("baseTeacherId"), "%"+schedulePO.getTeacherId()+"%")));
+                }
+
+                Path<Object> path = root.get("courseId");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <edu108IdList.size() ; i++) {
+                    in.value(edu108IdList.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<ScheduleViewPO> scheduleViewPOList = scheduleViewDao.findAll(scheduleViewPOSpecification);
+
+        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+        if(scheduleViewPOList.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到符合要求的课程");
+            return resultVO;
+        } else {
+            for (ScheduleViewPO o : scheduleViewPOList) {
+                SchoolTimetablePO s = new SchoolTimetablePO();
+                try {
+                    utils.copyParm(o,s);
+                    schoolTimetableList.add(s);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            timeTable.setCurrentUserId(schedulePO.getCurrentUserId());
+            timeTable.setSemester(schedulePO.getSemester());
+            timeTable.setWeekTime(schedulePO.getWeekTime());
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
+            resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);
+        }
+
+        if("type2".equals(schedulePO.getCrouseType())) {
+            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
+            List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTable.getWeekTime());
+            if (edu207List.size() == 0) {
+                resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
+            } else {
+                resultVO = ResultVO.setSuccess("当前周共找到"+edu207List.size()+"条分散学识安排",edu207List);
+            }
+        }
+
         return resultVO;
     }
 }
