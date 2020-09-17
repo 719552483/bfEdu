@@ -257,7 +257,7 @@ function destoryLastStuff(){
 	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#kj,#skdd";
 	reReloadSearchsWithSelect(reObject);
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
-	$(".choosendKjArea").empty();
+	$(".choosendKjArea,.singleKj").empty();
 	$(".kjRsArea ").hide();
 }
 

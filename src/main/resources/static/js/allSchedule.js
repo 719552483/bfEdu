@@ -514,9 +514,9 @@ function startSearch(needToastr){
 			hideloding();
 			if (backjson.code===200) {
 				if(searchInfo.crouseType==="type2"){
-					stuffFsArea(backjson.data);
+					stuffFsArea(backjson.data.newInfo);
 				}else{
-					stuffJzScheduleArea(backjson.data);
+					stuffJzScheduleArea(backjson.data.newInfo);
 				}
 				toastr.info(backjson.msg);
 			} else {
