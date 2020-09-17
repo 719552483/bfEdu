@@ -487,17 +487,21 @@ function stuffScheduleClassesTable(tableInfo) {
 
 //集中课程点击事件
 function singleScheduleAction(eve) {
+	$("#scheduleInfoModal").find("#tab1").show();
+	$("#scheduleInfoModal").find("#tab2").hide();
+	$("#scheduleInfoModal").find(".itab").find("li:eq(0)").find("a").addClass("selected");
+	$("#scheduleInfoModal").find(".itab").find("li:eq(1)").find("a").removeClass("selected");
 	if (eve.currentTarget.childNodes.length === 0) {
 		return;
 	}
-	getScheduleDetails(eve);
+	var classId=eve.currentTarget.attributes[3].nodeValue;
+	var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
+	var courseType=eve.currentTarget.attributes[5].nodeValue;
+	getScheduleDetails(classId,edu_180Id,courseType);
 }
 
 //获取集中课程详情
-function getScheduleDetails(eve){
-	 var classId=eve.currentTarget.attributes[3].nodeValue;
-	 var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
-	 var courseType=eve.currentTarget.attributes[5].nodeValue;
+function getScheduleDetails(classId,edu_180Id,courseType){
 	$.ajax({
 		method: 'get',
 		cache: false,

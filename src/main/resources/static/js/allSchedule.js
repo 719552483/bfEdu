@@ -207,56 +207,11 @@ function getLocations(){
 	});
 }
 
-//改变授课类型
-function getSchedule(){
-	var currentType=getNormalSelectValue("crouseType");
-	if(currentType===""){
-		return;
-	}
-
-	if(currentType==="type2"){
-		getFsScheduleInfo();
-	}else{
-		getScheduleClassesInfo();
-	}
-}
-
 //获取分散课表信息
-function getFsScheduleInfo(){
-	var searchObject=getScheduleSearchInfo();
-	if(typeof(searchObject) === "undefined"){
-		return;
-	}
-	$.ajax({
-		method: 'get',
-		cache: false,
-		url: "/searchScatteredClassByTeacher",
-		data:{
-			"searchObject":JSON.stringify(searchObject)
-		},
-		dataType: 'json',
-		beforeSend: function (xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function (textStatus) {
-			requestError();
-		},
-		complete: function (xhr, status) {
-			requestComplete();
-		},
-		success: function (backjson) {
-			hideloding();
-			$(".scheduleClassesTableArea,.myformtextTipArea").hide();
-			$(".fsScheduleAreaTableArea").show();
-			if (backjson.code===200) {
-				stuffFsSchedule(backjson.data);
-				toastr.info(backjson.msg);
-			} else {
-				drawFsSchedule();
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
+function stuffFsArea(tableInfo){
+	$(".scheduleClassesTableArea,.myformtextTipArea").hide();
+	$(".fsScheduleAreaTableArea").show();
+	stuffFsSchedule(tableInfo);
 }
 
 //填充空的分散课表
@@ -351,42 +306,10 @@ function drawScheduleClassesEmptyTable() {
 }
 
 //获取集中课程表信息
-function getScheduleClassesInfo() {
-	var searchObject=getScheduleSearchInfo();
-	if(typeof(searchObject) === "undefined"){
-		return;
-	}
-	$.ajax({
-		method: 'get',
-		cache: false,
-		url: "/getScheduleInfo",
-		data:{
-			"searchObject":JSON.stringify(searchObject)
-		},
-		dataType: 'json',
-		beforeSend: function (xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function (textStatus) {
-			requestError();
-		},
-		complete: function (xhr, status) {
-			requestComplete();
-		},
-		success: function (backjson) {
-			hideloding();
-			$(".scheduleClassesTableArea,.myformtextTipArea").show();
-			$(".fsScheduleAreaTableArea").hide();
-			if (backjson.code===200) {
-				stuffScheduleClassesTable(backjson.data.newInfo);
-				toastr.info(backjson.msg);
-			} else {
-				drawScheduleClassesEmptyTable()
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
-
+function stuffJzScheduleArea(tableInfo) {
+	$(".scheduleClassesTableArea,.myformtextTipArea").show();
+	$(".fsScheduleAreaTableArea").hide();
+	stuffScheduleClassesTable(tableInfo);
 }
 
 //渲染集中课程表
@@ -469,17 +392,21 @@ function stuffScheduleClassesTable(tableInfo) {
 
 //集中课程点击事件
 function singleScheduleAction(eve) {
+	$("#scheduleInfoModal").find("#tab1").show();
+	$("#scheduleInfoModal").find("#tab2").hide();
+	$("#scheduleInfoModal").find(".itab").find("li:eq(0)").find("a").addClass("selected");
+	$("#scheduleInfoModal").find(".itab").find("li:eq(1)").find("a").removeClass("selected");
 	if (eve.currentTarget.childNodes.length === 0) {
 		return;
 	}
-	getScheduleDetails(eve);
+	var classId=eve.currentTarget.attributes[3].nodeValue;
+	var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
+	var courseType=eve.currentTarget.attributes[5].nodeValue;
+	getScheduleDetails(classId,edu_180Id,courseType);
 }
 
 //获取集中课程详情
-function getScheduleDetails(eve){
-	 var classId=eve.currentTarget.attributes[3].nodeValue;
-	 var edu_180Id = eve.currentTarget.attributes[4].nodeValue;
-	 var courseType=eve.currentTarget.attributes[5].nodeValue;
+function getScheduleDetails(classId,edu_180Id,courseType){
 	$.ajax({
 		method: 'get',
 		cache: false,
@@ -557,15 +484,55 @@ function stuffStudentInfo(studentList){
 }
 
 //开始检索
-function startSearch(){
-   var searchInfo=getScheduleSearchInfo();
+function startSearch(needToastr){
+   var searchInfo=getScheduleSearchInfo(needToastr);
    if(typeof searchInfo==="undefined"){
 	   return ;
    }
+	if(searchInfo.crouseType===""){
+		return;
+	}
+
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getSchedule",
+		data:{
+			"SearchObject":JSON.stringify(searchInfo)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				if(searchInfo.crouseType==="type2"){
+					stuffFsArea(backjson.data);
+				}else{
+					stuffJzScheduleArea(backjson.data);
+				}
+				toastr.info(backjson.msg);
+			} else {
+				if(searchInfo.crouseType==="type2"){
+					drawFsSchedule();
+				}else{
+					drawScheduleClassesEmptyTable();
+				}
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //获得课表检索对象
-function getScheduleSearchInfo(){
+function getScheduleSearchInfo(needToastr){
 	var currentUserId= $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	var semester=getNormalSelectValue("semester");
 	var weekTime=getNormalSelectValue("weekTime");
@@ -578,17 +545,17 @@ function getScheduleSearchInfo(){
 	var location=getNormalSelectValue("location");
 	var classId=$("#class")[0].attributes[3].nodeValue;
 	var teacherId=$("#teacher")[0].attributes[3].nodeValue;
-	if(semester===""){
+	if(semester===""&&typeof needToastr==="undefined"){
 		toastr.warning('请选择学年');
 		return ;
 	}
 
-	if(weekTime===""){
+	if(weekTime===""&&typeof needToastr==="undefined"){
 		toastr.warning('请选择周数');
 		return ;
 	}
 
-	if(crouseType===""){
+	if(crouseType===""&&typeof needToastr==="undefined"){
 		toastr.warning('请选择授课类型');
 		return ;
 	}
@@ -1007,6 +974,16 @@ function btnBind() {
 	$('#startSearch').bind('click', function(e) {
 		startSearch();
 		e.stopPropagation();
+	});
+
+	//changge事件
+	$("#crouseType").change(function() {
+		startSearch();
+	});
+
+	//changge事件
+	$("#semester,#weekTime").change(function() {
+		startSearch(false);
 	});
 
 	//重置检索
