@@ -154,7 +154,6 @@ public class StaffManageService {
 
         //查询教师任务书ID列表
         List<String> edu201IdList = edu205Dao.findEdu201IdByTeacher(userKey);
-
         if(edu201IdList.size() == 0) {
             resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
             return resultVO;
@@ -182,8 +181,16 @@ public class StaffManageService {
         };
 
         List<Edu107> edu107List = edu107Dao.findAll(specification);
+        if (edu107List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
         List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).collect(Collectors.toList());
         List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
+        if (edu108IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
         List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
         //两个201id集合去交集
         edu201IdList.retainAll(edu201Ids);
