@@ -74,8 +74,8 @@ function stufflocalInfoTable(tableInfo) {
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'townShip',
-                title: '乡/镇',
+                field: 'pointCount',
+                title: '任务点',
                 align: 'left',
                 formatter: paramsMatter
             }, {
