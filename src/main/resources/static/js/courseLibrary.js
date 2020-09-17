@@ -32,7 +32,7 @@ function deafultSearch(){
 	serachObject.bzzymc="";
 	serachObject.kcxzCode="";
 	serachObject.zt="";
-	serachObject.department="";
+	serachObject.departmentCode="";
 
 	// 发送查询所有用户请求
 	$.ajax({
@@ -960,7 +960,7 @@ function startSearch(){
 	serachObject.bzzymc=markName;
 	serachObject.kcxzCode=coursesNature
 	serachObject.zt=status;
-	serachObject.department=department;
+	serachObject.departmentCode=department;
 
 	// 发送查询所有用户请求
 	$.ajax({

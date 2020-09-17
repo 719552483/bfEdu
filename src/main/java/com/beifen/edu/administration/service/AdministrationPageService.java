@@ -1179,6 +1179,9 @@ public class AdministrationPageService {
 				if (edu200.getZt() != null && !"".equals(edu200.getZt())) {
 					predicates.add(cb.equal(root.<String>get("zt"), edu200.getZt()));
 				}
+				if (edu200.getDepartmentCode() != null && !"".equals(edu200.getDepartmentCode())) {
+					predicates.add(cb.equal(root.<String>get("departmentCode"), edu200.getDepartmentCode()));
+				}
 				Path<Object> path = root.get("departmentCode");//定义查询的字段
 				CriteriaBuilder.In<Object> in = cb.in(path);
 				for (int i = 0; i <departments.size() ; i++) {
