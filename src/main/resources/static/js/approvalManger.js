@@ -289,6 +289,10 @@ function approvalInfo(row) {
 
 //根据业务类型展示相应的业务详情区域
 function judgmentBusinessShowArea(businessType,businessInfo){
+	if(businessInfo===null){
+		toastr.warning('业务数据已被删除');
+		return ;
+	}
 	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
    if(businessType==="01"||businessType==="02"){//课程审批
 	   stuffClassInfoArea(businessInfo);
@@ -346,7 +350,7 @@ function stuffCulturePlanInfoArea(businessInfo){
 			'<span><cite>实践学时：</cite><b>'+businessInfo[i].sjxs+'</b></span><div class="clear"></div>'+
 			'<span><cite>集中学时：</cite><b>'+businessInfo[i].jzxs+'</b></span>'+
 			'<span><cite>分散学时：</cite><b>'+businessInfo[i].fsxs+'</b></span>'+
-			'<span><cite>学分：</cite><b>'+businessInfo[i].xf+'</b></span><div><div class="clear"></div>'
+			'<span><cite>学分：</cite><b>'+businessInfo[i].xf+'</b></span></div><div class="clear"></div>'
 	}
 	$(".culturePlanApprovalArea").append(Str);
 	$("#approvalDetailsModal").find(".moadalTitle").html("培养计划审批详情");

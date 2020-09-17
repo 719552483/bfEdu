@@ -2258,6 +2258,10 @@ input:focus{
 	background:url(../images/btnbg2.png) repeat-x!important;
 }
 
+.scheduleClassesTableArea .search {
+	margin-top: 0px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
