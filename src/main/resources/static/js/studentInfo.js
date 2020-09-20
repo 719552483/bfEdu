@@ -149,8 +149,8 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			showToggle: false,
 			clickToSelect: true,
 			search: true,
-			exportDataType: "all",
 			showExport: true,      //是否显示导出
+			exportDataType: "all",
 			exportOptions:{
 				fileName: '学生信息导出'  //文件名称
 			},
@@ -170,18 +170,28 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				onUncheckAll(rows2);
 			},
 			onPostBody: function() {
-				drawPagination(".studentBaseInfoTableArea", "学生信息");
+				drawPagination(".studentBaseInfoTableArea", "学生信息","serverPage",1);
 				drawSearchInput(".studentBaseInfoTableArea");
 				changeTableNoRsTip();
-				changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息");
+				changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息","serverPage");
 				toolTipUp(".myTooltip");
 				btnControl();
-			},
-			onPageChange: function() {
-				drawPagination(".studentBaseInfoTableArea", "学生信息");
+
+				//勾选已选数据
 				for (var i = 0; i < choosendStudent.length; i++) {
 					$("#studentBaseInfoTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
 				}
+
+				//解决点击排序表内检索框自动增加的问题
+				var allsearchIcons=$(".studentBaseInfoTableArea").find(".searchIcon");
+				var searchIconDom=$(".studentBaseInfoTableArea").find(".searchIcon:eq(0)")[0].outerHTML;
+				if(allsearchIcons.length>1){
+					$(".studentBaseInfoTableArea").find(".searchIcon").remove();
+				}
+				$(".studentBaseInfoTableArea").find(".search").prepend(searchIconDom);
+			},
+			onPageChange: function() {
+				drawPagination(".studentBaseInfoTableArea", "学生信息","serverPage",1);
 			},
 			columns: [
 				{
@@ -587,6 +597,17 @@ function onUncheckAll(row){
 	}
 }
 
+//后端分页导出学生
+function exportStudent(){
+	var  searchStudentObject=getSearchStudentObject();
+	var $eleForm = $("<form method='get'></form>");
+	$eleForm.attr("action", "/exportStudentExcel"); //下载文件接口
+	$eleForm.append("searchInfo",JSON.stringify(searchStudentObject));
+	$(document.body).append($eleForm);
+	//提交表单，实现下载
+	$eleForm.submit();
+}
+
 //展示学生详情
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
@@ -922,7 +943,7 @@ function sendStudentRemoveInfo(removeArray){
 				for (var i = 0; i < removeArray.length; i++) {
 					$("#studentBaseInfoTable").bootstrapTable('removeByUniqueId', removeArray[i].studentId);
 				}
-				drawPagination(".studentBaseInfoTableArea", "学生信息");
+				drawPagination(".studentBaseInfoTableArea", "学生信息","serverPage",1);
 				$(".myTooltip").tooltipify();
 				$.hideModal("#remindModal");
 				toastr.success(backjson.msg);

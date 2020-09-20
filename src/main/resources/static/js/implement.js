@@ -507,7 +507,7 @@ function reDrawSelect(ID, value, text) {
 }
 
 // 渲染分页信息样式
-function drawPagination(tableAreaClass, paginationTxt) {
+function drawPagination(tableAreaClass, paginationTxt,serverPage,tableType) {
 	$(tableAreaClass).find("table").find("thead").find("input").attr("title","全选当前页");
 	$(tableAreaClass).find("table").find("thead").find("input").tooltipify({offsetLeft:-30,offsetTop:-15,position:"top",displayAware:false});
 	//分页信息样式
@@ -546,13 +546,13 @@ function drawPagination(tableAreaClass, paginationTxt) {
 		var str=$(".bootstrap4").find(".export").find("a:last-child").html();
 		$(".bootstrap4").find(".export").find("a:last-child").html('<img class="exportImg" src="images/i01.png" style="width: 24px;">'+str);
 	}
-	
+
 	$(".bootstrap4").find(".export").unbind('click');
 	$(".bootstrap4").find(".export").bind('click', function(e) {
-	    checkTableHaveData(tableAreaClass);
+		checkTableHaveData(tableAreaClass,serverPage,tableType);
 		e.stopPropagation();
 	});
-	
+
 	$(".bootstrap4").find(".keep-open").unbind('click');
 	$(".bootstrap4").find(".keep-open").bind('click', function(e) {
 		$(".bootstrap4").find(".keep-open").find(".dropdown-menu").toggle();
@@ -570,8 +570,8 @@ function drawPagination(tableAreaClass, paginationTxt) {
 	});
 }
 
-// 判断table是否渲染了数据
-function checkTableHaveData(tableAreaClass){
+// 前端分页判断table是否渲染了数据
+function checkTableHaveData(tableAreaClass,serverPage,tableType){
 	var tables=$(tableAreaClass).find("table");
 	var id="";
 	for (var i = 0; i < tables.length; i++) {
@@ -588,6 +588,17 @@ function checkTableHaveData(tableAreaClass){
 		$('body').click(function(e) {
 			$('.dropdown-menu').hide();
 	    })
+	}
+
+	//前端的分页和后端分页的不同处理
+	if(typeof serverPage!=="undefined"){
+		$(tableAreaClass).find(".export ").find(".dropdown-menu").find("a:last").unbind('click');
+		$(tableAreaClass).find(".export ").find(".dropdown-menu").find("a:last").bind('click', function(e) {
+			if(tableType==1){
+				exportStudent();
+			}
+			e.stopPropagation();
+		});
 	}
 }
 
