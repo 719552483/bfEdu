@@ -1,13 +1,21 @@
 var EJDMElementInfo;
+var choosendStudent=new Array();
 $(function() {
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
 	getMajorTrainingSelectInfo();
-	drawStudentBaseInfoEmptyTable();
 	btnControl();
 	binBind();
+	getStudentInfo();
 });
+
+//获取所有学生
+function getStudentInfo() {
+	//初始化表格
+	var oTable = new stuffStudentBaseInfoTable();
+	oTable.Init();
+}
 
 //获取-专业培养计划- 有逻辑关系select信息
 function getMajorTrainingSelectInfo() {
@@ -106,7 +114,6 @@ function drawStudentBaseInfoEmptyTable() {
 	stuffStudentBaseInfoTable({});
 }
 
-var choosendStudent=new Array();
 //渲染学生表
 function stuffStudentBaseInfoTable(tableInfo) {
 	window.releaseNewsEvents = {
@@ -121,289 +128,330 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		}
 	};
 
-	$('#studentBaseInfoTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo,
-		pagination: true,
-		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
-		showToggle: false,
-		showFooter: false,
-		clickToSelect: true,
-		search: true,
-		editable: false,
-		exportDataType: "all",  
-		showExport: true,      //是否显示导出
-		exportOptions:{  
-		    fileName: '学生信息导出'  //文件名称
-		},
-		striped: true,
-	    sidePagination: "client",   
-		toolbar: '#toolbar',
-		showColumns: true,
-		onCheck : function(row) {
-			onCheck(row);
-		},
-		onUncheck : function(row) {
-			onUncheck(row);
-		},
-		onCheckAll : function(rows) {
-			onCheckAll(rows);
-		},
-		onUncheckAll : function(rows,rows2) {
-			onUncheckAll(rows2);
-		},
-		onPageChange: function() {
-			drawPagination(".studentBaseInfoTableArea", "学生信息");
-			for (var i = 0; i < choosendStudent.length; i++) {
-				$("#studentBaseInfoTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
-			}
-		},
-		columns: [
-			{
-				field: 'check',
-				checkbox: true
-			},{
-				field: 'edu001_ID',
-				title: '唯一标识',
-				align: 'center',
-				sortable: true,
-				visible: false
+	var oTableInit = new Object();
+	oTableInit.Init = function () {
+		$('#studentBaseInfoTable').bootstrapTable('destroy').bootstrapTable({
+			url:'/studentMangerSearchStudent',         //请求后台的URL（*）
+			method: 'POST',                      //请求方式（*）
+			striped: true,                      //是否显示行间隔色
+			cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			pagination: true,                   //是否显示分页（*）
+			queryParamsType: '',
+			dataType: 'json',
+			pageNumber: 1, //初始化加载第一页，默认第一页
+			queryParams: queryParams,//请求服务器时所传的参数
+			sidePagination: 'server',//指定服务器端分页
+			pageSize: 10,//单页记录数
+			pageList: [10,20,30,40],//分页步进值
+			search: false,
+			silent: false,
+			showRefresh: false,                  //是否显示刷新按钮
+			showToggle: false,
+			clickToSelect: true,
+			search: true,
+			exportDataType: "all",
+			showExport: true,      //是否显示导出
+			exportOptions:{
+				fileName: '学生信息导出'  //文件名称
 			},
-			{
-				field: 'pyccmc',
-				title: '层次',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
+			striped: true,
+			toolbar: '#toolbar',
+			showColumns: true,
+			onCheck : function(row) {
+				onCheck(row);
+			},
+			onUncheck : function(row) {
+				onUncheck(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAll(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAll(rows2);
+			},
+			onPostBody: function() {
+				drawPagination(".studentBaseInfoTableArea", "学生信息");
+				drawSearchInput(".studentBaseInfoTableArea");
+				changeTableNoRsTip();
+				changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息");
+				toolTipUp(".myTooltip");
+				btnControl();
+			},
+			onPageChange: function() {
+				drawPagination(".studentBaseInfoTableArea", "学生信息");
+				for (var i = 0; i < choosendStudent.length; i++) {
+					$("#studentBaseInfoTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
+				}
+			},
+			columns: [
+				{
+					field: 'check',
+					checkbox: true
+				},{
+					field: 'edu001_ID',
+					title: '唯一标识',
+					align: 'center',
+					sortable: true,
+					visible: false
+				},
+				{
+					field: 'pyccmc',
+					title: '层次',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
 
-			}, {
-				field: 'szxbmc',
-				title: '二级学院',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			}, {
-				field: 'njmc',
-				title: '年级',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			}, {
-				field: 'zymc',
-				title: '专业名称',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			}, {
-				field: 'xzbname',
-				title: '行政班',
-				align: 'left',
-				sortable: true,
-				formatter: xzbnameMatter
-			}, {
-				field: 'xh',
-				title: '学号',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			}, {
-				field: 'xm',
-				title: '姓名',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			},{
-				field: 'sylx',
-				title: '生源类型',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			},  {
-				field: 'xb',
-				title: '性别',
-				align: 'left',
-				sortable: true,
-				formatter: sexFormatter,
-				visible: false
-			}, {
-				field: 'zt',
-				title: '状态',
-				align: 'left',
-				sortable: true,
-				formatter: ztMatter
-			}, {
-				field: 'sfyxj',
-				title: '是否有学籍',
-				align: 'left',
-				sortable: true,
-				formatter: isrollMatter,
-				visible: false
-			},
-			{
-				field: 'zkzh',
-				title: '准考证号',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			},
-			{
-				field: 'ksh',
-				title: '考生号',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'sfzh',
-				title: '身份证号',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'xjh',
-				title: '学籍号',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			},{
-				field: 'zym',
-				title: '曾用名',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'csrq',
-				title: '出生日期',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'rxsj',
-				title: '入学时间',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'mz',
-				title: '民族',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'hf',
-				title: '婚否',
-				align: 'left',
-				sortable: true,
-				formatter: marriageMatter,
-				visible: false
-			}, {
-				field: 'whcd',
-				title: '文化程度',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'zzmm',
-				title: '政治面貌',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'syd',
-				title: '生源地',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'jtzz',
-				title: '家庭住址',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'rxzf',
-				title: '入学总分',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'bz',
-				title: '备注',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'sjhm',
-				title: '手机号',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'email',
-				title: 'E-mail',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'jg',
-				title: '籍贯',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'sg',
-				title: '身高',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			}, {
-				field: 'tz',
-				title: '体重',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			},  {
-				field: 'zsfs',
-				title: '招生方式',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			}, {
-				field: 'dxpy',
-				title: '是否订单',
-				align: 'left',
-				sortable: true,
-				formatter: isOrNotisMatter,
-				visible: false
-			}, {
-				field: 'action',
-				title: '操作',
-				align: 'center',
-				clickToSelect: false,
-				formatter: releaseNewsFormatter,
-				events: releaseNewsEvents,
+				}, {
+					field: 'szxbmc',
+					title: '二级学院',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				}, {
+					field: 'njmc',
+					title: '年级',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				}, {
+					field: 'zymc',
+					title: '专业名称',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				}, {
+					field: 'xzbname',
+					title: '行政班',
+					align: 'left',
+					sortable: true,
+					formatter: xzbnameMatter
+				}, {
+					field: 'xh',
+					title: '学号',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				}, {
+					field: 'xm',
+					title: '姓名',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				},{
+					field: 'sylx',
+					title: '生源类型',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				},  {
+					field: 'xb',
+					title: '性别',
+					align: 'left',
+					sortable: true,
+					formatter: sexFormatter,
+					visible: false
+				}, {
+					field: 'zt',
+					title: '状态',
+					align: 'left',
+					sortable: true,
+					formatter: ztMatter
+				}, {
+					field: 'sfyxj',
+					title: '是否有学籍',
+					align: 'left',
+					sortable: true,
+					formatter: isrollMatter,
+					visible: false
+				},
+				{
+					field: 'zkzh',
+					title: '准考证号',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				},
+				{
+					field: 'ksh',
+					title: '考生号',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'sfzh',
+					title: '身份证号',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'xjh',
+					title: '学籍号',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				},{
+					field: 'zym',
+					title: '曾用名',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'csrq',
+					title: '出生日期',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'rxsj',
+					title: '入学时间',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'mz',
+					title: '民族',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'hf',
+					title: '婚否',
+					align: 'left',
+					sortable: true,
+					formatter: marriageMatter,
+					visible: false
+				}, {
+					field: 'whcd',
+					title: '文化程度',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'zzmm',
+					title: '政治面貌',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'syd',
+					title: '生源地',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'jtzz',
+					title: '家庭住址',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'rxzf',
+					title: '入学总分',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'bz',
+					title: '备注',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'sjhm',
+					title: '手机号',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'email',
+					title: 'E-mail',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'jg',
+					title: '籍贯',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'sg',
+					title: '身高',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				}, {
+					field: 'tz',
+					title: '体重',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter,
+					visible: false
+				},  {
+					field: 'zsfs',
+					title: '招生方式',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				}, {
+					field: 'dxpy',
+					title: '是否订单',
+					align: 'left',
+					sortable: true,
+					formatter: isOrNotisMatter,
+					visible: false
+				}, {
+					field: 'action',
+					title: '操作',
+					align: 'center',
+					clickToSelect: false,
+					formatter: releaseNewsFormatter,
+					events: releaseNewsEvents,
+				}],
+			responseHandler: function (res) {  //后台返回的结果
+				if(res.code == 200){
+					var data = {
+						total: res.data.total,
+						rows: res.data.rows
+					};
+					return data;
+				}else{
+					var data = {
+						total: 0,
+						rows:[]
+					};
+					toastr.warning(res.msg);
+					return data;
+				}
 			}
-		]
-	});
+		});
+	};
+
+	// 得到查询的参数
+	function queryParams(params) {
+		var temp=getSearchStudentObject();
+		temp.pageNum=params.pageNumber;
+		temp.pageSize=params.pageSize;
+		return JSON.stringify(temp);
+	}
 
 	function releaseNewsFormatter(value, row, index) {
 		return [
@@ -482,12 +530,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		}
 	}
 
-	drawPagination(".studentBaseInfoTableArea", "学生信息");
-	drawSearchInput(".studentBaseInfoTableArea");
-	changeTableNoRsTip();
-	changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息");
-	toolTipUp(".myTooltip");
-	btnControl();
+	return oTableInit;
 }
 
 //单选学生
@@ -1613,8 +1656,8 @@ function confirmGraduationStudents(choosendStudents){
 	});
 }
 
-//开始检索
-function startSearch() {
+//得到检索对象
+function getSearchStudentObject(){
 	var level = getNormalSelectValue("level");
 	var department = getNormalSelectValue("department");
 	var grade = getNormalSelectValue("grade");
@@ -1637,14 +1680,19 @@ function startSearch() {
 	studentName !== ""?searchObject.studentName = studentName:searchObject.studentName = "";
 	studentRollNumber !== ""?searchObject.studentRollNumber = studentRollNumber:searchObject.studentRollNumber = "";
 	className !== ""?searchObject.className = className:searchObject.className = "";
+	searchObject.userId =$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	return searchObject;
+}
 
+//开始检索
+function startSearch() {
+	var searchObject=getSearchStudentObject();
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/studentMangerSearchStudent",
 		data: {
-             "SearchCriteria":JSON.stringify(searchObject),
-			 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+             "SearchCriteria":JSON.stringify(searchObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
