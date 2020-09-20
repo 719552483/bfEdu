@@ -1752,7 +1752,7 @@ function researchStudents(){
 	reObject.normalSelectIds = "#administrationClass,#status,#testWay,#coursesSemester";
 	reObject.InputIds = "#studentNumber,#studentName,#studentRollNumber,#className";
 	reReloadSearchsWithSelect(reObject);
-	drawStudentBaseInfoEmptyTable();
+	getStudentInfo();
 }
 
 //学生审批流对象

@@ -2081,10 +2081,16 @@ top角色切换滚动体样式
 	color: rgb(22 56 72 / 92%);
 }
 
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list,
 .allUserTableArea .fixed-table-pagination .page-list{
 	display: inline-block!important;
 }
 
+
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .btn-group,
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .dropdown,
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .page-size,
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .caret,
 .allUserTableArea .fixed-table-pagination .page-list .btn-group,
 .allUserTableArea .fixed-table-pagination .page-list .dropdown,
 .allUserTableArea .fixed-table-pagination .page-list .page-size,
@@ -2092,16 +2098,18 @@ top角色切换滚动体样式
 	display: inline-block!important;
 }
 
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .btn-secondary,
 .allUserTableArea .fixed-table-pagination .page-list .btn-secondary{
 	background: none!important;
 	background-color: rgb(50 132 202 / 89%)!important;
 }
 
-
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .dropdown-menu a,
 .allUserTableArea .fixed-table-pagination .page-list .dropdown-menu a{
 padding-left: 10px!important;
 }
 
+.mainStudentBaseInfoTableArea .fixed-table-pagination .page-list .btn-secondary,
 .allUserTableArea .fixed-table-pagination .page-list .btn-secondary{
 	width: 70px!important;
 }
