@@ -73,6 +73,7 @@ function drawlocalInfoTableEmptyTable() {
     stufflocalInfoTable({});
 }
 
+var choosendlocal=new Array();
 //渲染教学点表
 function stufflocalInfoTable(tableInfo) {
     window.releaseNewsEvents = {
@@ -110,8 +111,23 @@ function stufflocalInfoTable(tableInfo) {
         sidePagination: "client",
         toolbar: '#toolbar',
         showColumns: true,
+        onCheck : function(row) {
+            onCheck(row);
+        },
+        onUncheck : function(row) {
+            onUncheck(row);
+        },
+        onCheckAll : function(rows) {
+            onCheckAll(rows);
+        },
+        onUncheckAll : function(rows,rows2) {
+            onUncheckAll(rows2);
+        },
         onPageChange: function() {
             drawPagination(".localInfoTableArea", "教学任务点信息");
+            for (var i = 0; i < choosendlocal.length; i++) {
+                $("#localInfoTable").bootstrapTable("checkBy", {field:"edu501Id", values:[choosendlocal[i].edu501Id]})
+            }
         },
         columns: [
             {
@@ -165,6 +181,60 @@ function stufflocalInfoTable(tableInfo) {
     changeColumnsStyle(".localInfoTableArea", "教学任务点信息");
     toolTipUp(".myTooltip");
     btnControl();
+}
+
+//单选学生
+function onCheck(row){
+    if(choosendlocal.length<=0){
+        choosendlocal.push(row);
+    }else{
+        var add=true;
+        for (var i = 0; i < choosendlocal.length; i++) {
+            if(choosendlocal[i].edu501Id===row.edu501Id){
+                add=false;
+                break;
+            }
+        }
+        if(add){
+            choosendlocal.push(row);
+        }
+    }
+}
+
+//单反选学生
+function onUncheck(row){
+    if(choosendlocal.length<=1){
+        choosendlocal.length=0;
+    }else{
+        for (var i = 0; i < choosendlocal.length; i++) {
+            if(choosendlocal[i].edu501Id===row.edu501Id){
+                choosendlocal.splice(i,1);
+            }
+        }
+    }
+}
+
+//全选学生
+function onCheckAll(row){
+    for (var i = 0; i < row.length; i++) {
+        choosendlocal.push(row[i]);
+    }
+}
+
+//全反选学生
+function onUncheckAll(row){
+    var a=new Array();
+    for (var i = 0; i < row.length; i++) {
+        a.push(row[i].edu501Id);
+    }
+
+
+    for (var i = 0; i < choosendlocal.length; i++) {
+        if(a.indexOf(choosendlocal[i].edu501Id)!==-1){
+            choosendlocal.splice(i,1);
+            i--;
+        }
+    }
 }
 
 //单个删除教学点
