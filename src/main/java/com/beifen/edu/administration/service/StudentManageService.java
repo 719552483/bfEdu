@@ -733,7 +733,7 @@ public class StudentManageService {
         }
         //创建Excel文件
         XSSFWorkbook workbook  = new XSSFWorkbook();
-        utils.createModifyStudentModal(workbook,edu001List);
+        utils.createStudentModal(workbook,edu001List);
         try {
             utils.loadModal(response,fileName, workbook);
         } catch (IOException e) {

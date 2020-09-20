@@ -2494,6 +2494,13 @@ public class ReflectUtils {
 		XSSFSheet sheet1 = workbook.createSheet("已选学生信息");
 		this.stuffStudentInfoSheet1(sheet1,chosedStudents);
 	}
+
+	// 批量导出学生模板
+	public void createStudentModal(XSSFWorkbook workbook,List<Edu001> chosedStudents) {
+		//创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("已选学生信息");
+		this.createStudentInfoModal(sheet1,chosedStudents);
+	}
 	
 	// 批量更新教师模板
 	public void createModifyTeacherModal(XSSFWorkbook workbook, List<Edu101> chosedTeachers) {
@@ -2601,6 +2608,99 @@ public class ReflectUtils {
 				}
 			}
 			
+			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,35,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,36,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,37,false);
+		}
+	}
+
+	//填充更新学生模板的Sheet1
+	private void createStudentInfoModal(XSSFSheet sheet,List<Edu001> chosedStudents) {
+		// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"*生源类型","*培养层次", "*所在系部", "*年级", "*专业", "*行政班", "*学生ID", "*学生姓名",
+				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
+				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
+				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		//循环填充数据
+		for (int i = 0; i < chosedStudents.size(); i++) {
+			appendCell(sheet,i,"",chosedStudents.get(i).getSylx(),-1,0,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getPyccmc(),-1,1,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSzxbmc(),-1,2,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getNjmc(),-1,3,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZymc(),-1,4,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXzbname(),-1,5,false);
+//			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
+			if(chosedStudents.get(i).getXb().equals("M")){
+				appendCell(sheet,i,"","男",-1,9,false);
+			}else{
+				appendCell(sheet,i,"","女",-1,9,false);
+			}
+			appendCell(sheet,i,"",chosedStudents.get(i).getZt(),-1,10,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getMz(),-1,13,false);
+			if(chosedStudents.get(i).getSfyxj()!=null){
+				if(chosedStudents.get(i).getSfyxj().equals("T")){
+					appendCell(sheet,i,"","是",-1,14,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,14,false);
+				}
+			}
+			appendCell(sheet,i,"",chosedStudents.get(i).getXjh(),-1,15,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZzmm(),-1,16,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSyd(),-1,17,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getWhcd(),-1,18,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getKsh(),-1,19,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxzf(),-1,20,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getRxsj(),-1,21,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getByzh(),-1,22,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZkzh(),-1,23,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSjhm(),-1,24,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getEmail(),-1,25,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getJg(),-1,26,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getZy(),-1,27,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getSg(),-1,28,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getTz(),-1,29,false);
+			if(chosedStudents.get(i).getHf()!=null){
+				if(chosedStudents.get(i).getHf().equals("T")){
+					appendCell(sheet,i,"","已婚",-1,31,false);
+				}else{
+					appendCell(sheet,i,"","未婚",-1,31,false);
+				}
+			}
+
+			if(chosedStudents.get(i).getZsfscode()!=null){
+				appendCell(sheet,i,"",chosedStudents.get(i).getZsfs(),-1,31,false);
+			}
+			if(chosedStudents.get(i).getDxpy()!=null){
+				if(chosedStudents.get(i).getDxpy().equals("T")){
+					appendCell(sheet,i,"","是",-1,33,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,33,false);
+				}
+			}
+
+			if(chosedStudents.get(i).getPkjt()!=null){
+				if(chosedStudents.get(i).getPkjt().equals("T")){
+					appendCell(sheet,i,"","是",-1,34,false);
+				}else{
+					appendCell(sheet,i,"","否",-1,34,false);
+				}
+			}
+
 			appendCell(sheet,i,"",chosedStudents.get(i).getJtzz(),-1,35,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZjxy(),-1,36,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getBz(),-1,37,false);
@@ -3779,8 +3879,8 @@ public class ReflectUtils {
 			Row row = sheet.getRow(rIndex); // 当前行
 			int firstCellIndex = row.getFirstCellNum(); //第一列
 			int lastCellIndex = row.getLastCellNum();  //最后一列
+			CellStyle textStyle = workbook.createCellStyle();
 			for (int cIndex = firstCellIndex; cIndex < lastCellIndex; cIndex++) { // 遍历列
-				CellStyle textStyle = workbook.createCellStyle();
 				XSSFDataFormat format = workbook.createDataFormat();
 				textStyle.setDataFormat(format.getFormat("@"));
 				workbook.getSheetAt(0).setDefaultColumnStyle(cIndex, textStyle);

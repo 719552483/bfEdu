@@ -252,7 +252,7 @@ public class StudentManageController {
     }
 
     /**
-     * 生成教学班名单
+     * 生成学生名单
      * @param searchInfo
      * @return
      */
