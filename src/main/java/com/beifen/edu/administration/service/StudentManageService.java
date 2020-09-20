@@ -219,16 +219,17 @@ public class StudentManageService {
         ResultVO resultVO;
 
         Map<String, Object> returnMap = new HashMap<>();
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
         pageNumber = pageNumber < 0 ? 0 : pageNumber;
         pageSize = pageSize < 0 ? 10 : pageSize;
 
-
-        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
-
         Specification<Edu001> specification = new Specification<Edu001>() {
-            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<Predicate>();
+            @Override
+            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb)
+            {
+                //page : 0 开始, limit : 默认为 10
+                List<Predicate> predicates = new ArrayList<>();
                 if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
                     predicates.add(cb.equal(root.<String> get("pycc"), edu001.getPycc()));
                 }
@@ -271,11 +272,11 @@ public class StudentManageService {
             }
         };
 
-        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"edu001_ID");
+        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"xh");
 
-        Page<Edu001> pages = edu001Dao.findAll(specification, page);
+        Page<Edu001> edu001Page = edu001Dao.findAll(specification, page);
 
-        List<Edu001> edu001s = pages.getContent();
+        List<Edu001> edu001s = edu001Page.getContent();
         long count = edu001Dao.count(specification);
 
         if(edu001s.size() == 0) {

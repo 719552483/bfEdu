@@ -301,7 +301,6 @@ public class SystemManageController {
 
     /**
      * 获取首页图表数据
-     * @param departmentIds
      * @return
      */
     @RequestMapping("/getIndexChart")

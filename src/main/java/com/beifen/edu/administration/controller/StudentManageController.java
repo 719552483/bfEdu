@@ -2,6 +2,7 @@ package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.StudentBreakPO;
+import com.beifen.edu.administration.PO.StudentSearchPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.StudentManageService;
@@ -231,38 +232,22 @@ public class StudentManageController {
      */
     @RequestMapping("studentMangerSearchStudent")
     @ResponseBody
-    public ResultVO studentMangerSearchStudent(@RequestBody String SearchCriteria) {
-        JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
-        // 根据层次等信息查出培养计划id
-        String level = searchObject.getString("level");
-        String department = searchObject.getString("department");
-        String grade = searchObject.getString("grade");
-        String major = searchObject.getString("major");
-        String administrationClass = searchObject.getString("administrationClass");
-        String status = searchObject.getString("status");
-        String studentNumber = searchObject.getString("studentNumber");
-        String studentName = searchObject.getString("studentName");
-        String studentRollNumber = searchObject.getString("studentRollNumber");
-        String className = searchObject.getString("className");
-        Integer pageNum = searchObject.getInt("pageNum");
-        Integer pageSize = searchObject.getInt("pageSize");
-        String userId = searchObject.getString("userId");
-
+    public ResultVO studentMangerSearchStudent(@RequestBody StudentSearchPO studentSearchPO) {
 
         // 填充搜索对象
         Edu001 edu001 = new Edu001();
-        edu001.setPycc(level);
-        edu001.setSzxb(department);
-        edu001.setNj(grade);
-        edu001.setZybm(major);
-        edu001.setEdu300_ID(administrationClass);
-        edu001.setZtCode(status);
-        edu001.setXh(studentNumber);
-        edu001.setXm(studentName);
-        edu001.setXjh(studentRollNumber);
-        edu001.setXzbname(className);
+        edu001.setPycc(studentSearchPO.getLevel());
+        edu001.setSzxb(studentSearchPO.getDepartment());
+        edu001.setNj(studentSearchPO.getGrade());
+        edu001.setZybm(studentSearchPO.getMajor());
+        edu001.setEdu300_ID(studentSearchPO.getAdministrationClass());
+        edu001.setZtCode(studentSearchPO.getStatus());
+        edu001.setXh(studentSearchPO.getStudentNumber());
+        edu001.setXm(studentSearchPO.getStudentName());
+        edu001.setXjh(studentSearchPO.getStudentRollNumber());
+        edu001.setXzbname(studentSearchPO.getClassName());
 
-        ResultVO result = studentManageService.studentMangerSearchStudent(edu001,userId,pageNum,pageSize);
+        ResultVO result = studentManageService.studentMangerSearchStudent(edu001,studentSearchPO.getUserId(),studentSearchPO.getPageNum(),studentSearchPO.getPageSize());
         return result;
     }
 
