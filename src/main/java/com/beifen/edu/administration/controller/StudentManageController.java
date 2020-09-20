@@ -253,12 +253,13 @@ public class StudentManageController {
 
     /**
      * 生成教学班名单
-     * @param studentSearchPO
+     * @param searchInfo
      * @return
      */
     @RequestMapping("/exportStudentExcel")
     @ResponseBody
-    public ResultVO exportStudentExcel(HttpServletRequest request,HttpServletResponse response,@RequestBody StudentSearchPO studentSearchPO) {
+    public ResultVO exportStudentExcel(HttpServletRequest request,HttpServletResponse response,@RequestParam("searchInfo") String searchInfo) {
+        StudentSearchPO studentSearchPO = JSON.parseObject(searchInfo, StudentSearchPO.class);
         // 填充搜索对象
         Edu001 edu001 = new Edu001();
         edu001.setPycc(studentSearchPO.getLevel());
