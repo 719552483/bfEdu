@@ -148,7 +148,6 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			showRefresh: false,                  //是否显示刷新按钮
 			showToggle: false,
 			clickToSelect: true,
-			search: true,
 			showExport: true,      //是否显示导出
 			exportDataType: "all",
 			exportOptions:{
