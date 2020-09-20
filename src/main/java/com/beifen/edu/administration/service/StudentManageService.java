@@ -9,6 +9,7 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -288,6 +293,9 @@ public class StudentManageService {
         }
         return resultVO;
     }
+
+
+
 
     // 查询学生所在行政班ID
     public String queryStudentXzbCode(String edu001Id) {
@@ -654,6 +662,87 @@ public class StudentManageService {
         } else{
             resultVO = ResultVO.setSuccess("共找到"+edu004List.size()+"条评价记录",edu004List);
         }
+        return resultVO;
+    }
+
+    //生成学生名单Excel
+    public ResultVO exportStudentExcel(HttpServletRequest request, HttpServletResponse response, Edu001 edu001,String userId) {
+        ResultVO resultVO;
+
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+        Specification<Edu001> specification = new Specification<Edu001>() {
+            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb)
+            {
+                List<Predicate> predicates = new ArrayList<>();
+                if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
+                    predicates.add(cb.equal(root.<String> get("pycc"), edu001.getPycc()));
+                }
+                if (edu001.getSzxb() != null && !"".equals(edu001.getSzxb())) {
+                    predicates.add(cb.equal(root.<String> get("szxb"), edu001.getSzxb()));
+                }
+                if (edu001.getNj() != null && !"".equals(edu001.getNj())) {
+                    predicates.add(cb.equal(root.<String> get("nj"), edu001.getNj()));
+                }
+                if (edu001.getZybm() != null && !"".equals(edu001.getZybm())) {
+                    predicates.add(cb.equal(root.<String> get("zybm"), edu001.getZybm()));
+                }
+                if (edu001.getEdu300_ID() != null && !"".equals(edu001.getEdu300_ID())) {
+                    predicates.add(cb.equal(root.<String> get("Edu300_ID"), edu001.getEdu300_ID()));
+                }
+                if (edu001.getZtCode() != null && !"".equals(edu001.getZtCode())) {
+                    predicates.add(cb.equal(root.<String> get("ztCode"), edu001.getZtCode()));
+                }
+                if (edu001.getXjh() != null && !"".equals(edu001.getXjh())) {
+                    predicates.add(cb.like(root.<String> get("xjh"), '%' + edu001.getXjh() + '%'));
+                }
+                if (edu001.getXh() != null && !"".equals(edu001.getXh())) {
+                    predicates.add(cb.like(root.<String> get("xh"), '%' + edu001.getXh() + '%'));
+                }
+                if (edu001.getXm() != null && !"".equals(edu001.getXm())) {
+                    predicates.add(cb.like(root.<String> get("xm"), '%' + edu001.getXm() + '%'));
+                }
+                if (edu001.getXzbname() != null && !"".equals(edu001.getXzbname())) {
+                    predicates.add(cb.like(root.<String> get("xzbname"), '%' + edu001.getXzbname() + '%'));
+                }
+
+                Path<Object> path = root.get("szxb");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <departments.size() ; i++) {
+                    in.value(departments.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu001> edu001List = edu001Dao.findAll(specification);
+
+        if(edu001List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无符合要求的学生");
+            return resultVO;
+        }
+
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName="";
+        if(isIE){
+            fileName="studentInfo";
+        }else{
+            fileName="学生名单";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook  = new XSSFWorkbook();
+        utils.createModifyStudentModal(workbook,edu001List);
+        try {
+            utils.loadModal(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        resultVO = ResultVO.setSuccess("生成成功");
         return resultVO;
     }
 }

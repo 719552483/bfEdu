@@ -226,7 +226,7 @@ public class StudentManageController {
     /**
      * 学生管理搜索学生
      *
-     * @param SearchCriteria
+     * @param studentSearchPO
      *            搜索条件
      * @return returnMap
      */
@@ -248,6 +248,31 @@ public class StudentManageController {
         edu001.setXzbname(studentSearchPO.getClassName());
 
         ResultVO result = studentManageService.studentMangerSearchStudent(edu001,studentSearchPO.getUserId(),studentSearchPO.getPageNum(),studentSearchPO.getPageSize());
+        return result;
+    }
+
+    /**
+     * 生成教学班名单
+     * @param studentSearchPO
+     * @return
+     */
+    @RequestMapping("/exportStudentExcel")
+    @ResponseBody
+    public ResultVO exportStudentExcel(HttpServletRequest request,HttpServletResponse response,@RequestBody StudentSearchPO studentSearchPO) {
+        // 填充搜索对象
+        Edu001 edu001 = new Edu001();
+        edu001.setPycc(studentSearchPO.getLevel());
+        edu001.setSzxb(studentSearchPO.getDepartment());
+        edu001.setNj(studentSearchPO.getGrade());
+        edu001.setZybm(studentSearchPO.getMajor());
+        edu001.setEdu300_ID(studentSearchPO.getAdministrationClass());
+        edu001.setZtCode(studentSearchPO.getStatus());
+        edu001.setXh(studentSearchPO.getStudentNumber());
+        edu001.setXm(studentSearchPO.getStudentName());
+        edu001.setXjh(studentSearchPO.getStudentRollNumber());
+        edu001.setXzbname(studentSearchPO.getClassName());
+
+        ResultVO result = studentManageService.exportStudentExcel(request,response,edu001,studentSearchPO.getUserId());
         return result;
     }
 
