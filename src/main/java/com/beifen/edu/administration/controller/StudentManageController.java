@@ -11,6 +11,7 @@ import net.sf.json.JSONObject;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -230,7 +231,7 @@ public class StudentManageController {
      */
     @RequestMapping("studentMangerSearchStudent")
     @ResponseBody
-    public ResultVO studentMangerSearchStudent(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userId") String userId) {
+    public ResultVO studentMangerSearchStudent(@RequestBody String SearchCriteria) {
         JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
         // 根据层次等信息查出培养计划id
         String level = searchObject.getString("level");
@@ -245,6 +246,8 @@ public class StudentManageController {
         String className = searchObject.getString("className");
         Integer pageNum = searchObject.getInt("pageNum");
         Integer pageSize = searchObject.getInt("pageSize");
+        String userId = searchObject.getString("userId");
+
 
         // 填充搜索对象
         Edu001 edu001 = new Edu001();
