@@ -599,13 +599,12 @@ function onUncheckAll(row){
 
 //后端分页导出学生
 function exportStudent(){
+	var url = "/exportStudentExcel";
 	var  searchStudentObject=getSearchStudentObject();
-	var $eleForm = $("<form method='get'></form>");
-	$eleForm.attr("action", "/exportStudentExcel"); //下载文件接口
-	$eleForm.append("searchInfo",JSON.stringify(searchStudentObject));
-	$(document.body).append($eleForm);
-	//提交表单，实现下载
-	$eleForm.submit();
+	var form = $("<form></form>").attr("action", url).attr("method", "post");
+	form.append($("<input></input>").attr("type", "hidden").attr("name", "searchInfo").attr("value", JSON.stringify(searchStudentObject)));
+	form.appendTo('body').submit().remove();
+
 }
 
 //展示学生详情
