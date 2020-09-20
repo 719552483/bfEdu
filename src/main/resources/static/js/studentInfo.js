@@ -1708,13 +1708,13 @@ function getSearchStudentObject(){
 //开始检索
 function startSearch() {
 	var searchObject=getSearchStudentObject();
+	var searchInfo=JSON.stringify(searchObject);
 	$.ajax({
-		method : 'get',
+		method : 'POST',
 		cache : false,
+		async :true,
 		url : "/studentMangerSearchStudent",
-		data: {
-             "SearchCriteria":JSON.stringify(searchObject)
-        },
+		data: searchInfo,
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
