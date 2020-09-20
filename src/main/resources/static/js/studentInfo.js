@@ -1707,33 +1707,7 @@ function getSearchStudentObject(){
 
 //开始检索
 function startSearch() {
-	var searchObject=getSearchStudentObject();
-	var searchInfo=JSON.stringify(searchObject);
-	$.ajax({
-		method : 'POST',
-		cache : false,
-		async :true,
-		url : "/studentMangerSearchStudent",
-		data: searchInfo,
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code===200) {
-				stuffStudentBaseInfoTable(backjson.data);
-			} else {
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
+	getStudentInfo();
 }
 
 //必选检索条件检查
