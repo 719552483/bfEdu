@@ -181,13 +181,13 @@ function stuffStudentBaseInfoTable(tableInfo) {
 					$("#studentBaseInfoTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
 				}
 
-				//解决点击排序表内检索框自动增加的问题
-				var allsearchIcons=$(".studentBaseInfoTableArea").find(".searchIcon");
-				var searchIconDom=$(".studentBaseInfoTableArea").find(".searchIcon:eq(0)")[0].outerHTML;
-				if(allsearchIcons.length>1){
-					$(".studentBaseInfoTableArea").find(".searchIcon").remove();
-				}
-				$(".studentBaseInfoTableArea").find(".search").prepend(searchIconDom);
+				// //解决点击排序表内检索框自动增加的问题
+				// var allsearchIcons=$(".studentBaseInfoTableArea").find(".searchIcon");
+				// var searchIconDom=$(".studentBaseInfoTableArea").find(".searchIcon:eq(0)")[0].outerHTML;
+				// if(allsearchIcons.length>1){
+				// 	$(".studentBaseInfoTableArea").find(".searchIcon").remove();
+				// }
+				// $(".studentBaseInfoTableArea").find(".search").prepend(searchIconDom);
 			},
 			onPageChange: function() {
 				drawPagination(".studentBaseInfoTableArea", "学生信息","serverPage",1);
