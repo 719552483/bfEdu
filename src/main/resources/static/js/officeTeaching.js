@@ -938,10 +938,46 @@ function getNotNullSearchs() {
 
 //展示已排课表
 function puttedSchedule(){
-	puttedScheduleControlArea();
-	getPuttedTaskSelectInfo();
-	puttedScheduleBtnBind();
-	drawEmptyPuttedTable();
+	var searchObject=new Object();
+	searchObject.pyjhcc="";
+	searchObject.pyjhxb="";
+	searchObject.pyjhnj="";
+	searchObject.pyjhzy="";
+	searchObject.kcxzid="";
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeachingScheduleCompleted",
+		data: {
+			"searchCondition":JSON.stringify(searchObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				puttedScheduleControlArea();
+				getPuttedTaskSelectInfo();
+				puttedScheduleBtnBind();
+				if(backjson.taskList.lenght===0){
+					toastr.warning('暂无已排课程');
+					drawEmptyPuttedTable();
+				}else{
+					stuffPuttedOutTable(backjson.taskList);
+				}
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //渲染空的已排课表table
