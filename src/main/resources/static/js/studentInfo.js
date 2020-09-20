@@ -603,8 +603,21 @@ function exportStudent(){
 	var  searchStudentObject=getSearchStudentObject();
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
 	form.append($("<input></input>").attr("type", "hidden").attr("name", "searchInfo").attr("value", JSON.stringify(searchStudentObject)));
+	form.on("submit",function() {
+		requestErrorbeforeSend()
+		//做ajax
+		$.ajax({
+			url: url,
+			method: "POST",
+			data:{
+				"searchInfo":JSON.stringify(searchStudentObject)
+			},
+			success: function () {
+				hideloding()
+			}
+		})
+	});
 	form.appendTo('body').submit().remove();
-
 }
 
 //展示学生详情
