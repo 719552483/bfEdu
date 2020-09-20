@@ -925,7 +925,6 @@ function getSearchValue(){
 	var majorValue = getNormalSelectValue("major");
 	var zcValue = getNormalSelectValue("teacherZc");
 	
-	var departmentText = getNormalSelectText("department");
 	var majorText = getNormalSelectText("major");
 	var zcText = getNormalSelectText("teacherZc");
 	var name=$("#teacherName").val();
