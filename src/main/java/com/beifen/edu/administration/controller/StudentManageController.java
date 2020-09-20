@@ -243,6 +243,8 @@ public class StudentManageController {
         String studentName = searchObject.getString("studentName");
         String studentRollNumber = searchObject.getString("studentRollNumber");
         String className = searchObject.getString("className");
+        Integer pageNum = searchObject.getInt("pageNum");
+        Integer pageSize = searchObject.getInt("pageSize");
 
         // 填充搜索对象
         Edu001 edu001 = new Edu001();
@@ -257,7 +259,7 @@ public class StudentManageController {
         edu001.setXjh(studentRollNumber);
         edu001.setXzbname(className);
 
-        ResultVO result = studentManageService.studentMangerSearchStudent(edu001,userId);
+        ResultVO result = studentManageService.studentMangerSearchStudent(edu001,userId,pageNum,pageSize);
         return result;
     }
 

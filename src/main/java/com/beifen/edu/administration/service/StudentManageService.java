@@ -11,6 +11,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -216,7 +219,14 @@ public class StudentManageService {
     }
 
     // 学生管理搜索学生
-    public ResultVO studentMangerSearchStudent(Edu001 edu001,String userId) {
+    public ResultVO studentMangerSearchStudent(Edu001 edu001,String userId,Integer pageNumber,Integer pageSize) {
+        ResultVO resultVO;
+
+        Map<String, Object> returnMap = new HashMap<>();
+
+        pageNumber = pageNumber < 0 ? 0 : pageNumber;
+        pageSize = pageSize < 0 ? 10 : pageSize;
+
 
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
@@ -264,8 +274,21 @@ public class StudentManageService {
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
-        List<Edu001> classesEntities = edu001Dao.findAll(specification);
-        ResultVO resultVO = ResultVO.setSuccess("共找到"+classesEntities.size()+"个学生",classesEntities);
+
+        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"edu001_ID");
+
+        Page<Edu001> pages = edu001Dao.findAll(specification, page);
+
+        List<Edu001> edu001s = pages.getContent();
+        long count = edu001Dao.count(specification);
+
+        if(edu001s.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无学生信息");
+        } else {
+            returnMap.put("rows",edu001s);
+            returnMap.put("total",count);
+            resultVO = ResultVO.setSuccess("共找到"+count+"个学生",returnMap);
+        }
         return resultVO;
     }
 
