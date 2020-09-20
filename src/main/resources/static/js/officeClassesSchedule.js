@@ -745,8 +745,8 @@ function allTeacherStartSearch(){
 	}
 	var serachObject=new Object();
 	departmentName===""?serachObject.departmentName="":serachObject.departmentName=departmentName;
-	mangerName===""?serachObject.mangerName="":serachObject.mangerName=mangerName;
-	mangerNumber===""?serachObject.mangerNumber="":serachObject.mangerNumber=mangerNumber;
+	mangerName===""?serachObject.xm="":serachObject.xm=mangerName;
+	mangerNumber===""?serachObject.jzgh="":serachObject.jzgh=mangerNumber;
 	$.ajax({
 		method : 'get',
 		cache : false,

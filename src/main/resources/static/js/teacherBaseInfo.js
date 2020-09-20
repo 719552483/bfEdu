@@ -934,8 +934,7 @@ function getSearchValue(){
 	
 	var returnObject = new Object();
 	if(departmentValue!==""){
-		returnObject.szxb = departmentValue;
-		returnObject.szxbmc = departmentText;
+		returnObject.departmentCode = departmentValue;
 	}
 	
 	if(majorValue!==""){

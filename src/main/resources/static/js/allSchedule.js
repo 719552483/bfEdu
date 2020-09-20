@@ -929,7 +929,7 @@ function allClassMangersStartSearch(){
 		return;
 	}
 	var serachObject=new Object();
-	departmentName===""?serachObject.szxbmc="":serachObject.szxbmc=departmentName;
+	departmentName===""?serachObject.departmentName="":serachObject.departmentName=departmentName;
 	mangerName===""?serachObject.xm="":serachObject.xm=mangerName;
 	mangerNumber===""?serachObject.jzgh="":serachObject.jzgh=mangerNumber;
 	$.ajax({
