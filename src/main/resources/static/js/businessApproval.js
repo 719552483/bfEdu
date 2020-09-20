@@ -113,46 +113,55 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				field: 'edu101_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			 {
 				field: 'szxbmc',
 				title: '二级学院',
+			 	sortable: true,
 				align: 'left',
 				formatter: szxbmcMatter
 			}, {
 				field: 'zymc',
 				title: '专业',
+				sortable: true,
 				align: 'left',
 				formatter: zymcMatter
 			}, {
 				field: 'jzglx',
 				title: '教职工类型',
+				sortable: true,
 				align: 'left',
 				formatter: paramsMatter
 			}, {
 				field: 'xm',
 				title: '姓名',
+				sortable: true,
 				align: 'left',
 				formatter: paramsMatter
 			}, {
 				field: 'xb',
 				title: '性别',
+				sortable: true,
 				align: 'left',
 				formatter: sexFormatter
 			},{
 				field: 'jzgh',
 				title: '教职工号',
+				sortable: true,
 				align: 'left',
 				formatter: paramsMatter
 			}, {
 				field: 'nl',
 				title: '年龄',
+				sortable: true,
 				align: 'left',
 				formatter: paramsMatter
 			},{
 				field: 'zc',
 				title: '职称',
+				sortable: true,
 				align: 'left',
 				formatter: paramsMatter
 			},{
@@ -488,37 +497,44 @@ function stuffRecordsTable(tableInfo){
 				field: 'edu112_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
 				field: 'userName',
 				title: '发起用户',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'destination',
 				title: '目的地',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'startTime',
 				title: '开始日期',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'endTime',
 				title: '结束日期',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'businessExplain',
 				title: '备注',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'businessState',
 				title: '审批状态',
 				align: 'left',
+				sortable: true,
 				formatter: approvalMatter
 			},{
 				field: 'action',
@@ -712,26 +728,31 @@ function stuffAddTeacherTable(tableInfo) {
 				field : 'edu101_ID',
 				title : 'id',
 				align : 'center',
+				sortable: true,
 				visible : false
 			},{
 				field: 'szxbmc',
 				title: '二级学院',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'xm',
 				title: '姓名',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'xb',
 				title: '性别',
 				align: 'left',
+				sortable: true,
 				formatter: sexFormatter
 			},{
 				field: 'jzgh',
 				title: '教职工号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}
 		]

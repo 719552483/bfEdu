@@ -432,8 +432,8 @@ public class StaffManageController {
         String jzgh = "";
         String szxbmc = "";
 
-        if (jsonObject.has("szxb")){
-            szxb = jsonObject.getString("szxb");
+        if (jsonObject.has("departmentCode")){
+            szxb = jsonObject.getString("departmentCode");
         }
         if (jsonObject.has("zy")){
             zy = jsonObject.getString("zy");
@@ -447,8 +447,8 @@ public class StaffManageController {
         if (jsonObject.has("jzgh")){
             jzgh = jsonObject.getString("jzgh");
         }
-        if (jsonObject.has("szxbmc")){
-            szxbmc = jsonObject.getString("szxbmc");
+        if (jsonObject.has("departmentName")){
+            szxbmc = jsonObject.getString("departmentName");
         }
 
         Edu101 edu101 = new Edu101();

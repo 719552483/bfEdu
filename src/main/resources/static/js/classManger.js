@@ -154,64 +154,75 @@ function stuffAdministrationClassTable(tableInfo){
 					$("#administrationClassTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendXzb[i].edu300_ID]})
 				}
 			},
-			columns : [ {
+			columns: [ {
 				field : 'check',
 				checkbox : true
 			},  {
 				field : 'edu300_ID',
 				title: '唯一标识',
 				align : 'center',
+				sortable: true,
 				visible : false
 			},{
 				field : 'pyccmc',
 				title : '培养层次',
 				align : 'left',
+				sortable: true,
 				formatter :paramsMatter
 			}, {
 				field : 'xbmc',
 				title : '所属二级学院',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'njmc',
 				title : '年级',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'zymc',
 				title : '专业',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'xzbmc',
 				title : '行政班名称',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'xzbbh',
 				title : '行政班班号',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},
 			{
 				field : 'xzbdm',
 				title : '行政班代码',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'xzbbm',
 				title : '行政班编码',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'zxrs',
 				title : '在校人数',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'rnrs',
 				title : '容纳人数',
 				align : 'left',
+				sortable: true,
 				formatter : rnrsMatter
 			},{
 				field : 'action',
@@ -936,33 +947,38 @@ function stuffTeachingClassTable(tableInfo) {
 				$("#teachingClassTable").bootstrapTable("checkBy", {field:"edu301_ID", values:[choosendJxb[i].edu301_ID]})
 			}
 		},
-		columns : [ {
+		columns: [ {
 			field : 'check',
 			checkbox : true
 		},	{
 			field: 'edu301_ID',
 			title: '唯一标识',
 			align: 'center',
+			sortable: true,
 			visible: false
 		},{
 			field : 'jxbmc',
 			title : '教学班名称',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter,
 		},{
 			field : 'zymc',
 			title : '专业',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		}, {
 			field : 'bhxzbmc',
 			title : '班级',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		}, {
 			field : 'jxbrs',
 			title : '教学班人数',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		}, {
 			field : 'action',

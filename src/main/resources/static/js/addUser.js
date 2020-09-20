@@ -301,26 +301,31 @@ function stuffTable() {
 							field: 'bf990_ID',
 							title: '唯一标识',
 							align: 'center',
+							sortable: true,
 							visible: false
 						},
 						{
 							field: 'yhm',
 							title: '用户名',
+							sortable: true,
 							formatter: userNameFormatter,
 							align: 'left'
 						},{
 							field: 'personName',
 							title: '用户名称',
+							sortable: true,
 							formatter: paramsMatter,
 							align: 'left'
 						}, {
 							field: 'js',
 							title: '用户角色',
+							sortable: true,
 							align: 'left',
 							formatter: userRoleFormatter,
 						}, {
 							field: 'deparmentNames',
 							title: '分管二级学院',
+							sortable: true,
 							align: 'left',
 							formatter: deparmentNamesFormatter,
 						},{

@@ -106,6 +106,7 @@ function stuffTaskInfoTable(tableInfo) {
 				field: 'edu201_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
@@ -113,38 +114,45 @@ function stuffTaskInfoTable(tableInfo) {
 				title: '班级',
 				align: 'left',
 				clickToSelect: false,
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},	{
 				field: 'jxbrs',
 				title: '教学班人数',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'sfxylcj',
 				title: '是否需要录成绩',
 				align: 'left',
+				sortable: true,
 				clickToSelect: false,
 				formatter: sfxylcjMatter
 			},{
 				field: 'zxs',
 				title: '总学时',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'kkbm',
 				title: '开课部门',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				clickToSelect: false
 			},{
 				field: 'pkbm',
 				title: '排课部门',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				clickToSelect: false
 			},{

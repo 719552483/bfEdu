@@ -123,53 +123,63 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				field: 'edu101_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			 {
 				field: 'szxbmc',
 				title: '二级学院',
 				align: 'left',
+				 sortable: true,
 				formatter: szxbmcMatter
 			}, {
 				field: 'zymc',
 				title: '专业',
 				align: 'left',
+				sortable: true,
 				formatter: zymcMatter
 			}, {
 				field: 'jzglx',
 				title: '教职工类型',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'xm',
 				title: '姓名',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'xb',
 				title: '性别',
 				align: 'left',
+				sortable: true,
 				formatter: sexFormatter
 			},{
 				field: 'jzgh',
 				title: '教职工号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'zc',
 				title: '职称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'whcd',
 				title: '文化程度',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'hf',
 				title: '婚否',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			},
@@ -177,6 +187,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				field: 'mz',
 				title: '民族',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			},
@@ -184,6 +195,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				field: 'dxsj',
 				title: '到校时间',
 				align: 'left',
+			 	sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			},{

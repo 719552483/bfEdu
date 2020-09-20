@@ -101,36 +101,43 @@ function stufflocalInfoTable(tableInfo) {
                 field: 'edu500Id',
                 title: '唯一标识',
                 align: 'center',
+                sortable: true,
                 visible: false
             }, {
                 field: 'localName',
                 title: '教学点名称',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'city',
                 title: '地级市',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'pointName',
                 title: '教学任务点名称',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'siteUtilization',
                 title: '场地使用率',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter,
             }, {
                 field: 'localAddress',
                 title: '详细地址',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             },{
                 field: 'remarks',
                 title: '备注',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter,
             }
             // {

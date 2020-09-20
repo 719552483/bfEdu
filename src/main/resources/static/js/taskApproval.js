@@ -43,24 +43,28 @@ function stuffCourseLibraryTable(tableInfo){
 					field: 'edu201_ID',
 					title: '唯一标识',
 					align: 'center',
+					sortable: true,
 					visible: false
 				},
 				{
 					field: 'jxbmc',
 					title: '教学班名称',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				}, 	{
 					field: 'kcmc',
 					title: '课程',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				},{
 					field: 'xzbmc',
 					title: '行政班',
 					align: 'left',
+					sortable: true,
 					formatter: xzbmcMatter
 
 				},{
@@ -68,6 +72,7 @@ function stuffCourseLibraryTable(tableInfo){
 					title: '主要老师',
 					clickToSelect: false,
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				},{
@@ -75,33 +80,39 @@ function stuffCourseLibraryTable(tableInfo){
 					title: '老师',
 					clickToSelect: false,
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
 					align: 'center',
+					sortable: true,
 					clickToSelect: false,
 					formatter: sfxylcjMatter
 				},{
 					field: 'kkbm',
 					title: '开课部门',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},	{
 					field: 'pkbm',
 					title: '排课部门',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter,
 					clickToSelect: false
 				},	{
 					field: 'sszt',
 					title: '审核状态',
 					align: 'center',
+					sortable: true,
 					formatter: ztMatter
 				},	{
 					field: 'fkyj',
 					title: '反馈意见',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'action',

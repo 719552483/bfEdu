@@ -129,26 +129,31 @@ function stuffApprovalMangerTable(tableInfo){
 			field : 'edu600Id',
 			title: '唯一标识',
 			align : 'center',
+			sortable: true,
 			visible : false
 		}, {
 			field : 'businessName',
 			title : '审批业务类型',
 			align : 'left',
+			sortable: true,
 			formatter :paramsMatter
 		}, {
 			field : 'keyWord',
 			title : '审批关键词',
 			align : 'left',
+			sortable: true,
 			formatter :paramsMatter
 		}, {
 			field : 'proposerName',
 			title : '申请人',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		},{
 			field : 'creatDate',
 			title : '发起时间',
 			align : 'left',
+			sortable: true,
 			formatter : creatDateMatter
 		},{
 			field : 'action',

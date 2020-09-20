@@ -143,14 +143,15 @@ function stuffAllRelationInfoTable(allRelationInfo){
 			field: 'edu107_ID',
 			title: 'edu107_ID',
 			align: 'center',
+			sortable: true,
 			visible: false
 		}, {
 			field: 'yxbz',
 			title: '有效标志',
 			align: 'left',
+			sortable: true,
 			visible: false
-		},
-			{
+		}, {
 				field: 'check',
 				checkbox: true
 			},{
@@ -158,18 +159,21 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				title: '二级学院审批',
 				align: 'left',
 				width:"20",
+				sortable: true,
 				formatter: approvalMatter
 			},
 			{
 				field: 'pyjhmc',
 				title: '培养计划名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},
 			{
 				field: 'edu103mc',
 				title: '培养层次名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			},
@@ -177,40 +181,47 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				field: 'edu103',
 				title: '培养层次代码',
 				align: 'left',
+				sortable: true,
 				visible: false
 			},
 			{
 				field: 'edu104mc',
 				title: '二级学院名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			},{
 				field: 'edu104',
 				title: '二级学院编码',
 				align: 'left',
+				sortable: true,
 				visible: false
 			},{
 				field: 'edu105mc',
 				title: '年级名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			},{
 				field: 'edu105',
 				title: '年级编码',
 				align: 'left',
+				sortable: true,
 				visible: false
 			},{
 				field: 'edu106mc',
 				title: '专业名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			},{
 				field: 'edu106',
 				title: '专业编码',
 				align: 'left',
+				sortable: true,
 				visible: false
 			},{
 				field: 'action',

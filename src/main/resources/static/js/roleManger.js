@@ -488,12 +488,14 @@ function stuffTable(tableInfo) {
 				field: 'bf991_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
 				field: 'js',
 				title: '角色名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'cdqx',
@@ -505,6 +507,7 @@ function stuffTable(tableInfo) {
 			}, {
 				field: 'anqx',
 				title: '按钮权限',
+				sortable: true,
 				clickToSelect: false,
 				formatter: anqxFormatter,
 				align: 'left'

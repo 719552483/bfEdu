@@ -74,21 +74,25 @@ function stufflocalInfoTable(tableInfo) {
                 field: 'edu501Id',
                 title: '唯一标识',
                 align: 'center',
+                sortable: true,
                 visible: false
             },{
                 field: 'pointName',
                 title: '教学任务点名称',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'capacity',
                 title: '可容纳人数',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             },{
                 field: 'remarks',
                 title: '备注',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter,
             }, {
                 field: 'action',

@@ -144,16 +144,19 @@ function stuffTaskInfoTable(tableInfo) {
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},	{
 				field: 'pyjhmc',
 				title: '培养计划名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},	{
 				field: 'jxbrs',
 				title: '教学班人数',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'zylsmc',
@@ -177,6 +180,7 @@ function stuffTaskInfoTable(tableInfo) {
 				field: 'zxs',
 				title: '总学时',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'kkbm',
@@ -1059,6 +1063,7 @@ function stuffPutOutTaskTable(tableInfo) {
 				field: 'edu201_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
@@ -1066,68 +1071,80 @@ function stuffPutOutTaskTable(tableInfo) {
 				title: '班级-(双击选择)',
 				align: 'left',
 				clickToSelect: false,
+				sortable: true,
 				formatter: classNameMatter
 			},
 			{
 				field: 'pyjhmc',
 				title: '培养计划名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},	{
 				field: 'jxbrs',
 				title: '教学班人数',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},	{
 				field: 'lsmc',
 				title: '老师-(双击选择)',
 				clickToSelect: false,
 				align: 'left',
+				sortable: true,
 				formatter: pointTeacherMatter
 			},{
 				field: 'zylsmc',
 				title: '主要老师-(双击选择)',
 				clickToSelect: false,
 				align: 'left',
+				sortable: true,
 				formatter: pointTeacherMatter
 
 			},{
 				field: 'sfxylcj',
 				title: '是否需要录成绩',
 				align: 'left',
+				sortable: true,
 				clickToSelect: false,
 				formatter: putOutTasksfxylcjMatter
 			},{
 				field: 'zxs',
 				title: '总学时',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'kkbm',
 				title: '开课部门-(双击选择)',
 				align: 'left',
+				sortable: true,
 				formatter: putOutTaskkkbmMatter,
 				clickToSelect: false
 			},	{
 				field: 'pkbm',
 				title: '排课部门-(双击选择)',
 				align: 'left',
+				sortable: true,
 				formatter: putOutTaskpkbmMatter,
 				clickToSelect: false
 			},{
 				field: 'sszt',
 				title: '审核状态',
 				align: 'left',
+				sortable: true,
 				formatter: ztMatter
 			},{
 				field: 'fkyj',
 				title: '反馈意见',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'action',

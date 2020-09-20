@@ -137,36 +137,43 @@ function stuffApprovalMangerTable(tableInfo){
 			field : 'edu600Id',
 			title: '唯一标识',
 			align : 'center',
+			sortable: true,
 			visible : false
 		}, {
 			field : 'businessName',
 			title : '审批业务类型',
 			align : 'left',
+			sortable: true,
 			formatter :paramsMatter
 		},{
 			field : 'keyWord',
 			title : '审批关键词',
 			align : 'left',
+			sortable: true,
 			formatter :paramsMatter
 		},  {
 			field : 'proposerName',
 			title : '申请人',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		},{
 			field : 'creatDate',
 			title : '发起时间',
 			align : 'left',
+			sortable: true,
 			formatter : creatDateMatter
 		},{
 			field : 'lastPersonName',
 			title : '上一步执行人',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		},{
 			field : 'lastApprovalOpinions',
 			title : '上一步审批意见',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		}, {
 			field : 'approvalOpinions',
@@ -594,36 +601,43 @@ function stuffApprovalBackTable(tableInfo){
 			field : 'edu600Id',
 			title: '唯一标识',
 			align : 'center',
+			sortable: true,
 			visible : false
 		}, {
 			field : 'businessName',
 			title : '审批业务类型',
 			align : 'left',
+			sortable: true,
 			formatter :paramsMatter
 		}, {
 			field : 'keyWord',
 			title : '审批关键词',
 			align : 'left',
+			sortable: true,
 			formatter :paramsMatter
 		},  {
 			field : 'proposerName',
 			title : '申请人',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		},{
 			field : 'creatDate',
 			title : '发起时间',
 			align : 'left',
+			sortable: true,
 			formatter : creatDateMatter
 		},{
 			field : 'lastPersonName',
 			title : '上一步审批人',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		},{
 			field : 'lastApprovalOpinions',
 			title : '上一步审批意见',
 			align : 'left',
+			sortable: true,
 			formatter : paramsMatter
 		},  {
 			field : 'action',

@@ -101,11 +101,13 @@ function stuffAllLevelTable(allLevel){
 					field: 'edu103_ID',
 					title: 'edu103_ID',
 					align: 'center',
+					sortable: true,
 					visible: false
 				}, {
 					field: 'yxbz',
 					title: '有效标志',
 					align: 'left',
+					sortable: true,
 					visible: false
 				},
 				{
@@ -116,28 +118,33 @@ function stuffAllLevelTable(allLevel){
 					field: 'pyccmc',
 					title: '培养层次名称',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'pyccbm',
 					title: '培养层次编码',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				}, {
 					field: 'rxjj',
 					title: '入学季节',
 					align: 'left',
+					sortable: true,
 					formatter: enterSeasonMatter
 				}, {
 					field: 'xq',
 					title: '学区',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter,
 					visible: false
 				}, {
 					field: 'xz',
 					title: '学制',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'action',
@@ -281,11 +288,13 @@ function stuffAllDepartmentTable(allDepartment){
 					field: 'edu104_ID',
 					title: 'edu104_ID',
 					align: 'center',
+					sortable: true,
 					visible: false
 				}, {
 					field: 'yxbz',
 					title: '有效标志',
 					align: 'left',
+					sortable: true,
 					visible: false
 				},
 				{
@@ -296,12 +305,14 @@ function stuffAllDepartmentTable(allDepartment){
 					field: 'xbmc',
 					title: '二级学院名称',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				}, {
 					field: 'xbbm',
 					title: '二级学院代码',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'action',
@@ -432,11 +443,13 @@ function stuffAllGradeTable(allGrade){
 					field: 'edu105_ID',
 					title: 'edu105_ID',
 					align: 'center',
+					sortable: true,
 					visible: false
 				}, {
 					field: 'yxbz',
 					title: '有效标志',
 					align: 'left',
+					sortable: true,
 					visible: false
 				},
 				{
@@ -447,12 +460,14 @@ function stuffAllGradeTable(allGrade){
 					field: 'njmc',
 					title: '年级名称',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				}, {
 					field: 'njbm',
 					title: '年级代码',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'action',
@@ -583,11 +598,13 @@ function stuffAllMajorTable(allMajor){
 					field: 'edu106_ID',
 					title: 'edu106_ID',
 					align: 'center',
+					sortable: true,
 					visible: false
 				}, {
 					field: 'yxbz',
 					title: '有效标志',
 					align: 'left',
+					sortable: true,
 					visible: false
 				},
 				{
@@ -598,12 +615,14 @@ function stuffAllMajorTable(allMajor){
 					field: 'zymc',
 					title: '专业名称',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				}, {
 					field: 'zybm',
 					title: '专业代码',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},{
 					field: 'action',
@@ -1771,34 +1790,40 @@ function stuffAllXnTable(allRelationInfo){
 					field: 'edu400_ID',
 					title: 'edu400_ID',
 					align: 'center',
+					sortable: true,
 					visible: false
 				}, 
 				{
 					field: 'xnmc',
 					title: '学年名称',
 					align: 'left',
+					sortable: true,
 					formatter: xnmcMatter
 				}, 
 				{
 					field: 'kssj',
 					title: '开始时间',
 					align: 'left',
+					sortable: true,
 					formatter: kssjMatter
 				}, 
 				{
 					field: 'jssj',
 					title: '结束时间',
 					align: 'left',
+					sortable: true,
 					formatter: jssjMatter
 				},{
 					field: 'zzs',
 					title: '总周数',
 					align: 'left',
+					sortable: true,
 					formatter: zzsMatter
 				},{
 					field: 'relaseTime',
 					title: '课表发布时间',
 					align: 'left',
+					sortable: true,
 					formatter: relaseTimeMatter
 				},{
 					field: 'action',

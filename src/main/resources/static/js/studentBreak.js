@@ -74,22 +74,26 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 field: 'edu006_ID',
                 title: '唯一标识',
                 align: 'center',
+                sortable: true,
                 visible: false
             },
             {
                 field: 'studentName',
                 title: '姓名',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             },  {
                 field: 'breachName',
                 title: '违纪类型',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             },{
                 field: 'breachDate',
                 title: '违纪时间',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             },{
                 field: 'action',

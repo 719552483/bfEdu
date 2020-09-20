@@ -60,27 +60,32 @@ function stufflocalInfoTable(tableInfo) {
                 field: 'edu000Id',
                 title: '唯一标识',
                 align: 'center',
+                sortable: true,
                 visible: false
             },{
                 field: 'ejdmglzd',
                 title: '二级代码关联字段',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter,
                 visible: false
             }, {
                 field: 'ejdmmc',
                 title: '二级代码名称',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'ejdm',
                 title: '二级代码',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'ejdmz',
                 title: '二级代码值',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'action',

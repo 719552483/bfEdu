@@ -77,46 +77,55 @@ function stuffStudentGradeTable(tableInfo) {
 				field: 'edu005_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			}, {
 				field: 'className',
 				title: '行政班',
 				align: 'left',
+				sortable: true,
 				formatter: xzbnameMatter
 			},{
 				field: 'courseName',
 				title: '课程名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},  {
 				field: 'studentName',
 				title: '学生姓名',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'grade',
 				title: '成绩',
 				align: 'left',
+				sortable: true,
 				formatter: gradeMatter
 			}, {
 				field: 'credit',
 				title: '课程总学分',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'getCredit',
 				title: '课程已获学分',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'gradeEnter',
 				title: '录入人',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'entryDate',
 				title: '录入时间',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}
 		]

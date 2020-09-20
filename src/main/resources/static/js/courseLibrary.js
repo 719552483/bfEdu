@@ -153,77 +153,92 @@ function stuffCourseLibraryTable(tableInfo){
 				field : 'bf200_ID',
 				title: '唯一标识',
 				align : 'center',
+				sortable: true,
 				visible : false
 			}, {
 				field : 'kcmc',
 				title : '课程名称',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'kcdm',
 				title : '课程代码',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			},{
 				field : 'xf',
 				title : '学分',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'zxs',
 				title : '总学时',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'llxs',
 				title : '理论学时',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'sjxs',
 				title : '实践学时',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'kclx',
 				title : '课程类型',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'kcxz',
 				title : '课程性质',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'bzzymc',
 				title : '标志专业名称',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter,
 				visible : false
 			}, {
 				field : 'kcfzr',
 				title : '课程负责人',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'kcfzrID',
 				title : '课程负责人id',
 				align : 'left',
+				sortable: true,
 				visible : false
 			}, {
 				field : 'zt',
 				title : '状态',
 				align : 'center',
+				sortable: true,
 				formatter : ztMatter
 			}, {
 				field : 'lrr',
 				title : '录入人',
 				align : 'left',
+				sortable: true,
 				formatter : paramsMatter
 			}, {
 				field : 'lrsj',
 				title : '录入时间',
 				align : 'left',
+				sortable: true,
 				formatter : timeFormatter
 			}, {
 				field : 'action',

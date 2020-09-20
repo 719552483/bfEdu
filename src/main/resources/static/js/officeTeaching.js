@@ -107,45 +107,53 @@ function stuffWaitTaskTable(tableInfo){
 					field: 'edu201_ID',
 					title: '唯一标识',
 					align: 'center',
+					sortable: true,
 					visible: false
 				},
 				{
 					field: 'className',
 					title: '班级名称',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				}, 	{
 					field: 'kcmc',
 					title: '课程',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 
 				},{
 					field: 'zylsmc',
 					title: '主要老师',
 					align: 'left',
+					sortable: true,
 					formatter: charSpiltMatter
 
 				},{
 					field: 'lsmc',
 					title: '老师',
 					align: 'left',
+					sortable: true,
 					formatter: charSpiltMatter
 				},{
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
 					align: 'center',
 					width:'15%',
+					sortable: true,
 					formatter: sfxylcjMatter
 				},{
 					field: 'kkbm',
 					title: '开课部门',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				},	{
 					field: 'pkbm',
 					title: '排课部门',
 					align: 'left',
+					sortable: true,
 					formatter: paramsMatter
 				}
 			]
@@ -1018,46 +1026,54 @@ function stuffPuttedOutTable(tableInfo){
 				field: 'edu202_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
 				field: 'className',
 				title: '班级名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			}, 	{
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			},{
 				field: 'zyls',
 				title: '主要老师',
 				align: 'left',
+				sortable: true,
 				formatter: charSpiltMatter
 
 			},{
 				field: 'ls',
 				title: '老师',
 				align: 'left',
+				sortable: true,
 				formatter: charSpiltMatter
 			},{
 				field: 'sfxylcj',
 				title: '是否需要录成绩',
 				align: 'center',
 				width:'15%',
+				sortable: true,
 				formatter: sfxylcjMatter
 			},{
 				field: 'kkbm',
 				title: '开课部门',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},	{
 				field: 'pkbm',
 				title: '排课部门',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field : 'action',

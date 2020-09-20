@@ -114,27 +114,32 @@ function stuffLogTable(tableInfo) {
                 field: 'edu114_ID',
                 title: '唯一标识',
                 align: 'center',
+                sortable: true,
                 visible: false
             },
             {
                 field: 'logTitle',
                 title: '日志标题',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'typeName',
                 title: '日志类型',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'creatDate',
                 title: '发布时间',
                 align: 'left',
+                sortable: true,
                 formatter: creatDateMatter
             },  {
                 field: 'action',
                 title: '操作',
                 align: 'center',
+                sortable: true,
                 clickToSelect: false,
                 formatter: releaseNewsFormatter,
                 events: releaseNewsEvents,

@@ -167,64 +167,76 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'edu001_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
 				field: 'pyccmc',
 				title: '层次',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 
 			}, {
 				field: 'szxbmc',
 				title: '二级学院',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'njmc',
 				title: '年级',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'zymc',
 				title: '专业名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'xzbname',
 				title: '行政班',
 				align: 'left',
+				sortable: true,
 				formatter: xzbnameMatter
 			}, {
 				field: 'xh',
 				title: '学号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'xm',
 				title: '姓名',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},{
 				field: 'sylx',
 				title: '生源类型',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			},  {
 				field: 'xb',
 				title: '性别',
 				align: 'left',
+				sortable: true,
 				formatter: sexFormatter,
 				visible: false
 			}, {
 				field: 'zt',
 				title: '状态',
 				align: 'left',
+				sortable: true,
 				formatter: ztMatter
 			}, {
 				field: 'sfyxj',
 				title: '是否有学籍',
 				align: 'left',
+				sortable: true,
 				formatter: isrollMatter,
 				visible: false
 			},
@@ -232,6 +244,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'zkzh',
 				title: '准考证号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			},
@@ -239,125 +252,146 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				field: 'ksh',
 				title: '考生号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'sfzh',
 				title: '身份证号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'xjh',
 				title: '学籍号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			},{
 				field: 'zym',
 				title: '曾用名',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'csrq',
 				title: '出生日期',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'rxsj',
 				title: '入学时间',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'mz',
 				title: '民族',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'hf',
 				title: '婚否',
 				align: 'left',
+				sortable: true,
 				formatter: marriageMatter,
 				visible: false
 			}, {
 				field: 'whcd',
 				title: '文化程度',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'zzmm',
 				title: '政治面貌',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'syd',
 				title: '生源地',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'jtzz',
 				title: '家庭住址',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'rxzf',
 				title: '入学总分',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'bz',
 				title: '备注',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'sjhm',
 				title: '手机号',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'email',
 				title: 'E-mail',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'jg',
 				title: '籍贯',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'sg',
 				title: '身高',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			}, {
 				field: 'tz',
 				title: '体重',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 				visible: false
 			},  {
 				field: 'zsfs',
 				title: '招生方式',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'dxpy',
 				title: '是否订单',
 				align: 'left',
+				sortable: true,
 				formatter: isOrNotisMatter,
 				visible: false
 			}, {

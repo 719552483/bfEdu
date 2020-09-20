@@ -99,6 +99,7 @@ function stuffAppraisalsTable(tableInfo) {
                 field: 'edu004_ID',
                 title: '唯一标识',
                 align: 'center',
+                sortable: true,
                 visible: false
             },
             // {
@@ -111,11 +112,13 @@ function stuffAppraisalsTable(tableInfo) {
                 field: 'teacherName',
                 title: '评价人',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             }, {
                 field: 'creatDate',
                 title: '评价时间',
                 align: 'left',
+                sortable: true,
                 formatter: paramsMatter
             } ,{
                 field: 'action',

@@ -177,36 +177,43 @@ function stuffReleaseNewsTable(tableInfo) {
 				field: 'edu700_ID',
 				title: '唯一标识',
 				align: 'center',
+				sortable: true,
 				visible: false
 			},
 			{
 				field: 'title',
 				title: '通知名称',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter
 			}, {
 				field: 'departmentName',
 				title: '接收的二级学院',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 			}, {
 				field: 'noticeTypeName',
 				title: '接收范围',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 			}, {
 				field: 'senderName',
 				title: '发件人',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 			},  {
 				field: 'sendDate',
 				title: '发布日期',
 				align: 'left',
+				sortable: true,
 				formatter: paramsMatter,
 			}, {
 				field: 'showInIndex',
 				title: '首页是否显示',
+				sortable: true,
 				formatter: switchFormatter,
 				align: 'center',
 				width: '10%'
