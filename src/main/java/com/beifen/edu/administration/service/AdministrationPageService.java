@@ -1955,7 +1955,7 @@ public class AdministrationPageService {
 		}
 		//创建Excel文件
 		XSSFWorkbook workbook  = new XSSFWorkbook();
-		utils.createModifyStudentModal(workbook,studentInEdu300);
+		utils.createStudentModal(workbook,studentInEdu300);
 		try {
 			utils.loadModal(response,fileName, workbook);
 		} catch (IOException e) {
