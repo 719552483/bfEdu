@@ -939,12 +939,12 @@ public class TeachingManageService {
             firstMap.put("value","第1周("+ startDate +"至"+endDate+")");
             weekList.add(firstMap);
             //循环放入最后一周之前的周信息
-            for (int i = 0; i < edu400.getZzs() - 1; i++) {
+            for (int i = 0; i < edu400.getZzs() - 2; i++) {
                 Map<String,Object> newMap = new HashMap<>();
                 String dateOne = DateUtils.getCalculateDateToString(countDate, 7*i);
                 String dateTwo = DateUtils.getCalculateDateToString(countDate, 7*(i+1)-1);
-                newMap.put("id",String.valueOf(i+1));
-                newMap.put("value","第"+(i+1)+"周("+ dateOne +"至"+dateTwo+")");
+                newMap.put("id",String.valueOf(i+2));
+                newMap.put("value","第"+(i+2)+"周("+ dateOne +"至"+dateTwo+")");
                 weekList.add(newMap);
             }
             //将最后一周放入周集合
