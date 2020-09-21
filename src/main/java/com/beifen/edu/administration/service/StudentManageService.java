@@ -248,7 +248,7 @@ public class StudentManageService {
                     predicates.add(cb.equal(root.<String> get("zybm"), edu001.getZybm()));
                 }
                 if (edu001.getEdu300_ID() != null && !"".equals(edu001.getEdu300_ID())) {
-                    predicates.add(cb.equal(root.<String> get("Edu300_ID"), edu001.getEdu300_ID()));
+                    predicates.add(cb.equal(root.<String> get("edu300_ID"), edu001.getEdu300_ID()));
                 }
                 if (edu001.getZtCode() != null && !"".equals(edu001.getZtCode())) {
                     predicates.add(cb.equal(root.<String> get("ztCode"), edu001.getZtCode()));
