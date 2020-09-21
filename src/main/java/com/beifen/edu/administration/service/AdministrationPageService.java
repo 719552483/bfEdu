@@ -839,6 +839,19 @@ public class AdministrationPageService {
 			edu201.setJxbrs(jxbrs.toString());
 			edu201DAO.save(edu201);
 
+
+			edu600.setBusinessKey(edu201.getEdu201_ID());
+			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+			if(!isSuccess) {
+				if (oldEdu201 != null) {
+					edu201DAO.save(oldEdu201);
+				} else {
+					edu201DAO.delete(edu201.getEdu201_ID());
+				}
+				resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+				return resultVO;
+			}
+
 			edu204Dao.removeByEdu201Id(edu201.getEdu201_ID().toString());
 
 			if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
@@ -886,20 +899,8 @@ public class AdministrationPageService {
 					edu205DAO.save(save);
 				}
 			}
-
-
-			edu600.setBusinessKey(edu201.getEdu201_ID());
-			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-			if(!isSuccess) {
-				if (oldEdu201 != null) {
-					edu201DAO.save(oldEdu201);
-				} else {
-					edu201DAO.delete(edu201.getEdu201_ID());
-				}
-				resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
-				return resultVO;
-			}
 		}
+
 		resultVO = ResultVO.setSuccess("教学任务书发布成功");
 		return resultVO;
 	}

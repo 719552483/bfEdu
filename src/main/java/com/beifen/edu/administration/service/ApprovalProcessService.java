@@ -96,6 +96,7 @@ public class ApprovalProcessService {
 
         if(!isSuccess) {
             edu601Dao.delete(edu601.getEdu601Id());
+            edu600DAO.delete(edu600.getEdu600Id());
         }
 
        return isSuccess;
