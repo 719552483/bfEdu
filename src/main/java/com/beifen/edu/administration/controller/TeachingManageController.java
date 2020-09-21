@@ -292,5 +292,19 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教务课程表查询
+     * @param yearId
+     * @return
+     */
+    @RequestMapping("/getYearWeek")
+    @ResponseBody
+    public ResultVO getYearWeek(@RequestParam("yearId") String yearId) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        result = teachingManageService.getYearWeek(yearId);
+        return result;
+    }
+
 
 }

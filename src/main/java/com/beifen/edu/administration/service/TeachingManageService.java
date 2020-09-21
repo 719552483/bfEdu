@@ -8,6 +8,7 @@ import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.constant.SecondaryCodeConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,8 @@ public class TeachingManageService {
     Edu114Dao edu114Dao;
     @Autowired
     Edu207Dao edu207Dao;
+    @Autowired
+    Edu400Dao edu400Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -909,6 +913,53 @@ public class TeachingManageService {
         }
 
         return resultVO;
+    }
+
+    //计算学年周数
+    public ResultVO getYearWeek(String yearId) {
+        ResultVO resultVO;
+        List<Map<String,Object>> weekList = new ArrayList<>();
+        Edu400 edu400 = edu400Dao.findOne(Long.parseLong(yearId));
+        try {
+            //记录开始日期
+            String startDate = edu400.getKssj();
+            //计算开始日期是星期几
+            int weekOfDate = DateUtils.getWeekOfDate(startDate);
+            String endDate;
+            //计算第一周结束日期
+            if(weekOfDate == 0) {
+                 endDate = startDate;
+            } else {
+                 endDate = DateUtils.getCalculateDateToString(startDate, 7-weekOfDate);
+            }
+            String countDate = DateUtils.getCalculateDateToString(endDate, 1);
+            //将第一周放入周集合
+            Map<String,Object> firstMap = new HashMap<>();
+            firstMap.put("id","1");
+            firstMap.put("value","第1周("+ startDate +"至"+endDate+")");
+            weekList.add(firstMap);
+            //循环放入最后一周之前的周信息
+            for (int i = 0; i < edu400.getZzs() - 1; i++) {
+                Map<String,Object> newMap = new HashMap<>();
+                String dateOne = DateUtils.getCalculateDateToString(countDate, 7*i);
+                String dateTwo = DateUtils.getCalculateDateToString(countDate, 7*(i+1)-1);
+                newMap.put("id",String.valueOf(i+1));
+                newMap.put("value","第"+(i+1)+"周("+ dateOne +"至"+dateTwo+")");
+                weekList.add(newMap);
+            }
+            //将最后一周放入周集合
+            Map<String,Object> lastMap = new HashMap<>();
+            String dateThree = DateUtils.getCalculateDateToString(countDate, 7*(edu400.getZzs()-1));
+            lastMap.put("id",String.valueOf(edu400.getZzs()));
+            lastMap.put("value","第"+edu400.getZzs()+"周("+ dateThree +"至"+edu400.getJssj()+")");
+            weekList.add(lastMap);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        resultVO = ResultVO.setSuccess("查询成功",weekList);
+        return resultVO;
+        
     }
 }
 
