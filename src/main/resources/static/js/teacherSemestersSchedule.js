@@ -55,9 +55,9 @@ function getAllWeeks(){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getTermInfoById",
+		url: "/getYearWeek",
 		data:{
-			"termId":semester
+			"yearId":semester
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -71,14 +71,15 @@ function getAllWeeks(){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
+				var allWeeks=backjson.data;
 				var configStr='<option value="seleceConfigTip">请选择</option>';
-				for (var i = 0; i < backjson.termInfo.zzs; i++) {
-					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
+				for (var i = 0; i < allWeeks.length; i++) {
+					configStr += '<option value="' + allWeeks[i].id + '">'+ allWeeks[i].value+'</option>';
 				}
 				stuffManiaSelect("#weekTime", configStr);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});

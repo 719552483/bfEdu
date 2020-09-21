@@ -440,31 +440,10 @@ function configedJz(){
 			return;
 		}
 
-		//根据开始结束周渲染可选分散周数
-		var startWeek=parseInt(PKInfo.ksz);
-		var endWeek=parseInt(PKInfo.jsz);
-		var stuffArray=new Array();
-		stuffArray.push(startWeek);
-		stuffArray.push(endWeek);
-
-		var currentNum=startWeek;
-		for (var g = 0; g < (endWeek-startWeek)-1; g++) {
-			currentNum=currentNum+1;
-			stuffArray.push(currentNum);
-		}
-		stuffArray=stuffArray.sort(function(a,b){return a-b});
-
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var g = 0; g < stuffArray.length; g++) {
-			str += '<option value="' + stuffArray[g] + '">第' + stuffArray[g]+'周</option>';
-		}
-		stuffManiaSelect("#fsxq", str);
-
 		var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
 		if(!checkJzPkRs){
 			return;
 		}
-
 		$(".itab").find("li:eq(1)").find("a").trigger('click');
 	}else{
 		$(".itab").find("li:eq(2)").find("a").trigger('click');
@@ -641,16 +620,12 @@ function removefsKj(eve){
 //根据学年渲染开始结束周
 function drawStartAndEndWeek(allWeeks){
 	var configStr='<option value="seleceConfigTip">请选择</option>';
-	for (var i = 0; i < allWeeks-1; i++) {
-		configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
+	for (var i = 0; i < allWeeks.length; i++) {
+		configStr += '<option value="' + allWeeks[i].id + '">'+ allWeeks[i].value+'</option>';
 	}
 	stuffManiaSelect("#startWeek", configStr);
-
-	configStr='<option value="seleceConfigTip">请选择</option>';
-	for (var i =1; i < allWeeks; i++) {
-		configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
-	}
 	stuffManiaSelect("#endWeek", configStr);
+	stuffManiaSelect("#fsxq", configStr);
 }
 
 //重新渲染开始结束周
@@ -663,9 +638,9 @@ function redrawStartAndEndWeek(){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getTermInfoById",
+		url: "/getYearWeek",
 		data:{
-			"termId":currentXn
+			"yearId":currentXn
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -679,11 +654,11 @@ function redrawStartAndEndWeek(){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
-				drawStartAndEndWeek(backjson.termInfo.zzs);
+			if (backjson.code===200) {
+				drawStartAndEndWeek(backjson.data);
 				$(".choosendTerm").html(currentXnmc+"学年");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -757,7 +732,8 @@ function checkJzPk(PKInfo,scheduleInfo){
 
 	var shouldJzxs=parseInt($(".jzxsSpan")[0].innerText);
 	var allWeek=(endWeek-startWeek)+1;
-	if(shouldJzxs<(allWeek*scheduleInfo.length)*2){
+	var checkRs=shouldJzxs<=(allWeek*scheduleInfo.length)*2;
+	if(!checkRs){
 		rs=false;
 		toastr.warning('集中学时不正确');
 		return rs;
