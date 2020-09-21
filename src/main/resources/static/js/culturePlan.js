@@ -163,19 +163,12 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				formatter: approvalMatter
 			},
 			{
-				field: 'pyjhmc',
-				title: '培养计划名称',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			},
-			{
 				field: 'edu103mc',
 				title: '培养层次名称',
 				align: 'left',
 				sortable: true,
+				width:"20px",
 				formatter: paramsMatter
-
 			},
 			{
 				field: 'edu103',
@@ -189,8 +182,8 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				title: '二级学院名称',
 				align: 'left',
 				sortable: true,
+				width:"50px",
 				formatter: paramsMatter
-
 			},{
 				field: 'edu104',
 				title: '二级学院编码',
@@ -202,8 +195,8 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				title: '年级名称',
 				align: 'left',
 				sortable: true,
+				width:"20px",
 				formatter: paramsMatter
-
 			},{
 				field: 'edu105',
 				title: '年级编码',
@@ -215,14 +208,20 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				title: '专业名称',
 				align: 'left',
 				sortable: true,
+				width:"180px",
 				formatter: paramsMatter
-
 			},{
 				field: 'edu106',
 				title: '专业编码',
 				align: 'left',
 				sortable: true,
 				visible: false
+			},	{
+				field: 'pyjhmc',
+				title: '培养计划名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
 			},{
 				field: 'action',
 				title: '操作',
@@ -1934,7 +1933,6 @@ function onUncheckAllCourse(row){
 		}
 	}
 }
-
 
 //展示课程信息
 function showCourseInfo(row) {

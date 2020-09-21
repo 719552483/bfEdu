@@ -172,8 +172,9 @@ function drawEJDMselect(EJDMInfo){
 		var allEvement=$(".isSowIndex "); //获取所有下拉select
 		for (var i = 0; i < allEvement.length; i++) {
 			var dorwEvementId=allEvement[i].id;
+			var dorwEvementClass=allEvement[i].classList;
 			var currentTxt=allEvement[i].parentNode.previousElementSibling.innerText.replace("*", "").trim().replace(/\s/g,"");
-			if(EJDMInfo[0].ejdmmc===currentTxt){
+			if(EJDMInfo[0].ejdmmc===currentTxt&&dorwEvementClass.length!=3){
 				var str = '<option value="seleceConfigTip">请选择</option>';
 				for (var g = 0; g < EJDMInfo.length; g++) {
 					str += '<option value="' + EJDMInfo[g].ejdm + '">' + EJDMInfo[g].ejdmz
