@@ -2106,6 +2106,17 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 查询二级学院
+	 * @return
+	 */
+	@RequestMapping("/getAllDepartment")
+	@ResponseBody
+	public ResultVO getAllDepartment() {
+		ResultVO result = administrationPageService.getAllDepartment();
+		return result;
+	}
+
+	/**
 	 * 根据类型选择班级
 	 * @param classType
 	 * @param userId

@@ -2337,4 +2337,17 @@ public class AdministrationPageService {
 		List<Edu500> edu500List = edu500Dao.findAll();
 		return edu500List;
 	}
+
+
+	//查询全部二级学院
+	public ResultVO getAllDepartment() {
+		ResultVO resultVO;
+		List<Edu104> edu104s = edu104DAO.findAll();
+		if (edu104s.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无二级学院信息");
+		} else {
+			resultVO = ResultVO.setSuccess("共查到"+edu104s.size()+"个学院信息",edu104s);
+		}
+		return resultVO;
+	}
 }
