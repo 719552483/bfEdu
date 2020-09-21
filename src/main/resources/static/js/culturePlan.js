@@ -1243,8 +1243,42 @@ function wantAddClass() {
 	// 	toastr.warning("该培养计划暂未通过审核");
 	// 	return;
 	// }
+	getAllDepartment();
 	getAllClassInfo($(".planName")[0].innerText);
-	$("#classBaseInfo_classSemesters").multiSelect();
+	// $("#classBaseInfo_classSemesters").multiSelect();
+}
+
+//查询全部二级学院
+function getAllDepartment(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllDepartment",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var selectInfo=backjson.data;
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < selectInfo.length; i++) {
+					str += '<option value="' + selectInfo[i].edu104_ID + '">' + selectInfo[i].xbmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#addClassSearch_department", str);
+			} else {
+				toastr.info(backjson.msg);
+			}
+		}
+	});
 }
 
 // 获取课程库列表
@@ -1427,7 +1461,7 @@ function getNewCulturePlanInfo(crouseID){
 
 //刷新新增专业课程区域
 function reloadCulturePlanArea(){
-	refreshMultiSselect("#classBaseInfo_classSemesters");
+	// refreshMultiSselect("#classBaseInfo_classSemesters");
 	rebackClassBaseInfo();
 }
 
@@ -1558,10 +1592,12 @@ function stuffMoreClassInfo() {
 
 // 添加专业课程开始检索
 function addClassAreaStartSearch() {
+	var departmentCode =getNormalSelectValue("addClassSearch_department");
 	var coursesCode = $("#addClassSearch_classCode").val();
 	var coursesName = $("#addClassSearch_className").val();
 	var majorWorkSign = $("#addClassSearch_classMark").val();
 	var serachObject=new Object();
+	serachObject.departmentCode=departmentCode;
 	serachObject.edu107Id=$(".edu107Id")[0].innerText;
 	coursesCode===""?serachObject.coursesCode="":serachObject.coursesCode=coursesCode;
 	coursesName===""?serachObject.coursesName="":serachObject.coursesName=coursesName;
@@ -1574,7 +1610,7 @@ function addClassAreaStartSearch() {
 		url : "/addCrouseSeacch",
 		data: {
              "SearchCriteria":JSON.stringify(serachObject),
-			 "userKey":JSON.parse($.session.get('userInfo')).userKey
+			 "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1602,7 +1638,7 @@ function addClassAreaStartSearch() {
 // 重置添加专业课程基础信息内容
 function rebackClassBaseInfo() {
 	var reObject = new Object();
-	reObject.normalSelectIds = "#classBaseInfo_isTeachingReform,#classBaseInfo_isCalssTextual,#classBaseInfo_isTextual,#classBaseInfo_isKernelClass,#classBaseInfo_isSchoolBusiness,#classBaseInfo_classWay,#classBaseInfo_signatureCourseLevel,#classBaseInfo_isNewClass,#classBaseInfo_classQuality,#classBaseInfo_classSchedRequire,#classBaseInfo_classType,#classBaseInfo_testWay,#classBaseInfo_classNature,#classBaseInfo_setUp,#classBaseInfo_classLocation,#classBaseInfo_moduleType";
+	reObject.normalSelectIds = "#addClassSearch_department,#classBaseInfo_isTeachingReform,#classBaseInfo_isCalssTextual,#classBaseInfo_isTextual,#classBaseInfo_isKernelClass,#classBaseInfo_isSchoolBusiness,#classBaseInfo_classWay,#classBaseInfo_signatureCourseLevel,#classBaseInfo_isNewClass,#classBaseInfo_classQuality,#classBaseInfo_classSchedRequire,#classBaseInfo_classType,#classBaseInfo_testWay,#classBaseInfo_classNature,#classBaseInfo_setUp,#classBaseInfo_classLocation,#classBaseInfo_moduleType";
 	reObject.InputIds = "#classBaseInfo_classCode,#classBaseInfo_className,#classBaseInfo_enName,#classBaseInfo_midtermPrcent,#classBaseInfo_endtermPrcent";
 	reReloadSearchsWithSelect(reObject);
 	// 数字input必须逐个重置 否则报错
@@ -1613,13 +1649,13 @@ function rebackClassBaseInfo() {
 	$("#classBaseInfo_centralizedHours").val(0);
 	$("#classBaseInfo_weekHours").val(0);
 	$("#classBaseInfo_countWeeks").val(0);
-	refreshMultiSselect("#classBaseInfo_classSemesters");
+	// refreshMultiSselect("#classBaseInfo_classSemesters");
 }
 
 // 添加专业课程重置检索
 function addClassArea_rebackSearch(isReloadTable) {
 	$("#addClassSearch_classCode,#addClassSearch_className,#addClassSearch_classMark").val("");
-	refreshMultiSselect("#classBaseInfo_classSemesters");
+	// refreshMultiSselect("#classBaseInfo_classSemesters");
 	rebackClassBaseInfo();
 	getAllClassInfo($(".planName")[0].innerText);
 }

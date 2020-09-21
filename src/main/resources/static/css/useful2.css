@@ -641,8 +641,9 @@ float: left;
 }
 
 .allClassTableArea .search {
-	margin-top: -50px !important;
+	margin-top: 6px !important;
 	margin-left: 68%;
+	padding-right: 2%;
 }
 
 .generatCourseArea .search {
@@ -2268,6 +2269,10 @@ input:focus{
 
 .scheduleClassesTableArea .search {
 	margin-top: 0px;
+}
+
+#stuffMoreClassInfo:focus{
+	outline: none!important;
 }
 
 @keyframes serachAnimation {
