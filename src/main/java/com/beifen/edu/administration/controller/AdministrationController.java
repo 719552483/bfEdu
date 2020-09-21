@@ -944,14 +944,17 @@ public class AdministrationController {
 	 */
 	@RequestMapping("addCrouseSeacch")
 	@ResponseBody
-	public Object addCrouseSeacch(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userKey")String userKey) {
+	public Object addCrouseSeacch(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userId")String userId) {
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
 		// 填充搜索对象
 		Edu200 edu200 = new Edu200();
 		edu200.setKcdm(searchObject.getString("coursesCode"));
 		edu200.setKcmc(searchObject.getString("coursesName"));
 		edu200.setBzzymc(searchObject.getString("majorWorkSign"));
-		ResultVO result = administrationPageService.addCrouseSeacch(edu200,userKey);
+		edu200.setDepartmentCode(searchObject.getString("departmentCode"));
+
+
+		ResultVO result = administrationPageService.addCrouseSeacch(edu200,userId);
 		return result;
 	}
 

@@ -1389,9 +1389,9 @@ public class AdministrationPageService {
 	}
 
 	// 培养计划添加专业课程检索
-	public ResultVO addCrouseSeacch(Edu200 edu200,String userKey) {
+	public ResultVO addCrouseSeacch(Edu200 edu200,String userId) {
 		ResultVO resultVO;
-		Edu101 edu101 = edu101DAO.findOne(Long.parseLong(userKey));
+
 		Specification<Edu200> specification = new Specification<Edu200>() {
 			public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1403,6 +1403,9 @@ public class AdministrationPageService {
 				}
 				if (edu200.getBzzymc() != null && !"".equals(edu200.getBzzymc())) {
 					predicates.add(cb.like(root.<String>get("bzzymc"), '%' + edu200.getBzzymc() + '%'));
+				}
+				if (edu200.getDepartmentCode() != null && !"".equals(edu200.getDepartmentCode())) {
+					predicates.add(cb.equal(root.<String>get("departmentCode"), edu200.getDepartmentCode()));
 				}
 				predicates.add(cb.equal(root.<String>get("zt"), "pass"));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
