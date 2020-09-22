@@ -911,7 +911,7 @@ function stuffLocationInfo(){
 						var capacity=locaitioninfo[i].capacity;
 						var remarks;
 						locaitioninfo[i].remarks==null||locaitioninfo[i].remarks===""?remarks="暂无备注":remarks=locaitioninfo[i].remarks;
-						$(".loationInfoTxt").html(getNormalSelectText("skdd")+' 可容乃人数:'+capacity+'人      备注:'+remarks+'');
+						$(".loationInfoTxt").html(getNormalSelectText("skdd")+' 可容纳人数:'+capacity+'人      备注:'+remarks+'');
 						$(".loationInfoTxt").show();
 						return;
 					}
