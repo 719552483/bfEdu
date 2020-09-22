@@ -245,4 +245,9 @@ public class PageRelatedController {
 	public String allSchedulePage() {
 		return "allSchedule";
 	}
+
+	@RequestMapping("chartDemo")
+	public String chartDemoPage() {
+		return "chartDemo";
+	}
 }
