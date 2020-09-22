@@ -949,7 +949,7 @@ public class TeachingManageService {
             }
             //将最后一周放入周集合
             Map<String,Object> lastMap = new HashMap<>();
-            String dateThree = DateUtils.getCalculateDateToString(countDate, 7*(edu400.getZzs()-1));
+            String dateThree = DateUtils.getCalculateDateToString(countDate, 7*(edu400.getZzs()-2));
             lastMap.put("id",String.valueOf(edu400.getZzs()));
             lastMap.put("value","第"+edu400.getZzs()+"周("+ dateThree +"至"+edu400.getJssj()+")");
             weekList.add(lastMap);
