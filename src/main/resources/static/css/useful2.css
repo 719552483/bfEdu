@@ -1308,7 +1308,7 @@ float: left;
     float: left;
     padding-top: 21px;
     color: #0e6baf;
-    width: 35px;
+    width:25px;
 }
 
 @media screen and (max-width:1174px) {
@@ -2241,7 +2241,7 @@ input:focus{
 	border-top: none!important;
 }
 
-.kjRsArea,.fskjRsArea{
+.kjRsArea,.fskjRsArea,.loationInfoTxt{
 	text-align: left;
 	padding-left: 21px;
 	padding-bottom: 20px;
@@ -2273,6 +2273,22 @@ input:focus{
 
 #stuffMoreClassInfo:focus{
 	outline: none!important;
+}
+
+.chartChildren{
+	min-height: 300px;
+	padding: 10px;
+	background-color: rgb(164 220 232 / 8%);
+}
+
+.chartPage .publicCodeCHildren {
+	width: 94.6%;
+}
+
+@media screen and (max-width:1366px) {
+	.chartPage .publicCodeCHildren {
+		width: 96%;
+	}
 }
 
 @keyframes serachAnimation {

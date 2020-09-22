@@ -267,6 +267,7 @@ function destoryLastStuff(){
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
 	$(".choosendKjArea,.singleKj").empty();
 	$(".kjRsArea ").hide();
+	$(".loationInfoTxt").hide();
 }
 
 //填充学年下拉框
@@ -868,6 +869,7 @@ function skddChange(){
 	var choosendsite=getNormalSelectText("jxd");
 	var choosendLoaction=getNormalSelectText("skdd");
 	if(choosendLoaction===""||choosendsite===""){
+		$(".loationInfoTxt").hide();
 		return;
 	}
 	if($(".choosendLoaction").length===0){
@@ -875,7 +877,53 @@ function skddChange(){
 	}else{
 		$(".choosendLoaction").html('在'+choosendsite+'-'+choosendLoaction+'授课');
 	}
+	stuffLocationInfo();
+}
 
+//渲染教学点备注和容纳人数
+function stuffLocationInfo(){
+	if(getNormalSelectValue("jxd")==""){
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getPointBySite",
+		data: {
+			"SearchObject":getNormalSelectValue("jxd")
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if(backjson.code===200){
+				var locaitioninfo=backjson.data;
+				for (var i = 0; i < locaitioninfo.length; i++) {
+					if(getNormalSelectValue("skdd")===locaitioninfo[i].edu501Id.toString()){
+						var capacity=locaitioninfo[i].capacity;
+						var remarks;
+						locaitioninfo[i].remarks==null||locaitioninfo[i].remarks===""?remarks="暂无备注":remarks=locaitioninfo[i].remarks;
+						$(".loationInfoTxt").html(getNormalSelectText("skdd")+' 可容乃人数:'+capacity+'人      备注:'+remarks+'');
+						$(".loationInfoTxt").show();
+						return;
+					}
+				}
+			}else{
+				var reObject = new Object();
+				reObject.normalSelectIds = "#skdd";
+				reReloadSearchsWithSelect(reObject);
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //返回待排课程区域
