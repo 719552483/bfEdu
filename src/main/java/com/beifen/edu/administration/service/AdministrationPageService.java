@@ -1101,9 +1101,9 @@ public class AdministrationPageService {
 		for (Edu203 e : edu203List) {
 			int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
 			if(e.getKsz().equals(e.getJsz())) {
-				ssz.append("第"+e.getKsz()+"周 ");
+				ssz.append("第"+e.getKsz()+"周,");
 			} else {
-				ssz.append("第"+e.getKsz()+"周-第"+e.getJsz()+"周 ");
+				ssz.append("第"+e.getKsz()+"周-第"+e.getJsz()+"周,");
 			}
 			for (int i = 0; i < weekCount; i++) {
 				Edu203 save = new Edu203();
@@ -1122,7 +1122,7 @@ public class AdministrationPageService {
 			}
 		}
 		//保存排课基础信息
-		edu202.setSzz(ssz.toString());
+		edu202.setSzz(ssz.toString().substring(0,ssz.length() - 1));
 		edu202DAO.save(edu202);
 		return isSuccess;
 	}
