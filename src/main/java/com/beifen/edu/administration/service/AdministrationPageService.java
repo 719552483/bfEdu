@@ -1106,10 +1106,17 @@ public class AdministrationPageService {
 				ssz.append("第"+e.getKsz()+"周-第"+e.getJsz()+"周,");
 			}
 			for (int i = 0; i < weekCount; i++) {
-				e.setEdu202_ID(edu202_id);
+				Edu203 save = new Edu203();
+				save.setEdu202_ID(edu202_id);
 				Integer week = (Integer.parseInt(e.getKsz()) + i);
-				e.setWeek(week.toString());
-				edu203Dao.save(e);
+				save.setWeek(week.toString());
+				save.setKsz(e.getKsz());
+				save.setJsz(e.getJsz());
+				save.setKjid(e.getKjid());
+				save.setKjmc(e.getKjmc());
+				save.setXqid(e.getXqid());
+				save.setXqmc(e.getXqmc());
+				edu203Dao.save(save);
 				currentXs+=2;
 				if (currentXs >= jzxs) {
 					break classCycle;
