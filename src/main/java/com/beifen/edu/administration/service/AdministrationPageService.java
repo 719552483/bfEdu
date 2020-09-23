@@ -1067,7 +1067,7 @@ public class AdministrationPageService {
 		}
 		//总学时
 		Double jzxs = edu201.getJzxs();
-
+		edu202DAO.save(edu202);
 		String edu202_id = edu202.getEdu202_ID().toString();
 		//如果有分散学时保存分散学时信息
 		if(edu207List.size() != 0) {
