@@ -1136,6 +1136,9 @@ float: left;
 	padding-left: 15px;
 	min-height: 97px;
 	border-radius: 6px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .singleSchedule:last-child {
@@ -2007,7 +2010,7 @@ top角色切换滚动体样式
 	padding-bottom: 1px;
 	font-weight: 600;
 	color: #677e92;
-	padding-top: 12px;
+	padding-top: 3px;
 }
 .lastscheduleClassName{
 	padding-bottom: 5px;

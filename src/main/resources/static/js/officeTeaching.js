@@ -265,8 +265,8 @@ function destoryLastStuff(){
 	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#kj,#skdd";
 	reReloadSearchsWithSelect(reObject);
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
-	$(".choosendKjArea,.singleKj").empty();
-	$(".kjRsArea ").hide();
+	$(".choosendCycleArea,.singleCycle").empty();
+	$(".kjRsArea,.lastCycleArea ").hide();
 	$(".loationInfoTxt").hide();
 }
 
@@ -935,7 +935,7 @@ function scheduleDetailInfo(needToastr){
 
 	if(returnArray.length==0){
 		if(typeof needToastr==="undefined"){
-			toastr.warning('请选择课节');
+			toastr.warning('请选择集中课时周期安排');
 		}
 	}
 	return returnArray;
@@ -1377,13 +1377,21 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	$("#puttedkCMC").val(puttedInfo.kcmc);
 	$("#puttedZyls").val(puttedInfo.zyls);
 	$("#puttedLs").val(puttedInfo.ls);
-	$("#puttedKsz").val(scheduleCompletedDetails.ksz);
-	$("#puttedJsz").val(scheduleCompletedDetails.jsz);
 	$('#puttedInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 
 	var classPeriodList=scheduleCompletedDetails.classPeriodList;
+	var helpAraay=new Array();
+	var drawAraay=new Array();
 	for (var i = 0; i < classPeriodList.length; i++) {
-		$(".puttedKjArea").append('<div class="PuttedKjArea">'+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+'</div>');
+		if(helpAraay.indexOf(classPeriodList[i].ksz+classPeriodList[i].jsz)===-1){
+			helpAraay.push(classPeriodList[i].ksz+classPeriodList[i].jsz);
+			drawAraay.push(classPeriodList[i]);
+		}
+	}
+
+	drawAraay.reverse();
+	for (var i = 0; i <drawAraay.length ; i++) {
+		$(".puttedKjArea").append('<div class="PuttedKjArea">至第'+drawAraay[i].ksz+'周到第'+drawAraay[i].jsz+'周  每周'+drawAraay[i].xqmc+' '+drawAraay[i].kjmc+'</div>');
 	}
 
 	if(scatterList.length===0){

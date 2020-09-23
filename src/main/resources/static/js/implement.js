@@ -1150,6 +1150,8 @@ function scheduleFormatter(value, row, index) {
 	var htmlStr = "";
 	if ($.isArray(value)) {
 		for (var i = 0; i < value.length; i++) {
+			var reg = new RegExp('"',"g");
+			var teacherNamestr = value[i].teacherName.replace(reg, "");
 			htmlStr += '<div classRoomID="' + value[i].classRoomId
 					+ '" teacherID="' + value[i].teacherId + '" classTypeId="'
 					+ value[i].classTypeId + '" classID="' + value[i].classId
@@ -1158,8 +1160,9 @@ function scheduleFormatter(value, row, index) {
 					+ changeClassAreaBg(value[i].classTypeId) + '">'
 					+ '<span class="scheduleClassName">'+ value[i].className+'</span>'
 				    + '<span class="scheduleClassName" id="'+value[i].edu203_id+'" edu202id="'+value[i].edu202_id+'">'+ value[i].courseName+'</span>'
-				    + '<span class="scheduleClassName">'+ charSpiltMatter(value[i].teacherName)+'</span>'
-				    + '<span class="lastscheduleClassName">'+ value[i].classRoom+'</span>'
+					+ '<span class="lastscheduleClassName">'+ value[i].szz+'</span>'
+				    + '<span class="scheduleClassName">'+ teacherNamestr+'</span>'
+				    + '<span class="lastscheduleClassName">'+ value[i].classRoom+' - '+value[i].point+'</span>'
 					+  '</div>'
 		}
 	} else {
