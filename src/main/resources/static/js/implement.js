@@ -1027,7 +1027,6 @@ jQuery.extend({
    }  
 }) 
 
-
 // 请求beforeSend
 function requestErrorbeforeSend() {
 	$(".loadingMasking").show();
@@ -1086,19 +1085,6 @@ function calssNameMatter(value, row, index) {
 		return [ '<div class="myTooltip normalTxt" title="' + row.kcmc
 				+ '">' + row.kcmc + '</div>' ].join('');
 	}
-}
-
-//授课学期文字化
-function skxqMatter(value, row, index) {
-	var skxqArray=JSON.parse(row.skxq);
-	var skxqArrayToTxt='';
-	 for (var i = 0; i < skxqArray.length; ++i) {
-		 skxqArrayToTxt+=skxqArray[i]+',';
-	 }
-	 
-	var skxqTxt='第'+skxqArrayToTxt.substring(0,skxqArrayToTxt.length-1)+'学期';
-	return [ '<div class="myTooltip" title="地' + skxqTxt
-				+ '">' + skxqTxt+ '</div>' ].join('');
 }
 
 //审批状态文字化
@@ -1313,7 +1299,6 @@ function toolTipUp(className) {
 	$(className).tooltipify();
 }
 
-
 //判断开始结束时间大小
 function checkTime(startTime,endTime){
 	var start=new Date(startTime.replace("-", "/").replace("-", "/"));
@@ -1355,53 +1340,6 @@ function drawCalenr(id,isSplitToday) {
 	}
 }
 
-// 数据库时间转化
-function formatterTimeToBase(time, indludeTime) {
-	var formatterTime;
-	if (indludeTime) {
-		var reg1 = /-/g;
-		var reg2 = /:/g;
-		var withoutrg1 = time.replace(reg1, '');
-		var withoutrg2 = withoutrg1.replace(reg2, '');
-		var formatterTime = withoutrg2.replace(/\s+/g, "");
-		return formatterTime;
-	} else {
-		var date;
-		var reg1 = /-/g;
-		date = time.replace(reg1, '');
-		formatterTime = date + "000000"
-	}
-	return formatterTime;
-}
-
-// 页面时间转换
-function formatterTimeToPage(date, isSplitTOAfterHours) {
-	var year = date.substring(0, 4);
-	var month = date.substring(4, 6);
-	var day = date.substring(6, 8);
-	if (isSplitTOAfterHours) {
-		var hours = date.substring(8, 10);
-		var min = date.substring(10, 12);
-		var sec = date.substring(12, 14);
-		return year + '-' + month + '-' + day + ' ' + hours + ':' + min + ':'
-				+ sec;
-	} else {
-		return year + '-' + month + '-' + day;
-	}
-}
-
-// 获取当前时间
-function getCrrruentDate() {
-	var oDate = new Date(); // 实例一个时间对象；
-	var y = oDate.getFullYear().toString(); // 获取系统的年；
-	var m = (oDate.getMonth() + 1).toString(); // 获取系统月份，由于月份是从0开始计算，所以要加1
-	var d = oDate.getDate().toString(); // 获取系统日，
-	var h = oDate.getHours().toString(); // 获取系统时，
-	var min = oDate.getMinutes().toString(); // 分
-	var s = oDate.getSeconds().toString(); // 秒
-	return y + m + d + h + min + s;
-}
-
 //去掉字符中的双引号
 function charSpiltMatter(value, row, index) {
 	if(value!=null){
@@ -1417,9 +1355,7 @@ function charSpiltMatter(value, row, index) {
 }
 
 //字符去所有空格  需要设置第2个参数为":g"
-function Trim(str, is_global)
-
-{
+function Trim(str, is_global){
 
 	var result;
 
@@ -1486,56 +1422,6 @@ jQuery.extend({
         return r;  
    }  
 })
-
-
-function Format(now,mask)
-{
-	var d = now;
-	var zeroize = function (value, length)
-	{
-		if (!length) length = 2;
-		value = String(value);
-		for (var i = 0, zeros = ''; i < (length - value.length); i++)
-		{
-			zeros += '0';
-		}
-		return zeros + value;
-	};
-
-	return mask.replace(/"[^"]*"|'[^']*'|\b(?:d{1,4}|m{1,4}|yy(?:yy)?|([hHMstT])\1?|[lLZ])\b/g, function ($0)
-	{
-		switch ($0)
-		{
-			case 'd': return d.getDate();
-			case 'dd': return zeroize(d.getDate());
-			case 'ddd': return ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'][d.getDay()];
-			case 'dddd': return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d.getDay()];
-			case 'M': return d.getMonth() + 1;
-			case 'MM': return zeroize(d.getMonth() + 1);
-			case 'MMM': return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
-			case 'MMMM': return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()];
-			case 'yy': return String(d.getFullYear()).substr(2);
-			case 'yyyy': return d.getFullYear();
-			case 'h': return d.getHours() % 12 || 12;
-			case 'hh': return zeroize(d.getHours() % 12 || 12);
-			case 'H': return d.getHours();
-			case 'HH': return zeroize(d.getHours());
-			case 'm': return d.getMinutes();
-			case 'mm': return zeroize(d.getMinutes());
-			case 's': return d.getSeconds();
-			case 'ss': return zeroize(d.getSeconds());
-			case 'l': return zeroize(d.getMilliseconds(), 3);
-			case 'L': var m = d.getMilliseconds();
-				if (m > 99) m = Math.round(m / 10);
-				return zeroize(m);
-			case 'tt': return d.getHours() < 12 ? 'am' : 'pm';
-			case 'TT': return d.getHours() < 12 ? 'AM' : 'PM';
-			case 'Z': return d.toUTCString().match(/[A-Z]+$/);
-			// Return quoted strings with the surrounding quotes removed
-			default: return $0.substr(1, $0.length - 2);
-		}
-	});
-};
 
 function timeStamp2String(time){
 	var datetime = new Date(time);
