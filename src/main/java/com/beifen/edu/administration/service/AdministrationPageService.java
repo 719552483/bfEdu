@@ -1067,8 +1067,7 @@ public class AdministrationPageService {
 		}
 		//总学时
 		Double jzxs = edu201.getJzxs();
-		//保存排课基础信息
-		edu202DAO.save(edu202);
+
 		String edu202_id = edu202.getEdu202_ID().toString();
 		//如果有分散学时保存分散学时信息
 		if(edu207List.size() != 0) {
@@ -1097,9 +1096,15 @@ public class AdministrationPageService {
 		});
 		//按周保存排课计划
 		int currentXs = 0;
+		StringBuffer ssz = new StringBuffer();
 		classCycle:
 		for (Edu203 e : edu203List) {
 			int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
+			if(e.getKsz().equals(e.getJsz())) {
+				ssz.append("第"+e.getKsz()+"周 ");
+			} else {
+				ssz.append("第"+e.getKsz()+"周-第"+e.getJsz()+"周 ");
+			}
 			for (int i = 0; i < weekCount; i++) {
 				Edu203 save = new Edu203();
 				save.setEdu202_ID(edu202_id);
@@ -1116,6 +1121,9 @@ public class AdministrationPageService {
 				}
 			}
 		}
+		//保存排课基础信息
+		edu202.setSzz(ssz.toString());
+		edu202DAO.save(edu202);
 		return isSuccess;
 	}
 
