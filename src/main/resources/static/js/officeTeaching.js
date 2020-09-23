@@ -523,7 +523,7 @@ function addNewFsKj(){
 	}
 
 	$(".singlefsKj,.choosendfsKjArea").append('<div class="choosendfsKjInfo" xs="'+fsXs+'" fsxq="'+fsxq+'" id="choosendfsKj'+fsxq+'">分散授课安排：第'+fsxq+'周  '+fsXs+'个学时' +
-		'<img class="choosendfsKjImg" src="images/close1.png"></img>' +
+		'<img class="choosendfsKjImg choosendfsKjInfoImg" src="images/close1.png"/>' +
 		'</div>');
 
 	//重置select
@@ -532,8 +532,8 @@ function addNewFsKj(){
 	reReloadSearchsWithSelect(reObject);
 	$("#fsXs").val(0);
 
-	$('.choosendfsKjInfo').unbind('click');
-	$('.choosendfsKjInfo').bind('click', function(e) {
+	$('.choosendfsKjInfoImg').unbind('click');
+	$('.choosendfsKjInfoImg').bind('click', function(e) {
 		removefsKj(e);
 		e.stopPropagation();
 	});
@@ -602,7 +602,7 @@ function addCoursePlan(){
 			break;
 		}
 		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'">集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +
-			'<img class="choosendKjImg" src="images/close1.png"/></div>';
+			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
 	}
 
 	if(isHave){
@@ -619,8 +619,8 @@ function addCoursePlan(){
 	$(".singleKj").empty();
 	$(".kjRsArea").hide();
 
-	$('.choosendCycleInfo').unbind('click');
-	$('.choosendCycleInfo').bind('click', function(e) {
+	$('.choosendCycleInfoImg').unbind('click');
+	$('.choosendCycleInfoImg').bind('click', function(e) {
 		removeCycle(e);
 		e.stopPropagation();
 	});
@@ -628,7 +628,7 @@ function addCoursePlan(){
 
 //删除周期
 function removeCycle(eve){
-	var id=eve.currentTarget.id;
+	var id=eve.currentTarget.parentElement.id;
 	$(".singleCycle,.choosendCycleArea").find("#"+id).remove();
 	var tab1CycleInfo=$(".singleCycle").find(".choosendCycleInfo");
 	if(tab1CycleInfo.length===0){
@@ -668,15 +668,15 @@ function AddnewKj(){
 		return;
 	}
 	$(".singleKj").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(currentXq+currentKj)+'">每周'+currentXqmc+'  '+currentKjmc+'课' +
-		'<img class="choosendKjImg" src="images/close1.png"/>' +
+		'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
 		'</div>');
 	//重置select组
 	var reObject = new Object();
 	reObject.normalSelectIds = "#kj,#xq";
 	reReloadSearchsWithSelect(reObject);
 
-	$('.choosendKjInfo').unbind('click');
-	$('.choosendKjInfo').bind('click', function(e) {
+	$('.choosendKjInfoImg').unbind('click');
+	$('.choosendKjInfoImg').bind('click', function(e) {
 		removeKj(e);
 		e.stopPropagation();
 	});
@@ -686,7 +686,7 @@ function AddnewKj(){
 
 //删除课节组
 function removeKj(eve){
-	var id=eve.currentTarget.id;
+	var id=eve.currentTarget.parentElement.id;
 	$(".singleKj").find("#"+id).remove();
 	var tab1KjInfo=$(".singleKj").find(".choosendKjInfo");
 	if(tab1KjInfo.length===0){
@@ -703,7 +703,7 @@ function removeKj(eve){
 
 //删除分散课节组
 function removefsKj(eve){
-	var id=eve.currentTarget.id;
+	var id=eve.currentTarget.parentElement.id;
 	$(".choosendfsKjArea,.singlefsKj").find("#"+id).remove();
 	var tab2KjInfo=$(".singlefsKj").find(".choosendfsKjInfo");
 	if(tab2KjInfo.length===0){
