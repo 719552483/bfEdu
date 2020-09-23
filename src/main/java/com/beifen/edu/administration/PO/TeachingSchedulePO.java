@@ -13,6 +13,7 @@ public class TeachingSchedulePO {
     private String pyjhxb;
     private String pyjhnj;
     private String pyjhzy;
+    private String pyjhmc;
     private String kcxz;
     private String kcxzid;
     private String kcmc;
@@ -149,6 +150,14 @@ public class TeachingSchedulePO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPyjhmc() {
+        return pyjhmc;
+    }
+
+    public void setPyjhmc(String pyjhmc) {
+        this.pyjhmc = pyjhmc;
     }
 
     @Id

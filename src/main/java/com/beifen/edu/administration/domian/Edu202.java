@@ -16,8 +16,7 @@ public class Edu202 {
 	private Long Edu201_ID; // 任务书ID
 	private Long xnid; // 学年id
 	private String xnmc;// 学年名称
-	private String ksz; // 开始周
-	private String jsz; // 结束周
+	private String szz; //排课所在周
 	private String skddmc; // 授课地点名称
 	private String skddid; // 授课地点ID
 	private String pointid; //教学任务点id
@@ -45,18 +44,15 @@ public class Edu202 {
 	public void setXnid(Long xnid) {
 		this.xnid = xnid;
 	}
-	public String getKsz() {
-		return ksz;
+
+	public String getSzz() {
+		return szz;
 	}
-	public void setKsz(String ksz) {
-		this.ksz = ksz;
+
+	public void setSzz(String szz) {
+		this.szz = szz;
 	}
-	public String getJsz() {
-		return jsz;
-	}
-	public void setJsz(String jsz) {
-		this.jsz = jsz;
-	}
+
 	public String getSkddmc() {
 		return skddmc;
 	}

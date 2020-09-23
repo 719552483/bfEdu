@@ -8,6 +8,8 @@ import javax.persistence.*;
 public class Edu203 {
 	private Long Edu203_ID;
 	private String Edu202_ID; //排课表ID
+	private String ksz;//开始周
+	private String jsz;//结束周
 	private String week;//所在周
 	private String kjid; // 课节id
 	private String kjmc; // 课节名称
@@ -73,5 +75,21 @@ public class Edu203 {
 
 	public void setWeek(String week) {
 		this.week = week;
+	}
+
+	public String getKsz() {
+		return ksz;
+	}
+
+	public void setKsz(String ksz) {
+		this.ksz = ksz;
+	}
+
+	public String getJsz() {
+		return jsz;
+	}
+
+	public void setJsz(String jsz) {
+		this.jsz = jsz;
 	}
 }

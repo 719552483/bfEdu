@@ -1061,68 +1061,53 @@ public class AdministrationPageService {
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
 		//总学时
-		Double zxs = Double.parseDouble(edu201.getZxs());
-		//集中学时
 		Double jzxs = edu201.getJzxs();
-		//计算排课总课时
-		Integer ksz = Integer.parseInt(edu202.getKsz());
-		Integer jsz = Integer.parseInt(edu202.getJsz());
-		Integer plzks = (jsz - ksz + 1) * edu203List.size()*2;
-		Integer sumFsxs = 0;
-
+		//保存排课基础信息
+		edu202DAO.save(edu202);
+		String edu202_id = edu202.getEdu202_ID().toString();
+		//如果有分散学时保存分散学时信息
 		if(edu207List.size() != 0) {
-			//计算分散课时
-			sumFsxs = edu207List.stream().collect(Collectors.summingInt(Edu207::getClassHours));
-		}
-
-		if (plzks + sumFsxs < zxs) {
-			isSuccess = false;
-		} else {
-			if(edu207List.size() != 0) {
-				for (Edu207 edu207 : edu207List) {
-					Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
-					edu207.setClassName(edu201.getClassName());
-					edu207.setClassId(edu201.getClassId().toString());
-					edu207.setEdu108_ID(edu108.getEdu108_ID().toString());
-					edu207.setCourseType(edu201.getClassType());
-					edu207Dao.save(edu207);
-				}
+			for (Edu207 edu207 : edu207List) {
+				Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
+				edu207.setClassName(edu201.getClassName());
+				edu207.setClassId(edu201.getClassId().toString());
+				edu207.setEdu108_ID(edu108.getEdu108_ID().toString());
+				edu207.setCourseType(edu201.getClassType());
+				edu207Dao.save(edu207);
 			}
-			edu202DAO.save(edu202);
-			String edu202_id = edu202.getEdu202_ID().toString();
-			//重新排列课节集合
-			Collections.sort(edu203List, new Comparator<Edu203>() {
-				public int compare(Edu203 arg0, Edu203 arg1) {
-					// 第一次比较星期
-					int i = arg0.getXqid().compareTo(arg1.getXqid());
-					// 如果星期相同则进行第二次比较
-					if (i == 0) {
-						// 第二次比较课节
-						int j = arg0.getKjid().compareTo(arg1.getKjid());
-						return j;
-					}
-					return i;
+		}
+		//重新排列课节集合
+		Collections.sort(edu203List, new Comparator<Edu203>() {
+			public int compare(Edu203 arg0, Edu203 arg1) {
+				// 第一次比较星期
+				int i = arg0.getXqid().compareTo(arg1.getXqid());
+				// 如果星期相同则进行第二次比较
+				if (i == 0) {
+					// 第二次比较课节
+					int j = arg0.getKjid().compareTo(arg1.getKjid());
+					return j;
 				}
-			});
-
-			//按周保存排课计划
-			int currentXs = 0;
-			classCycle:
-			for (int j = ksz; j < jsz + 1; j++) {
-				Integer saveWeek = j;
-				for (Edu203 e : edu203List) {
-					Edu203 save = new Edu203();
-					save.setEdu202_ID(edu202_id);
-					save.setWeek(saveWeek.toString());
-					save.setKjid(e.getKjid());
-					save.setKjmc(e.getKjmc());
-					save.setXqid(e.getXqid());
-					save.setXqmc(e.getXqmc());
-					edu203Dao.save(save);
-					currentXs+=2;
-					if (currentXs >= jzxs) {
-						break classCycle;
-					}
+				return i;
+			}
+		});
+		//按周保存排课计划
+		int currentXs = 0;
+		classCycle:
+		for (Edu203 e : edu203List) {
+			int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
+			for (int i = 0; i < weekCount; i++) {
+				Edu203 save = new Edu203();
+				save.setEdu202_ID(edu202_id);
+				Integer week = (Integer.parseInt(e.getJsz()) + i);
+				save.setWeek(week.toString());
+				save.setKjid(e.getKjid());
+				save.setKjmc(e.getKjmc());
+				save.setXqid(e.getXqid());
+				save.setXqmc(e.getXqmc());
+				edu203Dao.save(save);
+				currentXs+=2;
+				if (currentXs >= jzxs) {
+					break classCycle;
 				}
 			}
 		}
@@ -1645,7 +1630,7 @@ public class AdministrationPageService {
 
 		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
-		List<Edu207> edu207List = new ArrayList<>();
+		List<Edu207> edu207List;
 
 		try {
 			utils.copyTargetSuper(edu201, scheduleCompletedDetails);
@@ -1658,7 +1643,7 @@ public class AdministrationPageService {
 			e.printStackTrace();
 		}
 
-		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id, edu202.getKsz()));
+		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id));
 		edu207List = edu207Dao.findAllByEdu201Id(edu201.getEdu201_ID().toString());
 
 		returnMap.put("result", true);

@@ -38,6 +38,7 @@ public class ScheduleViewPO {
     private String courseType;
     private String point;
     private String pointId;
+    private String szz;
 
     @Id
     public String getID() {
@@ -253,5 +254,13 @@ public class ScheduleViewPO {
 
     public void setPointId(String pointId) {
         this.pointId = pointId;
+    }
+
+    public String getSzz() {
+        return szz;
+    }
+
+    public void setSzz(String szz) {
+        this.szz = szz;
     }
 }
