@@ -1060,6 +1060,11 @@ public class AdministrationPageService {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+		//如果为新增删除原有关联
+		if(edu202.getEdu201_ID() != null) {
+			edu203Dao.deleteByscheduleId(edu202.getEdu202_ID().toString());
+			edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
+		}
 		//总学时
 		Double jzxs = edu201.getJzxs();
 		//保存排课基础信息
@@ -2334,6 +2339,21 @@ public class AdministrationPageService {
 		} else {
 			resultVO = ResultVO.setSuccess("共查到"+edu104s.size()+"个学院信息",edu104s);
 		}
+		return resultVO;
+	}
+
+	//查询排课所有信息
+	public ResultVO searchScheduleInfo(String edu202Id) {
+		ResultVO resultVO;
+		Map<String,Object> returnMap = new HashMap<>();
+		Edu202 edu202 = edu202DAO.findOne(Long.parseLong(edu202Id));
+		Edu201 edu201 = edu201DAO.findOne(edu202.getEdu201_ID());
+		List<Edu203> edu203List = edu203Dao.getClassPeriodByEdu202Id(edu202Id);
+		List<Edu207> edu207List = edu207Dao.findAllByEdu201Id(edu201.getEdu201_ID().toString());
+		returnMap.put("edu202",edu202);
+		returnMap.put("edu203List",edu203List);
+		returnMap.put("edu207List",edu207List);
+		resultVO = ResultVO.setSuccess("查询成功",returnMap);
 		return resultVO;
 	}
 }

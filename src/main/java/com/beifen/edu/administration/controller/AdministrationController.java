@@ -2077,6 +2077,18 @@ public class AdministrationController {
 		return returnMap;
 	}
 
+	/**
+	 * 查询排课所有信息
+	 * @param edu202Id
+	 * @return
+	 */
+	@RequestMapping("/searchScheduleInfo")
+	@ResponseBody
+	public ResultVO searchScheduleInfo(@RequestParam("edu202Id") String edu202Id) {
+		ResultVO resultVO = administrationPageService.searchScheduleInfo(edu202Id);
+		return resultVO;
+	}
+
 
 	/**
 	 * 生成教学班名单
