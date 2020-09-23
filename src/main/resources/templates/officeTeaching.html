@@ -182,8 +182,9 @@
 							<div class="clear"></div>
 
 							<div class="formtitle" style="clear:both;margin-bottom: 25px;z-index: 0;">
-								<span>二、选择开始/结束周</span>
+								<span>二、周期课节安排</span>
 							</div>
+
 							<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
 								<div class="col4 giveBottom">
 									<ul class="forminfo">
@@ -207,16 +208,14 @@
 									</ul>
 								</div>
 							</div>
+							<div class="clear"></div>
 
-							<div class="formtitle" style="clear:both;margin-bottom: 25px;">
-								<span>三、选择课节</span>
-							</div>
 							<div class="kjArea">
 								<div class="searchArea searchAreaWitheSelect" style="margin-left: -2%;">
 									<div class="col4 giveBottom">
 										<ul class="forminfo">
 											<div class="">
-												<label class="selectName" style="margin-top: 14px;margin-right: 10%;">星&#12288;&#8197;期<b>*</b></label>
+												<label class="selectName" style="margin-top: 14px;margin-right: 8%;">星&#12288;&#8197;期<b>*</b></label>
 												<select class="isSowIndex xqSowIndex" id="xq">
 													<option value="seleceConfigTip">请选择</option>
 													<option value="01">星期一</option>
@@ -233,7 +232,7 @@
 									<div class="col4 giveBottom">
 										<ul class="forminfo">
 											<div class="">
-												<label class="selectName" style="margin-top: 14px;margin-right: 10%;">课&#12288;&#8197;节<b>*</b></label>
+												<label class="selectName" style="margin-top: 14px;margin-right: 8%;">课&#12288;&#8197;节<b>*</b></label>
 												<select class="isSowIndex kjSowIndex" id="kj">
 													<option value="seleceConfigTip">请选择</option>
 												</select>
@@ -244,6 +243,7 @@
 										<div class="tools scheduleToolsArea">
 											<ul class="toolbar" style="padding-top: 6px;margin-left: 16px;">
 												<li class="click" id="addnewKj"><span><img src="images/t01.png" style="width: 24px;"/></span>增加课节</li>
+												<li class="click" id="addCoursePlan"><span><img src="img/right.png" style="width: 24px;"/></span>增加周期</li>
 											</ul>
 										</div>
 									</div>
@@ -251,8 +251,13 @@
 								</div>
 							</div>
 							<div class="kjRsArea">
-								<div class="kjRsAreaTitle">已选课节</div>
+								<div class="kjRsAreaTitle"></div>
 								<div class="singleKj"></div>
+							</div>
+
+							<div class="lastCycleArea noneStart">
+								<div class="cycleRsAreaTitle">集中课时安排</div>
+								<div class="singleCycle"></div>
 							</div>
 							<div class="clear"></div>
 
@@ -347,7 +352,7 @@
 									<b class="scheduleRsTitle"></b>
 									<div class="choosendTermArea"><span class="choosendTerm"></span></div>
 									<div class="choosendWeekArea"><span class="choosendWeek"><cite class="choosendStartWeek"></cite><cite class="choosendEndWeek"></cite></span></div>
-									<div class="choosendKjArea"></div>
+									<div class="choosendCycleArea"></div>
 									<div class="choosendfsKjArea"></div>
 									<div class="choosendLoactionArea"></div>
 								</div>

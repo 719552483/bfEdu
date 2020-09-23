@@ -1061,7 +1061,7 @@ public class AdministrationPageService {
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
 		//如果为新增删除原有关联
-		if(edu202.getEdu201_ID() != null) {
+		if(edu202.getEdu202_ID() != null) {
 			edu203Dao.deleteByscheduleId(edu202.getEdu202_ID().toString());
 			edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 		}

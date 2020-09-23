@@ -1751,7 +1751,7 @@ margin: 0px 0px -14px -15px!important;
 	color: rgb(50 107 134 / 95%);
 }
 
-.choosendTerm,.choosendWeekArea,.choosendKjArea,.choosendfsKjArea,.choosendLoactionArea{
+.choosendTerm,.choosendWeekArea,.choosendKjArea,.choosendfsKjArea,.choosendLoactionArea,.choosendCycleArea{
 	margin-top: 5px;
 	font-size: 15px;
 	color: rgb(50 107 134 / 95%);
@@ -2241,19 +2241,19 @@ input:focus{
 	border-top: none!important;
 }
 
-.kjRsArea,.fskjRsArea,.loationInfoTxt{
+.kjRsArea,.fskjRsArea,.loationInfoTxt,.lastCycleArea{
 	text-align: left;
 	padding-left: 21px;
 	padding-bottom: 20px;
 	color: rgb(50 107 134 / 95%);
 }
 
-.kjRsAreaTitle,.fskjRsAreaTitle{
+.kjRsAreaTitle,.fskjRsAreaTitle,.cycleRsAreaTitle{
 	font-weight: 700;
 	font-size: 14px;
 }
 
-.choosendKjInfo,.choosendfsKjInfo{
+.choosendKjInfo,.choosendfsKjInfo,.choosendCycleInfo{
 	padding-bottom: 5px;
 	padding-top: 5px;
 }

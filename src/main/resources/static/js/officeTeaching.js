@@ -421,6 +421,12 @@ function scheduleSingleClassBtnBind(){
 		e.stopPropagation();
 	});
 
+	$('#addCoursePlan').unbind('click');
+	$('#addCoursePlan').bind('click', function(e) {
+		addCoursePlan();
+		e.stopPropagation();
+	});
+
 	$('#addNewFsKj').unbind('click');
 	$('#addNewFsKj').bind('click', function(e) {
 		addNewFsKj();
@@ -544,17 +550,110 @@ function KjBtnschange(){
 		return;
 	}
 
-	if($(".choosendKjArea").find("#choosendKjInfo"+(currentXq+currentKj)).length!==0){
+	if($(".singleKj").find("#choosendKjInfo"+(currentXq+currentKj)).length!==0){
 		toastr.warning('该课节安排已选择');
+	}
+}
+
+//新增周期
+function addCoursePlan(){
+	var term=getNormalSelectValue("term");
+	var startWeek=getNormalSelectValue("startWeek");
+	var endWeek=getNormalSelectValue("endWeek");
+	var startWeekmc=getNormalSelectText("startWeek");
+	var endWeekmc=getNormalSelectText("endWeek");
+	var choosedkJ=$(".singleKj").find(".choosendKjInfo");
+	var choosendCycle=$(".singleCycle").find(".choosendCycleInfo");
+
+	if(term===""){
+		toastr.warning('请选择学年')
+		return;
+	}
+
+	if(startWeek===""){
+		toastr.warning('请选择开始周')
+		return;
+	}
+
+	if(endWeek===""){
+		toastr.warning('请选择结束周')
+		return;
+	}
+
+	if(choosedkJ.length==0){
+		toastr.warning('请为周期安排课节')
+		return;
+	}
+
+	var choosendCycleIds=new Array();
+	for (var i = 0; i < choosendCycle.length; i++) {
+		choosendCycleIds.push(choosendCycle[i].id);
+	}
+
+	var appendStr="";
+	var isHave=false;
+	for (var i = 0; i < choosedkJ.length; i++) {
+		var currentXqmc=choosedkJ[i].attributes[1].nodeValue;
+		var currentKjmc=choosedkJ[i].attributes[2].nodeValue;
+		var currentXq=choosedkJ[i].attributes[3].nodeValue;
+		var currentKj=choosedkJ[i].attributes[4].nodeValue;
+		if(choosendCycleIds.indexOf('choosendCycleInfo'+currentXq+currentKj+startWeek+endWeek)!==-1){
+			isHave=true;
+			break;
+		}
+		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'">集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +
+			'<img class="choosendKjImg" src="images/close1.png"/></div>';
+	}
+
+	if(isHave){
+		toastr.warning('该周期已安排')
+		return;
+	}
+
+	var reObject = new Object();
+	reObject.normalSelectIds = "#kj,#xq,#startWeek,#endWeek";
+	reReloadSearchsWithSelect(reObject);
+
+	$(".choosendCycleArea,.singleCycle").append(appendStr);
+	$(".lastCycleArea ").show();
+	$(".singleKj").empty();
+	$(".kjRsArea").hide();
+
+	$('.choosendCycleInfo').unbind('click');
+	$('.choosendCycleInfo').bind('click', function(e) {
+		removeCycle(e);
+		e.stopPropagation();
+	});
+}
+
+//删除周期
+function removeCycle(eve){
+	var id=eve.currentTarget.id;
+	$(".singleCycle,.choosendCycleArea").find("#"+id).remove();
+	var tab1CycleInfo=$(".singleCycle").find(".choosendCycleInfo");
+	if(tab1CycleInfo.length===0){
+		$(".lastCycleArea").hide();
+	}else{
+		$(".lastCycleArea").show();
 	}
 }
 
 //新增课节组
 function AddnewKj(){
+	var startWeek=getNormalSelectValue("startWeek");
+	var endWeek=getNormalSelectValue("endWeek");
 	var currentXq=getNormalSelectValue("xq");
 	var currentKj=getNormalSelectValue("kj");
 	var currentXqmc=getNormalSelectText("xq");
 	var currentKjmc=getNormalSelectText("kj");
+	if(startWeek===""){
+		toastr.warning('请选择开始周');
+		return;
+	}
+	if(endWeek===""){
+		toastr.warning('请选择结束周');
+		return;
+	}
 	if(currentXq===""){
 		toastr.warning('请选择星期');
 		return;
@@ -564,14 +663,14 @@ function AddnewKj(){
 		return;
 	}
 
-	if($(".choosendKjArea").find("#choosendKjInfo"+(currentXq+currentKj)).length!==0){
+	if($(".singleKj").find("#choosendKjInfo"+(currentXq+currentKj)).length!==0){
 		toastr.warning('该课节安排已选择');
 		return;
 	}
-	$(".choosendKjArea,.singleKj").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'"  id="choosendKjInfo'+(currentXq+currentKj)+'">集中授课安排：每周'+currentXqmc+'  '+currentKjmc+'课' +
-		'<img class="choosendKjImg" src="images/close1.png"></img>' +
+	$(".singleKj").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(currentXq+currentKj)+'">每周'+currentXqmc+'  '+currentKjmc+'课' +
+		'<img class="choosendKjImg" src="images/close1.png"/>' +
 		'</div>');
-	//重置第一个select组
+	//重置select组
 	var reObject = new Object();
 	reObject.normalSelectIds = "#kj,#xq";
 	reReloadSearchsWithSelect(reObject);
@@ -581,13 +680,14 @@ function AddnewKj(){
 		removeKj(e);
 		e.stopPropagation();
 	});
+	$(".kjRsAreaTitle").html("第"+startWeek+"周 至 第"+endWeek+"周课节安排");
 	$(".kjRsArea").show();
 }
 
 //删除课节组
 function removeKj(eve){
 	var id=eve.currentTarget.id;
-	$(".choosendKjArea,.singleKj").find("#"+id).remove();
+	$(".singleKj").find("#"+id).remove();
 	var tab1KjInfo=$(".singleKj").find(".choosendKjInfo");
 	if(tab1KjInfo.length===0){
 		$(".kjRsArea").hide();
@@ -727,14 +827,28 @@ function confirmPk(){
 //验证集中排课结果
 function checkJzPk(PKInfo,scheduleInfo){
 	var rs=true;
-	//根据开始结束周渲染可选分散周数
-	var startWeek=parseInt(PKInfo.ksz);
-	var endWeek=parseInt(PKInfo.jsz);
+	var all=$(".singleCycle").find(".choosendCycleInfo");
+	if(all.length===0){
+		rs=false;
+		toastr.warning('集中学时不正确');
+		return rs;
+	}
 
 	var shouldJzxs=parseInt($(".jzxsSpan")[0].innerText);
-	var allWeek=(endWeek-startWeek)+1;
-	var checkRs=shouldJzxs<=(allWeek*scheduleInfo.length)*2;
-	if(!checkRs){
+	var currentJzxs=0
+	for (var i = 0; i < all.length; i++) {
+		var startWeek=parseInt(all[i].attributes[5].nodeValue);
+		var endWeek=parseInt(all[i].attributes[6].nodeValue);
+		var allWeek=0;
+		if(startWeek==endWeek){
+			currentJzxs+=2;
+		}else{
+			allWeek=(endWeek-startWeek)+1;
+			currentJzxs+=allWeek*2;
+		}
+	}
+
+	if(shouldJzxs!=currentJzxs){
 		rs=false;
 		toastr.warning('集中学时不正确');
 		return rs;
@@ -769,8 +883,6 @@ function checkSFxs(){
 function getJzPKInfo(needToastr){
 	var term=getNormalSelectValue("term");
 	var termMc=getNormalSelectText("term");
-	var startWeek=getNormalSelectValue("startWeek");
-	var endWeek=getNormalSelectValue("endWeek");
 	var location=getNormalSelectValue("jxd");
 	var point=getNormalSelectValue("skdd");
 	var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
@@ -778,18 +890,6 @@ function getJzPKInfo(needToastr){
 	if(term===""){
 		if(typeof needToastr==="undefined"){
 			toastr.warning('请选择学年');
-		}
-		return;
-	}
-	if(startWeek===""){
-		if(typeof needToastr==="undefined"){
-			toastr.warning('请选择开始周');
-		}
-		return;
-	}
-	if(endWeek===""){
-		if(typeof needToastr==="undefined"){
-			toastr.warning('请选择结束周');
 		}
 		return;
 	}
@@ -809,8 +909,6 @@ function getJzPKInfo(needToastr){
 	var returnObject=new Object();
 	returnObject.xnid=term;
 	returnObject.xnmc=termMc;
-	returnObject.ksz=startWeek;
-	returnObject.jsz=endWeek;
 	returnObject.skddmc=getNormalSelectText("jxd");
 	returnObject.skddid=location;
 	returnObject.pointid=point;
@@ -822,7 +920,7 @@ function getJzPKInfo(needToastr){
 //获得集中星期-课节信息
 function scheduleDetailInfo(needToastr){
 	var returnArray=new Array();
-	var all=$("#tab3").find(".choosendKjInfo");
+	var all=$("#tab3").find(".choosendCycleArea")[0].childNodes;
 	for (var i = 0; i < all.length; i++) {
 		var thisObject=new Object();
 		var current=all[i].attributes;
@@ -830,6 +928,8 @@ function scheduleDetailInfo(needToastr){
 		thisObject.kjmc=current[2].nodeValue;
 		thisObject.xqid=current[3].nodeValue;
 		thisObject.kjid=current[4].nodeValue;
+		thisObject.ksz=current[5].nodeValue;
+		thisObject.jsz=current[6].nodeValue;
 		returnArray.push(thisObject);
 	}
 
