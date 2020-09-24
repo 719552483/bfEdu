@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
@@ -873,33 +874,36 @@ public class AdministrationPageService {
 
 			edu205DAO.removeByEdu201Id(edu201.getEdu201_ID().toString());
 
-			if (edu201.getLs() != null) {
-				String[] lsid = edu201.getLs().split(",");
-				String[] lsmc = edu201.getLsmc().split(",");
-				for (int i = 0; i < lsid.length; i++) {
-					Edu205 save = new Edu205();
-					save.setEdu201_ID(edu201.getEdu201_ID());
-					save.setTeacherType("01");
-					save.setEdu101_ID(Long.parseLong(lsid[i]));
-					save.setTeacherName(lsmc[i]);
-					edu205DAO.save(save);
-				}
-			}
+			List<String> lsid = new ArrayList<>();
+			List<String> lsmc = new ArrayList<>();
+			List<String> zylsid = new ArrayList<>();
+			List<String> zylsmc = new ArrayList<>();
 
+			if (edu201.getLs() != null) {
+				lsid = Stream.of(edu201.getLs().split(",")).collect(Collectors.toList());
+				lsmc = Stream.of(edu201.getLsmc().split(",")).collect(Collectors.toList());
+			}
 
 			if (edu201.getZyls() != null) {
-				String[] zylsid = edu201.getZyls().split(",");
-				String[] zylsmc = edu201.getZylsmc().split(",");
-				for (int i = 0; i < zylsid.length; i++) {
-					Edu205 save = new Edu205();
-					save.setEdu201_ID(edu201.getEdu201_ID());
-					save.setTeacherType("02");
-					save.setEdu101_ID(Long.parseLong(zylsid[i]));
-					save.setTeacherName(zylsmc[i]);
-					edu205DAO.save(save);
-				}
+				zylsid = Stream.of(edu201.getZyls().split(",")).collect(Collectors.toList());
+				zylsmc = Stream.of(edu201.getZylsmc().split(",")).collect(Collectors.toList());
+			}
+
+			lsid.addAll(zylsid);
+			lsmc.addAll(zylsmc);
+			List<String> lsId = lsid.stream().distinct().collect(Collectors.toList());
+			List<String> LsMc = lsmc.stream().distinct().collect(Collectors.toList());
+
+			for (int i = 0; i < lsId.size(); i++) {
+				Edu205 save = new Edu205();
+				save.setEdu201_ID(edu201.getEdu201_ID());
+				save.setTeacherType("02");
+				save.setEdu101_ID(Long.parseLong(lsId.get(i)));
+				save.setTeacherName(LsMc.get(i));
+				edu205DAO.save(save);
 			}
 		}
+
 
 		resultVO = ResultVO.setSuccess("教学任务书发布成功");
 		return resultVO;

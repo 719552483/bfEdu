@@ -839,6 +839,8 @@ public class TeachingManageService {
             return resultVO;
         }
 
+        List edu108Ids = utils.heavyListMethod(edu108IdList);
+
         Specification<ScheduleViewPO> scheduleViewPOSpecification = new Specification<ScheduleViewPO>() {
             public Predicate toPredicate(Root<ScheduleViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -866,8 +868,8 @@ public class TeachingManageService {
 
                 Path<Object> path = root.get("courseId");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
-                for (int i = 0; i <edu108IdList.size() ; i++) {
-                    in.value(edu108IdList.get(i));//存入值
+                for (int i = 0; i <edu108Ids.size() ; i++) {
+                    in.value(edu108Ids.get(i));//存入值
                 }
                 predicates.add(cb.and(in));
 
