@@ -69,7 +69,7 @@ public interface Edu108Dao extends JpaRepository<Edu108, Long>, JpaSpecification
 	List<Edu108> findPlanByEdu200Id(String edu200Id);
 
 	//根据200ID集合查询108id集合
-	@Query(value = "select e.edu108_ID from Edu108 e,Edu107 f where e.edu200_ID in ?1 and f.xbsp = 'pass'",nativeQuery = true)
+	@Query(value = "select distinct e.edu108_ID from Edu108 e,Edu107 f where e.edu200_ID in ?1 and f.xbsp = 'pass'",nativeQuery = true)
     List<Long> findPlanByEdu200Ids(List<Long> edu200IdList);
 
 	//根据edu107id集合查询108

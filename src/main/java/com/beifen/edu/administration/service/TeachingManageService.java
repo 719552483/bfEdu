@@ -241,7 +241,7 @@ public class TeachingManageService {
             resultVO = ResultVO.setFailed("您不是本校教师，无法查看您的课程");
             return resultVO;
         }
-        //根据信息查询所有课表信息
+        //根据信息查询所有课表信息searchScatteredClassByTeacher
         List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101Id(edu101.getEdu101_ID().toString(),
                 timeTable.getWeekTime(), timeTable.getSemester());
         if(schoolTimetableList.size() == 0) {
@@ -561,7 +561,7 @@ public class TeachingManageService {
             return resultVO;
         }
 
-        List<Long> edu200IdList = edu200List.stream().map(e -> e.getBF200_ID()).collect(Collectors.toList());
+        List<Long> edu200IdList = edu200List.stream().map(e -> e.getBF200_ID()).distinct().collect(Collectors.toList());
 
         List<Long> edu108IdList = edu108Dao.findPlanByEdu200Ids(edu200IdList);
 
