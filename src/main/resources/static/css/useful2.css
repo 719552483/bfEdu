@@ -2300,6 +2300,12 @@ input:focus{
 	}
 }
 
+#puttedInfoModal .PuttedKjArea{
+	width: 48%;
+	float: left;
+	min-width: 212px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
