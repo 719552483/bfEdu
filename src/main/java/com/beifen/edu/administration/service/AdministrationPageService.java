@@ -1100,14 +1100,14 @@ public class AdministrationPageService {
 		});
 		//按周保存排课计划
 		int currentXs = 0;
-		StringBuffer ssz = new StringBuffer();
+		List<String> weekList = new ArrayList<>();
 		classCycle:
 		for (Edu203 e : edu203List) {
 			int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
 			if(e.getKsz().equals(e.getJsz())) {
-				ssz.append("第"+e.getKsz()+"周,");
+				weekList.add("第"+e.getKsz()+"周");
 			} else {
-				ssz.append("第"+e.getKsz()+"周-第"+e.getJsz()+"周,");
+				weekList.add("第"+e.getKsz()+"周-第"+e.getJsz()+"周");
 			}
 			for (int i = 0; i < weekCount; i++) {
 				Edu203 save = new Edu203();
@@ -1128,7 +1128,10 @@ public class AdministrationPageService {
 			}
 		}
 		//保存排课基础信息
-		edu202.setSzz(ssz.toString().substring(0,ssz.length() - 1));
+		List<String> list = (List<String>)utils.heavyListMethod(weekList);
+		list.sort((a, b) -> a.compareTo(b.toString()));
+		String weekName = utils.listToString(list, ',');
+		edu202.setSzz(weekName);
 		edu202DAO.save(edu202);
 		return isSuccess;
 	}
