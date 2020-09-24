@@ -198,6 +198,9 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
             return resultVO;
         }
+
+        List edu201ids = utils.heavyListMethod(edu201IdList);
+
         //根据条件筛选成绩表
         Specification<Edu005> edu005Specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -217,8 +220,8 @@ public class StaffManageService {
 
                 Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
                 CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
-                for (int i = 0; i < edu201IdList.size(); i++) {
-                    inEdu201.value(edu201IdList.get(i));//存入值
+                for (int i = 0; i < edu201ids.size(); i++) {
+                    inEdu201.value(edu201ids.get(i));//存入值
                 }
                 predicates.add(cb.and(inEdu201));
 
