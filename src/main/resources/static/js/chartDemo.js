@@ -840,7 +840,7 @@ function stuffBingtuTwo(){
 
 	option = {
 		title: {
-			text: '基地坐标系饼图',
+			text: '极地坐标系饼图',
 			textStyle: {
 				color: 'rgba(96,173,197,0.96)',
 				fontSize: '16'
