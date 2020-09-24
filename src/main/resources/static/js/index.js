@@ -508,6 +508,7 @@ function  stuffChart1(source){
 			padding: [5, 10],
 			left: 'left'
 		},
+		animationEasing: 'elasticOut',
 		tooltip: {
 			trigger: 'axis'
 		},
@@ -607,6 +608,7 @@ function  stuffChart2(dataOne,dataTwo){
 				fontSize: 10
 			},
 		},
+		animationEasing: 'elasticOut',
 		color: 'rgba(22,178,209,0.66)',
 		tooltip: {
 			trigger: 'axis',

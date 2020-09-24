@@ -1503,6 +1503,21 @@ function loadChoosendShortcuts() {
 	}) ;
 }
 
+//js -- 对象排序（根据对象的某一属性）
+function compare(pro) {
+    return function (obj1, obj2) {
+        var val1 =parseInt(obj1[pro]);
+        var val2 =parseInt(obj2[pro]);
+        if (val1 < val2 ) { //正序
+            return 1;
+        } else if (val1 > val2 ) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+}
+
 //根据权限渲染菜单
 function changeMenu(){
 	//首先全部展示父节点

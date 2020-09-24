@@ -1379,19 +1379,10 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	$("#puttedLs").val(puttedInfo.ls);
 	$('#puttedInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 
-	var classPeriodList=scheduleCompletedDetails.classPeriodList;
-	var helpAraay=new Array();
-	var drawAraay=new Array();
-	for (var i = 0; i < classPeriodList.length; i++) {
-		if(helpAraay.indexOf(classPeriodList[i].ksz+classPeriodList[i].jsz)===-1){
-			helpAraay.push(classPeriodList[i].ksz+classPeriodList[i].jsz);
-			drawAraay.push(classPeriodList[i]);
-		}
-	}
+	var classPeriodList=sortClassPeriodList(scheduleCompletedDetails.classPeriodList);
 
-	drawAraay.reverse();
-	for (var i = 0; i <drawAraay.length ; i++) {
-		$(".puttedKjArea").append('<div class="PuttedKjArea">至第'+drawAraay[i].ksz+'周到第'+drawAraay[i].jsz+'周  每周'+drawAraay[i].xqmc+' '+drawAraay[i].kjmc+'</div>');
+	for (var i = 0; i <classPeriodList.length ; i++) {
+		$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+'授课</div>');
 	}
 
 	if(scatterList.length===0){
@@ -1402,6 +1393,11 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 		}
 		$(".fsformtitle,.puttedfsKjArea").show();
 	}
+}
+
+function sortClassPeriodList(classPeriodList){
+	var returnArray=classPeriodList.sort(compare("week")).reverse();
+	return returnArray;
 }
 
 //已排课表按钮事件绑定
