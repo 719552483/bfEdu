@@ -321,24 +321,6 @@ public class TeachingManageService {
         Map map6 = new HashMap();
         map6.put("id","id6");
         map6.put("classPeriod",ClassPeriodConstant.SECTION_SIX);
-        Map map7 = new HashMap();
-        map7.put("id","id7");
-        map7.put("classPeriod",ClassPeriodConstant.SECTION_SEVEN);
-        Map map8 = new HashMap();
-        map8.put("id","id8");
-        map8.put("classPeriod",ClassPeriodConstant.SECTION_EIGHT);
-        Map map9 = new HashMap();
-        map9.put("id","id9");
-        map9.put("classPeriod",ClassPeriodConstant.SECTION_NINE);
-        Map map10 = new HashMap();
-        map10.put("id","id10");
-        map10.put("classPeriod",ClassPeriodConstant.SECTION_TEN);
-        Map map11 = new HashMap();
-        map11.put("id","id11");
-        map11.put("classPeriod",ClassPeriodConstant.SECTION_ELEVEN);
-        Map map12 = new HashMap();
-        map12.put("id","id12");
-        map12.put("classPeriod",ClassPeriodConstant.SECTION_TWELVE);
 
         for (SchoolTimetablePO s : schoolTimetableList) {
             if(ClassPeriodConstant.SECTION_ONE.equals(s.getKjmc())) {
@@ -359,24 +341,6 @@ public class TeachingManageService {
             if(ClassPeriodConstant.SECTION_SIX.equals(s.getKjmc())) {
                 map6 = classPackage(map6,s);
             }
-            if(ClassPeriodConstant.SECTION_SEVEN.equals(s.getKjmc())) {
-                map7 = classPackage(map7,s);
-            }
-            if(ClassPeriodConstant.SECTION_EIGHT.equals(s.getKjmc())) {
-                map8 = classPackage(map8,s);
-            }
-            if(ClassPeriodConstant.SECTION_NINE.equals(s.getKjmc())) {
-                map9 = classPackage(map9,s);
-            }
-            if(ClassPeriodConstant.SECTION_TEN.equals(s.getKjmc())) {
-                map10 = classPackage(map10,s);
-            }
-            if(ClassPeriodConstant.SECTION_ELEVEN.equals(s.getKjmc())) {
-                map11 = classPackage(map11,s);
-            }
-            if(ClassPeriodConstant.SECTION_TWELVE.equals(s.getKjmc())) {
-                map12 = classPackage(map12,s);
-            }
         }
 
         newInfo.add(map1);
@@ -385,12 +349,6 @@ public class TeachingManageService {
         newInfo.add(map4);
         newInfo.add(map5);
         newInfo.add(map6);
-        newInfo.add(map7);
-        newInfo.add(map8);
-        newInfo.add(map9);
-        newInfo.add(map10);
-        newInfo.add(map11);
-        newInfo.add(map12);
 
         return newInfo;
     }
