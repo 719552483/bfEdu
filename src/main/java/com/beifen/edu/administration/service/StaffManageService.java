@@ -185,7 +185,7 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
             return resultVO;
         }
-        List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).collect(Collectors.toList());
+        List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).distinct().collect(Collectors.toList());
         List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
         if (edu108IdList.size() == 0) {
             resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
