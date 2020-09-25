@@ -32,9 +32,9 @@ function getJiaoWuInfo(){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.result) {
 				drawJiaoWuPublicCodeTables(backjson);
-				hideloding();
 			} else {
 				toastr.warning('获取信息失败，请重试');
 			}

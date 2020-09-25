@@ -88,6 +88,7 @@ function getAllRelationInfo(){
 }
 
 var choosendRelation=new Array();
+
 //填充层次关系管理表
 function stuffAllRelationInfoTable(allRelationInfo){
 	window.releaseNewsEvents = {
@@ -318,7 +319,7 @@ function modifyRelation(row){
 
 //修改时填充该行信息到层次关系选择区
 function stufDeadultRelation(row){
-	LinkageSelectPublic("#addNewRelation_level","#addNewRelation_department","#addNewRelation_garde","#addNewRelation_major");
+	stuffRelationTipSelect();
 	stuffManiaSelectWithDeafult("#addNewRelation_department",row.edu104,row.edu104mc);  //填充默认二级学院
 	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.edu105,row.edu105mc);  //填充默认年级
 	stuffManiaSelectWithDeafult("#addNewRelation_major",row.edu106,row.edu106mc);  //填充默认专业
@@ -375,8 +376,7 @@ function wantAddRelation(){
 	$.showModal("#addNewRelationModal",true);
 	$("#addNewRelationModal").find(".moadalTitle").html("新增培养计划");
 	emptyRelationChooseArea();
-	LinkageSelectPublic("#addNewRelation_level","#addNewRelation_department","#addNewRelation_garde","#addNewRelation_major");
-
+	stuffRelationTipSelect();
 	//确认新增关系按钮
 	$('.addNewRelationTip_confimBtn').unbind('click');
 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
@@ -483,49 +483,72 @@ function emptyRelationChooseArea(){
 	reReloadSearchsWithSelect(reObject);
 }
 
-//填充新增关系模态框中的下拉框选项
+//根据表格填充新增关系待选项
 function stuffRelationTipSelect(){
-	$('.isSowIndex').selectMania(); //初始化下拉框
-	var allLevls = $("#allLevlTable").bootstrapTable("getData");
-	var allDepartments = $("#allDepartmentTable").bootstrapTable("getData");
-	var allGrades = $("#allGradeTable").bootstrapTable("getData");
-	var allMajors = $("#allMajorTable").bootstrapTable("getData");
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getJwPublicCodes",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				var allLevls=backjson.allLevel;
+				var allDepartment=backjson.allDepartment;
+				var allGrade=backjson.allGrade;
+				var allMajor=backjson.allMajor;
+				//层次下拉框
+				if(allLevls.length!==0){
+					var str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < allLevls.length; i++) {
+						str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
+					}
+					stuffManiaSelect("#addNewRelation_level", str);
+				}
 
-	//层次下拉框
-	if(allLevls.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allLevls.length; i++) {
-			str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_level", str);
-	}
+				//二级学院下拉框
+				if(allDepartment.length!==0){
+					var str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < allDepartment.length; i++) {
+						str += '<option value="' + allDepartment[i].edu104_ID + '">' + allDepartment[i].xbmc + '</option>';
+					}
+					stuffManiaSelect("#addNewRelation_department", str);
+				}
 
-	//二级学院下拉框
-	if(allDepartments.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allDepartments.length; i++) {
-			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_department", str);
-	}
+				//年级下拉框
+				if(allGrade.length!==0){
+					var str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < allGrade.length; i++) {
+						str += '<option value="' + allGrade[i].edu105_ID + '">' + allGrade[i].njmc + '</option>';
+					}
+					stuffManiaSelect("#addNewRelation_garde", str);
+				}
 
-	//年级下拉框
-	if(allGrades.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allGrades.length; i++) {
-			str += '<option value="' + allGrades[i].edu105_ID + '">' + allGrades[i].njmc + '</option>';
+				//专业下拉框
+				if(allMajor.length!==0){
+					var str = '<option value="seleceConfigTip">请选择</option>';
+					for (var i = 0; i < allMajor.length; i++) {
+						str += '<option value="' + allMajor[i].edu106_ID + '">' + allMajor[i].zymc + '</option>';
+					}
+					stuffManiaSelect("#addNewRelation_major", str);
+				}
+			} else {
+				toastr.warning('获取公共代码信息失败，请重试');
+			}
 		}
-		stuffManiaSelect("#addNewRelation_garde", str);
-	}
-
-	//专业下拉框
-	if(allMajors.length!==0){
-		var str = '<option value="seleceConfigTip">请选择</option>';
-		for (var i = 0; i < allMajors.length; i++) {
-			str += '<option value="' + allMajors[i].edu106_ID + '">' + allMajors[i].zymc + '</option>';
-		}
-		stuffManiaSelect("#addNewRelation_major", str);
-	}
+	});
 }
 
 //单个删除关系
