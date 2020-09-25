@@ -4,7 +4,7 @@ $(function() {
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
 	getAllRelationInfo();
-	tab3BtnBind();
+	tab1BtnBind();
 	$("input[type='number']").inputSpinner();
 });
 
@@ -12,7 +12,7 @@ $(function() {
  * tab3
  * */
 //层次关系管理页面按钮事件绑定
-function tab3BtnBind(){
+function tab1BtnBind(){
 	//批量删除关系
 	$('#removeRelations').unbind('click');
 	$('#removeRelations').bind('click', function(e) {
@@ -319,11 +319,20 @@ function modifyRelation(row){
 
 //修改时填充该行信息到层次关系选择区
 function stufDeadultRelation(row){
-	stuffRelationTipSelect();
-	stuffManiaSelectWithDeafult("#addNewRelation_department",row.edu104,row.edu104mc);  //填充默认二级学院
-	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.edu105,row.edu105mc);  //填充默认年级
-	stuffManiaSelectWithDeafult("#addNewRelation_major",row.edu106,row.edu106mc);  //填充默认专业
 	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
+	var str ="";
+	//层次
+	str = '<option value="' + row.edu103 + '">' + row.edu103mc+ '</option>';
+	stuffManiaSelect('#addNewRelation_level', str);
+	//系部
+	str = '<option value="' + row.edu104 + '">' + row.edu104mc+ '</option>';
+	stuffManiaSelect('#addNewRelation_department', str);
+	//年级
+	str = '<option value="' + row.edu105 + '">' + row.edu105mc+ '</option>';
+	stuffManiaSelect('#addNewRelation_garde', str);
+	//专业
+	str = '<option value="' + row.edu106 + '">' + row.edu106mc+ '</option>';
+	stuffManiaSelect('#addNewRelation_major', str);
 }
 
 //确认修改关系
