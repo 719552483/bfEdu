@@ -102,7 +102,7 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	void changeTestStatus(String s, String testFlag);
 
 	//根据108ID集合查询任务书
-	@Query(value = "select e.Edu201_ID from edu201 e where e.Edu108_ID in ?1 and e.sszt='pass' and e.sfsqks = 'T'", nativeQuery = true)
+	@Query(value = "select distinct e.Edu201_ID from edu201 e where e.Edu108_ID in ?1 and e.sszt='pass' and e.sfsqks = 'T'", nativeQuery = true)
 	List<String> getTaskByEdu108Ids(List<Long> edu108ids);
 
 }
