@@ -1197,6 +1197,13 @@ function stuffPuttedOutTable(tableInfo){
 				visible: false
 			},
 			{
+				field: 'pyjhmc',
+				title: '培养计划名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
 				field: 'className',
 				title: '班级名称',
 				align: 'left',

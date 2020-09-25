@@ -1,10 +1,10 @@
 var EJDMElementInfo;
 
 $(function() {
+	$('.isSowIndex').selectMania(); // 初始化下拉框
 	EJDMElementInfo=queryEJDMElementInfo();
 	pageGPS("#publicCodeModel");
 	pageGPS("#publicCodeModel_jw");
-	$('.isSowIndex').selectMania(); // 初始化下拉框
 	stuffYearSearchElement("input[type='number']");
 	getJiaoWuInfo();
 	btnbind();
@@ -51,6 +51,7 @@ function drawJiaoWuPublicCodeTables(backjson){
 	stuffAllDepartmentTable(backjson.allDepartment);
 	stuffAllGradeTable(backjson.allGrade);
 	stuffAllMajorTable(backjson.allMajor);
+	stuffMajorBelongtoSelect();
 }
 
 var choosendLevel=new Array();
@@ -625,6 +626,12 @@ function stuffAllMajorTable(allMajor){
 					sortable: true,
 					formatter: paramsMatter
 				},{
+					field: 'departmentName',
+					title: '所属二级学院',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				},{
 					field: 'action',
 					title: '操作',
 					align: 'center',
@@ -847,7 +854,6 @@ function stufDeadultLevekInfo(row){
 //清空培养层次模态框中select的值
 function emptyLevelChooseArea(){
 	var reObject = new Object();
-	// reObject.normalSelectIds = "#addNewLevel_schoolLocation,#addNewLevel_enterSeason";
 	reObject.normalSelectIds = "#addNewLevel_enterSeason";
 	reObject.InputIds = "#addNewLevel_levelName,#addNewLevel_academicStructure";
 	reReloadSearchsWithSelect(reObject);
@@ -1597,7 +1603,13 @@ function confimModifyMajor(row){
 function getMajorInfo(){
 	var majorName = $("#addNewMajor_mjorName").val();
 	var majorCode = $("#addNewMajor_majorCode").val();
-	
+	var Edu104_ID=getNormalSelectValue("majorBelongto");
+	var departmentName=getNormalSelectText("majorBelongto");
+
+	if(Edu104_ID===""){
+		toastr.warning('请选择专业所属二级学院');
+		return;
+	}
 	if(majorName===""){
 		toastr.warning('请输入专业名称');
 		return;
@@ -1611,6 +1623,8 @@ function getMajorInfo(){
 	var newMajorObject=new Object();
 	newMajorObject.zymc=majorName;
 	newMajorObject.zybm=majorCode;
+	newMajorObject.edu104_ID=Edu104_ID;
+	newMajorObject.departmentName=departmentName;
 	return newMajorObject;
 }
 
@@ -1618,6 +1632,7 @@ function getMajorInfo(){
 function emptyMajorChooseArea(){
 	var reObject = new Object();
 	reObject.InputIds = "#addNewMajor_mjorName";
+	reObject.normalSelectIds = "#majorBelongto";
 	reReloadSearchsWithSelect(reObject);
 }
 
@@ -1625,6 +1640,23 @@ function emptyMajorChooseArea(){
 function stufDeadultMajorInfo(row){
 	$("#addNewMajor_mjorName").val(row.zymc);
 	$("#addNewMajor_majorCode").val(row.zybm);
+	stuffManiaSelectWithDeafult("#majorBelongto", row.edu104_ID);
+}
+
+//填充专业所属二级学院下拉框
+function stuffMajorBelongtoSelect(){
+	var allDepartments=$("#allDepartmentTable").bootstrapTable('getData');
+	var str='';
+	if(allDepartments.length==0){
+		str='<option value="seleceConfigTip">暂无选择</option>';
+		toastr.warning('暂无二级学院');
+	}else{
+		str='<option value="seleceConfigTip">请选择</option>';
+		for (var i = 0; i < allDepartments.length; i++) {
+			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc+ '</option>';
+		}
+	}
+	stuffManiaSelect("#majorBelongto", str);
 }
 
 //单个删除年级

@@ -580,8 +580,8 @@ function getMajroByDeparment(departmentId,departmentName){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.result) {
-				var allMajor=backjson.allMajor;
+			if (backjson.code===200) {
+				var allMajor=backjson.data;
 				//专业下拉框
 				if(allMajor.length!==0){
 					var str = '<option value="seleceConfigTip">请选择</option>';
@@ -591,7 +591,7 @@ function getMajroByDeparment(departmentId,departmentName){
 					stuffManiaSelect("#addNewRelation_major", str);
 				}
 			} else {
-				toastr.warning('获取'+departmentName+'下专业信息失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
