@@ -1098,6 +1098,9 @@ function approvalMatter(value, row, index) {
 	} else if (value==="passing"){
 		return [ '<div class="myTooltip normalTxt" title="审批中">审批中</div>' ]
 		.join('');
+    }else if (value==null){
+        return [ '<div class="myTooltip normalTxt" title="未发起审批">未发起审批</div>' ]
+            .join('');
     }
 }
 

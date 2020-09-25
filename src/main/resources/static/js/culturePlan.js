@@ -522,7 +522,6 @@ function stuffRelationTipSelect(){
 				var allLevls=backjson.allLevel;
 				var allDepartment=backjson.allDepartment;
 				var allGrade=backjson.allGrade;
-				var allMajor=backjson.allMajor;
 				//层次下拉框
 				if(allLevls.length!==0){
 					var str = '<option value="seleceConfigTip">请选择</option>';
@@ -541,6 +540,10 @@ function stuffRelationTipSelect(){
 					stuffManiaSelect("#addNewRelation_department", str);
 				}
 
+				$("#addNewRelation_department").change(function() {
+					getMajroByDeparment(getNormalSelectValue("addNewRelation_department"),getNormalSelectValue("addNewRelation_department"));
+				});
+
 				//年级下拉框
 				if(allGrade.length!==0){
 					var str = '<option value="seleceConfigTip">请选择</option>';
@@ -549,7 +552,36 @@ function stuffRelationTipSelect(){
 					}
 					stuffManiaSelect("#addNewRelation_garde", str);
 				}
+			} else {
+				toastr.warning('获取公共代码信息失败，请重试');
+			}
+		}
+	});
+}
 
+//根据系部获取专业
+function getMajroByDeparment(departmentId,departmentName){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchMajorByDepartment",
+		data: {
+			"departmentCode":departmentId
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				var allMajor=backjson.allMajor;
 				//专业下拉框
 				if(allMajor.length!==0){
 					var str = '<option value="seleceConfigTip">请选择</option>';
@@ -559,7 +591,7 @@ function stuffRelationTipSelect(){
 					stuffManiaSelect("#addNewRelation_major", str);
 				}
 			} else {
-				toastr.warning('获取公共代码信息失败，请重试');
+				toastr.warning('获取'+departmentName+'下专业信息失败，请重试');
 			}
 		}
 	});
