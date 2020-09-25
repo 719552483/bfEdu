@@ -2373,4 +2373,17 @@ public class AdministrationPageService {
 		resultVO = ResultVO.setSuccess("查询成功",returnMap);
 		return resultVO;
 	}
+
+
+	//根据二级学院查询专业
+	public ResultVO searchMajorByDepartment(String departmentCode) {
+		ResultVO resultVO;
+		List<Edu106> edu106List = edu106DAO.findAllByDepartmentCode(departmentCode);
+		if (edu106List.size() == 0) {
+			resultVO = ResultVO.setFailed("该学院下暂无专业");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+edu106List.size()+"条专业",edu106List);
+		}
+		return resultVO;
+	}
 }

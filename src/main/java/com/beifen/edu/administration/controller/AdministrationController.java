@@ -719,6 +719,18 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 根据二级学院查询专业
+	 * @param departmentCode
+	 * @return
+	 */
+	@RequestMapping("searchMajorByDepartment")
+	@ResponseBody
+	public ResultVO stopClass(@RequestParam("departmentCode") String departmentCode) {
+		ResultVO resultVO = administrationPageService.searchMajorByDepartment(departmentCode);
+		return resultVO;
+	}
+
+	/**
 	 * 新增专业
 	 * @param newMajor
 	 * @return

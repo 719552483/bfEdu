@@ -33,4 +33,7 @@ public interface Edu106Dao extends JpaRepository<Edu106, Long>, JpaSpecification
 	@Query(value = "select * from edu106 where Edu106_ID =?1", nativeQuery = true)
 	public Edu106 query106BYID(String edu106id);
 
+	//根据二级学院查专业
+	@Query(value = "select * from edu106 where department_code =?1", nativeQuery = true)
+    List<Edu106> findAllByDepartmentCode(String departmentCode);
 }
