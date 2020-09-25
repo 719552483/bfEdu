@@ -35,6 +35,8 @@ public class StudentSchoolTimetablePO {
     private String kclx;
     private String courseType;
     private String szz;
+    private String point;
+    private String pointId;
 
     @Id
     public String getID() {
@@ -250,5 +252,21 @@ public class StudentSchoolTimetablePO {
 
     public void setSzz(String szz) {
         this.szz = szz;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
+    }
+
+    public String getPointId() {
+        return pointId;
+    }
+
+    public void setPointId(String pointId) {
+        this.pointId = pointId;
     }
 }

@@ -696,12 +696,10 @@ public class TeachingManageService {
             return resultVO;
         }
         //根据信息查询所有课表信息
-        List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101Id(edu101.getEdu101_ID().toString(),
-                timeTablePO.getWeekTime(), timeTablePO.getSemester());
-        if(schoolTimetableList.size() == 0) {
+        List<String> edu201Ids = teachingScheduleViewDao.findEdu201IdsByEdu101Id(edu101.getEdu101_ID().toString(),timeTablePO.getSemester());
+        if(edu201Ids.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
         } else {
-            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
             List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTablePO.getWeekTime());
             if (edu207List.size() == 0) {
                 resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
@@ -726,12 +724,10 @@ public class TeachingManageService {
         classIds.add(Long.parseLong(edu001.getEdu300_ID()));
         String[] classIdList = utils.listToString(classIds, ',').split(",");
         //根据信息查询所有课表信息
-        List<StudentSchoolTimetablePO> studentSchoolTimetableList = studentScheduleViewDao.findAllByEdu301Ids(classIdList,
-                timeTablePO.getWeekTime(), timeTablePO.getSemester());
-        if(studentSchoolTimetableList.size() == 0) {
+        List<String> edu201Ids = studentScheduleViewDao.findEdu201IdsByEdu301Ids(classIdList, timeTablePO.getSemester());
+        if(edu201Ids.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
         } else {
-            List<String> edu201Ids = studentSchoolTimetableList.stream().map(StudentSchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
             List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTablePO.getWeekTime());
             if (edu207List.size() == 0) {
                 resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
@@ -803,7 +799,10 @@ public class TeachingManageService {
             public Predicate toPredicate(Root<ScheduleViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 predicates.add(cb.equal(root.<String>get("xnid"),  schedulePO.getSemester()));
-                predicates.add(cb.equal(root.<String>get("week"),  schedulePO.getWeekTime()));
+                if (!"type2".equals(schedulePO.getCrouseType())) {
+                    predicates.add(cb.equal(root.<String>get("week"),  schedulePO.getWeekTime()));
+                }
+
                 if (schedulePO.getLocal() != null && !"".equals(schedulePO.getLocal())) {
                     predicates.add(cb.equal(root.<String>get("classRoomId"),  schedulePO.getLocal()));
                 }
