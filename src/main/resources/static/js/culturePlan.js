@@ -96,7 +96,7 @@ function stuffAllRelationInfoTable(allRelationInfo){
 			modifyRelation(row);
 		},
 		'click #removeRelation': function(e, value, row, index) {
-			removeRelation(row.edu107_ID);
+			removeRelation(row);
 		},
 		'click #makePlan': function(e, value, row, index) {
 			makePlan(row);
@@ -306,6 +306,11 @@ function onUncheckAllRelation(row){
 
 //预备修改关系
 function modifyRelation(row){
+	if(row.xbsp==="passing"){
+		toastr.warning("不能修改审批中的培养计划");
+		return;
+	}
+
 	stufDeadultRelation(row);
 	$.showModal("#addNewRelationModal",true);
 	$("#addNewRelationModal").find(".moadalTitle").html("修改培养计划");
@@ -344,7 +349,7 @@ function confimModifyRelation(row){
 	}
 	newRelationObject.yxbz=row.yxbz;
 	newRelationObject.edu107_ID=row.edu107_ID;
-
+	newRelationObject.xbsp=row.xbsp;
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -561,7 +566,15 @@ function stuffRelationTipSelect(){
 }
 
 //单个删除关系
-function removeRelation(removeID){
+function removeRelation(row){
+	if(row.xbsp==="passing"){
+		toastr.warning("不能删除审批中的培养计划");
+		return;
+	}
+	if(row.xbsp==="pass"){
+		toastr.warning("不能删除审批通过的培养计划");
+		return;
+	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html("培养计划");
 	$(".remindActionType").html("删除");
@@ -569,7 +582,7 @@ function removeRelation(removeID){
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
-		removeArray.push(removeID);
+		removeArray.push(row.edu107_ID);
 		sendRelationRemoveInfo(removeArray);
 		e.stopPropagation();
 	});
@@ -581,6 +594,17 @@ function removeRelations() {
 	if (chosenRelations.length === 0) {
 		toastr.warning('暂未选择任何数据');
 		return;
+	}
+
+	for (var i = 0; i <chosenRelations.length ; i++) {
+		if(chosenRelations[i].xbsp==="passing"){
+			toastr.warning("包含审批中的培养计划");
+			return;
+		}
+		if(chosenRelations[i].xbsp==="pass"){
+			toastr.warning("包含审批通过的培养计划");
+			return;
+		}
 	}
 
 	$.showModal("#remindModal",true);
