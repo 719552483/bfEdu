@@ -219,10 +219,6 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-                if(backjson.termInfo.length<=0){
-					toastr.warning('暂无学年信息');
-					return;
-				}
 				if(backjson.kjInfo.length<=0){
 					toastr.warning('暂无默认课节信息');
 					return;
@@ -241,7 +237,7 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 				destoryLastStuff();
 				//渲染各个下拉框
 				var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
-				stuffTermArae(backjson.termInfo,configSelectTxt);
+				stuffTermArae(choosedTask,configSelectTxt);
 				stuffJxdArae(backjson.jxdInfo,configSelectTxt);
 				drawStartAndEndWeek(backjson.termInfo[0]);
 				stuffKjArae(backjson.kjInfo,configSelectTxt,configSelectTxt);
@@ -280,7 +276,7 @@ function destoryLastStuff(){
 //填充学年下拉框
 function stuffTermArae(termInfo,str){
 	for (var i = 0; i < termInfo.length; i++) {
-		str += '<option value="' + termInfo[i].edu400_ID + '">' + termInfo[i].xnmc
+		str += '<option value="' + termInfo[i].xnid + '">' + termInfo[i].xn
 			+ '</option>';
 	}
 	stuffManiaSelect("#term", str);
