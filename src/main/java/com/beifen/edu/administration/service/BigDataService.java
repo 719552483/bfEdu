@@ -51,10 +51,10 @@ public class BigDataService {
         Map<String,Object> returnMap = new HashMap<>();
 
         List<Edu800> edu800List = edu800Dao.findAll();
-        List<Edu800> edu108SumList = edu800Dao.findSumInfo();
+        List<Edu800> edu800SumList = edu800Dao.findSumInfo();
 
         returnMap.put("edu800List",edu800List);
-        returnMap.put("edu108SumList",edu108SumList);
+        returnMap.put("edu800SumList",edu800SumList);
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
 
