@@ -284,6 +284,7 @@ padding:1.6em 0em 0.6em 31px !important
 
 /*表格2个操作 按钮字数不超过2个*/
 .actionChangeLastTD,
+#departmentPredictionTable td:last-child,
 #gradeEntryTable td:last-child,
 #fsScheduleTable td:last-child,
 #teachingClassTable td:last-child,
@@ -296,6 +297,7 @@ padding:1.6em 0em 0.6em 31px !important
 #allLevlTable td:last-child ,
 #allRoleTable td:last-child{
 	width: 175px;
+	min-width: 175px;
 }
 
 
@@ -1564,6 +1566,7 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.departmentPredictionTableArea .bootstrap4 .search,
 .studentGradeTableArea .bootstrap4 .search,
 .askForExamTableArea .bootstrap4 .search,
 .puttedTableArea .bootstrap4 .search,
@@ -2265,6 +2268,7 @@ input:focus{
 .cannottxt{
 	padding-top: 32px;
 	color: gray;
+	text-align: center;
 }
 
 .lastStepBtn{
@@ -2304,6 +2308,11 @@ input:focus{
 	width: 48%;
 	float: left;
 	min-width: 212px;
+}
+
+.predictionChartArea{
+	width: 100%;
+	min-height: 230px;
 }
 
 @keyframes serachAnimation {

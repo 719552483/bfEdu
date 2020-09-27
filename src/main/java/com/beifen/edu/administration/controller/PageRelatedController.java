@@ -246,6 +246,11 @@ public class PageRelatedController {
 		return "allSchedule";
 	}
 
+	@RequestMapping("dataPrediction")
+	public String dataPredictionPage() {
+		return "dataPrediction";
+	}
+
 	@RequestMapping("chartDemo")
 	public String chartDemoPage() {
 		return "chartDemo";
