@@ -27,6 +27,7 @@
 <script type="text/javascript" src="js/chartDemo.js"></script>
 <script src='sripts/echarts.min.js' type='text/javascript'></script>
 <script src='sripts/dataTool.js' type='text/javascript'></script>
+<script src='sripts/echarts-gl.js' type='text/javascript'></script>
 </head>
 
 <body>
@@ -41,140 +42,120 @@
 	</div>
 
 	<div class="formbody chartPage">
-		<div id="usual1" class="usual">
-			<div class="itab">
-				<ul>
-					<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">图表分析</a></li>
-					<li><a href="#tab2" onclick="drawBreadPilot(this)">表格分析</a></li>
-				</ul>
+		<div class="forminfo">
+			<div class="publicCodeModelArea">
+				<label>图表导航</label> <select class="isSowIndex" id="publicCodeModel_cahrt">
+				<option value="all">全部</option>
+				<option value="zhuzhuangtu">柱状图</option>
+				<option value="zhexiantu">折线图</option>
+				<option value="bingtu">饼图</option>
+				<option value="sandiantu">散点图</option>
+				<option value="Kxiantu">K线图</option>
+				<option value="leidatu">雷达图</option>
+				<option value="loudoutu">漏斗图</option>
+				<option value="guanxitu">关系图</option>
+				<option value="3Dzhuzhuangtu">3D柱状图</option>
+				<option value="3Dsandiantu">3D散点图</option>
+			</select>
 			</div>
 		</div>
 
-
-		<div id="tab1" class="tabson myTabson" style="margin-top: -9px !important;">
-			<div class="forminfo">
-				<div class="publicCodeModelArea">
-					<label>图表导航</label> <select class="isSowIndex" id="publicCodeModel_cahrt">
-						<option value="all">全部</option>
-						<option value="zhuzhuangtu">柱状图</option>
-						<option value="zhexiantu">折线图</option>
-						<option value="bingtu">饼图</option>
-						<option value="sandiantu">散点图</option>
-						<option value="Kxiantu">K线图</option>
-						<option value="leidatu">雷达图</option>
-						<option value="guanxitu">关系图</option>
-						<option value="xuritu">旭日图</option>
-						<option value="3Dzhuzhuangtu">3D柱状图</option>
-						<option value="3Dsandiantu">3D散点图</option>
-					</select>
+		<div class="ChartBg">
+			<div id="zhuzhuangtu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>柱状图</span>
 				</div>
+				<div class="col2 chartChildren" id="zhuzhuangtuOne"></div>
+				<div class="col2 chartChildren" id="zhuzhuangtuTwo"></div>
+				<div class="col2 chartChildren" id="zhuzhuangtuThree"></div>
+				<div class="col2 chartChildren" id="zhuzhuangtuFour"></div>
 			</div>
 
-			<div class="ChartBg">
-				<div id="zhuzhuangtu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>柱状图</span>
-					</div>
-					<div class="col2 chartChildren" id="zhuzhuangtuOne"></div>
-					<div class="col2 chartChildren" id="zhuzhuangtuTwo"></div>
-					<div class="col2 chartChildren" id="zhuzhuangtuThree"></div>
-					<div class="col2 chartChildren" id="zhuzhuangtuFour"></div>
+			<div id="zhexiantu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>折线图</span>
 				</div>
-
-				<div id="zhexiantu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>折线图</span>
-					</div>
-					<div class="col2 chartChildren" id="zhexiantuOne"></div>
-					<div class="col2 chartChildren" id="zhexiantuTwo"></div>
-					<div class="col2 chartChildren" id="zhexiantuThree"></div>
-					<div class="col2 chartChildren" id="zhexiantuFour"></div>
-				</div>
-
-				<div id="bingtu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>饼图</span>
-					</div>
-					<div class="col2 chartChildren" id="bingtuOne"></div>
-					<div class="col2 chartChildren" id="bingtuTwo"></div>
-					<div class="col2 chartChildren" id="bingtuThree"></div>
-					<div class="col2 chartChildren" id="bingtuFour"></div>
-				</div>
-
-				<div id="sandiantu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>散点图</span>
-					</div>
-					<div class="col2 chartChildren" id="sandiantuOne"></div>
-					<div class="col2 chartChildren" id="sandiantuTwo"></div>
-					<div class="col2 chartChildren" id="sandiantuThree"></div>
-					<div class="col2 chartChildren" id="sandiantuFour"></div>
-				</div>
-
-				<div id="Kxiantu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>K线图</span>
-					</div>
-					<div class="col2 chartChildren" id="KxiantuOne"></div>
-					<div class="col2 chartChildren" id="KxiantuTwo"></div>
-				</div>
-
-				<div id="leidatu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>雷达图</span>
-					</div>
-					<div class="col2 chartChildren" id="leidatuOne"></div>
-					<div class="col2 chartChildren" id="leidatuTwo"></div>
-				</div>
-
-				<div id="guanxitu" class="publicCodeCHildren">
-					<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
-						<span>关系图</span>
-					</div>
-					<div class="col2 chartChildren" id="guanxituOne" style="height: 500px"></div>
-					<div class="col2 chartChildren" id="guanxituTwo" style="height: 500px"></div>
-					<div class="col2 chartChildren" id="guanxituThree" style="height: 500px"></div>
-					<div class="col2 chartChildren" id="guanxituFour" style="height: 500px"></div>
-				</div>
-
-				<div id="xuritu" class="publicCodeCHildren">
-
-				</div>
-
-				<div id="3Dzhuzhuangtu" class="publicCodeCHildren">
-
-				</div>
-
-				<div id="3Dsandiantu" class="publicCodeCHildren">
-
-				</div>
-			</div>
-		</div>
-
-		<div id="tab2" class="tabson myTabson">
-		 <span class="isFirstShowTab2 noneStart">T</span>
-			<div class="forminfo">
-				<div class="publicCodeModelArea">
-					<label>模块导航</label> <select class="isSowIndex" id="publicCodeModel">
-						<option value="all">全部</option>
-						<option value="termManger">学年管理</option>
-					</select>
-				</div>
+				<div class="col2 chartChildren" id="zhexiantuOne"></div>
+				<div class="col2 chartChildren" id="zhexiantuTwo"></div>
+				<div class="col2 chartChildren" id="zhexiantuThree"></div>
+				<div class="col2 chartChildren" id="zhexiantuFour"></div>
 			</div>
 
-			<div id="termManger" class="publicCodeCHildren">
+			<div id="bingtu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>饼图</span>
+				</div>
+				<div class="col2 chartChildren" id="bingtuOne"></div>
+				<div class="col2 chartChildren" id="bingtuTwo"></div>
+				<div class="col2 chartChildren" id="bingtuThree"></div>
+				<div class="col2 chartChildren" id="bingtuFour"></div>
 			</div>
 
+			<div id="sandiantu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>散点图</span>
+				</div>
+				<div class="col2 chartChildren" id="sandiantuOne"></div>
+				<div class="col2 chartChildren" id="sandiantuTwo"></div>
+				<div class="col2 chartChildren" id="sandiantuThree"></div>
+				<div class="col2 chartChildren" id="sandiantuFour"></div>
+			</div>
 
+			<div id="Kxiantu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>K线图</span>
+				</div>
+				<div class="col2 chartChildren" id="KxiantuOne"></div>
+				<div class="col2 chartChildren" id="KxiantuTwo"></div>
+			</div>
+
+			<div id="leidatu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>雷达图</span>
+				</div>
+				<div class="col2 chartChildren" id="leidatuOne"></div>
+				<div class="col2 chartChildren" id="leidatuTwo"></div>
+			</div>
+
+			<div id="loudoutu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>漏斗图</span>
+				</div>
+				<div class="col2 chartChildren" id="loudoutuOne"></div>
+				<div class="col2 chartChildren" id="loudoutuTwo"></div>
+				<div class="col2 chartChildren" id="loudoutuThree"></div>
+				<div class="col2 chartChildren" id="loudoutuFour"></div>
+			</div>
+
+			<div id="guanxitu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>关系图</span>
+				</div>
+				<div class="col2 chartChildren" id="guanxituOne" style="height: 500px"></div>
+				<div class="col2 chartChildren" id="guanxituTwo" style="height: 500px"></div>
+				<div class="col2 chartChildren" id="guanxituThree" style="height: 500px"></div>
+				<div class="col2 chartChildren" id="guanxituFour" style="height: 500px"></div>
+			</div>
+
+			<div id="3Dzhuzhuangtu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>3D柱状图</span>
+				</div>
+				<div class="col2 chartChildren" id="3DzhuzhuangtuOne" style="height: 500px"></div>
+				<div class="col2 chartChildren" id="3DzhuzhuangtuTwo" style="height: 500px"></div>
+			</div>
+
+			<div id="3Dsandiantu" class="publicCodeCHildren">
+				<div class="formtitle" style="clear:both;z-index: -2;width: 98%;margin-bottom: 0px">
+					<span>3D散点图</span>
+				</div>
+				<div class="col2 chartChildren" id="3DsandiantuOne" style="height: 500px"></div>
+				<div class="col2 chartChildren" style="height: 500px"></div>
+			</div>
 		</div>
 
 
 	</div>
-
-	<script type="text/javascript">
-		$("#usual1 ul").idTabs();
-	</script>
-
     <!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 				<div class="spinner-box">

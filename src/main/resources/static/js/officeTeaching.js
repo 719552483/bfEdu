@@ -1279,6 +1279,7 @@ function stuffPuttedOutTable(tableInfo){
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 }
+
 //已排详情
 function puttedInfo(row){
 	$.ajax({
