@@ -18,4 +18,8 @@ public interface Edu800Dao extends JpaRepository<Edu800, Long>, JpaSpecification
     @Modifying
     @Query(value = "delete from EDU800 e where e.Edu800_ID in ?1 ",nativeQuery = true)
     void deleteByEdu108Ids(List<String> edu108IdList);
+
+    //查询各个学院各项费用之和
+    @Query(value = "select new com.beifen.edu.administration.domian.Edu800(sum(e.jsksf), sum(e.wlkczy), sum(e.yyglf), sum(e.cdzlf) , sum(e.jxyxsbf) , sum(e.pyfalzf) , sum(e.sxsbf) , sum(e.cdzlf) ,e.departmentCode,e.departmentName,e.year)  from Edu800 e group by e.departmentCode,e.departmentName,e.year")
+    List<Edu800> findSumInfo();
 }

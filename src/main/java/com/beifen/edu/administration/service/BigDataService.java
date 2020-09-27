@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,6 +28,8 @@ public class BigDataService {
     //保存大数据财务信息
     public ResultVO saveFinanceInfo(Edu800 edu800) {
         ResultVO resultVO;
+        String createDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        edu800.setCreateDate(createDate);
         edu800Dao.save(edu800);
         resultVO = ResultVO.setSuccess("操作成功",edu800);
         return resultVO;
@@ -42,12 +48,15 @@ public class BigDataService {
     //获取大数据财务信息
     public ResultVO getDataPredtiction() {
         ResultVO resultVO;
+        Map<String,Object> returnMap = new HashMap<>();
+
         List<Edu800> edu800List = edu800Dao.findAll();
-        if (edu800List.size() == 0) {
-            resultVO = ResultVO.setFailed("暂未找到数据");
-        } else {
-            resultVO = ResultVO.setSuccess("共找到"+edu800List.size()+"条数据",edu800List);
-        }
+        List<Edu800> edu108SumList = edu800Dao.findSumInfo();
+
+        returnMap.put("edu800List",edu800List);
+        returnMap.put("edu108SumList",edu108SumList);
+
+        resultVO = ResultVO.setSuccess("查询成功",returnMap);
 
         return resultVO;
     }

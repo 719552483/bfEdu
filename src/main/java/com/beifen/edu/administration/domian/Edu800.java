@@ -10,16 +10,33 @@ public class Edu800 {
     private String departmentCode;//学院代码
     private String departmentName;//学院名称
     private String year;//年份
-    private String jsksf;//教师课时费
-    private String wlkczy;//网络课程资源
-    private String yyglf;//人员管理费
-    private String cdzlf;//场地租赁费
-    private String jxyxsbf;//教学运行设备费
-    private String pyfalzf;//培养方案论证费
-    private String sxsbf;//实训设备费
-    private String clf;//差旅费
+    private Double jsksf;//教师课时费
+    private Double wlkczy;//网络课程资源
+    private Double yyglf;//人员管理费
+    private Double cdzlf;//场地租赁费
+    private Double jxyxsbf;//教学运行设备费
+    private Double pyfalzf;//培养方案论证费
+    private Double sxsbf;//实训设备费
+    private Double clf;//差旅费
     private String createPerson;//录入人
+    private String personName;//录入人名称
     private String createDate;//录入时间
+
+    public Edu800() {}
+
+    public Edu800(Double jsksf,Double wlkczy,Double yyglf,Double cdzlf,Double jxyxsbf,Double pyfalzf,Double sxsbf,Double clf,String departmentCode, String departmentName,String year) {
+        this.departmentCode = departmentCode;
+        this.departmentName = departmentName;
+        this.year = year;
+        this.jsksf = jsksf;
+        this.wlkczy = wlkczy;
+        this.yyglf = yyglf;
+        this.cdzlf = cdzlf;
+        this.jxyxsbf = jxyxsbf;
+        this.pyfalzf = pyfalzf;
+        this.sxsbf =sxsbf;
+        this.clf = clf;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -60,67 +77,67 @@ public class Edu800 {
         this.year = year;
     }
 
-    public String getJsksf() {
+    public Double getJsksf() {
         return jsksf;
     }
 
-    public void setJsksf(String jsksf) {
+    public void setJsksf(Double jsksf) {
         this.jsksf = jsksf;
     }
 
-    public String getWlkczy() {
+    public Double getWlkczy() {
         return wlkczy;
     }
 
-    public void setWlkczy(String wlkczy) {
+    public void setWlkczy(Double wlkczy) {
         this.wlkczy = wlkczy;
     }
 
-    public String getYyglf() {
+    public Double getYyglf() {
         return yyglf;
     }
 
-    public void setYyglf(String yyglf) {
+    public void setYyglf(Double yyglf) {
         this.yyglf = yyglf;
     }
 
-    public String getCdzlf() {
+    public Double getCdzlf() {
         return cdzlf;
     }
 
-    public void setCdzlf(String cdzlf) {
+    public void setCdzlf(Double cdzlf) {
         this.cdzlf = cdzlf;
     }
 
-    public String getJxyxsbf() {
+    public Double getJxyxsbf() {
         return jxyxsbf;
     }
 
-    public void setJxyxsbf(String jxyxsbf) {
+    public void setJxyxsbf(Double jxyxsbf) {
         this.jxyxsbf = jxyxsbf;
     }
 
-    public String getPyfalzf() {
+    public Double getPyfalzf() {
         return pyfalzf;
     }
 
-    public void setPyfalzf(String pyfalzf) {
+    public void setPyfalzf(Double pyfalzf) {
         this.pyfalzf = pyfalzf;
     }
 
-    public String getSxsbf() {
+    public Double getSxsbf() {
         return sxsbf;
     }
 
-    public void setSxsbf(String sxsbf) {
+    public void setSxsbf(Double sxsbf) {
         this.sxsbf = sxsbf;
     }
 
-    public String getClf() {
+    public Double getClf() {
         return clf;
     }
 
-    public void setClf(String clf) {
+    public void setClf(Double clf) {
         this.clf = clf;
     }
 
@@ -138,5 +155,13 @@ public class Edu800 {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
     }
 }
