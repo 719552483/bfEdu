@@ -1,0 +1,62 @@
+package com.beifen.edu.administration.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.domian.Edu800;
+import com.beifen.edu.administration.service.BigDataService;
+import com.beifen.edu.administration.utility.ReflectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+/**
+ * 大数据控制层
+ */
+@RestController
+public class BigDataContoller {
+    @Autowired
+    private BigDataService bigDataService;
+
+    ReflectUtils utils = new ReflectUtils();
+
+    /**
+     *财务信息存储
+     * @param financeInfo
+     * @return
+     */
+    @RequestMapping("/saveFinanceInfo")
+    @ResponseBody
+    public ResultVO saveFinanceInfo(@RequestParam("financeInfo") String financeInfo) {
+        Edu800 edu800 = JSON.parseObject(financeInfo, Edu800.class);
+        ResultVO result = bigDataService.saveFinanceInfo(edu800);
+        return result;
+    }
+
+    /**
+     *财务信息存储
+     * @param deleteIds
+     * @return
+     */
+    @RequestMapping("/deleteFinanceInfo")
+    @ResponseBody
+    public ResultVO deleteFinanceInfo(@RequestParam("deleteIds") String deleteIds) {
+        List<String> edu108IdList = JSON.parseArray(deleteIds, String.class);
+        ResultVO result = bigDataService.deleteFinanceInfo(edu108IdList);
+        return result;
+    }
+
+    /**
+     *财务信息存储
+     * @return
+     */
+    @RequestMapping("/getDataPredtiction")
+    @ResponseBody
+    public ResultVO getDataPredtiction() {
+        ResultVO result = bigDataService.getDataPredtiction();
+        return result;
+    }
+}

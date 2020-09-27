@@ -1,0 +1,21 @@
+package com.beifen.edu.administration.dao;
+
+import com.beifen.edu.administration.domian.Edu800;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+
+@Configuration
+public interface Edu800Dao extends JpaRepository<Edu800, Long>, JpaSpecificationExecutor<Edu800> {
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from EDU800 e where e.Edu800_ID in ?1 ",nativeQuery = true)
+    void deleteByEdu108Ids(List<String> edu108IdList);
+}
