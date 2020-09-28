@@ -337,7 +337,31 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 老师检索学年分散学时课表
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/searchYearScatteredClassByTeacher")
+    @ResponseBody
+    public ResultVO searchYearScatteredClassByTeacher(@RequestParam("searchObject") String searchObject) {
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        ResultVO result = teachingManageService.searchYearScatteredClassByTeacher(timeTablePO);
+        return result;
+    }
 
+    /**
+     * 学生检索学年分散学时课表
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/searchYearScatteredClassByStudent")
+    @ResponseBody
+    public ResultVO searchYearScatteredClassByStudent(@RequestParam("searchObject") String searchObject) {
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        ResultVO result = teachingManageService.searchYearScatteredClassByStudent(timeTablePO);
+        return result;
+    }
 
 
 }

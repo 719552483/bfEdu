@@ -27,4 +27,8 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
     //根据edu201ID集合查询分散学识安排
     @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1 and e.week = ?2", nativeQuery = true)
     List<Edu207> findAllByEdu201Ids(List<String> edu201Ids,String week);
+
+    //根据edu201ID集合查询学年分散学识安排
+    @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1", nativeQuery = true)
+    List<Edu207> findAllByEdu201IdsWithoutWeek(List<String> edu201Ids);
 }

@@ -684,6 +684,8 @@ public class TeachingManageService {
     //教师调课
     public ResultVO changeSchedule(Edu203 edu203) {
         ResultVO resultVO;
+        edu203.setKsz(edu203.getWeek());
+        edu203.setJsz(edu203.getWeek());
         edu203Dao.save(edu203);
         resultVO = ResultVO.setSuccess("调整成功");
         return resultVO;
@@ -937,8 +939,12 @@ public class TeachingManageService {
         Specification<YearSchedulePO> specification = new Specification<YearSchedulePO>() {
             public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
-                predicates.add(cb.equal(root.<String>get("edu101_id"),  edu101.getEdu101_ID()));
+                if (timeTable.getSemester() != null && !"".equals(timeTable.getSemester())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
+                }
+                if (edu101.getEdu101_ID() != null && !"".equals(edu101.getEdu101_ID())) {
+                    predicates.add(cb.equal(root.<String>get("edu101_id"),  edu101.getEdu101_ID()));
+                }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -993,7 +999,9 @@ public class TeachingManageService {
         Specification<YearSchedulePO> specification = new Specification<YearSchedulePO>() {
             public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
+                if (timeTable.getSemester() != null && !"".equals(timeTable.getSemester())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
+                }
                 Path<Object> classPath = root.get("classId");//定义查询的字段
                 CriteriaBuilder.In<Object> classIn = cb.in(classPath);
                 for (int i = 0; i <classIdList.length ; i++) {
@@ -1029,6 +1037,56 @@ public class TeachingManageService {
             }
             timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
             resultVO = ResultVO.setSuccess("当前周共找到"+yearSchedulePOS.size()+"个课程",timeTable);
+        }
+        return resultVO;
+    }
+
+    //老师检索学年分散学时课表
+    public ResultVO searchYearScatteredClassByTeacher(TimeTablePO timeTablePO) {
+        ResultVO resultVO;
+        Edu101 edu101 = edu101Dao.getTeacherInfoByEdu990Id(timeTablePO.getCurrentUserId());
+        if(edu101 == null) {
+            resultVO = ResultVO.setFailed("您不是本校教师，无法查看您的课程");
+            return resultVO;
+        }
+        //根据信息查询所有课表信息
+        List<String> edu201Ids = teachingScheduleViewDao.findEdu201IdsByEdu101Id(edu101.getEdu101_ID().toString(),timeTablePO.getSemester());
+        if(edu201Ids.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到您的课程");
+        } else {
+            List<Edu207> edu207List = edu207Dao.findAllByEdu201IdsWithoutWeek(edu201Ids);
+            if (edu207List.size() == 0) {
+                resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
+            } else {
+                resultVO = ResultVO.setSuccess("当前周共找到"+edu207List.size()+"条分散学识安排",edu207List);
+            }
+        }
+        return resultVO;
+    }
+
+    //学生检索学年分散学时课表
+    public ResultVO searchYearScatteredClassByStudent(TimeTablePO timeTablePO) {
+        ResultVO resultVO;
+        Edu001 edu001 = edu001Dao.getStudentInfoByEdu990Id(timeTablePO.getCurrentUserId());
+        if(edu001 == null) {
+            resultVO = ResultVO.setFailed("您不是本校学生，无法查看您的课程");
+            return resultVO;
+        }
+
+        List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(edu001.getEdu300_ID());
+        classIds.add(Long.parseLong(edu001.getEdu300_ID()));
+        String[] classIdList = utils.listToString(classIds, ',').split(",");
+        //根据信息查询所有课表信息
+        List<String> edu201Ids = studentScheduleViewDao.findEdu201IdsByEdu301Ids(classIdList, timeTablePO.getSemester());
+        if(edu201Ids.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到您的课程");
+        } else {
+            List<Edu207> edu207List = edu207Dao.findAllByEdu201IdsWithoutWeek(edu201Ids);
+            if (edu207List.size() == 0) {
+                resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");
+            } else {
+                resultVO = ResultVO.setSuccess("当前周共找到"+edu207List.size()+"条分散学识安排",edu207List);
+            }
         }
         return resultVO;
     }
