@@ -55,8 +55,8 @@ public class BigDataContoller {
      */
     @RequestMapping("/getDataPredtiction")
     @ResponseBody
-    public ResultVO getDataPredtiction(@RequestParam("year") String year) {
-        ResultVO result = bigDataService.getDataPredtiction(year);
+    public ResultVO getDataPredtiction(@RequestParam("year") String year,@RequestParam("departmentCode") String departmentCode) {
+        ResultVO result = bigDataService.getDataPredtiction(year,departmentCode);
         return result;
     }
 }

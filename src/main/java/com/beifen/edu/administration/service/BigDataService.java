@@ -48,7 +48,7 @@ public class BigDataService {
 
 
     //获取大数据财务信息
-    public ResultVO getDataPredtiction(String year) {
+    public ResultVO getDataPredtiction(String year,String departmentCode) {
         ResultVO resultVO;
         Map<String,Object> returnMap = new HashMap<>();
 
@@ -57,6 +57,9 @@ public class BigDataService {
                 List<Predicate> predicates = new ArrayList<>();
                 if (year != null && !"".equals(year)) {
                     predicates.add(cb.equal(root.<String>get("year"), year));
+                }
+                if (departmentCode != null && !"".equals(departmentCode)) {
+                    predicates.add(cb.equal(root.<String>get("departmentCode"), departmentCode));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
