@@ -46,55 +46,70 @@
 		</div>
 
 		<div class="formbody">
-			<div class="scheduleClassesMainArea">
-				<div class="formtext myformtext myformtextTipArea">
-					<b>提示：蓝色代表专业必修课,绿色代表公共必修课,黄色代表公共选修课,紫色代表专业选修课</b>
+			<div id="usual1" class="usual">
+				<div class="itab">
+					<ul>
+						<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">周课表</a></li>
+						<li><a href="#tab2" onclick="drawBreadPilot(this)">学年课表</a></li>
+					</ul>
 				</div>
-				<div class="searchArea searchAreaWitheSelect">
-					<div class="col4 giveBottom">
-						<ul class="forminfo">
-							<div class="">
-								<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
-								<select id="semester" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
-								</select>
+
+				<div id="tab1" class="tabson myTabson">
+					<div class="scheduleClassesMainArea">
+						<div class="formtext myformtext myformtextTipArea">
+							<b>提示：蓝色代表专业必修课,绿色代表公共必修课,黄色代表公共选修课,紫色代表专业选修课</b>
+						</div>
+						<div class="searchArea searchAreaWitheSelect">
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+										<select id="semester" class="isSowIndex">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
 							</div>
-						</ul>
-					</div>
 
-					<div class="col4 giveBottom">
-						<ul class="forminfo">
-							<div class="">
-								<label class="selectName" style="margin-top: 14px;">周数<b>*</b></label>
-								<select id="weekTime" class="isSowIndex">
-									<option value="seleceConfigTip">暂无选择</option>
-								</select>
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">周数<b>*</b></label>
+										<select id="weekTime" class="isSowIndex">
+											<option value="seleceConfigTip">暂无选择</option>
+										</select>
+									</div>
+								</ul>
 							</div>
-						</ul>
-					</div>
-					<div class="col4 giveBottom">
-						<ul class="forminfo">
-							<div class="">
-								<label class="selectName" style="margin-top: 14px;">授课类型</label>
-								<select id="crouseType" class="isSowIndex">
-									<option value="seleceConfigTip">请选择</option>
-									<option value="type1">集中授课</option>
-									<option value="type2">分散授课</option>
-								</select>
+							<div class="col4 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">授课类型</label>
+										<select id="crouseType" class="isSowIndex">
+											<option value="seleceConfigTip">请选择</option>
+											<option value="type1">集中授课</option>
+											<option value="type2">分散授课</option>
+										</select>
+									</div>
+								</ul>
 							</div>
-						</ul>
+						</div>
+
+						<div class="scheduleClassesTableArea searchGivePaddingR scheduleTableStyle">
+							<table class="tablelist myTableStyle" id="scheduleClassesTable" data-unique-id="id" style="margin-top: 10px;"></table>
+						</div>
+
+						<div class="fsScheduleAreaTableArea searchGivePaddingR columnsStyle noneStart">
+							<table class="tablelist myTableStyle" id="studentfsScheduleTable" data-unique-id="edu207_ID" style="margin-top: 10px;"></table>
+						</div>
+
 					</div>
 				</div>
 
-				<div class="scheduleClassesTableArea searchGivePaddingR scheduleTableStyle">
-					<table class="tablelist myTableStyle" id="scheduleClassesTable" data-unique-id="id" style="margin-top: 10px;"></table>
-				</div>
-
-				<div class="fsScheduleAreaTableArea searchGivePaddingR columnsStyle noneStart">
-					<table class="tablelist myTableStyle" id="studentfsScheduleTable" data-unique-id="edu207_ID" style="margin-top: 10px;"></table>
-				</div>
-
+				<div id="tab2" class="tabson myTabson"></div>
 			</div>
+
+
 </div>
 
 		<!-- 课表详情Modal -->

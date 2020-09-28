@@ -35,6 +35,7 @@ function getSemesterInfo() {
 					str += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc + '</option>';
 				}
 				stuffManiaSelect("#semester", str);
+				stuffManiaSelect("#semester2", str);
 				//changge事件
 				$("#semester").change(function() {
 					getAllWeeks();
@@ -604,6 +605,160 @@ function getScheduleSearchInfo(){
 	returnObject.semester=semester;
 	returnObject.weekTime=weekTime;
 	return returnObject;
+}
+
+//tab2事件绑定
+function tab2Actin(){
+	var defaultClassPeriod = 6;
+	var tableInfo = new Array();
+	for (var i = 0; i < defaultClassPeriod; i++) {
+		var scheduleClassesInfoObject = new Object();
+		scheduleClassesInfoObject.id = i;
+		scheduleClassesInfoObject.classPeriod = "第" + (i + 1) + "节";
+		scheduleClassesInfoObject.monday = "";
+		scheduleClassesInfoObject.tuesday = "";
+		scheduleClassesInfoObject.wednesday = "";
+		scheduleClassesInfoObject.thursday = "";
+		scheduleClassesInfoObject.friday = "";
+		scheduleClassesInfoObject.saturday = "";
+		scheduleClassesInfoObject.sunday = "";
+		tableInfo.push(scheduleClassesInfoObject);
+	}
+	stuffScheduleClassesTable2(tableInfo);
+	//changge事件
+	$("#crouseType2,#semester2").change(function() {
+		var semester=getNormalSelectValue("semester2");
+		var currentType=getNormalSelectValue("crouseType2");
+		var currentUserId= $(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+
+		if(semester===""&&currentType===""){
+			return;
+		}
+
+		var searchObject=new Object();
+		searchObject.semester=semester;
+		searchObject.currentUserId=currentUserId;
+
+		if(currentType==="type2"){
+			getFsScheduleInfo2(searchObject);
+		}else{
+			getScheduleClassesInfo2(searchObject);
+		}
+	});
+}
+
+//获取学年集中课表
+function getScheduleClassesInfo2(searchObject){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getYearScheduleInfo",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code==200) {
+				stuffScheduleClassesTable2(tableInfo);
+				toastr.warning(backjson.info);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//渲染集中课程表
+function stuffScheduleClassesTable2(tableInfo) {
+	$('#scheduleClassesTable2').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: false,
+		pageNumber: 1,
+		pageSize: 10,
+		pageList: [10],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		columns: [{
+			field: 'id',
+			title: 'id',
+			align: 'left',
+			visible: false
+		},
+			{
+				field: 'classPeriod',
+				title: '课节数',
+				align: 'left',
+				width: 10
+			}, {
+				field: 'monday',
+				title: '星期一',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'tuesday',
+				title: '星期二',
+				align: 'left',
+				formatter: scheduleFormatter,
+			}, {
+				field: 'wednesday',
+				title: '星期三',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'thursday',
+				title: '星期四',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'friday',
+				title: '星期五',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'saturday',
+				title: '星期六',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'sunday',
+				title: '星期日',
+				align: 'left',
+				formatter: scheduleFormatter
+			}
+		]
+	});
+	changeColumnsStyle(".scheduleClassesTableArea", "已排集中授课课表");
+	drawSearchInput(".scheduleClassesTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+
+	//课程区域点击事件
+	$('.singleSchedule').unbind('click');
+	$('.singleSchedule').bind('click', function(e) {
+		singleScheduleAction(e);
+		e.stopPropagation();
+	});
+}
+
+//获取学年分散课表
+function getFsScheduleInfo2(){
+
 }
 
 //初始化页面按钮绑定事件
