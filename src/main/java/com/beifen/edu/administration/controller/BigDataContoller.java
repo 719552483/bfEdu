@@ -50,7 +50,7 @@ public class BigDataContoller {
     }
 
     /**
-     *财务信息存储
+     *财务信息查询
      * @return
      */
     @RequestMapping("/getDataPredtiction")
