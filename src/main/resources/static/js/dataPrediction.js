@@ -1,7 +1,7 @@
 $(function() {
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	$("input[type='number']").inputSpinner();
-	getDataPredtictionInfo("");
+	getDataPredtictionInfo("","");
 	getAllDepartment();
 	btnBind();
 	//只选择年
@@ -19,13 +19,14 @@ $(function() {
 });
 
 //获取预决算数据信息
-function getDataPredtictionInfo(year) {
+function getDataPredtictionInfo(year,departmentCode) {
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/getDataPredtiction",
 		data: {
-			"year":year
+			"year":year,
+			"departmentCode":departmentCode
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -297,20 +298,21 @@ function stuffYearSelect(){
 	}
 	stuffManiaSelect("#predictionChart_changeYear", str);
 	stuffManiaSelect("#departmentPredictionChart_changeYear", str);
+	stuffManiaSelect("#departmentDataPrediction_year", str);
 
 	$("#predictionChart_changeYear").change(function() {
 		var year=getNormalSelectValue("predictionChart_changeYear");
-		changeYear(year);
+		changeYear(year,"");
 	});
 
 	$("#departmentPredictionChart_changeYear").change(function() {
 		var year=getNormalSelectValue("departmentPredictionChart_changeYear");
-		changeYear(year);
+		changeYear(year,"");
 	});
 }
 
 //chart区改变年份
-function changeYear(year){
+function changeYear(year,departmentCode){
 	if(year===""){
 		return;
 	}
@@ -319,7 +321,8 @@ function changeYear(year){
 		cache : false,
 		url : "/getDataPredtiction",
 		data: {
-			"year":year
+			"year":year,
+			"departmentCode":departmentCode
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -625,7 +628,7 @@ function modifyPrediction(row){
 		},
 		complete: function(xhr, status) {
 			requestComplete();
-			getDataPredtictionInfo("");
+			getDataPredtictionInfo("","");
 		},
 		success : function(backjson) {
 			hideloding();
@@ -696,7 +699,7 @@ function deletePredictions(deleteIds){
 		},
 		complete: function(xhr, status) {
 			requestComplete();
-			getDataPredtictionInfo("");
+			getDataPredtictionInfo("","");
 		},
 		success : function(backjson) {
 			hideloding();
@@ -715,6 +718,12 @@ function deletePredictions(deleteIds){
 function wantAddDepartmentDataPrediction(){
 	emptyModal();
 	$.showModal("#addModal",true);
+	//确认修改
+	$('.confirmBtn').unbind('click');
+	$('.confirmBtn').bind('click', function(e) {
+		confirmAddDepartmentDataPrediction();
+		e.stopPropagation();
+	});
 }
 
 //确认新增数据
@@ -747,7 +756,7 @@ function confirmAddDepartmentDataPrediction(){
 		},
 		complete: function(xhr, status) {
 			requestComplete();
-			getDataPredtictionInfo("");
+			getDataPredtictionInfo("","");
 		},
 		success : function(backjson) {
 			hideloding();
@@ -800,6 +809,7 @@ function getAllDepartment(){
 						+ '</option>';
 				}
 				stuffManiaSelect("#add_department", str);
+				stuffManiaSelect("#departmentDataPrediction_department", str);
 			} else {
 				toastr.info(backjson.msg);
 			}
@@ -895,6 +905,88 @@ function chartListener(){
 	});
 }
 
+// 开始检索
+function startSearch(){
+	var year=getNormalSelectValue("departmentDataPrediction_year");
+	var departmentCode=getNormalSelectValue("departmentDataPrediction_department");
+	if(year===""&&departmentCode===""){
+		toastr.warning("检索条件不能为空");
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getDataPredtiction",
+		data: {
+			"year":year,
+			"departmentCode":departmentCode
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var edu800List=backjson.data.edu800List;
+				if(edu800List.length==0){
+					toastr.warning("暂无预决算数据");
+				}
+				drawTab2(edu800List);
+			} else {
+				drawDepartmentPredictionTableEmptyTable();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+// 重置检索
+function reReloadSearchs(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getDataPredtiction",
+		data: {
+			"year":"",
+			"departmentCode":""
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var reObject = new Object();
+				reObject.normalSelectIds = "#departmentDataPrediction_year,#departmentDataPrediction_department";
+				reReloadSearchsWithSelect(reObject);
+
+				var edu800List=backjson.data.edu800List;
+				if(edu800List.length==0){
+					toastr.warning("暂无预决算数据");
+				}
+				stuffDepartmentPredictionTableEmptyTable(edu800List);
+			} else {
+				drawDepartmentPredictionTableEmptyTable();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //页面初始化时按钮事件绑定
 function btnBind(){
 	//提示框取消按钮
@@ -918,10 +1010,21 @@ function btnBind(){
 		e.stopPropagation();
 	});
 
-	//确认录入二级学院数据
-	$('.confirmBtn').unbind('click');
-	$('.confirmBtn').bind('click', function(e) {
-		confirmAddDepartmentDataPrediction();
+	//开始检索
+	$('#startSearch').unbind('click');
+	$('#startSearch').bind('click', function(e) {
+		startSearch();
+		e.stopPropagation();
+	});
+
+	$("#departmentDataPrediction_department").change(function() {
+		startSearch();
+	});
+
+	//重置检索
+	$('#reReloadSearchs').unbind('click');
+	$('#reReloadSearchs').bind('click', function(e) {
+		reReloadSearchs();
 		e.stopPropagation();
 	});
 }
