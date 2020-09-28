@@ -306,5 +306,38 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教师学年课程表查询
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/getYearScheduleInfo")
+    @ResponseBody
+    public ResultVO getYearScheduleInfo(@RequestParam("searchObject") String searchObject) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        result = teachingManageService.getYearScheduleInfo(timeTablePO);
+        return result;
+    }
+
+    /**
+     * 学生课程表查询
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/getStudentYearScheduleInfo")
+    @ResponseBody
+    public ResultVO getStudentYearScheduleInfo(@RequestParam("searchObject") String searchObject) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject jsonObject = JSONObject.parseObject(searchObject);
+        TimeTablePO timeTable = JSONObject.toJavaObject(jsonObject, TimeTablePO.class);
+        result = teachingManageService.getStudentYearScheduleInfo(timeTable);
+        return result;
+    }
+
+
+
 
 }

@@ -68,6 +68,8 @@ public class TeachingManageService {
     ClassStudentViewDao classStudentViewDao;
     @Autowired
     ScheduleViewDao scheduleViewDao;
+    @Autowired
+    YearScheduleViewDao yearScheduleViewDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -919,6 +921,115 @@ public class TeachingManageService {
         resultVO = ResultVO.setSuccess("查询成功",weekList);
         return resultVO;
         
+    }
+
+
+    //教师查询学年课表
+    public ResultVO getYearScheduleInfo(TimeTablePO timeTable) {
+        ResultVO resultVO;
+        Edu101 edu101 = edu101Dao.getTeacherInfoByEdu990Id(timeTable.getCurrentUserId());
+
+        if(edu101 == null) {
+            resultVO = ResultVO.setFailed("您不是本校教师，无法查看您的课程");
+            return resultVO;
+        }
+
+        Specification<YearSchedulePO> specification = new Specification<YearSchedulePO>() {
+            public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        //根据信息查询所有课表信息
+        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+        List<YearSchedulePO> yearSchedulePOS = yearScheduleViewDao.findAll(specification);
+        if(yearSchedulePOS.size() == 0) {
+            resultVO = ResultVO.setFailed("当前年度找到您的课程");
+        } else {
+            for (YearSchedulePO o : yearSchedulePOS) {
+                SchoolTimetablePO s = new SchoolTimetablePO();
+                try {
+                    utils.copyParm(o,s);
+                    if (o.getKsz().equals(o.getJsx())) {
+                        s.setSzz("第"+o.getKsz()+"周");
+                    } else {
+                        s.setSzz("第"+o.getKsz()+"-"+o.getJsx()+"周");
+                    }
+                    schoolTimetableList.add(s);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
+            resultVO = ResultVO.setSuccess("当前周共找到"+yearSchedulePOS.size()+"个课程",timeTable);
+        }
+        return resultVO;
+    }
+
+
+    //学生查询学年课表
+    public ResultVO getStudentYearScheduleInfo(TimeTablePO timeTable) {
+        ResultVO resultVO;
+        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+        Edu001 edu001 = edu001Dao.getStudentInfoByEdu990Id(timeTable.getCurrentUserId());
+        if(edu001 == null) {
+            resultVO = ResultVO.setFailed("您不是本校学生，无法查看您的课程");
+            return resultVO;
+        }
+
+        List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(edu001.getEdu300_ID());
+        classIds.add(Long.parseLong(edu001.getEdu300_ID()));
+        String[] classIdList = utils.listToString(classIds, ',').split(",");
+
+
+        //根据信息查询所有课表信息
+        Specification<YearSchedulePO> specification = new Specification<YearSchedulePO>() {
+            public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
+                Path<Object> classPath = root.get("classId");//定义查询的字段
+                CriteriaBuilder.In<Object> classIn = cb.in(classPath);
+                for (int i = 0; i <classIdList.length ; i++) {
+                    classIn.value(classIdList[i]);//存入值
+                }
+                predicates.add(cb.and(classIn));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<YearSchedulePO> yearSchedulePOS = yearScheduleViewDao.findAll(specification);
+        if(yearSchedulePOS.size() == 0) {
+            resultVO = ResultVO.setFailed("当前年度找到您的课程");
+        } else {
+            for (YearSchedulePO o : yearSchedulePOS) {
+                SchoolTimetablePO s = new SchoolTimetablePO();
+                try {
+                    utils.copyParm(o,s);
+                    if (o.getKsz().equals(o.getJsx())) {
+                        s.setSzz("第"+o.getKsz()+"周");
+                    } else {
+                        s.setSzz("第"+o.getKsz()+"-"+o.getJsx()+"周");
+                    }
+                    schoolTimetableList.add(s);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
+            resultVO = ResultVO.setSuccess("当前周共找到"+yearSchedulePOS.size()+"个课程",timeTable);
+        }
+        return resultVO;
     }
 }
 
