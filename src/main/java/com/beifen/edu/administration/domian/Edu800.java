@@ -23,10 +23,7 @@ public class Edu800 {
     private String createDate;//录入时间
 
     public Edu800() {}
-
-    public Edu800(Double jsksf,Double wlkczy,Double yyglf,Double cdzlf,Double jxyxsbf,Double pyfalzf,Double sxsbf,Double clf,String departmentCode, String departmentName,String year) {
-        this.departmentCode = departmentCode;
-        this.departmentName = departmentName;
+    public Edu800(Double jsksf,Double wlkczy,Double yyglf,Double cdzlf,Double jxyxsbf,Double pyfalzf,Double sxsbf,Double clf,String year) {
         this.year = year;
         this.jsksf = jsksf;
         this.wlkczy = wlkczy;
