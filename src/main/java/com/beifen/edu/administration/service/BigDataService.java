@@ -1,18 +1,21 @@
 package com.beifen.edu.administration.service;
 
 
+import com.beifen.edu.administration.PO.TeachingSchedulePO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.Edu800Dao;
 import com.beifen.edu.administration.domian.Edu800;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -46,12 +49,28 @@ public class BigDataService {
 
 
     //获取大数据财务信息
-    public ResultVO getDataPredtiction() {
+    public ResultVO getDataPredtiction(String year) {
         ResultVO resultVO;
         Map<String,Object> returnMap = new HashMap<>();
 
-        List<Edu800> edu800List = edu800Dao.findAll();
-        List<Edu800> edu800SumList = edu800Dao.findSumInfo();
+        Specification<Edu800> specification = new Specification<Edu800>() {
+            public Predicate toPredicate(Root<Edu800> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (year != null && !"".equals(year)) {
+                    predicates.add(cb.equal(root.<String>get("year"), year));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu800> edu800List = edu800Dao.findAll(specification);
+
+        List<Edu800> edu800SumList;
+        if(year != null && !"".equals(year) ) {
+            edu800SumList = edu800Dao.findSumInfoByYear(year);
+        }else {
+            edu800SumList = edu800Dao.findSumInfo();
+        }
 
         returnMap.put("edu800List",edu800List);
         returnMap.put("edu800SumList",edu800SumList);
