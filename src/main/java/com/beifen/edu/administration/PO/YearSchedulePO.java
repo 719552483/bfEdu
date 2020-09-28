@@ -27,6 +27,7 @@ public class YearSchedulePO {
     private String classType;
     private String classTypeId;
     private String courseId;
+    private String courseType;
     private String courseName;
     private String point;
     private String pointId;
@@ -207,5 +208,13 @@ public class YearSchedulePO {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(String courseType) {
+        this.courseType = courseType;
     }
 }
