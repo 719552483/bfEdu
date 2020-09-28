@@ -105,7 +105,7 @@ function stuffPredictionChart(edu800SumList){
 			data: ['教师课时费', '网络课程资源', '人员管理费', '场地租赁费', '教学运行设备费','培养方案论证费','实训设备费','差旅费']
 		},
 		animationEasing: 'elasticOut',
-		color:['rgba(112,144,162,0.87)','rgba(210,14,13,0.61)' ,'rgba(207,125,101,0.85)', 'rgba(97,160,168,0.87)', 'rgba(22,178,209,0.66)', '#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+		color:['rgba(22,178,209,0.66)','rgba(210,14,13,0.61)' ,'rgba(207,125,101,0.85)','rgba(112,144,162,0.87)', 'rgba(97,160,168,0.87)',  '#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
 		series: [
 			{
 				name: '费用类型',
@@ -137,7 +137,6 @@ function stuffPredictionChart(edu800SumList){
 
 //渲染二级学院chart
 function stuffDepartmentPredictionChart(edu800List){
-	edu800List=group(edu800List)[0].data;
 	var myChart = echarts.init(document.getElementById("departmentPredictionChart"));
 	var yAxisData=new Array();
 	var jsksfData=new Array();
@@ -149,16 +148,19 @@ function stuffDepartmentPredictionChart(edu800List){
 	var sxsbfData=new Array();
 	var clfData=new Array();
 
+	var drawYear=edu800List[0].year;;
 	for (var i = 0; i < edu800List.length; i++) {
-		yAxisData.push(edu800List[i].departmentName);
-		jsksfData.push(edu800List[i].jsksf);
-		wlkczyData.push(edu800List[i].wlkczy);
-		yyglfData.push(edu800List[i].yyglf);
-		cdzlfData.push(edu800List[i].cdzlf);
-		jxyxsbfData.push(edu800List[i].jxyxsbf);
-		pyfalzfData.push(edu800List[i].pyfalzf);
-		sxsbfData.push(edu800List[i].sxsbf);
-		clfData.push(edu800List[i].clf);
+		if(edu800List[i].year==drawYear){
+			yAxisData.push(edu800List[i].departmentName);
+			jsksfData.push(edu800List[i].jsksf);
+			wlkczyData.push(edu800List[i].wlkczy);
+			yyglfData.push(edu800List[i].yyglf);
+			cdzlfData.push(edu800List[i].cdzlf);
+			jxyxsbfData.push(edu800List[i].jxyxsbf);
+			pyfalzfData.push(edu800List[i].pyfalzf);
+			sxsbfData.push(edu800List[i].sxsbf);
+			clfData.push(edu800List[i].clf);
+		}
 	}
 
 	option = {
@@ -286,9 +288,12 @@ function stuffDepartmentPredictionChart(edu800List){
 function stuffYearSelect(){
 	var haveYears=$("#departmentPredictionTable").bootstrapTable('getData');
 	var str = '<option value="seleceConfigTip">请选择</option>';
+
 	for (var i = 0; i < haveYears.length; i++) {
-		str += '<option value="' + haveYears[i].year + '">' + haveYears[i].year
-			+ '</option>';
+		var readeyStr= '<option value="' + haveYears[i].year + '">' + haveYears[i].year+'</option>';
+		if(str.indexOf(readeyStr)===-1){
+			str += readeyStr;
+		}
 	}
 	stuffManiaSelect("#predictionChart_changeYear", str);
 	stuffManiaSelect("#departmentPredictionChart_changeYear", str);
@@ -888,31 +893,6 @@ function chartListener(){
 		var departmentPredictionChart = echarts.init(document.getElementById('departmentPredictionChart'));
 		departmentPredictionChart.resize();
 	});
-}
-
-//js -- 对象分组（根据对象的某一属性）
-function group(arr) {
-	var map = {},
-		dest = [];
-	for(var i = 0; i < arr.length; i++){
-		var ai = arr[i];
-		if(!map[ai.year]){
-			dest.push({
-				id: ai.year,
-				data: [ai]
-			});
-			map[ai.year] = ai;
-		}else{
-			for(var j = 0; j < dest.length; j++){
-				var dj = dest[j];
-				if(dj.year == ai.year){
-					dj.data.push(ai);
-					break;
-				}
-			}
-		}
-	}
-	return dest;
 }
 
 //页面初始化时按钮事件绑定
