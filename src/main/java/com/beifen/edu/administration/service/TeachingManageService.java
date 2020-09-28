@@ -938,6 +938,7 @@ public class TeachingManageService {
             public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
+                predicates.add(cb.equal(root.<String>get("edu101_id"),  edu101.getEdu101_ID()));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
