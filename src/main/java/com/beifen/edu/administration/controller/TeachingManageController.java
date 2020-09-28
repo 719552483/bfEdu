@@ -322,7 +322,7 @@ public class TeachingManageController {
     }
 
     /**
-     * 学生课程表查询
+     * 学生学年课程表查询
      * @param searchObject
      * @return
      */

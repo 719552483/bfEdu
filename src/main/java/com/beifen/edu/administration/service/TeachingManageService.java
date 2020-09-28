@@ -959,10 +959,10 @@ public class TeachingManageService {
                 SchoolTimetablePO s = new SchoolTimetablePO();
                 try {
                     utils.copyParm(o,s);
-                    if (o.getKsz().equals(o.getJsx())) {
+                    if (o.getKsz().equals(o.getJsz())) {
                         s.setSzz("第"+o.getKsz()+"周");
                     } else {
-                        s.setSzz("第"+o.getKsz()+"-"+o.getJsx()+"周");
+                        s.setSzz("第"+o.getKsz()+"-"+o.getJsz()+"周");
                     }
                     schoolTimetableList.add(s);
                 } catch (NoSuchMethodException e) {
@@ -1021,10 +1021,10 @@ public class TeachingManageService {
                 SchoolTimetablePO s = new SchoolTimetablePO();
                 try {
                     utils.copyParm(o,s);
-                    if (o.getKsz().equals(o.getJsx())) {
+                    if (o.getKsz().equals(o.getJsz())) {
                         s.setSzz("第"+o.getKsz()+"周");
                     } else {
-                        s.setSzz("第"+o.getKsz()+"-"+o.getJsx()+"周");
+                        s.setSzz("第"+o.getKsz()+"-"+o.getJsz()+"周");
                     }
                     schoolTimetableList.add(s);
                 } catch (NoSuchMethodException e) {

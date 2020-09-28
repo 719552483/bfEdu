@@ -15,8 +15,7 @@ public class YearSchedulePO {
     private String kjmc;
     private String xqid;
     private String xqmc;
-    private String edu202_id;
-    private String jsx;
+    private String jsz;
     private String ksz;
     private String xnid;
     private String classRoomId;
@@ -80,20 +79,12 @@ public class YearSchedulePO {
         this.xqmc = xqmc;
     }
 
-    public String getEdu202_id() {
-        return edu202_id;
+    public String getJsz() {
+        return jsz;
     }
 
-    public void setEdu202_id(String edu202_id) {
-        this.edu202_id = edu202_id;
-    }
-
-    public String getJsx() {
-        return jsx;
-    }
-
-    public void setJsx(String jsx) {
-        this.jsx = jsx;
+    public void setJsz(String jsz) {
+        this.jsz = jsz;
     }
 
     public String getKsz() {
