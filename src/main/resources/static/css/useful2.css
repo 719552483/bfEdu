@@ -2315,6 +2315,10 @@ input:focus{
 	min-height: 230px;
 }
 
+.PredictionChart{
+	height:400px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

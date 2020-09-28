@@ -37,6 +37,7 @@
 <script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
 <script type="text/javascript" src="sripts/tableExport.js"></script>
 <script type="text/javascript" src="sripts/bootstrap-table-export.js"></script>
+<script src='sripts/echarts.min.js' type='text/javascript'></script>
 </head>
 
 <body>
@@ -60,21 +61,47 @@
 
 			<div id="tab1" class="tabson myTabson">
 				<div class="allDataPredictionArea predictionChartArea">
-					<div class="formtitle">
+					<div class="formtitle" style="margin-bottom: 7px;">
 						<span>学院预决算数据分析</span>
 					</div>
 					<div class="cannottxt">暂无学院预决算数据...</div>
-					<div class="predictionChart">
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">切换年份</label>
+									<select class="isSowIndex" id="predictionChart_changeYear">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="predictionChart PredictionChart" id="predictionChart">
 
 					</div>
 				</div>
 
 				<div class="departmentDataPredictionArea predictionChartArea">
-					<div class="formtitle">
+					<div class="formtitle" style="margin-bottom: 7px;">
 						<span>二级学院预决算数据分析</span>
 					</div>
 					<div class="cannottxt">暂无二级学院预决算数据...</div>
-					<div class="departmentPredictionChart"></div>
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">切换年份</label>
+									<select class="isSowIndex" id="departmentPredictionChart_changeYear">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="departmentPredictionChart PredictionChart" id="departmentPredictionChart" style="height: 350px"></div>
 				</div>
 			</div>
 

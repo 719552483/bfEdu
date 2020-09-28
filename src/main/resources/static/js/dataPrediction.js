@@ -1,7 +1,7 @@
 $(function() {
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	$("input[type='number']").inputSpinner();
-	getDataPredtictionInfo();
+	getDataPredtictionInfo("");
 	getAllDepartment();
 	btnBind();
 	//只选择年
@@ -15,14 +15,18 @@ $(function() {
 		minView :4,
 		todayBtn: "linked",
 	});
+	chartListener();
 });
 
 //获取预决算数据信息
-function getDataPredtictionInfo() {
+function getDataPredtictionInfo(year) {
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/getDataPredtiction",
+		data: {
+			"year":year
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -41,11 +45,13 @@ function getDataPredtictionInfo() {
 				if(edu800List.length==0&&edu800SumList.length==0){
 					toastr.warning("暂无预决算数据");
 				}
-				drawTab1(edu800List,edu800SumList);
 				drawTab2(edu800List);
+				drawTab1(edu800List,edu800SumList);
 			} else {
-				drawPredictionTableEmptyTable();
 				drawDepartmentPredictionTableEmptyTable();
+				$(".allDataPredictionArea,.departmentDataPredictionArea").find(".cannottxt").show();
+				$(".allDataPredictionArea").find(".predictionChart").hide();
+				$(".departmentDataPredictionArea").find(".departmentPredictionChart").hide();
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -56,20 +62,289 @@ function getDataPredtictionInfo() {
  * tab1
  */
 function drawTab1(edu800List,edu800SumList) {
-	// if(edu800List.length==0){
-	// 	drawPredictionTableEmptyTable();
-	// }else{
-	// 	stuffPredictionTableEmptyTable(edu800List);
-	// }
-	//
-	// if(edu800SumList.length==0){
-	// 	drawDepartmentPredictionTableEmptyTable();
-	// }else{
-	// 	stuffDepartmentPredictionTableEmptyTable(edu800SumList);
-	// }
+	if(edu800SumList.length==0){
+		$("#tab1").find(".allDataPredictionArea").find(".cannottxt").show();
+		$("#tab1").find(".allDataPredictionArea").find(".predictionChart,.searchArea").hide();
+	}else{
+		$("#tab1").find(".allDataPredictionArea").find(".cannottxt").hide();
+		$("#tab1").find(".allDataPredictionArea").find(".predictionChart,.searchArea").show();
+		stuffPredictionChart(edu800SumList[0]);
+		stuffYearSelect();
+	}
+
+	if(edu800List.length==0){
+		$("#tab1").find(".departmentDataPredictionArea").find(".cannottxt").show();
+		$("#tab1").find(".departmentDataPredictionArea").find(".departmentPredictionChart,.searchArea").hide();
+	}else{
+		$("#tab1").find(".departmentDataPredictionArea").find(".cannottxt").hide();
+		$("#tab1").find(".departmentDataPredictionArea").find(".departmentPredictionChart,.searchArea").show();
+		stuffDepartmentPredictionChart(edu800List);
+		stuffYearSelect();
+	}
 }
 
+//渲染学院chart
+function stuffPredictionChart(edu800SumList){
+	var myChart = echarts.init(document.getElementById("predictionChart"));
+	option = {
+		title: {
+			left: 'center',
+			text: edu800SumList.year+'年学院预决算数据',
+			textStyle: {
+				color: 'rgba(96,173,197,0.96)',
+				fontSize: '16'
+			},
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b} : {c} ({d}%)'
+		},
+		legend: {
+			left: 'center',
+			bottom:'bottom',
+			data: ['教师课时费', '网络课程资源', '人员管理费', '场地租赁费', '教学运行设备费','培养方案论证费','实训设备费','差旅费']
+		},
+		animationEasing: 'elasticOut',
+		color:['rgba(112,144,162,0.87)','rgba(210,14,13,0.61)' ,'rgba(207,125,101,0.85)', 'rgba(97,160,168,0.87)', 'rgba(22,178,209,0.66)', '#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+		series: [
+			{
+				name: '费用类型',
+				type: 'pie',
+				radius: '55%',
+				center: ['50%', '60%'],
+				data:  [
+					{value: edu800SumList.jsksf, name: '教师课时费'},
+					{value: edu800SumList.wlkczy, name: '网络课程资源'},
+					{value: edu800SumList.yyglf, name: '人员管理费'},
+					{value: edu800SumList.cdzlf, name: '场地租赁费'},
+					{value: edu800SumList.jxyxsbf, name: '教学运行设备费'},
+					{value: edu800SumList.pyfalzf, name: '培养方案论证费'},
+					{value: edu800SumList.sxsbf, name: '实训设备费'},
+					{value: edu800SumList.clf, name: '差旅费'}
+				],
+				emphasis: {
+					itemStyle: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						shadowColor: 'rgba(0, 0, 0, 0.5)'
+					}
+				}
+			}
+		]
+	};
+	myChart.setOption(option);
+}
 
+//渲染二级学院chart
+function stuffDepartmentPredictionChart(edu800List){
+	edu800List=group(edu800List)[0].data;
+	var myChart = echarts.init(document.getElementById("departmentPredictionChart"));
+	var yAxisData=new Array();
+	var jsksfData=new Array();
+	var wlkczyData=new Array();
+	var yyglfData=new Array();
+	var cdzlfData=new Array();
+	var jxyxsbfData=new Array();
+	var pyfalzfData=new Array();
+	var sxsbfData=new Array();
+	var clfData=new Array();
+
+	for (var i = 0; i < edu800List.length; i++) {
+		yAxisData.push(edu800List[i].departmentName);
+		jsksfData.push(edu800List[i].jsksf);
+		wlkczyData.push(edu800List[i].wlkczy);
+		yyglfData.push(edu800List[i].yyglf);
+		cdzlfData.push(edu800List[i].cdzlf);
+		jxyxsbfData.push(edu800List[i].jxyxsbf);
+		pyfalzfData.push(edu800List[i].pyfalzf);
+		sxsbfData.push(edu800List[i].sxsbf);
+		clfData.push(edu800List[i].clf);
+	}
+
+	option = {
+		title: {
+			left: 'center',
+			text: edu800List[0].year+'年二级学院预决算数据',
+			textStyle: {
+				color: 'rgba(96,173,197,0.96)',
+				fontSize: '16'
+			},
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'cross'
+			}
+		},
+		animationEasing: 'elasticOut',
+		legend: {
+			left: 'center',
+			bottom:'bottom',
+			data: ['教师课时费', '网络课程资源', '人员管理费', '场地租赁费', '教学运行设备费','培养方案论证费','实训设备费','差旅费']
+		},
+		color:['rgba(22,178,209,0.66)','rgba(210,14,13,0.61)' ,'rgba(207,125,101,0.85)','rgba(112,144,162,0.87)', 'rgba(97,160,168,0.87)',  '#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+		xAxis: {
+			type: 'value',
+			splitLine: {
+				show: true,
+				lineStyle:{
+					type:'dashed'
+				}
+			}
+		},
+		yAxis: {
+			type: 'category',
+			data: yAxisData
+		},
+		series: [
+			{
+				name: '教师课时费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data:jsksfData
+			},
+			{
+				name: '网络课程资源',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: wlkczyData
+			},
+			{
+				name: '人员管理费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: yyglfData
+			},
+			{
+				name: '场地租赁费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: cdzlfData
+			},
+			{
+				name: '教学运行设备费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: jxyxsbfData
+			},
+			{
+				name: '培养方案论证费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: pyfalzfData
+			},
+			{
+				name: '实训设备费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: sxsbfData
+			},
+			{
+				name: '差旅费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'insideRight'
+				},
+				data: clfData
+			}
+		]
+	};
+	myChart.setOption(option);
+}
+
+//渲染学院年份select
+function stuffYearSelect(){
+	var haveYears=$("#departmentPredictionTable").bootstrapTable('getData');
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < haveYears.length; i++) {
+		str += '<option value="' + haveYears[i].year + '">' + haveYears[i].year
+			+ '</option>';
+	}
+	stuffManiaSelect("#predictionChart_changeYear", str);
+	stuffManiaSelect("#departmentPredictionChart_changeYear", str);
+
+	$("#predictionChart_changeYear").change(function() {
+		var year=getNormalSelectValue("predictionChart_changeYear");
+		changeYear(year);
+	});
+
+	$("#departmentPredictionChart_changeYear").change(function() {
+		var year=getNormalSelectValue("departmentPredictionChart_changeYear");
+		changeYear(year);
+	});
+}
+
+//chart区改变年份
+function changeYear(year){
+	if(year===""){
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getDataPredtiction",
+		data: {
+			"year":year
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var edu800List=backjson.data.edu800List;
+				var edu800SumList=backjson.data.edu800SumList;
+				if(edu800List.length==0){
+					toastr.warning("暂无预决算数据");
+				}
+				stuffPredictionChart(edu800SumList[0]);
+				stuffDepartmentPredictionChart(edu800List);
+			} else {
+				$(".allDataPredictionArea,.departmentDataPredictionArea").find(".cannottxt").show();
+				$(".allDataPredictionArea").find(".predictionChart").hide();
+				$(".departmentDataPredictionArea").find(".departmentPredictionChart").hide();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
 /*
  * tab1 end
  */
@@ -95,7 +370,7 @@ var choosend=new Array();
 function stuffDepartmentPredictionTableEmptyTable(tableInfo){
 	window.releaseNewsEvents = {
 		'click #modifyPrediction' : function(e, value, row, index) {
-			modifyPrediction(row);
+			wantmodifyPrediction(row);
 		},
 		'click #deletePrediction' : function(e, value, row, index) {
 			wantDeletePrediction(row);
@@ -121,16 +396,16 @@ function stuffDepartmentPredictionTableEmptyTable(tableInfo){
 		toolbar : '#toolbar',
 		showColumns : true,
 		onCheck : function(row) {
-			onCheckXZB(row);
+			onCheck(row);
 		},
 		onUncheck : function(row) {
-			onUncheckXZB(row);
+			onUncheck(row);
 		},
 		onCheckAll : function(rows) {
-			onCheckAllXZB(rows);
+			onCheckAll(rows);
 		},
 		onUncheckAll : function(rows,rows2) {
-			onUncheckAllXZB(rows2);
+			onUncheckAll(rows2);
 		},
 		onPageChange : function() {
 			drawPagination(".departmentPredictionTableArea", "预决算信息");
@@ -300,35 +575,141 @@ function onUncheckAll(row){
 }
 
 //预备修改
-function modifyPrediction(row){
-
+function wantmodifyPrediction(row){
+	emptyModal();
+	$.showModal("#addModal",true);
+	stuffManiaSelectWithDeafult("#add_department",row.departmentCode,row.departmentName)
+	$("#add_year").val(row.year);
+	$("#add_jsks").val(row.jsksf);
+	$("#add_wlkczy").val(row.wlkczy);
+	$("#add_yyglf").val(row.yyglf);
+	$("#add_cdzlf").val(row.cdzlf);
+	$("#add_jxyxsbf").val(row.jxyxsbf);
+	$("#add_pyfalzf").val(row.pyfalzf);
+	$("#add_sxsb").val(row.sxsbf);
+	$("#add_clf").val(row.clf);
+	//确认修改
+	$('.confirmBtn').unbind('click');
+	$('.confirmBtn').bind('click', function(e) {
+		modifyPrediction(row);
+		e.stopPropagation();
+	});
 }
 
 //发送修改请求
 function modifyPrediction(row){
+	var departmentDataPrediction=getDepartmentDataPrediction();
+	if(typeof departmentDataPrediction==="undefined"){
+		return;
+	}
 
+	departmentDataPrediction.edu800_ID=row.edu800_ID;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/saveFinanceInfo",
+		data: {
+			"financeInfo":JSON.stringify(departmentDataPrediction)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+			getDataPredtictionInfo("");
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$("#departmentPredictionTable").bootstrapTable('updateByUniqueId', {
+					id: departmentDataPrediction.edu800_ID,
+					row: departmentDataPrediction
+				});
+				toolTipUp(".myTooltip");
+				$.hideModal("#addModal");
+			} else {
+				toastr.info(backjson.msg);
+			}
+		}
+	});
 }
 
 //单个删除
 function wantDeletePrediction(row){
-
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.year+"年-"+row.departmentName+"的预决算数据");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var removeArray = new Array;
+		removeArray.push(row.edu800_ID);
+		deletePredictions(removeArray);
+		e.stopPropagation();
+	});
 }
 
 //多选删除
 function wantDeletePredictions(){
-
+	var choosendData = choosend;
+	if (choosendData.length === 0) {
+		toastr.warning('暂未选择任何班级');
+		return;
+	}
+	$.showModal("#remindModal",true);
+	$(".remindType").html("已选的预决算数据");
+	$(".remindActionType").html("删除");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		var removeArray = new Array;
+		for (var i = 0; i < choosendData.length; i++) {
+			removeArray.push(choosendData[i].edu800_ID);
+		}
+		deletePredictions(removeArray);
+		e.stopPropagation();
+	});
 }
 
 //发送删除请求
-function modifyPrediction(deleteIds){
-
+function deletePredictions(deleteIds){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/deleteFinanceInfo",
+		data: {
+			"deleteIds":JSON.stringify(deleteIds)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+			getDataPredtictionInfo("");
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				tableRemoveAction("#departmentPredictionTable", deleteIds, ".departmentPredictionTableArea", "预决算信息");
+				toolTipUp(".myTooltip");
+				$.hideModal("#remindModal");
+			} else {
+				toastr.info(backjson.msg);
+			}
+		}
+	});
 }
 
 //预备录入二级学院数据
 function wantAddDepartmentDataPrediction(){
 	emptyModal();
 	$.showModal("#addModal",true);
-	$('.addAdministrationClassTip').find(".myInput").attr("disabled", false) // 取消input元素为readonly
 }
 
 //确认新增数据
@@ -339,8 +720,8 @@ function confirmAddDepartmentDataPrediction(){
 	}
 	var allDepartmentPrediction = $("#departmentPredictionTable").bootstrapTable("getData");
 	for (var i = 0; i < allDepartmentPrediction.length; i++) {
-		if(allDepartmentPrediction[i].year===departmentDataPrediction.year){
-			toastr.warning(allDepartmentPrediction[i].year+"年预决算数据已存在");
+		if(allDepartmentPrediction[i].year===departmentDataPrediction.year&&allDepartmentPrediction[i].departmentCode===departmentDataPrediction.departmentCode){
+			toastr.warning(allDepartmentPrediction[i].year+"年"+allDepartmentPrediction[i].departmentName+"预决算数据已存在");
 			return ;
 		}
 	}
@@ -361,6 +742,7 @@ function confirmAddDepartmentDataPrediction(){
 		},
 		complete: function(xhr, status) {
 			requestComplete();
+			getDataPredtictionInfo("");
 		},
 		success : function(backjson) {
 			hideloding();
@@ -496,6 +878,41 @@ function getDepartmentDataPrediction(){
 	returnObject.createPerson=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span").attr("userId");
 	returnObject.personName=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;;
 	return returnObject;
+}
+
+// chart自适应
+function chartListener(){
+	window.addEventListener("resize", function() {
+		var predictionChart = echarts.init(document.getElementById('predictionChart'));
+		predictionChart.resize();
+		var departmentPredictionChart = echarts.init(document.getElementById('departmentPredictionChart'));
+		departmentPredictionChart.resize();
+	});
+}
+
+//js -- 对象分组（根据对象的某一属性）
+function group(arr) {
+	var map = {},
+		dest = [];
+	for(var i = 0; i < arr.length; i++){
+		var ai = arr[i];
+		if(!map[ai.year]){
+			dest.push({
+				id: ai.year,
+				data: [ai]
+			});
+			map[ai.year] = ai;
+		}else{
+			for(var j = 0; j < dest.length; j++){
+				var dj = dest[j];
+				if(dj.year == ai.year){
+					dj.data.push(ai);
+					break;
+				}
+			}
+		}
+	}
+	return dest;
 }
 
 //页面初始化时按钮事件绑定
