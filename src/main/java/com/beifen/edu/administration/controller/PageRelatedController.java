@@ -255,4 +255,9 @@ public class PageRelatedController {
 	public String chartDemoPage() {
 		return "chartDemo";
 	}
+
+	@RequestMapping("teachDatasConfiguration")
+	public String teachDatasConfigurationPage() {
+		return "teachDatasConfiguration";
+	}
 }

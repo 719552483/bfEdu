@@ -30,23 +30,31 @@ body {
 
 .samllAreaColor {
 	background: rgba(8, 53, 93, 0.22);
+	padding-top: 15px;
 }
 
 .samllAreaColor_1 {
-	background: rgba(8, 53, 93, 0.43);
+	padding-top: 15px;
+	background: rgba(8, 53, 93, 0.22);
 }
 
 .colForThree {
-	height: 90%;
+	/*height: 90%;*/
+	height:auto;
 }
 
 .samllPartOfIndex {
 	height: 31%;
 	margin-bottom: 20px;
+	min-height: 222px;
 }
 
 .centerPartOfIndex {
-	height: 88%;
+	height: auto;
+}
+4
+.centerPartOfIndex2 {
+	height: auto;
 }
 
 .noMargin {
@@ -180,9 +188,57 @@ body {
 	 color: rgb(94, 173, 197);
 }
 
+.opticyCol1 .col1{
+	margin-bottom: 0px;
+	background-color: rgb(91 127 158 / 85%);
+}
+
+.opticyCol1 .btn-group{
+	width: 100%!important;
+}
+
+.opticyCol1 .btn{
+	background:none!important;
+	border: none;
+	width: 100%;
+}
+
+.opticyCol1 .btn:hover ,.opticyCol1 .btn:active,.opticyCol1 .btn:focus{
+	color: rgb(122 162 197);
+}
+
+.opticyCol1 .col1 ul{
+	background: rgb(122 162 197);
+	width: 100%;
+	text-align: center;
+}
+
+.opticyCol1 .col1 li a{
+	color: white;
+}
+
+.opticyCol1 .col1 li a:hover{
+	color: black;
+}
+
+.centerPartOfIndex2 .tableArea .search{
+	margin-top: 0px !important;
+}
+
 .pagination>li>a:hover,
 .pagination>.active>a {
 	background-color: rgba(64, 169, 216, 0.2196078431372549);
+}
+
+.opticyCol1 .select-mania-inner{
+	min-height: 33px!important;
+	height: 33px!important;
+}
+
+.opticyCol1 .select-mania-values{
+	min-height: 18px;
+	height: 18px;
+	margin-top: -8px;
 }
 
 ::-webkit-input-placeholder {

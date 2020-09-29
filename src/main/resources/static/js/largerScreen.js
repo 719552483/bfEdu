@@ -295,12 +295,12 @@ function drawMap(id, allMapJson, currentTeachLocal) {
 	option = {
 		title: {
 			text: '辽宁省教学点分布',
-			subtext: "2019年学院高职扩招在籍学生6230人，其中第一批高职扩招在籍学生2931人，设57个教学班，第二批高职扩招学生3299人，共设85个教学班级。", //副标题 \n 用于换行
+			subtext: "2019年学院高职扩招在籍学生6230人，其中第一批高职扩招在籍学生2931人，共设57个教学班\n第二批高职扩招学生3299人，共设85个教学班级。", //副标题 \n 用于换行
 			itemGap: 15, //主副标题间距
 			padding: [20, 10, 5, 5], //设置标题内边距,上，右，下，左
 			left: "center",
-			// x: "left", 
-			// y: 'top', 
+			// x: "left",
+			// y: 'top',
 			textStyle: {
 				fontSize: 20, //大小
 				fontWeight: '800', //粗细
@@ -319,7 +319,7 @@ function drawMap(id, allMapJson, currentTeachLocal) {
 			selectedMode: false, //选中模式：single | multiple
 			left: 50,
 			right: 50,
-			top: 20,
+			top:40,
 			bottom: -50,
 			label: {
 				normal: { //静态的时候展示样式
