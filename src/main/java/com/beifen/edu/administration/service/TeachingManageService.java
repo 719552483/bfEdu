@@ -951,7 +951,8 @@ public class TeachingManageService {
 
         //根据信息查询所有课表信息
         List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
-        List<YearSchedulePO> yearSchedulePOS = yearScheduleViewDao.findAll(specification);
+        List<YearSchedulePO> yearSchedules = yearScheduleViewDao.findAll(specification);
+        List<YearSchedulePO> yearSchedulePOS = replaceSchedule(yearSchedules);
         if(yearSchedulePOS.size() == 0) {
             resultVO = ResultVO.setFailed("当前年度找到您的课程");
         } else {
@@ -959,11 +960,6 @@ public class TeachingManageService {
                 SchoolTimetablePO s = new SchoolTimetablePO();
                 try {
                     utils.copyParm(o,s);
-                    if (o.getKsz().equals(o.getJsz())) {
-                        s.setSzz("第"+o.getKsz()+"周");
-                    } else {
-                        s.setSzz("第"+o.getKsz()+"-"+o.getJsz()+"周");
-                    }
                     schoolTimetableList.add(s);
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
@@ -977,6 +973,39 @@ public class TeachingManageService {
             resultVO = ResultVO.setSuccess("当前周共找到"+yearSchedulePOS.size()+"个课程",timeTable);
         }
         return resultVO;
+    }
+
+    //重新整理学年课表
+    private List<YearSchedulePO> replaceSchedule(List<YearSchedulePO> yearSchedules) {
+        List<YearSchedulePO> newList = new ArrayList<>();
+        int size = yearSchedules.size();
+        for (int i = 0; i < size ; i++) {
+            String kjid = yearSchedules.get(i).getKjid();
+            String xqid = yearSchedules.get(i).getXqid();
+            List<YearSchedulePO> orderList = new ArrayList<>();
+            for ( int j = i ;j < size; j++) {
+                YearSchedulePO info = yearSchedules.get(j);
+                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid())) {
+                    orderList.add(info);
+                }
+                if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()))) {
+                    break;
+                }
+            }
+            List<String> ssz = new ArrayList<>();
+            for (YearSchedulePO e : orderList) {
+                if (e.getKsz().equals(e.getJsz())) {
+                    ssz.add("第"+e.getKsz()+"周");
+                } else {
+                    ssz.add("第"+e.getKsz()+"-"+e.getJsz()+"周");
+                }
+            }
+            YearSchedulePO addInfo = orderList.get(0);
+            addInfo.setSzz(utils.listToString(ssz,','));
+            newList.add(addInfo);
+            i += orderList.size()-1;
+        }
+        return newList;
     }
 
 
@@ -1013,7 +1042,8 @@ public class TeachingManageService {
             }
         };
 
-        List<YearSchedulePO> yearSchedulePOS = yearScheduleViewDao.findAll(specification);
+        List<YearSchedulePO> yearSchedules = yearScheduleViewDao.findAll(specification);
+        List<YearSchedulePO> yearSchedulePOS = replaceSchedule(yearSchedules);
         if(yearSchedulePOS.size() == 0) {
             resultVO = ResultVO.setFailed("当前年度找到您的课程");
         } else {
@@ -1021,11 +1051,6 @@ public class TeachingManageService {
                 SchoolTimetablePO s = new SchoolTimetablePO();
                 try {
                     utils.copyParm(o,s);
-                    if (o.getKsz().equals(o.getJsz())) {
-                        s.setSzz("第"+o.getKsz()+"周");
-                    } else {
-                        s.setSzz("第"+o.getKsz()+"-"+o.getJsz()+"周");
-                    }
                     schoolTimetableList.add(s);
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
