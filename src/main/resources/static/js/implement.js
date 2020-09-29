@@ -1550,7 +1550,7 @@ function group(arr) {
 function toPercent(num) {
     var returnsTR='';
     var ex = /^\d+$/;
-    if (ex.test(num)) {
+    if (ex.test(num*100)) {
         returnsTR= (num*100) + '%';
     }else{
         returnsTR= (num*100).toFixed(2) + '%';
