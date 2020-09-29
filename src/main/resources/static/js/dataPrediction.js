@@ -112,7 +112,7 @@ function stuffPredictionChart(edu800SumList){
 				name: '费用类型',
 				type: 'pie',
 				radius: '55%',
-				center: ['50%', '60%'],
+				center: ['50%', '50%'],
 				data:  [
 					{value: edu800SumList.jsksf, name: '教师课时费'},
 					{value: edu800SumList.wlkczy, name: '网络课程资源'},
@@ -176,7 +176,27 @@ function stuffDepartmentPredictionChart(edu800List){
 		tooltip: {
 			trigger: 'axis',
 			axisPointer: {
-				type: 'cross'
+				type: 'shadow'
+			},
+			formatter : function(params, ticket, callback) {
+				if (params.value == undefined || params.value !== params.value) {
+					params.value = 0;
+				}
+				var count=0;
+				var str='';
+				for (var i = 0; i < params.length; i++) {
+					count+=params[i].data;
+				}
+
+				for (var i = 0; i < params.length; i++) {
+					if(i===0){
+						str+=params[i].axisValue+'   总预算:'+count+'<br />'+params[i].marker+' '+params[i].seriesName+':'+params[i].data+' ('+toPercent(params[i].data/count)+')<br />';
+					}else{
+						str+=params[i].marker+' '+params[i].seriesName+':'+params[i].data+' ('+toPercent(params[i].data/count)+')<br />';
+					}
+				}
+
+				return  str;
 			}
 		},
 		animationEasing: 'elasticOut',
@@ -206,6 +226,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data:jsksfData
@@ -216,6 +243,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: wlkczyData
@@ -226,6 +260,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: yyglfData
@@ -236,6 +277,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: cdzlfData
@@ -246,6 +294,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: jxyxsbfData
@@ -256,6 +311,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: pyfalzfData
@@ -266,6 +328,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: sxsbfData
@@ -276,6 +345,13 @@ function stuffDepartmentPredictionChart(edu800List){
 				stack: '总量',
 				label: {
 					show: true,
+					formatter: function (params) {
+						if (params.value > 0) {
+							return params.value;
+						} else {
+							return '';
+						}
+					},
 					position: 'insideRight'
 				},
 				data: clfData

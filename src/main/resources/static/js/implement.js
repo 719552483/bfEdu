@@ -1546,6 +1546,19 @@ function group(arr) {
 	return dest;
 }
 
+//把number转化成百分比
+function toPercent(num) {
+    var returnsTR='';
+    var ex = /^\d+$/;
+    if (ex.test(num)) {
+        returnsTR= (num*100) + '%';
+    }else{
+        returnsTR= (num*100).toFixed(2) + '%';
+    }
+
+    return returnsTR;
+}
+
 //根据权限渲染菜单
 function changeMenu(){
 	//首先全部展示父节点
