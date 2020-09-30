@@ -256,6 +256,11 @@ public class PageRelatedController {
 		return "chartDemo";
 	}
 
+	@RequestMapping("dataExcavating")
+	public String dataExcavatingPage() {
+		return "dataExcavating";
+	}
+
 	@RequestMapping("teachDatasConfiguration")
 	public String teachDatasConfigurationPage() {
 		return "teachDatasConfiguration";
