@@ -15,6 +15,9 @@ public class Edu203 {
 	private String kjmc; // 课节名称
 	private String xqid; // 星期id
 	private String xqmc; // 星期名称
+	private String Edu101_id;//教师id
+	private String teacherName;//教师名称
+	private String teacherType;//教师类型
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -91,5 +94,29 @@ public class Edu203 {
 
 	public void setJsz(String jsz) {
 		this.jsz = jsz;
+	}
+
+	public String getEdu101_id() {
+		return Edu101_id;
+	}
+
+	public void setEdu101_id(String edu101_id) {
+		Edu101_id = edu101_id;
+	}
+
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	public String getTeacherType() {
+		return teacherType;
+	}
+
+	public void setTeacherType(String teacherType) {
+		this.teacherType = teacherType;
 	}
 }

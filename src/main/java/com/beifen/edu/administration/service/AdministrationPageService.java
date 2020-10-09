@@ -1064,6 +1064,9 @@ public class AdministrationPageService {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+
+
+
 		//如果为新增删除原有关联
 		if(edu202.getEdu202_ID() != null) {
 			edu203Dao.deleteByscheduleId(edu202.getEdu202_ID().toString());
@@ -1122,7 +1125,21 @@ public class AdministrationPageService {
 					save.setKjmc(e.getKjmc());
 					save.setXqid(e.getXqid());
 					save.setXqmc(e.getXqmc());
+					save.setEdu101_id(e.getEdu101_id());
+					save.setTeacherName(e.getTeacherName());
+					save.setTeacherType("01");
 					edu203Dao.save(save);
+					if(edu201.getZyls() != null) {
+						String[] zyls = edu201.getZyls().split(",");
+						String[] zylsmc = edu201.getZylsmc().split(",");
+						for(int n = 0;n < zyls.length; n++){
+							save.setEdu203_ID(null);
+							save.setEdu101_id(zyls[n]);
+							save.setTeacherName(zylsmc[n]);
+							save.setTeacherType("02");
+							edu203Dao.save(save);
+						}
+					}
 					currentXs+=2;
 					if (currentXs >= jzxs) {
 						break classCycle;
