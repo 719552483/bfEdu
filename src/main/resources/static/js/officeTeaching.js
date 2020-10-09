@@ -1364,18 +1364,18 @@ function stuffPuttedOutTable(tableInfo){
 				formatter: paramsMatter
 
 			},{
+				field: 'ls',
+				title: '任课老师',
+				align: 'left',
+				sortable: true,
+				formatter: charSpiltMatter
+			},{
 				field: 'zyls',
-				title: '主要老师',
+				title: '助教',
 				align: 'left',
 				sortable: true,
 				formatter: charSpiltMatter
 
-			},{
-				field: 'ls',
-				title: '老师',
-				align: 'left',
-				sortable: true,
-				formatter: charSpiltMatter
 			},{
 				field: 'sfxylcj',
 				title: '是否需要录成绩',
@@ -1547,8 +1547,10 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 		$(".jzformtitle,.puttedKjArea").hide();
 	}else{
 		for (var i = 0; i <classPeriodList.length ; i++) {
+			if(classPeriodList[i].teacherType==="01"){
 			$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+' -'+classPeriodList[i].teacherName+'</div>');
-		}
+			}
+			}
 	}
 
 
