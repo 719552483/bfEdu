@@ -969,8 +969,8 @@ function putOutTasks(){
 //检查任务书信息
 function checkPutOutInfo(putOutArray){
 	for (var i = 0; i < putOutArray.length; i++) {
-		if((putOutArray[i].ls===""||putOutArray[i].ls==null)&&(putOutArray[i].zyls===""||putOutArray[i].zyls==null)){
-			toastr.warning('有任务书暂未指定教师');
+		if(putOutArray[i].ls===""||putOutArray[i].ls==null){
+			toastr.warning('有任务书暂未指定任课老师');
 			return;
 		}
 
