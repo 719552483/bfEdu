@@ -774,7 +774,8 @@ function allTeacherStartSearch(){
 			 if (backjson.code === 200) {
 				 stuffTaecherTable(backjson.data);
 			 } else {
-			 	toastr.warning(backjson.data);
+			 	toastr.warning(backjson.msg);
+				 stuffTaecherTable({});
 			 }
 		}
 	});
@@ -785,7 +786,37 @@ function allTaecherReSearch(){
 	var reObject = new Object();
 	reObject.InputIds = "#departmentName,#mangerName,#mangerNumber";
 	reReloadSearchsWithSelect(reObject);
-	stuffTaecherTable();
+	var serachObject=new Object();
+	serachObject.departmentName="";
+	serachObject.xm="";
+	serachObject.jzgh="";
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeacher",
+		data: {
+			"SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffTaecherTable(backjson.data);
+			} else {
+				toastr.warning(backjson.data);
+			}
+		}
+	});
 }
 
 //确认选择教师事件

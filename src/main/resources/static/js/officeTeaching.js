@@ -251,15 +251,17 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 }
 
 //填充排课区域的title
-function stuffTitle(culturePlanInfo,choosedTask){
-	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.levelTxt+" "
-		+culturePlanInfo.departmentTxt+" "
-		+culturePlanInfo.gradeTxt+" "
-		+culturePlanInfo.majorTxt+" "
-		+choosedTask.kcmc+
-		"(总学时："+choosedTask.zxs+"课时  集中学时："+choosedTask.jzxs+"课时  分散学时："+choosedTask.fsxs+"课时)");
+function stuffTitle(culturePlanInfo,choosedTask) {
+	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.levelTxt + " "
+		+ culturePlanInfo.departmentTxt + " "
+		+ culturePlanInfo.gradeTxt + " "
+		+ culturePlanInfo.majorTxt + " "
+		+ choosedTask.kcmc +
+		"(总学时：" + choosedTask.zxs + "课时  集中学时：" + choosedTask.jzxs + "课时  分散学时：" + choosedTask.fsxs + "课时)");
 	$(".jzxsSpan").html(choosedTask.jzxs);
 	$(".fsxsSpan").html(choosedTask.fsxs);
+	$(".cyclePuttedHousr").html(0);
+	$(".cycleWaitHousr").html(choosedTask.jzxs);
 }
 
 //初始化课节等下拉框
@@ -458,8 +460,8 @@ function configedJz(){
 	}else{
 		$(".itab").find("li:eq(2)").find("a").trigger('click');
 	}
-
-
+	$(".fsPuttedHousr").html(0);
+	$(".fsWaitHousr").html($('.fsxsSpan ')[0].innerText);
 }
 
 //tab2的上一步
@@ -511,6 +513,11 @@ function  checkAllPK(){
 function addNewFsKj(){
 	var fsxq=getNormalSelectValue("fsxq");
 	var fsXs=parseInt($("#fsXs").val());
+	var allHousr=parseInt($(".fsxsSpan")[0].innerText);
+	var PuttedHousr=parseInt($(".fsPuttedHousr")[0].innerText)+fsXs;
+	var waitHour=0;
+	allHousr-PuttedHousr<0?waitHour=0:waitHour=allHousr-PuttedHousr;
+
 	if(fsxq===""){
 		toastr.warning('请选择周数');
 		return;
@@ -522,6 +529,11 @@ function addNewFsKj(){
 
 	if($(".fskjRsArea").find("#choosendfsKj"+fsxq).length!==0){
 		toastr.warning('该课节安排已选择');
+		return;
+	}
+
+	if(PuttedHousr>allHousr){
+		toastr.warning('分散课时安排超过'+allHousr+'课时');
 		return;
 	}
 
@@ -541,6 +553,11 @@ function addNewFsKj(){
 		e.stopPropagation();
 	});
 	$(".fskjRsArea").show();
+
+
+
+	$(".fsPuttedHousr").html(PuttedHousr);
+	$(".fsWaitHousr").html(waitHour);
 }
 
 //课节下拉框事件
@@ -608,19 +625,43 @@ function addCoursePlan(){
 			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
 	}
 
+	var jzxs=parseInt($(".jzxsSpan ")[0].innerText);
+	var puttedHousr=parseInt($(".cyclePuttedHousr ")[0].innerText);
+	var waitHousr=parseInt($(".cycleWaitHousr ")[0].innerText);
+	var currentHour=((parseInt(endWeek)-parseInt(startWeek))+1)*2;
+	puttedHousr=puttedHousr+currentHour;
+	jzxs-puttedHousr<0?waitHousr=0:waitHousr=jzxs-puttedHousr;
+
 	if(isHave){
 		toastr.warning('该周期已安排')
 		return;
 	}
 
+	if(puttedHousr>jzxs){
+		toastr.warning('集中课时安排超过'+jzxs+'课时');
+		//重置dom
+		var reObject = new Object();
+		reObject.normalSelectIds = "#kj,#xq,#startWeek,#endWeek";
+		reReloadSearchsWithSelect(reObject);
+		$(".choosendKjInfo").empty();
+		$(".kjRsArea").hide();
+		return;
+	}
+
+	//重置dom
 	var reObject = new Object();
 	reObject.normalSelectIds = "#kj,#xq,#startWeek,#endWeek";
 	reReloadSearchsWithSelect(reObject);
 
+	//渲染dom
 	$(".choosendCycleArea,.singleCycle").append(appendStr);
 	$(".lastCycleArea ").show();
 	$(".singleKj").empty();
 	$(".kjRsArea").hide();
+
+	//展示实时结果
+	$(".cyclePuttedHousr").html(puttedHousr);
+	$(".cycleWaitHousr").html(waitHousr);
 
 	$('.choosendCycleInfoImg').unbind('click');
 	$('.choosendCycleInfoImg').bind('click', function(e) {
@@ -632,6 +673,16 @@ function addCoursePlan(){
 //删除周期
 function removeCycle(eve){
 	var id=eve.currentTarget.parentElement.id;
+	var startWeek=parseInt(eve.currentTarget.parentElement.attributes[5].nodeValue);
+	var endWeek=parseInt(eve.currentTarget.parentElement.attributes[6].nodeValue);
+	var jzxs=parseInt($(".jzxsSpan ")[0].innerText);
+	var puttedHousr=parseInt($(".cyclePuttedHousr ")[0].innerText);
+	var waitHousr=parseInt($(".cycleWaitHousr ")[0].innerText);
+
+	var currentHour=((endWeek-startWeek)+1)*2;
+	puttedHousr=puttedHousr-currentHour;
+	waitHousr=jzxs-puttedHousr;
+
 	$(".singleCycle,.choosendCycleArea").find("#"+id).remove();
 	var tab1CycleInfo=$(".singleCycle").find(".choosendCycleInfo");
 	if(tab1CycleInfo.length===0){
@@ -639,6 +690,10 @@ function removeCycle(eve){
 	}else{
 		$(".lastCycleArea").show();
 	}
+
+	//展示实时结果
+	$(".cyclePuttedHousr").html(puttedHousr);
+	$(".cycleWaitHousr").html(waitHousr);
 }
 
 //新增课节组
@@ -707,6 +762,11 @@ function removeKj(eve){
 //删除分散课节组
 function removefsKj(eve){
 	var id=eve.currentTarget.parentElement.id;
+	var fsXs=parseInt(eve.currentTarget.parentElement.attributes[1].nodeValue);
+	var PuttedHousr=parseInt($(".fsPuttedHousr")[0].innerText)-fsXs;
+	var waitHour=parseInt($(".fsWaitHousr")[0].innerText)+fsXs;
+
+
 	$(".choosendfsKjArea,.singlefsKj").find("#"+id).remove();
 	var tab2KjInfo=$(".singlefsKj").find(".choosendfsKjInfo");
 	if(tab2KjInfo.length===0){
@@ -719,6 +779,9 @@ function removefsKj(eve){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#fsxq";
 	reReloadSearchsWithSelect(reObject);
+
+	$(".fsPuttedHousr").html(PuttedHousr);
+	$(".fsWaitHousr").html(waitHour);
 }
 
 //根据学年渲染开始结束周

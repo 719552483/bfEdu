@@ -520,7 +520,7 @@ float: left;
 	margin-left: -20px !important;
 }
 
-.fixed-table-container input[type="checkbox"] {
+.bs-checkbox  input[type="checkbox"] {
 	margin:15px -24px auto !important;
 }
 
@@ -1760,10 +1760,14 @@ margin: 0px 0px -14px -15px!important;
 	font-weight: 600;
 }
 
-.scheduleRsTitle{
+.scheduleRsTitle,.real-timeTitle{
 	font-size: 15px;
 	font-family: sans-serif;
 	color: rgb(50 107 134 / 95%);
+}
+
+.real-timeTitle{
+	text-align: left!important;
 }
 
 .choosendTerm,.choosendWeekArea,.choosendKjArea,.choosendfsKjArea,.choosendLoactionArea,.choosendCycleArea{

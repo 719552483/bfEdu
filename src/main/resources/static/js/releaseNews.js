@@ -427,12 +427,12 @@ function changNewsIshow(currentNewId,currentStatus,e) {
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code===200) {
+			if (backjson) {
 				//不确定是否在Index页面已删除???
 				toastr.success('操作成功');
 				e.currentTarget.parentNode.parentNode.attributes[1].nodeValue=newStatus;
 			} else {
-				toastr.warning(backjson.msg);
+				toastr.warning('操作失败，请重试');
 			}
 		}
 	});
