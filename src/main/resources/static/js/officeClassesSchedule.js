@@ -159,14 +159,14 @@ function stuffTaskInfoTable(tableInfo) {
 				sortable: true,
 				formatter: paramsMatter
 			},{
-				field: 'zylsmc',
-				title: '主要老师-(双击选择)',
+				field: 'lsmc',
+				title: '任课老师-(双击选择)',
 				clickToSelect: false,
 				align: 'left',
 				formatter: pointTeacherMatter
 			},{
-				field: 'lsmc',
-				title: '老师-(双击选择)',
+				field: 'zylsmc',
+				title: '助教-(双击选择)',
 				clickToSelect: false,
 				align: 'left',
 				formatter: pointTeacherMatter
@@ -839,7 +839,30 @@ function confirmChoosedTeacher(tableId,index,cellName){
 	var drawLsStr2=codeArray.toString();
 
 	var choosedTask = $(tableId).bootstrapTable("getSelections");
+	var datas = $(tableId).bootstrapTable("getData");
+
+	if(tableId==="#scheduleClassesTable"){
+		sfxylcjControlBind();
+	}else{
+		putOutTasksfxylcjControlBind();
+	}
+
 	if(choosedTask<=0){
+		//判断选择的老师是否会与已选择的任务书中的老师冲突
+		for (var i = 0; i < codeArray.length; i++) {
+			if(cellName==='ls'){
+				if(codeArray.indexOf(parseInt(datas[index].zyls))!==-1){
+					toastr.warning('该任务书助教包含该教师');
+					return;
+				}
+			}else{
+				if(codeArray.indexOf(parseInt(datas[index].ls))!==-1){
+					toastr.warning('该任务书任课教师包含该教师');
+					return;
+				}
+			}
+		}
+
 		$(tableId).bootstrapTable('updateCell', {
 			index: index,
 			field: fieldName2,
@@ -854,6 +877,21 @@ function confirmChoosedTeacher(tableId,index,cellName){
 		});
 	}else{
 		for (var i = 0; i < choosedTask.length; i++) {
+			//判断选择的老师是否会与已选择的任务书中的老师冲突
+			for (var c = 0; c < codeArray.length; c++) {
+				if(cellName==='ls'){
+					if(codeArray.indexOf(parseInt(choosedTask[i].zyls))!==-1){
+						toastr.warning('有任务书助教包含该教师');
+						return;
+					}
+				}else{
+					if(codeArray.indexOf(parseInt(choosedTask[i].ls))!==-1){
+						toastr.warning('有任务书任课教师包含该教师');
+						return;
+					}
+				}
+			}
+
 			if(choosedTask[i].check){
 				$(tableId).bootstrapTable('updateCell', {
 					index: i,
@@ -869,11 +907,6 @@ function confirmChoosedTeacher(tableId,index,cellName){
 				});
 			}
 		}
-	}
-	if(tableId==="#scheduleClassesTable"){
-		sfxylcjControlBind();
-	}else{
-		putOutTasksfxylcjControlBind();
 	}
 	$.hideModal();
 	toolTipUp(".myTooltip");
@@ -1117,19 +1150,18 @@ function stuffPutOutTaskTable(tableInfo) {
 				formatter: paramsMatter
 			},	{
 				field: 'lsmc',
-				title: '老师-(双击选择)',
+				title: '任课老师-(双击选择)',
 				clickToSelect: false,
 				align: 'left',
 				sortable: true,
 				formatter: pointTeacherMatter
 			},{
 				field: 'zylsmc',
-				title: '主要老师-(双击选择)',
+				title: '助教-(双击选择)',
 				clickToSelect: false,
 				align: 'left',
 				sortable: true,
 				formatter: pointTeacherMatter
-
 			},{
 				field: 'sfxylcj',
 				title: '是否需要录成绩',

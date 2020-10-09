@@ -131,15 +131,14 @@ function stuffWaitTaskTable(tableInfo){
 					formatter: paramsMatter
 
 				},{
-					field: 'zylsmc',
-					title: '主要老师',
+					field: 'lsmc',
+					title: '任课老师',
 					align: 'left',
 					sortable: true,
 					formatter: charSpiltMatter
-
 				},{
-					field: 'lsmc',
-					title: '老师',
+					field: 'zylsmc',
+					title: '助教',
 					align: 'left',
 					sortable: true,
 					formatter: charSpiltMatter
@@ -227,20 +226,19 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 					toastr.warning('暂无可选教学点场地信息');
 					return;
 				}
+
+				var isZero=true;
+				choosedTask[0].jzxs===0?isZero=true:isZero=false;
+				drawJzXueDomArea(isZero,choosedTask,backjson.jxdInfo,backjson.termInfo[0],backjson.kjInfo);
+
 				if(choosedTask[0].fsxs===0){
 					$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").hide();
 				}else{
 					$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").show();
 				}
 
-				stuffTitle(culturePlanInfo,choosedTask[0]);
 				destoryLastStuff();
-				//渲染各个下拉框
-				var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
-				stuffTermArae(choosedTask,configSelectTxt);
-				stuffJxdArae(backjson.jxdInfo,configSelectTxt);
-				drawStartAndEndWeek(backjson.termInfo[0]);
-				stuffKjArae(backjson.kjInfo,configSelectTxt,configSelectTxt);
+				stuffTitle(culturePlanInfo,choosedTask[0]);
 				scheduleSingleClassBtnBind();
 				controlScheduleArea();
 			} else {
@@ -248,6 +246,52 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 			}
 		}
 	});
+}
+
+//集中学时区域dom渲染
+function drawJzXueDomArea(isZero,choosedTask,jxdInfo,termInfo,kjInfo){
+	var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
+	stuffTermArae(choosedTask,configSelectTxt);
+	stuffJxdArae(jxdInfo,configSelectTxt);
+	drawStartAndEndWeek(termInfo);
+	stuffKjArae(kjInfo,configSelectTxt,configSelectTxt);
+	if(isZero){
+		$(".itab").find("li:eq(1)").find("a").trigger('click');
+		$(".scheduleSingleClassArea").find(".itab").find("li:eq(0)").hide();
+		$(".scheduleSingleClassArea").find("#tab2").find(".cannottxt").hide();
+		$(".scheduleSingleClassArea").find("#tab2").find(".fsMainArea").show();
+
+		$(".fsPuttedHousr").html(0);
+		$(".fsWaitHousr").html(choosedTask[0].fsxs);
+
+		$.ajax({
+			method: 'get',
+			cache: false,
+			url: "/getYearWeek",
+			data:{
+				"yearId":choosedTask[0].xnid
+			},
+			dataType: 'json',
+			beforeSend: function (xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function (textStatus) {
+				requestError();
+			},
+			complete: function (xhr, status) {
+				requestComplete();
+			},
+			success: function (backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					drawStartAndEndWeek(backjson.data);
+					$(".choosendTerm").html(choosedTask[0].xn+"学年");
+				} else {
+					toastr.warning(backjson.msg);
+				}
+			}
+		});
+	}
 }
 
 //填充排课区域的title
@@ -476,6 +520,11 @@ function configedFsNextStep(){
 		return;
 	}
 	$(".itab").find("li:eq(2)").find("a").trigger('click');
+	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
+	if(currentJzxs==0){
+		$(".scheduleSingleClassArea").find("#tab3").find('.cannottxt').hide();
+		$(".scheduleSingleClassArea").find("#tab3").find('.rsArea').show();
+	}
 }
 
 //tab3的下一步
@@ -485,14 +534,17 @@ function configedAlllastStep(){
 
 //检查是否排完集中
 function checkJzPK(){
-	var PKInfo=getJzPKInfo(false);
-	var scheduleInfo=scheduleDetailInfo(false);
-	if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
-		$("#tab2").find(".cannottxt").show();
-		$("#tab2").find(".fsMainArea").hide();
-	}else{
-		$("#tab2").find(".cannottxt").hide();
-		$("#tab2").find(".fsMainArea").show();
+	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
+	if(currentJzxs!=0){
+		var PKInfo=getJzPKInfo(false);
+		var scheduleInfo=scheduleDetailInfo(false);
+		if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
+			$("#tab2").find(".cannottxt").show();
+			$("#tab2").find(".fsMainArea").hide();
+		}else{
+			$("#tab2").find(".cannottxt").hide();
+			$("#tab2").find(".fsMainArea").show();
+		}
 	}
 }
 
@@ -833,19 +885,35 @@ function redrawStartAndEndWeek(){
 
 //确认排课
 function confirmPk(){
-    var PKInfo=getJzPKInfo();
-	if(typeof PKInfo ==='undefined'){
-		return;
-	}
+	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
+	var scheduleInfo;
+	var PKInfo;
+	if(currentJzxs!=0){
+		PKInfo=getJzPKInfo();
+		if(typeof PKInfo ==='undefined'){
+			return;
+		}
 
-	var scheduleInfo=scheduleDetailInfo();
-	if(scheduleInfo.length==0){
-		return;
-	}
+		scheduleInfo=scheduleDetailInfo();
+		if(scheduleInfo.length==0){
+			return;
+		}
 
-	var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
-	if(!checkJzPkRs){
-		return;
+		var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
+		if(!checkJzPkRs){
+			return;
+		}
+	}else{
+		scheduleInfo=new Array();
+		var choosed = $("#WaitTaskTable").bootstrapTable("getSelections");
+		var PKInfo=new Object();
+		PKInfo.xnid=choosed[0].xnid;
+		PKInfo.xnmc=choosed[0].xn;
+		PKInfo.skddmc="";
+		PKInfo.skddid="";
+		PKInfo.pointid="";
+		PKInfo.point="";
+		PKInfo.edu201_ID=choosed[0].edu201_ID;
 	}
 
 	var fsxsInfo=new Array();
@@ -1455,9 +1523,15 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 
 	var classPeriodList=sortClassPeriodList(scheduleCompletedDetails.classPeriodList);
 
-	for (var i = 0; i <classPeriodList.length ; i++) {
-		$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+'授课</div>');
+	$(".jzformtitle,.puttedKjArea,.fsformtitle,.puttedfsKjArea").show();
+	if(classPeriodList.length===0){
+		$(".jzformtitle,.puttedKjArea").hide();
+	}else{
+		for (var i = 0; i <classPeriodList.length ; i++) {
+			$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+'授课</div>');
+		}
 	}
+
 
 	if(scatterList.length===0){
 		$(".fsformtitle,.puttedfsKjArea").hide();
