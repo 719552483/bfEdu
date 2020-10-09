@@ -326,6 +326,15 @@ function stuffTermArae(termInfo,str){
 			+ '</option>';
 	}
 	stuffManiaSelect("#term", str);
+
+	str='';
+	var allTeacher=termInfo[0].ls.split(",");
+	var allTeacherName=termInfo[0].lsmc.split(",");
+	for (var i = 0; i < allTeacher.length; i++) {
+		str += '<option value="' + allTeacher[i] + '">' + allTeacherName[i]
+			+ '</option>';
+	}
+	stuffManiaSelect("#teacher", str);
 }
 
 //填充教学点下拉框
@@ -629,6 +638,8 @@ function KjBtnschange(){
 
 //新增周期
 function addCoursePlan(){
+	var teacherID=getNormalSelectValue("teacher");
+	var teacherName=getNormalSelectText("teacher");
 	var term=getNormalSelectValue("term");
 	var startWeek=getNormalSelectValue("startWeek");
 	var endWeek=getNormalSelectValue("endWeek");
@@ -636,6 +647,11 @@ function addCoursePlan(){
 	var endWeekmc=getNormalSelectText("endWeek");
 	var choosedkJ=$(".singleKj").find(".choosendKjInfo");
 	var choosendCycle=$(".singleCycle").find(".choosendCycleInfo");
+
+	if(teacher===""){
+		toastr.warning('请选择任课教师')
+		return;
+	}
 
 	if(term===""){
 		toastr.warning('请选择学年')
@@ -673,7 +689,8 @@ function addCoursePlan(){
 			isHave=true;
 			break;
 		}
-		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'">集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +
+		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'">' +
+			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'    任课教师  -'+teacherName+
 			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
 	}
 
@@ -1064,6 +1081,8 @@ function scheduleDetailInfo(needToastr){
 		thisObject.kjid=current[4].nodeValue;
 		thisObject.ksz=current[5].nodeValue;
 		thisObject.jsz=current[6].nodeValue;
+		thisObject.Edu101_id=current[8].nodeValue;
+		thisObject.teacherName=current[9].nodeValue;
 		returnArray.push(thisObject);
 	}
 
@@ -1528,7 +1547,7 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 		$(".jzformtitle,.puttedKjArea").hide();
 	}else{
 		for (var i = 0; i <classPeriodList.length ; i++) {
-			$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+'授课</div>');
+			$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+' -'+classPeriodList[i].teacherName+'</div>');
 		}
 	}
 

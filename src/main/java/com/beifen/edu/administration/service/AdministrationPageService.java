@@ -1133,11 +1133,19 @@ public class AdministrationPageService {
 						String[] zyls = edu201.getZyls().split(",");
 						String[] zylsmc = edu201.getZylsmc().split(",");
 						for(int n = 0;n < zyls.length; n++){
-							save.setEdu203_ID(null);
-							save.setEdu101_id(zyls[n]);
-							save.setTeacherName(zylsmc[n]);
-							save.setTeacherType("02");
-							edu203Dao.save(save);
+							Edu203 one = new Edu203();
+							one.setEdu202_ID(edu202_id);
+							one.setWeek(week.toString());
+							one.setKsz(e.getKsz());
+							one.setJsz(e.getJsz());
+							one.setKjid(e.getKjid());
+							one.setKjmc(e.getKjmc());
+							one.setXqid(e.getXqid());
+							one.setXqmc(e.getXqmc());
+							one.setEdu101_id(zyls[n]);
+							one.setTeacherName(zylsmc[n]);
+							one.setTeacherType("02");
+							edu203Dao.save(one);
 						}
 					}
 					currentXs+=2;
