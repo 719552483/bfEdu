@@ -423,7 +423,7 @@ public class StaffManageController {
      */
     @RequestMapping("searchTeacher")
     @ResponseBody
-    public ResultVO SeacchTeacher(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
+    public ResultVO SearchTeacher(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
         JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
         String szxb ="";
         String zy = "";
@@ -462,6 +462,38 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 搜索教师
+     *
+     * @param SearchCriteria
+     *            搜索条件
+     * @return returnMap
+     */
+    @RequestMapping("searchAllTeacher")
+    @ResponseBody
+    public ResultVO searchAllTeacher(@RequestParam String SearchCriteria) {
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        String xm ="";
+        String jzgh = "";
+        String szxbmc = "";
+
+        if (jsonObject.has("xm")){
+            xm = jsonObject.getString("xm");
+        }
+        if (jsonObject.has("jzgh")){
+            jzgh = jsonObject.getString("jzgh");
+        }
+        if (jsonObject.has("departmentName")){
+            szxbmc = jsonObject.getString("departmentName");
+        }
+
+        Edu101 edu101 = new Edu101();
+        edu101.setXm(xm);
+        edu101.setJzgh(jzgh);
+        edu101.setSzxbmc(szxbmc);
+        ResultVO result = administrationPageService.searchAllTeacher(edu101);
+        return result;
+    }
     /**
      * 查询需要录入成绩的名单
      * @param userId

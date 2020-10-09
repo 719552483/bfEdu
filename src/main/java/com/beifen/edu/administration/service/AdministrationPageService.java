@@ -2386,4 +2386,33 @@ public class AdministrationPageService {
 		}
 		return resultVO;
 	}
+
+	public ResultVO searchAllTeacher(Edu101 edu101) {
+		ResultVO resultVO;
+
+		Specification<Edu101> specification = new Specification<Edu101>() {
+			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu101.getXm() != null && !"".equals(edu101.getXm())) {
+					predicates.add(cb.like(root.<String>get("xm"), '%' + edu101.getXm() + '%'));
+				}
+				if (edu101.getJzgh() != null && !"".equals(edu101.getJzgh())) {
+					predicates.add(cb.like(root.<String>get("jzgh"), '%' + edu101.getJzgh() + '%'));
+				}
+				if (edu101.getSzxbmc() != null && !"".equals(edu101.getSzxbmc())) {
+					predicates.add(cb.like(root.<String>get("szxbmc"), '%' + edu101.getSzxbmc() + '%'));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu101> teacherList = edu101DAO.findAll(specification);
+
+		if(teacherList.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无教师信息");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+teacherList.size()+"个教师",teacherList);
+		}
+
+		return resultVO;
+	}
 }
