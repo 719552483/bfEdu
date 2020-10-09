@@ -754,10 +754,9 @@ function allTeacherStartSearch(){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/searchTeacher",
+		url : "/searchAllTeacher",
 		data: {
-            "SearchCriteria":JSON.stringify(serachObject),
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+            "SearchCriteria":JSON.stringify(serachObject)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -786,18 +785,10 @@ function allTaecherReSearch(){
 	var reObject = new Object();
 	reObject.InputIds = "#departmentName,#mangerName,#mangerNumber";
 	reReloadSearchsWithSelect(reObject);
-	var serachObject=new Object();
-	serachObject.departmentName="";
-	serachObject.xm="";
-	serachObject.jzgh="";
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/searchTeacher",
-		data: {
-			"SearchCriteria":JSON.stringify(serachObject),
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-		},
+		url : "/queryAllTeachers",
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -814,6 +805,7 @@ function allTaecherReSearch(){
 				stuffTaecherTable(backjson.data);
 			} else {
 				toastr.warning(backjson.data);
+				stuffTaecherTable({});
 			}
 		}
 	});
