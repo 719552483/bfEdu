@@ -1084,55 +1084,58 @@ public class AdministrationPageService {
 				edu207Dao.save(edu207);
 			}
 		}
-		//重新排列课节集合
-		Collections.sort(edu203List, new Comparator<Edu203>() {
-			public int compare(Edu203 arg0, Edu203 arg1) {
-				// 第一次比较星期
-				int i = arg0.getXqid().compareTo(arg1.getXqid());
-				// 如果星期相同则进行第二次比较
-				if (i == 0) {
-					// 第二次比较课节
-					int j = arg0.getKjid().compareTo(arg1.getKjid());
-					return j;
+
+		if(edu203List.size() != 0) {
+			//重新排列课节集合
+			Collections.sort(edu203List, new Comparator<Edu203>() {
+				public int compare(Edu203 arg0, Edu203 arg1) {
+					// 第一次比较星期
+					int i = arg0.getXqid().compareTo(arg1.getXqid());
+					// 如果星期相同则进行第二次比较
+					if (i == 0) {
+						// 第二次比较课节
+						int j = arg0.getKjid().compareTo(arg1.getKjid());
+						return j;
+					}
+					return i;
 				}
-				return i;
-			}
-		});
-		//按周保存排课计划
-		int currentXs = 0;
-		List<String> weekList = new ArrayList<>();
-		classCycle:
-		for (Edu203 e : edu203List) {
-			int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
-			if(e.getKsz().equals(e.getJsz())) {
-				weekList.add("第"+e.getKsz()+"周");
-			} else {
-				weekList.add("第"+e.getKsz()+"周-第"+e.getJsz()+"周");
-			}
-			for (int i = 0; i < weekCount; i++) {
-				Edu203 save = new Edu203();
-				save.setEdu202_ID(edu202_id);
-				Integer week = (Integer.parseInt(e.getKsz()) + i);
-				save.setWeek(week.toString());
-				save.setKsz(e.getKsz());
-				save.setJsz(e.getJsz());
-				save.setKjid(e.getKjid());
-				save.setKjmc(e.getKjmc());
-				save.setXqid(e.getXqid());
-				save.setXqmc(e.getXqmc());
-				edu203Dao.save(save);
-				currentXs+=2;
-				if (currentXs >= jzxs) {
-					break classCycle;
+			});
+			//按周保存排课计划
+			int currentXs = 0;
+			List<String> weekList = new ArrayList<>();
+			classCycle:
+			for (Edu203 e : edu203List) {
+				int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
+				if(e.getKsz().equals(e.getJsz())) {
+					weekList.add("第"+e.getKsz()+"周");
+				} else {
+					weekList.add("第"+e.getKsz()+"周-第"+e.getJsz()+"周");
+				}
+				for (int i = 0; i < weekCount; i++) {
+					Edu203 save = new Edu203();
+					save.setEdu202_ID(edu202_id);
+					Integer week = (Integer.parseInt(e.getKsz()) + i);
+					save.setWeek(week.toString());
+					save.setKsz(e.getKsz());
+					save.setJsz(e.getJsz());
+					save.setKjid(e.getKjid());
+					save.setKjmc(e.getKjmc());
+					save.setXqid(e.getXqid());
+					save.setXqmc(e.getXqmc());
+					edu203Dao.save(save);
+					currentXs+=2;
+					if (currentXs >= jzxs) {
+						break classCycle;
+					}
 				}
 			}
+			//保存排课基础信息
+			List<String> list = (List<String>)utils.heavyListMethod(weekList);
+			list.sort((a, b) -> a.compareTo(b.toString()));
+			String weekName = utils.listToString(list, ',');
+			edu202.setSzz(weekName);
+			edu202DAO.save(edu202);
 		}
-		//保存排课基础信息
-		List<String> list = (List<String>)utils.heavyListMethod(weekList);
-		list.sort((a, b) -> a.compareTo(b.toString()));
-		String weekName = utils.listToString(list, ',');
-		edu202.setSzz(weekName);
-		edu202DAO.save(edu202);
 		return isSuccess;
 	}
 
