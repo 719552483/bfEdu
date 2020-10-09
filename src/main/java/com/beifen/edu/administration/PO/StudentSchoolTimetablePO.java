@@ -37,6 +37,7 @@ public class StudentSchoolTimetablePO {
     private String szz;
     private String point;
     private String pointId;
+    private String teacherType;
 
     @Id
     public String getID() {
@@ -268,5 +269,13 @@ public class StudentSchoolTimetablePO {
 
     public void setPointId(String pointId) {
         this.pointId = pointId;
+    }
+
+    public String getTeacherType() {
+        return teacherType;
+    }
+
+    public void setTeacherType(String teacherType) {
+        this.teacherType = teacherType;
     }
 }

@@ -806,13 +806,13 @@ public class TeachingManageService {
                 if (!"type2".equals(schedulePO.getCrouseType())) {
                     predicates.add(cb.equal(root.<String>get("week"),  schedulePO.getWeekTime()));
                 }
-
                 if (schedulePO.getLocal() != null && !"".equals(schedulePO.getLocal())) {
                     predicates.add(cb.equal(root.<String>get("classRoomId"),  schedulePO.getLocal()));
                 }
                 if (schedulePO.getLocation() != null && !"".equals(schedulePO.getLocation())) {
                     predicates.add(cb.equal(root.<String>get("pointId"),  schedulePO.getLocation()));
                 }
+                predicates.add(cb.equal(root.<String>get("teacherType"),"01"));
                 if (schedulePO.getClassId() != null && !"".equals(schedulePO.getClassId())) {
                     List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(schedulePO.getClassId());
                     classIds.add(Long.parseLong(schedulePO.getClassId()));
@@ -826,7 +826,6 @@ public class TeachingManageService {
                 if (schedulePO.getTeacherId() != null && !"".equals(schedulePO.getTeacherId())) {
                     predicates.add(cb.or(cb.like(root.<String>get("teacherId"), "%"+schedulePO.getTeacherId()+"%"),cb.like(root.<String>get("baseTeacherId"), "%"+schedulePO.getTeacherId()+"%")));
                 }
-
                 Path<Object> path = root.get("courseId");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
                 for (int i = 0; i <edu108Ids.size() ; i++) {
@@ -1031,6 +1030,7 @@ public class TeachingManageService {
                 if (timeTable.getSemester() != null && !"".equals(timeTable.getSemester())) {
                     predicates.add(cb.equal(root.<String>get("xnid"),  timeTable.getSemester()));
                 }
+                predicates.add(cb.equal(root.<String>get("teacherType"),  "01"));
                 Path<Object> classPath = root.get("classId");//定义查询的字段
                 CriteriaBuilder.In<Object> classIn = cb.in(classPath);
                 for (int i = 0; i <classIdList.length ; i++) {

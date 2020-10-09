@@ -32,6 +32,9 @@ public class YearSchedulePO {
     private String point;
     private String pointId;
     private String szz;
+    private String baseTeacherName;
+    private String baseTeacherId;
+    private String teacherType;
 
     @Id
     public String getID() {
@@ -216,5 +219,29 @@ public class YearSchedulePO {
 
     public void setCourseType(String courseType) {
         this.courseType = courseType;
+    }
+
+    public String getBaseTeacherName() {
+        return baseTeacherName;
+    }
+
+    public void setBaseTeacherName(String baseTeacherName) {
+        this.baseTeacherName = baseTeacherName;
+    }
+
+    public String getBaseTeacherId() {
+        return baseTeacherId;
+    }
+
+    public void setBaseTeacherId(String baseTeacherId) {
+        this.baseTeacherId = baseTeacherId;
+    }
+
+    public String getTeacherType() {
+        return teacherType;
+    }
+
+    public void setTeacherType(String teacherType) {
+        this.teacherType = teacherType;
     }
 }

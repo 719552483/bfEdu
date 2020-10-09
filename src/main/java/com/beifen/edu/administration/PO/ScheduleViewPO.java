@@ -39,6 +39,7 @@ public class ScheduleViewPO {
     private String point;
     private String pointId;
     private String szz;
+    private String teacherType;
 
     @Id
     public String getID() {
@@ -262,5 +263,13 @@ public class ScheduleViewPO {
 
     public void setSzz(String szz) {
         this.szz = szz;
+    }
+
+    public String getTeacherType() {
+        return teacherType;
+    }
+
+    public void setTeacherType(String teacherType) {
+        this.teacherType = teacherType;
     }
 }

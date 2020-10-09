@@ -1141,6 +1141,8 @@ function scheduleFormatter(value, row, index) {
 		for (var i = 0; i < value.length; i++) {
 			var reg = new RegExp('"',"g");
 			var teacherNamestr = value[i].teacherName.replace(reg, "");
+			var baseTeacherName;
+			value[i].baseTeacherName===''||value[i].baseTeacherName==null||typeof value[i].baseTeacherName==="undefined"?baseTeacherName='暂无助教':baseTeacherName=value[i].baseTeacherName.replace(reg, "");
 			htmlStr += '<div classRoomID="' + value[i].classRoomId
 					+ '" teacherID="' + value[i].teacherId + '" classTypeId="'
 					+ value[i].classTypeId + '" classID="' + value[i].classId
@@ -1150,7 +1152,8 @@ function scheduleFormatter(value, row, index) {
 					+ '<span class="scheduleClassName">'+ value[i].className+'</span>'
 				    + '<span class="scheduleClassName" id="'+value[i].edu203_id+'" edu202id="'+value[i].edu202_id+'">'+ value[i].courseName+'</span>'
 					+ '<span class="lastscheduleClassName">'+ value[i].szz+'</span>'
-				    + '<span class="scheduleClassName">'+ teacherNamestr+'</span>'
+				    + '<span class="scheduleClassName">任课教师：'+ teacherNamestr+'</span>'
+					+ '<span class="scheduleClassName">助教：'+ baseTeacherName+'</span>'
 				    + '<span class="lastscheduleClassName">'+ value[i].classRoom+' - '+value[i].point+'</span>'
 					+  '</div>'
 		}
