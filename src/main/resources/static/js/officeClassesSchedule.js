@@ -943,10 +943,10 @@ function changsfxylcj(tableid,inputid,index){
 }
 
 //单个发布任务书
-function putOut(row){
+function putOut(row,index){
 	var putOutArray=new Array();
 	putOutArray.push(row);
-	row.sfxylcj==null?row.sfxylcj="F":row.sfxylcj=row.sfxylcj;
+	$("#sfxylcjControl"+index)[0].checked?row.sfxylcj="T":row.sfxylcj='F';
 	checkPutOutInfo(putOutArray);
 }
 
@@ -975,7 +975,7 @@ function checkPutOutInfo(putOutArray){
 		}
 	}
 	for (var i = 0; i < putOutArray.length; i++) {
-		putOutArray[i].sfxylcj==null?putOutArray[i].sfxylcj="F":putOutArray[i].sfxylcj=putOutArray[i].sfxylcj;
+		$("#sfxylcjControl"+i)[0].checked?putOutArray[i].sfxylcj="T":putOutArray[i].sfxylcj='F';
 	}
 
 	$.showModal("#remindModal",true);
