@@ -231,11 +231,9 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 				choosedTask[0].jzxs===0?isZero=true:isZero=false;
 				drawJzXueDomArea(isZero,choosedTask,backjson.jxdInfo,backjson.termInfo[0],backjson.kjInfo);
 
-				if(choosedTask[0].fsxs===0){
-					$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").hide();
-				}else{
-					$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").show();
-				}
+				isZero=true;
+				choosedTask[0].fsxs===0?isZero=true:isZero=false;
+				drawFsXueDomArea(isZero);
 
 				destoryLastStuff();
 				stuffTitle(culturePlanInfo,choosedTask[0]);
@@ -291,7 +289,24 @@ function drawJzXueDomArea(isZero,choosedTask,jxdInfo,termInfo,kjInfo){
 				}
 			}
 		});
+	}else{
+		$(".itab").find("li:eq(0)").find("a").trigger('click');
+
+		$(".scheduleSingleClassArea").find(".itab").find("li:eq(0)").show();
+		$(".scheduleSingleClassArea").find("#tab2").find(".cannottxt").show();
+		$(".scheduleSingleClassArea").find("#tab2").find(".fsMainArea").hide();
 	}
+}
+
+//分散学时区域dom渲染
+function drawFsXueDomArea(isZero){
+	if(isZero){
+		$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").hide();
+	}else{
+		$(".scheduleSingleClassArea").find(".itab").find("li:eq(1)").show();
+	}
+	$(".fskjRsArea").find(".singlefsKj").empty();
+	$(".fskjRsArea").hide();
 }
 
 //填充排课区域的title
@@ -1616,6 +1631,7 @@ function research(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#level,#department,#grade,#major,#kcxz";
 	reReloadSearchsWithSelect(reObject);
+	startSearch();
 }
 
 //已排排重置检索
@@ -1623,6 +1639,7 @@ function putted_reSearch(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz";
 	reReloadSearchsWithSelect(reObject);
+	getPuttedScheduleInfo();
 }
 
 //开始检索
@@ -1677,7 +1694,6 @@ function binBind(){
 	//开始排课按钮
 	$('#startSchedule').unbind('click');
 	$('#startSchedule').bind('click', function(e) {
-		$(".itab").find("li:eq(0)").find("a").trigger('click');
 		startSchedule();
 		e.stopPropagation();
 	});
