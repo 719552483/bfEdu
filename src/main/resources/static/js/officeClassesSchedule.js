@@ -152,12 +152,6 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
-			},	{
-				field: 'jxbrs',
-				title: '教学班人数',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
 			},{
 				field: 'lsmc',
 				title: '任课老师-(双击选择)',
@@ -218,7 +212,7 @@ function stuffTaskInfoTable(tableInfo) {
 	function pkbmMatter(value, row, index) {
 		if(typeof value==="undefined"||value==null||value==="null"){
 			return [
-				'<span title="'+row.pkbm+'" class="myTooltip pkbmTxt pkbmTxt' + index + '"></span><select class="myTableSelect myTableSelect' +
+				'<span title="暂未选择排课部门,双击选择" class="myTooltip pkbmTxt redTxt pkbmTxt' + index + '">暂未选择排课部门</span><select class="myTableSelect myTableSelect' +
 				index + '" id="pkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
 			]
 				.join('');
@@ -234,7 +228,7 @@ function stuffTaskInfoTable(tableInfo) {
 	function kkbmMatter(value, row, index) {
 		if(typeof value==="undefined"||value==null){
 			return [
-				'<span title="'+row.kkbm+'" class="myTooltip kkbmTxt kkbmTxt' + index + '"></span><select class="myTableSelect mykkbmTableSelect' +
+				'<span title="暂未选择开课部门,双击选择" class="myTooltip kkbmTxt redTxt kkbmTxt' + index + '">暂未选择开课部门</span><select class="myTableSelect mykkbmTableSelect' +
 				index + '" id="kkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
 			]
 				.join('');
@@ -727,12 +721,12 @@ function pointTeacherMatter(value, row, index) {
 function classNameMatter(value, row, index) {
 	if(typeof value==="undefined"||value==null){
 		return [
-			'<div class="classChoseArea'+index+'"><span class="normalTxt classTxt'+index+'">暂未选择</span>' +
+			'<div class="classChoseArea'+index+' myTooltip" title="暂未选择班级，双击选择"><span class="redTxt classTxt'+index+'">暂未选择</span>' +
 			'</div>'
 		].join('');
 	}else{
 		return [
-			'<div class="classChoseArea'+index+'"><span class="normalTxt classTxt'+index+'">'+value+'</span>' +
+			'<div class="classChoseArea'+index+' myTooltip" title="'+value+'"><span class="normalTxt classTxt'+index+'">'+value+'</span>' +
 			'</div>'
 		].join('');
 	}
