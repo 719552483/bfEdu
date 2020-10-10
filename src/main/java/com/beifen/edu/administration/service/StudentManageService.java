@@ -530,7 +530,8 @@ public class StudentManageService {
         }
 
         List<Long> edu201IdList = all.stream().map(e -> e.getEdu201_ID()).collect(Collectors.toList());
-        List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey,edu201IdList);
+        List list = utils.heavyListMethod(edu201IdList);
+        List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey,list);
 
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
