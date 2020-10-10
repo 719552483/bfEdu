@@ -1182,7 +1182,7 @@ public class AdministrationPageService {
 			edu005.setClassName(e.getXzbname());
 			edu005.setEdu201_ID(Long.parseLong(edu201ID));
 			edu005.setXn(edu201.getXn());
-			edu005.setXn(edu201.getXnid());
+			edu005.setXnid(edu201.getXnid());
 			edu005.setIsExamCrouse(edu201.getSfxylcj());
 			edu005.setCredit(edu201.getXf());
 			edu005Dao.save(edu005);
