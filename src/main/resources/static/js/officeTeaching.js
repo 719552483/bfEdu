@@ -93,7 +93,7 @@ function stuffWaitTaskTable(tableInfo){
 			search: true,
 			editable: false,
 			striped: true,
-		    sidePagination: "client",   
+		    sidePagination: "client",
 			toolbar: '#toolbar',
 			showColumns: true,
 			onPageChange: function() {
@@ -135,13 +135,13 @@ function stuffWaitTaskTable(tableInfo){
 					title: '任课老师',
 					align: 'left',
 					sortable: true,
-					formatter: charSpiltMatter
+					formatter: paramsMatter
 				},{
 					field: 'zylsmc',
 					title: '助教',
 					align: 'left',
 					sortable: true,
-					formatter: charSpiltMatter
+					formatter: paramsMatter
 				},{
 					field: 'sfxylcj',
 					title: '是否需要录成绩',
@@ -1383,13 +1383,13 @@ function stuffPuttedOutTable(tableInfo){
 				title: '任课老师',
 				align: 'left',
 				sortable: true,
-				formatter: charSpiltMatter
+				formatter: paramsMatter
 			},{
 				field: 'zyls',
 				title: '助教',
 				align: 'left',
 				sortable: true,
-				formatter: charSpiltMatter
+				formatter: paramsMatter
 
 			},{
 				field: 'sfxylcj',
