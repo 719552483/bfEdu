@@ -952,6 +952,7 @@ function changsfxylcj(tableid,inputid,index){
 function putOut(row){
 	var putOutArray=new Array();
 	putOutArray.push(row);
+	row.sfxylcj==null?row.sfxylcj="F":row.sfxylcj=row.sfxylcj;
 	checkPutOutInfo(putOutArray);
 }
 
@@ -979,6 +980,10 @@ function checkPutOutInfo(putOutArray){
 			return;
 		}
 	}
+	for (var i = 0; i < putOutArray.length; i++) {
+		putOutArray[i].sfxylcj==null?putOutArray[i].sfxylcj="F":putOutArray[i].sfxylcj=putOutArray[i].sfxylcj;
+	}
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选    "+putOutArray.length+"  条任务书");
 	$(".remindActionType").html("发布");
