@@ -17,6 +17,7 @@ public class Edu993 {
 	private String roleId; //角色id
 	private String userId; //关联人id
 	private String noticeText; // 提醒内容
+	private String noticeType; // 提醒类型
 	private String businessType;// 业务类型
 	private String businessId;// 业务主键
 	private String isHandle; //是否处理
@@ -65,6 +66,14 @@ public class Edu993 {
 
 	public void setNoticeText(String noticeText) {
 		this.noticeText = noticeText;
+	}
+
+	public String getNoticeType() {
+		return noticeType;
+	}
+
+	public void setNoticeType(String noticeType) {
+		this.noticeType = noticeType;
 	}
 
 	public String getBusinessType() {
