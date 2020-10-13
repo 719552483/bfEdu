@@ -354,6 +354,11 @@ function confirmChooseClass(row,tableID){
     var choosendType=getNormalSelectValue("classType");
 	var choosendclassName=getNormalSelectText("class");
 	var choosendclassValue=getNormalSelectValue("class");
+	if(choosendclassValue===""){
+		toastr.warning('请选择班级');
+		return;
+	}
+
 	row.className=choosendclassName;
 	row.classId=choosendclassValue;
 	row.classType=choosendType;
