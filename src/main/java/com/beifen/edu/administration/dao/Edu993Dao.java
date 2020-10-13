@@ -8,22 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.beifen.edu.administration.domian.Edu993;
 
+import java.util.List;
+
 public interface Edu993Dao extends JpaRepository<Edu993, Long>, JpaSpecificationExecutor<Edu993> {
 
-	// 根据id获取通知
-	@Query(value = "select * from edu993 e where e.Edu993_ID=?1", nativeQuery = true)
-	public Edu993 getNoteInfoById(String noteId);
+	// 根据角色获取通知
+	@Query(value = "select * from edu993 e where e.department_code in ?1 and role_id = ?2", nativeQuery = true)
+	public List<Edu993> getNoticesByRole(List<String> departments, String roleId);
 
-	// 改变通知是否首页展示
-	@Transactional
-	@Modifying
-	@Query(value = "UPDATE edu993 SET sfsyzs=?2 WHERE Edu993_ID =?1", nativeQuery = true)
-	public void changeNoticeIsShowIndex(String noticeId, String isShow);
-
-	//删除通知
-	@Transactional
-	@Modifying
-	@Query(value = "delete from edu993 where Edu993_ID =?1", nativeQuery = true)
-	public void removeNotices(String edu990id);
+	// 根据关联人获取通知
+	@Query(value = "select * from edu993 e where e.user_id=?1 and role_id = ?2", nativeQuery = true)
+	public List<Edu993> getNoticesByUser(String userId,String roleId);
 
 }

@@ -322,4 +322,17 @@ public class SystemManageController {
         ResultVO result = systemManageService.getIndexChart();
         return result;
     }
+
+    /**
+     * 查询提醒事项
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    @RequestMapping("/searchNotices")
+    @ResponseBody
+    public ResultVO searchNotices(@RequestParam("userId") String userId,@RequestParam("roleId") String roleId) {
+        ResultVO result = systemManageService.searchNotices(userId,roleId);
+        return result;
+    }
 }

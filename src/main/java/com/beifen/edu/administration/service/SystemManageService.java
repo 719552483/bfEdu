@@ -29,6 +29,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 //系统管理业务层
 @Service
@@ -40,6 +41,8 @@ public class SystemManageService {
     Edu991Dao edu991Dao;
     @Autowired
     Edu992Dao edu992Dao;
+    @Autowired
+    Edu993Dao edu993Dao;
     @Autowired
     Edu000Dao edu000Dao;
     @Autowired
@@ -688,5 +691,32 @@ public class SystemManageService {
     // 改变消息是否在首页展示
     public void changeNoticeIsShowIndex(String noticeId, String isShow) {
         edu700Dao.changeNoticeIsShowIndex(Long.parseLong(noticeId), isShow);
+    }
+
+    //查询提醒事项
+    public ResultVO searchNotices(String userId,String roleId) {
+        ResultVO resultVO;
+        List<Edu993> edu993List = new ArrayList<>();
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+        Edu990 edu990 = edu990Dao.queryUserById(userId);
+        String userKey = edu990.getUserKey();
+
+        List<Edu993> noticesByRole = edu993Dao.getNoticesByRole(departments, roleId);
+        if (noticesByRole.size() != 0) {
+            edu993List.addAll(noticesByRole);
+        }
+
+        List<Edu993> noticesByUser = edu993Dao.getNoticesByUser(userKey,roleId);
+        if (noticesByUser.size() != 0) {
+            edu993List.addAll(noticesByUser);
+        }
+
+        if(edu993List.size() != 0) {
+            List<Edu993> collect = edu993List.stream().distinct().collect(Collectors.toList());
+            resultVO = ResultVO.setSuccess("共找到"+collect.size()+"条提醒事项",collect);
+        }else {
+            resultVO = ResultVO.setFailed("暂无提醒事项");
+        }
+        return resultVO;
     }
 }
