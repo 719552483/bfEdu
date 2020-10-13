@@ -267,7 +267,7 @@ function approvalInfo(row) {
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-				$.showModal("#approvalDetailsModal",false);
+
 				judgmentBusinessShowArea(row.businessType,backjson.businessInfo);
 			} else {
 				toastr.warning('操作，请重试');
@@ -278,10 +278,11 @@ function approvalInfo(row) {
 
 //根据业务类型展示相应的业务详情区域
 function judgmentBusinessShowArea(businessType,businessInfo){
-	if(businessInfo===null){
+	if(businessInfo==null){
 		toastr.warning('业务数据已被删除');
 		return ;
 	}
+	$.showModal("#approvalDetailsModal",false);
 	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
    if(businessType==="01"||businessType==="02"){//课程审批
 	   stuffClassInfoArea(businessInfo);
