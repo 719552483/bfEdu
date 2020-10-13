@@ -124,6 +124,7 @@ function stuffTaskInfoTable(tableInfo) {
 			for (var i = 0; i < choosendCanPutTask.length; i++) {
 				$("#scheduleClassesTable").bootstrapTable("checkBy", {field:"edu206_ID", values:[choosendCanPutTask[i].edu206_ID]})
 			}
+			sfxylcjControlBind();
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;
@@ -946,7 +947,6 @@ function changsfxylcj(tableid,inputid,index){
 function putOut(row,index){
 	var putOutArray=new Array();
 	putOutArray.push(row);
-	$("#sfxylcjControl"+index)[0].checked?row.sfxylcj="T":row.sfxylcj='F';
 	checkPutOutInfo(putOutArray);
 }
 
@@ -957,7 +957,6 @@ function putOutTasks(){
 		toastr.warning('暂未选择任务书');
 		return;
 	}
-
 	checkPutOutInfo(choosedTasks);
 }
 
@@ -973,9 +972,6 @@ function checkPutOutInfo(putOutArray){
 			toastr.warning('有任务书暂未指定班级');
 			return;
 		}
-	}
-	for (var i = 0; i < putOutArray.length; i++) {
-		$("#sfxylcjControl"+i)[0].checked?putOutArray[i].sfxylcj="T":putOutArray[i].sfxylcj='F';
 	}
 
 	$.showModal("#remindModal",true);
@@ -1102,6 +1098,7 @@ function stuffPutOutTaskTable(tableInfo) {
 		},
 		onPageChange: function() {
 			drawPagination(".putOutTaskTableArea", "教学任务书");
+			putOutTasksfxylcjControlBind();
 			for (var i = 0; i < choosendPutOutTask.length; i++) {
 				$("#putOutTaskTable").bootstrapTable("checkBy", {field:"edu201_ID", values:[choosendPutOutTask[i].edu201_ID]})
 			}
@@ -1633,7 +1630,7 @@ function allTaecherAreabtnBind(tableid,index,cellName) {
 }
 
 //已发布任务书区域按钮绑定事件
-function putOutTaskAreabtnBind(tableid,index,cellName) {
+function putOutTaskAreabtnBind() {
 	//检索已发布任务书
 	$('#startSearchPutOutTasks').unbind('click');
 	$('#startSearchPutOutTasks').bind('click', function(e) {
