@@ -926,11 +926,22 @@ public class AdministrationPageService {
 	}
 
 	// 删除教学任务书
-	public void removeTasks(String edu201id) {
-		//删除任务书
-		edu204Dao.removeByEdu201Id(edu201id);
-		edu205DAO.removeByEdu201Id(edu201id);
-		edu201DAO.delete(Long.parseLong(edu201id));
+	public ResultVO removeTasks(List<String> deleteArray) {
+		ResultVO resultVO;
+		List<String> edu202Ids = edu202DAO.findEdu202ByEdu201Ids(deleteArray);
+		if(edu202Ids.size() != 0) {
+			resultVO = ResultVO.setFailed("存在已排课任务书，无法删除");
+		} else {
+			for (int i = 0; i< deleteArray.size(); i++) {
+				String edu201id = deleteArray.get(i);
+				//删除任务书
+				edu204Dao.removeByEdu201Id(edu201id);
+				edu205DAO.removeByEdu201Id(edu201id);
+				edu201DAO.delete(Long.parseLong(edu201id));
+			}
+			resultVO = ResultVO.setSuccess("共删除了"+deleteArray.size()+"条任务书");
+		}
+		return resultVO;
 	}
 
 	// 根据ID查询任务书

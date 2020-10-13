@@ -1896,14 +1896,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("removeTasks")
 	@ResponseBody
-	public Object removeTasks(@RequestParam("removeInfo") String removeInfo) {
-		Map<String, Object> returnMap = new HashMap();
-		JSONArray deleteArray = JSONArray.fromObject(removeInfo); // 解析json字符
-		for (int i = 0; i< deleteArray.size(); i++) {
-			administrationPageService.removeTasks(deleteArray.get(i).toString());
-		}
-		returnMap.put("result", true);
-		return returnMap;
+	public ResultVO removeTasks(@RequestParam("removeInfo") String removeInfo) {
+		ResultVO result;
+		List<String> deleteArray = JSON.parseArray(removeInfo, String.class);// 解析json字符
+		result = administrationPageService.removeTasks(deleteArray);
+		return result;
 	}
 
 
