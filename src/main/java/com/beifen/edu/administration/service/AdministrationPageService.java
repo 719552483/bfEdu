@@ -928,7 +928,9 @@ public class AdministrationPageService {
 	// 删除教学任务书
 	public void removeTasks(String edu201id) {
 		//删除任务书
-		edu201DAO.updateRwsState(edu201id,"F");
+		edu204Dao.removeByEdu201Id(edu201id);
+		edu205DAO.removeByEdu201Id(edu201id);
+		edu201DAO.delete(Long.parseLong(edu201id));
 	}
 
 	// 根据ID查询任务书
