@@ -2364,6 +2364,10 @@ input:focus{
 	text-align: center;
 }
 
+.area{
+	margin-bottom: 10px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

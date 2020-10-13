@@ -653,89 +653,48 @@ function KjBtnschange(){
 
 //新增周期
 function addCoursePlan(){
-	var teacherID=getNormalSelectValue("teacher");
-	var teacherName=getNormalSelectText("teacher");
-	var term=getNormalSelectValue("term");
-	var startWeek=getNormalSelectValue("startWeek");
-	var endWeek=getNormalSelectValue("endWeek");
-	var startWeekmc=getNormalSelectText("startWeek");
-	var endWeekmc=getNormalSelectText("endWeek");
-	var choosedkJ=$(".singleKj").find(".choosendKjInfo");
-	var choosendCycle=$(".singleCycle").find(".choosendCycleInfo");
-
-	if(teacher===""){
-		toastr.warning('请选择任课教师')
+	var reAreas=$(".kjRsArea").find(".singleKj").find(".appendArea").find(".choosendKjInfo");
+	var puttedCycles=$(".lastCycleArea").find(".singleCycle").find(".choosendCycleInfo");
+	if(reAreas.length==0){
+		toastr.warning('暂未进行课时安排')
 		return;
 	}
 
-	if(term===""){
-		toastr.warning('请选择学年')
-		return;
-	}
 
-	if(startWeek===""){
-		toastr.warning('请选择开始周')
-		return;
-	}
-
-	if(endWeek===""){
-		toastr.warning('请选择结束周')
-		return;
-	}
-
-	if(choosedkJ.length==0){
-		toastr.warning('请为周期安排课节')
-		return;
-	}
-
-	var choosendCycleIds=new Array();
-	for (var i = 0; i < choosendCycle.length; i++) {
-		choosendCycleIds.push(choosendCycle[i].id);
+	var currentHour=0;
+	for (var i = 0; i < puttedCycles.length; i++) {
+		var startWeek=puttedCycles[i].attributes[5].nodeValue;
+		var endWeek=puttedCycles[i].attributes[6].nodeValue;
+		currentHour+=((parseInt(endWeek)-parseInt(startWeek))+1)*2;
 	}
 
 	var appendStr="";
-	var isHave=false;
-	for (var i = 0; i < choosedkJ.length; i++) {
-		var currentXqmc=choosedkJ[i].attributes[1].nodeValue;
-		var currentKjmc=choosedkJ[i].attributes[2].nodeValue;
-		var currentXq=choosedkJ[i].attributes[3].nodeValue;
-		var currentKj=choosedkJ[i].attributes[4].nodeValue;
-		if(choosendCycleIds.indexOf('choosendCycleInfo'+currentXq+currentKj+startWeek+endWeek)!==-1){
-			isHave=true;
-			break;
-		}
+	for (var i = 0; i < reAreas.length; i++) {
+		var startWeek=reAreas[i].attributes[8].nodeValue;
+		var endWeek=reAreas[i].attributes[9].nodeValue;
+		var currentXq=reAreas[i].attributes[3].nodeValue;
+		var currentKj=reAreas[i].attributes[4].nodeValue;
+		var teacherID=reAreas[i].attributes[6].nodeValue;
+		var startWeekmc=reAreas[i].attributes[10].nodeValue;
+		var endWeekmc=reAreas[i].attributes[11].nodeValue;
+		var currentXqmc=reAreas[i].attributes[1].nodeValue;
+		var currentKjmc=reAreas[i].attributes[2].nodeValue;
+		var teacherName=reAreas[i].attributes[7].nodeValue;
+
 		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'">' +
 			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'    任课教师  -'+teacherName+
 			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
+		currentHour+=((parseInt(endWeek)-parseInt(startWeek))+1)*2;
 	}
 
 	var jzxs=parseInt($(".jzxsSpan ")[0].innerText);
-	var puttedHousr=parseInt($(".cyclePuttedHousr ")[0].innerText);
-	var waitHousr=parseInt($(".cycleWaitHousr ")[0].innerText);
-	var currentHour=((parseInt(endWeek)-parseInt(startWeek))+1)*2;
-	puttedHousr=puttedHousr+currentHour;
-	jzxs-puttedHousr<0?waitHousr=0:waitHousr=jzxs-puttedHousr;
-
-	if(isHave){
-		toastr.warning('该周期已安排')
-		return;
-	}
-
+	var puttedHousr=currentHour;
+	var waitHousr=jzxs-puttedHousr;
+	waitHousr<0?waitHousr=0:waitHousr=waitHousr;
 	if(puttedHousr>jzxs){
 		toastr.warning('集中课时安排超过'+jzxs+'课时');
-		//重置dom
-		var reObject = new Object();
-		reObject.normalSelectIds = "#kj,#xq,#startWeek,#endWeek";
-		reReloadSearchsWithSelect(reObject);
-		$(".choosendKjInfo").empty();
-		$(".kjRsArea").hide();
 		return;
 	}
-
-	//重置dom
-	var reObject = new Object();
-	reObject.normalSelectIds = "#kj,#xq,#startWeek,#endWeek";
-	reReloadSearchsWithSelect(reObject);
 
 	//渲染dom
 	$(".choosendCycleArea,.singleCycle").append(appendStr);
@@ -757,16 +716,6 @@ function addCoursePlan(){
 //删除周期
 function removeCycle(eve){
 	var id=eve.currentTarget.parentElement.id;
-	var startWeek=parseInt(eve.currentTarget.parentElement.attributes[5].nodeValue);
-	var endWeek=parseInt(eve.currentTarget.parentElement.attributes[6].nodeValue);
-	var jzxs=parseInt($(".jzxsSpan ")[0].innerText);
-	var puttedHousr=parseInt($(".cyclePuttedHousr ")[0].innerText);
-	var waitHousr=parseInt($(".cycleWaitHousr ")[0].innerText);
-
-	var currentHour=((endWeek-startWeek)+1)*2;
-	puttedHousr=puttedHousr-currentHour;
-	waitHousr=jzxs-puttedHousr;
-
 	$(".singleCycle,.choosendCycleArea").find("#"+id).remove();
 	var tab1CycleInfo=$(".singleCycle").find(".choosendCycleInfo");
 	if(tab1CycleInfo.length===0){
@@ -774,8 +723,13 @@ function removeCycle(eve){
 	}else{
 		$(".lastCycleArea").show();
 	}
-
 	//展示实时结果
+	var startWeek=eve.currentTarget.parentElement.attributes[5].nodeValue;
+	var endWeek=eve.currentTarget.parentElement.attributes[6].nodeValue;
+	var lessHour=((parseInt(endWeek)-parseInt(startWeek))+1)*2;
+	var puttedHousr=parseInt($(".cyclePuttedHousr")[0].innerText)-lessHour;
+	var waitHousr=parseInt($(".cycleWaitHousr")[0].innerText)+lessHour;
+
 	$(".cyclePuttedHousr").html(puttedHousr);
 	$(".cycleWaitHousr").html(waitHousr);
 }
@@ -786,8 +740,18 @@ function AddnewKj(){
 	var endWeek=getNormalSelectValue("endWeek");
 	var currentXq=getNormalSelectValue("xq");
 	var currentKj=getNormalSelectValue("kj");
+	var teacherID=getNormalSelectValue("teacher");
+	var startWeekName=getNormalSelectText("startWeek");
+	var endWeekName=getNormalSelectText("endWeek");
 	var currentXqmc=getNormalSelectText("xq");
 	var currentKjmc=getNormalSelectText("kj");
+	var teacherName=getNormalSelectText("teacher");
+
+	if(teacherID===""){
+		toastr.warning('请选择任课教师')
+		return;
+	}
+
 	if(startWeek===""){
 		toastr.warning('请选择开始周');
 		return;
@@ -796,6 +760,12 @@ function AddnewKj(){
 		toastr.warning('请选择结束周');
 		return;
 	}
+
+	if(parseInt(endWeek)<parseInt(startWeek)){
+		toastr.warning('开始周必须大于结束周');
+		return;
+	}
+
 	if(currentXq===""){
 		toastr.warning('请选择星期');
 		return;
@@ -805,13 +775,24 @@ function AddnewKj(){
 		return;
 	}
 
-	if($(".singleKj").find("#choosendKjInfo"+(currentXq+currentKj)).length!==0){
+	if($(".singleKj").find("#choosendKjInfo"+(startWeek+endWeek+currentXq+currentKj)).length!==0){
 		toastr.warning('该课节安排已选择');
 		return;
 	}
-	$(".singleKj").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(currentXq+currentKj)+'">每周'+currentXqmc+'  '+currentKjmc+'课' +
+
+	if($(".singleKj").find(".area"+startWeek+endWeek).length<1){
+		$(".singleKj").append('<div class="area area'+(startWeek+endWeek)+'">' +
+				'<span class="kjRsAreaTitle">第'+startWeek+'周 至 第'+endWeek+'周课节安排</span>' +
+				'<div class="appendArea"><div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:' +teacherName+
+					'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
+				'</div>' +
+			'</div>');
+	}else{
+		$(".area"+startWeek+endWeek).find(".appendArea").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:'  +teacherName+
 		'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
-		'</div>');
+		'</div>' );
+	}
+
 	//重置select组
 	var reObject = new Object();
 	reObject.normalSelectIds = "#kj,#xq";
@@ -822,19 +803,21 @@ function AddnewKj(){
 		removeKj(e);
 		e.stopPropagation();
 	});
-	$(".kjRsAreaTitle").html("第"+startWeek+"周 至 第"+endWeek+"周课节安排");
-	$(".kjRsArea").show();
+	$(".kjRsArea,.singleKj").show();
 }
 
 //删除课节组
 function removeKj(eve){
 	var id=eve.currentTarget.parentElement.id;
+	var appendArea=eve.currentTarget.parentElement.parentElement;
 	$(".singleKj").find("#"+id).remove();
-	var tab1KjInfo=$(".singleKj").find(".choosendKjInfo");
-	if(tab1KjInfo.length===0){
-		$(".kjRsArea").hide();
-	}else{
-		$(".kjRsArea").show();
+	if(appendArea.childNodes.length===0){
+		var classNAME=appendArea.parentNode.classList[1];
+		$("."+classNAME).remove();
+	}
+
+	if($(".singleKj")[0].childNodes.length==0){
+		$(".singleKj").hide();
 	}
 
 	//重置第一个select组
