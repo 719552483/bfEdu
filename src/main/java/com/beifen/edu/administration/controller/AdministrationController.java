@@ -1781,18 +1781,7 @@ public class AdministrationController {
 		// 上传结束
 	}
 
-	/**
-	 * 改变消息是否在首页展示
-	 * @return returnMap
-	 */
-	@RequestMapping("changeNoticeIsShowIndex")
-	@ResponseBody
-	public Object changeNoticeIsShowIndex(@RequestParam("noticeId") String noticeId,@RequestParam("isShow") String isShow) {
-		Map<String, Object> returnMap = new HashMap();
-		administrationPageService.changeNoticeIsShowIndex(noticeId,isShow);
-		returnMap.put("result", true);
-		return returnMap;
-	}
+
 
 //	/**
 //	 * 删除通知

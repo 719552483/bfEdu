@@ -1,13 +1,10 @@
 package com.beifen.edu.administration.domian;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -16,17 +13,20 @@ import javax.persistence.Table;
 @Table(name = "Edu993")
 public class Edu993 {
 	private Long Edu993_ID;
-	private String isRead; // 是否已读
+	private String departmentCode; // 学院id
+	private String roleId; //角色id
+	private String userId; //关联人id
 	private String noticeText; // 提醒内容
-	private String noticeType;// 提醒类型
-	private String TypeName;//类型名称
+	private String businessType;// 业务类型
+	private String businessId;// 业务主键
+	private String isHandle; //是否处理
 	private String createDate;// 发布时间
-
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
 	@Column(name = "Edu993_ID")
+
 	public Long getEdu993_ID() {
 		return Edu993_ID;
 	}
@@ -35,12 +35,28 @@ public class Edu993 {
 		Edu993_ID = edu993_ID;
 	}
 
-	public String getIsRead() {
-		return isRead;
+	public String getDepartmentCode() {
+		return departmentCode;
 	}
 
-	public void setIsRead(String isRead) {
-		this.isRead = isRead;
+	public void setDepartmentCode(String departmentCode) {
+		this.departmentCode = departmentCode;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getNoticeText() {
@@ -51,20 +67,28 @@ public class Edu993 {
 		this.noticeText = noticeText;
 	}
 
-	public String getNoticeType() {
-		return noticeType;
+	public String getBusinessType() {
+		return businessType;
 	}
 
-	public void setNoticeType(String noticeType) {
-		this.noticeType = noticeType;
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
 	}
 
-	public String getTypeName() {
-		return TypeName;
+	public String getBusinessId() {
+		return businessId;
 	}
 
-	public void setTypeName(String typeName) {
-		TypeName = typeName;
+	public void setBusinessId(String businessId) {
+		this.businessId = businessId;
+	}
+
+	public String getIsHandle() {
+		return isHandle;
+	}
+
+	public void setIsHandle(String isHandle) {
+		this.isHandle = isHandle;
 	}
 
 	public String getCreateDate() {

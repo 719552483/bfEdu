@@ -17,6 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -541,6 +544,8 @@ public class SystemManageService {
     }
 
 
+
+
     //获取首页的通知
     public ResultVO getNotices(String userId) {
         ResultVO resultVO;
@@ -678,5 +683,10 @@ public class SystemManageService {
 
         resultVO = ResultVO.setSuccess("查询成功",indexChartPO);
         return resultVO;
+    }
+
+    // 改变消息是否在首页展示
+    public void changeNoticeIsShowIndex(String noticeId, String isShow) {
+        edu700Dao.changeNoticeIsShowIndex(Long.parseLong(noticeId), isShow);
     }
 }

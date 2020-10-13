@@ -250,6 +250,19 @@ public class SystemManageController {
     }
 
     /**
+     * 改变消息是否在首页展示
+     * @return returnMap
+     */
+    @RequestMapping("changeNoticeIsShowIndex")
+    @ResponseBody
+    public Object changeNoticeIsShowIndex(@RequestParam("noticeId") String noticeId, @RequestParam("isShow") String isShow) {
+        Map<String, Object> returnMap = new HashMap();
+        systemManageService.changeNoticeIsShowIndex(noticeId,isShow);
+        returnMap.put("result", true);
+        return returnMap;
+    }
+
+    /**
      * 获取用户发布的通知
      * @return returnMap
      */

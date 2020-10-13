@@ -45,8 +45,6 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu005Dao edu005Dao;
 	@Autowired
-	private Edu993Dao edu993DAO;
-	@Autowired
 	private Edu200Dao edu200DAO;
 	@Autowired
 	private Edu201Dao edu201DAO;
@@ -699,10 +697,7 @@ public class AdministrationPageService {
 	}
 
 
-	// 改变消息是否在首页展示
-	public void changeNoticeIsShowIndex(String noticeId, String isShow) {
-		edu993DAO.changeNoticeIsShowIndex(noticeId, isShow);
-	}
+
 
 
 	// 根据二级代码关联字段获取二级代码
