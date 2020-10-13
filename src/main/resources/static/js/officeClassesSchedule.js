@@ -91,8 +91,8 @@ function stuffTaskInfoTable(tableInfo) {
 		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
+		pageSize : 1,
+		pageList : [ 1 ],
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
@@ -124,6 +124,8 @@ function stuffTaskInfoTable(tableInfo) {
 			for (var i = 0; i < choosendCanPutTask.length; i++) {
 				$("#scheduleClassesTable").bootstrapTable("checkBy", {field:"edu206_ID", values:[choosendCanPutTask[i].edu206_ID]})
 			}
+		},
+		onPostBody : function() {
 			sfxylcjControlBind();
 		},
 		onDblClickRow : function(row, $element, field) {
@@ -321,6 +323,7 @@ function onDblClickScheduleClassesTable(row, $element, field){
 	}else{
 		return;
 	}
+
 }
 
 //预备选择班级
@@ -1098,10 +1101,12 @@ function stuffPutOutTaskTable(tableInfo) {
 		},
 		onPageChange: function() {
 			drawPagination(".putOutTaskTableArea", "教学任务书");
-			putOutTasksfxylcjControlBind();
 			for (var i = 0; i < choosendPutOutTask.length; i++) {
 				$("#putOutTaskTable").bootstrapTable("checkBy", {field:"edu201_ID", values:[choosendPutOutTask[i].edu201_ID]})
 			}
+		},
+		onPostBody : function() {
+			putOutTasksfxylcjControlBind();
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;
