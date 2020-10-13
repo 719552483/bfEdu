@@ -213,7 +213,7 @@ function stuffTaskInfoTable(tableInfo) {
 	function pkbmMatter(value, row, index) {
 		if(typeof value==="undefined"||value==null||value==="null"){
 			return [
-				'<span title="暂未选择排课部门,双击选择" class="myTooltip pkbmTxt redTxt pkbmTxt' + index + '">暂未选择排课部门</span><select class="myTableSelect myTableSelect' +
+				'<span title="暂未选择排课部门,双击选择" class="myTooltip pkbmTxt normalTxt pkbmTxt' + index + '">暂未安排</span><select class="myTableSelect myTableSelect' +
 				index + '" id="pkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
 			]
 				.join('');
@@ -229,7 +229,7 @@ function stuffTaskInfoTable(tableInfo) {
 	function kkbmMatter(value, row, index) {
 		if(typeof value==="undefined"||value==null){
 			return [
-				'<span title="暂未选择开课部门,双击选择" class="myTooltip kkbmTxt redTxt kkbmTxt' + index + '">暂未选择开课部门</span><select class="myTableSelect mykkbmTableSelect' +
+				'<span title="暂未选择开课部门,双击选择" class="myTooltip kkbmTxt normalTxt kkbmTxt' + index + '">暂未安排</span><select class="myTableSelect mykkbmTableSelect' +
 				index + '" id="kkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
 			]
 				.join('');
@@ -1188,7 +1188,7 @@ function stuffPutOutTaskTable(tableInfo) {
 			},{
 				field: 'sszt',
 				title: '审核状态',
-				align: 'left',
+				align: 'center',
 				sortable: true,
 				formatter: ztMatter
 			},{
@@ -1209,25 +1209,33 @@ function stuffPutOutTaskTable(tableInfo) {
 	});
 	
 	function putOutTaskFormatter(value, row, index) {
-		if(row.sszt==="pass"){
+		if(row.sszt==="passing"){
 			return [
                 '<div class="noActionText">不可操作</div>'
 				]
 				.join('');
-		}
-		return [
+		}else if(row.sszt==="pass"){
+			return [
+				'<ul class="toolbar tabletoolbar" style="min-width: 500px;">' +
+				'<li id="removeTask" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
+				'</ul>'
+			]
+				.join('');
+		}else{
+			return [
 				'<ul class="toolbar tabletoolbar" style="min-width: 500px;">' +
 				'<li id="modifyTask" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
 				'<li id="removeTask" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
 				'</ul>'
 			]
-			.join('');
+				.join('');
+		}
 	}
 
 	function putOutTaskpkbmMatter(value, row, index) {
 		if(value ==null||value ==="null"){
 			return [
-				'<span title="'+row.pkbm+'" class="myTooltip normalTxt putOutTaskpkbmTxt putOutTaskpkbmTxt' + index + '">暂未安排</span><select class="myTableSelect myputOutTaskTableSelect' +
+				'<span title="暂未安排" class="myTooltip normalTxt putOutTaskpkbmTxt putOutTaskpkbmTxt' + index + '">暂未安排</span><select class="myTableSelect myputOutTaskTableSelect' +
 				index + '" id="putOutTaskpkbmSelect'+index+'">' + roleOptionObject.pkbm + '</select>'
 			]
 				.join('');
@@ -1243,7 +1251,7 @@ function stuffPutOutTaskTable(tableInfo) {
 	function putOutTaskkkbmMatter(value, row, index) {
 		if(value ==null||value ==="null"){
 			return [
-				'<span title="'+row.kkbm+'" class="myTooltip normalTxt putOutTaskkkbmTxt putOutTaskkkbmTxt' + index + '">暂未安排</span><select class="myTableSelect mykkbmputOutTaskTableSelect' +
+				'<span title="暂未安排" class="myTooltip normalTxt putOutTaskkkbmTxt putOutTaskkkbmTxt' + index + '">暂未安排</span><select class="myTableSelect mykkbmputOutTaskTableSelect' +
 				index + '" id="putOutTaskkkbmSelect'+index+'">' + roleOptionObject.kkbm + '</select>'
 			]
 				.join('');
@@ -1372,10 +1380,6 @@ function wantChangePutOutKKBM(index,cellName){
 function removePutOutTasks(){
 	var chosenTask = choosendPutOutTask;
 	for (var i = 0; i < chosenTask.length; i++) {
-		if(chosenTask[i].sszt==="pass"){
-			toastr.warning('不能删除已通过审核的教学任务书');
-			return;
-		}
 		if(chosenTask[i].sszt==="passing"){
 			toastr.warning('不能操作审核中的教学任务书');
 			return;
@@ -1408,15 +1412,11 @@ function removeTask(row,index){
 		toastr.warning('不能删除正在审核的教学任务书');
 		return;
 	}
-	if(row.sszt==="pass"){
-		toastr.warning('不能删除已通过审核的教学任务书');
-		return;
-	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html('教学任务书');
 	$(".remindActionType").html("删除");
 	
-	//确认删除学生
+	//确认删除
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray = new Array;
@@ -1446,17 +1446,17 @@ function sendTaskRemoveInfo(removeArray){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
+			hideloding();
+			if (backjson.code===200) {
 				for (var i = 0; i < removeArray.length; i++) {
 					$("#putOutTaskTable").bootstrapTable('removeByUniqueId', removeArray[i]);
 				}
 				drawPagination(".putOutTaskTableArea", "教学任务书");
 				$(".myTooltip").tooltipify();
 				$.hideModal("#remindModal");
-				toastr.success('删除成功');
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
