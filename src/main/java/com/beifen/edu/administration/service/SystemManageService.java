@@ -694,7 +694,7 @@ public class SystemManageService {
     }
 
     //查询提醒事项
-    public ResultVO searchNotices(String userId,String roleId) {
+    public ResultVO searchNotes(String userId,String roleId) {
         ResultVO resultVO;
         List<Edu993> edu993List = new ArrayList<>();
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);

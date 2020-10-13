@@ -329,10 +329,10 @@ public class SystemManageController {
      * @param roleId
      * @return
      */
-    @RequestMapping("/searchNotices")
+    @RequestMapping("/searchNotes")
     @ResponseBody
-    public ResultVO searchNotices(@RequestParam("userId") String userId,@RequestParam("roleId") String roleId) {
-        ResultVO result = systemManageService.searchNotices(userId,roleId);
+    public ResultVO searchNotes(@RequestParam("userId") String userId,@RequestParam("roleId") String roleId) {
+        ResultVO result = systemManageService.searchNotes(userId,roleId);
         return result;
     }
 }
