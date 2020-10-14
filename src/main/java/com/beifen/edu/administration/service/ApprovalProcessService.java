@@ -306,7 +306,7 @@ public class ApprovalProcessService {
            return isSuccess;
        }
 
-
+       //审批结束回写数据
        if ("0".equals(edu600.getCurrentRole().toString()) || !"1".equals(approvalFlag) || edu600.getCurrentRole().equals(edu600.getProposerType())){
            edu600.setApprovalEnd("T");
            edu600DAO.save(edu600);

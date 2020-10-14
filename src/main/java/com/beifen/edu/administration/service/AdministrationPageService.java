@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.NoteConstant;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.constant.SecondaryCodeConstant;
 import com.beifen.edu.administration.dao.*;
@@ -90,6 +91,8 @@ public class AdministrationPageService {
 	private Edu207Dao edu207Dao;
 	@Autowired
 	private Edu500Dao edu500Dao;
+	@Autowired
+	private Edu993Dao edu993Dao;
 	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
@@ -1061,19 +1064,11 @@ public class AdministrationPageService {
 		edu401DAO.kjsxjy(kjId, kjsx);
 	}
 
-	// 修改课节名称
-	public void modifyKjMc(String newKjMc, String kjId) {
-		edu401DAO.modifyKjMc(newKjMc, kjId);
-	}
-
-
 	//确认排课
 	public boolean saveSchedule(Edu202 edu202, List<Edu203> edu203List, List<Edu207> edu207List) {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
-
-
 
 		//如果为新增删除原有关联
 		if(edu202.getEdu202_ID() != null) {
@@ -1169,6 +1164,42 @@ public class AdministrationPageService {
 			edu202.setSzz(weekName);
 			edu202DAO.save(edu202);
 		}
+
+
+		//找到所有老师ID并发布提醒事项
+		List<String> lsid = new ArrayList<>();
+		List<String> zylsid = new ArrayList<>();
+		if (edu201.getLs() != null) {
+			lsid = Stream.of(edu201.getLs().split(",")).collect(Collectors.toList());
+		}
+		if (edu201.getZyls() != null) {
+			zylsid = Stream.of(edu201.getZyls().split(",")).collect(Collectors.toList());
+		}
+		lsid.addAll(zylsid);
+		List<String> lsId = lsid.stream().distinct().collect(Collectors.toList());
+		//找到二级学院ID
+		Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
+		Edu107 edu107 = edu107DAO.findOne(edu108.getEdu107_ID());
+
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(currentTime);
+
+		for (String s : lsId) {
+			Edu993 edu993 = new Edu993();
+			edu993.setDepartmentCode(edu107.getEdu104());
+			edu993.setRoleId(NoteConstant.TEACHER_ROLE);
+			edu993.setUserId(s);
+			String noticeText = "由您任教的"+edu201.getClassName()+"的"+edu201.getKcmc()+"已完成排课,请注意查看";
+			edu993.setNoticeText(noticeText);
+			edu993.setNoticeType(NoteConstant.TASK_NOTE);
+			edu993.setBusinessType("98");
+			edu993.setBusinessId(edu202_id);
+			edu993.setIsHandle("T");
+			edu993.setCreateDate(dateString);
+			edu993Dao.save(edu993);
+		}
+
 		return isSuccess;
 	}
 
@@ -1643,6 +1674,8 @@ public class AdministrationPageService {
 		edu005Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 		edu202DAO.delete(Long.parseLong(scheduleId));
 		edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
+
+		edu993Dao.deleteByEdu202ID(scheduleId);
 	}
 
 	//根据条件检索已排课信息
