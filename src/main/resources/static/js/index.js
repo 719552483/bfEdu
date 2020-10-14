@@ -348,6 +348,18 @@ function groupChangeAction() {
 	}
 }
 
+//加载用户信息
+function loadUserScdlsj() {
+	//渲染用户信息
+	var userInfo = JSON.parse($.session.get('userInfo'));
+	if(userInfo.scdlsj==="fristTime"){
+		$(".longinInfo").hide();
+	}else{
+		$(".longinInfo").find("i").html("您上次登录的时间：<br>"+userInfo.scdlsj);
+		$(".longinInfo").show();
+	}
+}
+
 //加载通知
 function loadNotices(){
 	$.ajax({
@@ -384,17 +396,20 @@ function drawNotices(allNotices){
 	var str="";
 	var stffNum=0;
 	for (var i = 0; i < allNotices.length; i++) {
-		if(allNotices[i].showInIndex==="T"&&stffNum<=6){
+		if(allNotices[i].showInIndex==="T"&&stffNum<=3){
 			stffNum++;
 			str+='<a href="noticeHTMLmodel.html?newId=' + allNotices[i].edu700_ID +'"><li class="NoticeChildren" id="'+allNotices[i].edu700_ID+'">'+allNotices[i].title+'<br><b>'+allNotices[i].sendDate+'</b></li></a>';
 		}
 	}
 	
-	if(str.length===0){
+	if(allNotices.length===0){
 		str='<li class="NoNotice">暂未发布任何重要通知...</li>';
+	}
+
+
+	if(stffNum<=3){
 		$(".noticeArea").find("a").remove();
 	}
-	
 	$(".newlist").append(str);
 }
 
@@ -446,24 +461,186 @@ function stuffMoreNoctices(moreInfo){
 	$(".newlist2").append(str);
 }
 
-/*
-加载用户信息
-*/
-function loadUserScdlsj() {
-	//渲染用户信息
-	var userInfo = JSON.parse($.session.get('userInfo'));
-	if(userInfo.scdlsj==="fristTime"){
-		$(".longinInfo").hide();
-	}else{
-		$(".longinInfo").find("i").html("您上次登录的时间：<br>"+userInfo.scdlsj);
-		$(".longinInfo").show();
-	}
-}
-
 //返回按钮
 function returnBack(){
 	$(".configIndexPage,.versionInfo,.xline:last").show();
 	$(".allShortcuts,.moreNoticeArea").hide();
+}
+
+//加载提醒
+function loadReminds(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchNotes",
+		data: {
+			"roleId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				drawReminds(backjson.data);
+			}else{
+				drawReminds([]);
+			}
+		}
+	});
+}
+
+//渲染提醒
+function drawReminds(reminds){
+	$(".remindlist").empty();
+	var str="";
+	var stffNum=0;
+	for (var i = 0; i < reminds.length; i++) {
+		if(reminds[i].isHandle==="T"&&stffNum<=3){
+			stffNum++;
+			str+='<a class="showMoreReminds"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
+		}
+	}
+
+	if(reminds.length===0){
+		str='<li class="NoNotice">暂无个人消息...</li>';
+	}
+
+	if(stffNum<=3){
+		$(parent.frames["topFrame"].document).find(".user").find("i").hide();
+		$(parent.frames["topFrame"].document).find(".user").find("b").hide();
+		$(".remindArea").find("a").remove();
+	}else{
+		$(parent.frames["topFrame"].document).find(".user").find("i").show();
+		$(parent.frames["topFrame"].document).find(".user").find("b").show();
+		$(parent.frames["topFrame"].document).find(".user").find("b").html(stffNum-3);
+	}
+
+	$(".remindlist").append(str);
+	//展示更多提醒
+	$('.showMoreReminds').unbind('click');
+	$('.showMoreReminds').bind('click', function(e) {
+		showMoreReminds(reminds);
+		$('.allRemindArea').show();
+		$('.mainindex').hide().css("padding","0px");
+		e.stopPropagation();
+	});
+
+	//返回
+	$('.remindReturnBtn').unbind('click');
+	$('.remindReturnBtn').bind('click', function(e) {
+		$('.allRemindArea').hide();
+		$('.mainindex').show().css("padding","20px");;
+		e.stopPropagation();
+	});
+}
+
+//展示更多提醒
+function showMoreReminds(reminds){
+	var department=getFromRedis("department");
+	var roleInfo=getFromRedis("roleInfo");
+	for (var i = 0; i < reminds.length; i++) {
+		for (var d = 0; d < department.length; d++) {
+			if(parseInt(reminds[i].departmentCode)==department[d].edu104_ID){
+				reminds[i].departmentName=department[d].xbmc;
+				break;
+			}
+		}
+	}
+
+	for (var i = 0; i < reminds.length; i++) {
+		for (var r = 0; r < roleInfo.length; r++) {
+			if(parseInt(reminds[i].roleId)==roleInfo[r].bf991_ID){
+				reminds[i].roleName=roleInfo[r].js;
+				break;
+			}
+		}
+	}
+
+	$('#moreNoticeTable').bootstrapTable('destroy').bootstrapTable({
+		data: reminds,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 10,
+		pageList: [10],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".moreNoticeTableArea", "个人消息");
+		},
+		columns: [{
+			field: 'edu993_ID',
+			title: '唯一标识',
+			align: 'center',
+			sortable: true,
+			visible: false
+		}, {
+			field: 'noticeText',
+			title: '消息内容',
+			align: 'left',
+			formatter: paramsMatter,
+			sortable: true
+		},{
+			field: 'createDate',
+			title: '发送时间',
+			align: 'left',
+			formatter: paramsMatter,
+			width:"220px",
+			sortable: true
+		},{
+			field: 'departmentName',
+			title: '发送学院',
+			align: 'left',
+			formatter: paramsMatter,
+			width:"180px",
+			sortable: true
+		},{
+			field: 'roleName',
+			title: '发送角色',
+			align: 'left',
+			formatter: paramsMatter,
+			width:"180px",
+			sortable: true
+		},{
+			field: 'isHandle',
+			title: '处理状态',
+			align: 'left',
+			formatter: isHandleMatter,
+			width:"180px",
+			sortable: true
+		}]
+	});
+
+	function isHandleMatter(value, row, index) {
+		if(typeof value === 'T'){
+			return [ '<div class="myTooltip redTxt" title="未处理">未处理</div>' ]
+				.join('');
+
+		}else{
+			return [ '<div class="myTooltip greenTxt" title="已处理">已处理</div>' ]
+				.join('');
+		}
+	}
+
+	drawSearchInput(".moreNoticeTableArea");
+	drawPagination(".moreNoticeTableArea", "个人消息");
+	changeColumnsStyle(".moreNoticeTableArea", "个人消息");
+	toolTipUp(".myTooltip");
+	btnControl();
 }
 
 //填充chart
@@ -683,6 +860,7 @@ $(function() {
 	ShortcutsButtonBind();
 	drawAuthorityGroup();
 	loadNotices();
+	loadReminds();
 	loadChoosendShortcuts();
 	getChartInfo();
 	chartListener();

@@ -49,7 +49,7 @@ span {
 a,
 a:focus {
 	text-decoration: none;
-	color: #000;
+	color: #333333f2;
 	outline: none;
 	blr: expression(this.onFocus=this.blur());
 }
@@ -924,7 +924,7 @@ h2 {
 	font-size: 14px;
 }
 
-.more1 {
+.more1,.more2,.more {
 	float: right;
 	font-weight: normal;
 	color: #307fb1;
@@ -935,27 +935,28 @@ h2 {
 	text-align: center;
 }
 
-.newlist,.newlist2{
+.newlist,.newlist2,.remindlist,.remindlist2{
 	padding-left: 14px;
-	padding-top: 15px;
+	padding-top: 20px;
 }
 
-.newlist li,.newlist2 li {
+.newlist li,.newlist2 li,.remindlist li,.remindlist2 li{
 	line-height: 25px;
 	background: url(../images/list2.png) no-repeat 0px 8px;
 	text-indent: 11px;
 	text-overflow: ellipsis;
 	white-space: normal;
+	background-position-y: 11px;
 }
 
-.newlist i {
+.newlist i,.remindlist i {
 	width: 80px;
 	display: block;
 	float: left;
 	font-style: normal;
 }
 
-.newlist b,.newlist2 b {
+.newlist b,.newlist2 b,.remindlist b,.remindlist2 b{
 	font-weight: normal;
 	color: #7b7b7b;
 	padding-left: 10px;

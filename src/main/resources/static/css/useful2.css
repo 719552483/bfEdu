@@ -1525,6 +1525,8 @@ background: rgba(36, 138, 187, 0.77);
 	background: none!important;
 	text-align: center;
 	margin-top: 33px;
+	color: gray;
+	text-indent: -18px!important;
 }
 
 .noticeTitleArea{
@@ -2246,11 +2248,14 @@ input:focus{
 	overflow-x: hidden;
 }
 
-.right_infoleft .newlist li{
+.right_infoleft .newlist li,
+.right_infoleft .remindlist li{
 	overflow: hidden;
+	white-space: nowrap;
 }
 
-.noticeArea .newlist li{
+.noticeArea .newlist li,
+.remindArea .remindlist li{
 	max-width: 313px;
 }
 
@@ -2366,6 +2371,23 @@ input:focus{
 
 .area{
 	margin-bottom: 10px;
+}
+
+.user b{
+	width: fit-content;
+	margin-left: -7px;
+	background: none;
+	background-color: #da0808;
+	padding-left: 3px;
+	padding-top: 1px;
+	padding-right: 3px;
+	border-radius: 5px;
+	min-width: 20px;
+}
+
+.moreNoticeTableArea .search,
+.moreNoticeTableArea .columns {
+	margin-top: -40px!important;
 }
 
 @keyframes serachAnimation {
