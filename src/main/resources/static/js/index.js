@@ -590,7 +590,7 @@ function showMoreReminds(reminds){
 			visible: false
 		}, {
 			field: 'noticeText',
-			title: '消息内容',
+			title: '提醒内容',
 			align: 'left',
 			formatter: paramsMatter,
 			sortable: true
