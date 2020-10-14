@@ -643,7 +643,7 @@ public class SystemManageService {
         redisUtils.set("secondaryCode",edu000List);
         redisUtils.set("classPeriod",edu401List);
         redisUtils.set("department",edu104List);
-        redisUtils.set("RoleInfo",edu991List);
+        redisUtils.set("roleInfo",edu991List);
 
     }
 
