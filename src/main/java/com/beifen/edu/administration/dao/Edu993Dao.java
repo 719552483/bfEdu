@@ -23,6 +23,6 @@ public interface Edu993Dao extends JpaRepository<Edu993, Long>, JpaSpecification
 	// 根据202id删除
 	@Transactional
 	@Modifying
-	@Query(value = "delete from edu993 e where e.Edu202_ID =?1", nativeQuery = true)
+	@Query(value = "delete from edu993 e where e.business_id =?1 and notice_type = '03'", nativeQuery = true)
 	void deleteByEdu202ID(String scheduleId);
 }
