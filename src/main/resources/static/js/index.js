@@ -510,14 +510,13 @@ function drawReminds(reminds){
 		}
 	}
 
-	if(reminds.length===0){
-		str='<li class="NoNotice">暂无个人消息...</li>';
+	if(stffNum===0){
+		str='<li class="NoNotice">暂无未处理的提醒事项...</li>';
 	}
 
 	if(stffNum<=3){
 		$(parent.frames["topFrame"].document).find(".user").find("i").hide();
 		$(parent.frames["topFrame"].document).find(".user").find("b").hide();
-		$(".remindArea").find("a").remove();
 	}else{
 		$(parent.frames["topFrame"].document).find(".user").find("i").show();
 		$(parent.frames["topFrame"].document).find(".user").find("b").show();
@@ -525,16 +524,16 @@ function drawReminds(reminds){
 	}
 
 	$(".remindlist").append(str);
-	//展示更多提醒
-	$('.showMoreReminds').unbind('click');
-	$('.showMoreReminds').bind('click', function(e) {
+	//展示更多提醒||全部提醒
+	$('.showMoreReminds,.moreRemind').unbind('click');
+	$('.showMoreReminds,.moreRemind').bind('click', function(e) {
 		showMoreReminds(reminds);
 		$('.allRemindArea').show();
 		$('.mainindex').hide().css("padding","0px");
 		e.stopPropagation();
 	});
 
-	//返回
+	// 返回
 	$('.remindReturnBtn').unbind('click');
 	$('.remindReturnBtn').bind('click', function(e) {
 		$('.allRemindArea').hide();
