@@ -1675,7 +1675,7 @@ public class AdministrationPageService {
 		edu202DAO.delete(Long.parseLong(scheduleId));
 		edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 
-		edu993Dao.deleteByEdu202ID(scheduleId);
+		edu993Dao.deleteByBusiness(scheduleId,NoteConstant.TASK_NOTE);
 	}
 
 	//根据条件检索已排课信息
@@ -2290,6 +2290,22 @@ public class AdministrationPageService {
 			edu007.setEdu001_ID(studentIds[i]);
 			edu007.setStudentName(studentName[i]);
 			edu007Dao.save(edu007);
+
+			//发布提醒事项
+			Edu001 edu001 = edu001DAO.findOne(Long.parseLong(studentIds[i]));
+			Edu993 edu993 = new Edu993();
+			edu993.setDepartmentCode(edu001.getSzxb());
+			edu993.setRoleId(NoteConstant.STUDENT_ROLE);
+			edu993.setUserId(edu001.getEdu001_ID().toString());
+			String noticeText = "您有一条"+edu006.getBreachName()+"违纪记录,请注意查看";
+			edu993.setNoticeText(noticeText);
+			edu993.setNoticeType(NoteConstant.BREAK_NOTE);
+			edu993.setBusinessType("99");
+			edu993.setBusinessId(edu007.getEdu007_ID().toString());
+			edu993.setIsHandle("T");
+			edu993.setCreateDate(dateString);
+			edu993Dao.save(edu993);
+
 		}
 
 		resultVO = ResultVO.setSuccess("保存违纪信息成功",edu006);
@@ -2319,6 +2335,8 @@ public class AdministrationPageService {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(currentTime);
 		edu007Dao.cancelBreakByEdu006Id(dateString,cancelId,studentId);
+
+		edu993Dao.deleteByBusiness(cancelId,NoteConstant.BREAK_NOTE);
 
 		resultVO = ResultVO.setSuccess("撤销违纪成功",dateString);
 		return resultVO;
