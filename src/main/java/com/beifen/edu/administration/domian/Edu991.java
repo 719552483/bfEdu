@@ -10,11 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 //权限表
 @Entity
 @Table(name = "Edu991")
-public class Edu991 {
+public class Edu991 implements Serializable {
 	private Long BF991_ID;
 	private String js;  //角色类型(名称)
 	private String cdqx;  //菜单权限(指定长度700)

@@ -8,12 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
+import java.io.Serializable;
 
 
 @Entity
 @Table(name = "Edu104")
-public class Edu104 {
+public class Edu104 implements Serializable {
  //系部关系管理
 	private  Long Edu104_ID; 	
 	private  String xbmc;//系部名称

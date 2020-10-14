@@ -639,6 +639,7 @@ public class SystemManageService {
         List<Edu104> edu104List = edu104Dao.findAll();
         //查询角色
         List<Edu991> edu991List = edu991Dao.findAll();
+
         redisUtils.set("secondaryCode",edu000List);
         redisUtils.set("classPeriod",edu401List);
         redisUtils.set("department",edu104List);
