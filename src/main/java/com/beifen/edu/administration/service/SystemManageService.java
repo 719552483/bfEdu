@@ -635,8 +635,15 @@ public class SystemManageService {
         List<Edu000> edu000List = edu000Dao.findAll();
         //查询默认课节
         List<Edu401> edu401List = edu401Dao.findAll();
+        //查询二级学院
+        List<Edu104> edu104List = edu104Dao.findAll();
+        //查询角色
+        List<Edu991> edu991List = edu991Dao.findAll();
         redisUtils.set("secondaryCode",edu000List);
         redisUtils.set("classPeriod",edu401List);
+        redisUtils.set("department",edu104List);
+        redisUtils.set("RoleInfo",edu991List);
+
     }
 
     //获取首页图表数据
