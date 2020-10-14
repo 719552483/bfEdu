@@ -504,7 +504,7 @@ function drawReminds(reminds){
 	var str="";
 	var stffNum=0;
 	for (var i = 0; i < reminds.length; i++) {
-		if(reminds[i].isHandle==="T"&&stffNum<=3){
+		if(reminds[i].isHandle==="F"&&stffNum<=3){
 			stffNum++;
 			str+='<a class="showMoreReminds"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
 		}
