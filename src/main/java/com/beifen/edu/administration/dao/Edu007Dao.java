@@ -23,4 +23,9 @@ public interface Edu007Dao extends JpaRepository<Edu007, Long>, JpaSpecification
     @Modifying
     @Query(value = "update edu007 set cancel_date = ?1, cancel_state = 'T' where Edu006_ID =?2 and Edu001_ID = ?3", nativeQuery = true)
     void cancelBreakByEdu006Id(String currentTime, String cancelId,String studentId);
+
+    //查找关联信息
+    @Query(value = "select e.* from Edu007 e where e.Edu006_ID =?1 and e.edu001_ID = ?2",nativeQuery = true)
+    Edu007 findOneByEdu106IdAndStudent(String cancelId, String studentId);
+
 }

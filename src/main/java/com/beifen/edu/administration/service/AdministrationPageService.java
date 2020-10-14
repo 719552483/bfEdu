@@ -2335,8 +2335,8 @@ public class AdministrationPageService {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(currentTime);
 		edu007Dao.cancelBreakByEdu006Id(dateString,cancelId,studentId);
-
-		edu993Dao.deleteByBusiness(cancelId,NoteConstant.BREAK_NOTE);
+		Edu007 edu007 = edu007Dao.findOneByEdu106IdAndStudent(cancelId,studentId);
+		edu993Dao.deleteByBusiness(edu007.getEdu007_ID().toString(),NoteConstant.BREAK_NOTE);
 
 		resultVO = ResultVO.setSuccess("撤销违纪成功",dateString);
 		return resultVO;
