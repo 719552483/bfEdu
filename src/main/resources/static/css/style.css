@@ -938,6 +938,8 @@ h2 {
 .newlist,.newlist2,.remindlist,.remindlist2{
 	padding-left: 14px;
 	padding-top: 20px;
+	padding-right: 14px;
+	padding-bottom: 20px;
 }
 
 .newlist li,.newlist2 li,.remindlist li,.remindlist2 li{
