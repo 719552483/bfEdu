@@ -1,8 +1,14 @@
 package com.beifen.edu.administration.service;
 
 
+import com.beifen.edu.administration.PO.EchartPO;
+import com.beifen.edu.administration.PO.StudentInPointPO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.dao.Edu001Dao;
+import com.beifen.edu.administration.dao.Edu202Dao;
+import com.beifen.edu.administration.dao.Edu501Dao;
 import com.beifen.edu.administration.dao.Edu800Dao;
+import com.beifen.edu.administration.domian.Edu501;
 import com.beifen.edu.administration.domian.Edu800;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +21,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -26,6 +33,12 @@ public class BigDataService {
 
     @Autowired
     private Edu800Dao edu800Dao;
+    @Autowired
+    private Edu501Dao edu501Dao;
+    @Autowired
+    private Edu202Dao edu202Dao;
+    @Autowired
+    private Edu001Dao edu001Dao;
 
     //保存大数据财务信息
     public ResultVO saveFinanceInfo(Edu800 edu800) {
@@ -80,5 +93,104 @@ public class BigDataService {
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
 
         return resultVO;
+    }
+
+    //获取大屏展示数据
+    public ResultVO getBigScreenData() {
+        ResultVO resultVO;
+        Map<String,Object> returnMap = new HashMap<>();
+
+        //教学任务点查询
+        List<Edu501> edu501List = edu501Dao.findAll();
+        returnMap.put("pointInfo",edu501List);
+
+        //教学点学生人数查询
+        Map<String, Object> studentsInLocal = getStudentsInLocal();
+        returnMap.put("studentsInLocal",studentsInLocal);
+
+        //学生年龄雷达图
+        List<EchartPO> studentAgeData = getStudentsByAge();
+        returnMap.put("studentAgeData",studentAgeData);
+
+        //学生职业雷达图
+        List<EchartPO> studentJobData = getStudentsByJob();
+        returnMap.put("studentJobData",studentJobData);
+
+        resultVO = ResultVO.setSuccess("查询成功",returnMap);
+        return resultVO;
+    }
+
+    //获取各职业学生人数
+    private List<EchartPO> getStudentsByJob() {
+
+        List<EchartPO> echartPOS = edu001Dao.getStudentByJob();
+
+        return echartPOS;
+    }
+
+    //获取各年龄段学生人数
+    private List<EchartPO> getStudentsByAge() {
+        List<EchartPO> echartPOS = new ArrayList<>();
+
+        Integer count1 = edu001Dao.getStudentByAge("0","19");
+        Integer count2 = edu001Dao.getStudentByAge("20","29");
+        Integer count3 = edu001Dao.getStudentByAge("30","39");
+        Integer count4 = edu001Dao.getStudentByAge("40","49");
+        Integer count5 = edu001Dao.getStudentByAge("50","99");
+
+        String name1 = "20岁以下";
+        String name2 = "20-30岁";
+        String name3 = "30-40岁";
+        String name4= "40-50岁";
+        String name5 = "50岁以上";
+
+        for (int i = 0; i <5 ; i++) {
+            EchartPO echartPO = new EchartPO();
+            switch(i) {
+                case 0:
+                    echartPO.setName(name1);
+                    echartPO.setValue(count1.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 1:
+                    echartPO.setName(name2);
+                    echartPO.setValue(count2.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 2:
+                    echartPO.setName(name3);
+                    echartPO.setValue(count3.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 3:
+                    echartPO.setName(name4);
+                    echartPO.setValue(count4.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 4:
+                    echartPO.setName(name5);
+                    echartPO.setValue(count5.toString());
+                    echartPOS.add(echartPO);
+                    break;
+            }
+
+        }
+
+        return echartPOS;
+    }
+
+    //教学点学生人数查询
+    private Map<String,Object> getStudentsInLocal() {
+        Map<String,Object> returnMap = new HashMap<>();
+
+        List<StudentInPointPO> studentInPointList = edu202Dao.getStudentsInLocal();
+
+        List<String> yAxisData = studentInPointList.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
+        List<String> seriesdata = studentInPointList.stream().map(StudentInPointPO::getStudentCount).collect(Collectors.toList());
+
+        returnMap.put("yAxisData",yAxisData);
+        returnMap.put("seriesdata",seriesdata);
+
+        return returnMap;
     }
 }

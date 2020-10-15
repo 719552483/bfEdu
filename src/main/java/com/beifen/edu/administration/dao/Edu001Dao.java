@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.beifen.edu.administration.PO.EchartPO;
 import com.beifen.edu.administration.domian.Edu101;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -97,4 +98,11 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//根据专业查找学生人数
 	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.zybm = ?1",nativeQuery = true)
     Integer countByEdu106Id(Long edu106_id);
+
+	//根据年龄查找学生人数
+	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.nl between ?1 and ?2",nativeQuery = true)
+	Integer getStudentByAge(String s, String s1);
+
+	@Query(value = "select new com.beifen.edu.administration.PO.EchartPO(t.sylx ,count(t.edu001_ID)) from Edu001 t group by t.sylx")
+	List<EchartPO> getStudentByJob();
 }

@@ -59,4 +59,15 @@ public class BigDataContoller {
         ResultVO result = bigDataService.getDataPredtiction(year,departmentCode);
         return result;
     }
+
+    /**
+     *获取大屏展示数据
+     * @return
+     */
+    @RequestMapping("/getBigScreenData")
+    @ResponseBody
+    public ResultVO getBigScreenData() {
+        ResultVO result = bigDataService.getBigScreenData();
+        return result;
+    }
 }
