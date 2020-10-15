@@ -1848,11 +1848,13 @@ function reStuffData(data){
 		}
 	}];
 
+
 	data.forEach(function(d, i) {
-		var value = ['', '', '', '', ''];
+		var value = ['0', '0', '0', '0', '0'];
 		value[i] = max,
 			renderData[0].value[i] = d.value;
 		renderData.push({
+			name: "学员概貌",
 			value: value,
 			symbol: 'circle',
 			symbolSize: 12,
