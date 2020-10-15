@@ -169,6 +169,11 @@ border-bottom: 1px #ff000000 solid!important;
     background-color: rgba(64, 169, 216, 0.2196078431372549);
 }
 
+.tableArea .disabled > a{
+    background: rgba(64, 169, 216, 0.2196078431372549);
+    color: rgb(83, 218, 241);
+}
+
 
 
 
