@@ -4,7 +4,7 @@ package com.beifen.edu.administration.PO;
 public class StudentInPointPO {
     private String edu501_Id;
     private String localName;
-    private String studentCount;
+    private Long studentCount;
 
     public StudentInPointPO() {}
 
@@ -12,7 +12,7 @@ public class StudentInPointPO {
     public StudentInPointPO(String edu501_Id, String localName, Long studentCount) {
         this.edu501_Id = edu501_Id;
         this.localName = localName;
-        this.studentCount = studentCount.toString();
+        this.studentCount = studentCount;
     }
 
     public String getEdu501_Id() {
@@ -31,11 +31,11 @@ public class StudentInPointPO {
         this.localName = localName;
     }
 
-    public String getStudentCount() {
+    public Long getStudentCount() {
         return studentCount;
     }
 
-    public void setStudentCount(String studentCount) {
+    public void setStudentCount(Long studentCount) {
         this.studentCount = studentCount;
     }
 }

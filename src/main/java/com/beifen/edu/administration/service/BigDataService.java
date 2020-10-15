@@ -186,7 +186,7 @@ public class BigDataService {
         List<StudentInPointPO> studentInPointList = edu202Dao.getStudentsInLocal();
 
         List<String> yAxisData = studentInPointList.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
-        List<String> seriesdata = studentInPointList.stream().map(StudentInPointPO::getStudentCount).collect(Collectors.toList());
+        List<Long> seriesdata = studentInPointList.stream().map(StudentInPointPO::getStudentCount).collect(Collectors.toList());
 
         returnMap.put("yAxisData",yAxisData);
         returnMap.put("seriesdata",seriesdata);
