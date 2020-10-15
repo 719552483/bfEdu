@@ -1689,7 +1689,12 @@ function drawRight3(seriesdatas,yAxisDatas){
 		var currentYAxisData=yAxisDatas[i];
 		var changeLeft=0;
 		for (var j = 0; j < currentYAxisData.length; j++) {
-			currentYAxisData[j].length>=0?changeLeft=60:changeLeft=30;
+			if(currentYAxisData[j].length>=0){
+				changeLeft=60;
+				break
+			}else{
+				changeLeft=30;
+			}
 		}
 		stuffOption = {
 			"title": {
