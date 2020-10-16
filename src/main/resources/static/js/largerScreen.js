@@ -162,48 +162,6 @@ option2 = {
 };
 //////////////////////交通工具流量 end
 
-
-
-
-
-
-// Make dynamic data.
-function random() {
-	return +(Math.random() * (maxData - 10)).toFixed(1);
-}
-setInterval(function () {
-	var dynamicData = [random(), random(), random(), random(),random(), random(), random(), random(),random(),random()];
-	//myChart.setOption({
-	//    series: [{
-	//        data: dynamicData.slice()
-	//    }, {
-	//        data: dynamicData.slice()
-	//    }]
-	//})
-}, 3000)
-//////////////////////收费站收费排行2 end
-
-//收费站收费排行2
-
-// Make dynamic data.
-function random() {
-	return +(Math.random() * (maxData - 10)).toFixed(1);
-}
-setInterval(function () {
-	var dynamicData = [random(), random(), random(), random(),random(), random(), random(), random(),random(),random()];
-	//myChart.setOption({
-	//    series: [{
-	//        data: dynamicData.slice()
-	//    }, {
-	//        data: dynamicData.slice()
-	//    }]
-	//})
-}, 3000)
-//////////////////////收费站收费排行2 end
-
-//今日实时收费
-
-
 var shadowColor = '#374b86';
 var value = 85;
 option6 = {
@@ -1183,11 +1141,11 @@ function ListeneChart(){
 		myChart = echarts.init(document.getElementById('main31'));
 		myChart.resize();
 
-		myChart = echarts.init(document.getElementById('main4'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main41'));
-		myChart.resize();
+	    var allRight3=$(".localStudentInfoArea").find(".swiper-slide");
+		for (var i = 0; i < allRight3.length; i++) {
+			myChart = echarts.init(document.getElementById(allRight3[i].id));
+			myChart.resize();
+		}
 
 		myChart = echarts.init(document.getElementById('main5'));
 		myChart.resize();
@@ -1205,6 +1163,11 @@ function ListeneChart(){
 
 //获取设备分辨率
 function getscreen(){
+	var data=$("#rightTable").bootstrapTable("getData");
+	if(data.length<=3){
+		return;
+	}
+
 	var screen=window.screen.width;
 	if(screen==1920){
 		$(".tableArea").find("div.pagination")[0].style.marginTop="25px";
