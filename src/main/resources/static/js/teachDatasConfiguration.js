@@ -1031,11 +1031,11 @@ function ListeneChart(){
         myChart = echarts.init(document.getElementById('main31'));
         myChart.resize();
 
-        myChart = echarts.init(document.getElementById('main4'));
-        myChart.resize();
-
-        myChart = echarts.init(document.getElementById('main41'));
-        myChart.resize();
+        var allRight3=$(".localStudentInfoArea").find(".swiper-slide");
+        for (var i = 0; i < allRight3.length; i++) {
+            myChart = echarts.init(document.getElementById(allRight3[i].id));
+            myChart.resize();
+        }
 
         myChart = echarts.init(document.getElementById('main5'));
         myChart.resize();
