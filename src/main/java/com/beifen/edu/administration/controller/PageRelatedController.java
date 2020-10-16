@@ -96,11 +96,6 @@ public class PageRelatedController {
 		return "LargeScreen";
 	}
 
-	@RequestMapping("testLargeScreen")
-	public String testLargeScreen() {
-		return "testLargeScreen";
-	}
-
 	@RequestMapping("noticeHTMLmodel")
 	public String noticeHTMLmodelPage() {
 		return "noticeHTMLmodel";
