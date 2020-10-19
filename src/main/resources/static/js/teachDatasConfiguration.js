@@ -1340,7 +1340,7 @@ function loadChart(){
     myChart2.setOption(option2);
 
     //各类型扩招人数
-    drawLeft3(option1);
+    drawCenter1(option1);
 
     //中间地图
     getMapInfo();
@@ -1352,8 +1352,8 @@ function  drawLeft1(option1){
     myChart1.setOption(option1);
 }
 
-//左3
-function  drawLeft3(option1,option2,option3){
+//中1
+function  drawCenter1(option1,option2,option3){
     var value =80;
     option5 = {
         title: {
