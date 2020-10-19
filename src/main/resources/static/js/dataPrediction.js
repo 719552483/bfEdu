@@ -86,6 +86,18 @@ function drawTab1(edu800List,edu800SumList) {
 
 //渲染学院chart
 function stuffPredictionChart(edu800SumList){
+	var dataList=[
+		{value: edu800SumList.jsksf, name: '教师课时费'},
+		{value: edu800SumList.wlkczy, name: '网络课程资源'},
+		{value: edu800SumList.yyglf, name: '人员管理费'},
+		{value: edu800SumList.cdzlf, name: '场地租赁费'},
+		{value: edu800SumList.jxyxsbf, name: '教学运行设备费'},
+		{value: edu800SumList.pyfalzf, name: '培养方案论证费'},
+		{value: edu800SumList.sxsbf, name: '实训设备费'},
+		{value: edu800SumList.clf, name: '差旅费'}
+	];
+	dataList=dataList.sort(compare("value"));
+
 	var myChart = echarts.init(document.getElementById("predictionChart"));
 	option = {
 		title: {
@@ -113,16 +125,7 @@ function stuffPredictionChart(edu800SumList){
 				type: 'pie',
 				radius: '55%',
 				center: ['50%', '50%'],
-				data:  [
-					{value: edu800SumList.jsksf, name: '教师课时费'},
-					{value: edu800SumList.wlkczy, name: '网络课程资源'},
-					{value: edu800SumList.yyglf, name: '人员管理费'},
-					{value: edu800SumList.cdzlf, name: '场地租赁费'},
-					{value: edu800SumList.jxyxsbf, name: '教学运行设备费'},
-					{value: edu800SumList.pyfalzf, name: '培养方案论证费'},
-					{value: edu800SumList.sxsbf, name: '实训设备费'},
-					{value: edu800SumList.clf, name: '差旅费'}
-				],
+				data:dataList,
 				emphasis: {
 					itemStyle: {
 						shadowBlur: 10,
