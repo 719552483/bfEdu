@@ -129,6 +129,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".studentBaseInfoTableArea", "学生信息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'edu005_ID',

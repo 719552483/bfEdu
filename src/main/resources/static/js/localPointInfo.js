@@ -129,6 +129,9 @@ function stufflocalInfoTable(tableInfo) {
                 $("#localInfoTable").bootstrapTable("checkBy", {field:"edu501Id", values:[choosendlocal[i].edu501Id]})
             }
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         columns: [
             {
                 field: 'check',

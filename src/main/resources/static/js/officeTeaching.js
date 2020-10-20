@@ -99,6 +99,9 @@ function stuffWaitTaskTable(tableInfo){
 			onPageChange: function() {
 				drawPagination(".WaitTaskTableArea", "教学任务书");
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns: [
 				{
 					field : 'radio',
@@ -1328,6 +1331,9 @@ function stuffPuttedOutTable(tableInfo){
 		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".puttedTableArea", "已排课表");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
 		},
 		columns: [
 			{

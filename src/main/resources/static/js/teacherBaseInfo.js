@@ -115,6 +115,9 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".teacherBaseInfoTableArea", "教职工信息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'check',

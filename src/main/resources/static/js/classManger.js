@@ -154,6 +154,9 @@ function stuffAdministrationClassTable(tableInfo){
 					$("#administrationClassTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendXzb[i].edu300_ID]})
 				}
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns: [ {
 				field : 'check',
 				checkbox : true
@@ -946,6 +949,9 @@ function stuffTeachingClassTable(tableInfo) {
 			for (var i = 0; i < choosendJxb.length; i++) {
 				$("#teachingClassTable").bootstrapTable("checkBy", {field:"edu301_ID", values:[choosendJxb[i].edu301_ID]})
 			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
 		},
 		columns: [ {
 			field : 'check',

@@ -133,6 +133,9 @@ function stuffApprovalMangerTable(tableInfo){
 		onPageChange : function() {
 			drawPagination(".approvalMangerTableArea", "审批信息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns : [ {
 			field : 'edu600Id',
 			title: '唯一标识',
@@ -596,6 +599,9 @@ function stuffApprovalBackTable(tableInfo){
 		},
 		onPageChange : function() {
 			drawPagination(".approvalBackTableArea", "审批信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
 		},
 		columns : [ {
 			field : 'edu600Id',

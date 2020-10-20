@@ -146,6 +146,9 @@ function stuffCourseLibraryTable(tableInfo){
 					$("#courseLibraryTable").bootstrapTable("checkBy", {field:"bf200_ID", values:[choosendCrouse[i].bf200_ID]})
 				}
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns : [ {
 				field : 'check',
 				checkbox : true

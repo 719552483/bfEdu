@@ -98,6 +98,9 @@ function stuffAllLevelTable(allLevel){
 					$("#allLevlTable").bootstrapTable("checkBy", {field:"edu103_ID", values:[choosendLevel[i].edu103_ID]})
 				}
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns: [{
 					field: 'edu103_ID',
 					title: 'edu103_ID',
@@ -285,6 +288,9 @@ function stuffAllDepartmentTable(allDepartment){
 					$("#allDepartmentTable").bootstrapTable("checkBy", {field:"edu104_ID", values:[choosendDepartment[i].edu104_ID]})
 				}
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns: [{
 					field: 'edu104_ID',
 					title: 'edu104_ID',
@@ -440,6 +446,9 @@ function stuffAllGradeTable(allGrade){
 					$("#allGradeTable").bootstrapTable("checkBy", {field:"edu105_ID", values:[choosendGrade[i].edu105_ID]})
 				}
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns: [{
 					field: 'edu105_ID',
 					title: 'edu105_ID',
@@ -594,6 +603,9 @@ function stuffAllMajorTable(allMajor){
 				for (var i = 0; i < choosendMajor.length; i++) {
 					$("#allMajorTable").bootstrapTable("checkBy", {field:"edu106_ID", values:[choosendMajor[i].edu106_ID]})
 				}
+			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
 			},
 			columns: [{
 					field: 'edu106_ID',
@@ -1817,6 +1829,9 @@ function stuffAllXnTable(allRelationInfo){
 			showColumns: false,
 			onPageChange: function() {
 				drawPagination(".xnTableArea", "学年");
+			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
 			},
 			columns: [{
 					field: 'edu400_ID',

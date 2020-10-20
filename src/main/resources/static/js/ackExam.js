@@ -91,6 +91,9 @@ function stuffTaskInfoTable(tableInfo) {
 		onUncheckAll : function(rows,rows2) {
 			onUncheckAll(rows2);
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		onPageChange: function() {
 			drawPagination(".askForExamTableArea", "可申请课程");
 			for (var i = 0; i < choosendCourse.length; i++) {

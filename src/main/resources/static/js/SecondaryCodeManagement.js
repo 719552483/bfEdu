@@ -52,6 +52,9 @@ function stufflocalInfoTable(tableInfo) {
         onPageChange: function() {
             drawPagination(".localInfoTableArea", "教学任务点信息");
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         columns: [
             {
                 field: 'check',

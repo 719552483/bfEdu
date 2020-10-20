@@ -72,6 +72,9 @@ function stuffStudentGradeTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".studentGradeTableArea", "成绩信息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'edu005_ID',

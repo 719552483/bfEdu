@@ -106,6 +106,9 @@ function stuffLogTable(tableInfo) {
                 $("#techerLogTable").bootstrapTable("checkBy", {field:"edu114_ID", values:[choosendTeacherLog[i].edu114_ID]})
             }
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         columns: [
             {
                 field: 'check',

@@ -69,6 +69,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
         onPageChange: function() {
             drawPagination(".studentStudentListTableArea", "违纪信息");
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         columns: [
             {
                 field: 'edu006_ID',

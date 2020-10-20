@@ -169,6 +169,9 @@ function stuffReleaseNewsTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".tableArea", "通知");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'check',

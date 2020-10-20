@@ -100,6 +100,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
         onPageChange: function() {
             drawPagination(".techerStudentListTableArea", "学生信息");
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         columns: [
             {
                 field: 'edu001_ID',
@@ -727,6 +730,9 @@ function stuffStudentTable(tableInfo){
             for (var i = 0; i < choosendStudents.length; i++) {
                 $("#allStudentTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudents[i].edu001_ID]})
             }
+        },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
         },
         columns : [ {
             field : 'edu001_ID',

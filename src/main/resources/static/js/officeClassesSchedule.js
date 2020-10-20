@@ -127,6 +127,7 @@ function stuffTaskInfoTable(tableInfo) {
 		},
 		onPostBody : function() {
 			sfxylcjControlBind();
+			toolTipUp(".myTooltip");
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;
@@ -1112,6 +1113,7 @@ function stuffPutOutTaskTable(tableInfo) {
 		},
 		onPostBody : function() {
 			putOutTasksfxylcjControlBind();
+			toolTipUp(".myTooltip");
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;

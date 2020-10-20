@@ -35,6 +35,9 @@ function stuffCourseLibraryTable(tableInfo){
 			onPageChange: function() {
 				drawPagination(".putOutTaskTableArea", "教学任务书");
 			},
+			onPostBody: function() {
+				toolTipUp(".myTooltip");
+			},
 			columns: [
 				{
 					field: 'check',

@@ -85,6 +85,9 @@ function stuffAppraisalsTable(tableInfo) {
         onUncheckAll : function(rows,rows2) {
             onUncheckAll(rows2);
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         onPageChange: function() {
             drawPagination(".techerStudentListTableArea", "评价信息");
             for (var i = 0; i < choosendAppraisals.length; i++) {

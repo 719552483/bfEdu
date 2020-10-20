@@ -480,6 +480,9 @@ function stuffTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".allRoleTableArea", "角色信息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'check',

@@ -124,6 +124,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 $("#techerStudentListTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
             }
         },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
         columns: [
             {
                 field: 'check',

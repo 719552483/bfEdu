@@ -105,6 +105,9 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".teacherBaseInfoTableArea", "教职工信息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'check',
@@ -489,6 +492,9 @@ function stuffRecordsTable(tableInfo){
 		onPageChange: function() {
 			drawPagination(".recordsTableArea", "出差记录");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [
 			{
 				field: 'check',
@@ -719,6 +725,9 @@ function stuffAddTeacherTable(tableInfo) {
 			for (var i = 0; i < choosendTeachers.length; i++) {
 				$("#addTeacherTable").bootstrapTable("checkBy", {field:"edu101_ID", values:[choosendTeachers[i].edu101_ID]})
 			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
 		},
 		columns: [
 			{

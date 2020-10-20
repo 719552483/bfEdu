@@ -581,6 +581,9 @@ function showMoreReminds(reminds){
 		onPageChange: function() {
 			drawPagination(".moreNoticeTableArea", "个人消息");
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [{
 			field: 'edu993_ID',
 			title: '唯一标识',

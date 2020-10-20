@@ -140,6 +140,9 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				$("#relationTable").bootstrapTable("checkBy", {field:"edu107_ID", values:[choosendRelation[i].edu107_ID]})
 			}
 		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
 		columns: [{
 			field: 'edu107_ID',
 			title: 'edu107_ID',
