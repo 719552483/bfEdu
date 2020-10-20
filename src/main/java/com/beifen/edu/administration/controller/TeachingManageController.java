@@ -363,5 +363,62 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教务查询教师学年课程表查询
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/JwGetYearScheduleInfo")
+    @ResponseBody
+    public ResultVO JwGetYearScheduleInfo(@RequestParam("searchObject") String searchObject) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        result = teachingManageService.JwGetYearScheduleInfo(timeTablePO);
+        return result;
+    }
+
+    /**
+     * 教务查询班级学年课程表查询
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/JwGetYearScheduleInfoByClass")
+    @ResponseBody
+    public ResultVO JwGetYearScheduleInfoByClass(@RequestParam("searchObject") String searchObject) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        result = teachingManageService.JwGetYearScheduleInfoByClass(timeTablePO);
+        return result;
+    }
+
+    /**
+     * 教务检索学年分散学时课表
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/JwSearchYearScatteredClassByTeacher")
+    @ResponseBody
+    public ResultVO JwSearchYearScatteredClassByTeacher(@RequestParam("searchObject") String searchObject) {
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        ResultVO result = teachingManageService.JwSearchYearScatteredClassByTeacher(timeTablePO);
+        return result;
+    }
+
+    /**
+     * 教务检索班级分散学时课表
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/JwSearchYearScatteredClassByStudent")
+    @ResponseBody
+    public ResultVO JwSearchYearScatteredClassByStudent(@RequestParam("searchObject") String searchObject) {
+        TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
+        ResultVO result = teachingManageService.JwSearchYearScatteredClassByStudent(timeTablePO);
+        return result;
+    }
+
+
 
 }
