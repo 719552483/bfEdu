@@ -1,14 +1,466 @@
 $(function() {
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	$("input[type='number']").inputSpinner();
-	stuffSearchElement();
-	drawScheduleClassesEmptyTable();
-	btnBind();
+	getSemesterInfo();
+	yearArea();
+	yearBtnBind();
 });
+
+/*tab1 start*/
+//学年课表
+function yearArea(){
+	drawYearScheduleEmptyTable();
+	//changge事件
+	// $("#yearSemester,#yearCrouseType").change(function() {
+	// 	yearStartSearch();
+	// });
+}
+
+//填充空的学年集中空表
+function drawYearScheduleEmptyTable(){
+	var defaultClassPeriod = 6;
+	var tableInfo = new Array();
+	for (var i = 0; i < defaultClassPeriod; i++) {
+		var scheduleClassesInfoObject = new Object();
+		scheduleClassesInfoObject.id = i;
+		scheduleClassesInfoObject.classPeriod = "第" + (i + 1) + "节";
+		scheduleClassesInfoObject.monday = "";
+		scheduleClassesInfoObject.tuesday = "";
+		scheduleClassesInfoObject.wednesday = "";
+		scheduleClassesInfoObject.thursday = "";
+		scheduleClassesInfoObject.friday = "";
+		scheduleClassesInfoObject.saturday = "";
+		scheduleClassesInfoObject.sunday = "";
+		tableInfo.push(scheduleClassesInfoObject);
+	}
+	stuffYearScheduleEmptyTable(tableInfo);
+}
+
+//渲染学年集中空表
+function stuffYearScheduleEmptyTable(tableInfo){
+	$('#yearScheduleTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: false,
+		pageNumber: 1,
+		pageSize: 10,
+		pageList: [10],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: false,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		columns: [{
+			field: 'id',
+			title: 'id',
+			align: 'left',
+			visible: false
+		},
+			{
+				field: 'classPeriod',
+				title: '课节数',
+				align: 'left',
+				width: 10
+			}, {
+				field: 'monday',
+				title: '星期一',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'tuesday',
+				title: '星期二',
+				align: 'left',
+				formatter: scheduleFormatter,
+			}, {
+				field: 'wednesday',
+				title: '星期三',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'thursday',
+				title: '星期四',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'friday',
+				title: '星期五',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'saturday',
+				title: '星期六',
+				align: 'left',
+				formatter: scheduleFormatter
+			}, {
+				field: 'sunday',
+				title: '星期日',
+				align: 'left',
+				formatter: scheduleFormatter
+			}
+		]
+	});
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+
+	//课程区域点击事件
+	$('.singleSchedule').unbind('click');
+	$('.singleSchedule').bind('click', function(e) {
+		singleScheduleAction(e);
+		e.stopPropagation();
+	});
+}
+
+//填充空的学年分散课表
+function drawYearFsSchedule(){
+	stuffYearFsSchedule({});
+}
+
+//渲染学年分散课表
+function stuffYearFsSchedule(tableInfo){
+	window.releaseNewsEvents = {
+		'click #yearDeatils' : function(e, value, row, index) {
+			getScheduleDetails(row.classId,row.edu108_ID,row.courseType);
+		}
+	};
+	$('#yearFsScheduleTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: '分散课表导出'  //文件名称
+		},
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".yearFsScheduleTableArea", "已排分散授课课表");
+		},
+		columns : [
+			{
+				field : 'edu207_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
+			},{
+				field : 'courseName',
+				title : '课程名称',
+				align : 'left',
+				formatter :paramsMatter
+			}, {
+				field : 'week',
+				title : '周数',
+				align : 'left',
+				formatter : paramsMatter
+			},{
+				field : 'classHours',
+				title : '学时',
+				align : 'left',
+				formatter : paramsMatter
+			},{
+				field : 'courseContent',
+				title : '课程内容',
+				align : 'left',
+				formatter : paramsMatter
+			},{
+				field : 'teachingPlatform',
+				title : '授课平台',
+				align : 'left',
+				formatter : paramsMatter
+			},{
+				field : 'action',
+				title : '操作',
+				align : 'center',
+				clickToSelect : false,
+				formatter : releaseNewsFormatter,
+				events : releaseNewsEvents,
+			}]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li class="queryBtn" id="yearDeatils"><span><img src="img/info.png" style="width:24px"></span>分散授课详情</li>'
+		+ '</ul>' ].join('');
+	}
+
+	drawPagination(".yearFsScheduleTableArea", "已排分散授课课表");
+	drawSearchInput(".yearFsScheduleTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".yearFsScheduleTableArea", "已排分散授课课表");
+	btnControl();
+}
+
+//查询教师集中学年课程表查询
+function JwGetYearScheduleInfo(searchObject){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/JwGetYearScheduleInfo",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			$(".yearScheduleTableArea").show();
+			$(".yearFsScheduleTableArea").hide();
+			if (backjson.code===200) {
+				stuffYearScheduleEmptyTable(backjson.data.newInfo);
+				toastr.info(backjson.msg);
+			} else {
+				drawYearScheduleEmptyTable();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//查询班级集中学年课程表查询
+function JwGetYearScheduleInfoByClass(searchObject){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/JwGetYearScheduleInfoByClass",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			$(".yearScheduleTableArea").show();
+			$(".yearFsScheduleTableArea").hide();
+			if (backjson.code===200) {
+				stuffYearScheduleEmptyTable(backjson.data.newInfo);
+				toastr.info(backjson.msg);
+			} else {
+				drawYearScheduleEmptyTable();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//查询教师学年分散学时课表
+function JwSearchYearScatteredClassByTeacher(searchObject){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/JwSearchYearScatteredClassByTeacher",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			$(".yearScheduleTableArea").hide();
+			$(".yearFsScheduleTableArea").show();
+			if (backjson.code===200) {
+				stuffYearFsSchedule(backjson.data);
+				toastr.info(backjson.msg);
+			} else {
+				drawYearFsSchedule();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//查询班级学年分散学时课表
+function JwSearchYearScatteredClassByStudent(searchObject){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/JwSearchYearScatteredClassByClass",
+		data:{
+			"searchObject":JSON.stringify(searchObject)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			$(".yearScheduleTableArea").hide();
+			$(".yearFsScheduleTableArea").show();
+			if (backjson.code===200) {
+				stuffYearFsSchedule(backjson.data);
+				toastr.info(backjson.msg);
+			} else {
+				drawYearFsSchedule();
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获取学年课表检索对象
+function getYearScheduleSearchObject(){
+	var semester=getNormalSelectValue("yearSemester");
+	var classId=$("#yearClass")[0].attributes[3].nodeValue;
+	var teacherId=$("#yearTeacher")[0].attributes[3].nodeValue;
+	if(semester===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+
+	if(classId===""&&teacherId===""){
+		toastr.warning('班级或教师至少选择一项进行检索');
+		return;
+	}
+
+	if(classId!==""&&teacherId!==""){
+		toastr.warning('班级或教师只能选择一项进行检索');
+		return;
+	}
+
+	var returnObject=new Object();
+	classId===""?returnObject.currentUserId=teacherId:returnObject.currentUserId=classId;
+	classId===""?returnObject.level2Type="teacher":returnObject.level2Type="class";
+	returnObject.semester=semester;
+	return returnObject;
+}
+
+//学年课表开始检索
+function yearStartSearch(){
+	var searchObject=getYearScheduleSearchObject();
+	if(typeof searchObject==="undefined"){
+		return;
+	}
+	var type=getNormalSelectValue("yearCrouseType");
+	if(type===""){
+		toastr.warning('请选择授课类型');
+		return;
+	}
+
+	if(type==="type1"){
+		if(searchObject.level2Type==="teacher"){
+			JwGetYearScheduleInfo(searchObject);
+		}else{
+			JwGetYearScheduleInfoByClass(searchObject);
+		}
+	}else{
+		if(searchObject.level2Type==="teacher"){
+			JwSearchYearScatteredClassByTeacher(searchObject);
+		}else{
+			JwSearchYearScatteredClassByStudent(searchObject);
+		}
+	}
+}
+
+//学年课表重置检索
+function yearReSearch(){
+	var currentType=getNormalSelectValue("yearCrouseType");
+	var reObject = new Object();
+	reObject.InputIds = "#yearClass,#yearTeacher";
+	reObject.normalSelectIds = "#yearSemester,#yearCrouseType";
+	$("#yearClass").attr("classid","");
+	$("#yearTeacher").attr("teacherId","");
+	reReloadSearchsWithSelect(reObject);
+	if(currentType==="type2"){
+		drawYearFsSchedule();
+	}else if(currentType==="type1"){
+		drawYearScheduleEmptyTable();
+	}
+}
+
+//学年课表按钮事件绑定
+function yearBtnBind(){
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+
+	//行政班focus
+	$('#class,#yearClass').focus(function(e){
+		classModalBtnBind();
+		getClassInfo();
+		e.stopPropagation();
+	});
+
+	//教师focus
+	$('#teacher,#yearTeacher').focus(function(e){
+		teacherModalBtnBind();
+		getTeacherInfo();
+		e.stopPropagation();
+	});
+
+	//开始检索
+	$('#yearStartSearch').unbind('click');
+	$('#yearStartSearch').bind('click', function(e) {
+		yearStartSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#yearReSearch').unbind('click');
+	$('#yearReSearch').bind('click', function(e) {
+		yearReSearch();
+		e.stopPropagation();
+	});
+}
+/*tab1 end*/
+
+/*tab2 start*/
+var isFirst=true;
+//周课表
+function WeekArea(){
+	if(isFirst){
+		isFirst=false;
+		stuffSearchElement();
+		drawScheduleClassesEmptyTable();
+		btnBind();
+	}
+}
 
 //填充检索下拉框元素
 function stuffSearchElement(){
-	getSemesterInfo();
 	drawPlanSelect();
 	//学年changge事件
 	$("#semester").change(function() {
@@ -123,6 +575,7 @@ function getSemesterInfo() {
 					str += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc + '</option>';
 				}
 				stuffManiaSelect("#semester", str);
+				stuffManiaSelect("#yearSemester", str);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -342,7 +795,7 @@ function stuffScheduleClassesTable(tableInfo) {
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
-		search: true,
+		search: false,
 		editable: false,
 		striped: true,
 		toolbar: '#toolbar',
@@ -396,8 +849,6 @@ function stuffScheduleClassesTable(tableInfo) {
 			}
 		]
 	});
-	changeColumnsStyle(".scheduleClassesTableArea", "已排集中授课课表");
-	drawSearchInput(".scheduleClassesTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 
@@ -721,6 +1172,11 @@ function stuffAdministrationClassTable(tableInfo){
 //行政班modal按钮事件
 function classModalBtnBind(){
 	LinkageSelectPublic("#class_level","#class_department","#class_grade","#class_major");
+	var reObject = new Object();
+	reObject.InputIds = "#class_className";
+	reObject.normalSelectIds = "#class_level,#class_department,#class_grade,#class_major";
+	reReloadSearchsWithSelect(reObject);
+
 	//开始检索
 	$('#allClass_StartSearch').unbind('click');
 	$('#allClass_StartSearch').bind('click', function(e) {
@@ -746,8 +1202,20 @@ function classModalBtnBind(){
 //确认选择行政班
 function confirmChoosedClass(){
 	var choosed=$("#allClassTable").bootstrapTable("getSelections");
-	$("#class").val(choosed[0].xzbmc);
-	$("#class").attr("classid",choosed[0].edu300_ID);
+	if(choosed.length==0){
+		toastr.warning('请选择班级');
+		return;
+	}
+	var currentType=$("#mainArea").find(".itab").find(".selected")[0].hash;
+	if(currentType==="#year"){
+		$("#yearClass").val(choosed[0].xzbmc);
+		$("#yearClass").attr("classid",choosed[0].edu300_ID);
+		$("#yearTeacher").val("");
+		$("#yearTeacher").attr("teacherId","");
+	}else{
+		$("#class").val(choosed[0].xzbmc);
+		$("#class").attr("classid",choosed[0].edu300_ID);
+	}
 	$.hideModal("#classModal");
 }
 
@@ -898,6 +1366,9 @@ function stuffAllClassMangersTable(tableInfo){
 
 //教师modal按钮事件
 function teacherModalBtnBind(){
+	var reObject = new Object();
+	reObject.InputIds = "#departmentName,#mangerName,#mangerNumber";
+	reReloadSearchsWithSelect(reObject);
 	//开始检索
 	$('#allClassMangers_StartSearch').unbind('click');
 	$('#allClassMangers_StartSearch').bind('click', function(e) {
@@ -974,20 +1445,25 @@ function allClassMangersReSearch(){
 //确认选择教师
 function confirmChoosedTeacher(){
 	var choosed=$("#allClassMangersTable").bootstrapTable("getSelections");
-	$("#teacher").val(choosed[0].xm);
-	$("#teacher").attr("teacherId",choosed[0].edu101_ID);
+	if(choosed.length==0){
+		toastr.warning('请选择教师');
+		return;
+	}
+	var currentType=$("#mainArea").find(".itab").find(".selected")[0].hash;
+	if(currentType==="#year"){
+		$("#yearTeacher").val(choosed[0].xm);
+		$("#yearTeacher").attr("teacherId",choosed[0].edu101_ID);
+		$("#yearClass").val("");
+		$("#yearClass").attr("classId","");
+	}else{
+		$("#teacher").val(choosed[0].xm);
+		$("#teacher").attr("teacherId",choosed[0].edu101_ID);
+	}
 	$.hideModal("#allClassMangersModal");
 }
 
 //初始化页面按钮绑定事件
 function btnBind() {
-	//提示框取消按钮
-	$('.cancelTipBtn,.cancel').unbind('click');
-	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$.hideModal();
-		e.stopPropagation();
-	});
-
 	//开始检索
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
@@ -1011,18 +1487,5 @@ function btnBind() {
 		reSearch();
 		e.stopPropagation();
 	});
-
-	//行政班focus
-	$('#class').focus(function(e){
-		classModalBtnBind();
-		getClassInfo();
-		e.stopPropagation();
-	});
-
-	//教师focus
-	$('#teacher').focus(function(e){
-		teacherModalBtnBind();
-		getTeacherInfo();
-		e.stopPropagation();
-	});
 }
+/*tab2 end*/

@@ -1611,11 +1611,13 @@ background: rgba(36, 138, 187, 0.77);
     margin-top: 3px;
 }
 
+.yearFsScheduleTableArea .search,
 .fsScheduleAreaTableArea2 .search,
 .fsScheduleAreaTableArea .search{
 	margin-top: 6px;
 }
 
+.yearFsScheduleTableArea .columns,
 .fsScheduleAreaTableArea2 .columns,
 .fsScheduleAreaTableArea .columns {
 	margin-top: 5px;
