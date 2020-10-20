@@ -1233,7 +1233,7 @@ public class TeachingManageService {
     }
 
     //教务检索班级分散学时课表
-    public ResultVO JwSearchYearScatteredClassByStudent(TimeTablePO timeTablePO) {
+    public ResultVO JwSearchYearScatteredClassByClass(TimeTablePO timeTablePO) {
         ResultVO resultVO;
         List<Long> classIds = edu302Dao.findEdu301IdsByEdu300Id(timeTablePO.getCurrentUserId());
         classIds.add(Long.parseLong(timeTablePO.getCurrentUserId()));

@@ -411,11 +411,11 @@ public class TeachingManageController {
      * @param searchObject
      * @return
      */
-    @RequestMapping("/JwSearchYearScatteredClassByStudent")
+    @RequestMapping("/JwSearchYearScatteredClassByClass")
     @ResponseBody
-    public ResultVO JwSearchYearScatteredClassByStudent(@RequestParam("searchObject") String searchObject) {
+    public ResultVO JwSearchYearScatteredClassByClass(@RequestParam("searchObject") String searchObject) {
         TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
-        ResultVO result = teachingManageService.JwSearchYearScatteredClassByStudent(timeTablePO);
+        ResultVO result = teachingManageService.JwSearchYearScatteredClassByClass(timeTablePO);
         return result;
     }
 
