@@ -817,10 +817,18 @@ public class AdministrationPageService {
 	}
 
 	// 发布教学任务书
-	public ResultVO putOutTask(List<Edu201> edu201s,Edu600 edu600) {
+	public ResultVO putOutTask(List<Edu201> edu201s,Edu600 oldedu600) {
 		ResultVO resultVO;
 		for (Edu201 edu201 : edu201s) {
-			Edu201 oldEdu201 =null;
+			Edu201 oldEdu201 = new Edu201();
+			Edu600 edu600 = new Edu600();
+			try {
+				BeanUtils.copyProperties(edu600,oldedu600);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 			//保留原始数据
 			if(edu201.getEdu201_ID() != null) {
 				oldEdu201 = edu201DAO.findOne(edu201.getEdu201_ID());
@@ -842,7 +850,7 @@ public class AdministrationPageService {
 			edu600.setBusinessKey(edu201.getEdu201_ID());
 			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 			if(!isSuccess) {
-				if (oldEdu201 != null) {
+				if (oldEdu201.getEdu201_ID() != null) {
 					edu201DAO.save(oldEdu201);
 				} else {
 					edu201DAO.delete(edu201.getEdu201_ID());
