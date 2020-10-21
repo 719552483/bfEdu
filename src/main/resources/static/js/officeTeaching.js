@@ -1227,7 +1227,8 @@ function puttedSchedule(){
 		cache : false,
 		url : "/searchTeachingScheduleCompleted",
 		data: {
-			"searchCondition":JSON.stringify(searchObject)
+			"searchCondition":JSON.stringify(searchObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1280,7 +1281,8 @@ function getPuttedScheduleInfo(){
 		cache : false,
 		url : "/searchTeachingScheduleCompleted",
 		data: {
-			"searchCondition":JSON.stringify(getPuttedSelectValue())
+			"searchCondition":JSON.stringify(getPuttedSelectValue()),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {

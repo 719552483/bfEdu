@@ -1687,10 +1687,13 @@ public class AdministrationPageService {
 	}
 
 	//根据条件检索已排课信息
-	public Map<String, Object> searchTeachingScheduleCompleted(TeachingSchedulePO teachingSchedule) {
+	public Map<String, Object> searchTeachingScheduleCompleted(TeachingSchedulePO teachingSchedule,String userId) {
 		Map<String, Object> returnMap = new HashMap();
 
 		List<TeachingSchedulePO> taskList;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
 		Specification<TeachingSchedulePO> specification = new Specification<TeachingSchedulePO>() {
 			public Predicate toPredicate(Root<TeachingSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1710,6 +1713,12 @@ public class AdministrationPageService {
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
 					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
+				Path<Object> path = root.get("pyjhxb");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
 
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}

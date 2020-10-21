@@ -2011,11 +2011,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("searchTeachingScheduleCompleted")
 	@ResponseBody
-	public Object searchTeachingScheduleCompleted(@RequestParam("searchCondition") String searchCondition) {
+	public Object searchTeachingScheduleCompleted(@RequestParam("searchCondition") String searchCondition,@RequestParam("userId") String userId) {
 		Map<String, Object> returnMap = new HashMap();
 		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(searchCondition);
 		TeachingSchedulePO teachingSchedule = JSON.toJavaObject(jsonObject,TeachingSchedulePO.class);
-		returnMap = administrationPageService.searchTeachingScheduleCompleted(teachingSchedule);
+		returnMap = administrationPageService.searchTeachingScheduleCompleted(teachingSchedule,userId);
 		return returnMap;
 	}
 
