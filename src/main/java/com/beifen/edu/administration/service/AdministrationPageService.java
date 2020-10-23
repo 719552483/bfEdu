@@ -1792,7 +1792,14 @@ public class AdministrationPageService {
 			edu200.setKcdm(newkcdm);
 		} else {
 			//保留原始数据
-			oldEdu200 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
+			Edu200 edu2001 = edu200DAO.queryClassById(edu200.getBF200_ID().toString());
+			try {
+				BeanUtils.copyProperties(oldEdu200,edu2001);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 			//查询是否有培养计划正在使用该课程
 			List<Edu108> edu108List = edu108DAO.findPlanByEdu200Id(edu200.getBF200_ID().toString());
 			if (edu108List.size() != 0) {

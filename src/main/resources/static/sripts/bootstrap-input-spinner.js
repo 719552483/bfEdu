@@ -106,7 +106,7 @@
                 var newValue = $input[0].value
                 var focusOut = event.type === "focusout"
                 if (!(locale === "en-US" || locale === "en-GB" || locale === "th-TH")) {
-                    newValue = newValue.replace(/[. ]/g, '').replace(/,/g, '.')
+                    newValue = newValue.replace(/,/g, '.')
                 }
                 setValue(newValue, focusOut)
                 dispatchEvent($original, event.type)
@@ -138,8 +138,8 @@
                     newValue = Math.round(newValue * Math.pow(10, decimals)) / Math.pow(10, decimals)
                     $original[0].value = newValue
                     if (updateInput) {
-                    	$input[0].value = newValue
-//                        $input[0].value = numberFormat.format(newValue)
+                        $input[0].value = newValue
+                        $input[0].value = numberFormat.format(newValue)
                     }
                     value = newValue
                 }
