@@ -1664,7 +1664,7 @@ function putOutTaskAreabtnBind() {
 	$('#research2').unbind('click');
 	$('#research2').bind('click', function(e) {
 		var reObject = new Object();
-		reObject.InputIds = "#xzbmc,#kcmc";
+		reObject.InputIds = "#pyjhmc,#kcmc";
 		reReloadSearchsWithSelect(reObject);
 		showputedTask(false);
 		e.stopPropagation();
@@ -1712,7 +1712,7 @@ function binBind() {
 	$('#research1').unbind('click');
 	$('#research1').bind('click', function(e) {
 		var reObject = new Object();
-		reObject.InputIds = "#xzbmc,#kcmc";
+		reObject.InputIds = "#pyjhmc,#kcmc";
 		reReloadSearchsWithSelect(reObject);
 		deafultSearch();
 		e.stopPropagation();
