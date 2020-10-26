@@ -245,10 +245,10 @@ function stuffTaskInfoTable(tableInfo) {
 		}
 	}
 
-	drawPagination(".scheduleClassesTableArea", "教学任务书");
+	drawPagination(".scheduleClassesTableArea", "开课计划");
 	drawSearchInput(".scheduleClassesTableArea");
 	changeTableNoRsTip();
-	changeColumnsStyle( ".scheduleClassesTableArea", "教学任务书");
+	changeColumnsStyle( ".scheduleClassesTableArea", "开课计划");
 	toolTipUp(".myTooltip");
 	sfxylcjControlBind();
 	$("#removePutOutTasks").hide();

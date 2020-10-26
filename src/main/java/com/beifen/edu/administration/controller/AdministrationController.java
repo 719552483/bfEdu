@@ -1222,9 +1222,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("findAllClass")
 	@ResponseBody
-	public Object findAllClass() {
+	public Object findAllClass(@RequestParam("userId") String userId) {
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu300> classList = administrationPageService.findAllClass();
+		List<Edu300> classList = administrationPageService.findAllClass(userId);
 		returnMap.put("classList",classList);
 		returnMap.put("result", true);
 		return returnMap;
