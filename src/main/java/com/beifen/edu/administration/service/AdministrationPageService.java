@@ -779,7 +779,7 @@ public class AdministrationPageService {
 		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
 
 		if(edu108Ids.size() == 0) {
-			resultVO = ResultVO.setFailed("暂未找到任务书");
+			resultVO = ResultVO.setFailed("暂未找到开课计划");
 			return resultVO;
 		}
 
@@ -808,9 +808,9 @@ public class AdministrationPageService {
 
 
 		if (edu206IdList.size() == 0){
-			resultVO = ResultVO.setFailed("暂未找到任务书");
+			resultVO = ResultVO.setFailed("暂未找到开课计划");
 		} else {
-			resultVO = ResultVO.setSuccess("共找到"+edu206IdList.size()+"条任务书",edu206IdList);
+			resultVO = ResultVO.setSuccess("共找到"+edu206IdList.size()+"条开课计划",edu206IdList);
 		}
 
 		return resultVO;
@@ -1656,8 +1656,11 @@ public class AdministrationPageService {
 	}
 
 	//查询全部行政班
-	public List<Edu300> findAllClass() {
-		List<Edu300> classList = edu300DAO.findAll();
+	public List<Edu300> findAllClass(String userId) {
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		List<Edu300> classList = edu300DAO.findAllbyDepartments(departments);
 		return classList;
 	}
 
