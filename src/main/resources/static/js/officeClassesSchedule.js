@@ -1050,6 +1050,7 @@ function showputedTask(IsmainAreaControl){
 		},
 		success : function(backjson) {
 			hideloding();
+			$("#putOutTasks").hide();
 			if (backjson.code === 200) {
 				stuffPutOutTaskTable(backjson.data);
 				if (typeof(IsmainAreaControl) === "undefined") {
@@ -1294,7 +1295,6 @@ function stuffPutOutTaskTable(tableInfo) {
 	changeTableNoRsTip();
 	changeColumnsStyle( ".putOutTaskTableArea", "教学任务书");
 	toolTipUp(".myTooltip");
-	btnControl();
 	putOutTasksfxylcjControlBind();
 }
 
@@ -1601,7 +1601,7 @@ function startSearchPutOutTasks(){
 
 //页面展示区域控制
 function mainAreaControl(){
-	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#putOutTasks,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
+	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
 	var reObject = new Object();
 	reObject.InputIds = "#xzbmc,#kcmc";
 	reReloadSearchsWithSelect(reObject);
@@ -1722,6 +1722,7 @@ function binBind() {
 	$('#reback').unbind('click');
 	$('#reback').bind('click', function(e) {
 		mainAreaControl();
+		$("#putOutTasks").show();
 		e.stopPropagation();
 	});
 }

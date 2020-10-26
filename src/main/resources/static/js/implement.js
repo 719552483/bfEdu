@@ -610,9 +610,8 @@ function drawSearchInput(area) {
 	}else{
 		$(".fixed-table-toolbar").find(".search").prepend('<img class="searchIcon" src="images/ico06.png" style="width: 24px;" />');
 	}
-	
-
 	$(area).find(".fixed-table-toolbar").find(".search").find("input").attr("spellcheck",false);
+	$(area).find(".fixed-table-toolbar").find(".search").find("input").attr( "placeholder" , "表内检索..." );
 	// 聚焦
 	$(area).find(".fixed-table-toolbar").find(".search").find("input").focus(function(e) {
 		$(area).find(".searchIcon").addClass("serachFocus");
