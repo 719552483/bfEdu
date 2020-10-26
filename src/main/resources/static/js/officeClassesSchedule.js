@@ -1649,16 +1649,6 @@ function putOutTaskAreabtnBind() {
 		startSearchPutOutTasks();
 		e.stopPropagation();
 	});
-	
-	// 重置检索已发布任务书
-	$('#research2').unbind('click');
-	$('#research2').bind('click', function(e) {
-		var reObject = new Object();
-		reObject.InputIds = "#xzbmc,#kcmc";
-		reReloadSearchsWithSelect(reObject);
-		showputedTask(false);
-		e.stopPropagation();
-	});
 
 	// 重置检索已发布任务书
 	$('#research2').unbind('click');
