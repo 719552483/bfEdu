@@ -531,8 +531,11 @@ function configedJz(){
 	}else{
 		$(".itab").find("li:eq(2)").find("a").trigger('click');
 	}
-	$(".fsPuttedHousr").html(0);
-	$(".fsWaitHousr").html($('.fsxsSpan ')[0].innerText);
+
+	if($(".singlefsKj").find(".choosendfsKjInfo").length==0){
+		$(".fsPuttedHousr").html(0);
+		$(".fsWaitHousr").html($('.fsxsSpan ')[0].innerText);
+	}
 }
 
 //tab2的上一步
@@ -559,20 +562,29 @@ function configedAlllastStep(){
 	$(".itab").find("li:eq(1)").find("a").trigger('click');
 }
 
-//检查是否排完集中
+//检查是否排完集中并且正确
 function checkJzPK(){
-	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
-	if(currentJzxs!=0){
-		var PKInfo=getJzPKInfo(false);
-		var scheduleInfo=scheduleDetailInfo(false);
-		if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
-			$("#tab2").find(".cannottxt").show();
-			$("#tab2").find(".fsMainArea").hide();
-		}else{
-			$("#tab2").find(".cannottxt").hide();
-			$("#tab2").find(".fsMainArea").show();
-		}
+	var currentWaitJzxs=parseInt($(".cycleWaitHousr ")[0].innerText);
+	// if(currentWaitJzxs!=0){
+	// 	var PKInfo=getJzPKInfo(false);
+	// 	var scheduleInfo=scheduleDetailInfo(false);
+	// 	if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
+	// 		$("#tab2").find(".cannottxt").show();
+	// 		$("#tab2").find(".fsMainArea").hide();
+	// 	}else{
+	// 		$("#tab2").find(".cannottxt").hide();
+	// 		$("#tab2").find(".fsMainArea").show();
+	// 	}
+	// }
+	if(currentWaitJzxs>0){
+		$("#tab2").find(".cannottxt").show();
+		$("#tab2").find(".fsMainArea").hide();
+		toastr.warning('集中学时剩余'+currentWaitJzxs+'课时未排，请先排完集中学时');
+	}else{
+		$("#tab2").find(".cannottxt").hide();
+		$("#tab2").find(".fsMainArea").show();
 	}
+
 }
 
 //检查是否起码排完集中
