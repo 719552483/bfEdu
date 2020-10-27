@@ -360,10 +360,14 @@ public class StudentManageService {
                     updateStudent(edu001);
                 }
             }
-            approvalProcessService.initiationProcess(edu600);
+            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+            if (isSuccess) {
+                resultVO = ResultVO.setSuccess("学生信息修改成功",edu001);
+            } else {
+                edu001Dao.save(oldEdu001);
+                resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+            }
         }
-        resultVO = ResultVO.setSuccess("学生信息修改成功",edu001);
-
         return resultVO;
     }
 
