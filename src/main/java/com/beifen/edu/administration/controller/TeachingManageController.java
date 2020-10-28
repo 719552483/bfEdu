@@ -170,7 +170,7 @@ public class TeachingManageController {
 
 
     /**
-     * 申请考试
+     * 申请结课
      * @param tasks
      * @param approvalInfo
      * @return

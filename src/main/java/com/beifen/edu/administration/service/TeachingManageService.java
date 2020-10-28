@@ -530,48 +530,8 @@ public class TeachingManageService {
     public ResultVO searchTaskCanTest(String userId, TestTaskSearchPO testTaskSearchPO) {
         ResultVO resultVO;
 
-        //从redis中查询二级学院管理权限
-        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
-
-        //根据权限查询课程
-        Specification<Edu200> edu200specification = new Specification<Edu200>() {
-            public Predicate toPredicate(Root<Edu200> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<Predicate>();
-                if (testTaskSearchPO.getCourseCode() != null && !"".equals(testTaskSearchPO.getCourseCode())) {
-                    predicates.add(cb.like(root.<String>get("kcdm"), "%"+testTaskSearchPO.getCourseCode()+"%"));
-                }
-                if (testTaskSearchPO.getCourseName() != null && !"".equals(testTaskSearchPO.getCourseName())) {
-                    predicates.add(cb.like(root.<String>get("kcmc"), "%"+testTaskSearchPO.getCourseName()+"%"));
-                }
-                if (testTaskSearchPO.getCoursesNature() != null && !"".equals(testTaskSearchPO.getCoursesNature())) {
-                    predicates.add(cb.equal(root.<String>get("kcxzCode"), testTaskSearchPO.getCoursesNature()));
-                }
-                Path<Object> path = root.get("departmentCode");//定义查询的字段
-                CriteriaBuilder.In<Object> in = cb.in(path);
-                for (int i = 0; i <departments.size() ; i++) {
-                    in.value(departments.get(i));//存入值
-                }
-                predicates.add(cb.and(in));
-                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        };
-
-        List<Edu200> edu200List = edu200Dao.findAll(edu200specification);
-
-        if(edu200List.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
-            return resultVO;
-        }
-
-        List<Long> edu200IdList = edu200List.stream().map(e -> e.getBF200_ID()).distinct().collect(Collectors.toList());
-
-        List<Long> edu108IdList = edu108Dao.findPlanByEdu200Ids(edu200IdList);
-
-        if(edu108IdList.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
-            return resultVO;
-        }
-
+        Edu990 edu990 = edu990Dao.queryUserById(userId);
+        String userKey = edu990.getUserKey();
         //查询任务书
         Specification<Edu201> edu201specification = new Specification<Edu201>() {
             public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -579,15 +539,10 @@ public class TeachingManageService {
                 if (testTaskSearchPO.getClassName() != null && !"".equals(testTaskSearchPO.getClassName())) {
                     predicates.add(cb.like(root.<String>get("className"), "%"+testTaskSearchPO.getClassName()+"%"));
                 }
+                predicates.add(cb.like(root.<String>get("ls"), "%"+userKey+"%"));
                 predicates.add(cb.isNotNull(root.<String>get("sfypk")));
                 predicates.add(cb.equal(root.<String>get("sfsqks"), "F"));
 
-                Path<Object> path = root.get("edu108_ID");//定义查询的字段
-                CriteriaBuilder.In<Object> in = cb.in(path);
-                for (int i = 0; i <edu108IdList.size() ; i++) {
-                    in.value(edu108IdList.get(i));//存入值
-                }
-                predicates.add(cb.and(in));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -595,7 +550,7 @@ public class TeachingManageService {
         List<Edu201> edu201List = edu201Dao.findAll(edu201specification);
 
         if(edu201List.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无可以审请考试的课程");
+            resultVO = ResultVO.setFailed("暂无可以结课的课程");
         } else {
             resultVO = ResultVO.setSuccess("共找到"+edu201List.size()+"门课程",edu201List);
         }
@@ -607,21 +562,10 @@ public class TeachingManageService {
     //申请考试
     public ResultVO askForExam(List<String> edu201IdList, Edu600 edu600) {
         ResultVO resultVO;
-
-        for (String s : edu201IdList) {
-            edu201Dao.changeTestStatus(s,"passing");
-
-            edu600.setBusinessKey(Long.parseLong(s));
-            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-
-            if(!isSuccess) {
-                edu201Dao.changeTestStatus(s,"F");
-                resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
-                return resultVO;
-            }
+        for (String businessKey : edu201IdList) {
+            edu201Dao.changeTestStatus(businessKey,"T");
         }
-
-        resultVO = ResultVO.setSuccess("申请成功");
+        resultVO = ResultVO.setSuccess("结课成功");
         return resultVO;
     }
 

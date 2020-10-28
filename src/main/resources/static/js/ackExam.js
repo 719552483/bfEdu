@@ -172,7 +172,7 @@ function stuffTaskInfoTable(tableInfo) {
 	function scheduleClassesFormatter(value, row, index) {
 		return [
 			'<ul class="toolbar tabletoolbar">' +
-			'<li id="askForExam"><span><img src="img/confirm.png" style="width:24px"></span>申请考试</li>' +
+			'<li id="askForExam"><span><img src="img/confirm.png" style="width:24px"></span>结课</li>' +
 			'</ul>'
 		]
 			.join('');
@@ -192,10 +192,10 @@ function stuffTaskInfoTable(tableInfo) {
 		}
 	}
 
-	drawPagination(".askForExamTableArea", "可申请课程");
+	drawPagination(".askForExamTableArea", "可结课课程");
 	drawSearchInput(".askForExamTableArea");
 	changeTableNoRsTip();
-	changeColumnsStyle( ".askForExamTableArea", "可申请课程");
+	changeColumnsStyle( ".askForExamTableArea", "可结课课程");
 	toolTipUp(".myTooltip");
 }
 
