@@ -10,10 +10,10 @@ $(function() {
 //学年课表
 function yearArea(){
 	drawYearScheduleEmptyTable();
-	//changge事件
-	// $("#yearSemester,#yearCrouseType").change(function() {
-	// 	yearStartSearch();
-	// });
+	//change事件
+	$("#yearSemester,#yearCrouseType").change(function() {
+		yearSelectChangeSearch();
+	});
 }
 
 //填充空的学年集中空表
@@ -338,23 +338,29 @@ function JwSearchYearScatteredClassByStudent(searchObject){
 }
 
 //获取学年课表检索对象
-function getYearScheduleSearchObject(){
+function getYearScheduleSearchObject(needToastr){
 	var semester=getNormalSelectValue("yearSemester");
 	var classId=$("#yearClass")[0].attributes[3].nodeValue;
 	var teacherId=$("#yearTeacher")[0].attributes[3].nodeValue;
 	if(semester===""){
-		toastr.warning('请选择学年');
+		if(typeof needToastr==="undefined"){
+			toastr.warning('请选择学年');
+		}
 		return;
 	}
 
 
 	if(classId===""&&teacherId===""){
-		toastr.warning('班级或教师至少选择一项进行检索');
+		if(typeof needToastr==="undefined"){
+			toastr.warning('班级或教师至少选择一项进行检索');
+		}
 		return;
 	}
 
 	if(classId!==""&&teacherId!==""){
-		toastr.warning('班级或教师只能选择一项进行检索');
+		if(typeof needToastr==="undefined"){
+			toastr.warning('班级或教师只能选择一项进行检索');
+		}
 		return;
 	}
 
@@ -374,6 +380,32 @@ function yearStartSearch(){
 	var type=getNormalSelectValue("yearCrouseType");
 	if(type===""){
 		toastr.warning('请选择授课类型');
+		return;
+	}
+
+	if(type==="type1"){
+		if(searchObject.level2Type==="teacher"){
+			JwGetYearScheduleInfo(searchObject);
+		}else{
+			JwGetYearScheduleInfoByClass(searchObject);
+		}
+	}else{
+		if(searchObject.level2Type==="teacher"){
+			JwSearchYearScatteredClassByTeacher(searchObject);
+		}else{
+			JwSearchYearScatteredClassByStudent(searchObject);
+		}
+	}
+}
+
+//学年课表change事件
+function yearSelectChangeSearch(){
+	var searchObject=getYearScheduleSearchObject(false);
+	if(typeof searchObject==="undefined"){
+		return;
+	}
+	var type=getNormalSelectValue("yearCrouseType");
+	if(type===""){
 		return;
 	}
 
@@ -1212,6 +1244,7 @@ function confirmChoosedClass(){
 		$("#yearClass").attr("classid",choosed[0].edu300_ID);
 		$("#yearTeacher").val("");
 		$("#yearTeacher").attr("teacherId","");
+		yearSelectChangeSearch();
 	}else{
 		$("#class").val(choosed[0].xzbmc);
 		$("#class").attr("classid",choosed[0].edu300_ID);
@@ -1455,6 +1488,7 @@ function confirmChoosedTeacher(){
 		$("#yearTeacher").attr("teacherId",choosed[0].edu101_ID);
 		$("#yearClass").val("");
 		$("#yearClass").attr("classId","");
+		yearSelectChangeSearch();
 	}else{
 		$("#teacher").val(choosed[0].xm);
 		$("#teacher").attr("teacherId",choosed[0].edu101_ID);
