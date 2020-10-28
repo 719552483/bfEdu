@@ -866,13 +866,11 @@ function confirmChoosedTeacher(tableId,index,cellName){
 				}
 			}
 		}
-
 		$(tableId).bootstrapTable('updateCell', {
 			index: index,
 			field: fieldName2,
 			value:  drawLsStr
 		});
-
 
 		$(tableId).bootstrapTable('updateCell', {
 			index: index,
@@ -897,18 +895,25 @@ function confirmChoosedTeacher(tableId,index,cellName){
 			}
 
 			if(choosedTask[i].check){
-				$(tableId).bootstrapTable('updateCell', {
-					index: i,
-					field: fieldName2,
-					value:  drawLsStr
+				var row=choosedTask[i];
+				row.lsmc=drawLsStr;
+				row.ls=drawLsStr2;
+				$(tableId).bootstrapTable('updateByUniqueId', {
+					id: choosedTask[i].edu206_ID,
+					row: row
 				});
-
-
-				$(tableId).bootstrapTable('updateCell', {
-					index: i,
-					field: fieldName1,
-					value:drawLsStr2
-				});
+				// $(tableId).bootstrapTable('updateCell', {
+				// 	index: i,
+				// 	field: fieldName2,
+				// 	value:  drawLsStr
+				// });
+				//
+				//
+				// $(tableId).bootstrapTable('updateCell', {
+				// 	index: i,
+				// 	field: fieldName1,
+				// 	value:drawLsStr2
+				// });
 			}
 		}
 	}
