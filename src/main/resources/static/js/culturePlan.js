@@ -1413,13 +1413,13 @@ function addCulturePlan(){
 		return;
 	}
 	
-	var allHaveCrouse = $("#majorTrainingTable").bootstrapTable("getData");
-	for (var i = 0; i < allHaveCrouse.length; i++) {
-		if(currentchoosedCroese[0].bf200_ID===allHaveCrouse[i].edu200_ID){
-			toastr.warning('专业课程已存在');
-			return;
-		}
-	}
+	// var allHaveCrouse = $("#majorTrainingTable").bootstrapTable("getData");
+	// for (var i = 0; i < allHaveCrouse.length; i++) {
+	// 	if(currentchoosedCroese[0].bf200_ID===allHaveCrouse[i].edu200_ID){
+	// 		toastr.warning('专业课程已存在');
+	// 		return;
+	// 	}
+	// }
 	
 	var crouseInfo=getNewCulturePlanInfo(currentchoosedCroese[0].bf200_ID);
 	if(typeof crouseInfo ==='undefined'){
