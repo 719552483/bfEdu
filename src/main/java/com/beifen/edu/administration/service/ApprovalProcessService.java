@@ -116,7 +116,6 @@ public class ApprovalProcessService {
                 department = edu107.getEdu104();
                 break;
             case"04":
-            case"08":
                 Edu201 edu201 = edu201Dao.findOne(businessKey);
                 Edu108 edu1081 = edu108Dao.findOne(edu201.getEdu108_ID());
                 Edu107 edu1071 = edu107Dao.findOne(edu1081.getEdu107_ID());
@@ -171,10 +170,6 @@ public class ApprovalProcessService {
             case"07":
                 Edu101 edu101 = edu101Dao.findOne(businessKey);
                 keyWord = edu101.getXm();
-                break;
-            case"08":
-                Edu201 edu2011 = edu201Dao.findOne(businessKey);
-                keyWord = edu2011.getClassName()+edu2011.getKcmc()+"考试申请";
                 break;
             default:
                 keyWord = "查无此类型";
@@ -350,9 +345,6 @@ public class ApprovalProcessService {
                 case"07":
                     edu101Dao.updateState(businessKey, "pass");
                     break;
-                case"08":
-                    edu201Dao.changeTestStatus(businessKey,"T");
-                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -381,9 +373,6 @@ public class ApprovalProcessService {
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
                     break;
-                case"08":
-                    edu201Dao.changeTestStatus(businessKey,"F");
-                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -410,9 +399,6 @@ public class ApprovalProcessService {
                     break;
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
-                    break;
-                case"08":
-                    edu201Dao.changeTestStatus(businessKey,"F");
                     break;
                 default:
                     isSuccess = false;
@@ -642,7 +628,6 @@ public class ApprovalProcessService {
                 object = edu108List;
                 break;
             case"04":
-            case"08":
                 object = edu201Dao.getTaskById(businessKey);
                 break;
             case"05":
