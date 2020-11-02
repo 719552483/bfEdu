@@ -1554,7 +1554,6 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	$(".puttedfsKjArea").find(".PuttedfsKjArea").remove();
 
 	$("#puttedTerm").val(scheduleCompletedDetails.xn);
-	$("#puttedSkdd").val(scheduleCompletedDetails.skddmc);
 	$("#puttedJxbMC").val(puttedInfo.className);
 	$("#puttedkCMC").val(puttedInfo.kcmc);
 	$("#puttedZyls").val(puttedInfo.zyls);
