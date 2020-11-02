@@ -4,6 +4,7 @@ import com.beifen.edu.administration.domian.Edu201;
 import com.beifen.edu.administration.domian.Edu203;
 
 import java.util.List;
+import java.util.Map;
 
 public class ScheduleCompletedDetailPO extends Edu201 {
     private Long Edu202_ID;
@@ -12,6 +13,7 @@ public class ScheduleCompletedDetailPO extends Edu201 {
     private String skddmc; // 授课地点名称
     private String skddid; // 授课地点ID
     private List<Edu203> classPeriodList;//课节集合
+    private Map<String,List<Edu203>> classPeriodMap; //课节分组集合
 
     public Long getEdu202_ID() {
         return Edu202_ID;
@@ -59,5 +61,13 @@ public class ScheduleCompletedDetailPO extends Edu201 {
 
     public void setClassPeriodList(List<Edu203> classPeriodList) {
         this.classPeriodList = classPeriodList;
+    }
+
+    public Map<String, List<Edu203>> getClassPeriodMap() {
+        return classPeriodMap;
+    }
+
+    public void setClassPeriodMap(Map<String, List<Edu203>> classPeriodMap) {
+        this.classPeriodMap = classPeriodMap;
     }
 }

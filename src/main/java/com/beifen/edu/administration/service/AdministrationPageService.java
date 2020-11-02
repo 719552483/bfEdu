@@ -1006,87 +1006,21 @@ public class AdministrationPageService {
 		return all;
 	}
 
-
-	// 查询所有课节
-	public List<Edu401> queryAllKj() {
-		return edu401DAO.findAll();
-	}
-
-//    //根据学年获取课节信息
-//	public List<Edu401> getKjInfoByXn(String termId) {
-//		return edu401DAO.getKjInfoByXn(termId);
-//	}
-
 	//获取所有默认课节
 	public List<Edu401> queryAllDeafultKj() {
 		return edu401DAO.findAll();
 	}
 
-	// 新增课节
-	public void addNewKj(Edu401 edu401) {
-		edu401DAO.save(edu401);
-	}
-
-	// 新增课节时获得课节顺序
-	public String getNewKjsh(Edu401 edu401) {
-		List<Edu401> currentKjLenth = null;
-		currentKjLenth = edu401DAO.findKjPonitSjd(edu401.getSjd());
-		return String.valueOf(currentKjLenth.size() + 1);
-	}
-
-	// 验证是否有排课表正在使用该课节
-	public boolean verifyKj(String kjId) {
-		boolean rs = true;
-		List<Edu202> useThisEdu202 = edu202DAO.verifyKj(kjId);
-		if (useThisEdu202.size() > 0) {
-			rs = false;
-		}
-		return rs;
-	}
-
-	// 删除课节
-	public void removeKj(String deleteId) {
-		edu401DAO.removeTasks(deleteId);
-	}
-
-	// 删除课节时将所在时段其后所有课节的顺序加一 需要考虑是否选择了学年
-	public void addKjsxAterThisKj(String kjId) {
-		Edu401 remove401 = edu401DAO.queryKjById(kjId);
-		String sjd = remove401.getSjd();
-		int kjsx = Integer.parseInt(remove401.getKjsx());
-		List<Edu401> allEdu401 = null;
-		allEdu401 = edu401DAO.queryDefaultkjsz();
-
-		// 课节顺序大于删除课节的课节顺序的 可接顺序减一
-		for (int i = 0; i < allEdu401.size(); i++) {
-			if (Integer.parseInt(allEdu401.get(i).getKjsx()) > kjsx) {
-				AdministrationPageService.this.czkjsx(allEdu401.get(i).getEdu401_ID().toString(),
-						(Integer.parseInt(allEdu401.get(i).getKjsx()) - 1));
-			}
-		}
-	}
-
-	// 重置课节顺序
-	private void czkjsx(String kjId, int kjsfAsInt) {
-		String kjsx = String.valueOf(kjsfAsInt);
-		edu401DAO.kjsxjy(kjId, kjsx);
-	}
 
 	//确认排课
-	public boolean saveSchedule(Edu202 edu202, List<Edu203> edu203List, List<Edu207> edu207List) {
+	public boolean saveSchedule(String edu201Id, List<Edu203> edu203List, List<Edu207> edu207List) {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
-		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+		Edu201 edu201 = edu201DAO.queryTaskByID(edu201Id);
 
-		//如果为新增删除原有关联
-		if(edu202.getEdu202_ID() != null) {
-			edu203Dao.deleteByscheduleId(edu202.getEdu202_ID().toString());
-			edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
-		}
 		//总学时
 		Double jzxs = edu201.getJzxs();
-		edu202DAO.save(edu202);
-		String edu202_id = edu202.getEdu202_ID().toString();
+
 		//如果有分散学时保存分散学时信息
 		if(edu207List.size() != 0) {
 			for (Edu207 edu207 : edu207List) {
@@ -1114,65 +1048,80 @@ public class AdministrationPageService {
 					return i;
 				}
 			});
-			//按周保存排课计划
-			int currentXs = 0;
-			List<String> weekList = new ArrayList<>();
-			classCycle:
-			for (Edu203 e : edu203List) {
-				int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
-				if(e.getKsz().equals(e.getJsz())) {
-					weekList.add("第"+e.getKsz()+"周");
-				} else {
-					weekList.add("第"+e.getKsz()+"周-第"+e.getJsz()+"周");
-				}
-				for (int i = 0; i < weekCount; i++) {
-					Edu203 save = new Edu203();
-					save.setEdu202_ID(edu202_id);
-					Integer week = (Integer.parseInt(e.getKsz()) + i);
-					save.setWeek(week.toString());
-					save.setKsz(e.getKsz());
-					save.setJsz(e.getJsz());
-					save.setKjid(e.getKjid());
-					save.setKjmc(e.getKjmc());
-					save.setXqid(e.getXqid());
-					save.setXqmc(e.getXqmc());
-					save.setEdu101_id(e.getEdu101_id());
-					save.setTeacherName(e.getTeacherName());
-					save.setTeacherType("01");
-					edu203Dao.save(save);
-					if(edu201.getZyls() != null) {
-						String[] zyls = edu201.getZyls().split(",");
-						String[] zylsmc = edu201.getZylsmc().split(",");
-						for(int n = 0;n < zyls.length; n++){
-							Edu203 one = new Edu203();
-							one.setEdu202_ID(edu202_id);
-							one.setWeek(week.toString());
-							one.setKsz(e.getKsz());
-							one.setJsz(e.getJsz());
-							one.setKjid(e.getKjid());
-							one.setKjmc(e.getKjmc());
-							one.setXqid(e.getXqid());
-							one.setXqmc(e.getXqmc());
-							one.setEdu101_id(zyls[n]);
-							one.setTeacherName(zylsmc[n]);
-							one.setTeacherType("02");
-							edu203Dao.save(one);
+			Map<String, List<Edu203>> Edu203ByPoint = edu203List.stream().collect(Collectors.groupingBy(Edu203::getPointId));
+
+			Edu203ByPoint.forEach((key, value) -> {
+				//按周保存排课计划
+				int currentXs = 0;
+				List<String> weekList = new ArrayList<>();
+
+				Edu202 edu202 = new Edu202();
+				edu202.setEdu201_ID(Long.parseLong(edu201Id));
+				edu202.setXnid(Long.parseLong(edu201.getXnid()));
+				edu202.setXnmc(edu201.getXn());
+				edu202.setSkddid(value.get(0).getLocalId());
+				edu202.setSkddmc(value.get(0).getLocalName());
+				edu202.setPointid(value.get(0).getPointId());
+				edu202.setPoint(value.get(0).getPointName());
+				edu202DAO.save(edu202);
+				String edu202_id = edu202.getEdu202_ID().toString();
+
+				classCycle:
+				for (Edu203 e : value) {
+					int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
+					if(e.getKsz().equals(e.getJsz())) {
+						weekList.add("第"+e.getKsz()+"周");
+					} else {
+						weekList.add("第"+e.getKsz()+"周-第"+e.getJsz()+"周");
+					}
+					for (int i = 0; i < weekCount; i++) {
+						Edu203 save = new Edu203();
+						save.setEdu202_ID(edu202_id);
+						Integer week = (Integer.parseInt(e.getKsz()) + i);
+						save.setWeek(week.toString());
+						save.setKsz(e.getKsz());
+						save.setJsz(e.getJsz());
+						save.setKjid(e.getKjid());
+						save.setKjmc(e.getKjmc());
+						save.setXqid(e.getXqid());
+						save.setXqmc(e.getXqmc());
+						save.setEdu101_id(e.getEdu101_id());
+						save.setTeacherName(e.getTeacherName());
+						save.setTeacherType("01");
+						edu203Dao.save(save);
+						if(edu201.getZyls() != null) {
+							String[] zyls = edu201.getZyls().split(",");
+							String[] zylsmc = edu201.getZylsmc().split(",");
+							for(int n = 0;n < zyls.length; n++){
+								Edu203 one = new Edu203();
+								one.setEdu202_ID(edu202_id);
+								one.setWeek(week.toString());
+								one.setKsz(e.getKsz());
+								one.setJsz(e.getJsz());
+								one.setKjid(e.getKjid());
+								one.setKjmc(e.getKjmc());
+								one.setXqid(e.getXqid());
+								one.setXqmc(e.getXqmc());
+								one.setEdu101_id(zyls[n]);
+								one.setTeacherName(zylsmc[n]);
+								one.setTeacherType("02");
+								edu203Dao.save(one);
+							}
+						}
+						currentXs+=2;
+						if (currentXs >= jzxs) {
+							break classCycle;
 						}
 					}
-					currentXs+=2;
-					if (currentXs >= jzxs) {
-						break classCycle;
-					}
 				}
-			}
-			//保存排课基础信息
-			List<String> list = (List<String>)utils.heavyListMethod(weekList);
-			list.sort((a, b) -> a.compareTo(b.toString()));
-			String weekName = utils.listToString(list, ',');
-			edu202.setSzz(weekName);
-			edu202DAO.save(edu202);
+				//保存排课基础信息
+				List<String> list = (List<String>)utils.heavyListMethod(weekList);
+				list.sort((a, b) -> a.compareTo(b.toString()));
+				String weekName = utils.listToString(list, ',');
+				edu202.setSzz(weekName);
+				edu202DAO.save(edu202);
+			});
 		}
-
 
 		//找到所有老师ID并发布提醒事项
 		List<String> lsid = new ArrayList<>();
@@ -1202,7 +1151,7 @@ public class AdministrationPageService {
 			edu993.setNoticeText(noticeText);
 			edu993.setNoticeType(NoteConstant.TASK_NOTE);
 			edu993.setBusinessType("98");
-			edu993.setBusinessId(edu202_id);
+			edu993.setBusinessId(edu201Id);
 			edu993.setIsHandle("T");
 			edu993.setCreateDate(dateString);
 			edu993Dao.save(edu993);
@@ -1686,7 +1635,7 @@ public class AdministrationPageService {
 		edu202DAO.delete(Long.parseLong(scheduleId));
 		edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 
-		edu993Dao.deleteByBusiness(scheduleId,NoteConstant.TASK_NOTE);
+		edu993Dao.deleteByBusiness(edu202.getEdu201_ID().toString(),NoteConstant.TASK_NOTE);
 	}
 
 	//根据条件检索已排课信息
@@ -1756,6 +1705,9 @@ public class AdministrationPageService {
 
 		scheduleCompletedDetails.setClassPeriodList(edu203Dao.getClassPeriodByEdu202Id(edu202Id));
 		edu207List = edu207Dao.findAllByEdu201Id(edu201.getEdu201_ID().toString());
+
+		Map<String, List<Edu203>> classPeriodMap = scheduleCompletedDetails.getClassPeriodList().stream().collect(Collectors.groupingBy(Edu203::getPointId));
+		scheduleCompletedDetails.setClassPeriodMap(classPeriodMap);
 
 		returnMap.put("result", true);
 		returnMap.put("scheduleCompletedDetails", scheduleCompletedDetails);

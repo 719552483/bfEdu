@@ -18,6 +18,10 @@ public class Edu203 {
 	private String Edu101_id;//教师id
 	private String teacherName;//教师名称
 	private String teacherType;//教师类型
+	private String localId; //教学点id
+	private String localName; //教学点名称
+	private String pointId; //任务点id
+	private String pointName; //任务点名称
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -118,5 +122,37 @@ public class Edu203 {
 
 	public void setTeacherType(String teacherType) {
 		this.teacherType = teacherType;
+	}
+
+	public String getLocalId() {
+		return localId;
+	}
+
+	public void setLocalId(String localId) {
+		this.localId = localId;
+	}
+
+	public String getLocalName() {
+		return localName;
+	}
+
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
+
+	public String getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(String pointId) {
+		this.pointId = pointId;
+	}
+
+	public String getPointName() {
+		return pointName;
+	}
+
+	public void setPointName(String pointName) {
+		this.pointName = pointName;
 	}
 }
