@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1021,6 +1022,13 @@ public class AdministrationPageService {
 		//总学时
 		Double jzxs = edu201.getJzxs();
 
+		Edu202 edu202 = new Edu202();
+		edu202.setEdu201_ID(Long.parseLong(edu201Id));
+		edu202.setXnid(Long.parseLong(edu201.getXnid()));
+		edu202.setXnmc(edu201.getXn());
+		edu202DAO.save(edu202);
+		String edu202_id = edu202.getEdu202_ID().toString();
+
 		//如果有分散学时保存分散学时信息
 		if(edu207List.size() != 0) {
 			for (Edu207 edu207 : edu207List) {
@@ -1050,21 +1058,15 @@ public class AdministrationPageService {
 			});
 			Map<String, List<Edu203>> Edu203ByPoint = edu203List.stream().collect(Collectors.groupingBy(Edu203::getPointId));
 
-			Edu203ByPoint.forEach((key, value) -> {
-				//按周保存排课计划
-				int currentXs = 0;
-				List<String> weekList = new ArrayList<>();
+			//按周保存排课计划
+			AtomicInteger currentXs = new AtomicInteger();
+			List<String> weekList = new ArrayList<>();
 
-				Edu202 edu202 = new Edu202();
-				edu202.setEdu201_ID(Long.parseLong(edu201Id));
-				edu202.setXnid(Long.parseLong(edu201.getXnid()));
-				edu202.setXnmc(edu201.getXn());
-				edu202.setSkddid(value.get(0).getLocalId());
-				edu202.setSkddmc(value.get(0).getLocalName());
-				edu202.setPointid(value.get(0).getPointId());
-				edu202.setPoint(value.get(0).getPointName());
-				edu202DAO.save(edu202);
-				String edu202_id = edu202.getEdu202_ID().toString();
+			Edu203ByPoint.forEach((key, value) -> {
+				String localId = value.get(0).getLocalId();
+				String localName = value.get(0).getLocalName();
+				String pointId = value.get(0).getPointId();
+				String pointName = value.get(0).getPointName();
 
 				classCycle:
 				for (Edu203 e : value) {
@@ -1088,6 +1090,10 @@ public class AdministrationPageService {
 						save.setEdu101_id(e.getEdu101_id());
 						save.setTeacherName(e.getTeacherName());
 						save.setTeacherType("01");
+						save.setLocalId(localId);
+						save.setLocalName(localName);
+						save.setPointId(pointId);
+						save.setPointName(pointName);
 						edu203Dao.save(save);
 						if(edu201.getZyls() != null) {
 							String[] zyls = edu201.getZyls().split(",");
@@ -1105,22 +1111,25 @@ public class AdministrationPageService {
 								one.setEdu101_id(zyls[n]);
 								one.setTeacherName(zylsmc[n]);
 								one.setTeacherType("02");
+								one.setLocalId(localId);
+								one.setLocalName(localName);
+								one.setPointId(pointId);
+								one.setPointName(pointName);
 								edu203Dao.save(one);
 							}
 						}
-						currentXs+=2;
-						if (currentXs >= jzxs) {
+						currentXs.addAndGet(2);
+						if (currentXs.get() >= jzxs) {
 							break classCycle;
 						}
 					}
 				}
-				//保存排课基础信息
-				List<String> list = (List<String>)utils.heavyListMethod(weekList);
-				list.sort((a, b) -> a.compareTo(b.toString()));
-				String weekName = utils.listToString(list, ',');
-				edu202.setSzz(weekName);
-				edu202DAO.save(edu202);
 			});
+			List<String> list = (List<String>)utils.heavyListMethod(weekList);
+			list.sort((a, b) -> a.compareTo(b.toString()));
+			String weekName = utils.listToString(list, ',');
+			edu202.setSzz(weekName);
+			edu202DAO.save(edu202);
 		}
 
 		//找到所有老师ID并发布提醒事项

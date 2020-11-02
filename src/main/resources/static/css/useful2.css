@@ -2396,6 +2396,14 @@ input:focus{
 	padding-left: 2em;
 }
 
+.puttedJzTitle{
+	text-align: left;
+	width: 100%;
+	color: #115882;
+	font-size: 15px;
+	font-weight: 500;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

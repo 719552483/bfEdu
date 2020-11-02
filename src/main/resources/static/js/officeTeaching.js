@@ -690,14 +690,18 @@ function addCoursePlan(){
 		var currentXq=reAreas[i].attributes[3].nodeValue;
 		var currentKj=reAreas[i].attributes[4].nodeValue;
 		var teacherID=reAreas[i].attributes[6].nodeValue;
+		var location=reAreas[i].attributes[12].nodeValue;
+		var point=reAreas[i].attributes[13].nodeValue;
 		var startWeekmc=reAreas[i].attributes[10].nodeValue;
 		var endWeekmc=reAreas[i].attributes[11].nodeValue;
 		var currentXqmc=reAreas[i].attributes[1].nodeValue;
 		var currentKjmc=reAreas[i].attributes[2].nodeValue;
 		var teacherName=reAreas[i].attributes[7].nodeValue;
+		var locationName=reAreas[i].attributes[14].nodeValue;
+		var pointName=reAreas[i].attributes[15].nodeValue;
 
-		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'">' +
-			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'    任课教师  -'+teacherName+
+		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
+			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
 			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
 		currentHour+=((parseInt(endWeek)-parseInt(startWeek))+1)*2;
 	}
@@ -761,9 +765,22 @@ function AddnewKj(){
 	var currentXqmc=getNormalSelectText("xq");
 	var currentKjmc=getNormalSelectText("kj");
 	var teacherName=getNormalSelectText("teacher");
+	var location=getNormalSelectValue("jxd");
+	var point=getNormalSelectValue("skdd");
+	var locationName=getNormalSelectText("jxd");
+	var pointName=getNormalSelectText("skdd");
 
 	if(teacherID===""){
 		toastr.warning('请选择任课教师')
+		return;
+	}
+
+	if(location===""){
+		toastr.warning('请选择教学点');
+		return;
+	}
+	if(point===""){
+		toastr.warning('请选择授课地点');
 		return;
 	}
 
@@ -798,12 +815,12 @@ function AddnewKj(){
 	if($(".singleKj").find(".area"+startWeek+endWeek).length<1){
 		$(".singleKj").append('<div class="area area'+(startWeek+endWeek)+'">' +
 				'<span class="kjRsAreaTitle">第'+startWeek+'周 至 第'+endWeek+'周课节安排</span>' +
-				'<div class="appendArea"><div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:' +teacherName+
+				'<div class="appendArea"><div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'" location="'+location+'" ponit="'+point+'" locationName="'+locationName+'" pointNme="'+pointName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:' +teacherName+' -授课地点:'+locationName+' '+pointName+
 					'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
 				'</div>' +
 			'</div>');
 	}else{
-		$(".area"+startWeek+endWeek).find(".appendArea").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:'  +teacherName+
+		$(".area"+startWeek+endWeek).find(".appendArea").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'"  location="'+location+'" ponit="'+point+'" locationName="'+locationName+'" pointNme="'+pointName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:'  +teacherName+' -授课地点:'+locationName+' '+pointName+
 		'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
 		'</div>' );
 	}
@@ -960,7 +977,7 @@ function confirmPk(){
 		cache: false,
 		url: "/comfirmSchedule",
 		data:{
-			"scheduleInfo":JSON.stringify(PKInfo),
+			"Edu201Id":PKInfo.edu201_ID.toString(),
 			"scheduleDetail":JSON.stringify(scheduleInfo),
 			"scatteredClass":JSON.stringify(fsxsInfo)
 		},
@@ -1047,8 +1064,6 @@ function checkSFxs(){
 function getJzPKInfo(needToastr){
 	var term=getNormalSelectValue("term");
 	var termMc=getNormalSelectText("term");
-	var location=getNormalSelectValue("jxd");
-	var point=getNormalSelectValue("skdd");
 	var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
 
 	if(term===""){
@@ -1057,26 +1072,10 @@ function getJzPKInfo(needToastr){
 		}
 		return;
 	}
-	if(location===""){
-		if(typeof needToastr==="undefined"){
-			toastr.warning('请选择教学点');
-		}
-		return;
-	}
-	if(point===""){
-		if(typeof needToastr==="undefined"){
-			toastr.warning('请选择授课地点');
-		}
-		return;
-	}
 
 	var returnObject=new Object();
 	returnObject.xnid=term;
 	returnObject.xnmc=termMc;
-	returnObject.skddmc=getNormalSelectText("jxd");
-	returnObject.skddid=location;
-	returnObject.pointid=point;
-	returnObject.point=getNormalSelectText("skdd");
 	returnObject.edu201_ID=taskId;
 	return returnObject;
 }
@@ -1096,6 +1095,10 @@ function scheduleDetailInfo(needToastr){
 		thisObject.jsz=current[6].nodeValue;
 		thisObject.Edu101_id=current[8].nodeValue;
 		thisObject.teacherName=current[9].nodeValue;
+		thisObject.localId=current[10].nodeValue;
+		thisObject.pointId=current[11].nodeValue;
+		thisObject.localName=current[12].nodeValue;
+		thisObject.pointName=current[13].nodeValue;
 		returnArray.push(thisObject);
 	}
 
@@ -1547,7 +1550,7 @@ function confirmRmovePutted(removeArray){
 //填充已排详情
 function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	//清空已有课节安排区域
-	$(".puttedKjArea").find(".PuttedKjArea").remove();
+	$(".puttedKjArea").find(".PuttedKjArea,.puttedJzTitle").remove();
 	$(".puttedfsKjArea").find(".PuttedfsKjArea").remove();
 
 	$("#puttedTerm").val(scheduleCompletedDetails.xn);
@@ -1558,19 +1561,12 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	$("#puttedLs").val(puttedInfo.ls);
 	$('#puttedInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 
-	var classPeriodList=sortClassPeriodList(scheduleCompletedDetails.classPeriodList);
 
-	$(".jzformtitle,.puttedKjArea,.fsformtitle,.puttedfsKjArea").show();
-	if(classPeriodList.length===0){
-		$(".jzformtitle,.puttedKjArea").hide();
-	}else{
-		for (var i = 0; i <classPeriodList.length ; i++) {
-			if(classPeriodList[i].teacherType==="01"){
-			$(".puttedKjArea").append('<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+' -'+classPeriodList[i].teacherName+'</div>');
-			}
-			}
+	var classPeriodMap=scheduleCompletedDetails.classPeriodMap;
+
+	for (var key in classPeriodMap) {
+		stuffPuttedJzPk(classPeriodMap[key]);
 	}
-
 
 	if(scatterList.length===0){
 		$(".fsformtitle,.puttedfsKjArea").hide();
@@ -1582,6 +1578,25 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	}
 }
 
+//渲染已排集中课时
+function stuffPuttedJzPk(classPeriodList){
+	classPeriodList=sortClassPeriodList(classPeriodList);
+	$(".jzformtitle,.puttedKjArea,.fsformtitle,.puttedfsKjArea").show();
+	var str='';
+	if(classPeriodList.length===0){
+		$(".jzformtitle,.puttedKjArea").hide();
+	}else{
+		str='<div class="puttedJzTitle"><i class="iconfont icon-JIAOSHI"></i>'+classPeriodList[0].localName+'-'+classPeriodList[0].pointName+'</div>';
+		for (var i = 0; i <classPeriodList.length ; i++) {
+			if(classPeriodList[i].teacherType==="01"){
+				str+='<div class="PuttedKjArea">第'+classPeriodList[i].week+'周  '+classPeriodList[i].xqmc+' '+classPeriodList[i].kjmc+' -'+classPeriodList[i].teacherName+'</div>';
+			}
+		}
+		$(".puttedKjArea").append(str+'<div class="clear"></div>');
+	}
+}
+
+//数组排序
 function sortClassPeriodList(classPeriodList){
 	var returnArray=classPeriodList.sort(compare("week")).reverse();
 	return returnArray;

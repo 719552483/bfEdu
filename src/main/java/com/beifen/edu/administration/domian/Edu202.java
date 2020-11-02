@@ -16,12 +16,8 @@ public class Edu202 {
 	private Long Edu201_ID; // 任务书ID
 	private Long xnid; // 学年id
 	private String xnmc;// 学年名称
-	private String szz; //排课所在周
-	private String skddmc; // 授课地点名称
-	private String skddid; // 授课地点ID
-	private String pointid; //教学任务点id
-	private String point; //教学任务点名称
-	
+	private String szz; //所在周
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -44,27 +40,6 @@ public class Edu202 {
 	public void setXnid(Long xnid) {
 		this.xnid = xnid;
 	}
-
-	public String getSzz() {
-		return szz;
-	}
-
-	public void setSzz(String szz) {
-		this.szz = szz;
-	}
-
-	public String getSkddmc() {
-		return skddmc;
-	}
-	public void setSkddmc(String skddmc) {
-		this.skddmc = skddmc;
-	}
-	public String getSkddid() {
-		return skddid;
-	}
-	public void setSkddid(String skddid) {
-		this.skddid = skddid;
-	}
 	public String getXnmc() {
 		return xnmc;
 	}
@@ -73,19 +48,11 @@ public class Edu202 {
 		this.xnmc = xnmc;
 	}
 
-	public String getPointid() {
-		return pointid;
+	public String getSzz() {
+		return szz;
 	}
 
-	public void setPointid(String pointid) {
-		this.pointid = pointid;
-	}
-
-	public String getPoint() {
-		return point;
-	}
-
-	public void setPoint(String point) {
-		this.point = point;
+	public void setSzz(String szz) {
+		this.szz = szz;
 	}
 }
