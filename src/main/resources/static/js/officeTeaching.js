@@ -794,7 +794,7 @@ function AddnewKj(){
 	}
 
 	if(parseInt(endWeek)<parseInt(startWeek)){
-		toastr.warning('开始周必须大于结束周');
+		toastr.warning('开始周必须小于等于结束周');
 		return;
 	}
 
