@@ -1094,7 +1094,7 @@ function showputedTask(IsmainAreaControl){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code === 500) {
+			if (backjson.code === 200) {
 				$("#putOutTasks").hide();
 				stuffPutOutTaskTable(backjson.data);
 				if (typeof(IsmainAreaControl) === "undefined") {
