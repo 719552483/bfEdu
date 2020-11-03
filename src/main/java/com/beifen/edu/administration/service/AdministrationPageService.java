@@ -934,7 +934,12 @@ public class AdministrationPageService {
 		boolean isRepeat = false;
 
 		for(Edu201 e : edu201s) {
-			List<Edu201> edu201List = edu201DAO.findExistTask(e.getKcmc(),e.getClassId(),e.getLs(),e.getZyls());
+			List<Edu201> edu201List = new ArrayList<>();
+			if(e.getZyls() == null){
+				edu201List.addAll(edu201DAO.findExistTaskWithOutZyls(e.getKcmc(),e.getClassId(),e.getLs()));
+			} else {
+				edu201List.addAll(edu201DAO.findExistTask(e.getKcmc(),e.getClassId(),e.getLs(),e.getZyls()));
+			}
 			if(edu201List.size()!=0){
 				isRepeat = true;
 				break;
