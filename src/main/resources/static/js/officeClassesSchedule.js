@@ -5,13 +5,41 @@ $(function() {
 	getBmInfo();
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	deafultSearch();
+	stuffDepartmnet();
 });
+
+//查询可选二级学院
+function stuffDepartmnet(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getUsefulDepartment",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var str = '';
+				for (var i = 0; i < backjson.data.length; i++) {
+					str += '<option value="' + backjson.data[i].edu104_ID + '">' + backjson.data[i].xbmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#department", str);
+			} else {
+				toastr.warning('获取二级学院失败，请重试');
+			}
+		}
+	});
+}
 
 //初始化检索
 function deafultSearch(){
 	var returnObject=new Object();
 	returnObject.pyjhmc="";
 	returnObject.kcmc="";
+	returnObject.departmentCode="";
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -676,9 +704,11 @@ function searchTask(){
 function getSearchInfo(){
 	var pyjhmc=$("#pyjhmc").val();
 	var kcmc=$("#kcmc").val();
+	var departmentCode=getNormalSelectValue("departmentCode");
 	var returnObject=new Object();
 	returnObject.pyjhmc=pyjhmc;
 	returnObject.kcmc=kcmc;
+	returnObject.departmentCode=departmentCode;
 	return returnObject;
 }
 
@@ -1567,11 +1597,13 @@ function comfirmModifyTask(row,index){
 function startSearchPutOutTasks(){
 	var pyjhmc=$("#pyjhmc").val();
 	var kcmc=$("#kcmc").val();
-	if(pyjhmc===""&&kcmc===""){
+	var departmentCode=getNormalSelectValue("departmentCode");
+	if(pyjhmc===""&&kcmc===""&&departmentCode==""){
 		toastr.warning('检索条件为空');
 		return;
 	}
 	var serachObject=new Object();
+	serachObject.departmentCode=departmentCode;
 	pyjhmc===""?serachObject.pyjhmc="":serachObject.pyjhmc=pyjhmc;
 	kcmc===""?serachObject.kcmc="":serachObject.kcmc=kcmc;
 	serachObject.sszt="";
