@@ -1826,10 +1826,11 @@ public class AdministrationController {
 		JSONObject searchObject = JSONObject.fromObject(searchInfo);
 		String pyjhmc = searchObject.getString("pyjhmc");
 		String kcmc = searchObject.getString("kcmc");
+		String departmentCode = searchObject.getString("departmentCode");
 		Edu206 edu206 = new Edu206();
 		edu206.setPyjhmc(pyjhmc);
 		edu206.setKcmc(kcmc);
-		ResultVO result = administrationPageService.getTaskInfo(edu206,userId);
+		ResultVO result = administrationPageService.getTaskInfo(edu206,departmentCode,userId);
 		return result;
 	}
 
@@ -1919,11 +1920,12 @@ public class AdministrationController {
 		String pyjhmc = searchObject.getString("pyjhmc");
 		String kcmc = searchObject.getString("kcmc");
 		String sszt = searchObject.getString("sszt");
+		String departmentCode = searchObject.getString("departmentCode");
 		Edu201 edu201=new Edu201();
 		edu201.setPyjhmc(pyjhmc);
 		edu201.setKcmc(kcmc);
 		edu201.setSszt(sszt);
-		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201,userId);
+		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201,departmentCode,userId);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
 		return returnMap;

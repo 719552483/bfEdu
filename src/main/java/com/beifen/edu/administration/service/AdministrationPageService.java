@@ -771,12 +771,18 @@ public class AdministrationPageService {
 	}
 
 
-	// 根据教学班组装任务书信息
-	public ResultVO getTaskInfo(Edu206 edu206,String userId) {
+	//获取可供发布的教学任务书
+	public ResultVO getTaskInfo(Edu206 edu206,String departmentCode,String userId) {
 		ResultVO resultVO;
-		//从redis中查询二级学院管理权限
-		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		List<String> departments = new ArrayList<>();
 
+		//判断是否指定了二级学院
+		if(!"".equals(departmentCode)) {
+			departments.add(departmentCode);
+		} else {
+			//从redis中查询二级学院管理权限
+			departments.addAll((List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId));
+		}
 		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
 
 		if(edu108Ids.size() == 0) {
@@ -820,6 +826,14 @@ public class AdministrationPageService {
 	// 发布教学任务书
 	public ResultVO putOutTask(List<Edu201> edu201s,Edu600 oldedu600) {
 		ResultVO resultVO;
+		//检查是否存在重复的任务书
+		boolean isRepeat = checkRepeatTask(edu201s);
+
+		if(isRepeat) {
+			resultVO = ResultVO.setFailed("存在重复的任务书，请检查口重新发布");
+			return resultVO;
+		}
+
 		for (Edu201 edu201 : edu201s) {
 			Edu201 oldEdu201 = new Edu201();
 			Edu600 edu600 = new Edu600();
@@ -914,6 +928,20 @@ public class AdministrationPageService {
 
 		resultVO = ResultVO.setSuccess("教学任务书发布成功");
 		return resultVO;
+	}
+
+	private boolean checkRepeatTask(List<Edu201> edu201s) {
+		boolean isRepeat = false;
+
+		for(Edu201 e : edu201s) {
+			List<Edu201> edu201List = edu201DAO.findExistTask(e.getKcmc(),e.getClassId(),e.getLs(),e.getZyls());
+			if(edu201List.size()!=0){
+				isRepeat = true;
+				break;
+			}
+		}
+
+		return isRepeat;
 	}
 
 	// 查询已发布任务书
@@ -1553,12 +1581,17 @@ public class AdministrationPageService {
 
 
 	// 检索已发布的教学任务书
-	public List<Edu201> searchPutOutTasks(Edu201 edu201,String userId) {
-
+	public List<Edu201> searchPutOutTasks(Edu201 edu201,String departmentCode,String userId) {
 		List<Edu201> entities = new ArrayList<>();
+		List<String> departments = new ArrayList<>();
 
-		//从redis中查询二级学院管理权限
-		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		//判断是否指定了二级学院
+		if(!"".equals(departmentCode)) {
+			departments.add(departmentCode);
+		} else {
+			//从redis中查询二级学院管理权限
+			departments.addAll((List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId));
+		}
 
 		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
 
