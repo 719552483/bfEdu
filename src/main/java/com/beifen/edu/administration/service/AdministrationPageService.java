@@ -930,6 +930,7 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	//判断是否存在重复的任务书
 	private boolean checkRepeatTask(List<Edu201> edu201s) {
 		boolean isRepeat = false;
 
