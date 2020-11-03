@@ -21,7 +21,7 @@ function stuffDepartmnet(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				var str = '';
+				var str = '<option value="seleceConfigTip">请选择</option>';
 				for (var i = 0; i < backjson.data.length; i++) {
 					str += '<option value="' + backjson.data[i].edu104_ID + '">' + backjson.data[i].xbmc
 						+ '</option>';
@@ -669,6 +669,10 @@ function onUncheckAll(row){
 //检索任务书表
 function searchTask(){
 	var taskInfo=getSearchInfo();
+	if(typeof taskInfo==='undefined'){
+		return;
+	}
+
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -704,7 +708,12 @@ function searchTask(){
 function getSearchInfo(){
 	var pyjhmc=$("#pyjhmc").val();
 	var kcmc=$("#kcmc").val();
-	var departmentCode=getNormalSelectValue("departmentCode");
+	var departmentCode=getNormalSelectValue("department");
+	if(pyjhmc===""&&kcmc===""&&departmentCode===""){
+		toastr.warning("检索条件不能为空");
+		return;
+	}
+
 	var returnObject=new Object();
 	returnObject.pyjhmc=pyjhmc;
 	returnObject.kcmc=kcmc;
@@ -1597,7 +1606,7 @@ function comfirmModifyTask(row,index){
 function startSearchPutOutTasks(){
 	var pyjhmc=$("#pyjhmc").val();
 	var kcmc=$("#kcmc").val();
-	var departmentCode=getNormalSelectValue("departmentCode");
+	var departmentCode=getNormalSelectValue("department");
 	if(pyjhmc===""&&kcmc===""&&departmentCode==""){
 		toastr.warning('检索条件为空');
 		return;
@@ -1641,6 +1650,7 @@ function mainAreaControl(){
 	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
 	var reObject = new Object();
 	reObject.InputIds = "#xzbmc,#kcmc";
+	reObject.normalSelectIds = "#department";
 	reReloadSearchsWithSelect(reObject);
 }
 
@@ -1692,6 +1702,7 @@ function putOutTaskAreabtnBind() {
 	$('#research2').bind('click', function(e) {
 		var reObject = new Object();
 		reObject.InputIds = "#pyjhmc,#kcmc";
+		reObject.normalSelectIds = "#department";
 		reReloadSearchsWithSelect(reObject);
 		showputedTask(false);
 		e.stopPropagation();
@@ -1740,6 +1751,7 @@ function binBind() {
 	$('#research1').bind('click', function(e) {
 		var reObject = new Object();
 		reObject.InputIds = "#pyjhmc,#kcmc";
+		reObject.normalSelectIds = "#department";
 		reReloadSearchsWithSelect(reObject);
 		deafultSearch();
 		e.stopPropagation();
