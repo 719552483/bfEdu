@@ -1258,6 +1258,10 @@ function puttedSchedule(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
+				var reObject = new Object();
+				reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz";
+				reReloadSearchsWithSelect(reObject);
+
 				puttedScheduleControlArea();
 				getPuttedTaskSelectInfo();
 				puttedScheduleBtnBind();
