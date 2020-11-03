@@ -830,7 +830,7 @@ public class AdministrationPageService {
 		boolean isRepeat = checkRepeatTask(edu201s);
 
 		if(isRepeat) {
-			resultVO = ResultVO.setFailed("存在重复的任务书，请检查口重新发布");
+			resultVO = ResultVO.setFailed("存在重复的任务书，请检查后重新发布");
 			return resultVO;
 		}
 
