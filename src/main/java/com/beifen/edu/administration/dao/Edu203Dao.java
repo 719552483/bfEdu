@@ -26,4 +26,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     //根据课程id查询课节
     @Query(value = "select * from Edu203 where edu202_ID = ?1", nativeQuery = true)
     List<Edu203> getClassPeriodByEdu202Id(String edu202Id);
+
+    @Query(value = "select * from Edu203 e where e.point_id = ?1", nativeQuery = true)
+    List<Edu203> findEdu203IdsByEdu501Id(String toString);
 }

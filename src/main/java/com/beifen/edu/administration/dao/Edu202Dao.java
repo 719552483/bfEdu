@@ -24,22 +24,20 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 	@Query(value = "select * from edu202 e where e.Edu202_ID = ?1", nativeQuery = true)
 	Edu202 findEdu202ById(String edu202Id);
 
-	@Query(value = "select e.Edu202_ID from Edu202 e where e.pointid = ?1", nativeQuery = true)
-	List<String> findEdu202IdsByEdu501Id(String edu501Id);
-
 	@Query(value = "select e.Edu202_ID from Edu202 e where e.Edu201_ID in ?1", nativeQuery = true)
     List<String> findEdu202ByEdu201Ids(List<String> deleteArray);
 
 	@Query(value = "select e.Edu202_ID from Edu202 e where e.Edu201_ID = ?1", nativeQuery = true)
     List<String> findEdu202ByEdu201Ids(String edu201Id);
 
-//	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(c.skddid,b.skddmc,sum(c.zxrs)) from Edu201 a, Edu202 b, Edu204 d,Edu300 c " +
+//	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(e.localId,e.localName,sum(c.zxrs)) from Edu201 a, Edu202 b, Edu204 d,Edu300 c, Edu203 e " +
 //			"where a.edu201_ID = b.edu201_ID " +
 //			"and d.edu201_ID = a.edu201_ID " +
 //			"and c.edu300_ID = d.edu300_ID " +
-//			"and c.skddid is not null " +
-//			"and b.skddid <> '57250' " +
-//			"group by b.skddid,b.skddmc " +
-//			"order by b.skddid ")
+//			"and b.edu202_ID = e.edu202_ID " +
+//			"and e.localId is not null " +
+//			"and e.localId <> '57250' " +
+//			"group by e.localId,e.localName " +
+//			"order by e.localId ")
 //	List<StudentInPointPO> getStudentsInLocal();
 }

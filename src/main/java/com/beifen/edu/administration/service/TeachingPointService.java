@@ -182,10 +182,9 @@ public class TeachingPointService {
         int weeks = Integer.parseInt(edu400Dao.getWeekByYear(localUsedPO.getAcademicYearId()));
         Integer countUsed = weeks * 6;
         for (LocalUsedPO e : localUsedPOS) {
-            List<String> edu202Ids = edu202Dao.findEdu202IdsByEdu501Id(e.getEdu501Id().toString());
-            if(edu202Ids.size() != 0){
-                List<Edu203> usedList = edu203Dao.findAllbyEdu202Ids(edu202Ids);
-                double v = usedList.size() / Double.parseDouble(countUsed.toString());
+            List<Edu203> edu203s = edu203Dao.findEdu203IdsByEdu501Id(e.getEdu501Id().toString());
+            if(edu203s.size() != 0){
+                double v = edu203s.size() / Double.parseDouble(countUsed.toString());
                 NumberFormat nf = NumberFormat.getPercentInstance();
                 nf.setMinimumFractionDigits(2);//设置保留小数位
                 String usedPercent = nf.format(v);
