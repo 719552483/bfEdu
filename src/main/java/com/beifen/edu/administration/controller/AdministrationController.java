@@ -852,6 +852,16 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 获得某层次下的系部
+	 */
+	@RequestMapping("/alllevelMatchDepartment")
+	@ResponseBody
+	public ResultVO alllevelMatchDepartment(@RequestParam("leveCode") String leveCode) {
+		ResultVO resultVO =  administrationPageService.alllevelMatchDepartment(leveCode);
+		return resultVO;
+	}
+
+	/**
 	 * 获得某系部下的年级
 	 */
 	@RequestMapping("/departmentMatchGrade")

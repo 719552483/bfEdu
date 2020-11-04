@@ -426,6 +426,18 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	// 查询某层次下的全部系部
+	public ResultVO alllevelMatchDepartment(String leveCode) {
+		ResultVO resultVO;
+		List<Edu107> edu107s = edu107DAO.getDepartmentInLevel(leveCode);
+		if(edu107s.size() == 0) {
+			resultVO = ResultVO.setFailed("暂无系部信息");
+		} else {
+			resultVO = ResultVO.setSuccess("查询成功",edu107s);
+		}
+		return resultVO;
+	}
+
 	// 查询某系部下的年级
 	public List<Edu107> departmentMatchGrade(String departmentCode) {
 		List<Edu107> edu107s = edu107DAO.departmentMatchGrade(departmentCode);

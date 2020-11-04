@@ -51,7 +51,7 @@ function deafultSearch(){
 
 //获取-专业培养计划- 有逻辑关系select信息
 function getMajorTrainingSelectInfo() {
-	LinkageSelectPublic("#level","#department","#grade","#major");
+	SelectPublic("#level","#department","#grade","#major");
 	$("#major").change(function() {
 		if(getNormalSelectValue("major")===""){
 			return;

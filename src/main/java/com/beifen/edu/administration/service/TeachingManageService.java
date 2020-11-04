@@ -504,7 +504,7 @@ public class TeachingManageService {
                     predicates.add(cb.like(root.<String> get("name"), '%' + classStudent.getName() + '%'));
                 }
                 if (classStudent.getClassName() != null && !"".equals(classStudent.getClassName())) {
-                    predicates.add(cb.like(root.<String> get("className"), '%' + classStudent.getClassName() + '%'));
+                    predicates.add(cb.like(root.<String> get("xzbname"), '%' + classStudent.getClassName() + '%'));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
@@ -515,11 +515,10 @@ public class TeachingManageService {
         if(allInfo.size() == 0) {
             resultVO = ResultVO.setFailed("暂无符合要求的学生名单");
         } else {
-            List<String> studentIds = new ArrayList<>();
-            for (ClassStudentViewPO e : allInfo) {
-                studentIds.add(e.getEdu001_id().toString());
-            }
-            edu001List = edu001Dao.findStudentsByIds(studentIds);
+            //获取行政班集合
+            List<String> edu300Ids = allInfo.stream().map(ClassStudentViewPO::getEdu300_id).distinct().collect(Collectors.toList());
+            //查询行政班内的学生
+            edu001List = edu001Dao.getStudentInEdu300(edu300Ids);
             resultVO = ResultVO.setSuccess("共找到"+edu001List.size()+"个学生",edu001List);
         }
 

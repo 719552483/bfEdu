@@ -11,6 +11,8 @@ public class ClassStudentViewPO {
     private String id;
     private String edu301_id;
     private String edu001_id;
+    private String edu300_id;
+    private String xzbname;
     private String className;
     private String gradation;
     private String pyccmc;
@@ -144,5 +146,21 @@ public class ClassStudentViewPO {
 
     public void setUserKey(String userKey) {
         this.userKey = userKey;
+    }
+
+    public String getEdu300_id() {
+        return edu300_id;
+    }
+
+    public void setEdu300_id(String edu300_id) {
+        this.edu300_id = edu300_id;
+    }
+
+    public String getXzbname() {
+        return xzbname;
+    }
+
+    public void setXzbname(String xzbname) {
+        this.xzbname = xzbname;
     }
 }
