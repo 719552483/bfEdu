@@ -165,14 +165,14 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 align: 'center',
                 sortable: true,
                 formatter: paramsMatter,
-                visible: false
+                visible: true
             }, {
                 field: 'xzbname',
                 title: '行政班',
                 align: 'left',
                 sortable: true,
                 formatter: xzbnameMatter,
-                visible: false
+                visible: true
             }, {
                 field: 'xm',
                 title: '姓名',
@@ -190,6 +190,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 title: '生源类型',
                 align: 'left',
                 sortable: true,
+                visible: false,
                 formatter: paramsMatter
             },  {
                 field: 'xb',
@@ -357,6 +358,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 title: '招生方式',
                 align: 'left',
                 sortable: true,
+                visible: false,
                 formatter: paramsMatter
             }, {
                 field: 'dxpy',
