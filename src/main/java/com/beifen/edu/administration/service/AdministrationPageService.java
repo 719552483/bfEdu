@@ -419,7 +419,7 @@ public class AdministrationPageService {
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 		List<Edu107> edu107s = edu107DAO.levelMatchDepartment(leveCode,departments);
 		if(edu107s.size() == 0) {
-			resultVO = ResultVO.setFailed("暂无系部信息");
+			resultVO = ResultVO.setFailed("暂无符合要求的二级学院信息");
 		} else {
 			resultVO = ResultVO.setSuccess("查询成功",edu107s);
 		}
@@ -431,7 +431,7 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		List<Edu107> edu107s = edu107DAO.getDepartmentInLevel(leveCode);
 		if(edu107s.size() == 0) {
-			resultVO = ResultVO.setFailed("暂无系部信息");
+			resultVO = ResultVO.setFailed("暂无符合要求的二级学院信息");
 		} else {
 			resultVO = ResultVO.setSuccess("查询成功",edu107s);
 		}
