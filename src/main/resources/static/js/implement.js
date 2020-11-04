@@ -116,17 +116,17 @@ function queryEJDMElementInfo(){
 		async :false,
 		url : "/getEJDM",
 		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
+		// beforeSend: function(xhr) {
+		// 	requestErrorbeforeSend();
+		// },
+		// error: function(textStatus) {
+		// 	requestError();
+		// },
+		// complete: function(xhr, status) {
+		// 	requestComplete();
+		// },
 		success : function(backjson) {
-			hideloding();
+			// hideloding();
 			if (backjson.code == 200) {
 				queryRs=backjson.data.allEJDM;
 			} else {
@@ -479,18 +479,18 @@ function SelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId,c
 		cache : false,
 		url : "/queryAllLevel",
 		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
+		// beforeSend: function(xhr) {
+		// 	requestErrorbeforeSend();
+		// },
+		// error: function(textStatus) {
+		// 	requestError();
+		// },
+		// complete: function(xhr, status) {
+		// 	requestComplete();
+		// },
 		success : function(backjson) {
 			if (backjson.result) {
-				hideloding();
+				// hideloding();
 				var str = '';
 				if (typeof(configValue) === "undefined") {
 					str = '<option value="seleceConfigTip">请选择</option>';
