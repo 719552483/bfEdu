@@ -1,15 +1,15 @@
 package com.beifen.edu.administration.service;
 
 
+import com.beifen.edu.administration.PO.BigDataDepartmentPO;
+import com.beifen.edu.administration.PO.BigDataTeacherTypePO;
+import com.beifen.edu.administration.PO.EchartDataPO;
 import com.beifen.edu.administration.PO.EchartPO;
-import com.beifen.edu.administration.PO.StudentInPointPO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.dao.Edu001Dao;
-import com.beifen.edu.administration.dao.Edu202Dao;
-import com.beifen.edu.administration.dao.Edu501Dao;
-import com.beifen.edu.administration.dao.Edu800Dao;
+import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.Edu501;
 import com.beifen.edu.administration.domian.Edu800;
+import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,6 +39,8 @@ public class BigDataService {
     private Edu202Dao edu202Dao;
     @Autowired
     private Edu001Dao edu001Dao;
+    @Autowired
+    private ReflectUtils utils;
 
     //保存大数据财务信息
     public ResultVO saveFinanceInfo(Edu800 edu800) {
@@ -116,15 +118,68 @@ public class BigDataService {
         List<EchartPO> studentJobData = getStudentsByJob();
         returnMap.put("studentJobData",studentJobData);
 
+        //二级学院列表
+        List<BigDataDepartmentPO> departmentData= getBigDataDepartment();
+        returnMap.put("departmentData",departmentData);
+
+        //获取教师类型数据
+        List<BigDataTeacherTypePO> teacherTypeData= getBigDataTeacherType();
+        Map<String, List<BigDataTeacherTypePO>> teacherTypeByDepartemnt = teacherTypeData.stream().collect(Collectors.groupingBy(BigDataTeacherTypePO::getEdu104Id));
+        //整理教师类型柱状图数据
+        List<EchartDataPO> newTeacherTypeData = new ArrayList<>();
+        teacherTypeByDepartemnt.forEach((key, value) -> {
+            EchartDataPO echartDataPO = packageTeacherType(value);
+            newTeacherTypeData.add(echartDataPO);
+        });
+        returnMap.put("teacherTypeData",newTeacherTypeData);
+
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
     }
 
+    //整理教师类型柱状图数据
+    private EchartDataPO packageTeacherType(List<BigDataTeacherTypePO> value) {
+        EchartDataPO echartDataPO = new EchartDataPO();
+        Integer zrjs = 0;
+        Integer jzjs = 0;
+        Integer wpjs = 0;
+        String[] data = {zrjs.toString(),jzjs.toString(),wpjs.toString()};
+        for(BigDataTeacherTypePO e : value) {
+            Integer i = Integer.parseInt(e.getTeacherCount());
+            if("001".equals(e.getTeacherType())) {
+                data[0]=i.toString();
+            } else if ("003".equals(e.getTeacherType())) {
+                data[1]=i.toString();
+            } else if ("004".equals(e.getTeacherType())) {
+                data[2]=i.toString();
+            }
+        }
+
+        echartDataPO.setName(value.get(0).getDepartmentName());
+        echartDataPO.setData(data);
+
+        return echartDataPO;
+    }
+
+    //获取大屏教师类型数据
+    private List<BigDataTeacherTypePO> getBigDataTeacherType() {
+        List<Object[]> teacherTypeList = edu202Dao.getTeacherType();
+        BigDataTeacherTypePO bigDataTeacherTypePO = new BigDataTeacherTypePO();
+        List<BigDataTeacherTypePO> newteacherTypeList = utils.castEntity(teacherTypeList, BigDataTeacherTypePO.class, bigDataTeacherTypePO);
+        return newteacherTypeList;
+    }
+
+    //获取大屏二级学院列表
+    private List<BigDataDepartmentPO> getBigDataDepartment() {
+        List<Object[]> departmentPOList = edu202Dao.getDepartment();
+        BigDataDepartmentPO bigDataDepartmentPO = new BigDataDepartmentPO();
+        List<BigDataDepartmentPO> newdepartmentPOList = utils.castEntity(departmentPOList, BigDataDepartmentPO.class, bigDataDepartmentPO);
+        return newdepartmentPOList;
+    }
+
     //获取各职业学生人数
     private List<EchartPO> getStudentsByJob() {
-
         List<EchartPO> echartPOS = edu001Dao.getStudentByJob();
-
         return echartPOS;
     }
 
