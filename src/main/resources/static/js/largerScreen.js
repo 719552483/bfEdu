@@ -1,167 +1,5 @@
 var color = ['#e9df3d', '#f79c19', '#21fcd6', '#08c8ff', '#df4131'];
 
-
-
-//交通工具流量
-option2 = {
-
-	tooltip: {//鼠标指上时的标线
-		trigger: 'axis',
-		axisPointer: {
-			lineStyle: {
-				color: '#fff'
-			}
-		}
-	},
-	legend: {
-		icon: 'rect',
-		itemWidth: 14,
-		itemHeight: 5,
-		itemGap: 13,
-		data: ['类型1', '类型2', '类型3'],
-		right: '10px',
-		top: '0px',
-		textStyle: {
-			fontSize: 12,
-			color: '#fff'
-		}
-	},
-	grid: {
-		x: 35,
-		y: 25,
-		x2: 8,
-		y2: 25,
-	},
-	xAxis: [{
-		type: 'category',
-		boundaryGap: false,
-		axisLine: {
-			lineStyle: {
-				color: '#57617B'
-			}
-		},
-		axisLabel: {
-			textStyle: {
-				color:'#fff',
-			},
-		},
-		data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-	}],
-	yAxis: [{
-		type: 'value',
-		axisTick: {
-			show: false
-		},
-		axisLine: {
-			lineStyle: {
-				color: '#57617B',
-
-			}
-		},
-		axisLabel: {
-			margin: 10,
-			textStyle: {
-				fontSize: 14
-			},
-			textStyle: {
-				color:'#fff',
-			},
-		},
-		splitLine: {
-			lineStyle: {
-				color: 'rgba(255,255,255,.2)',
-				type:'dotted',
-			}
-		}
-	}],
-	series: [{
-		name: '类型1',
-		type: 'line',
-		smooth: true,
-		lineStyle: {
-			normal: {
-				width: 2
-			}
-		},
-		areaStyle: {
-			normal: {
-				color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-					offset: 0,
-					color: 'rgba(137, 189, 27, 0.3)'
-				}, {
-					offset: 0.8,
-					color: 'rgba(137, 189, 27, 0)'
-				}], false),
-				shadowColor: 'rgba(0, 0, 0, 0.1)',
-				shadowBlur: 10
-			}
-		},
-		itemStyle: {
-			normal: {
-				color: 'rgb(137,189,27)'
-			}
-		},
-		data: [20,35,34,45,52,41,49,64,24,52.4,24,33]
-	}, {
-		name: '类型2',
-		type: 'line',
-		smooth: true,
-		lineStyle: {
-			normal: {
-				width: 2
-			}
-		},
-		areaStyle: {
-			normal: {
-				color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-					offset: 0,
-					color: 'rgba(0, 136, 212, 0.3)'
-				}, {
-					offset: 0.8,
-					color: 'rgba(0, 136, 212, 0)'
-				}], false),
-				shadowColor: 'rgba(0, 0, 0, 0.1)',
-				shadowBlur: 10
-			}
-		},
-		itemStyle: {
-			normal: {
-				color: 'rgb(0,136,212)'
-			}
-		},
-		data: [97.3,99.2,99.3,100.0,99.6,90.6,80.0,91.5,69.8,67.5,90.4,84.9]
-	}, {
-		name: '类型3',
-		type: 'line',
-		smooth: true,
-		lineStyle: {
-			normal: {
-				width: 2
-			}
-		},
-		areaStyle: {
-			normal: {
-				color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-					offset: 0,
-					color: 'rgba(219, 50, 51, 0.3)'
-				}, {
-					offset: 0.8,
-					color: 'rgba(219, 50, 51, 0)'
-				}], false),
-				shadowColor: 'rgba(0, 0, 0, 0.1)',
-				shadowBlur: 10
-			}
-		},
-		itemStyle: {
-			normal: {
-				color: 'rgb(219,50,51)'
-			}
-		},
-		data: [84.2,81.0,67.5,62.1,43.7,68.5,51.9,71.8,76.7,67.6,62.9,0]
-	}, ]
-};
-//////////////////////交通工具流量 end
-
 var shadowColor = '#374b86';
 var value = 85;
 option6 = {
@@ -345,7 +183,6 @@ option7 = {
 		}]
 	}]
 }
-//////////////////////今日实时收费 end
 
 var convertData = function (data) {
 	var res = [];
@@ -817,7 +654,6 @@ option9 = {
 		}
 	]
 }
-//////////////////////收费站收费量 end
 
 //加载地图信息
 function getMapInfo() {
@@ -1125,360 +961,8 @@ function loadConfig(){
 		, 1100);
 }
 
-
-//chart自适应
-function ListeneChart(){
-	window.addEventListener("resize", function() {
-		var myChart = echarts.init(document.getElementById('main1'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main2'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main3'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main31'));
-		myChart.resize();
-
-	    var allRight3=$(".localStudentInfoArea").find(".swiper-slide");
-		for (var i = 0; i < allRight3.length; i++) {
-			myChart = echarts.init(document.getElementById(allRight3[i].id));
-			myChart.resize();
-		}
-
-		myChart = echarts.init(document.getElementById('main5'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main6'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main7'));
-		myChart.resize();
-
-		myChart = echarts.init(document.getElementById('main8'));
-		myChart.resize();
-	});
-}
-
-//获取设备分辨率
-function getscreen(){
-	var data=$("#rightTable").bootstrapTable("getData");
-	if(data.length<=3){
-		return;
-	}
-
-	var screen=window.screen.width;
-	if(screen==1920){
-		$(".tableArea").find("div.pagination")[0].style.marginTop="25px";
-	}else if(screen==1366){
-		$(".tableArea").find("div.pagination")[0].style.marginTop="0px";
-	}
-}
-
-//加载chart
-function loadChart(){
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/getBigScreenData",
-		dataType : 'json',
-		success : function(backjson) {
-			if(backjson.code===200){
-				//右1
-				var studentAgeData=reStuffData(backjson.data.studentAgeData);
-				var studentJobData =reStuffData(backjson.data.studentJobData);
-				option3 = {
-					tooltip: {
-						show: true,
-						trigger: "item"
-					},
-					radar: {
-						center: ["50%", "50%"],//偏移位置
-						radius: "80%",
-						startAngle: 40, // 起始角度
-						splitNumber: 4,
-						shape: "circle",
-						splitArea: {
-							areaStyle: {
-								color: 'transparent'
-							}
-						},
-						axisLabel: {
-							show: false,
-							fontSize: 20,
-							color: "#000",
-							fontStyle: "normal",
-							fontWeight: "normal"
-						},
-						axisLine: {
-							show: true,
-							lineStyle: {
-								color: "rgba(255, 255, 255, 0.5)"
-							}
-						},
-						splitLine: {
-							show: true,
-							lineStyle: {
-								color: "rgba(255, 255, 255, 0.5)"
-							}
-						},
-						indicator: studentAgeData.indicator
-					},
-					series: [{
-						type: "radar",
-						data: studentAgeData.renderData
-					}]
-				}
-				option31 = {
-					tooltip: {
-						show: true,
-						trigger: "item"
-					},
-					radar: {
-						center: ["50%", "50%"],//偏移位置
-						radius: "80%",
-						startAngle: 40, // 起始角度
-						splitNumber: 4,
-						shape: "circle",
-						splitArea: {
-							areaStyle: {
-								color: 'transparent'
-							}
-						},
-						axisLabel: {
-							show: false,
-							fontSize: 20,
-							color: "#000",
-							fontStyle: "normal",
-							fontWeight: "normal"
-						},
-						axisLine: {
-							show: true,
-							lineStyle: {
-								color: "rgba(255, 255, 255, 0.5)"
-							}
-						},
-						splitLine: {
-							show: true,
-							lineStyle: {
-								color: "rgba(255, 255, 255, 0.5)"
-							}
-						},
-						indicator: studentJobData.indicator
-					},
-					series: [{
-						type: "radar",
-						data: studentJobData.renderData
-					}]
-				}
-				drawRight1(option3,option31);
-
-				//右2
-				drawRight2(backjson.data.pointInfo);
-
-				//右3
-				var seriesdata=backjson.data.studentsInLocal.seriesdata;
-				var yAxisData=backjson.data.studentsInLocal.yAxisData;
-				var seriesdatas = [];
-				var yAxisDatas = [];
-
-				//每五个五一组
-				for(var i=0;i<seriesdata.length;i+=5){
-					seriesdatas.push(seriesdata.slice(i,i+5));
-				}
-				for(var i=0;i<yAxisData.length;i+=5){
-					yAxisDatas.push(yAxisData.slice(i,i+5));
-				}
-				drawRight3(seriesdatas,yAxisDatas);
-			}
-		}
-	});
-
-
-	//学院开课数量
-	var option1 = {
-		grid: {
-			left: '0',
-			top: '30',
-			right: '0',
-			bottom: '10',
-			containLabel: true
-		},
-		legend: {
-
-			top: 0,
-
-			textStyle: {
-
-				color: "#fff",
-
-			},
-
-			itemWidth: 10,  // 设置宽度
-
-			itemHeight: 10, // 设置高度
-
-		},
-
-		tooltip: {
-
-			trigger: 'axis',
-
-			axisPointer: { // 坐标轴指示器，坐标轴触发有效
-
-				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-
-			}
-
-		},
-
-		xAxis: {
-
-			type: 'category',
-
-			data: ["字段1","字段2","字段3","字段4","字段5","字段6","字段7","字段8","字段9"],
-
-			axisTick: { //---坐标轴 刻度
-
-				show: true, //---是否显示
-
-			},
-
-			axisLine: { //---坐标轴 轴线
-
-				show: true, //---是否显示
-
-				lineStyle: {
-
-					color: 'rgba(255,255,255,.1)',
-
-					width: 1,
-
-					type: 'dotted',
-
-				},
-
-			},
-
-			axisLabel: {//X轴文字
-
-				textStyle: {
-
-					fontSize: 12,
-
-					color: '#fff'
-
-				},
-
-			},
-
-		},
-
-		yAxis: {
-
-			type: 'value',
-
-			splitLine: {//分割线
-
-				show: true,
-
-				lineStyle: {
-					color: 'rgba(255,255,255,.1)',
-
-					width: 1,
-					type: 'dotted'
-
-				}
-
-			},
-
-			axisLabel: {//Y轴刻度值
-
-				formatter: '{value}',
-
-				textStyle: {
-
-					fontSize: 12,
-
-					color: '#fff'
-
-				},
-
-			},
-
-			axisLine: { //---坐标轴 轴线
-
-				show: false, //---是否显示
-
-			},
-
-		},
-
-		series: [{
-
-			name: '类型1',
-
-			type: 'bar',
-
-			data: [3, 7, 4, 9, 3, 5,9, 3, 5],
-
-			barWidth: 15,
-
-			barGap: 0.5, //柱子之间间距 //柱图宽度      两种情况都要设置，设置series 中对应数据柱形的itemStyle属性下的emphasis和normal的barBorderRadius属性初始化时候圆角  鼠标移上去圆角
-
-			itemStyle: {
-
-				normal: {
-					barBorderRadius: 50,
-					color: "#446ACF",
-
-				}
-
-			},
-
-		}, {
-
-			name: '类型2',
-
-			type: 'bar',
-			data: [6, 2, 5, 2, 5, 6,9, 3, 5],
-			barWidth: 15, //柱图宽度
-			barGap: 0.5,
-			itemStyle: {
-
-				normal: { //设置颜色的渐变
-					barBorderRadius: 50,
-					color: "#4fb69d",
-
-				}
-
-			},
-
-		}]
-
-	};
-	drawLeft1(option1);
-
-	//交通工具流量
-	var myChart2 = echarts.init(document.getElementById('main2'));
-	myChart2.setOption(option2);
-
-	//各类型扩招人数
-	drawLeft3(option1);
-
-	//中间地图
-	getMapInfo();
-}
-
-//左1
-function  drawLeft1(option1){
-	var myChart1 = echarts.init(document.getElementById('main1'));
-	myChart1.setOption(option1);
-}
-
-//左3
-function  drawLeft3(option1,option2,option3){
+//渲染中间的圆圈
+function drawCenterCicle(){
 	var value =80;
 	option5 = {
 		title: {
@@ -1576,8 +1060,432 @@ function  drawLeft3(option1,option2,option3){
 	myChart7.setOption(option7);
 }
 
-//右1
-function drawRight1(option3,option31){
+//渲染授课教师人数表
+function stuffTeacherCountTable(tableInfo){
+	$('#teacherCountTable').bootstrapTable('destroy').bootstrapTable({
+		data:tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize:3,
+		pageList: [3],
+		showToggle: false,
+		showFooter: false,
+		search: true,
+		editable: false,
+		striped: false,
+		toolbar: '#toolbar',
+		showColumns: false,
+		onClickRow : function(row, $element, field) {
+			changePageData(row);
+		},
+		columns: [{
+			field: 'id',
+			title: 'id',
+			align: 'center',
+			visible: false
+		},
+			{
+				field: 'departmentName',
+				title: '二级学院名称',
+				align: 'center'
+			},{
+				field: 'teacherCount',
+				title: '授课教师数',
+				align: 'center'
+			}
+		]
+	});
+}
+
+//点击切换页面数据源
+function changePageData(row){
+	alert(1)
+}
+
+//渲染教师类型分布chart
+function stuffTeacherTypeCount(teacherTypeData){
+	var xAxisDatas=new Array();
+	var seriesdatas = new Array();
+
+	for (var i = 0; i <teacherTypeData.length ; i++) {
+		xAxisDatas.push(teacherTypeData[i].name);
+		seriesdatas.push(teacherTypeData[i].data)
+	}
+
+	var typeOne = new Array();
+	var typeTwo = new Array();
+	var typeThree = new Array();
+
+	for (var i = 0; i <teacherTypeData.length; i++) {
+		typeOne.push(seriesdatas[i][0]);
+		typeTwo.push(seriesdatas[i][1]);
+		typeThree.push(seriesdatas[i][2]);
+	}
+
+	var Titledatas = [];
+	var typeOneDatas = [];
+	var typeTwoDatas = [];
+	var typeThreeDatas = [];
+
+	//每五个五一组
+	for(var i=0;i<xAxisDatas.length;i+=4){
+		Titledatas.push(xAxisDatas.slice(i,i+4));
+	}
+
+	for(var i=0;i<typeOne.length;i+=3){
+		typeOneDatas.push(typeOne.slice(i,i+4));
+		typeTwoDatas.push(typeTwo.slice(i,i+4));
+		typeThreeDatas.push(typeThree.slice(i,i+4));
+	}
+
+	for (var i = 0; i < Titledatas.length; i++) {
+		var stuffOption;
+		var str='';
+		stuffOption = {
+			grid: {
+				left: '-20',
+				top: '30',
+				right: '20',
+				bottom: '10',
+				containLabel: true
+			},
+			legend: {
+				top: 0,
+				textStyle: {
+					color: "#fff",
+				},
+				itemWidth: 10,  // 设置宽度
+				itemHeight: 10, // 设置高度
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: { // 坐标轴指示器，坐标轴触发有效
+					type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+				},
+				confine: true
+			},
+			xAxis: {
+				type: 'category',
+				data: Titledatas[i],
+				axisTick: { //---坐标轴 刻度
+					show: true, //---是否显示
+				},
+				axisLine: { //---坐标轴 轴线
+					show: true, //---是否显示
+					lineStyle: {
+						color: 'rgba(255,255,255,.1)',
+						width: 1,
+						type: 'dotted',
+					},
+				},
+				axisLabel: {//X轴文字
+					textStyle: {
+						fontSize: 12,
+						color: '#fff'
+					},
+				},
+			},
+			yAxis: {
+				type: 'value',
+				show:false
+			},
+			series: [{
+				name: '专任教师',
+				type: 'bar',
+				data: typeOneDatas[i],
+				barWidth: 20,
+				barGap: 0.5, //柱子之间间距 //柱图宽度      两种情况都要设置，设置series 中对应数据柱形的itemStyle属性下的emphasis和normal的barBorderRadius属性初始化时候圆角  鼠标移上去圆角
+				itemStyle: {
+					normal: {
+						barBorderRadius: 50,
+						color: "#446ACF",
+					}
+				},
+			}, {
+				name: '兼职教师',
+				type: 'bar',
+				data: typeTwoDatas[i],
+				barWidth:20, //柱图宽度
+				barGap: 0.5,
+				itemStyle: {
+					normal: { //设置颜色的渐变
+						barBorderRadius: 50,
+						color: "#4fb69d",
+					}
+				},
+			},{
+				name: '外聘教师',
+				type: 'bar',
+				data: typeThreeDatas[i],
+				barWidth: 20,
+				barGap: 0.5, //柱子之间间距 //柱图宽度      两种情况都要设置，设置series 中对应数据柱形的itemStyle属性下的emphasis和normal的barBorderRadius属性初始化时候圆角  鼠标移上去圆角
+				itemStyle: {
+					normal: {
+						barBorderRadius: 50,
+						color: "rgba(182,123,30,0.91)",
+					}
+				},
+			}]
+		};
+
+		str=' <div class="swiper-slide" id="teacherTypeCount'+i+'"></div>';
+		$(".teacheeTypeCountAppendArea").append(str);
+		var thisChart= echarts.init(document.getElementById('teacherTypeCount'+i));
+		thisChart.setOption(stuffOption);
+	}
+
+	if(Titledatas.length>1){
+		var mySwiper1 = new Swiper('.visual_swiperRight2', {
+			autoplay: true,//可选选项，自动滑动
+			speed: 800,//可选选项，滑动速度
+			autoplay: {
+				delay: 2500,//1秒切换一次
+			},
+		})
+	}
+}
+
+//渲染课时类型分布
+function stuffclassHourTypeCount(periodTypeData) {
+	var titleArray = [];
+	var seriesDatas = periodTypeData.periodTypeEcharts;
+	for (var i = 0; i < periodTypeData.departmentNames.length;i += 5) {
+		titleArray.push(periodTypeData.departmentNames.slice(i, i + 5));
+	}
+
+	var typeOneDatas = [];
+	var typeTwoDatas = [];
+	var typeThreeDatas = [];
+	var typeFourDatas = [];
+
+	for (var i = 0; i < seriesDatas.length; i++) {
+		var currrentData = seriesDatas[i].data;
+		if (seriesDatas[i].name === "理论学时") {
+			for (var c = 0; c < currrentData.length; c +=5) {
+				typeOneDatas.push(currrentData.slice(c, c + 5));
+			}
+		}
+		if (seriesDatas[i].name === "实践学时") {
+			for (var d = 0; d < currrentData.length; d += 5) {
+				typeTwoDatas.push(currrentData.slice(d, d + 5));
+			}
+		}
+		if (seriesDatas[i].name === "集中学时") {
+			for (var f = 0; f < currrentData.length; f += 5) {
+				typeThreeDatas.push(currrentData.slice(f, f + 5));
+			}
+		}
+		if (seriesDatas[i].name === "分散学时") {
+			for (var g = 0; g < currrentData.length;g+= 5) {
+				typeFourDatas.push(currrentData.slice(g, g + 5));
+			}
+		}
+	}
+
+		for (var i = 0; i < typeOneDatas.length; i++) {
+			var stuffOption;
+			var str = '';
+			stuffOption = {
+				color: ['#446ACF', '#4fb69d', 'rgb(197,135,31)', '#018bbf', '#338bcf', '#cd6d34', '#FD9E06', '#ad4b3e'],
+				tooltip: {
+					trigger: 'axis',
+					confine: true,
+					axisPointer: { // 坐标轴指示器，坐标轴触发有效
+						type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+					}
+				},
+				grid: {
+					left: '0',
+					top: '30',
+					right: '0',
+					bottom: '10',
+					containLabel: true
+				},
+				legend: {
+					top: 0,
+					textStyle: {
+						color: "#fff",
+					},
+					itemWidth: 10,  // 设置宽度
+					itemHeight: 10, // 设置高度
+				},
+				xAxis: {
+					type: 'value',
+					show: false
+				},
+				yAxis: {
+					type: 'category',
+					data: titleArray[i],
+					splitLine: {//分割线
+						show: false
+					},
+					axisTick: {       //y轴刻度线
+						"show": false
+					},
+					axisLine: { //---坐标轴 轴线
+						show: true, //---是否显示
+						lineStyle: {
+							color: 'rgba(255,255,255,.1)',
+							width: 1,
+							type: 'dotted',
+						},
+					},
+					axisLabel: {//Y轴刻度值
+						textStyle: {
+							fontSize: 12,
+							color: '#fff'
+						},
+					},
+				},
+				series: [
+					{
+						name: '理论学时',
+						type: 'bar',
+						stack: '总量',
+						barWidth: 20,
+						itemStyle: {
+							normal: {
+								barBorderRadius: [10, 0, 0, 10]
+							}
+						},
+						data: typeOneDatas[i]
+					},
+					{
+						name: "实践学时",
+						type: 'bar',
+						stack: '总量',
+						barWidth: 20,
+						data: typeTwoDatas[i]
+					},
+					{
+						name: '集中学时',
+						type: 'bar',
+						stack: '总量',
+						barWidth: 20,
+						data: typeThreeDatas[i]
+					},
+					{
+						name: '分散学时',
+						type: 'bar',
+						stack: '总量',
+						barWidth: 20,
+						itemStyle: {
+							normal: {
+								barBorderRadius: [0, 10, 10, 0]
+							}
+						},
+						data: typeFourDatas[i]
+					}
+				]
+			};
+
+			str=' <div class="swiper-slide" id="classHourTypeCount'+i+'"></div>';
+			$(".classHourTypeAppendArea").append(str);
+			var thisChart= echarts.init(document.getElementById('classHourTypeCount'+i));
+			thisChart.setOption(stuffOption);
+		}
+
+
+	if(typeOneDatas.length>1){
+		var mySwiperRight3 = new Swiper('.visual_swiperRight3', {
+			autoplay: true,//可选选项，自动滑动
+			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
+			speed: 1000,//可选选项，滑动速度
+		});
+	}
+}
+
+//学院概貌分析
+function stuffstudentFaceCount(studentAgeData,studentJobData){
+	var studentAgeData=reStuffData(studentAgeData);
+	var studentJobData =reStuffData(studentJobData);
+	var option3 = {
+		tooltip: {
+			show: true,
+			trigger: "item",
+			confine: true
+		},
+		radar: {
+			center: ["50%", "50%"],//偏移位置
+			radius: "80%",
+			startAngle: 40, // 起始角度
+			splitNumber: 4,
+			shape: "circle",
+			splitArea: {
+				areaStyle: {
+					color: 'transparent'
+				}
+			},
+			axisLabel: {
+				show: false,
+				fontSize: 20,
+				color: "#000",
+				fontStyle: "normal",
+				fontWeight: "normal"
+			},
+			axisLine: {
+				show: true,
+				lineStyle: {
+					color: "rgba(255, 255, 255, 0.5)"
+				}
+			},
+			splitLine: {
+				show: true,
+				lineStyle: {
+					color: "rgba(255, 255, 255, 0.5)"
+				}
+			},
+			indicator: studentAgeData.indicator
+		},
+		series: [{
+			type: "radar",
+			data: studentAgeData.renderData
+		}]
+	}
+	var option31 = {
+		tooltip: {
+			show: true,
+			trigger: "item",
+			confine: true
+		},
+		radar: {
+			center: ["50%", "50%"],//偏移位置
+			radius: "80%",
+			startAngle: 40, // 起始角度
+			splitNumber: 4,
+			shape: "circle",
+			splitArea: {
+				areaStyle: {
+					color: 'transparent'
+				}
+			},
+			axisLabel: {
+				show: false,
+				fontSize: 20,
+				color: "#000",
+				fontStyle: "normal",
+				fontWeight: "normal"
+			},
+			axisLine: {
+				show: true,
+				lineStyle: {
+					color: "rgba(255, 255, 255, 0.5)"
+				}
+			},
+			splitLine: {
+				show: true,
+				lineStyle: {
+					color: "rgba(255, 255, 255, 0.5)"
+				}
+			},
+			indicator: studentJobData.indicator
+		},
+		series: [{
+			type: "radar",
+			data: studentJobData.renderData
+		}]
+	}
+
 	var myChart3 = echarts.init(document.getElementById('main3'));
 	myChart3.setOption(option3);
 	var myChart31 = echarts.init(document.getElementById('main31'));
@@ -1591,8 +1499,79 @@ function drawRight1(option3,option31){
 	})
 }
 
-//右2
-function drawRight2(tableInfo) {
+//饼图渲染demo(学院概貌分析chart)
+function reStuffData(data){
+	var returnObject=new Object();
+
+	var max = 0;
+	data.forEach(function(d) {
+		max = parseInt(d.value) > max ? parseInt(d.value) : max;
+	});
+
+	var renderData = [{
+		value: [],
+		name: "学员概貌",
+		symbol: 'none',
+		lineStyle: {
+			normal: {
+				color: '#ecc03e',
+				width: 2
+			}
+		},
+		areaStyle: {
+			normal: {
+				color: new echarts.graphic.LinearGradient(0, 0, 1, 0,
+					[{
+						offset: 0,
+						color: 'rgba(203, 158, 24, 0.8)'
+					}, {
+						offset: 1,
+						color: 'rgba(190, 96, 20, 0.8)'
+					}],
+					false)
+			}
+		}
+	}];
+
+
+	data.forEach(function(d, i) {
+		var value = ['', '', '', '', ''];
+		value[i] = max,
+			renderData[0].value[i] = d.value;
+		renderData.push({
+			name: "学员概貌",
+			value: value,
+			symbol: 'circle',
+			symbolSize: 12,
+			lineStyle: {
+				normal: {
+					color: 'transparent'
+				}
+			},
+			itemStyle: {
+				normal: {
+					color: color[i],
+				}
+			}
+		})
+	})
+	var indicator = [];
+
+	data.forEach(function(d) {
+		indicator.push({
+			name: d.name,
+			max: max,
+			color: '#fff'
+		})
+	})
+
+	returnObject.indicator=indicator;
+	returnObject.renderData=renderData;
+	return returnObject;
+}
+
+//渲染教学任务点信息表格
+function stuffLocationTable(tableInfo) {
 	window.teachingPlaceEvents = {
 		'click #moreInfo': function(e, value, row, index) {
 			moreInfo(row, index);
@@ -1602,7 +1581,7 @@ function drawRight2(tableInfo) {
 		}
 	};
 
-	$('#rightTable').bootstrapTable('destroy').bootstrapTable({
+	$('#rightTable,#rightTable2').bootstrapTable('destroy').bootstrapTable({
 		data:tableInfo,
 		pagination: true,
 		pageNumber: 1,
@@ -1644,6 +1623,50 @@ function drawRight2(tableInfo) {
 	}
 }
 
+//加载chart
+function loadChart(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getBigScreenData",
+		dataType : 'json',
+		success : function(backjson) {
+			if(backjson.code===200){
+				//中间地图
+				getMapInfo();
+				//中间的圆圈
+				drawCenterCicle();
+
+				//授课教师人数
+				stuffTeacherCountTable(backjson.data.departmentData);
+				//教师类型分布
+				stuffTeacherTypeCount(backjson.data.teacherTypeData);
+				//课时类型分布
+				stuffclassHourTypeCount(backjson.data.periodTypeData);
+
+				//学院概貌分析
+				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData);
+				//教学任务点信息
+				stuffLocationTable(backjson.data.pointInfo);
+				//右3
+				// var seriesdata=backjson.data.studentsInLocal.seriesdata;
+				// var yAxisData=backjson.data.studentsInLocal.yAxisData;
+				// var seriesdatas = [];
+				// var yAxisDatas = [];
+				//
+				// //每五个五一组
+				// for(var i=0;i<seriesdata.length;i+=5){
+				// 	seriesdatas.push(seriesdata.slice(i,i+5));
+				// }
+				// for(var i=0;i<yAxisData.length;i+=5){
+				// 	yAxisDatas.push(yAxisData.slice(i,i+5));
+				// }
+				// drawRight3(seriesdatas,yAxisDatas);
+			}
+		}
+	});
+}
+
 //右3
 function drawRight3(seriesdatas,yAxisDatas){
 	for (var i = 0; i <seriesdatas.length ; i++) {
@@ -1675,6 +1698,7 @@ function drawRight3(seriesdatas,yAxisDatas){
 			},
 			"tooltip": {
 				"trigger": "item",
+				"confine": true,
 				"textStyle": {
 					"fontSize": 12
 				},
@@ -1776,76 +1800,54 @@ function drawRight3(seriesdatas,yAxisDatas){
 	}
 }
 
-//右1饼图 重新渲染backjson中的chart数据
-function reStuffData(data){
-	var returnObject=new Object();
+//chart自适应
+function ListeneChart(){
+	window.addEventListener("resize", function() {
+		var myChart = echarts.init(document.getElementById('main1'));
+		myChart.resize();
+		//
+		// myChart = echarts.init(document.getElementById('main2'));
+		// myChart.resize();
 
+		myChart = echarts.init(document.getElementById('main3'));
+		myChart.resize();
 
-	var max = 0;
-	data.forEach(function(d) {
-		max = parseInt(d.value) > max ? parseInt(d.value) : max;
-	});
+		myChart = echarts.init(document.getElementById('main31'));
+		myChart.resize();
 
-	var renderData = [{
-		value: [],
-		name: "学员概貌",
-		symbol: 'none',
-		lineStyle: {
-			normal: {
-				color: '#ecc03e',
-				width: 2
-			}
-		},
-		areaStyle: {
-			normal: {
-				color: new echarts.graphic.LinearGradient(0, 0, 1, 0,
-					[{
-						offset: 0,
-						color: 'rgba(203, 158, 24, 0.8)'
-					}, {
-						offset: 1,
-						color: 'rgba(190, 96, 20, 0.8)'
-					}],
-					false)
-			}
+		var allRight3=$(".localStudentInfoArea").find(".swiper-slide");
+		for (var i = 0; i < allRight3.length; i++) {
+			myChart = echarts.init(document.getElementById(allRight3[i].id));
+			myChart.resize();
 		}
-	}];
 
+		myChart = echarts.init(document.getElementById('main5'));
+		myChart.resize();
 
-	data.forEach(function(d, i) {
-		var value = ['', '', '', '', ''];
-		value[i] = max,
-			renderData[0].value[i] = d.value;
-		renderData.push({
-			name: "学员概貌",
-			value: value,
-			symbol: 'circle',
-			symbolSize: 12,
-			lineStyle: {
-				normal: {
-					color: 'transparent'
-				}
-			},
-			itemStyle: {
-				normal: {
-					color: color[i],
-				}
-			}
-		})
-	})
-	var indicator = [];
+		myChart = echarts.init(document.getElementById('main6'));
+		myChart.resize();
 
-	data.forEach(function(d) {
-		indicator.push({
-			name: d.name,
-			max: max,
-			color: '#fff'
-		})
-	})
+		myChart = echarts.init(document.getElementById('main7'));
+		myChart.resize();
 
-	returnObject.indicator=indicator;
-	returnObject.renderData=renderData;
-	return returnObject;
+		myChart = echarts.init(document.getElementById('main8'));
+		myChart.resize();
+	});
+}
+
+//获取设备分辨率
+function getscreen(){
+	var data=$("#rightTable").bootstrapTable("getData");
+	if(data.length<=3){
+		return;
+	}
+
+	var screen=window.screen.width;
+	if(screen==1920){
+		$(".tableArea").find("div.pagination")[0].style.marginTop="25px";
+	}else if(screen==1366){
+		$(".tableArea").find("div.pagination")[0].style.marginTop="0px";
+	}
 }
 
 $(function () {
