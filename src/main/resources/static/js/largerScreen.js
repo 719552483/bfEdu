@@ -1,189 +1,3 @@
-var color = ['#e9df3d', '#f79c19', '#21fcd6', '#08c8ff', '#df4131'];
-
-var shadowColor = '#374b86';
-var value = 85;
-option6 = {
-
-	title: {
-		//text: `${value}万辆`,
-		text: `2019第二批`,
-		subtext: '共60周',
-		left: 'center',
-		top: 'center',//top待调整
-		textStyle: {
-			color: '#fff',
-			fontSize: 16,
-			fontFamily: 'PingFangSC-Regular'
-		},
-		subtextStyle: {
-			color: '#ff',
-			fontSize: 12,
-			fontFamily: 'PingFangSC-Regular',
-			top: 'center'
-		},
-		itemGap: -1//主副标题间距
-	},
-
-	series: [{
-		name: 'pie1',
-		type: 'pie',
-		clockWise: true,
-		radius: ['65%', '70%'],
-		itemStyle: {
-			normal: {
-				label: {
-					show: false
-				},
-				labelLine: {
-					show: false
-				}
-			}
-		},
-		hoverAnimation: false,
-		data: [{
-			value: value,
-			name: 'completed',
-			itemStyle: {
-				normal: {
-					borderWidth: 8,
-					borderColor: {
-						colorStops: [{
-							offset: 0,
-							color: '#02df94' || '#25d6bc' // 0% 处的颜色
-						}, {
-							offset: 1,
-							color: '#28d3d0' || '#14dbaa' // 100% 处的颜色
-						}]
-					},
-					color: { // 完成的圆环的颜色
-						colorStops: [{
-							offset: 0,
-							color: '#02df94' || '#25d6bc' // 0% 处的颜色
-						}, {
-							offset: 1,
-							color: '#28d3d0' || '#14dbaa' // 100% 处的颜色
-						}]
-					},
-					label: {
-						show: false
-					},
-					labelLine: {
-						show: false
-					}
-				}
-			}
-		}, {
-			name: 'gap',
-			value: 100 - value,
-			itemStyle: {
-				normal: {
-					label: {
-						show: false
-					},
-					labelLine: {
-						show: false
-					},
-					color: 'rgba(0, 0, 0, 0)',
-					borderColor: 'rgba(0, 0, 0, 0)',
-					borderWidth: 0
-				}
-			}
-		}]
-	}]
-}
-
-var shadowColor = '#374b86';
-var value = 46;
-option7 = {
-
-	title: {
-		//text: `${value}万辆`,
-		text: `2020第一批`,
-		subtext: '共65周',
-		left: 'center',
-		top: 'center',//top待调整
-		textStyle: {
-			color: '#fff',
-			fontSize: 16,
-			fontFamily: 'PingFangSC-Regular'
-		},
-		subtextStyle: {
-			color: '#ff',
-			fontSize: 12,
-			fontFamily: 'PingFangSC-Regular',
-			top: 'center'
-		},
-		itemGap: -1//主副标题间距
-	},
-
-	series: [{
-		name: 'pie1',
-		type: 'pie',
-		clockWise: true,
-		radius: ['65%', '70%'],
-		itemStyle: {
-			normal: {
-				label: {
-					show: false
-				},
-				labelLine: {
-					show: false
-				}
-			}
-		},
-		hoverAnimation: false,
-		data: [{
-			value: value,
-			name: 'completed',
-			itemStyle: {
-				normal: {
-					borderWidth: 8,
-					borderColor: {
-						colorStops: [{
-							offset: 0,
-							color: '#eb3600' || '#cc9a00' // 0% 处的颜色
-						}, {
-							offset: 1,
-							color: '#d0a00e' || '#d0570e' // 100% 处的颜色
-						}]
-					},
-					color: { // 完成的圆环的颜色
-						colorStops: [{
-							offset: 0,
-							color: '#eb3600' || '#cc9a00' // 0% 处的颜色
-						}, {
-							offset: 1,
-							color: '#d0a00e' || '#d0570e' // 100% 处的颜色
-						}]
-					},
-					label: {
-						show: false
-					},
-					labelLine: {
-						show: false
-					}
-				}
-			}
-		}, {
-			name: 'gap',
-			value: 100 - value,
-			itemStyle: {
-				normal: {
-					label: {
-						show: false
-					},
-					labelLine: {
-						show: false
-					},
-					color: 'rgba(0, 0, 0, 0)',
-					borderColor: 'rgba(0, 0, 0, 0)',
-					borderWidth: 0
-				}
-			}
-		}]
-	}]
-}
-
 var convertData = function (data) {
 	var res = [];
 	for (var i = 0; i < data.length; i++) {
@@ -879,51 +693,6 @@ function hiddenBigVideo(){
 	}, 600);
 }
 
-//任务点详情
-function moreInfo(row, index){
-	$(".moreInfo").hide();
-	$(".returnBtn"+index).show();
-	//重新加载chart
-
-	//显示小监控
-	$('.topHideenArea').find(".visual_conBot").addClass('animated slideOutUp');
-	var wait = setInterval(function() {
-		if (!$('.topHideenArea').find(".visual_conBot").is(":animated")) {
-			clearInterval(wait);
-			//执行code
-			$('.head_top').hide();
-			$('.topHideenArea').find(".visual_conBot").find(".visual_chart").hide();
-			$(".smallvideOnwer").find("span").html(row.studyLocalName+'实时监控画面');
-			$(".smallvideOnwer,.smallVideoArea").show();
-			$('.smallVideoArea').addClass('animated slideInDown');
-			$('#samllVideo')[0].play();
-			$('.topHideenArea').find(".visual_conBot").removeClass('animated slideOutUp');
-		}
-	}, 600);
-}
-
-//返回
-function smallVideoReturn(row, index){
-	$(".moreInfo").show();
-	$(".returnBtn"+index).hide();
-	//重新加载chart
-
-	//隐藏小监控
-	$('.topHideenArea').find(".visual_conBot").addClass('animated bounceIn');
-	var wait = setInterval(function() {
-		if (!$('.topHideenArea').find(".visual_conBot").is(":animated")) {
-			clearInterval(wait);
-			//执行code
-			$('.head_top').show();
-			$('.topHideenArea').find(".visual_conBot").find(".visual_chart").show();
-			$(".smallvideOnwer,.smallVideoArea").hide();
-			$('.smallVideoArea').hide();
-			$('#samllVideo')[0].pause();
-			$('.topHideenArea').find(".visual_conBot").removeClass('animated bounceIn');
-		}
-	}, 600);
-}
-
 // table增加tooltip
 function paramsMatter(value, row, index) {
 	if(typeof value === 'undefined'||value==null||value===""){
@@ -967,8 +736,8 @@ function drawCenterCicle(){
 	option5 = {
 		title: {
 			// text: `${value}万辆`,
-			text: `2019第一批`,
-			subtext: '共65周',
+			text: `40%`,
+			subtext: '财经学院',
 			left: 'center',
 			top: 'center',//top待调整
 			textStyle: {
@@ -984,7 +753,13 @@ function drawCenterCicle(){
 			},
 			itemGap: -1//主副标题间距
 		},
-
+		tooltip: {
+			trigger: 'item',
+			axisPointer: { // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			confine: true
+		},
 		series: [{
 			name: 'pie1',
 			type: 'pie',
@@ -1056,8 +831,7 @@ function drawCenterCicle(){
 	myChart5.setOption(option5);
 	var myChart6 = echarts.init(document.getElementById('main6'));
 	myChart6.setOption(option6);
-	var myChart7 = echarts.init(document.getElementById('main7'));
-	myChart7.setOption(option7);
+
 }
 
 //渲染授课教师人数表
@@ -1499,8 +1273,9 @@ function stuffstudentFaceCount(studentAgeData,studentJobData){
 	})
 }
 
-//饼图渲染demo(学院概貌分析chart)
+//学院概貌分析饼图渲染demo
 function reStuffData(data){
+	var color = ['#e9df3d', '#f79c19', '#21fcd6', '#08c8ff', '#df4131'];
 	var returnObject=new Object();
 
 	var max = 0;
@@ -1570,57 +1345,352 @@ function reStuffData(data){
 	return returnObject;
 }
 
-//渲染教学任务点信息表格
-function stuffLocationTable(tableInfo) {
-	window.teachingPlaceEvents = {
-		'click #moreInfo': function(e, value, row, index) {
-			moreInfo(row, index);
-		},
-		'click #return': function(e, value, row, index) {
-			smallVideoReturn(row, index);
-		}
-	};
-
-	$('#rightTable,#rightTable2').bootstrapTable('destroy').bootstrapTable({
-		data:tableInfo,
-		pagination: true,
-		pageNumber: 1,
-		pageSize:3,
-		pageList: [3],
-		showToggle: false,
-		showFooter: false,
-		search: true,
-		editable: false,
-		striped: false,
-		toolbar: '#toolbar',
-		showColumns: false,
-		columns: [{
-			field: 'id',
-			title: 'id',
-			align: 'center',
-			visible: false
-		},
-			{
-				field: 'pointName',
-				title: '任务点名称',
-				align: 'center'
-			}, {
-				field: 'action',
-				title: '操作',
-				align: 'center',
-				width:'20px',
-				formatter: teachingPlaceFormatter,
-				events: teachingPlaceEvents,
-			}
-		]
-	});
-
-	function teachingPlaceFormatter(value, row, index) {
-		return ['<button type="button" id="moreInfo" class="btn btn-info myBtn moreInfo moreInfo'+index+'" >教点详情</button>' +
-		'<button type="button" id="return" class="btn btn-info myBtn noneStart returnBtn returnBtn' +index + '">返回</button>'
-		]
-			.join('');
+//渲染开课数量
+function stuffoptenClassCount(chartInfo) {
+	var chartInfos = [];
+	for (var i = 0; i < chartInfo.length;i += 3) {
+		chartInfos.push(chartInfo.slice(i, i + 3));
 	}
+
+	for (var i = 0; i < chartInfos.length; i++) {
+		var className='courseCount_swiper-slide'+i;
+		var parentStr='<div class="swiper-slide '+className+'"></div>';
+		$(".courseCountAppendArea").append(parentStr);
+	}
+
+	for (var i = 0; i < chartInfos.length; i++) {
+		var currentInfo = chartInfos[i];
+		var className='courseCount_swiper-slide'+i;
+		for (var c = 0; c < currentInfo.length; c++) {
+			var str="";
+			if(c==0){
+				var option1 = cicleColor1(currentInfo[c]);
+				str='<div class="swiper-slide visualSssf_right_box" id="classOpenCount'+currentInfo[c].text+'"></div>';
+				$("."+className).append(str);
+				var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+				openClassCount.setOption(option1);
+			}else if(c==1){
+				var option2 = cicleColor2(currentInfo[c]);
+				str=' <div class="swiper-slide visualSssf_right_box" id="classOpenCount'+currentInfo[c].text+'"></div>';
+				$("."+className).append(str);
+				var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+				openClassCount.setOption(option2);
+			}else{
+				var option3 = cicleColor3(currentInfo[c]);
+				str=' <div class="swiper-slide visualSssf_right_box" id="classOpenCount'+currentInfo[c].text+'"></div>';
+				$("."+className).append(str);
+				var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+				openClassCount.setOption(option3);
+			}
+		}
+	}
+	var mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
+		autoplay: true,//可选选项，自动滑动
+		speed: 800,//可选选项，滑动速度
+		autoplay: {
+			delay: 2500,//1秒切换一次
+		},
+	})
+}
+
+//蓝色饼图demo
+function cicleColor1(currentInfo){
+	var returnOption=new Array();
+	var value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	returnOption = {
+		title: {
+			text: `${value}%`,
+			subtext: currentInfo.text,
+			left: 'center',
+			top: 'center',//top待调整
+			textStyle: {
+				color: '#fff',
+				fontSize: 16,
+				fontFamily: 'PingFangSC-Regular'
+			},
+			subtextStyle: {
+				color: '#ff',
+				fontSize:12,
+				fontFamily: 'PingFangSC-Regular',
+				top: 'center'
+			},
+			itemGap: -1//主副标题间距
+		},
+		tooltip: {
+			trigger: 'item',
+			axisPointer: { // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			confine: true
+		},
+		series: [{
+			name: currentInfo.text,
+			type: 'pie',
+			clockWise: true,
+			radius: ['65%', '70%'],
+			itemStyle: {
+				normal: {
+					label: {
+						show: false
+					},
+					labelLine: {
+						show: false
+					}
+				}
+			},
+			hoverAnimation: false,
+			data: [{
+				value: currentInfo.courseCompleteCount,
+				name: '已完成课程',
+				itemStyle: {
+					normal: {
+						borderWidth: 8,
+						borderColor: {
+							colorStops: [{
+								offset: 0,
+								color: '#1d54f7' || '#00cefc' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#68eaf9' || '#367bec' // 100% 处的颜色
+							}]
+						},
+						color: { // 完成的圆环的颜色
+							colorStops: [{
+								offset: 0,
+								color: '#1d54f7' || '#00cefc' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#68eaf9' || '#367bec' // 100% 处的颜色
+							}]
+						},
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					}
+				}
+			}, {
+				name: 'gap',
+				value: 100 - value,
+				itemStyle: {
+					normal: {
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						},
+						color: 'rgba(0, 0, 0, 0)',
+						borderColor: 'rgba(0, 0, 0, 0)',
+						borderWidth: 0
+					}
+				}
+			}]
+		}]
+	}
+	return returnOption;
+}
+
+//绿色饼图demo
+function cicleColor2(currentInfo){
+	var value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	var returnOption=new Array();
+	returnOption = {
+		title: {
+			text: `${value}%`,
+			subtext: currentInfo.text,
+			left: 'center',
+			top: 'center',//top待调整
+			textStyle: {
+				color: '#fff',
+				fontSize: 16,
+				fontFamily: 'PingFangSC-Regular'
+			},
+			subtextStyle: {
+				color: '#ff',
+				fontSize: 12,
+				fontFamily: 'PingFangSC-Regular',
+				top: 'center'
+			},
+			itemGap: -1//主副标题间距
+		},
+		tooltip: {
+			trigger: 'item',
+			axisPointer: { // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			confine: true
+		},
+		series: [{
+			name: currentInfo.text,
+			type: 'pie',
+			clockWise: true,
+			radius: ['65%', '70%'],
+			itemStyle: {
+				normal: {
+					label: {
+						show: false
+					},
+					labelLine: {
+						show: false
+					}
+				}
+			},
+			hoverAnimation: false,
+			data: [{
+				value: value,
+				name:  currentInfo.text,
+				itemStyle: {
+					normal: {
+						borderWidth: 8,
+						borderColor: {
+							colorStops: [{
+								offset: 0,
+								color: '#02df94' || '#25d6bc' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#28d3d0' || '#14dbaa' // 100% 处的颜色
+							}]
+						},
+						color: { // 完成的圆环的颜色
+							colorStops: [{
+								offset: 0,
+								color: '#02df94' || '#25d6bc' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#28d3d0' || '#14dbaa' // 100% 处的颜色
+							}]
+						},
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					}
+				}
+			}, {
+				name: 'gap',
+				value: 100 - value,
+				itemStyle: {
+					normal: {
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						},
+						color: 'rgba(0, 0, 0, 0)',
+						borderColor: 'rgba(0, 0, 0, 0)',
+						borderWidth: 0
+					}
+				}
+			}]
+		}]
+	}
+	return returnOption;
+}
+
+//黄色饼图demo
+function cicleColor3(currentInfo){
+	var value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	var returnOption=new Array();
+	returnOption = {
+		title: {
+			text: `${value}%`,
+			subtext: currentInfo.text,
+			left: 'center',
+			top: 'center',//top待调整
+			textStyle: {
+				color: '#fff',
+				fontSize: 16,
+				fontFamily: 'PingFangSC-Regular'
+			},
+			subtextStyle: {
+				color: '#ff',
+				fontSize: 12,
+				fontFamily: 'PingFangSC-Regular',
+				top: 'center'
+			},
+			itemGap: -1//主副标题间距
+		},
+		tooltip: {
+			trigger: 'item',
+			axisPointer: { // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			confine: true
+		},
+		series: [{
+			name: currentInfo.text,
+			type: 'pie',
+			clockWise: true,
+			radius: ['65%', '70%'],
+			itemStyle: {
+				normal: {
+					label: {
+						show: false
+					},
+					labelLine: {
+						show: false
+					}
+				}
+			},
+			hoverAnimation: false,
+			data: [{
+				value: value,
+				name: currentInfo.text,
+				itemStyle: {
+					normal: {
+						borderWidth: 8,
+						borderColor: {
+							colorStops: [{
+								offset: 0,
+								color: '#eb3600' || '#cc9a00' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#d0a00e' || '#d0570e' // 100% 处的颜色
+							}]
+						},
+						color: { // 完成的圆环的颜色
+							colorStops: [{
+								offset: 0,
+								color: '#eb3600' || '#cc9a00' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#d0a00e' || '#d0570e' // 100% 处的颜色
+							}]
+						},
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					}
+				}
+			}, {
+				name: 'gap',
+				value: 100 - value,
+				itemStyle: {
+					normal: {
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						},
+						color: 'rgba(0, 0, 0, 0)',
+						borderColor: 'rgba(0, 0, 0, 0)',
+						borderWidth: 0
+					}
+				}
+			}]
+		}]
+	}
+	return returnOption;
 }
 
 //加载chart
@@ -1635,7 +1705,7 @@ function loadChart(){
 				//中间地图
 				getMapInfo();
 				//中间的圆圈
-				drawCenterCicle();
+				// drawCenterCicle();
 
 				//授课教师人数
 				stuffTeacherCountTable(backjson.data.departmentData);
@@ -1646,8 +1716,8 @@ function loadChart(){
 
 				//学院概貌分析
 				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData);
-				//教学任务点信息
-				stuffLocationTable(backjson.data.pointInfo);
+				//开课数量
+				stuffoptenClassCount(backjson.data.courseData);
 				//右3
 				// var seriesdata=backjson.data.studentsInLocal.seriesdata;
 				// var yAxisData=backjson.data.studentsInLocal.yAxisData;

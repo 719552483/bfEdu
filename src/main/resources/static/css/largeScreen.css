@@ -100,8 +100,7 @@
 .tableArea .fixed-table-container thead th .th-inner,
 .tableArea .table > tbody > tr > td,
 tableArea .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
-    padding: unset!important;
-
+    padding: 4px 0px 4px 0px!important;
 }
 
 .tableArea .pagination-info{
