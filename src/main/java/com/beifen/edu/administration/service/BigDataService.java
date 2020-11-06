@@ -1,10 +1,7 @@
 package com.beifen.edu.administration.service;
 
 
-import com.beifen.edu.administration.PO.BigDataDepartmentPO;
-import com.beifen.edu.administration.PO.BigDataTeacherTypePO;
-import com.beifen.edu.administration.PO.EchartDataPO;
-import com.beifen.edu.administration.PO.EchartPO;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.Edu501;
@@ -133,8 +130,65 @@ public class BigDataService {
         });
         returnMap.put("teacherTypeData",newTeacherTypeData);
 
+        //获取课时类型数据
+        List<BigDataPeriodTypePO> periodTypeData= getBigDataPeriodType();
+        //按顺序整理课时格式
+        List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
+        //按顺序获取二级学院名称
+        List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
+
+        Map<String,Object> newPeriodTypeData = new HashMap<>();
+        newPeriodTypeData.put("departmentNames",departmentNames);
+        newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
+
+        returnMap.put("periodTypeData",newPeriodTypeData);
+
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
+    }
+
+    private List<EchartDataPO> packagePeriodType(List<BigDataPeriodTypePO> periodTypeData) {
+        EchartDataPO llxsEchartDataPO = new EchartDataPO();
+        EchartDataPO sjxsEchartDataPO = new EchartDataPO();
+        EchartDataPO jzxsEchartDataPO = new EchartDataPO();
+        EchartDataPO fsxsEchartDataPO = new EchartDataPO();
+
+        String[] llxsData = new String[periodTypeData.size()];
+        String[] sjxsData = new String[periodTypeData.size()];
+        String[] jzxsData = new String[periodTypeData.size()];
+        String[] fsxsData = new String[periodTypeData.size()];
+
+        for (int i = 0; i < periodTypeData.size();i++) {
+            llxsData[i] = periodTypeData.get(i).getLlxs();
+            sjxsData[i] = periodTypeData.get(i).getSjxs();
+            jzxsData[i] = periodTypeData.get(i).getJzxs();
+            fsxsData[i] = periodTypeData.get(i).getFsxs();
+        }
+
+        llxsEchartDataPO.setName("理论学时");
+        llxsEchartDataPO.setData(llxsData);
+        sjxsEchartDataPO.setName("实践学时");
+        sjxsEchartDataPO.setData(sjxsData);
+        jzxsEchartDataPO.setName("集中学时");
+        jzxsEchartDataPO.setData(jzxsData);
+        fsxsEchartDataPO.setName("分散学时");
+        fsxsEchartDataPO.setData(fsxsData);
+
+        ArrayList<EchartDataPO> echartDataPOList = new ArrayList<>();
+        echartDataPOList.add(llxsEchartDataPO);
+        echartDataPOList.add(sjxsEchartDataPO);
+        echartDataPOList.add(jzxsEchartDataPO);
+        echartDataPOList.add(fsxsEchartDataPO);
+
+        return echartDataPOList;
+    }
+
+    //获取课时类型数据
+    private List<BigDataPeriodTypePO> getBigDataPeriodType() {
+        List<Object[]> periodTypeList = edu202Dao.getPeriodType();
+        BigDataPeriodTypePO bigDataPeriodTypePO = new BigDataPeriodTypePO();
+        List<BigDataPeriodTypePO> newPeriodTypeList = utils.castEntity(periodTypeList, BigDataPeriodTypePO.class, bigDataPeriodTypePO);
+        return newPeriodTypeList;
     }
 
     //整理教师类型柱状图数据

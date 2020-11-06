@@ -15,19 +15,10 @@ import javax.persistence.Table;
 @Table(name = "Edu105")
 public class Edu105 {
  //年级管理
-
-	
-	
-	
 	private  Long Edu105_ID; 	
 	private  String njbm;//年级编码
 	private  String njmc;//年级名称
 	private  String yxbz;//有效标志
-	
-	
-	
-	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -56,14 +47,4 @@ public class Edu105 {
 	public void setYxbz(String yxbz) {
 		this.yxbz = yxbz;
 	}
-	
-	
-
-	
-	
-
-	
-
-	
-	
 }

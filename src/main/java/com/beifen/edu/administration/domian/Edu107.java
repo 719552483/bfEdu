@@ -27,6 +27,10 @@ public class Edu107 {
 	private  String edu106mc;//专业名称
 	private  String yxbz;//有效标志
 	private  String xbsp;//系部审批
+	private String batch;// 批次代码
+	private String batchName; //批次名称
+	private String schoolYear; //学年代码
+	private String schoolYearName; //学年名称
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -107,5 +111,37 @@ public class Edu107 {
 
 	public void setXbsp(String xbsp) {
 		this.xbsp = xbsp;
+	}
+
+	public String getBatch() {
+		return batch;
+	}
+
+	public void setBatch(String batch) {
+		this.batch = batch;
+	}
+
+	public String getBatchName() {
+		return batchName;
+	}
+
+	public void setBatchName(String batchName) {
+		this.batchName = batchName;
+	}
+
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
+	public String getSchoolYearName() {
+		return schoolYearName;
+	}
+
+	public void setSchoolYearName(String schoolYearName) {
+		this.schoolYearName = schoolYearName;
 	}
 }

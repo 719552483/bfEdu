@@ -18,6 +18,8 @@ public class Edu400 {
 	private String jssj; //结束时间
 	private int zzs; //总周数
 	private String relaseTime;//开始排课时间
+	private String batch;// 批次代码
+	private String batchName; //批次名称
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -58,5 +60,21 @@ public class Edu400 {
 
 	public void setRelaseTime(String relaseTime) {
 		this.relaseTime = relaseTime;
+	}
+
+	public String getBatch() {
+		return batch;
+	}
+
+	public void setBatch(String batch) {
+		this.batch = batch;
+	}
+
+	public String getBatchName() {
+		return batchName;
+	}
+
+	public void setBatchName(String batchName) {
+		this.batchName = batchName;
 	}
 }

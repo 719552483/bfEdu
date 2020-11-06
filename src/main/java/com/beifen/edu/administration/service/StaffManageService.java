@@ -55,27 +55,20 @@ public class StaffManageService {
     public void addTeacher(Edu101 edu101) {
         edu101Dao.save(edu101);
 
-        if (edu101.getEdu101_ID() == null) {
-            Edu990 edu990 = new Edu990();
-            edu990.setYhm(edu101.getJzgh());
-            edu990.setMm("123456");
-            edu990.setJs("教职工");
-            edu990.setJsId("8050");
-            edu990.setUserKey(edu101.getEdu101_ID().toString());
-            edu990.setPersonName(edu101.getXm());
-            edu990Dao.save(edu990);
+        Edu990 edu990 = new Edu990();
+        edu990.setYhm(edu101.getJzgh());
+        edu990.setMm("123456");
+        edu990.setJs("教职工");
+        edu990.setJsId("8050");
+        edu990.setUserKey(edu101.getEdu101_ID().toString());
+        edu990.setPersonName(edu101.getXm());
+        edu990Dao.save(edu990);
 
-            Edu992 edu992 = new Edu992();
-            edu992.setBF990_ID(edu990.getBF990_ID());
-            edu992.setBF991_ID(Long.parseLong("8051"));
-            edu992Dao.save(edu992);
-        }
+        Edu992 edu992 = new Edu992();
+        edu992.setBF990_ID(edu990.getBF990_ID());
+        edu992.setBF991_ID(Long.parseLong("8051"));
+        edu992Dao.save(edu992);
 
-    }
-
-    // 根据id查询教师姓名
-    public String queryTecaherNameById(Long techerId) {
-        return edu101Dao.queryTeacherById(techerId);
     }
 
     // 根据id查询教师所有信息
