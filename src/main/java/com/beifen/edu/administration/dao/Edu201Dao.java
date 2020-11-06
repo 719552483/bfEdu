@@ -14,12 +14,6 @@ import com.beifen.edu.administration.domian.Edu201;
 
 @Configuration
 public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecificationExecutor<Edu201> {
-	// 根据id任务书
-	@Transactional
-	@Modifying
-	@Query(value = "delete from edu201 where Edu201_ID =?1", nativeQuery = true)
-	void removeTasks(String id);
-
 	//根据ID查询任务书
 	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)
 	public Edu201 queryTaskByID(String iD);
@@ -45,9 +39,28 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "UPDATE edu201 SET sszt =?2 WHERE Edu201_ID =?1", nativeQuery = true)
 	void changeTaskStatus(String id, String status);
 
-	//根据108ID查询待排任务书
-	@Query(value = "select * from edu201 e where e.Edu108_ID=?1 and e.sszt='pass'", nativeQuery = true)
-	Edu201 getTaskByEdu108Id(String edu108id);
+	//根据二级学院查询
+	@Query(value = "select distinct r.*\n" +
+			"     	from EDU201 r,\n" +
+			"            EDU108 p,\n" +
+			"            EDU107 q\n" +
+			"      where p.EDU107_ID = q.EDU107_ID\n" +
+			"        and r.EDU108_ID = p.EDU108_ID\n" +
+			"and q.EDU104 = ?1\n" +
+			"and r.sszt='pass'", nativeQuery = true)
+	List<Edu201> getEdu201By104ID(Long edu104Id);
+
+	//根据二级学院查询
+	@Query(value = "select distinct r.*\n" +
+			"     	from EDU201 r,\n" +
+			"            EDU108 p,\n" +
+			"            EDU107 q\n" +
+			"      where p.EDU107_ID = q.EDU107_ID\n" +
+			"        and r.EDU108_ID = p.EDU108_ID\n" +
+			"and q.EDU104 = ?1\n" +
+			"and r.SFSQKS = 'T'\n" +
+			"and r.sszt='pass'", nativeQuery = true)
+	List<Edu201> getEdu201IsCompleted(Long edu104Id);
 
 	//根据201ID查询任务书
 	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)

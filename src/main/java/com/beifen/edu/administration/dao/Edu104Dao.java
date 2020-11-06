@@ -48,4 +48,12 @@ public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecification
 	//根据id查询二级学院名称
 	@Query(value = "select xbmc from edu104 where Edu104_ID in ?1", nativeQuery = true)
 	List<String> queryXbNameByIds(List<String> departmentList);
+
+	//查询有培养计划的二级学院
+	@Query(value = "select distinct b.*\n" +
+			"            from edu107 a,\n" +
+			"                 edu104 b\n" +
+			"            where a.EDU104 = b.EDU104_ID" +
+			"            order by b.EDU104_ID",nativeQuery = true)
+    List<Edu104> getEdu104InPlan();
 }

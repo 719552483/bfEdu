@@ -4,8 +4,7 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
-import com.beifen.edu.administration.domian.Edu501;
-import com.beifen.edu.administration.domian.Edu800;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +35,10 @@ public class BigDataService {
     private Edu202Dao edu202Dao;
     @Autowired
     private Edu001Dao edu001Dao;
+    @Autowired
+    private Edu104Dao edu104Dao;
+    @Autowired
+    private Edu201Dao edu201Dao;
     @Autowired
     private ReflectUtils utils;
 
@@ -136,12 +139,25 @@ public class BigDataService {
         List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
         //按顺序获取二级学院名称
         List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
-
+        //组装课时类型Echart信息
         Map<String,Object> newPeriodTypeData = new HashMap<>();
         newPeriodTypeData.put("departmentNames",departmentNames);
         newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
-
         returnMap.put("periodTypeData",newPeriodTypeData);
+
+        //获取开课情况数据
+        List<Edu104> edu104List = edu104Dao.getEdu104InPlan();
+        List<Map<String,Object>> courseData = new ArrayList<>();
+        for(Edu104 e : edu104List) {
+            Map<String,Object> map = new HashMap<>();
+            List<Edu201> edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
+            List<Edu201> edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
+            map.put("text",e.getXbmc());
+            map.put("courseCount",edu201By104ID.size());
+            map.put("courseCompleteCount",edu201IsCompleted.size());
+            courseData.add(map);
+        }
+        returnMap.put("courseData",courseData);
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
