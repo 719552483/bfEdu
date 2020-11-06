@@ -1396,7 +1396,10 @@ function stuffoptenClassCount(chartInfo) {
 //蓝色饼图demo
 function cicleColor1(currentInfo){
 	var returnOption=new Array();
-	var value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	var value=0;
+	if(currentInfo.courseCount!=0){
+		value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	}
 	returnOption = {
 		title: {
 			text: `${value}%`,
@@ -1495,7 +1498,10 @@ function cicleColor1(currentInfo){
 
 //绿色饼图demo
 function cicleColor2(currentInfo){
-	var value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	var value=0;
+	if(currentInfo.courseCount!=0){
+		value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	}
 	var returnOption=new Array();
 	returnOption = {
 		title: {
@@ -1595,7 +1601,10 @@ function cicleColor2(currentInfo){
 
 //黄色饼图demo
 function cicleColor3(currentInfo){
-	var value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	var value=0;
+	if(currentInfo.courseCount!=0){
+		value=Math.floor(currentInfo.courseCompleteCount/currentInfo.courseCount*100);
+	}
 	var returnOption=new Array();
 	returnOption = {
 		title: {
