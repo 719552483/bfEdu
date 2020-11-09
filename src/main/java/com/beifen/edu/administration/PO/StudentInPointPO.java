@@ -1,15 +1,17 @@
 package com.beifen.edu.administration.PO;
 
+import java.io.Serializable;
+
 //教学点包含学生人数实体类
-public class StudentInPointPO {
+public class StudentInPointPO implements Serializable {
     private String edu501_Id;
     private String localName;
-    private Long studentCount;
+    private String studentCount;
 
     public StudentInPointPO() {}
 
 
-    public StudentInPointPO(String edu501_Id, String localName, Long studentCount) {
+    public StudentInPointPO(String edu501_Id, String localName, String studentCount) {
         this.edu501_Id = edu501_Id;
         this.localName = localName;
         this.studentCount = studentCount;
@@ -31,11 +33,11 @@ public class StudentInPointPO {
         this.localName = localName;
     }
 
-    public Long getStudentCount() {
+    public String getStudentCount() {
         return studentCount;
     }
 
-    public void setStudentCount(Long studentCount) {
+    public void setStudentCount(String studentCount) {
         this.studentCount = studentCount;
     }
 }

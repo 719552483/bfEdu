@@ -308,13 +308,19 @@ public class BigDataService {
     private Map<String,Object> getStudentsInLocal() {
         Map<String,Object> returnMap = new HashMap<>();
 
-//        List<StudentInPointPO> studentInPointList = edu202Dao.getStudentsInLocal();
-//
-//        List<String> yAxisData = studentInPointList.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
-//        List<Long> seriesdata = studentInPointList.stream().map(StudentInPointPO::getStudentCount).collect(Collectors.toList());
-//
-//        returnMap.put("yAxisData",yAxisData);
-//        returnMap.put("seriesdata",seriesdata);
+        List<Object[]> studentInPointList = edu202Dao.getStudentsInLocal();
+
+        StudentInPointPO studentInPointPO = new StudentInPointPO();
+        List<StudentInPointPO> newStudentInPointPO = utils.castEntity(studentInPointList, StudentInPointPO.class, studentInPointPO);
+
+        List<String> yAxisData = newStudentInPointPO.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
+        List<Long> seriesdata = newStudentInPointPO.stream().map(a -> {
+            long studentCount = Long.parseLong(a.getStudentCount());
+            return studentCount;
+        }).collect(Collectors.toList());
+
+        returnMap.put("yAxisData",yAxisData);
+        returnMap.put("seriesdata",seriesdata);
 
         return returnMap;
     }

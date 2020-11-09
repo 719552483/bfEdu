@@ -104,14 +104,15 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"order by t.EDU104_ID ",nativeQuery = true)
 	List<Object[]> getPeriodType();
 
-//	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(e.localId,e.localName,sum(c.zxrs)) from Edu201 a, Edu202 b, Edu204 d,Edu300 c, Edu203 e " +
-//			"where a.edu201_ID = b.edu201_ID " +
-//			"and d.edu201_ID = a.edu201_ID " +
-//			"and c.edu300_ID = d.edu300_ID " +
-//			"and b.edu202_ID = e.edu202_ID " +
-//			"and e.localId is not null " +
-//			"and e.localId <> '57250' " +
-//			"group by e.localId,e.localName " +
-//			"order by e.localId ")
-//	List<StudentInPointPO> getStudentsInLocal();
+	@Query(value = "select to_char(t.LOCAL_ID) edu501_id,to_char(t.LOCAL_NAME) local_name,to_char(sum(t.zxrs)) student_count from (select e.LOCAL_ID,e.LOCAL_NAME,c.zxrs,c.EDU300_ID from Edu201 a,Edu202 b, Edu204 d,Edu300 c, Edu203 e\n" +
+			"               where c.edu300_ID = d.edu300_ID\n" +
+			"                 and b.edu202_ID = e.edu202_ID\n" +
+			"                 and d.EDU201_ID = a.EDU201_ID\n" +
+			"                 and a.EDU201_ID = b.EDU201_ID\n" +
+			"                 and e.LOCAL_ID is not null\n" +
+			"                 and e.LOCAL_ID <> '57250'\n" +
+			"               group by e.LOCAL_ID,e.LOCAL_NAME,c.zxrs,c.EDU300_ID\n" +
+			"               order by e.LOCAL_ID) t\n" +
+			"group by t.LOCAL_ID,t.LOCAL_NAME",nativeQuery = true)
+	List<Object[]> getStudentsInLocal();
 }

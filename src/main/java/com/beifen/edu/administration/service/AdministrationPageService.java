@@ -871,6 +871,8 @@ public class AdministrationPageService {
 				jxbrs += one.getJxbrs();
 			}
 			edu201.setJxbrs(jxbrs.toString());
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+			edu201.setFbsj(df.format(new Date()));
 			edu201DAO.save(edu201);
 
 
@@ -1211,6 +1213,10 @@ public class AdministrationPageService {
 			edu993.setCreateDate(dateString);
 			edu993Dao.save(edu993);
 		}
+
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+		edu201.setPksj(df.format(new Date()));
+		edu201DAO.save(edu201);
 
 		return isSuccess;
 	}
