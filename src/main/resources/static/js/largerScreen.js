@@ -235,12 +235,19 @@ function paramsMatter(value, row, index) {
 
 //渲染授课教师人数表
 function stuffTeacherCountTable(tableInfo){
+	var screen=window.screen.width;
+	var pagelist=0;
+	if(screen<=1366){
+		pagelist=3;
+	}else{
+		pagelist=4;
+	}
 	$('#teacherCountTable').bootstrapTable('destroy').bootstrapTable({
 		data:tableInfo,
 		pagination: true,
 		pageNumber: 1,
-		pageSize:3,
-		pageList: [3],
+		pageSize:pagelist,
+		pageList: [pagelist],
 		showToggle: false,
 		showFooter: false,
 		search: true,
@@ -250,6 +257,9 @@ function stuffTeacherCountTable(tableInfo){
 		showColumns: false,
 		onClickRow : function(row, $element, field) {
 			changePageData(row);
+		},
+		onPostBody: function() {
+			changetableStyleByScreen(tableInfo);
 		},
 		columns: [{
 			field: 'id',
@@ -1314,18 +1324,26 @@ function loadConfig(){
 		, 1100);
 }
 
-//获取设备分辨率
-function getscreen(){
-	var data=$("#rightTable").bootstrapTable("getData");
-	if(data.length<=3){
+//根据设备分辨率改变table css
+function changetableStyleByScreen(tableInfo){
+	if(tableInfo.length<=2){
 		return;
 	}
 
 	var screen=window.screen.width;
-	if(screen==1920){
-		$(".tableArea").find("div.pagination")[0].style.marginTop="25px";
-	}else if(screen==1366){
-		$(".tableArea").find("div.pagination")[0].style.marginTop="0px";
+	var allth=$(".visual_left").find(".tableArea").find("tbody").find("tr").find("td");
+	if(screen<=1366){
+		$(".visual_left").find(".tableArea").find(".search").find("input")[0].style.height="17px";
+		for (var i = 0; i < allth.length; i++) {
+			allth[i].style.lineHeight=0.6;
+		}
+		$(".visual_left").find(".tableArea").find(".fixed-table-pagination").find(".pagination")[0].style.marginTop="1%";
+	}else{
+		$(".visual_left").find(".tableArea").find(".search").find("input")[0].style.height="25px";
+		for (var i = 0; i < allth.length; i++) {
+			allth[i].style.lineHeight=1.428571429;
+		}
+		$(".visual_left").find(".tableArea").find(".fixed-table-pagination").find(".pagination")[0].style.marginTop="4%";
 	}
 }
 
@@ -1355,7 +1373,6 @@ $(function () {
 	loadConfig();
 	loadChart();
 	ListeneChart();
-	getscreen();
 })
 
 
