@@ -300,15 +300,22 @@ function stuffTeacherTypeCount(teacherTypeData){
 	var typeTwoDatas = [];
 	var typeThreeDatas = [];
 
-	//每五个五一组
-	for(var i=0;i<xAxisDatas.length;i+=4){
-		Titledatas.push(xAxisDatas.slice(i,i+4));
+	//分组
+	var screen=window.screen.width;
+	var groupNum=0;
+	if(screen<=1366){
+		groupNum=3;
+	}else{
+		groupNum=4;
+	}
+	for(var i=0;i<xAxisDatas.length;i+=groupNum){
+		Titledatas.push(xAxisDatas.slice(i,i+groupNum));
 	}
 
 	for(var i=0;i<typeOne.length;i+=3){
-		typeOneDatas.push(typeOne.slice(i,i+4));
-		typeTwoDatas.push(typeTwo.slice(i,i+4));
-		typeThreeDatas.push(typeThree.slice(i,i+4));
+		typeOneDatas.push(typeOne.slice(i,i+groupNum));
+		typeTwoDatas.push(typeTwo.slice(i,i+groupNum));
+		typeThreeDatas.push(typeThree.slice(i,i+groupNum));
 	}
 
 	for (var i = 0; i < Titledatas.length; i++) {
@@ -420,10 +427,17 @@ function stuffTeacherTypeCount(teacherTypeData){
 
 //渲染课时类型分布
 function stuffclassHourTypeCount(periodTypeData) {
+	var screen=window.screen.width;
+	var groupNum=0;
+	if(screen<=1366){
+		groupNum=4;
+	}else{
+		groupNum=5;
+	}
 	var titleArray = [];
 	var seriesDatas = periodTypeData.periodTypeEcharts;
-	for (var i = 0; i < periodTypeData.departmentNames.length;i += 5) {
-		titleArray.push(periodTypeData.departmentNames.slice(i, i + 5));
+	for (var i = 0; i < periodTypeData.departmentNames.length;i += groupNum) {
+		titleArray.push(periodTypeData.departmentNames.slice(i, i + groupNum));
 	}
 
 	var typeOneDatas = [];
@@ -434,23 +448,23 @@ function stuffclassHourTypeCount(periodTypeData) {
 	for (var i = 0; i < seriesDatas.length; i++) {
 		var currrentData = seriesDatas[i].data;
 		if (seriesDatas[i].name === "理论学时") {
-			for (var c = 0; c < currrentData.length; c +=5) {
-				typeOneDatas.push(currrentData.slice(c, c + 5));
+			for (var c = 0; c < currrentData.length; c +=groupNum) {
+				typeOneDatas.push(currrentData.slice(c, c + groupNum));
 			}
 		}
 		if (seriesDatas[i].name === "实践学时") {
-			for (var d = 0; d < currrentData.length; d += 5) {
-				typeTwoDatas.push(currrentData.slice(d, d + 5));
+			for (var d = 0; d < currrentData.length; d += groupNum) {
+				typeTwoDatas.push(currrentData.slice(d, d + groupNum));
 			}
 		}
 		if (seriesDatas[i].name === "集中学时") {
-			for (var f = 0; f < currrentData.length; f += 5) {
-				typeThreeDatas.push(currrentData.slice(f, f + 5));
+			for (var f = 0; f < currrentData.length; f += groupNum) {
+				typeThreeDatas.push(currrentData.slice(f, f + groupNum));
 			}
 		}
 		if (seriesDatas[i].name === "分散学时") {
-			for (var g = 0; g < currrentData.length;g+= 5) {
-				typeFourDatas.push(currrentData.slice(g, g + 5));
+			for (var g = 0; g < currrentData.length;g+= groupNum) {
+				typeFourDatas.push(currrentData.slice(g, g + groupNum));
 			}
 		}
 	}
@@ -471,7 +485,7 @@ function stuffclassHourTypeCount(periodTypeData) {
 					left: '0',
 					top: '30',
 					right: '0',
-					bottom: '10',
+					bottom: '-10',
 					containLabel: true
 				},
 				legend: {
