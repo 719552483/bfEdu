@@ -104,6 +104,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"order by t.EDU104_ID ",nativeQuery = true)
 	List<Object[]> getPeriodType();
 
+	//根据授课情况查询教学点学生人数
 	@Query(value = "select to_char(t.LOCAL_ID) edu501_id,to_char(t.LOCAL_NAME) local_name,to_char(sum(t.zxrs)) student_count from (select e.LOCAL_ID,e.LOCAL_NAME,c.zxrs,c.EDU300_ID from Edu201 a,Edu202 b, Edu204 d,Edu300 c, Edu203 e\n" +
 			"               where c.edu300_ID = d.edu300_ID\n" +
 			"                 and b.edu202_ID = e.edu202_ID\n" +
@@ -115,4 +116,8 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"               order by e.LOCAL_ID) t\n" +
 			"group by t.LOCAL_ID,t.LOCAL_NAME",nativeQuery = true)
 	List<Object[]> getStudentsInLocal();
+
+	//根据行政班查询教学点学生人数
+	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(t.localCode,t.localName,sum(t.zxrs)) from Edu300 t group by t.localCode,t.localName")
+	List<StudentInPointPO> getStudentsInLocalByEdu300();
 }

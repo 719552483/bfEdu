@@ -17,6 +17,12 @@ public class StudentInPointPO implements Serializable {
         this.studentCount = studentCount;
     }
 
+    public StudentInPointPO(String edu501_Id, String localName, Long studentCount) {
+        this.edu501_Id = edu501_Id;
+        this.localName = localName;
+        this.studentCount = studentCount.toString();
+    }
+
     public String getEdu501_Id() {
         return edu501_Id;
     }
