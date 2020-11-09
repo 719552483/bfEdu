@@ -847,6 +847,19 @@ function cicleColor1(currentInfo){
 			axisPointer: { // 坐标轴指示器，坐标轴触发有效
 				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
 			},
+			formatter: function(params) {
+				var all=parseInt(currentInfo.courseCount);
+				var noNum=parseInt(currentInfo.courseCount)-parseInt(currentInfo.courseCompleteCount);
+				var result = ''
+				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#1d54f7"></span>';
+				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
+				result= "共"+all+ "门课程</br>"
+					   + dotHtml +
+					   "已完成："+currentInfo.courseCompleteCount+ "</br>"+
+						notHtml +
+						"未完成："+noNum;
+				return result
+			},
 			confine: true
 		},
 		series: [{
@@ -950,6 +963,19 @@ function cicleColor2(currentInfo){
 			axisPointer: { // 坐标轴指示器，坐标轴触发有效
 				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
 			},
+			formatter: function(params) {
+				var all=parseInt(currentInfo.courseCount);
+				var noNum=parseInt(currentInfo.courseCount)-parseInt(currentInfo.courseCompleteCount);
+				var result = ''
+				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#1d54f7"></span>';
+				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
+				result= "共"+all+ "门课程</br>"
+					+ dotHtml +
+					"已完成："+currentInfo.courseCompleteCount+ "</br>"+
+					notHtml +
+					"未完成："+noNum;
+				return result
+			},
 			confine: true
 		},
 		series: [{
@@ -1052,6 +1078,19 @@ function cicleColor3(currentInfo){
 			trigger: 'item',
 			axisPointer: { // 坐标轴指示器，坐标轴触发有效
 				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			formatter: function(params) {
+				var all=parseInt(currentInfo.courseCount);
+				var noNum=parseInt(currentInfo.courseCount)-parseInt(currentInfo.courseCompleteCount);
+				var result = ''
+				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#1d54f7"></span>';
+				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
+				result= "共"+all+ "门课程</br>"
+					+ dotHtml +
+					"已完成："+currentInfo.courseCompleteCount+ "</br>"+
+					notHtml +
+					"未完成："+noNum;
+				return result
 			},
 			confine: true
 		},
