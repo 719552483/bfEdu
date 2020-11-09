@@ -570,7 +570,12 @@ function configedFsNextStep(){
 
 //tab3的下一步
 function configedAlllastStep(){
-	$(".itab").find("li:eq(1)").find("a").trigger('click');
+	var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
+	if(choosendClass.fsxs!=0){
+		$(".itab").find("li:eq(1)").find("a").trigger('click');
+	}else{
+		$(".itab").find("li:eq(0)").find("a").trigger('click');
+	}
 }
 
 //检查是否排完集中并且正确
