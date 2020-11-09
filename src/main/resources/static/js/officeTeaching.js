@@ -238,6 +238,8 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 				choosedTask[0].fsxs===0?isZero=true:isZero=false;
 				drawFsXueDomArea(isZero);
 
+				judgementStepDisplay(choosedTask[0].jzxs,choosedTask[0].fsxs);
+
 				destoryLastStuff();
 				stuffTitle(culturePlanInfo,choosedTask[0]);
 				scheduleSingleClassBtnBind();
@@ -247,6 +249,15 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 			}
 		}
 	});
+}
+
+//根据集中分散学时判断按钮的展示
+function judgementStepDisplay(jzxs,fsxs){
+	$(".configedFs_lastStep").show();
+	//集中学时为0 分散学时不为0
+	if(jzxs==0&&fsxs!=0){
+		$(".configedFs_lastStep").hide();
+	}
 }
 
 //集中学时区域dom渲染
@@ -332,7 +343,7 @@ function destoryLastStuff(){
 	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#kj,#skdd";
 	reReloadSearchsWithSelect(reObject);
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
-	$(".choosendCycleArea,.singleCycle").empty();
+	$(".choosendCycleArea,.singleCycle,.choosendfsKjArea").empty();
 	$(".kjRsArea,.lastCycleArea ").hide();
 	$(".loationInfoTxt").hide();
 }
@@ -564,27 +575,19 @@ function configedAlllastStep(){
 
 //检查是否排完集中并且正确
 function checkJzPK(){
-	var currentWaitJzxs=parseInt($(".cycleWaitHousr ")[0].innerText);
-	// if(currentWaitJzxs!=0){
-	// 	var PKInfo=getJzPKInfo(false);
-	// 	var scheduleInfo=scheduleDetailInfo(false);
-	// 	if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
-	// 		$("#tab2").find(".cannottxt").show();
-	// 		$("#tab2").find(".fsMainArea").hide();
-	// 	}else{
-	// 		$("#tab2").find(".cannottxt").hide();
-	// 		$("#tab2").find(".fsMainArea").show();
-	// 	}
-	// }
-	if(currentWaitJzxs>0){
-		$("#tab2").find(".cannottxt").show();
-		$("#tab2").find(".fsMainArea").hide();
-		toastr.warning('集中学时剩余'+currentWaitJzxs+'课时未排，请先排完集中学时');
-	}else{
-		$("#tab2").find(".cannottxt").hide();
-		$("#tab2").find(".fsMainArea").show();
+	var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
+	var currentWaitJzxs;
+	if(choosendClass.jzxs!=0){
+	 	currentWaitJzxs=parseInt($(".cycleWaitHousr ")[0].innerText);
+		if(currentWaitJzxs>0){
+			$("#tab2").find(".cannottxt").show();
+			$("#tab2").find(".fsMainArea").hide();
+			toastr.warning('集中学时剩余'+currentWaitJzxs+'课时未排，请先排完集中学时');
+		}else{
+			$("#tab2").find(".cannottxt").hide();
+			$("#tab2").find(".fsMainArea").show();
+		}
 	}
-
 }
 
 //检查是否起码排完集中
