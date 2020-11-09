@@ -969,8 +969,8 @@ function cicleColor2(currentInfo){
 			},
 			hoverAnimation: false,
 			data: [{
-				value: value,
-				name:  currentInfo.text,
+				value: currentInfo.courseCompleteCount,
+				name: '已完成课程',
 				itemStyle: {
 					normal: {
 						borderWidth: 8,
@@ -1072,8 +1072,8 @@ function cicleColor3(currentInfo){
 			},
 			hoverAnimation: false,
 			data: [{
-				value: value,
-				name: currentInfo.text,
+				value: currentInfo.courseCompleteCount,
+				name: '已完成课程',
 				itemStyle: {
 					normal: {
 						borderWidth: 8,
