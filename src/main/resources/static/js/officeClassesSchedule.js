@@ -1195,6 +1195,12 @@ function stuffPutOutTaskTable(tableInfo) {
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
+			},{
+				field: 'fbsj',
+				title: '发布时间',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
 			},	{
 				field: 'jxbrs',
 				title: '教学班人数',

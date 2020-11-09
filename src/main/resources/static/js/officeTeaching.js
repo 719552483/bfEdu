@@ -1383,14 +1383,18 @@ function stuffPuttedOutTable(tableInfo){
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
-
 			}, 	{
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
-
+			},	{
+				field: 'pksj',
+				title: '排课时间',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
 			},{
 				field: 'ls',
 				title: '任课老师',
