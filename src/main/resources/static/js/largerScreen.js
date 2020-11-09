@@ -1243,9 +1243,9 @@ function stuffStudentCount(seriesdata,yAxisData){
 				}
 			]
 		};
-		str=' <div class="swiper-slide chartDom1" id="main'+i+'"></div>';
+		str=' <div class="swiper-slide chartDom1" id="localStudent'+i+'"></div>';
 		$(".localStudentInfoArea").append(str);
-		var myRight3= echarts.init(document.getElementById('main'+i));
+		var myRight3= echarts.init(document.getElementById('localStudent'+i));
 		myRight3.setOption(stuffOption);
 	}
 
