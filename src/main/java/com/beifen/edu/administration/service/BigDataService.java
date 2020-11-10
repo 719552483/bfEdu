@@ -98,7 +98,7 @@ public class BigDataService {
     }
 
     //获取大屏展示数据
-    public ResultVO getBigScreenData() {
+    public ResultVO getBigScreenData(BigDataSearchPO bigDataSearch) {
         ResultVO resultVO;
         Map<String,Object> returnMap = new HashMap<>();
 
@@ -110,54 +110,101 @@ public class BigDataService {
         Map<String, Object> studentsInLocal = getStudentsInLocal();
         returnMap.put("studentsInLocal",studentsInLocal);
 
-        //学生年龄雷达图
-        List<EchartPO> studentAgeData = getStudentsByAge();
-        returnMap.put("studentAgeData",studentAgeData);
-
-        //学生职业雷达图
-        List<EchartPO> studentJobData = getStudentsByJob();
-        returnMap.put("studentJobData",studentJobData);
-
         //二级学院列表
         List<BigDataDepartmentPO> departmentData= getBigDataDepartment();
         returnMap.put("departmentData",departmentData);
 
-        //获取教师类型数据
-        List<BigDataTeacherTypePO> teacherTypeData= getBigDataTeacherType();
-        Map<String, List<BigDataTeacherTypePO>> teacherTypeByDepartemnt = teacherTypeData.stream().collect(Collectors.groupingBy(BigDataTeacherTypePO::getEdu104Id));
-        //整理教师类型柱状图数据
-        List<EchartDataPO> newTeacherTypeData = new ArrayList<>();
-        teacherTypeByDepartemnt.forEach((key, value) -> {
-            EchartDataPO echartDataPO = packageTeacherType(value);
-            newTeacherTypeData.add(echartDataPO);
-        });
-        returnMap.put("teacherTypeData",newTeacherTypeData);
+        if("".equals(bigDataSearch.getDepartmentCode())) {
+            //学生年龄雷达图
+            List<EchartPO> studentAgeData = getStudentsByAge(bigDataSearch);
+            returnMap.put("studentAgeData",studentAgeData);
 
-        //获取课时类型数据
-        List<BigDataPeriodTypePO> periodTypeData= getBigDataPeriodType();
-        //按顺序整理课时格式
-        List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
-        //按顺序获取二级学院名称
-        List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
-        //组装课时类型Echart信息
-        Map<String,Object> newPeriodTypeData = new HashMap<>();
-        newPeriodTypeData.put("departmentNames",departmentNames);
-        newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
-        returnMap.put("periodTypeData",newPeriodTypeData);
+            //学生职业雷达图
+            List<EchartPO> studentJobData = getStudentsByJob(bigDataSearch);
+            returnMap.put("studentJobData",studentJobData);
 
-        //获取开课情况数据
-        List<Edu104> edu104List = edu104Dao.getEdu104InPlan();
-        List<Map<String,Object>> courseData = new ArrayList<>();
-        for(Edu104 e : edu104List) {
-            Map<String,Object> map = new HashMap<>();
-            List<Edu201> edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
-            List<Edu201> edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
-            map.put("text",e.getXbmc());
-            map.put("courseCount",edu201By104ID.size());
-            map.put("courseCompleteCount",edu201IsCompleted.size());
-            courseData.add(map);
+            //获取教师类型数据
+            List<BigDataTeacherTypePO> teacherTypeData= getBigDataTeacherType(bigDataSearch);
+            Map<String, List<BigDataTeacherTypePO>> teacherTypeByDepartemnt = teacherTypeData.stream().collect(Collectors.groupingBy(BigDataTeacherTypePO::getEdu104Id));
+            //整理教师类型柱状图数据
+            List<EchartDataPO> newTeacherTypeData = new ArrayList<>();
+            teacherTypeByDepartemnt.forEach((key, value) -> {
+                EchartDataPO echartDataPO = packageTeacherType(value);
+                newTeacherTypeData.add(echartDataPO);
+            });
+            returnMap.put("teacherTypeData",newTeacherTypeData);
+
+            //获取课时类型数据
+            List<BigDataPeriodTypePO> periodTypeData= getBigDataPeriodType(bigDataSearch);
+            //按顺序整理课时格式
+            List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
+            //按顺序获取二级学院名称
+            List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
+            //组装课时类型Echart信息
+            Map<String,Object> newPeriodTypeData = new HashMap<>();
+            newPeriodTypeData.put("departmentNames",departmentNames);
+            newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
+            returnMap.put("periodTypeData",newPeriodTypeData);
+
+            //获取开课情况数据
+            List<Edu104> edu104List = edu104Dao.getEdu104InPlan();
+            List<Map<String,Object>> courseData = new ArrayList<>();
+            for(Edu104 e : edu104List) {
+                Map<String,Object> map = new HashMap<>();
+                List<Edu201> edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
+                List<Edu201> edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
+                map.put("text",e.getXbmc());
+                map.put("courseCount",edu201By104ID.size());
+                map.put("courseCompleteCount",edu201IsCompleted.size());
+                courseData.add(map);
+            }
+            returnMap.put("courseData",courseData);
+        } else {
+            //学生年龄雷达图
+            List<EchartPO> studentAgeData = getStudentsByAge(bigDataSearch);
+            returnMap.put("studentAgeData",studentAgeData);
+
+            //学生职业雷达图
+            List<EchartPO> studentJobData = getStudentsByJob(bigDataSearch);
+            returnMap.put("studentJobData",studentJobData);
+
+            //获取教师类型数据
+            List<BigDataTeacherTypePO> teacherTypeData= getBigDataTeacherType(bigDataSearch);
+            Map<String, List<BigDataTeacherTypePO>> teacherTypeByDepartemnt = teacherTypeData.stream().collect(Collectors.groupingBy(BigDataTeacherTypePO::getEdu104Id));
+            //整理教师类型柱状图数据
+            List<EchartDataPO> newTeacherTypeData = new ArrayList<>();
+            teacherTypeByDepartemnt.forEach((key, value) -> {
+                EchartDataPO echartDataPO = packageTeacherType(value);
+                newTeacherTypeData.add(echartDataPO);
+            });
+            returnMap.put("teacherTypeData",newTeacherTypeData);
+
+            //获取课时类型数据
+            List<BigDataPeriodTypePO> periodTypeData= getBigDataPeriodType(bigDataSearch);
+            //按顺序整理课时格式
+            List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
+            //按顺序获取二级学院名称
+            List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
+            //组装课时类型Echart信息
+            Map<String,Object> newPeriodTypeData = new HashMap<>();
+            newPeriodTypeData.put("departmentNames",departmentNames);
+            newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
+            returnMap.put("periodTypeData",newPeriodTypeData);
+
+            //获取开课情况数据
+            List<Edu104> edu104List = edu104Dao.getEdu104InPlanInDepartment(bigDataSearch.getDepartmentCode());
+            List<Map<String,Object>> courseData = new ArrayList<>();
+            for(Edu104 e : edu104List) {
+                Map<String,Object> map = new HashMap<>();
+                List<Edu201> edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
+                List<Edu201> edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
+                map.put("text",e.getXbmc());
+                map.put("courseCount",edu201By104ID.size());
+                map.put("courseCompleteCount",edu201IsCompleted.size());
+                courseData.add(map);
+            }
+            returnMap.put("courseData",courseData);
         }
-        returnMap.put("courseData",courseData);
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
@@ -200,8 +247,15 @@ public class BigDataService {
     }
 
     //获取课时类型数据
-    private List<BigDataPeriodTypePO> getBigDataPeriodType() {
-        List<Object[]> periodTypeList = edu202Dao.getPeriodType();
+    private List<BigDataPeriodTypePO> getBigDataPeriodType(BigDataSearchPO bigDataSearchPO) {
+        String departmentCode = bigDataSearchPO.getDepartmentCode();
+        List<Object[]> periodTypeList;
+        if("".equals(departmentCode)) {
+            periodTypeList = edu202Dao.getPeriodType();
+        } else {
+            periodTypeList = edu202Dao.getPeriodTypeInDepartment(departmentCode);
+        }
+
         BigDataPeriodTypePO bigDataPeriodTypePO = new BigDataPeriodTypePO();
         List<BigDataPeriodTypePO> newPeriodTypeList = utils.castEntity(periodTypeList, BigDataPeriodTypePO.class, bigDataPeriodTypePO);
         return newPeriodTypeList;
@@ -232,8 +286,15 @@ public class BigDataService {
     }
 
     //获取大屏教师类型数据
-    private List<BigDataTeacherTypePO> getBigDataTeacherType() {
-        List<Object[]> teacherTypeList = edu202Dao.getTeacherType();
+    private List<BigDataTeacherTypePO> getBigDataTeacherType(BigDataSearchPO bigDataSearchPO) {
+        String departmentCode = bigDataSearchPO.getDepartmentCode();
+        List<Object[]> teacherTypeList;
+        if ("".equals(departmentCode)) {
+            teacherTypeList = edu202Dao.getTeacherType();
+        } else {
+            teacherTypeList = edu202Dao.getTeacherTypeInDepartment(departmentCode);
+        }
+
         BigDataTeacherTypePO bigDataTeacherTypePO = new BigDataTeacherTypePO();
         List<BigDataTeacherTypePO> newteacherTypeList = utils.castEntity(teacherTypeList, BigDataTeacherTypePO.class, bigDataTeacherTypePO);
         return newteacherTypeList;
@@ -248,20 +309,45 @@ public class BigDataService {
     }
 
     //获取各职业学生人数
-    private List<EchartPO> getStudentsByJob() {
-        List<EchartPO> echartPOS = edu001Dao.getStudentByJob();
+    private List<EchartPO> getStudentsByJob(BigDataSearchPO bigDataSearchPO) {
+        String departmentCode = bigDataSearchPO.getDepartmentCode();
+
+        List<EchartPO> echartPOS;
+        if("".equals(departmentCode)) {
+            echartPOS = edu001Dao.getStudentByJob();
+        } else {
+            echartPOS = edu001Dao.getStudentByJobWithDepatrment(departmentCode);
+        }
+
         return echartPOS;
     }
 
     //获取各年龄段学生人数
-    private List<EchartPO> getStudentsByAge() {
+    private List<EchartPO> getStudentsByAge(BigDataSearchPO bigDataSearch) {
         List<EchartPO> echartPOS = new ArrayList<>();
 
-        Integer count1 = edu001Dao.getStudentByAge("0","19");
-        Integer count2 = edu001Dao.getStudentByAge("20","29");
-        Integer count3 = edu001Dao.getStudentByAge("30","39");
-        Integer count4 = edu001Dao.getStudentByAge("40","49");
-        Integer count5 = edu001Dao.getStudentByAge("50","99");
+        String departmentCode = bigDataSearch.getDepartmentCode();
+
+        Integer count1;
+        Integer count2;
+        Integer count3;
+        Integer count4;
+        Integer count5;
+
+        if("".equals(departmentCode)) {
+             count1 = edu001Dao.getStudentByAge("0","19");
+             count2 = edu001Dao.getStudentByAge("20","29");
+             count3 = edu001Dao.getStudentByAge("30","39");
+             count4 = edu001Dao.getStudentByAge("40","49");
+             count5 = edu001Dao.getStudentByAge("50","99");
+        } else {
+             count1 = edu001Dao.getStudentByAgeWithDepartment("0","19",departmentCode);
+             count2 = edu001Dao.getStudentByAgeWithDepartment("20","29",departmentCode);
+             count3 = edu001Dao.getStudentByAgeWithDepartment("30","39",departmentCode);
+             count4 = edu001Dao.getStudentByAgeWithDepartment("40","49",departmentCode);
+             count5 = edu001Dao.getStudentByAgeWithDepartment("50","99",departmentCode);
+        }
+
 
         String name1 = "20岁以下";
         String name2 = "20-30岁";

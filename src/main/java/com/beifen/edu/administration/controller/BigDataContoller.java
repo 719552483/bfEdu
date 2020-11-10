@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.PO.BigDataSearchPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu800;
 import com.beifen.edu.administration.service.BigDataService;
@@ -66,8 +67,9 @@ public class BigDataContoller {
      */
     @RequestMapping("/getBigScreenData")
     @ResponseBody
-    public ResultVO getBigScreenData() {
-        ResultVO result = bigDataService.getBigScreenData();
+    public ResultVO getBigScreenData(@RequestParam("searchInfo") String searchInfo) {
+        BigDataSearchPO bigDataSearch = JSON.parseObject(searchInfo, BigDataSearchPO.class);
+        ResultVO result = bigDataService.getBigScreenData(bigDataSearch);
         return result;
     }
 }

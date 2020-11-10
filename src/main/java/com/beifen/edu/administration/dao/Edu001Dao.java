@@ -17,18 +17,6 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select * from edu001 b where b.Edu300_ID=?1", nativeQuery = true)
 	public List<Edu001> queryStudentInfoByAdministrationClass(String xzbCode);
 
-	// 按行政班ID填充学生的教学班信息
-	@Transactional
-	@Modifying
-	@Query(value = "UPDATE edu001 SET jxbname =?1,Edu301_ID =?2 WHERE Edu300_ID =?3", nativeQuery = true)
-	public void stuffStudentTeachingClassInfoBy300id(String jxbname, Long edu301_ID, String xzbcode);
-
-	// 按学生id填充学生的教学班信息
-	@Transactional
-	@Modifying
-	@Query(value = "UPDATE edu001 SET jxbname =?1,Edu301_ID =?2 WHERE Edu001_ID =?3", nativeQuery = true)
-	public void stuffStudentTeachingClassInfoby001id(String jxbname, Long edu301_ID, String studentid);
-
 	// 修改行政班时修改行政班下学生的行政班信息
 	@Transactional
 	@Modifying
@@ -99,6 +87,15 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.nl between ?1 and ?2",nativeQuery = true)
 	Integer getStudentByAge(String s, String s1);
 
+	//根据二级学院查找各年龄段学生人数
+	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.nl between ?1 and ?2 and e.szxb = ?3",nativeQuery = true)
+	Integer getStudentByAgeWithDepartment(String s, String s1, String departmentCode);
+
+	//根据生源类型查询学生人数
 	@Query(value = "select new com.beifen.edu.administration.PO.EchartPO(t.sylx ,count(t.edu001_ID)) from Edu001 t group by t.sylx")
 	List<EchartPO> getStudentByJob();
+
+	//根据二级学院查询各生源类型学生人数
+	@Query(value = "select new com.beifen.edu.administration.PO.EchartPO(t.sylx ,count(t.edu001_ID)) from Edu001 t where t.szxb = ?1 group by t.sylx")
+	List<EchartPO> getStudentByJobWithDepatrment(String departmentCode);
 }
