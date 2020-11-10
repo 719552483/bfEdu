@@ -270,7 +270,7 @@ public class BigDataService {
                 Map<String,Object> jzksMap = new HashMap<>();
                 List<Edu203> jzksClassPeriod = edu203Dao.getJzksClassPeriod(bigDataSearch.getDepartmentCode());
                 List<Edu203> jzksClassPeriodComplete = edu203Dao.getJzksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week,dayOfWeek);
-                jzksMap.put("text","集中学时");
+                jzksMap.put("text","集中学时进度");
                 jzksMap.put("peridoCount",jzksClassPeriod.size()*2);
                 jzksMap.put("periodCompleteCount",jzksClassPeriodComplete.size()*2);
                 returnMap.put("jzksClassPeriodDate",jzksMap);
@@ -279,7 +279,7 @@ public class BigDataService {
                 Map<String,Object> fsksMap = new HashMap<>();
                 Long fsksClassPeriod = edu207Dao.getFsksClassPeriod(bigDataSearch.getDepartmentCode());
                 Long fsksClassPeriodComplete = edu207Dao.getFsksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week);
-                fsksMap.put("text","分散学时");
+                fsksMap.put("text","分散学时进度");
                 fsksMap.put("peridoCount",fsksClassPeriod);
                 fsksMap.put("periodCompleteCount",fsksClassPeriodComplete);
                 returnMap.put("fsksClassPeriodDate",fsksMap);
