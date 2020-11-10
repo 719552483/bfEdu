@@ -1801,7 +1801,7 @@ function teacherCrouseHours(periodByTeacherType){
 						y:10,
 						fill: 'white',
 						text: [
-							'教师类型统计',
+							'教师授课分布',
 						].join('\n'),
 						textAlign:'center',//3、居中显示
 						fontSize:15,
