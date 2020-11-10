@@ -36,6 +36,10 @@
     display: none;
 }
 
+.noneStartImportant{
+    display: none!important;
+}
+
 .bigVideoArea {
     display: none;
     position: relative;
@@ -181,6 +185,16 @@ border-bottom: 1px #ff000000 solid!important;
     margin-bottom: -10px;
 }
 
+.smallBingtu{
+    height: 100%;
+}
+
+.visual_box2{
+    width: 49%;
+    color: white;
+    float: left;
+    height: 50%;
+}
 
 
 

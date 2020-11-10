@@ -262,8 +262,8 @@ function stuffTeacherCountTable(tableInfo){
 			changetableStyleByScreen(tableInfo);
 		},
 		columns: [{
-			field: 'id',
-			title: 'id',
+			field: 'edu104Id',
+			title: '唯一标志',
 			align: 'center',
 			visible: false
 		},
@@ -282,11 +282,30 @@ function stuffTeacherCountTable(tableInfo){
 
 //点击切换页面数据源
 function changePageData(row){
-	alert(1)
+	var returnObject=new Object();
+	returnObject.departmentCode=row.edu104Id;
+	returnObject.schoolYearCode="";
+	returnObject.batchCode="";
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getBigScreenData",
+		data: {
+			"searchInfo":JSON.stringify(returnObject)
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			if(backjson.code===200){
+				reloadChart(backjson.data);
+			}else{
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //渲染教师类型分布chart
-function stuffTeacherTypeCount(teacherTypeData){
+function stuffTeacherTypeCount(teacherTypeData,isSingle){
 	var xAxisDatas=new Array();
 	var seriesdatas = new Array();
 
@@ -418,25 +437,32 @@ function stuffTeacherTypeCount(teacherTypeData){
 			}]
 		};
 
-		str=' <div class="swiper-slide chartDom1" id="teacherTypeCount'+i+'"></div>';
-		$(".teacheeTypeCountAppendArea").append(str);
-		var thisChart= echarts.init(document.getElementById('teacherTypeCount'+i));
-		thisChart.setOption(stuffOption);
+		if(isSingle){
+			var thisChart= echarts.init(document.getElementById('singleTeacheeTypeCount'));
+			thisChart.setOption(stuffOption);
+		}else{
+			str=' <div class="swiper-slide chartDom1" id="teacherTypeCount'+i+'"></div>';
+			$(".teacheeTypeCountAppendArea").append(str);
+			var thisChart= echarts.init(document.getElementById('teacherTypeCount'+i));
+			thisChart.setOption(stuffOption);
+		}
 	}
 
-	if(Titledatas.length>1){
-		var mySwiper1 = new Swiper('.visual_swiperRight2', {
-			autoplay: true,//可选选项，自动滑动
-			speed: 800,//可选选项，滑动速度
-			autoplay: {
-				delay: 2500,//1秒切换一次
-			},
-		})
+	if(!isSingle){
+		if(Titledatas.length>1){
+			mySwiper = new Swiper('.visual_swiperRight2', {
+				autoplay: true,//可选选项，自动滑动
+				speed: 800,//可选选项，滑动速度
+				autoplay: {
+					delay: 2500,//1秒切换一次
+				},
+			})
+		}
 	}
 }
 
 //渲染课时类型分布
-function stuffclassHourTypeCount(periodTypeData) {
+function stuffclassHourTypeCount(periodTypeData,isSingle) {
 	var screen=window.screen.width;
 	var groupNum=0;
 	if(screen<=1366){
@@ -575,20 +601,25 @@ function stuffclassHourTypeCount(periodTypeData) {
 					}
 				]
 			};
-
-			str=' <div class="swiper-slide chartDom1" id="classHourTypeCount'+i+'"></div>';
-			$(".classHourTypeAppendArea").append(str);
-			var thisChart= echarts.init(document.getElementById('classHourTypeCount'+i));
-			thisChart.setOption(stuffOption);
+			if(isSingle){
+				var thisChart= echarts.init(document.getElementById('singleClassHourTypeCount'));
+				thisChart.setOption(stuffOption);
+			}else{
+				str=' <div class="swiper-slide chartDom1" id="classHourTypeCount'+i+'"></div>';
+				$(".classHourTypeAppendArea").append(str);
+				var thisChart= echarts.init(document.getElementById('classHourTypeCount'+i));
+				thisChart.setOption(stuffOption);
+			}
 		}
 
-
-	if(typeOneDatas.length>1){
-		var mySwiperRight3 = new Swiper('.visual_swiperRight3', {
-			autoplay: true,//可选选项，自动滑动
-			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
-			speed: 1000,//可选选项，滑动速度
-		});
+	if(!isSingle){
+		if(typeOneDatas.length>1){
+			var mySwiperRight3 = new Swiper('.visual_swiperRight3', {
+				autoplay: true,//可选选项，自动滑动
+				direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
+				speed: 1000,//可选选项，滑动速度
+			});
+		}
 	}
 }
 
@@ -769,7 +800,7 @@ function reStuffData(data){
 }
 
 //渲染开课数量
-function stuffoptenClassCount(chartInfo) {
+function stuffoptenClassCount(chartInfo,isSingle) {
 	var chartInfos = [];
 	for (var i = 0; i < chartInfo.length;i += 3) {
 		chartInfos.push(chartInfo.slice(i, i + 3));
@@ -786,34 +817,43 @@ function stuffoptenClassCount(chartInfo) {
 		var className='courseCount_swiper-slide'+i;
 		for (var c = 0; c < currentInfo.length; c++) {
 			var str="";
-			if(c==0){
+			if(isSingle){
 				var option1 = cicleColor1(currentInfo[c]);
-				str='<div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
-				$("."+className).append(str);
-				var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+				var openClassCount = echarts.init(document.getElementById('singleCourseCount'));
 				openClassCount.setOption(option1);
-			}else if(c==1){
-				var option2 = cicleColor2(currentInfo[c]);
-				str=' <div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
-				$("."+className).append(str);
-				var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
-				openClassCount.setOption(option2);
 			}else{
-				var option3 = cicleColor3(currentInfo[c]);
-				str=' <div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
-				$("."+className).append(str);
-				var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
-				openClassCount.setOption(option3);
+				if(c==0){
+					var option1 = cicleColor1(currentInfo[c]);
+					str='<div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
+					$("."+className).append(str);
+					var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+					openClassCount.setOption(option1);
+				}else if(c==1){
+					var option2 = cicleColor2(currentInfo[c]);
+					str=' <div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
+					$("."+className).append(str);
+					var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+					openClassCount.setOption(option2);
+				}else{
+					var option3 = cicleColor3(currentInfo[c]);
+					str=' <div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
+					$("."+className).append(str);
+					var openClassCount = echarts.init(document.getElementById('classOpenCount'+currentInfo[c].text));
+					openClassCount.setOption(option3);
+				}
 			}
 		}
 	}
-	var mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
-		autoplay: true,//可选选项，自动滑动
-		speed: 800,//可选选项，滑动速度
-		autoplay: {
-			delay: 2500,//1秒切换一次
-		},
-	})
+
+	if(!isSingle){
+		var mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
+			autoplay: true,//可选选项，自动滑动
+			speed: 800,//可选选项，滑动速度
+			autoplay: {
+				delay: 2500,//1秒切换一次
+			},
+		})
+	}
 }
 
 //蓝色饼图demo
@@ -1309,10 +1349,17 @@ function stuffStudentCount(seriesdata,yAxisData){
 
 //初始化加载chart
 function loadChart(){
+	var returnObject=new Object();
+	returnObject.departmentCode="";
+	returnObject.schoolYearCode="";
+	returnObject.batchCode="";
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/getBigScreenData",
+		data: {
+			"searchInfo":JSON.stringify(returnObject)
+		},
 		dataType : 'json',
 		success : function(backjson) {
 			if(backjson.code===200){
@@ -1322,19 +1369,63 @@ function loadChart(){
 				//授课教师人数
 				stuffTeacherCountTable(backjson.data.departmentData);
 				//教师类型分布
-				stuffTeacherTypeCount(backjson.data.teacherTypeData);
+				stuffTeacherTypeCount(backjson.data.teacherTypeData,false);
 				//课时类型分布
-				stuffclassHourTypeCount(backjson.data.periodTypeData);
+				stuffclassHourTypeCount(backjson.data.periodTypeData,false);
 
-				//学院概貌分析
+				//学员概貌分析
 				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData);
-				//开课数量
-				stuffoptenClassCount(backjson.data.courseData);
+				//授课情况统计
+				stuffoptenClassCount(backjson.data.courseData,false);
 				//学员统计人数
 				stuffStudentCount(backjson.data.studentsInLocal.seriesdata,backjson.data.studentsInLocal.yAxisData);
 			}
 		}
 	});
+}
+
+//重新渲染chartDom
+function reloadChart(backjsonData){
+	$(".visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount").hide();
+	$("#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount").show();
+
+	//教师类型分布
+	stuffTeacherTypeCount(backjsonData.teacherTypeData,true);
+	//课时类型分布
+	stuffclassHourTypeCount(backjsonData.periodTypeData,true);
+	//学员概貌分析
+	stuffstudentFaceCount(backjsonData.studentAgeData,backjsonData.studentJobData);
+	//授课情况统计
+	stuffoptenClassCount(backjsonData.courseData,true);
+	// //学员统计人数
+	// stuffStudentCount(backjsonData.studentsInLocal.seriesdata,backjsonData.studentsInLocal.yAxisData);
+	//中间隐藏的四个小chart
+	stuffCenterCiecle();
+}
+
+//渲染中间隐藏的四个小chart
+function stuffCenterCiecle(){
+	//隐藏map
+	if (!$(".centerMap").is(':hidden')) {
+		$('.centerMap').addClass('animated bounceOut');
+		var wait = setInterval(function() {
+			if (!$('.centerMap').is(":animated")) {
+				$('.centerMap').removeClass('animated bounceOut').hide();
+				clearInterval(wait);
+			}
+		}, 300);
+	}
+
+	//展示chart
+	$('.smallBingtu').show().addClass('animated bounceIn');
+	var wait = setInterval(function() {
+		if (!$('.smallBingtu').is(":animated")) {
+			$('.smallBingtu').removeClass('animated bounceIn');
+			clearInterval(wait);
+		}
+	}, 600);
+
+	$("#returnConfigPage").removeClass('noneStartImportant');
 }
 
 //初始化加载
