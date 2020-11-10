@@ -1801,7 +1801,7 @@ function teacherCrouseHours(periodByTeacherType){
 						y:10,
 						fill: 'white',
 						text: [
-							'授课课时分布',
+							'教师类型统计',
 						].join('\n'),
 						textAlign:'center',//3、居中显示
 						fontSize:15,
@@ -1812,7 +1812,7 @@ function teacherCrouseHours(periodByTeacherType){
 		}],
 		series: [
 			{
-				name: '职称名称',
+				name: '教师类型',
 				type: 'pie',
 				radius: ['50%', '70%'],
 				avoidLabelOverlap: false,
@@ -1829,6 +1829,69 @@ function teacherCrouseHours(periodByTeacherType){
 				},
 				labelLine: {
 					show: false
+				},
+				itemStyle: {
+					emphasis: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						shadowColor: 'rgba(16,16,16,0.58)'
+					},
+					normal: {
+						label : {
+							color: "white",
+							show: false,
+							position: 'inside',
+						},
+						color: function(params) {
+							var colorList = [
+								{
+									c1: 'rgba(15,122,226,0.67)',//操作
+									c2: 'rgba(16,210,216,0.67)'
+								},
+								{
+									c1: 'rgba(16,210,216,0.67)',//操作
+									c2: 'rgba(81,207,104,0.67)'
+								},
+								{
+									c1: 'rgba(81,207,104,0.67)',//操作
+									c2: 'rgba(231,238,36,0.67)'
+								},
+								{
+									c1: 'rgba(231,238,36,0.67)',//操作
+									c2: 'rgba(227,135,40,0.67)'
+								},
+								{
+									c1: 'rgba(227,135,40,0.67)',//操作
+									c2: 'rgba(222,65,16,0.68)'
+								},
+								{
+									c1: 'rgba(222,65,16,0.67)',//操作
+									c2: 'rgba(219,86,109,0.67)'
+								},
+								{
+									c1: 'rgba(219,86,109,0.67)',//操作
+									c2: 'rgba(212,46,164,0.67)'
+								},{
+									c1: 'rgba(212,46,164,0.67)',//操作
+									c2: 'rgba(136,45,214,0.67)'
+								},{
+									c1: 'rgba(136,45,214,0.67)',//操作
+									c2: 'rgba(54,18,189,0.67)'
+								},{
+									c1: 'rgba(54,18,189,0.67)',//操作
+									c2: 'rgba(15,122,226,0.67)'
+								}]
+							return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+
+								offset: 0,
+								color: colorList[params.dataIndex].c1
+							}, {
+								offset: 1,
+								color: colorList[params.dataIndex].c2
+							}])
+							/*  return colorList[params.dataIndex]*/
+						}
+					}
 				},
 				data: periodByTeacherType
 			}
