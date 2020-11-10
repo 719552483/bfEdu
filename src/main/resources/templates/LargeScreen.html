@@ -51,6 +51,8 @@
                 <div class="swiper-container visual_swiperRight2 visual_chart">
                     <div class="swiper-wrapper teacheeTypeCountAppendArea"></div>
                 </div>
+
+                <div class="visual_chart noneStart chartDom1" id="singleTeacheeTypeCount"></div>
             </div>
 
             <div class="visual_box">
@@ -61,16 +63,37 @@
                 <div class="swiper-container visual_swiperRight3 visual_chart">
                     <div class="swiper-wrapper classHourTypeAppendArea"></div>
                 </div>
+                <div class="visual_chart noneStart chartDom1" id="singleClassHourTypeCount"></div>
             </div>
         </div>
 
         <div class="visual_con topHideenArea">
            <div class="visual_conTop">
 			   <div class="visual_conBot_bot" style="height: 180px;">
-			       <div class="visualSssf_right">
-			           <div class="visualSssf_right_box chartDom1" id="main5"></div>
-			           <div class="visualSssf_right_box chartDom1" id="main6"></div>
-			       </div>
+                   <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group with nested dropdown">
+                       <a class="btn btn-default noneStartImportant" role="button" id="returnConfigPage">返回</a>
+                       <div class="btn-group" role="group">
+                           <a  class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                               年级 <span class="caret"></span>
+                           </a>
+                           <ul class="dropdown-menu">
+                               <li><a>Action</a></li>
+                               <li><a>Another action</a></li>
+                               <li><a>Something else here</a></li>
+                           </ul>
+                       </div>
+
+                       <div class="btn-group" role="group">
+                           <a  class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                               批次 <span class="caret"></span>
+                           </a>
+                           <ul class="dropdown-menu">
+                               <li><a>Action</a></li>
+                               <li><a>Another action</a></li>
+                               <li><a>Something else here</a></li>
+                           </ul>
+                       </div>
+                   </div>
 			       <div class="clear"></div>
 			   </div>
             </div>
@@ -82,7 +105,14 @@
                 <img class="visual_conBot_4" src="images/ksh45.png"/>
                 <div class="visual_chart_text">
                 </div>
-                <div class="visual_chart chartDom1" id="main8"></div>
+                <div class="visual_chart chartDom1 centerMap" id="main8"></div>
+                <div class="smallBingtu noneStart">
+<!--                    <div class="bigVideoReturn" id="reryrnConfigPage"><button type="button" class="btn btn-primary"><img src="img/back.png" style="width: 24px;"/>返回</button></div>-->
+                    <div class="visual_box2">.col-md-6</div>
+                    <div class="visual_box2">.col-md-6</div>
+                    <div class="visual_box2">.col-md-6</div>
+                    <div class="visual_box2">.col-md-6</div>
+                </div>
 
                 <div class="smallVideoArea noneStart visual_chart" style="margin-top: 19%;">
                     <video class="col-md-12 videoArea" controls="controls" id="samllVideo">
@@ -114,6 +144,7 @@
                 <div class="swiper-container visual_swiperRightCourseCount visual_chart">
                     <div class="swiper-wrapper visualSssf_right courseCountAppendArea"></div>
                 </div>
+                <div class="visual_chart noneStart chartDom1" id="singleCourseCount"></div>
             </div>
 
             <div class="visual_box">

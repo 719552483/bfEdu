@@ -93,7 +93,7 @@ html, body, form{overflow-y:auto;height:100%;}
 .visual_left .sfzcll .sfzcll_box .sfzcll_smallBk .ygh{color:#ffe400;}
 
 .visual_con{width:50%;height:100%;float:left;padding:25px 20px 0 20px;}
-.visual_con .visual_conTop{height:130px;margin-bottom:10px;}
+.visual_con .visual_conTop{height:35px;margin-bottom:10px;}
 .visual_con .visual_conTop .visual_conTop_box{height:100%;padding:0 3px;}
 .visual_con .visual_conTop .visual_conTop1{width:20%;height:100%;float:left;}
 .visual_con .visual_conTop .visual_conTop1>div{background:url(../images/ksh40.png) no-repeat;background-size:100% 100%;}
@@ -110,7 +110,7 @@ html, body, form{overflow-y:auto;height:100%;}
 .visual_con .visual_conTop .visual_conTop_box>div .conTop_smil a.xd{color:#12fe81;}
 .visual_con .visual_conTop .visual_conTop_box>div .conTop_smil a.null{visibility:hidden;}
 
-.visual_con .visual_conBot{height:calc(100% - 136px);/* background:url(../images/ksh41.png) no-repeat;background-size:100% 100%; */position:relative;}
+.visual_con .visual_conBot{height:calc(100% - 45px);/* background:url(../images/ksh41.png) no-repeat;background-size:100% 100%; */position:relative;}
 .visual_con .visual_conBot>img{position:absolute;width:25px;height:25px;}
 .visual_con .visual_conBot .visual_conBot_l{position:absolute;left:0;top:0;}
 .visual_con .visual_conBot .visual_conBot_2{position:absolute;right:0;top:0;}
