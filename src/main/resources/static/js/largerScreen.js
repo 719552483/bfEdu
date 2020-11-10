@@ -2160,7 +2160,7 @@ function returnConfigPage(){
 			$('.smallBingtu').removeClass('animated bounceOut').hide();
 			clearInterval(wait);
 		}
-	}, 300);
+	}, 150);
 
 	$('.centerMap').addClass('animated bounceIn').show();
 	var wait1 = setInterval(function() {
@@ -2168,7 +2168,7 @@ function returnConfigPage(){
 			$('.centerMap').removeClass('animated bounceIn');
 			clearInterval(wait1);
 		}
-	}, 300);
+	}, 600);
 
 	//教师类型分布
 	var teacherTypeCountCharts=$(".teacheeTypeCountAppendArea").find('.chartDom1').length;
