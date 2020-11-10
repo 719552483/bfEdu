@@ -227,7 +227,7 @@ public class BigDataService {
                 if(e.getTeacherTypeName() == null) {
                     map.put("name","暂无职称");
                 } else {
-                    map.put("name",e.getTeacherTypeName());
+                    map.put("name",e.getTeacherType());
                 }
                 map.put("value",e.getTeacherCount());
                 newTeacherZcTypeData.add(map);
@@ -240,7 +240,7 @@ public class BigDataService {
             List<Map<String,Object>> newPeriodByTeacherType = new ArrayList<>();
             for(BigDataTeacherTypePO e : periodByTeacherType) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("name",e.getTeacherTypeName());
+                map.put("name",e.getTeacherType());
                 map.put("value",e.getTeacherCount());
                 newPeriodByTeacherType.add(map);
             }
@@ -280,9 +280,9 @@ public class BigDataService {
                 Map<String,Object> fsksMap = new HashMap<>();
                 Long fsksClassPeriod = edu207Dao.getFsksClassPeriod(bigDataSearch.getDepartmentCode());
                 Long fsksClassPeriodComplete = edu207Dao.getFsksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week);
-                jzksMap.put("text","集中学时");
-                jzksMap.put("peridoCount",fsksClassPeriod);
-                jzksMap.put("periodCompleteCount",fsksClassPeriodComplete);
+                fsksMap.put("text","分散学时");
+                fsksMap.put("peridoCount",fsksClassPeriod);
+                fsksMap.put("periodCompleteCount",fsksClassPeriodComplete);
                 returnMap.put("fsksClassPeriodDate",fsksMap);
 
             } catch (ParseException e) {
