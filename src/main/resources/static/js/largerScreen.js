@@ -363,7 +363,7 @@ function stuffTeacherTypeCount(teacherTypeData){
 				axisLine: { //---坐标轴 轴线
 					show: true, //---是否显示
 					lineStyle: {
-						color: 'rgba(255,255,255,.1)',
+						color: '#ff000000',
 						width: 1,
 						type: 'dotted',
 					},
@@ -522,7 +522,7 @@ function stuffclassHourTypeCount(periodTypeData) {
 					axisLine: { //---坐标轴 轴线
 						show: true, //---是否显示
 						lineStyle: {
-							color: 'rgba(255,255,255,.1)',
+							color: '#ff000000',
 							width: 1,
 							type: 'dotted',
 						},
