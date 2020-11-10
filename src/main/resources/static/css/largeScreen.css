@@ -196,8 +196,26 @@ border-bottom: 1px #ff000000 solid!important;
     height: 50%;
 }
 
+.visual_box2ChartArea{
+    height: 100%
+}
 
+.visual_conTop .btn-default {
+    background-color: rgb(91 127 158 / 85%);
+    border-color: #8c929445;
+    color: white;
+}
 
+.open .dropdown-toggle.btn-default{
+    background-color: rgb(91 127 158 / 85%);
+    border-color: #8c929445;
+}
+
+.open > .dropdown-menu{
+    background: rgb(122 162 197);
+    width: 100%;
+    text-align: center;
+}
 
 
 

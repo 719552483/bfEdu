@@ -614,7 +614,7 @@ function stuffclassHourTypeCount(periodTypeData,isSingle) {
 
 	if(!isSingle){
 		if(typeOneDatas.length>1){
-			var mySwiperRight3 = new Swiper('.visual_swiperRight3', {
+			mySwiperRight3 = new Swiper('.visual_swiperRight3', {
 				autoplay: true,//可选选项，自动滑动
 				direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 				speed: 1000,//可选选项，滑动速度
@@ -846,7 +846,7 @@ function stuffoptenClassCount(chartInfo,isSingle) {
 	}
 
 	if(!isSingle){
-		var mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
+		mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
 			autoplay: true,//可选选项，自动滑动
 			speed: 800,//可选选项，滑动速度
 			autoplay: {
@@ -1339,7 +1339,155 @@ function stuffStudentCount(seriesdata,yAxisData){
 	}
 
 	if(seriesdatas.length>1){
-		var mySwiper2 = new Swiper('.visual_swiper2', {
+		mySwiper2 = new Swiper('.visual_swiper2', {
+			autoplay: true,//可选选项，自动滑动
+			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
+			speed: 1000,//可选选项，滑动速度
+		});
+	}
+}
+
+//渲染学员统计人数2
+function stuffStudentCount2(seriesdata,yAxisData){
+
+	var seriesdatas = [];
+	var yAxisDatas = [];
+
+	//每五个五一组
+	for(var i=0;i<seriesdata.length;i+=5){
+		seriesdatas.push(seriesdata.slice(i,i+5));
+	}
+	for(var i=0;i<yAxisData.length;i+=5){
+		yAxisDatas.push(yAxisData.slice(i,i+5));
+	}
+
+	var firstStr="<div class='swiper-wrapper localStudentInfoArea2'></div>";
+	$(".visual_swiper2_2").append(firstStr);
+
+	for (var i = 0; i <seriesdatas.length ; i++) {
+		var str="";
+		var stuffOption;
+		var currentYAxisData=yAxisDatas[i];
+		var changeLeft=0;
+		for (var j = 0; j < currentYAxisData.length; j++) {
+			if(currentYAxisData[j].length>=0){
+				changeLeft=60;
+				break
+			}else{
+				changeLeft=30;
+			}
+		}
+		stuffOption = {
+			"title": {
+				"text": " ",
+				"left": "center",
+				"y": "10",
+				"textStyle": {
+					"color": "#fff"
+				}
+			},
+			"grid": {
+				"left": changeLeft,
+				"top": 0,
+				"bottom": 10
+			},
+			"tooltip": {
+				"trigger": "item",
+				"confine": true,
+				"textStyle": {
+					"fontSize": 12
+				},
+				"formatter": "{b0}:{c0}"
+			},
+			"xAxis": {
+				"max": 100,
+				"splitLine": {
+					"show": false
+				},
+				"axisLine": {
+					"show": false
+				},
+				"axisLabel": {
+					"show": false
+				},
+				"axisTick": {
+					"show": false
+				}
+			},
+			"yAxis": [
+				{
+					"type": "category",
+					"inverse": false,
+					"data": yAxisDatas[i],
+					"axisLine": {
+						"show": false
+					},
+					"axisTick": {
+						"show": false
+					},
+					"axisLabel": {
+						"margin": -4,
+						"textStyle": {
+							"color": "#fff",
+							"fontSize": 16.25
+						}
+					}
+				},
+
+			],
+			"series": [
+				{
+					"type": "pictorialBar",
+					"symbol": "image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAADYElEQVR4nO2dz0sUYRjHP7tIdAmxQ1LdlhCKMohAIsgiyEuHjkUEFQTlpejS/xCCBB06RBGBBKIG4cGyH0qHBKE9eKyFqBQPRQeNCt06vGNY7bq7szPfeZLnAwuzM+/zgw/DDvMu70wOIVveLscJOwycA44A24CfwAfgKXAbeFVvovlC/o/vuVwuTj+x0FWiYdGbgXvA8RrjHgAXgIVaCbMU3SKr1BhtwEtgZx1jTwI7gG7ga5pNNUO+9pBMuEN9klfYD9xMqZdEsCj6AHAiRtxZYFeyrSSHRdGnYsblCD8jJrEoek8TsbsT6yJhLIrelFFsqlgUPZtRbKpYFP2kidjxxLpIGIuiB4AvMeLmgJGEe0kMi6I/AVdjxPVSx91hVlgUDXAXuEaY16jFMnAJeJhqR01iVTTAdeAYUFxjzBRwCLgl6agJrM51rDAO7AP2EmbxthPO8vfAc2Ams84axLpoCGKLrH1mm8eC6KPAGaAL2Fpj7AZgY7T9DfhRY/wc4eflPmH+OjOynI8uEGbpukXlJ4Dz84V8aWWHcj46q4thFzCNTjJRren2UrlLWPM3WYjuAMYIk/tq2oCx9lK5Q11YLboFGARaxXVX0woMtpfK0uuTWvRFoFNcsxKdhF5kqEX3iuuthbQXtehG/gdMG2kvlm/B1xUuWoSLFmFF9CRwg2TnM4pRzskEc8bGiugR4ArhNjkpJqKcJv51sSJ63eOiRbhoES5ahIsW4aJFuGgRLlqEixbhokW4aBEuWoSLFuGiRbhoES5ahIsW4aJFuGgRLlqEWvTHKvs/p1izWu5qvaSCWvTlCvtmgeEUaw5TeUVtpV5SQy16COgBRoHXhMWb3aS7PnAhqjEQ1RwFeuYL+aEUa/5DFmtYHkefOEwQVmcBvKD+FQNvgNN/P+pHiV8MRbhoES5ahIsW4aJFuGgRLlqEixbhokW4aBEuWoSLFuGiRbhoES5ahIsW4aJFuGgRLlqEixbhokVYEx3nudGKXE1jTfS6xUWLcNEiXLQIFy3CRYtw0SJctAgXLcJFi3DRIv430eUq2+axJvp7jePPqmzHySXFmuhHwFKVYzNA/6rv/VR/s9BSlMsM1kTPEN4DPkU4I8vAO6APOAgsrhq7GO3ri8aUo5ipKIep1zv9AtipgOACGIrLAAAAAElFTkSuQmCC",
+					"symbolRepeat": "fixed",
+					"symbolMargin": "5%",
+					"symbolClip": true,
+					"symbolSize": 22.5,
+					"symbolPosition": "start",
+					"symbolOffset": [
+						20,
+						0
+					],
+					"symbolBoundingData": 300,
+					"data": seriesdatas[i],
+					"z": 10
+				},
+				{
+					"type": "pictorialBar",
+					"itemStyle": {
+						"normal": {
+							"opacity": 0.3
+						}
+					},
+					"label": {
+						"normal": {
+							"show": false
+						}
+					},
+					"animationDuration": 0,
+					"symbolRepeat": "fixed",
+					"symbolMargin": "5%",
+					"symbol": "image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAADYElEQVR4nO2dz0sUYRjHP7tIdAmxQ1LdlhCKMohAIsgiyEuHjkUEFQTlpejS/xCCBB06RBGBBKIG4cGyH0qHBKE9eKyFqBQPRQeNCt06vGNY7bq7szPfeZLnAwuzM+/zgw/DDvMu70wOIVveLscJOwycA44A24CfwAfgKXAbeFVvovlC/o/vuVwuTj+x0FWiYdGbgXvA8RrjHgAXgIVaCbMU3SKr1BhtwEtgZx1jTwI7gG7ga5pNNUO+9pBMuEN9klfYD9xMqZdEsCj6AHAiRtxZYFeyrSSHRdGnYsblCD8jJrEoek8TsbsT6yJhLIrelFFsqlgUPZtRbKpYFP2kidjxxLpIGIuiB4AvMeLmgJGEe0kMi6I/AVdjxPVSx91hVlgUDXAXuEaY16jFMnAJeJhqR01iVTTAdeAYUFxjzBRwCLgl6agJrM51rDAO7AP2EmbxthPO8vfAc2Ams84axLpoCGKLrH1mm8eC6KPAGaAL2Fpj7AZgY7T9DfhRY/wc4eflPmH+OjOynI8uEGbpukXlJ4Dz84V8aWWHcj46q4thFzCNTjJRren2UrlLWPM3WYjuAMYIk/tq2oCx9lK5Q11YLboFGARaxXVX0woMtpfK0uuTWvRFoFNcsxKdhF5kqEX3iuuthbQXtehG/gdMG2kvlm/B1xUuWoSLFmFF9CRwg2TnM4pRzskEc8bGiugR4ArhNjkpJqKcJv51sSJ63eOiRbhoES5ahIsW4aJFuGgRLlqEixbhokW4aBEuWoSLFuGiRbhoES5ahIsW4aJFuGgRLlqEWvTHKvs/p1izWu5qvaSCWvTlCvtmgeEUaw5TeUVtpV5SQy16COgBRoHXhMWb3aS7PnAhqjEQ1RwFeuYL+aEUa/5DFmtYHkefOEwQVmcBvKD+FQNvgNN/P+pHiV8MRbhoES5ahIsW4aJFuGgRLlqEixbhokW4aBEuWoSLFuGiRbhoES5ahIsW4aJFuGgRLlqEixbhokVYEx3nudGKXE1jTfS6xUWLcNEiXLQIFy3CRYtw0SJctAgXLcJFi3DRIv430eUq2+axJvp7jePPqmzHySXFmuhHwFKVYzNA/6rv/VR/s9BSlMsM1kTPEN4DPkU4I8vAO6APOAgsrhq7GO3ri8aUo5ipKIep1zv9AtipgOACGIrLAAAAAElFTkSuQmCC",
+					"symbolSize": 22.5,
+					"symbolBoundingData": 300,
+					"symbolPosition": "start",
+					"symbolOffset": [
+						20,
+						0
+					],
+					"data": seriesdatas[i],
+					"z": 5
+				}
+			]
+		};
+		str=' <div class="swiper-slide chartDom1" id="localStudent2'+i+'"></div>';
+		$(".localStudentInfoArea2").append(str);
+		var myRight3= echarts.init(document.getElementById('localStudent2'+i));
+		myRight3.setOption(stuffOption);
+	}
+
+	if(seriesdatas.length>1){
+		var mySwiper2 = new Swiper('.visual_swiper2_2', {
 			autoplay: true,//可选选项，自动滑动
 			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 			speed: 1000,//可选选项，滑动速度
@@ -1386,8 +1534,33 @@ function loadChart(){
 
 //重新渲染chartDom
 function reloadChart(backjsonData){
-	$(".visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount").hide();
-	$("#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount").show();
+	//教师类型分布
+	var teacherTypeCountCharts=$(".teacheeTypeCountAppendArea").find('.chartDom1').length;
+	if(teacherTypeCountCharts>1){
+		mySwiper.autoplay.stop();
+	}
+
+	//课时类型分布
+	var classHourTypeCharts=$(".classHourTypeAppendArea").find('.chartDom1').length;
+	if(classHourTypeCharts>1){
+		mySwiperRight3.autoplay.stop();
+	}
+
+	//授课情况统计
+	var courseCountCharts=$(".courseCountAppendArea").find('.swiper-slide').length;
+	if(courseCountCharts>1){
+		mySwiper1.autoplay.stop();
+	}
+
+	//学员人数统计
+	var localStudentCountCharts=$(".localStudentInfoArea").find('.chartDom1').length;
+	if(localStudentCountCharts>1){
+		mySwiper2.autoplay.stop();
+	}
+
+	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount").hide();
+	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount").show();
+	$(".visual_swiper2_2").empty();
 
 	//教师类型分布
 	stuffTeacherTypeCount(backjsonData.teacherTypeData,true);
@@ -1397,14 +1570,23 @@ function reloadChart(backjsonData){
 	stuffstudentFaceCount(backjsonData.studentAgeData,backjsonData.studentJobData);
 	//授课情况统计
 	stuffoptenClassCount(backjsonData.courseData,true);
-	// //学员统计人数
-	// stuffStudentCount(backjsonData.studentsInLocal.seriesdata,backjsonData.studentsInLocal.yAxisData);
+	//学员统计人数
+	stuffStudentCount2(backjsonData.studentsInLocal.seriesdata,backjsonData.studentsInLocal.yAxisData);
 	//中间隐藏的四个小chart
-	stuffCenterCiecle();
+	stuffCenterCiecle(backjsonData);
+
+	//返回初始页面
+	$('#returnConfigPage').unbind('click');
+	$('#returnConfigPage').bind('click', function(e) {
+		returnConfigPage();
+		e.stopPropagation();
+	});
 }
 
 //渲染中间隐藏的四个小chart
-function stuffCenterCiecle(){
+function stuffCenterCiecle(backjsonData){
+	$(".centerMap").hide();
+	$(".smallBingtu").show();
 	//隐藏map
 	if (!$(".centerMap").is(':hidden')) {
 		$('.centerMap').addClass('animated bounceOut');
@@ -1417,15 +1599,538 @@ function stuffCenterCiecle(){
 	}
 
 	//展示chart
-	$('.smallBingtu').show().addClass('animated bounceIn');
+	$('.smallBingtu').addClass('animated bounceIn');
 	var wait = setInterval(function() {
 		if (!$('.smallBingtu').is(":animated")) {
-			$('.smallBingtu').removeClass('animated bounceIn');
+			$('.smallBingtu').removeClass('animated bounceIn').show();
 			clearInterval(wait);
 		}
 	}, 600);
 
-	$("#returnConfigPage").removeClass('noneStartImportant');
+	$("#returnConfigPage").removeClass('noneStartImportant').css("display",'table-cell');
+
+	//教师职称分布
+     teacherTitleCount(backjsonData.teacherZcTypeData);
+
+	//教师授课课时
+	teacherCrouseHours(backjsonData.periodByTeacherType);
+
+	//集中课时统计
+	jzksClassPeriodDate(backjsonData.jzksClassPeriodDate);
+
+	//分散课时统计
+	fsksClassPeriodDate(backjsonData.fsksClassPeriodDate);
+}
+
+//教师职称分布
+function teacherTitleCount(teacherZcTypeData){
+	var option = {
+		// color :['rgba(13,133,196,0.74)', 'rgba(22,193,222,0.89)', 'rgba(46,204,118,0.81)', 'rgba(131,221,33,0.89)', 'rgba(179,174,16,0.91)'],
+		tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c} ({d}%)'
+		},
+		graphic: [{//2、中心的文字设置
+			type: 'group',
+			left: 'center',
+			top: 'center',
+			children: [
+				{
+					type: 'circle',
+					z: 100,
+					left: 'center',
+					top: 'middle',
+					shape: {
+						cx: 0,
+						cy: 0,
+						r:50,
+					},
+					style: {
+						fill: 'rgba(255,255,255,0)',
+						stroke: 'rgba(255,255,255,0)',
+						lineWidth: 2,
+					}
+				},
+				{
+					type: 'text',
+					z: 100,
+					left: 'center',
+					top: 'middle',
+					style: {
+						x:3,
+						y:10,
+						fill: 'white',
+						text: [
+							'教师职称统计',
+						].join('\n'),
+						textAlign:'center',//3、居中显示
+						fontSize:15,
+						fontWeight:800
+					}
+				}
+			]
+		}],
+		series: [
+			{
+				name: '职称名称',
+				type: 'pie',
+				radius: ['50%', '70%'],
+				avoidLabelOverlap: false,
+				label: {
+					show: false,
+					position: 'center'
+				},
+				emphasis: {
+					label: {
+						show: true,
+						fontSize: '30',
+						fontWeight: 'bold'
+					}
+				},
+				labelLine: {
+					show: false
+				},
+				itemStyle: {
+					emphasis: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						shadowColor: 'rgba(16,16,16,0.58)'
+					},
+					normal: {
+						label : {
+							color: "white",
+							show: false,
+							position: 'inside',
+						},
+						color: function(params) {
+							var colorList = [
+								{
+									c1: 'rgba(15,122,226,0.67)',//操作
+									c2: 'rgba(16,210,216,0.67)'
+								},
+								{
+									c1: 'rgba(16,210,216,0.67)',//操作
+									c2: 'rgba(81,207,104,0.67)'
+								},
+								{
+									c1: 'rgba(81,207,104,0.67)',//操作
+									c2: 'rgba(231,238,36,0.67)'
+								},
+								{
+									c1: 'rgba(231,238,36,0.67)',//操作
+									c2: 'rgba(227,135,40,0.67)'
+								},
+								{
+									c1: 'rgba(227,135,40,0.67)',//操作
+									c2: 'rgba(222,65,16,0.68)'
+								},
+								{
+									c1: 'rgba(222,65,16,0.67)',//操作
+									c2: 'rgba(219,86,109,0.67)'
+								},
+								{
+									c1: 'rgba(219,86,109,0.67)',//操作
+									c2: 'rgba(212,46,164,0.67)'
+								},{
+									c1: 'rgba(212,46,164,0.67)',//操作
+									c2: 'rgba(136,45,214,0.67)'
+								},{
+									c1: 'rgba(136,45,214,0.67)',//操作
+									c2: 'rgba(54,18,189,0.67)'
+								},{
+									c1: 'rgba(54,18,189,0.67)',//操作
+									c2: 'rgba(15,122,226,0.67)'
+								}]
+							return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+
+								offset: 0,
+								color: colorList[params.dataIndex].c1
+							}, {
+								offset: 1,
+								color: colorList[params.dataIndex].c2
+							}])
+							/*  return colorList[params.dataIndex]*/
+						}
+					}
+				},
+				data: teacherZcTypeData
+			}
+		]
+	};
+
+	var teacherTitleCount = echarts.init(document.getElementById('teacherTitleCount'));
+	teacherTitleCount.setOption(option);
+}
+
+//授课课时分布
+function teacherCrouseHours(periodByTeacherType){
+	var option = {
+		color :['rgba(13,133,196,0.74)', 'rgba(22,193,222,0.89)', 'rgba(46,204,118,0.81)', 'rgba(131,221,33,0.89)', 'rgba(179,174,16,0.91)'],
+		tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b}: {c} ({d}%)'
+		},
+		graphic: [{//2、中心的文字设置
+			type: 'group',
+			left: 'center',
+			top: 'center',
+			children: [
+				{
+					type: 'circle',
+					z: 100,
+					left: 'center',
+					top: 'middle',
+					shape: {
+						cx: 0,
+						cy: 0,
+						r:50,
+					},
+					style: {
+						fill: 'rgba(255,255,255,0)',
+						stroke: 'rgba(255,255,255,0)',
+						lineWidth: 2,
+					}
+				},
+				{
+					type: 'text',
+					z: 100,
+					left: 'center',
+					top: 'middle',
+					style: {
+						x:3,
+						y:10,
+						fill: 'white',
+						text: [
+							'授课课时分布',
+						].join('\n'),
+						textAlign:'center',//3、居中显示
+						fontSize:15,
+						fontWeight:800
+					}
+				}
+			]
+		}],
+		series: [
+			{
+				name: '职称名称',
+				type: 'pie',
+				radius: ['50%', '70%'],
+				avoidLabelOverlap: false,
+				label: {
+					show: false,
+					position: 'center'
+				},
+				emphasis: {
+					label: {
+						show: true,
+						fontSize: '30',
+						fontWeight: 'bold'
+					}
+				},
+				labelLine: {
+					show: false
+				},
+				data: periodByTeacherType
+			}
+		]
+	};
+
+	var periodByTeacherTypeCount = echarts.init(document.getElementById('periodByTeacherTypeCount'));
+	periodByTeacherTypeCount.setOption(option);
+}
+
+//集中课时统计
+function jzksClassPeriodDate(jzksClassPeriodDate){
+	var option=jzksClassPeriodChartDemo(jzksClassPeriodDate);
+	var jzksClassPeriodDate = echarts.init(document.getElementById('jzksClassPeriodDate'));
+	jzksClassPeriodDate.setOption(option);
+}
+
+//分散课时统计
+function fsksClassPeriodDate(fsksClassPeriodDate){
+	var option=fsksClassPeriodChartDemo(fsksClassPeriodDate);
+	var fsksClassPeriodDate = echarts.init(document.getElementById('fsksClassPeriodDate'));
+	fsksClassPeriodDate.setOption(option);
+}
+
+//集中课时chart demo
+function jzksClassPeriodChartDemo(currentInfo){
+	var returnOption=new Array();
+	var value=0;
+	if(currentInfo.peridoCount!=0){
+		value=Math.floor(currentInfo.periodCompleteCount/currentInfo.peridoCount*100);
+	}
+	returnOption = {
+		title: {
+			text: `${value}%`,
+			subtext: currentInfo.text,
+			left: 'center',
+			top: 'center',//top待调整
+			textStyle: {
+				color: '#fff',
+				fontSize: 16,
+				fontFamily: 'PingFangSC-Regular'
+			},
+			subtextStyle: {
+				color: '#ff',
+				fontSize:12,
+				fontFamily: 'PingFangSC-Regular',
+				top: 'center'
+			},
+			itemGap: -1//主副标题间距
+		},
+		tooltip: {
+			trigger: 'item',
+			axisPointer: { // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			formatter: function(params) {
+				var all=parseInt(currentInfo.peridoCount);
+				var noNum=parseInt(currentInfo.peridoCount)-parseInt(currentInfo.periodCompleteCount);
+				var result = ''
+				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#19daf7"></span>';
+				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
+				result= "共"+all+ "个课时</br>"
+					+ dotHtml +
+					"已完成："+currentInfo.periodCompleteCount+ "</br>"+
+					notHtml +
+					"未完成："+noNum;
+				return result
+			},
+			confine: true
+		},
+		series: [{
+			name: currentInfo.text,
+			type: 'pie',
+			clockWise: true,
+			radius: ['65%', '70%'],
+			itemStyle: {
+				normal: {
+					label: {
+						show: false
+					},
+					labelLine: {
+						show: false
+					}
+				}
+			},
+			hoverAnimation: false,
+			data: [{
+				value: value,
+				name: '已完成课时',
+				itemStyle: {
+					normal: {
+						borderWidth: 25,
+						borderColor: {
+							colorStops: [{
+								offset: 0,
+								color: '#19daf7' || '#0cfcdc' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#0cfcdc' || '#19daf7' // 100% 处的颜色
+							}]
+						},
+						color: { // 完成的圆环的颜色
+							colorStops: [{
+								offset: 0,
+								color: '#19daf7' || '#0cfcdc' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#0cfcdc' || '#19daf7' // 100% 处的颜色
+							}]
+						},
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					}
+				}
+			}, {
+				name: 'gap',
+				value: 100 - value,
+				itemStyle: {
+					normal: {
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						},
+						color: 'rgba(0, 0, 0, 0)',
+						borderColor: 'rgba(0, 0, 0, 0)',
+						borderWidth: 0
+					}
+				}
+			}]
+		}]
+	}
+	return returnOption;
+}
+
+//分散课时chart demo
+function fsksClassPeriodChartDemo(currentInfo){
+	var returnOption=new Array();
+	var value=0;
+	if(currentInfo.peridoCount!=0){
+		value=Math.floor(currentInfo.periodCompleteCount/currentInfo.peridoCount*100);
+	}
+	returnOption = {
+		title: {
+			text: `${value}%`,
+			subtext: currentInfo.text,
+			left: 'center',
+			top: 'center',//top待调整
+			textStyle: {
+				color: '#fff',
+				fontSize: 16,
+				fontFamily: 'PingFangSC-Regular'
+			},
+			subtextStyle: {
+				color: '#ff',
+				fontSize:12,
+				fontFamily: 'PingFangSC-Regular',
+				top: 'center'
+			},
+			itemGap: -1//主副标题间距
+		},
+		tooltip: {
+			trigger: 'item',
+			axisPointer: { // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+			},
+			formatter: function(params) {
+				var all=parseInt(currentInfo.peridoCount);
+				var noNum=parseInt(currentInfo.peridoCount)-parseInt(currentInfo.periodCompleteCount);
+				var result = ''
+				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#fc5919"></span>';
+				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
+				result= "共"+all+ "个课时</br>"
+					+ dotHtml +
+					"已完成："+currentInfo.periodCompleteCount+ "</br>"+
+					notHtml +
+					"未完成："+noNum;
+				return result
+			},
+			confine: true
+		},
+		series: [{
+			name: currentInfo.text,
+			type: 'pie',
+			clockWise: true,
+			radius: ['65%', '70%'],
+			itemStyle: {
+				normal: {
+					label: {
+						show: false
+					},
+					labelLine: {
+						show: false
+					}
+				}
+			},
+			hoverAnimation: false,
+			data: [{
+				value: value,
+				name: '已完成课时',
+				itemStyle: {
+					normal: {
+						borderWidth: 25,
+						borderColor: {
+							colorStops: [{
+								offset: 0,
+								color: '#f7af0d' || '#fc5919' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#fc5919' || '#f7af0d' // 100% 处的颜色
+							}]
+						},
+						color: { // 完成的圆环的颜色
+							colorStops: [{
+								offset: 0,
+								color: '#f7af0d' || '#fc5919' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#fc5919' || '#f7af0d' // 100% 处的颜色
+							}]
+						},
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						}
+					}
+				}
+			}, {
+				name: 'gap',
+				value: 100 - value,
+				itemStyle: {
+					normal: {
+						label: {
+							show: false
+						},
+						labelLine: {
+							show: false
+						},
+						color: 'rgba(0, 0, 0, 0)',
+						borderColor: 'rgba(0, 0, 0, 0)',
+						borderWidth: 0
+					}
+				}
+			}]
+		}]
+	}
+	return returnOption;
+}
+
+//返回初始化页面
+function returnConfigPage(){
+	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount").show();
+	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,#returnConfigPage").hide();
+
+	//隐藏
+	$('.smallBingtu').addClass('animated bounceOut');
+	var wait = setInterval(function() {
+		if (!$('.smallBingtu').is(":animated")) {
+			$('.smallBingtu').removeClass('animated bounceOut').hide();
+			clearInterval(wait);
+		}
+	}, 300);
+
+	$('.centerMap').addClass('animated bounceIn').show();
+	var wait1 = setInterval(function() {
+		if (!$('.centerMap').is(":animated")) {
+			$('.centerMap').removeClass('animated bounceIn');
+			clearInterval(wait1);
+		}
+	}, 300);
+
+	//教师类型分布
+	var teacherTypeCountCharts=$(".teacheeTypeCountAppendArea").find('.chartDom1').length;
+	if(teacherTypeCountCharts>1){
+		mySwiper.autoplay.start();
+	}
+
+	//课时类型分布
+	var classHourTypeCharts=$(".classHourTypeAppendArea").find('.chartDom1').length;
+	if(classHourTypeCharts>1){
+		mySwiperRight3.autoplay.start();
+	}
+
+	//授课情况统计
+	$(".courseCountAppendArea").find('.swiper-slide:last').remove();
+	var courseCountCharts=$(".courseCountAppendArea").find('.swiper-slide').length;
+	if(courseCountCharts>1){
+		mySwiper1.autoplay.start();
+	}
+
+	//学员人数统计
+	var localStudentCountCharts=$(".localStudentInfoArea").find('.chartDom1').length;
+	if(localStudentCountCharts>1){
+		mySwiper2.autoplay.start();
+	}
 }
 
 //初始化加载
