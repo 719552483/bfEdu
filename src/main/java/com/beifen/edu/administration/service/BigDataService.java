@@ -254,13 +254,12 @@ public class BigDataService {
             int week;
             try {
                 int weekOfDate = DateUtils.getWeekOfDate(df.format(new Date()));
-
                 int daysBetween = DateUtils.getDaysBetween(kssj, df.format(new Date()));
                 int leftDay = daysBetween % 7;
-                if (leftDay != 0) {
-                    week = daysBetween / 7;
+                if (leftDay == 0) {
+                    week = (daysBetween / 7) + 1;
                 }else {
-                    week = daysBetween / 7 + 1;
+                    week = (daysBetween / 7) + 2;
                 }
                 if(weekOfDate == 0) {
                     dayOfWeek = 7;
