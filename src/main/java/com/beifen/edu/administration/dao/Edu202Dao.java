@@ -169,4 +169,58 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"group by t.EDU104_ID, t.XBMC " +
 			"order by t.EDU104_ID ",nativeQuery = true)
 	List<Object[]> getPeriodTypeInDepartment(String departmentCode);
+
+	//根据二级学院查询各教学点在校人数
+	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(t.localCode,t.localName,sum(t.zxrs)) from Edu300 t where t.xbbm = ?1 group by t.localCode,t.localName")
+	List<StudentInPointPO> getStudentsInLocalByEdu300Only(String departmentCode);
+
+	//获取教师职称分布数据
+	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.ZCBM) teacher_type, to_char(t.ZC) teacher_type_name\n" +
+			"    from (select distinct m.EDU104_ID, m.XBMC, s.XM, s.ZC, s.ZCBM \n" +
+			"          from (select distinct b.EDU104_ID, b.XBMC \n" +
+			"                from edu107 a, \n" +
+			"                     edu104 b \n" +
+			"                where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m, \n" +
+			"               EDU203 n, \n" +
+			"               EDU201 r, \n" +
+			"               EDU101 s, \n" +
+			"               edu202 o, \n" +
+			"               EDU108 p, \n" +
+			"               EDU107 q \n" +
+			"          where n.EDU202_ID = o.EDU202_ID \n" +
+			"            and o.EDU201_ID = r.EDU201_ID \n" +
+			"            and s.EDU101_ID = n.EDU101_ID \n" +
+			"            and p.EDU107_ID = q.EDU107_ID \n" +
+			"            and r.EDU108_ID = p.EDU108_ID \n" +
+			"            and m.EDU104_ID = q.EDU104 \n" +
+			"            and n.TEACHER_TYPE = '01' \n" +
+			"          group by m.EDU104_ID, m.XBMC, s.XM, s.ZC, s.ZCBM) t \n" +
+			"    group by t.EDU104_ID, t.XBMC, t.ZC, t.ZCBM \n" +
+			"    order by t.EDU104_ID, t.ZC",nativeQuery = true)
+	List<Object[]> getTeacherZcType(String departmentCode);
+
+	//获取各类型老师集中学时数量
+	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.EDU203_ID)*2) teacher_count, to_char(t.JZGLXBM) teacher_type, to_char(t.JZGLX) teacher_type_name\n" +
+			"    from (select distinct m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM,n.EDU203_ID\n" +
+			"          from (select distinct b.EDU104_ID, b.XBMC\n" +
+			"                from edu107 a,\n" +
+			"                     edu104 b\n" +
+			"                where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+			"               EDU203 n,\n" +
+			"               EDU201 r,\n" +
+			"               EDU101 s,\n" +
+			"               edu202 o,\n" +
+			"               EDU108 p,\n" +
+			"               EDU107 q\n" +
+			"          where n.EDU202_ID = o.EDU202_ID\n" +
+			"            and o.EDU201_ID = r.EDU201_ID\n" +
+			"            and s.EDU101_ID = n.EDU101_ID\n" +
+			"            and p.EDU107_ID = q.EDU107_ID\n" +
+			"            and r.EDU108_ID = p.EDU108_ID\n" +
+			"            and m.EDU104_ID = q.EDU104\n" +
+			"            and n.TEACHER_TYPE = '01'\n" +
+			"          group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM,n.EDU203_ID) t\n" +
+			"    group by t.EDU104_ID, t.XBMC, t.JZGLX, t.JZGLXBM \n" +
+			"    order by t.EDU104_ID, t.JZGLX",nativeQuery = true)
+	List<Object[]> getPeriodByTeacherType(String departmentCode);
 }

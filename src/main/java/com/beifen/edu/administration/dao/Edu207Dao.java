@@ -31,4 +31,41 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
     //根据edu201ID集合查询学年分散学识安排
     @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1", nativeQuery = true)
     List<Edu207> findAllByEdu201IdsWithoutWeek(List<String> edu201Ids);
+
+    //根据二级学院获取分散学时总数
+    @Query(value = "select sum(CLASS_HOURS)\n" +
+            "    from (select distinct b.EDU104_ID, b.XBMC \n" +
+            "        from edu107 a, \n" +
+            "        edu104 b \n" +
+            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+            "        EDU207 n,\n" +
+            "        EDU201 r, \n" +
+            "        edu202 o, \n" +
+            "        EDU108 p, \n" +
+            "        EDU107 q \n" +
+            "    where n.EDU201_ID = r.EDU201_ID\n" +
+            "      and o.EDU201_ID = r.EDU201_ID \n" +
+            "      and p.EDU107_ID = q.EDU107_ID \n" +
+            "      and r.EDU108_ID = p.EDU108_ID \n" +
+            "      and m.EDU104_ID = q.EDU104 \n",nativeQuery = true)
+    Long getFsksClassPeriod(String departmentCode);
+
+
+    @Query(value = "select sum(CLASS_HOURS)\n" +
+            "    from (select distinct b.EDU104_ID, b.XBMC \n" +
+            "        from edu107 a, \n" +
+            "        edu104 b \n" +
+            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+            "        EDU207 n,\n" +
+            "        EDU201 r, \n" +
+            "        edu202 o, \n" +
+            "        EDU108 p, \n" +
+            "        EDU107 q \n" +
+            "    where n.EDU201_ID = r.EDU201_ID\n" +
+            "      and o.EDU201_ID = r.EDU201_ID \n" +
+            "      and p.EDU107_ID = q.EDU107_ID \n" +
+            "      and r.EDU108_ID = p.EDU108_ID \n" +
+            "      and m.EDU104_ID = q.EDU104 \n" +
+            "      and to_number(n.week) < ?2",nativeQuery = true)
+    Long getFsksClassPeriodComplete(String departmentCode, int week);
 }

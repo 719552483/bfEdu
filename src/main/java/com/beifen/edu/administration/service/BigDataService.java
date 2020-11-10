@@ -5,6 +5,7 @@ import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,7 +42,14 @@ public class BigDataService {
     @Autowired
     private Edu201Dao edu201Dao;
     @Autowired
+    private Edu400Dao edu400Dao;
+    @Autowired
+    private Edu203Dao edu203Dao;
+    @Autowired
+    private Edu207Dao edu207Dao;
+    @Autowired
     private ReflectUtils utils;
+
 
     //保存大数据财务信息
     public ResultVO saveFinanceInfo(Edu800 edu800) {
@@ -106,15 +115,15 @@ public class BigDataService {
         List<Edu501> edu501List = edu501Dao.findAll();
         returnMap.put("pointInfo",edu501List);
 
-        //教学点学生人数查询
-        Map<String, Object> studentsInLocal = getStudentsInLocal();
-        returnMap.put("studentsInLocal",studentsInLocal);
-
         //二级学院列表
         List<BigDataDepartmentPO> departmentData= getBigDataDepartment();
         returnMap.put("departmentData",departmentData);
 
         if("".equals(bigDataSearch.getDepartmentCode())) {
+            //教学点学生人数查询
+            Map<String, Object> studentsInLocal = getStudentsInLocal(bigDataSearch);
+            returnMap.put("studentsInLocal",studentsInLocal);
+
             //学生年龄雷达图
             List<EchartPO> studentAgeData = getStudentsByAge(bigDataSearch);
             returnMap.put("studentAgeData",studentAgeData);
@@ -160,6 +169,10 @@ public class BigDataService {
             }
             returnMap.put("courseData",courseData);
         } else {
+            //教学点学生人数查询
+            Map<String, Object> studentsInLocal = getStudentsInLocal(bigDataSearch);
+            returnMap.put("studentsInLocal",studentsInLocal);
+
             //学生年龄雷达图
             List<EchartPO> studentAgeData = getStudentsByAge(bigDataSearch);
             returnMap.put("studentAgeData",studentAgeData);
@@ -204,10 +217,101 @@ public class BigDataService {
                 courseData.add(map);
             }
             returnMap.put("courseData",courseData);
+
+            //查询教师职称分布
+            List<BigDataTeacherTypePO> teacherZcTypeData= getTeacherZcType(bigDataSearch);
+            //组装饼图数据
+            List<Map<String,Object>> newTeacherZcTypeData = new ArrayList<>();
+            for(BigDataTeacherTypePO e : teacherZcTypeData) {
+                HashMap<String, Object> map = new HashMap<>();
+                if(e.getTeacherTypeName() == null) {
+                    map.put("name","暂无职称");
+                } else {
+                    map.put("name",e.getTeacherTypeName());
+                }
+                map.put("value",e.getTeacherCount());
+                newTeacherZcTypeData.add(map);
+            }
+            returnMap.put("teacherZcTypeData",newTeacherZcTypeData);
+
+            //查询各类型教师课时数
+            List<BigDataTeacherTypePO> periodByTeacherType= getPeriodByTeacherType(bigDataSearch);
+            //组装饼图数据
+            List<Map<String,Object>> newPeriodByTeacherType = new ArrayList<>();
+            for(BigDataTeacherTypePO e : periodByTeacherType) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("name",e.getTeacherTypeName());
+                map.put("value",e.getTeacherCount());
+                newPeriodByTeacherType.add(map);
+            }
+            returnMap.put("periodByTeacherType",newPeriodByTeacherType);
+
+            //计算当前日期是该学年的第几周星期几
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong("31951"));
+            String kssj = edu400.getKssj();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+            int dayOfWeek;
+            int week;
+            try {
+                int weekOfDate = DateUtils.getWeekOfDate(df.format(new Date()));
+
+                int daysBetween = DateUtils.getDaysBetween(kssj, df.format(new Date()));
+                int leftDay = daysBetween % 7;
+                if (leftDay != 0) {
+                    week = daysBetween / 7;
+                }else {
+                    week = daysBetween / 7 + 1;
+                }
+                if(weekOfDate == 0) {
+                    dayOfWeek = 7;
+                }else {
+                    dayOfWeek = weekOfDate;
+                }
+                //查询集中学时实时课时占比
+                Map<String,Object> jzksMap = new HashMap<>();
+                List<Edu203> jzksClassPeriod = edu203Dao.getJzksClassPeriod(bigDataSearch.getDepartmentCode());
+                List<Edu203> jzksClassPeriodComplete = edu203Dao.getJzksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week,dayOfWeek);
+                jzksMap.put("text","集中学时");
+                jzksMap.put("peridoCount",jzksClassPeriod.size()*2);
+                jzksMap.put("periodCompleteCount",jzksClassPeriodComplete.size()*2);
+                returnMap.put("jzksClassPeriodDate",jzksMap);
+
+                //查询分散学时实时课时占比
+                Map<String,Object> fsksMap = new HashMap<>();
+                Long fsksClassPeriod = edu207Dao.getFsksClassPeriod(bigDataSearch.getDepartmentCode());
+                Long fsksClassPeriodComplete = edu207Dao.getFsksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week);
+                jzksMap.put("text","集中学时");
+                jzksMap.put("peridoCount",fsksClassPeriod);
+                jzksMap.put("periodCompleteCount",fsksClassPeriodComplete);
+                returnMap.put("fsksClassPeriodDate",fsksMap);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
+    }
+
+    //获取各类型老师集中学时数量
+    private List<BigDataTeacherTypePO> getPeriodByTeacherType(BigDataSearchPO bigDataSearch) {
+        String departmentCode = bigDataSearch.getDepartmentCode();
+        List<Object[]> teacherZcType = edu202Dao.getPeriodByTeacherType(departmentCode);
+
+        BigDataTeacherTypePO bigDataTeacherTypePO = new BigDataTeacherTypePO();
+        List<BigDataTeacherTypePO> newteacherTypeList = utils.castEntity(teacherZcType, BigDataTeacherTypePO.class, bigDataTeacherTypePO);
+        return newteacherTypeList;
+    }
+
+    //获取教师职称分布
+    private List<BigDataTeacherTypePO> getTeacherZcType(BigDataSearchPO bigDataSearch) {
+        String departmentCode = bigDataSearch.getDepartmentCode();
+        List<Object[]> teacherZcType = edu202Dao.getTeacherZcType(departmentCode);
+
+        BigDataTeacherTypePO bigDataTeacherTypePO = new BigDataTeacherTypePO();
+        List<BigDataTeacherTypePO> newteacherTypeList = utils.castEntity(teacherZcType, BigDataTeacherTypePO.class, bigDataTeacherTypePO);
+        return newteacherTypeList;
     }
 
     private List<EchartDataPO> packagePeriodType(List<BigDataPeriodTypePO> periodTypeData) {
@@ -391,14 +495,21 @@ public class BigDataService {
     }
 
     //教学点学生人数查询
-    private Map<String,Object> getStudentsInLocal() {
+    private Map<String,Object> getStudentsInLocal(BigDataSearchPO bigDataSearchPO) {
         Map<String,Object> returnMap = new HashMap<>();
 
+        String departmentCode = bigDataSearchPO.getDepartmentCode();
 //        List<Object[]> studentInPointList = edu202Dao.getStudentsInLocal();
 //        StudentInPointPO studentInPointPO = new StudentInPointPO();
 //        List<StudentInPointPO> newStudentInPointPO = utils.castEntity(studentInPointList, StudentInPointPO.class, studentInPointPO);
 
-        List<StudentInPointPO> newStudentInPointPO = edu202Dao.getStudentsInLocalByEdu300();
+        List<StudentInPointPO> newStudentInPointPO;
+        if("".equals(departmentCode)) {
+           newStudentInPointPO  = edu202Dao.getStudentsInLocalByEdu300();
+        } else {
+            newStudentInPointPO  = edu202Dao.getStudentsInLocalByEdu300Only(departmentCode);
+        }
+
         List<String> yAxisData = newStudentInPointPO.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
         List<Long> seriesdata = newStudentInPointPO.stream().map(a -> {
             long studentCount = Long.parseLong(a.getStudentCount());
