@@ -493,3 +493,9 @@ border-bottom: 1px #ff000000 solid!important;
     color: #b56d92e0;
     float: right;
 }
+
+.logoStyle{
+    height: 87px;
+    float: left;
+    margin-top: -5%;
+}
