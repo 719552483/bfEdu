@@ -97,7 +97,7 @@ function drawMap(id, allMapJson, currentTeachLocal) {
 		geo: {
 			map: "liaoNing",
 			roam: false, //开启鼠标缩放和漫游
-			zoom: 0.8, //地图缩放级别
+			zoom: 0.7, //地图缩放级别
 			selectedMode: false, //选中模式：single | multiple
 			left: 0,
 			right: 0,
@@ -1552,6 +1552,8 @@ function loadChart(){
 		dataType : 'json',
 		success : function(backjson) {
 			if(backjson.code===200){
+				$(".Screen1").hide();
+				$(".Screen2").addClass("animated flipInX").show();
 				//中间地图
 				getMapInfo();
 
@@ -1601,6 +1603,7 @@ function reloadChart(backjsonData){
 
 	studentFaceCountSwiper1.autoplay.stop();
 
+
 	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1").hide();
 	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,.visual_swiper1_1").show();
 	$(".visual_swiper2_2").empty();
@@ -1624,6 +1627,8 @@ function reloadChart(backjsonData){
 		returnConfigPage();
 		e.stopPropagation();
 	});
+
+	studentFaceCountSwiper2.autoplay.start();
 }
 
 //渲染中间隐藏的四个小chart
@@ -2258,7 +2263,7 @@ function returnConfigPage(){
 	}
 
 	studentFaceCountSwiper1.autoplay.start();
-
+	studentFaceCountSwiper2.autoplay.stop();
 }
 
 //初始化加载
@@ -2332,10 +2337,186 @@ function reloadPage1(){
 	}
 }
 
+//渲染1屏
+function stuffScreen1(){
+	getScreen1MapInfo();
+
+	$('#enterScreen2').unbind('click');
+	$('#enterScreen2').bind('click', function(e) {
+		enterScreen2();
+		e.stopPropagation();
+	});
+}
+
+//渲染1屏地图
+function getScreen1MapInfo(){
+	var currentTeachLocal = [
+		{name: '锦州凌海',
+			value: [121.35, 41.17]
+		},
+		{name: '绥中',
+			value: [120.33, 40.32]
+		},
+		{name: '大连',
+			value: [121.62, 38.92]
+		},
+		{
+			name: '朝阳市',
+			value: [120.451176, 41.576758]
+		},
+		{
+			name: '北镇',
+			value: [121.883693,41.594137]
+		},
+		{
+			name: '阜新市',
+			value: [121.648962, 42.011796]
+		},
+		{
+			name: '康平',
+			value: [123.35, 42.75]
+		},
+		{
+			name: '法库',
+			value: [123.245, 42.30]
+		},
+		{
+			name: '沈阳市',
+			value: [123.429096, 41.796767]
+		},
+		{
+			name: '昌图',
+			value: [123.46, 42.36]
+		},
+		{
+			name: '西丰',
+			value: [124.72, 42.73]
+		},
+		{
+			name: '开原',
+			value: [124.03, 42.53]
+		},
+		{
+			name: '铁岭市',
+			value: [123.844279, 42.290585]
+		},
+		{
+			name: '海城',
+			value: [122.41, 40.41]
+		},
+		{
+			name: '大石桥',
+			value: [122.50, 40.65]
+		},
+		{
+			name: '庄河',
+			value: [122.98, 39.70]
+		}]
+	$.getJSON("mapJson/liaoNing.json", function(result) {
+		$.each(result, function(i, field) {
+			drawScreen1Map("screen1Map", result, currentTeachLocal);
+		});
+	});
+}
+
+//渲染中间地图
+function drawScreen1Map(id, allMapJson, currentTeachLocal) {
+	echarts.registerMap('liaoNing', allMapJson);
+	var myChart = echarts.init(document.getElementById(id));
+
+	option = {
+		title: {
+			// text: '辽宁省教学点分布',
+			// subtext: "2019年学院高职扩招在籍学生6230人，其中第一批高职扩招在籍学生2931人，共设57个教学班\n第二批高职扩招学生3299人，共设85个教学班级。", //副标题 \n 用于换行
+			itemGap: 15, //主副标题间距
+			// padding: [10, 10, 5, 5], //设置标题内边距,上，右，下，左
+			left: "center",
+			// x: "left",
+			// y: 'top',
+			textStyle: {
+				fontSize: 20, //大小
+				fontWeight: '800', //粗细
+				color: 'rgb(121, 210, 236)'
+			},
+			subtextStyle: { //副标题的属性
+				fontSize: 13, //大小
+				fontWeight: '400', //粗细
+				color: 'rgba(157, 227, 249, 0.91)'
+			}
+		},
+		geo: {
+			map: "liaoNing",
+			roam: false, //开启鼠标缩放和漫游
+			zoom: 0.7, //地图缩放级别
+			selectedMode: false, //选中模式：single | multiple
+			left: 0,
+			right: 0,
+			top:-50,
+			bottom: -50,
+			label: {
+				normal: { //静态的时候展示样式
+					show: false, //是否显示地图省份得名称
+					textStyle: {
+						color: "#fff",
+						fontSize: 10,
+						fontFamily: "Arial"
+					}
+				},
+				emphasis: {
+					color: 'white', //动态展示文字的样式
+				},
+			},
+			itemStyle: {
+				normal: {
+					areaColor: "rgba(255, 255, 255, 0)",
+					borderWidth: 1.5,
+					textStyle: {
+						color: "#fff"
+					},
+					borderColor: "rgba(153, 215, 234, 0.58)" //地图边框颜色
+				},
+				emphasis: {
+					color: "#fff",
+					areaColor: "rgba(45, 189, 232, 0.83)"
+				}
+			}
+		},
+		series: [{
+			name: '教学点',
+			type: 'effectScatter',
+			coordinateSystem: 'geo',
+			hoverAnimation: true,
+			label: {
+				normal: {
+					formatter: '{b}',
+					position: 'right',
+					show: true
+				}
+			},
+			data: currentTeachLocal,
+			symbolSize: 15,
+			rippleEffect: {
+				brushType: 'stroke'
+			},
+			itemStyle: {
+				normal: {
+					color: 'rgb(1, 226, 251)' // 散点的颜色
+				}
+			}
+		}]
+	}
+	myChart.setOption(option);
+}
+
+//进入2屏
+function enterScreen2(){
+	loadChart( );
+	ListeneChart();
+}
+
 $(function () {
 	loadConfig();
-	loadChart();
-	ListeneChart();
+	stuffScreen1();
 })
 
 

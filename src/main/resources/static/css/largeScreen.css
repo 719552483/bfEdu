@@ -9,7 +9,7 @@
 
 .iconfont {
     font-family: "iconfont" !important;
-    font-size: 16px;
+    font-size: 1vw;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -54,7 +54,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 40px;
+    font-size: 2vw;
     background: linear-gradient( 0deg,#0095d6, #46daff);
     background-size: cover;
     -webkit-background-clip: text;
@@ -260,5 +260,208 @@ border-bottom: 1px #ff000000 solid!important;
 }
 
 
+.my_visual{
+    height: calc(116% - 48px);
+    padding-top: 10px;
+}
 
+.Screen2{
+    display: none;
+}
 
+.Screen1 .visual_con ,.txtArea{
+    height:90%;
+}
+
+.Screen1 .centerMap ,.txtArea{
+    float: left;
+}
+
+.txtArea{
+    margin-left: -18%;
+}
+
+.Screen1 .visual_con .visual_chart{
+    top:7%;
+}
+
+.txt1{
+    float: left;
+    position: relative;
+    left: 8%;
+    top: 9%;
+}
+
+.txt1 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: cornflowerblue;
+    float: right;
+}
+
+.txt1 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: cornflowerblue;
+    float: left;
+}
+
+.txt2{
+    float: left;
+    position: relative;
+    left: -50%;
+    top: 19%;
+}
+
+.txt2 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: wheat;
+    float: right;
+}
+
+.txt2 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: wheat;
+    float: left;
+}
+
+.txt3{
+    float: left;
+    position: relative;
+    left: -58%;
+    top: 32%;
+
+}
+
+.txt3 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: darkseagreen;
+    float: right;
+}
+
+.txt3 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: darkseagreen;
+    float: left;
+}
+
+.txt4{
+    float: left;
+    position: relative;
+    left: -36%;
+    top: 42%;
+}
+
+.txt4 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: #aa90ff;
+    float: right;
+}
+
+.txt4 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: #aa90ff;
+    float: left;
+}
+
+.txt5{
+    float: left;
+    position: relative;
+    left: 8%;
+    top: 51%;
+}
+
+.txt5 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: white;
+    float: right;
+}
+
+.txt5 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: white;
+    float: left;
+}
+
+.Screen1 .visual_con ,.txtArea2{
+    height:90%;
+}
+
+.txtArea2{
+    float: right;
+}
+
+.txtArea2{
+    margin-left: -18%;
+}
+
+.txt6{
+    float: left;
+    position: relative;
+    left: 70%;
+    top: -96%;
+}
+
+.txt6 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: #e4aa52e0;
+    float: left;
+}
+
+.txt6 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: #e4aa52e0;
+    float: right;
+}
+
+.txt7{
+    float: left;
+    position: relative;
+    left: 86%;
+    top: -87%;
+}
+
+.txt7 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: #52dde4e0;
+    float: left;
+}
+
+.txt7 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: #52dde4e0;
+    float: right;
+}
+
+.txt8{
+    float: left;
+    position: relative;
+    left: 100%;
+    top: -75%;
+}
+
+.txt8 span:first-child{
+    font-size: 2vw;
+    font-weight: bold;
+    color: #b56d92e0;
+    float: left;
+}
+
+.txt8 span:last-child{
+    font-size: 1vw;
+    font-weight: normal;
+    color: #b56d92e0;
+    float: right;
+}
