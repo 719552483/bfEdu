@@ -30,6 +30,34 @@
     content: "\e613";
 }
 
+@font-face {font-family: "iconfont";
+    src: url('iconfont.eot?t=1605094769019'); /* IE9 */
+    src: url('iconfont.eot?t=1605094769019#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAOIAAsAAAAAB4gAAAM6AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcAqDFIJzATYCJAMICwYABCAFhG0HMBuZBsgOJUHBwMCgAABABF9jv313h2pSjXS8ioYkiUolmydCZjqJkMkMGQ/5X+bMlX3XepwybBHBIAOPoqRAzhXoyYSvvgi+zR+He21N8PmAcptjcNQFGG8NbE9sa2nnBfLB/A9jF7TE4wTq9amPLPfsPxwkhTkuEIe2qYCU0SoNhaFWqK5YWsQN5KpNp8J9ANfB7+MXmoZEUpWZJesHPXTo/IlWihhnY+M9BPCmM4OtImMGKMR2pXWVGEVniOrVaI4hsK3C4HMgm/W4m/3HI4hqZn4j6IHca+I5/EvNT6DAzivgedBgyvig0mSGvKT62ovuR9TcXp1kni55XEEYuvf54+cd6IqSZ16MePVqJNn4dMyL58OXvOw4cu2mfadKjhAz+5buAaHhAeLHpavIqlKEPO2rtepERchTMwRVFr1CVSqBObCkYjw8IGvJK/PGL0bEJXbUWUdevpSfPx++4UWd5soXocLE9c+w4oT9T3/GfdU6LYaNkFJ73w0WmxREry/YcLKiAcVRcCM7p/MtvSzVgMo1qQHrDwsDjKrFsv9/1rgff1uy6HPxNbXs4i0IyQ3/pT4khHCcpyJ6VXah3h9lMTlKdmOcU2kZINV/0CL2i0970/gqEqzsfxpxF0lvdcxsULeEQUU7HqlqVRC8Oc7wsWRaWpgoY5+30Bmgkpf3inP+0994OVuenlS4/T8pUcD72/cocFfyCnSzg9q7sQV/hdexomgCU5Eej4tsyVUqQ0K95lAB09nu41B7F0jMoZbzICQ1eiGrNYIs2Bmo0mAWqtWag3rTeq1u0IERRanDlPkAQqtDkDR7hazVA2TBfoAq3b5BtdYQod5uFN+ywVjYcjdGFU51VKehrYWBYRu4HBYOpWbKU1haENBGUpa0A9ikYeN8ohcNKJtiRjJtNuXcQIOFPvYEp1HPCzFioUM13tDiPGrbqJFR9aSGWuiDbAlDKThKh1TTIJsmFDC82pxc+P5QlCnFo2ANZVX2kSgmye4eNdFQ4w7IXtKgU9mtnJOUZmqK4wzIwIR8qCcwU54VDaGoepCD0nANWQPCkbYaoWpGV2nD5eX+262DeqYqhdUvq96zlcCxAQAAAA==') format('woff2'),
+    url('iconfont.woff?t=1605094769019') format('woff'),
+    url('iconfont.ttf?t=1605094769019') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url('iconfont.svg?t=1605094769019#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dianji:before {
+    content: "\e720";
+    font-size: 1.5vw;
+    margin-left: 15px;
+    margin-top: 11px;
+    float: right;
+    color: #b56d92;
+}
+
+
+
 
 
 .noneStart{
