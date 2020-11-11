@@ -72,7 +72,7 @@ function stuffCourseLibraryTable(tableInfo){
 
 				},{
 					field: 'zylsmc',
-					title: '主要老师',
+					title: '助教',
 					clickToSelect: false,
 					align: 'left',
 					sortable: true,
