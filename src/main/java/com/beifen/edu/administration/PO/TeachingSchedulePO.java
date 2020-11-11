@@ -26,6 +26,7 @@ public class TeachingSchedulePO {
     private String EDU202_ID;
     private String id;
     private String sfxylcj;
+    private String pksj;
 
 
     public String getPyjhcc() {
@@ -158,6 +159,14 @@ public class TeachingSchedulePO {
 
     public void setPyjhmc(String pyjhmc) {
         this.pyjhmc = pyjhmc;
+    }
+
+    public String getPksj() {
+        return pksj;
+    }
+
+    public void setPksj(String pksj) {
+        this.pksj = pksj;
     }
 
     @Id

@@ -2048,7 +2048,7 @@ public class AdministrationPageService {
 	public ResultVO getJxPublicCodes() {
 		ResultVO resultVO;
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu400> allXn = edu400DAO.findAll();
+		List<Edu400> allXn = edu400DAO.findAllXn();
 		returnMap.put("allXn", allXn);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;

@@ -23,4 +23,7 @@ public interface Edu400Dao extends  JpaRepository<Edu400, Long>,JpaSpecification
     //根据任务书查询包含学年信息
     @Query(value = "select distinct e.* from edu400 e, edu201 f where e.Edu400_ID = f.xnid and f.Edu201_ID in ?1", nativeQuery = true)
     List<Edu400> getYearFromEdu201(List<String> edu201IdList);
+
+    @Query(value = "select * from edu400 e order by e.xnmc",nativeQuery = true)
+    List<Edu400> findAllXn();
 }
