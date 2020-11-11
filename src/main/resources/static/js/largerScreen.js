@@ -222,17 +222,6 @@ function hiddenBigVideo(){
 	}, 600);
 }
 
-//table文字格式化
-function paramsMatter(value, row, index) {
-	if(typeof value === 'undefined'||value==null||value===""){
-		return [ '<div class="myTooltip normalTxt" title="暂无">暂无</div>' ]
-			.join('');
-	}else{
-		return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]
-			.join('');
-	}
-}
-
 //渲染授课教师人数表
 function stuffTeacherCountTable(tableInfo){
 	var screen=window.screen.width;
@@ -256,7 +245,8 @@ function stuffTeacherCountTable(tableInfo){
 		toolbar: '#toolbar',
 		showColumns: false,
 		onClickRow : function(row, $element, field) {
-			changePageData(row);
+			var index =parseInt($element[0].dataset.index);
+			changePageData(row,index);
 		},
 		onPostBody: function() {
 			changetableStyleByScreen(tableInfo);
@@ -270,18 +260,30 @@ function stuffTeacherCountTable(tableInfo){
 			{
 				field: 'departmentName',
 				title: '二级学院名称',
-				align: 'center'
+				align: 'center',
+				formatter: departmentNameMatter
 			},{
 				field: 'teacherCount',
 				title: '授课教师数',
-				align: 'center'
+				align: 'center',
+				formatter: teacherCountMatter
 			}
 		]
 	});
+
+	function departmentNameMatter(value, row, index) {
+		return [ '<div class="changeLeft'+index+'"><img class="tableImgLeft" src="images/ulist.png"/><span>'+value+'</span></div>' ]
+			.join('');
+	}
+
+	function teacherCountMatter(value, row, index) {
+		return [ '<div class="changeRight'+index+'"><img class="tableImgRight" src="images/ulist.png"/><span>'+value+'</span></div>' ]
+			.join('');
+	}
 }
 
 //点击切换页面数据源
-function changePageData(row){
+function changePageData(row,index){
 	var returnObject=new Object();
 	returnObject.departmentCode=row.edu104Id;
 	returnObject.schoolYearCode="";
@@ -297,11 +299,32 @@ function changePageData(row){
 		success : function(backjson) {
 			if(backjson.code===200){
 				reloadChart(backjson.data);
+				changeChoosendStyle(index);
 			}else{
 				toastr.warning(backjson.msg);
 			}
 		}
 	});
+}
+
+//改变table选择的样式
+function changeChoosendStyle(index){
+	$(".tableImgLeft,.tableImgRight").hide();
+	$(".tableSpanLeft").removeClass("tableSpanLeft");
+	$(".tableSpanRight").removeClass("tableSpanRight");
+	$(".tableChoosend").removeClass("tableChoosend");
+
+	$(".changeLeft"+index).find(".tableImgLeft").show();
+	$(".changeLeft"+index).find("span").addClass("tableSpanLeft");
+	$(".changeRight"+index).find(".tableImgRight").show();
+	$(".changeRight"+index).find("span").addClass("tableSpanRight");
+	$(".changeLeft"+index)[0].parentElement.parentElement.className="tableChoosend";
+	var screen=window.screen.width;
+	if(screen<=1366){
+		$(".tableImgLeft,.tableImgRight").css("marginTop","1px");
+	}else{
+		$(".tableImgLeft,.tableImgRight").css("marginTop","3%");
+	}
 }
 
 //渲染教师类型分布chart
@@ -624,7 +647,7 @@ function stuffclassHourTypeCount(periodTypeData,isSingle) {
 }
 
 //学院概貌分析
-function stuffstudentFaceCount(studentAgeData,studentJobData){
+function stuffstudentFaceCount(studentAgeData,studentJobData,isSingle){
 	var studentAgeData=reStuffData(studentAgeData);
 	var studentJobData =reStuffData(studentJobData);
 	var option3 = {
@@ -712,19 +735,37 @@ function stuffstudentFaceCount(studentAgeData,studentJobData){
 			type: "radar",
 			data: studentJobData.renderData
 		}]
+	};
+
+	if(isSingle){
+		var myChart3 = echarts.init(document.getElementById('main3_2'));
+		myChart3.setOption(option3);
+		var myChart31 = echarts.init(document.getElementById('main31_2'));
+		myChart31.setOption(option31);
+	}else{
+		var myChart3 = echarts.init(document.getElementById('main3'));
+		myChart3.setOption(option3);
+		var myChart31 = echarts.init(document.getElementById('main31'));
+		myChart31.setOption(option31);
 	}
 
-	var myChart3 = echarts.init(document.getElementById('main3'));
-	myChart3.setOption(option3);
-	var myChart31 = echarts.init(document.getElementById('main31'));
-	myChart31.setOption(option31);
-	var mySwiper1 = new Swiper('.visual_swiper1', {
-		autoplay: true,//可选选项，自动滑动
-		speed: 800,//可选选项，滑动速度
-		autoplay: {
-			delay: 2500,//1秒切换一次
-		},
-	})
+	if(isSingle){
+		studentFaceCountSwiper2 = new Swiper('.visual_swiper1_1', {
+			autoplay: true,//可选选项，自动滑动
+			speed: 800,//可选选项，滑动速度
+			autoplay: {
+				delay: 2500,//1秒切换一次
+			},
+		})
+	}else{
+		studentFaceCountSwiper1 = new Swiper('.visual_swiper1', {
+			autoplay: true,//可选选项，自动滑动
+			speed: 800,//可选选项，滑动速度
+			autoplay: {
+				delay: 2500,//1秒切换一次
+			},
+		})
+	}
 }
 
 //学院概貌分析饼图渲染demo
@@ -1522,7 +1563,7 @@ function loadChart(){
 				stuffclassHourTypeCount(backjson.data.periodTypeData,false);
 
 				//学员概貌分析
-				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData);
+				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData,false);
 				//授课情况统计
 				stuffoptenClassCount(backjson.data.courseData,false);
 				//学员统计人数
@@ -1558,8 +1599,10 @@ function reloadChart(backjsonData){
 		mySwiper2.autoplay.stop();
 	}
 
-	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount").hide();
-	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount").show();
+	studentFaceCountSwiper1.autoplay.stop();
+
+	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1").hide();
+	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,.visual_swiper1_1").show();
 	$(".visual_swiper2_2").empty();
 
 	//教师类型分布
@@ -1567,7 +1610,7 @@ function reloadChart(backjsonData){
 	//课时类型分布
 	stuffclassHourTypeCount(backjsonData.periodTypeData,true);
 	//学员概貌分析
-	stuffstudentFaceCount(backjsonData.studentAgeData,backjsonData.studentJobData);
+	stuffstudentFaceCount(backjsonData.studentAgeData,backjsonData.studentJobData,true);
 	//授课情况统计
 	stuffoptenClassCount(backjsonData.courseData,true);
 	//学员统计人数
@@ -1923,6 +1966,14 @@ function jzksClassPeriodChartDemo(currentInfo){
 	if(currentInfo.peridoCount!=0){
 		value=Math.floor(currentInfo.periodCompleteCount/currentInfo.peridoCount*100);
 	}
+
+	var screen=window.screen.width;
+	var borderWidth=0;
+	if(screen<=1366){
+		borderWidth=15;
+	}else{
+		borderWidth=25;
+	}
 	returnOption = {
 		title: {
 			text: `${value}%`,
@@ -1983,7 +2034,7 @@ function jzksClassPeriodChartDemo(currentInfo){
 				name: '已完成课时',
 				itemStyle: {
 					normal: {
-						borderWidth: 25,
+						borderWidth: borderWidth,
 						borderColor: {
 							colorStops: [{
 								offset: 0,
@@ -2038,6 +2089,13 @@ function fsksClassPeriodChartDemo(currentInfo){
 	var value=0;
 	if(currentInfo.peridoCount!=0){
 		value=Math.floor(currentInfo.periodCompleteCount/currentInfo.peridoCount*100);
+	}
+	var screen=window.screen.width;
+	var borderWidth=0;
+	if(screen<=1366){
+		borderWidth=15;
+	}else{
+		borderWidth=25;
 	}
 	returnOption = {
 		title: {
@@ -2099,7 +2157,7 @@ function fsksClassPeriodChartDemo(currentInfo){
 				name: '已完成课时',
 				itemStyle: {
 					normal: {
-						borderWidth: 25,
+						borderWidth: borderWidth,
 						borderColor: {
 							colorStops: [{
 								offset: 0,
@@ -2150,8 +2208,12 @@ function fsksClassPeriodChartDemo(currentInfo){
 
 //返回初始化页面
 function returnConfigPage(){
-	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount").show();
-	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,#returnConfigPage").hide();
+	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1").show();
+	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,#returnConfigPage,.visual_swiper1_1").hide();
+	$(".tableImgLeft,.tableImgRight").hide();
+	$(".tableSpanLeft").removeClass("tableSpanLeft");
+	$(".tableSpanRight").removeClass("tableSpanRight");
+	$(".tableChoosend").removeClass("tableChoosend");
 
 	//隐藏
 	$('.smallBingtu').addClass('animated bounceOut');
@@ -2194,6 +2256,9 @@ function returnConfigPage(){
 	if(localStudentCountCharts>1){
 		mySwiper2.autoplay.start();
 	}
+
+	studentFaceCountSwiper1.autoplay.start();
+
 }
 
 //初始化加载
@@ -2235,13 +2300,13 @@ function changetableStyleByScreen(tableInfo){
 		for (var i = 0; i < allth.length; i++) {
 			allth[i].style.lineHeight=0.6;
 		}
-		$(".visual_left").find(".tableArea").find(".fixed-table-pagination").find(".pagination")[0].style.marginTop="1%";
+		$(".visual_left").find(".tableArea").find(".fixed-table-pagination").find(".pagination")[0].style.marginTop="-1%";
 	}else{
 		$(".visual_left").find(".tableArea").find(".search").find("input")[0].style.height="25px";
 		for (var i = 0; i < allth.length; i++) {
 			allth[i].style.lineHeight=1.428571429;
 		}
-		$(".visual_left").find(".tableArea").find(".fixed-table-pagination").find(".pagination")[0].style.marginTop="4%";
+		$(".visual_left").find(".tableArea").find(".fixed-table-pagination").find(".pagination")[0].style.marginTop="0%";
 	}
 }
 

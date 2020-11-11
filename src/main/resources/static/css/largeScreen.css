@@ -217,6 +217,47 @@ border-bottom: 1px #ff000000 solid!important;
     text-align: center;
 }
 
+.tableSpanLeft{
+    float: left;
+    color: #88ceff;
+}
+
+.tableSpanRight{
+    float: right;
+    color: #88ceff;
+}
+
+.tableImgLeft {
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg); 	/* IE 9 */
+    -moz-transform:rotate(180deg); 	/* Firefox */
+    -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+    -o-transform:rotate(180deg); 	/* Opera */
+    float: left;
+    margin-left: 10%;
+    margin-right: 27%;
+    width: 7px;
+    height: 7px;
+    display:none;
+}
+
+.tableImgRight {
+    transform:rotate(360deg);
+    -ms-transform:rotate(360deg); 	/* IE 9 */
+    -moz-transform:rotate(360deg); 	/* Firefox */
+    -webkit-transform:rotate(360deg); /* Safari 和 Chrome */
+    -o-transform:rotate(360deg); 	/* Opera */
+    float: right;
+    margin-left: 10%;
+    margin-right: 33%;
+    width: 7px;
+    height: 7px;
+    display:none;
+}
+
+.tableChoosend{
+    background-color: rgb(130 178 239 / 22%);
+}
 
 
 
