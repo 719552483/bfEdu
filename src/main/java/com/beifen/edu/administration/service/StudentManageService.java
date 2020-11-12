@@ -550,8 +550,8 @@ public class StudentManageService {
                     } else if ("T".equals(e.getGrade())) {
                         e.setGetCredit(e.getCredit());
                     } else {
-                        int i = Integer.parseInt(e.getGrade());
-                        if (i < 60) {
+                        double i = Double.parseDouble(e.getGrade());
+                        if (i < 60.00) {
                             e.setGetCredit(0.00);
                         } else {
                             e.setGetCredit(e.getCredit());
