@@ -303,4 +303,16 @@ public class TeachingPointService {
 
         return resultVO;
     }
+
+    //搜索全部教学点
+    public ResultVO searchAllLocal() {
+        ResultVO resultVO;
+        List<Edu500> edu500List = edu500Dao.findAll();
+        if(edu500List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无教学点信息");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu500List.size()+"个教学点",edu500List);
+        }
+        return resultVO;
+    }
 }

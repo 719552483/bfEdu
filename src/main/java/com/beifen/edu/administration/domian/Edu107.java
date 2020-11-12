@@ -29,8 +29,6 @@ public class Edu107 {
 	private  String xbsp;//系部审批
 	private String batch;// 批次代码
 	private String batchName; //批次名称
-	private String schoolYear; //学年代码
-	private String schoolYearName; //学年名称
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -127,21 +125,5 @@ public class Edu107 {
 
 	public void setBatchName(String batchName) {
 		this.batchName = batchName;
-	}
-
-	public String getSchoolYear() {
-		return schoolYear;
-	}
-
-	public void setSchoolYear(String schoolYear) {
-		this.schoolYear = schoolYear;
-	}
-
-	public String getSchoolYearName() {
-		return schoolYearName;
-	}
-
-	public void setSchoolYearName(String schoolYearName) {
-		this.schoolYearName = schoolYearName;
 	}
 }
