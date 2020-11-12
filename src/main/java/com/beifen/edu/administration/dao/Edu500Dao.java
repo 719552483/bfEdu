@@ -27,4 +27,8 @@ public interface Edu500Dao extends JpaRepository<Edu500, Long>, JpaSpecification
             "(select count(f.edu501Id) from Edu501 f where f.edu500Id = e.edu500Id),e.localName,e.localAddress,e.remarks) " +
             "from Edu500 e where e.edu500Id in ?1")
     List<Edu500> findAllByEdu500Ids(List<Long> edu500Ids);
+
+    //查询教学点数量
+    @Query(value = "select count(0) from edu500 e", nativeQuery = true)
+    Long findAllLocal();
 }

@@ -63,4 +63,8 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	//查询各类学时总和
 	@Query(value = "select new com.beifen.edu.administration.PO.ClassHourPO(sum(e.llxs),sum(e.sjxs),sum(e.jzxs),sum(e.fsxs)) from Edu200 e")
 	ClassHourPO findSumClassHours();
+
+	//查询课程数量
+	@Query(value = "select count(0) from edu200", nativeQuery = true)
+    Long findAllCourse();
 }
