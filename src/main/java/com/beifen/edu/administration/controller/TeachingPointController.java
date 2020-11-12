@@ -53,6 +53,17 @@ public class TeachingPointController {
     }
 
     /**
+     * 搜索全部教学点
+     * @return
+     */
+    @RequestMapping("/searchAllLocal")
+    @ResponseBody
+    public ResultVO searchAllLocal() {
+        ResultVO result = teachingPointService.searchAllLocal();
+        return result;
+    }
+
+    /**
      * 删除教学点
      * @param removeIDs
      * @return
