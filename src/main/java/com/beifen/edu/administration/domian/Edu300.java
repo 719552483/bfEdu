@@ -32,8 +32,6 @@ public class Edu300 {
 	private  String yxbz;//有效标志
 	private String batch;// 批次代码
 	private String batchName; //批次名称
-	private String schoolYear; //学年代码
-	private String schoolYearName; //学年名称
 	private String localCode;//归属地编码
 	private String localName;//归属地名称
 	
@@ -107,18 +105,6 @@ public class Edu300 {
 	public void setZymc(String zymc) {
 		this.zymc = zymc;
 	}
-//	public String getXqmc() {
-//		return xqmc;
-//	}
-//	public void setXqmc(String xqmc) {
-//		this.xqmc = xqmc;
-//	}
-//	public String getXqbm() {
-//		return xqbm;
-//	}
-//	public void setXqbm(String xqbm) {
-//		this.xqbm = xqbm;
-//	}
 	public int getZxrs() {
 		return zxrs;
 	}
@@ -140,30 +126,6 @@ public String getSfsckkjh() {
 	public void setSfsckkjh(String sfsckkjh) {
 		this.sfsckkjh = sfsckkjh;
 	}
-	//	public String getBzrmc() {
-//		return bzrmc;
-//	}
-//	public void setBzrmc(String bzrmc) {
-//		this.bzrmc = bzrmc;
-//	}
-//	public String getBzrbm() {
-//		return bzrbm;
-//	}
-//	public void setBzrbm(String bzrbm) {
-//		this.bzrbm = bzrbm;
-//	}
-//	public String getFdymc() {
-//		return fdymc;
-//	}
-//	public void setFdymc(String fdymc) {
-//		this.fdymc = fdymc;
-//	}
-//	public String getFdybm() {
-//		return fdybm;
-//	}
-//	public void setFdybm(String fdybm) {
-//		this.fdybm = fdybm;
-//	}
 	public String getYxbz() {
 		return yxbz;
 	}
@@ -197,28 +159,12 @@ public String getSfsckkjh() {
 		this.batch = batch;
 	}
 
-	public String getSchoolYear() {
-		return schoolYear;
-	}
-
-	public void setSchoolYear(String schoolYear) {
-		this.schoolYear = schoolYear;
-	}
-
 	public String getBatchName() {
 		return batchName;
 	}
 
 	public void setBatchName(String batchName) {
 		this.batchName = batchName;
-	}
-
-	public String getSchoolYearName() {
-		return schoolYearName;
-	}
-
-	public void setSchoolYearName(String schoolYearName) {
-		this.schoolYearName = schoolYearName;
 	}
 
 	public String getLocalCode() {
