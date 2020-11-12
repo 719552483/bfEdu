@@ -227,6 +227,12 @@ function stuffAllRelationInfoTable(allRelationInfo){
 				sortable: true,
 				formatter: paramsMatter
 			},{
+				field: 'batchName',
+				title: '批次',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
 				field: 'action',
 				title: '操作',
 				align: 'center',
@@ -341,6 +347,9 @@ function stufDeadultRelation(row){
 	//专业
 	str = '<option value="' + row.edu106 + '">' + row.edu106mc+ '</option>';
 	stuffManiaSelect('#addNewRelation_major', str);
+	//批次
+	str = '<option value="' + row.batch + '">' + row.batchName+ '</option>';
+	stuffManiaSelect('#addNewRelation_bath', str);
 }
 
 //确认修改关系
@@ -453,7 +462,10 @@ function getRelationSelectInfo(){
 	var relationGardeText = getNormalSelectText("addNewRelation_garde");
 	var relationMmajorValue = getNormalSelectValue("addNewRelation_major");
 	var relationMmajorText = getNormalSelectText("addNewRelation_major");
+	var batch = getNormalSelectValue("addNewRelation_bath");
+	var batchName = getNormalSelectText("addNewRelation_bath");
 	var relationName =$("#addNewRelation_RelationName").val();
+
 
 	if(relationName===""){
 		toastr.warning('培养计划名称不能为空');
@@ -478,16 +490,22 @@ function getRelationSelectInfo(){
 		toastr.warning('请选择专业');
 		return;
 	}
+	if(batch===""){
+		toastr.warning('请选择批次');
+		return;
+	}
 
 	var newRelationObject=new Object();
 	newRelationObject.edu103mc=relationlLevelText;
 	newRelationObject.edu104mc=relationDepartmentText;
 	newRelationObject.edu105mc=relationGardeText;
 	newRelationObject.edu106mc=relationMmajorText;
+	newRelationObject.batchName=batchName;
 	newRelationObject.edu103=relationlLevelValue;
 	newRelationObject.edu104=relationDepartmentValue;
 	newRelationObject.edu105=relationGardeValue;
 	newRelationObject.edu106=relationMmajorValue;
+	newRelationObject.batchName=batchName;
 	newRelationObject.pyjhmc=relationName;
 	return newRelationObject;
 }
