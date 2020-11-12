@@ -516,6 +516,13 @@ function emptyRelationChooseArea(){
 	reObject.normalSelectIds = "#addNewRelation_level,#addNewRelation_department,#addNewRelation_garde,#addNewRelation_major";
 	reObject.InputIds = "#addNewRelation_RelationName";
 	reReloadSearchsWithSelect(reObject);
+
+	//批次
+	var str='<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < EJDMElementInfo.pclx.length; i++) {
+		str += '<option value="' + EJDMElementInfo.pclx[i].ejdm + '">' + EJDMElementInfo.pclx[i].ejdmz+ '</option>';
+	}
+	stuffManiaSelect('#addNewRelation_bath', str);
 }
 
 //根据表格填充新增关系待选项

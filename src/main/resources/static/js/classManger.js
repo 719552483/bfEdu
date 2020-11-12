@@ -1,7 +1,9 @@
 var EJDMElementInfo;
+var allLocation;
 $(function() {
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	EJDMElementInfo=queryEJDMElementInfo();
+	allLocation=queryAllLocationInfo();
 	stuffEJDElement(EJDMElementInfo);
 	getMajorAdministrationClassSelectInfo();
 	drawAdministrationClassEmptyTable();
@@ -9,6 +11,27 @@ $(function() {
 	$("input[type='number']").inputSpinner();
 	deafultSearch();
 });
+
+// 查询所有归属地
+function queryAllLocationInfo(){
+	var queryRs;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		async :false,
+		url : "/searchAllLocal",
+		dataType : 'json',
+		success : function(backjson) {
+			if (backjson.code == 200) {
+				queryRs=backjson.data;
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+	return queryRs;
+}
+
 
 //初始化检索
 function deafultSearch(){
@@ -191,6 +214,18 @@ function stuffAdministrationClassTable(tableInfo){
 				sortable: true,
 				formatter : paramsMatter
 			},{
+				field : 'batchName',
+				title : '批次',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			},{
+				field : 'localName',
+				title : '归属地',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			},  {
 				field : 'xzbmc',
 				title : '行政班名称',
 				align : 'left',
@@ -323,12 +358,47 @@ function administrationClassInfo(row){
 	$(".myabeNoneTipBtn,.addAdministrationClass_classCodeArea,.addAdministrationClass_selfNumArea").hide();
 	$(".addAdministrationClass_classCodeArea").show();
 	$(".addAdministrationClassTip").find(".canNotModifythings").remove();
-	stuffAdministrationClassDetails(row);
+	stuffAdministrationClassDetails(row,false);
 }
 
 //填充行政班详情
-function stuffAdministrationClassDetails(row){
-//	actionStuffManiaSelectWithDeafult("#addAdministrationClass_campus",row.xqbm,row.xqmc);  //校区
+function stuffAdministrationClassDetails(row,ismodify){
+	var str='';
+	//批次
+	if(ismodify){
+		for (var i = 0; i < EJDMElementInfo.pclx.length; i++) {
+			if(EJDMElementInfo.pclx[i].ejdm===row.batch){
+				str = '<option value="' + EJDMElementInfo.pclx[i].ejdm + '">' + EJDMElementInfo.pclx[i].ejdmz+ '</option>';
+			}
+		}
+		for (var i = 0; i < EJDMElementInfo.pclx.length; i++) {
+			if(EJDMElementInfo.pclx[i].ejdm!==row.batch){
+				str += '<option value="' + EJDMElementInfo.pclx[i].ejdm + '">' + EJDMElementInfo.pclx[i].ejdmz+ '</option>';
+			}
+		}
+	}else{
+		str = '<option value="' + row.batch + '">' + row.batchName+ '</option>';
+	}
+	stuffManiaSelect('#addAdministrationClass_batch', str);
+
+	str='';
+	//归属地
+	if(ismodify){
+		for (var i = 0; i < allLocation.length; i++) {
+			if(allLocation[i].edu500Id==parseInt(row.localCode)){
+				str = '<option value="' + allLocation[i].edu500Id + '">' + allLocation[i].localName+ '</option>';
+			}
+		}
+		for (var i = 0; i < allLocation.length; i++) {
+			if(allLocation[i].edu500Id!=parseInt(row.localCode)){
+				str += '<option value="' + allLocation[i].edu500Id + '">' + allLocation[i].localName+ '</option>';
+			}
+		}
+	}else{
+		str = '<option value="' + row.localCode + '">' + row.localName+ '</option>';
+	}
+	stuffManiaSelect('#addAdministrationClass_local', str);
+
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_level",row.pyccbm,row.pyccmc); //层次
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_department",row.xbbm,row.xbmc); //二级学院
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_garde",row.njbm,row.njmc); //年级
@@ -377,8 +447,8 @@ function modifyAdministrationClass(row){
 	$('.addAdministrationClassTip').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn,.canNotModifythings").show();
 	$(".addAdministrationClass_classCodeArea").hide();
-	$(".addAdministrationClassTip").find("label:lt(5)").after('<samll class="canNotModifythings"><br />(不可改)</samll>');
-	stuffAdministrationClassDetails(row);
+	$(".addAdministrationClassTip").find("label:lt(4)").after('<samll class="canNotModifythings"><br />(不可改)</samll>');
+	stuffAdministrationClassDetails(row,true);
 	//确认修改行政班
 	$('.confirmAddAdministrationClass').unbind('click');
 	$('.confirmAddAdministrationClass').bind('click', function(e) {
@@ -390,9 +460,6 @@ function modifyAdministrationClass(row){
 //确认修改行政班
 function confirmModifyAdministrationClass(row){
 	var NotNullSearchs=getNotNullSearchs();
-//	newAdministrationClassObject.edu300_ID=row.edu300_ID;
-//	newAdministrationClassObject.yxbz=row.yxbz;
-//	newAdministrationClassObject.xzbbm=row.xzbbm;
 	if(typeof NotNullSearchs ==='undefined'){
 		return;
 	}
@@ -400,15 +467,17 @@ function confirmModifyAdministrationClass(row){
 		toastr.warning('容纳人数只接受数字参数');
 		return;
 	}
-	row.xzbmc=$("#addAdministrationClass_className").val();
-	row.rnrs=$("#addAdministrationClass_houldNum").val();
+
+	var newClassInfo=getAdministrationClassDetails();
+	newClassInfo.xzbmc=$("#addAdministrationClass_className").val();
+	newClassInfo.rnrs=$("#addAdministrationClass_houldNum").val();
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/modifyAdministrationClass",
 		data: {
-             "modifyInfo":JSON.stringify(row),
+             "modifyInfo":JSON.stringify(newClassInfo),
              "culturePlanInfo":JSON.stringify(getNotNullSearchs())
         },
 		dataType : 'json',
@@ -430,8 +499,8 @@ function confirmModifyAdministrationClass(row){
 				}
 				hideloding();
 				$("#administrationClassTable").bootstrapTable('updateByUniqueId', {
-					id: row.edu300_ID,
-					row: row
+					id: newClassInfo.edu300_ID,
+					row: newClassInfo
 				});
 				$.hideModal("#addAdministrationClassModal");
 				toolTipUp(".myTooltip");
@@ -539,6 +608,16 @@ function getAdministrationClassDetails(){
 		toastr.warning('专业不能为空');
 		return;
 	}
+	if(getNormalSelectValue("addAdministrationClass_batch") === ""){
+		toastr.warning('批次不能为空');
+		return;
+	}
+
+	if(getNormalSelectValue("addAdministrationClass_local") === ""){
+		toastr.warning('归属地不能为空');
+		return;
+	}
+
 	if($("#addAdministrationClass_selfNum").val() === ""){
 		toastr.warning('自定义班级序号不能为空');
 		return;
@@ -571,6 +650,10 @@ function getAdministrationClassDetails(){
 	newClassObject.njmc=getNormalSelectText("addAdministrationClass_garde");
 	newClassObject.zybm=getNormalSelectValue("addAdministrationClass_major");
 	newClassObject.zymc=getNormalSelectText("addAdministrationClass_major");
+	newClassObject.batch=getNormalSelectValue("addAdministrationClass_batch");
+	newClassObject.batchName=getNormalSelectText("addAdministrationClass_batch");
+	newClassObject.localCode=getNormalSelectValue("addAdministrationClass_local");
+	newClassObject.localName=getNormalSelectText("addAdministrationClass_local").split('-')[1];
 	newClassObject.zdybjxh=$("#addAdministrationClass_selfNum").val();
 //	newClassObject.xqmc=getNormalSelectText("addAdministrationClass_campus");
 //	newClassObject.xqbm=getNormalSelectValue("addAdministrationClass_campus");
@@ -587,6 +670,13 @@ function emptyAdministrationClassDetailsArea(){
 	reObject.InputIds = "#addAdministrationClass_className,#addAdministrationClass_houldNum";
 	reObject.actionSelectIds = "#addAdministrationClass_department,#addAdministrationClass_garde,#addAdministrationClass_major";
 	reReloadSearchsWithSelect(reObject);
+
+	//归属地
+	var str='<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i <allLocation.length ; i++) {
+		str += '<option value="' + allLocation[i].edu500Id + '">'+allLocation[i].city+' - ' + allLocation[i].localName+ '</option>';
+	}
+	stuffManiaSelect('#addAdministrationClass_local', str);
 }
 
 //单个删除行政班
