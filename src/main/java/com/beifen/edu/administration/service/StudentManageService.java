@@ -514,35 +514,33 @@ public class StudentManageService {
     public ResultVO studentGetGrades(String userKey,Edu005 edu005) {
         ResultVO resultVO;
 
+        Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
+        String studentCode = one.getXh();
+
         Specification<Edu005> specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
                     predicates.add(cb.like(root.<String>get("courseName"),"%"+edu005.getCourseName()+"%"));
                 }
-                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
-                    predicates.add(cb.equal(root.<String>get("xnid"), edu005.getXnid()));
+                if (edu005.getGrade() != null && !"".equals(edu005.getGrade())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"), edu005.getGrade()));
+                }
+                if (studentCode != null && !"".equals(studentCode)) {
+                    predicates.add(cb.equal(root.<String>get("studentCode"), studentCode));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
 
-        List<Edu005> all = edu005Dao.findAll(specification);
-        if (all.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无成绩信息");
-            return resultVO;
-        }
-
-        List<Long> edu201IdList = all.stream().map(e -> e.getEdu201_ID()).collect(Collectors.toList());
-        List list = utils.heavyListMethod(edu201IdList);
-        List<Edu005> edu005List = edu005Dao.findAllByStudent(userKey,list);
+        List<Edu005> edu005List = edu005Dao.findAll(specification);
 
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
         } else {
             //添加已得学分
             for (Edu005 e : edu005List) {
-                if (edu005.getGrade() == null || "".equals(edu005.getGrade())){
+                if (e.getGrade() == null || "".equals(e.getGrade())){
                     e.setGetCredit(0.00);
                 } else {
                     if ("F".equals(e.getGrade())) {
