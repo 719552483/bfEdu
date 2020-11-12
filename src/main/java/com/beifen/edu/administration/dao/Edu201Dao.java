@@ -124,4 +124,7 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 	@Query(value = "select * from edu201 e where e.kcmc = ?1 and e.class_id = ?2 and e.ls = ?3 and e.zyls is null", nativeQuery = true)
 	List<Edu201> findExistTaskWithOutZyls(String kcmc, Long classId, String ls);
+
+	@Query(value = "select distinct t.xnid from Edu201 t")
+    List<String> getYearList();
 }

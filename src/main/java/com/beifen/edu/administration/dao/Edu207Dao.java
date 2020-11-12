@@ -68,4 +68,23 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
             "      and m.EDU104_ID = q.EDU104 \n" +
             "      and to_number(n.week) < ?2",nativeQuery = true)
     Long getFsksClassPeriodComplete(String departmentCode, int week);
+
+    @Query(value = "select sum(CLASS_HOURS)\n" +
+            "    from (select distinct b.EDU104_ID, b.XBMC \n" +
+            "        from edu107 a, \n" +
+            "        edu104 b \n" +
+            "        where a.EDU104 = b.EDU104_ID) m,\n" +
+            "        EDU207 n,\n" +
+            "        EDU201 r, \n" +
+            "        edu202 o, \n" +
+            "        EDU108 p, \n" +
+            "        EDU107 q \n" +
+            "    where n.EDU201_ID = r.EDU201_ID\n" +
+            "      and o.EDU201_ID = r.EDU201_ID \n" +
+            "      and p.EDU107_ID = q.EDU107_ID \n" +
+            "      and r.EDU108_ID = p.EDU108_ID \n" +
+            "      and m.EDU104_ID = q.EDU104 \n" +
+            "      and r.xnid = ?2" +
+            "      and to_number(n.week) < ?1",nativeQuery = true)
+    Long getFsksClassPeriodCompleted(int week,String edu400ID);
 }

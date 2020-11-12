@@ -48,6 +48,14 @@ public class BigDataService {
     @Autowired
     private Edu207Dao edu207Dao;
     @Autowired
+    private Edu101Dao edu101Dao;
+    @Autowired
+    private Edu500Dao edu500Dao;
+    @Autowired
+    private Edu300Dao edu300Dao;
+    @Autowired
+    private Edu200Dao edu200Dao;
+    @Autowired
     private ReflectUtils utils;
 
 
@@ -519,5 +527,70 @@ public class BigDataService {
         returnMap.put("seriesdata",seriesdata);
 
         return returnMap;
+    }
+
+    //获取大屏汇总数据
+    public ResultVO getBigScreenTotalData() {
+        ResultVO resultVO;
+        Map<String,Object> returnMap = new HashMap<>();
+        //二级学院数量
+        returnMap.put("departmentCount",8);
+        //教师数量
+        List<Edu101> edu101List = edu101Dao.findAllteacher();
+        returnMap.put("teacherCount",edu101List.size());
+        //学生数量
+        List<Edu001> edu001List = edu001Dao.findAllStudent();
+        returnMap.put("studentCount",edu001List.size());
+        //教学点数量
+        List<Edu500> edu500List = edu500Dao.findAll();
+        returnMap.put("localCount",edu500List.size());
+        //行政班数量
+        List<Edu300> edu300List = edu300Dao.findAll();
+        returnMap.put("classCount",edu300List.size());
+        //课程数量
+        List<Edu200> edu200List = edu200Dao.findAll();
+        returnMap.put("courseCount",edu200List.size());
+
+        //已完成课时数量
+        List<String> Edu400Idlist = edu201Dao.getYearList();
+        try {
+            Integer jzxsCount = 0;
+            Integer fsxsCount = 0;
+            for(String edu400Id : Edu400Idlist) {
+                Edu400 edu400 = edu400Dao.findOne(Long.parseLong(edu400Id));
+                String kssj = edu400.getKssj();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+                int dayOfWeek;
+                int week;
+                int weekOfDate = DateUtils.getWeekOfDate(df.format(new Date()));
+                int daysBetween = DateUtils.getDaysBetween(kssj, df.format(new Date()));
+                int leftDay = daysBetween % 7;
+                if (leftDay == 0) {
+                    week = (daysBetween / 7) + 1;
+                }else {
+                    week = (daysBetween / 7) + 2;
+                }
+                if(weekOfDate == 0) {
+                    dayOfWeek = 7;
+                }else {
+                    dayOfWeek = weekOfDate;
+                }
+                //查询集中学时实时课时占比
+                List<Edu203> jzksClassPeriodCompleted = edu203Dao.getJzksClassPeriodCompleted(week,dayOfWeek,edu400Id);
+                jzxsCount+= jzksClassPeriodCompleted.size()*2;
+                //查询分散学时实时课时占比
+                Long fsksClassPeriodCompleted = edu207Dao.getFsksClassPeriodCompleted(week,edu400Id);
+                if(fsksClassPeriodCompleted != null) {
+                    fsxsCount += Integer.parseInt(fsksClassPeriodCompleted.toString());
+                }
+            }
+            returnMap.put("completehoursCount",jzxsCount+fsxsCount);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        resultVO = ResultVO.setSuccess("查询成功",returnMap);
+        return resultVO;
+
     }
 }

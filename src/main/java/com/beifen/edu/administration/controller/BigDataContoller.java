@@ -72,4 +72,16 @@ public class BigDataContoller {
         ResultVO result = bigDataService.getBigScreenData(bigDataSearch);
         return result;
     }
+
+    /**
+     *获取大屏展示汇总数据
+     * @return
+     */
+    @RequestMapping("/getBigScreenTotalData")
+    @ResponseBody
+    public ResultVO getBigScreenTotalData() {
+        ResultVO result = bigDataService.getBigScreenTotalData();
+        return result;
+    }
+
 }

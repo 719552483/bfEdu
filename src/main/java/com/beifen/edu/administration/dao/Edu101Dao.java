@@ -54,4 +54,8 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	//根据专业查找教师人数
 	@Query(value = "select count(e.Edu101_ID) from edu101 e where e.zy = ?1", nativeQuery = true)
     Integer countByEdu106Id(Long edu106_id);
+
+	//查询有效老师
+	@Query(value = "select e.* from edu101 e where e.wpjzgspzt is null or e.wpjzgspzt = 'pass' ",nativeQuery = true)
+    List<Edu101> findAllteacher();
 }

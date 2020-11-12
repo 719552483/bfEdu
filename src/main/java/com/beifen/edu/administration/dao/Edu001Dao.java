@@ -98,4 +98,8 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//根据二级学院查询各生源类型学生人数
 	@Query(value = "select new com.beifen.edu.administration.PO.EchartPO(t.sylx ,count(t.edu001_ID)) from Edu001 t where t.szxb = ?1 group by t.sylx")
 	List<EchartPO> getStudentByJobWithDepatrment(String departmentCode);
+
+	//查询在校学生
+	@Query(value = "select e.* from edu001 e where e.zt_code in ('001','007','006')",nativeQuery = true)
+    List<Edu001> findAllStudent();
 }
