@@ -468,7 +468,8 @@ function confirmModifyAdministrationClass(row){
 		return;
 	}
 
-	var newClassInfo=getAdministrationClassDetails();
+	var newClassInfo=getAdministrationClassDetails(true);
+	newClassInfo.edu300_ID=row.edu300_ID;
 	newClassInfo.xzbmc=$("#addAdministrationClass_className").val();
 	newClassInfo.rnrs=$("#addAdministrationClass_houldNum").val();
 	// 发送查询所有用户请求
@@ -532,7 +533,7 @@ function wantAddAdministrationClass(){
 
 //确认新增行政班
 function confirmAddAdministrationClass(){
-	var newAdministrationClassObject=getAdministrationClassDetails();
+	var newAdministrationClassObject=getAdministrationClassDetails(false);
 	if(typeof newAdministrationClassObject ==='undefined'){
 		return;
 	}
@@ -587,7 +588,7 @@ function confirmAddAdministrationClass(){
 }
 
 //获取新增行政班信息
-function getAdministrationClassDetails(){
+function getAdministrationClassDetails(ismodify){
 //	if(getNormalSelectValue("addAdministrationClass_campus") === ""){
 //		toastr.warning('校区不能为空');
 //		return;
@@ -653,7 +654,7 @@ function getAdministrationClassDetails(){
 	newClassObject.batch=getNormalSelectValue("addAdministrationClass_batch");
 	newClassObject.batchName=getNormalSelectText("addAdministrationClass_batch");
 	newClassObject.localCode=getNormalSelectValue("addAdministrationClass_local");
-	newClassObject.localName=getNormalSelectText("addAdministrationClass_local").split('-')[1];
+	ismodify?newClassObject.localName=getNormalSelectText("addAdministrationClass_local"):newClassObject.localName=getNormalSelectText("addAdministrationClass_local").split('-')[1];
 	newClassObject.zdybjxh=$("#addAdministrationClass_selfNum").val();
 //	newClassObject.xqmc=getNormalSelectText("addAdministrationClass_campus");
 //	newClassObject.xqbm=getNormalSelectValue("addAdministrationClass_campus");
