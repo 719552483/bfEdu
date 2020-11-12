@@ -2284,13 +2284,6 @@ function loadConfig(){
 	var sfzcllHtwo = sfzcllH - 2
 	$('.sfzcll_box').css('line-height', sfzcllH + 'px')
 	$('.sfzcll_smallBk>div').css('line-height', sfzcllHtwo + 'px')
-
-	//删除加载动画
-	$('#load').fadeOut(1000)
-	setTimeout(function () {
-			$('#load').remove()
-		}
-		, 1100);
 }
 
 //根据设备分辨率改变table css
@@ -2362,6 +2355,7 @@ function getScreen1Info(){
 		success : function(backjson) {
 			if(backjson.code===200){
 				stuffScreen1(backjson.data);
+				bigScreenLoadingExit();
 			}
 		}
 	});
@@ -2371,6 +2365,9 @@ function getScreen1Info(){
 function stuffScreen1(Screen1Info){
 	getScreen1MapInfo();
 	stuffScreen1TexInfo(Screen1Info);
+	$(".txtAnimationLeft").addClass("animated slideInLeft");
+	$(".conBotAnimation").addClass("animated pulse");
+	$(".txtAnimationRight").addClass("animated slideInRight");
 
 	$('#enterScreen2').unbind('click');
 	$('#enterScreen2').bind('click', function(e) {
@@ -2452,6 +2449,7 @@ function getScreen1MapInfo(){
 
 //渲染1屏文字信息
 function stuffScreen1TexInfo(Screen1Info){
+	$("#classCount").html(Screen1Info.classCount.toLocaleString());
 	$("#departmentCount").html(Screen1Info.departmentCount.toLocaleString());
 	$("#teacherCount").html(Screen1Info.teacherCount.toLocaleString());
 	$("#studentCount").html(Screen1Info.studentCount.toLocaleString());
@@ -2552,6 +2550,15 @@ function drawScreen1Map(id, allMapJson, currentTeachLocal) {
 //进入2屏
 function enterScreen2(){
 	loadChart( );
+}
+
+//删除加载动画
+function bigScreenLoadingExit(){
+	$('#load').fadeOut(1000);
+	// setTimeout(function () {
+	// 		$('#load').remove()
+	// 	}
+	// 	, 1100);
 }
 
 $(function () {
