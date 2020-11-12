@@ -1554,7 +1554,7 @@ function loadChart(){
 			if(backjson.code===200){
 				$(".currentShowPage").html(2);
 				$(".Screen1").hide();
-				$(".Screen2").addClass("animated flipInX").show();
+				$(".Screen2").show();
 				//中间地图
 				getMapInfo();
 
@@ -1571,6 +1571,9 @@ function loadChart(){
 				stuffoptenClassCount(backjson.data.courseData,false);
 				//学员统计人数
 				stuffStudentCount(backjson.data.studentsInLocal.seriesdata,backjson.data.studentsInLocal.yAxisData);
+
+				$('#load').hide();
+				$(".Screen2").addClass("animated flipInX");
 			}
 		}
 	});
@@ -2355,7 +2358,7 @@ function getScreen1Info(){
 		success : function(backjson) {
 			if(backjson.code===200){
 				stuffScreen1(backjson.data);
-				bigScreenLoadingExit();
+				bigScreenLoadingExit(1000);
 			}
 		}
 	});
@@ -2549,16 +2552,13 @@ function drawScreen1Map(id, allMapJson, currentTeachLocal) {
 
 //进入2屏
 function enterScreen2(){
+	$('#load').show();
 	loadChart( );
 }
 
 //删除加载动画
-function bigScreenLoadingExit(){
+function bigScreenLoadingExit(mins){
 	$('#load').fadeOut(1000);
-	// setTimeout(function () {
-	// 		$('#load').remove()
-	// 	}
-	// 	, 1100);
 }
 
 $(function () {
