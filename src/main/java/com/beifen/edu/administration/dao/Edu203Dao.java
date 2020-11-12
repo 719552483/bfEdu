@@ -31,7 +31,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     List<Edu203> findEdu203IdsByEdu501Id(String toString);
 
     //根据学院查询集中课时数量
-    @Query(value = "select n.*\n" +
+    @Query(value = "select count(0)\n" +
             "from (select distinct b.EDU104_ID, b.XBMC\n" +
             "    from edu107 a,\n" +
             "    edu104 b\n" +
@@ -47,10 +47,10 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "  and r.EDU108_ID = p.EDU108_ID\n" +
             "  and m.EDU104_ID = q.EDU104\n" +
             "  and n.TEACHER_TYPE = '01'",nativeQuery = true)
-    List<Edu203> getJzksClassPeriod(String departmentCode);
+    Long getJzksClassPeriod(String departmentCode);
 
     //根据学院查询集中课时完成数量
-    @Query(value = "select n.* \n" +
+    @Query(value = "select count(1) \n" +
             "    from (select distinct b.EDU104_ID, b.XBMC \n" +
             "        from edu107 a, \n" +
             "        edu104 b \n" +
@@ -67,10 +67,10 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "      and m.EDU104_ID = q.EDU104 \n" +
             "      and n.TEACHER_TYPE = '01' \n" +
             "      and (to_number(n.week) < ?2 or (to_number(n.week) = ?2 and to_number(n.xqid) < ?3))",nativeQuery = true)
-    List<Edu203> getJzksClassPeriodComplete(String departmentCode, int week, int dayOfWeek);
+    Long getJzksClassPeriodComplete(String departmentCode, int week, int dayOfWeek);
 
     //查询集中课时完成数量
-    @Query(value = "select n.* \n" +
+    @Query(value = "select count(1) \n" +
             "    from (select distinct b.EDU104_ID, b.XBMC \n" +
             "        from edu107 a, \n" +
             "        edu104 b \n" +
@@ -88,5 +88,5 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "      and n.TEACHER_TYPE = '01' \n" +
             "      and r.xnid = ?3" +
             "      and (to_number(n.week) < ?1 or (to_number(n.week) = ?1 and to_number(n.xqid) < ?2))",nativeQuery = true)
-    List<Edu203> getJzksClassPeriodCompleted(int week, int dayOfWeek,String edu401ID);
+    Long getJzksClassPeriodCompleted(int week, int dayOfWeek,String edu401ID);
 }

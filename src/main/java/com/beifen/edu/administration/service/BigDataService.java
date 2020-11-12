@@ -168,11 +168,11 @@ public class BigDataService {
             List<Map<String,Object>> courseData = new ArrayList<>();
             for(Edu104 e : edu104List) {
                 Map<String,Object> map = new HashMap<>();
-                List<Edu201> edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
-                List<Edu201> edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
+                Long edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
+                Long edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
                 map.put("text",e.getXbmc());
-                map.put("courseCount",edu201By104ID.size());
-                map.put("courseCompleteCount",edu201IsCompleted.size());
+                map.put("courseCount",edu201By104ID);
+                map.put("courseCompleteCount",edu201IsCompleted);
                 courseData.add(map);
             }
             returnMap.put("courseData",courseData);
@@ -217,11 +217,11 @@ public class BigDataService {
             List<Map<String,Object>> courseData = new ArrayList<>();
             for(Edu104 e : edu104List) {
                 Map<String,Object> map = new HashMap<>();
-                List<Edu201> edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
-                List<Edu201> edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
+                Long edu201IsCompleted = edu201Dao.getEdu201IsCompleted(e.getEdu104_ID());
+                Long edu201By104ID = edu201Dao.getEdu201By104ID(e.getEdu104_ID());
                 map.put("text",e.getXbmc());
-                map.put("courseCount",edu201By104ID.size());
-                map.put("courseCompleteCount",edu201IsCompleted.size());
+                map.put("courseCount",edu201By104ID);
+                map.put("courseCompleteCount",edu201IsCompleted);
                 courseData.add(map);
             }
             returnMap.put("courseData",courseData);
@@ -276,11 +276,11 @@ public class BigDataService {
                 }
                 //查询集中学时实时课时占比
                 Map<String,Object> jzksMap = new HashMap<>();
-                List<Edu203> jzksClassPeriod = edu203Dao.getJzksClassPeriod(bigDataSearch.getDepartmentCode());
-                List<Edu203> jzksClassPeriodComplete = edu203Dao.getJzksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week,dayOfWeek);
+                Long jzksClassPeriod = edu203Dao.getJzksClassPeriod(bigDataSearch.getDepartmentCode());
+                Long jzksClassPeriodComplete = edu203Dao.getJzksClassPeriodComplete(bigDataSearch.getDepartmentCode(),week,dayOfWeek);
                 jzksMap.put("text","集中学时进度");
-                jzksMap.put("peridoCount",jzksClassPeriod.size()*2);
-                jzksMap.put("periodCompleteCount",jzksClassPeriodComplete.size()*2);
+                jzksMap.put("peridoCount",jzksClassPeriod*2);
+                jzksMap.put("periodCompleteCount",jzksClassPeriodComplete*2);
                 returnMap.put("jzksClassPeriodDate",jzksMap);
 
                 //查询分散学时实时课时占比
@@ -536,20 +536,20 @@ public class BigDataService {
         //二级学院数量
         returnMap.put("departmentCount",8);
         //教师数量
-        List<Edu101> edu101List = edu101Dao.findAllteacher();
-        returnMap.put("teacherCount",edu101List.size());
+        Long teacherCount = edu101Dao.findAllteacher();
+        returnMap.put("teacherCount",teacherCount);
         //学生数量
-        List<Edu001> edu001List = edu001Dao.findAllStudent();
-        returnMap.put("studentCount",edu001List.size());
+        Long studentCount = edu001Dao.findAllStudent();
+        returnMap.put("studentCount",studentCount);
         //教学点数量
-        List<Edu500> edu500List = edu500Dao.findAll();
-        returnMap.put("localCount",edu500List.size());
+        Long localCount = edu500Dao.findAllLocal();
+        returnMap.put("localCount",localCount);
         //行政班数量
-        List<Edu300> edu300List = edu300Dao.findAll();
-        returnMap.put("classCount",edu300List.size());
+        Long classCount = edu300Dao.findAllClass();
+        returnMap.put("classCount",classCount);
         //课程数量
-        List<Edu200> edu200List = edu200Dao.findAll();
-        returnMap.put("courseCount",edu200List.size());
+        Long courseCount = edu200Dao.findAllCourse();
+        returnMap.put("courseCount",courseCount);
 
         //已完成课时数量
         List<String> Edu400Idlist = edu201Dao.getYearList();
@@ -576,8 +576,8 @@ public class BigDataService {
                     dayOfWeek = weekOfDate;
                 }
                 //查询集中学时实时课时占比
-                List<Edu203> jzksClassPeriodCompleted = edu203Dao.getJzksClassPeriodCompleted(week,dayOfWeek,edu400Id);
-                jzxsCount+= jzksClassPeriodCompleted.size()*2;
+                Long jzksClassPeriodCompleted = edu203Dao.getJzksClassPeriodCompleted(week,dayOfWeek,edu400Id);
+                jzxsCount+= Integer.parseInt(jzksClassPeriodCompleted.toString())*2;
                 //查询分散学时实时课时占比
                 Long fsksClassPeriodCompleted = edu207Dao.getFsksClassPeriodCompleted(week,edu400Id);
                 if(fsksClassPeriodCompleted != null) {

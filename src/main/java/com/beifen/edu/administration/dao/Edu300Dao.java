@@ -90,4 +90,8 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	//根据权限查询行政班
 	@Query(value = "select * from edu300 e where e.xbbm in ?1 order by e.xbbm,e.zybm", nativeQuery = true)
     List<Edu300> findAllbyDepartments(List<String> departments);
+
+	//查询行政班数量
+	@Query(value = "select count(0) from edu300 e", nativeQuery = true)
+    Long findAllClass();
 }

@@ -100,6 +100,6 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	List<EchartPO> getStudentByJobWithDepatrment(String departmentCode);
 
 	//查询在校学生
-	@Query(value = "select e.* from edu001 e where e.zt_code in ('001','007','006')",nativeQuery = true)
-    List<Edu001> findAllStudent();
+	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006')",nativeQuery = true)
+    Long findAllStudent();
 }

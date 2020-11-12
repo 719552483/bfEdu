@@ -40,7 +40,7 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	void changeTaskStatus(String id, String status);
 
 	//根据二级学院查询
-	@Query(value = "select distinct r.*\n" +
+	@Query(value = "select distinct count(0)\n" +
 			"     	from EDU201 r,\n" +
 			"            EDU108 p,\n" +
 			"            EDU107 q\n" +
@@ -48,10 +48,10 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 			"        and r.EDU108_ID = p.EDU108_ID\n" +
 			"and q.EDU104 = ?1\n" +
 			"and r.sszt='pass'", nativeQuery = true)
-	List<Edu201> getEdu201By104ID(Long edu104Id);
+	Long getEdu201By104ID(Long edu104Id);
 
 	//根据二级学院查询
-	@Query(value = "select distinct r.*\n" +
+	@Query(value = "select distinct count(0)\n" +
 			"     	from EDU201 r,\n" +
 			"            EDU108 p,\n" +
 			"            EDU107 q\n" +
@@ -60,7 +60,7 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 			"and q.EDU104 = ?1\n" +
 			"and r.SFSQKS = 'T'\n" +
 			"and r.sszt='pass'", nativeQuery = true)
-	List<Edu201> getEdu201IsCompleted(Long edu104Id);
+	Long getEdu201IsCompleted(Long edu104Id);
 
 	//根据201ID查询任务书
 	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)
