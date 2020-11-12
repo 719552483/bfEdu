@@ -2547,4 +2547,15 @@ public class AdministrationPageService {
 
 		return resultVO;
 	}
+
+	public Boolean checkClassRepeat(Long edu300_id, String xzbmc) {
+		Boolean nameHave;
+		List<Edu300> edu300List = edu300DAO.checkClassRepeat(edu300_id, xzbmc);
+		if (edu300List.size() != 0) {
+			nameHave = true;
+		} else {
+			nameHave = false;
+		}
+		return nameHave;
+	}
 }

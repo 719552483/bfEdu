@@ -94,4 +94,7 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	//查询行政班数量
 	@Query(value = "select count(0) from edu300 e", nativeQuery = true)
     Long findAllClass();
+
+	@Query(value = "select * from Edu300 e where e.edu300_ID <> ?1 and e.xzbmc = ?2",nativeQuery = true)
+    List<Edu300> checkClassRepeat(Long edu300_id, String xzbmc);
 }
