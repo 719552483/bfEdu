@@ -1152,35 +1152,17 @@ public class AdministrationController {
 	public Object modifyAdministrationClass(@RequestParam("culturePlanInfo") String culturePlanInfo,
 											@RequestParam("modifyInfo") String modifyInfo) {
 		Map<String, Object> returnMap = new HashMap();
-		List<Edu300> currentAllAdministrationClasses = administrationPageService.queryAllAdministrationClasses();
+
 		// 将修改信息转化为108实体
 		JSONObject newCrouseInfo = JSONObject.fromObject(modifyInfo);
 		Edu300 edu300 = (Edu300) JSONObject.toBean(newCrouseInfo, Edu300.class);
-		// 判断是否冲突
-		boolean namehave = false;
-//		boolean codehave = false;
-
-		for (int i = 0; i < currentAllAdministrationClasses.size(); i++) {
-			if (!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())
-					&& currentAllAdministrationClasses.get(i).getXzbmc().equals(edu300.getXzbmc())) {
-				namehave = true;
-				break;
-			}
-
-//			if (!currentAllAdministrationClasses.get(i).getEdu300_ID().equals(edu300.getEdu300_ID())
-//					&& currentAllAdministrationClasses.get(i).getXzbbm().equals(edu300.getXzbbm())) {
-//				codehave = true;
-//				break;
-//			}
-
-		}
+		Boolean namehave= administrationPageService.checkClassRepeat(edu300.getEdu300_ID(),edu300.getXzbmc());
 		// 不存在则修改
 		if (!namehave) {
 			administrationPageService.updateAdministrationClass(edu300);
 		}
 
 		returnMap.put("namehave", namehave);
-//		returnMap.put("codehave", codehave);
 		returnMap.put("result", true);
 		return returnMap;
 	}
