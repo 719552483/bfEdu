@@ -82,9 +82,15 @@ function stuffStudentGradeTable(tableInfo) {
 				align: 'center',
 				sortable: true,
 				visible: false
-			}, {
+			},{
 				field: 'className',
 				title: '行政班',
+				align: 'left',
+				sortable: true,
+				formatter: xzbnameMatter
+			}, {
+				field: 'xn',
+				title: '学年',
 				align: 'left',
 				sortable: true,
 				formatter: xzbnameMatter
@@ -165,16 +171,23 @@ function stuffStudentGradeTable(tableInfo) {
 					.join('');
 			}
 		} else {
-			if(parseInt(value)<60){
+			if(value==null||value===""||typeof value==="undefined"){
 				return [
-					'<div class="myTooltip redTxt" title="'+value+'">'+value+'</div>'
+					'<div class="myTooltip normalTxt" title="暂无成绩">暂无成绩</div>'
 				]
 					.join('');
 			}else{
-				return [
-					'<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
-				]
-					.join('');
+				if(parseInt(value)<60){
+					return [
+						'<div class="myTooltip redTxt" title="'+value+'">'+value+'</div>'
+					]
+						.join('');
+				}else{
+					return [
+						'<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
+					]
+						.join('');
+				}
 			}
 		}
 	}
