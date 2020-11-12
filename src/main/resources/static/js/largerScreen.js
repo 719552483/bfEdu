@@ -1552,6 +1552,7 @@ function loadChart(){
 		dataType : 'json',
 		success : function(backjson) {
 			if(backjson.code===200){
+				$(".currentShowPage").html(2);
 				$(".Screen1").hide();
 				$(".Screen2").addClass("animated flipInX").show();
 				//中间地图
@@ -2320,13 +2321,15 @@ function ListeneChart(){
 	window.addEventListener("resize", function() {
 		var currentShowPage=parseInt($(".currentShowPage")[0].innerText);
 		if(currentShowPage==1){
-			reloadPage1()
+			reloadPage1();
+		}else if(currentShowPage==2){
+			reloadPage2();
 		}
 	});
 }
 
-//page1 chart自适应
-function reloadPage1(){
+//page2 chart自适应
+function reloadPage2(){
 	var myChart;
 	var chartDom1s=$(".chartDom1");
 	for (var i = 0; i < chartDom1s.length; i++) {
@@ -2337,9 +2340,37 @@ function reloadPage1(){
 	}
 }
 
+//page1 chart自适应
+function reloadPage1(){
+	var myChart;
+	var chartDomFirst=$(".chartDomFirst");
+	for (var i = 0; i < chartDomFirst.length; i++) {
+		if(chartDomFirst[i].id!==""){
+			myChart = echarts.init(document.getElementById(chartDomFirst[i].id));
+			myChart.resize();
+		}
+	}
+}
+
+//获取1屏信息
+function getScreen1Info(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getBigScreenTotalData",
+		dataType : 'json',
+		success : function(backjson) {
+			if(backjson.code===200){
+				stuffScreen1(backjson.data);
+			}
+		}
+	});
+}
+
 //渲染1屏
-function stuffScreen1(){
+function stuffScreen1(Screen1Info){
 	getScreen1MapInfo();
+	stuffScreen1TexInfo(Screen1Info);
 
 	$('#enterScreen2').unbind('click');
 	$('#enterScreen2').bind('click', function(e) {
@@ -2419,7 +2450,17 @@ function getScreen1MapInfo(){
 	});
 }
 
-//渲染中间地图
+//渲染1屏文字信息
+function stuffScreen1TexInfo(Screen1Info){
+	$("#departmentCount").html(Screen1Info.departmentCount.toLocaleString());
+	$("#teacherCount").html(Screen1Info.teacherCount.toLocaleString());
+	$("#studentCount").html(Screen1Info.studentCount.toLocaleString());
+	$("#localCount").html(Screen1Info.localCount.toLocaleString());
+	$("#courseCount").html(Screen1Info.courseCount.toLocaleString());
+	$("#completehoursCount").html(Screen1Info.completehoursCount.toLocaleString());
+}
+
+//渲染1屏中间地图
 function drawScreen1Map(id, allMapJson, currentTeachLocal) {
 	echarts.registerMap('liaoNing', allMapJson);
 	var myChart = echarts.init(document.getElementById(id));
@@ -2511,12 +2552,12 @@ function drawScreen1Map(id, allMapJson, currentTeachLocal) {
 //进入2屏
 function enterScreen2(){
 	loadChart( );
-	ListeneChart();
 }
 
 $(function () {
 	loadConfig();
-	stuffScreen1();
+	getScreen1Info();
+	ListeneChart();
 })
 
 
