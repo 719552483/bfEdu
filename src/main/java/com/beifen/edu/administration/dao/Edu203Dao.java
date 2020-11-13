@@ -35,7 +35,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "from (select distinct b.EDU104_ID, b.XBMC\n" +
             "    from edu107 a,\n" +
             "    edu104 b\n" +
-            "    where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+            "    where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
             "    EDU203 n,\n" +
             "    EDU201 r,\n" +
             "    edu202 o,\n" +
@@ -46,15 +46,16 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "  and p.EDU107_ID = q.EDU107_ID\n" +
             "  and r.EDU108_ID = p.EDU108_ID\n" +
             "  and m.EDU104_ID = q.EDU104\n" +
-            "  and n.TEACHER_TYPE = '01'",nativeQuery = true)
-    Long getJzksClassPeriod(String departmentCode);
+            "  and n.TEACHER_TYPE = '01'" +
+            "  and r.xnid = ?4",nativeQuery = true)
+    Long getJzksClassPeriod(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,Long yearCode);
 
     //根据学院查询集中课时完成数量
     @Query(value = "select count(1) \n" +
             "    from (select distinct b.EDU104_ID, b.XBMC \n" +
             "        from edu107 a, \n" +
             "        edu104 b \n" +
-            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?5 and a.edu105 in ?4) m,\n" +
             "        EDU203 n, \n" +
             "        EDU201 r, \n" +
             "        edu202 o, \n" +
@@ -66,8 +67,9 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "      and r.EDU108_ID = p.EDU108_ID \n" +
             "      and m.EDU104_ID = q.EDU104 \n" +
             "      and n.TEACHER_TYPE = '01' \n" +
+            "      and r.xnid = ?6" +
             "      and (to_number(n.week) < ?2 or (to_number(n.week) = ?2 and to_number(n.xqid) < ?3))",nativeQuery = true)
-    Long getJzksClassPeriodComplete(String departmentCode, int week, int dayOfWeek);
+    Long getJzksClassPeriodComplete(String departmentCode, int week, int dayOfWeek, List<Long> schoolYearCodeList,List<String> batchCodeList,Long yearCode);
 
     //查询集中课时完成数量
     @Query(value = "select count(1) \n" +

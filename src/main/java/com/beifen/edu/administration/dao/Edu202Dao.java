@@ -37,7 +37,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID) m,\n" +
+			"            where a.EDU104 = b.EDU104_ID and a.batch in ?2 and a.edu105 in ?1) m,\n" +
 			"           EDU203 n,\n" +
 			"           EDU201 r,\n" +
 			"           EDU101 s,\n" +
@@ -51,9 +51,10 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"        and r.EDU108_ID = p.EDU108_ID\n" +
 			"        and m.EDU104_ID = q.EDU104\n" +
 			"        and n.TEACHER_TYPE = '01'\n" +
+			"        and r.xnid in ?3" +
 			"      group by m.EDU104_ID, m.XBMC, s.XM) t\n" +
 			"group by t.EDU104_ID, t.XBMC",nativeQuery = true)
-	List<Object[]> getDepartment();
+	List<Object[]> getDepartment(List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 
 	//获取大屏教师类型
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.JZGLX) teacher_type, to_char(t.JZGLXBM) teacher_type_name\n" +
@@ -61,7 +62,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID) m,\n" +
+			"            where a.EDU104 = b.EDU104_ID and a.batch in ?2 and a.edu105 in ?1) m,\n" +
 			"           EDU203 n,\n" +
 			"           EDU201 r,\n" +
 			"           EDU101 s,\n" +
@@ -75,10 +76,12 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"        and r.EDU108_ID = p.EDU108_ID\n" +
 			"        and m.EDU104_ID = q.EDU104\n" +
 			"        and n.TEACHER_TYPE = '01'\n" +
+			"        and r.xnid in ?3" +
 			"      group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM) t\n" +
 			"group by t.EDU104_ID, t.XBMC, t.JZGLX, t.JZGLXBM\n" +
 			"order by t.EDU104_ID, t.JZGLX",nativeQuery = true)
-	List<Object[]> getTeacherType();
+	List<Object[]> getTeacherType(List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList
+	);
 
 
 	//获取大屏课时类型
@@ -87,7 +90,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID) m,\n" +
+			"            where a.EDU104 = b.EDU104_ID and a.batch in ?2 and a.edu105 in ?1) m,\n" +
 			"           EDU203 n,\n" +
 			"           EDU201 r,\n" +
 			"           edu202 o,\n" +
@@ -99,28 +102,15 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"        and r.EDU108_ID = p.EDU108_ID\n" +
 			"        and m.EDU104_ID = q.EDU104\n" +
 			"        and n.TEACHER_TYPE = '01'\n" +
+			"        and r.xnid in ?3" +
 			"      group by m.EDU104_ID, m.XBMC,n.EDU202_ID,p.zxs,p.LLXS,p.SJXS,p.JZXS,p.FSXS) t\n" +
 			"group by t.EDU104_ID, t.XBMC " +
 			"order by t.EDU104_ID ",nativeQuery = true)
-	List<Object[]> getPeriodType();
-
-	//根据授课情况查询教学点学生人数
-	@Query(value = "select to_char(t.LOCAL_ID) edu501_id,to_char(t.LOCAL_NAME) local_name,to_char(sum(t.zxrs)) student_count from (select e.LOCAL_ID,e.LOCAL_NAME,c.zxrs,c.EDU300_ID from Edu201 a,Edu202 b, Edu204 d,Edu300 c, Edu203 e\n" +
-			"               where c.edu300_ID = d.edu300_ID\n" +
-			"                 and b.edu202_ID = e.edu202_ID\n" +
-			"                 and d.EDU201_ID = a.EDU201_ID\n" +
-			"                 and a.EDU201_ID = b.EDU201_ID\n" +
-			"                 and e.LOCAL_ID is not null\n" +
-			"                 and e.LOCAL_ID <> '57250'\n" +
-			"               group by e.LOCAL_ID,e.LOCAL_NAME,c.zxrs,c.EDU300_ID\n" +
-			"               order by e.LOCAL_ID) t\n" +
-			"group by t.LOCAL_ID,t.LOCAL_NAME",nativeQuery = true)
-	List<Object[]> getStudentsInLocal();
+	List<Object[]> getPeriodType(List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 
 	//根据行政班查询教学点学生人数
-	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(t.localCode,t.localName,sum(t.zxrs)) from Edu300 t group by t.localCode,t.localName")
-	List<StudentInPointPO> getStudentsInLocalByEdu300();
-
+	@Query(value = "select t.local_code edu501_id,t.local_name local_name,to_char(sum(t.zxrs)) student_count  from Edu300 t where t.njbm in ?1 and t.batch in ?2 group by t.local_code,t.local_name",nativeQuery = true)
+	List<Object[]> getStudentsInLocalByEdu300(List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//根据二级学院获取教师类型
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.JZGLX) teacher_type, to_char(t.JZGLXBM) teacher_type_name\n" +
@@ -128,7 +118,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+			"            where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
 			"           EDU203 n,\n" +
 			"           EDU201 r,\n" +
 			"           EDU101 s,\n" +
@@ -142,10 +132,11 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"        and r.EDU108_ID = p.EDU108_ID\n" +
 			"        and m.EDU104_ID = q.EDU104\n" +
 			"        and n.TEACHER_TYPE = '01'\n" +
+			"        and r.xnid in ?4" +
 			"      group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM) t\n" +
 			"group by t.EDU104_ID, t.XBMC, t.JZGLX, t.JZGLXBM\n" +
 			"order by t.EDU104_ID, t.JZGLX",nativeQuery = true)
-	List<Object[]> getTeacherTypeInDepartment(String departmentCode);
+	List<Object[]> getTeacherTypeInDepartment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 
 
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name,to_char(sum(t.zxs)) zxs,to_char(sum(t.llxs)) llxs,to_char(sum(t.sjxs)) sjxs,to_char(sum(t.jzxs)) jzxs,to_char(sum(t.fsxs)) fsxs\n" +
@@ -153,7 +144,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+			"            where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
 			"           EDU203 n,\n" +
 			"           EDU201 r,\n" +
 			"           edu202 o,\n" +
@@ -165,14 +156,15 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"        and r.EDU108_ID = p.EDU108_ID\n" +
 			"        and m.EDU104_ID = q.EDU104\n" +
 			"        and n.TEACHER_TYPE = '01'\n" +
+			"        and r.xnid in ?4" +
 			"      group by m.EDU104_ID, m.XBMC,n.EDU202_ID,p.zxs,p.LLXS,p.SJXS,p.JZXS,p.FSXS) t\n" +
 			"group by t.EDU104_ID, t.XBMC " +
 			"order by t.EDU104_ID ",nativeQuery = true)
-	List<Object[]> getPeriodTypeInDepartment(String departmentCode);
+	List<Object[]> getPeriodTypeInDepartment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 
 	//根据二级学院查询各教学点在校人数
-	@Query(value = "select new com.beifen.edu.administration.PO.StudentInPointPO(t.localCode,t.localName,sum(t.zxrs)) from Edu300 t where t.xbbm = ?1 group by t.localCode,t.localName")
-	List<StudentInPointPO> getStudentsInLocalByEdu300Only(String departmentCode);
+	@Query(value = "select t.local_code edu501_id,t.local_name local_name,to_char(sum(t.zxrs)) student_count from Edu300 t where t.xbbm = ?1 and t.njbm in ?2 and t.batch in ?3 group by t.local_code, t.local_name",nativeQuery = true)
+	List<Object[]> getStudentsInLocalByEdu300Only(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//获取教师职称分布数据
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.ZCBM) teacher_type, to_char(t.ZC) teacher_type_name\n" +
@@ -180,7 +172,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"          from (select distinct b.EDU104_ID, b.XBMC \n" +
 			"                from edu107 a, \n" +
 			"                     edu104 b \n" +
-			"                where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m, \n" +
+			"                where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m, \n" +
 			"               EDU203 n, \n" +
 			"               EDU201 r, \n" +
 			"               EDU101 s, \n" +
@@ -194,10 +186,11 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"            and r.EDU108_ID = p.EDU108_ID \n" +
 			"            and m.EDU104_ID = q.EDU104 \n" +
 			"            and n.TEACHER_TYPE = '01' \n" +
+			"        	 and r.xnid in ?4" +
 			"          group by m.EDU104_ID, m.XBMC, s.XM, s.ZC, s.ZCBM) t \n" +
 			"    group by t.EDU104_ID, t.XBMC, t.ZC, t.ZCBM \n" +
 			"    order by t.EDU104_ID, t.ZC",nativeQuery = true)
-	List<Object[]> getTeacherZcType(String departmentCode);
+	List<Object[]> getTeacherZcType(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 
 	//获取各类型老师集中学时数量
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.EDU203_ID)*2) teacher_count, to_char(t.JZGLXBM) teacher_type, to_char(t.JZGLX) teacher_type_name\n" +
@@ -205,7 +198,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"          from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"                from edu107 a,\n" +
 			"                     edu104 b\n" +
-			"                where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+			"                where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
 			"               EDU203 n,\n" +
 			"               EDU201 r,\n" +
 			"               EDU101 s,\n" +
@@ -219,8 +212,9 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"            and r.EDU108_ID = p.EDU108_ID\n" +
 			"            and m.EDU104_ID = q.EDU104\n" +
 			"            and n.TEACHER_TYPE = '01'\n" +
+			"        	 and r.xnid in ?4" +
 			"          group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM,n.EDU203_ID) t\n" +
 			"    group by t.EDU104_ID, t.XBMC, t.JZGLX, t.JZGLXBM \n" +
 			"    order by t.EDU104_ID, t.JZGLX",nativeQuery = true)
-	List<Object[]> getPeriodByTeacherType(String departmentCode);
+	List<Object[]> getPeriodByTeacherType(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 }

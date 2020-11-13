@@ -54,13 +54,17 @@ public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecification
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
 			"            where a.EDU104 = b.EDU104_ID" +
+			"              and a.edu105 in ?1" +
+			"              and a.batch in ?2" +
 			"            order by b.EDU104_ID",nativeQuery = true)
-    List<Edu104> getEdu104InPlan();
+    List<Edu104> getEdu104InPlan(List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	@Query(value = "select distinct b.*\n" +
 			"            from edu107 a,\n" +
 			"                 edu104 b\n" +
 			"            where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1" +
+			"              and a.edu105 in ?2" +
+			"              and a.batch in ?3" +
 			"            order by b.EDU104_ID",nativeQuery = true)
-	List<Edu104> getEdu104InPlanInDepartment(String departmentCode);
+	List<Edu104> getEdu104InPlanInDepartment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
 }

@@ -1,6 +1,8 @@
 package com.beifen.edu.administration.PO;
 
-public class EchartPO {
+import java.io.Serializable;
+
+public class EchartPO implements Serializable {
 
     private String name;
     private String value;
@@ -10,6 +12,11 @@ public class EchartPO {
     public EchartPO(String name, Long value) {
         this.name = name;
         this.value = value.toString();
+    }
+
+    public EchartPO(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
     public String getName() {

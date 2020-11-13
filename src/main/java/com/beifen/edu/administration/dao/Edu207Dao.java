@@ -37,25 +37,7 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
             "    from (select distinct b.EDU104_ID, b.XBMC \n" +
             "        from edu107 a, \n" +
             "        edu104 b \n" +
-            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
-            "        EDU207 n,\n" +
-            "        EDU201 r, \n" +
-            "        edu202 o, \n" +
-            "        EDU108 p, \n" +
-            "        EDU107 q \n" +
-            "    where n.EDU201_ID = r.EDU201_ID\n" +
-            "      and o.EDU201_ID = r.EDU201_ID \n" +
-            "      and p.EDU107_ID = q.EDU107_ID \n" +
-            "      and r.EDU108_ID = p.EDU108_ID \n" +
-            "      and m.EDU104_ID = q.EDU104 \n",nativeQuery = true)
-    Long getFsksClassPeriod(String departmentCode);
-
-
-    @Query(value = "select sum(CLASS_HOURS)\n" +
-            "    from (select distinct b.EDU104_ID, b.XBMC \n" +
-            "        from edu107 a, \n" +
-            "        edu104 b \n" +
-            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1) m,\n" +
+            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
             "        EDU207 n,\n" +
             "        EDU201 r, \n" +
             "        edu202 o, \n" +
@@ -66,8 +48,28 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
             "      and p.EDU107_ID = q.EDU107_ID \n" +
             "      and r.EDU108_ID = p.EDU108_ID \n" +
             "      and m.EDU104_ID = q.EDU104 \n" +
+            "  and r.xnid = ?4",nativeQuery = true)
+    Long getFsksClassPeriod(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,Long yearCode);
+
+
+    @Query(value = "select sum(CLASS_HOURS)\n" +
+            "    from (select distinct b.EDU104_ID, b.XBMC \n" +
+            "        from edu107 a, \n" +
+            "        edu104 b \n" +
+            "        where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?4 and a.edu105 in ?3) m,\n" +
+            "        EDU207 n,\n" +
+            "        EDU201 r, \n" +
+            "        edu202 o, \n" +
+            "        EDU108 p, \n" +
+            "        EDU107 q \n" +
+            "    where n.EDU201_ID = r.EDU201_ID\n" +
+            "      and o.EDU201_ID = r.EDU201_ID \n" +
+            "      and p.EDU107_ID = q.EDU107_ID \n" +
+            "      and r.EDU108_ID = p.EDU108_ID \n" +
+            "      and m.EDU104_ID = q.EDU104 \n" +
+            "      and r.xnid = ?5" +
             "      and to_number(n.week) < ?2",nativeQuery = true)
-    Long getFsksClassPeriodComplete(String departmentCode, int week);
+    Long getFsksClassPeriodComplete(String departmentCode, int week,List<Long> schoolYearCodeList,List<String> batchCodeList,Long yearCode);
 
     @Query(value = "select sum(CLASS_HOURS)\n" +
             "    from (select distinct b.EDU104_ID, b.XBMC \n" +

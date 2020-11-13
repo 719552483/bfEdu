@@ -84,20 +84,20 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
     Integer countByEdu106Id(Long edu106_id);
 
 	//根据年龄查找学生人数
-	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.nl between ?1 and ?2",nativeQuery = true)
-	Integer getStudentByAge(String s, String s1);
+	@Query(value = "select count(e.Edu001_ID) from edu001 e,edu300 t where e.Edu300_ID = t.Edu300_ID and (e.nl between ?1 and ?2) and t.njbm in ?3 and t.batch in ?4  ",nativeQuery = true)
+	Integer getStudentByAge(String s, String s1,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//根据二级学院查找各年龄段学生人数
-	@Query(value = "select count(e.Edu001_ID) from edu001 e where e.nl between ?1 and ?2 and e.szxb = ?3",nativeQuery = true)
-	Integer getStudentByAgeWithDepartment(String s, String s1, String departmentCode);
+	@Query(value = "select count(e.Edu001_ID) from edu001 e, edu300 t where e.Edu300_ID = t.Edu300_ID and (e.nl between ?1 and ?2) and e.szxb = ?3 and t.njbm in ?4 and t.batch in ?5",nativeQuery = true)
+	Integer getStudentByAgeWithDepartment(String s, String s1, String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//根据生源类型查询学生人数
-	@Query(value = "select new com.beifen.edu.administration.PO.EchartPO(t.sylx ,count(t.edu001_ID)) from Edu001 t group by t.sylx")
-	List<EchartPO> getStudentByJob();
+	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t, Edu300 m where t.edu300_ID = m.edu300_ID and m.njbm in ?1 and m.batch in ?2 group by t.sylx",nativeQuery = true)
+	List<Object[]> getStudentByJob(List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//根据二级学院查询各生源类型学生人数
-	@Query(value = "select new com.beifen.edu.administration.PO.EchartPO(t.sylx ,count(t.edu001_ID)) from Edu001 t where t.szxb = ?1 group by t.sylx")
-	List<EchartPO> getStudentByJobWithDepatrment(String departmentCode);
+	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t, Edu300 m where t.edu300_ID = m.edu300_ID and t.szxb = ?1 and m.njbm in ?2 and m.batch in ?3 group by t.sylx",nativeQuery = true)
+	List<Object[]> getStudentByJobWithDepatrment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//查询在校学生
 	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006')",nativeQuery = true)
