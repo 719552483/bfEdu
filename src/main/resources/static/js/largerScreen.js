@@ -206,14 +206,14 @@ function hiddenBigVideo(){
 			clearInterval(wait);
 			//执行code
 			$('.bigVideoArea').removeClass('animated slideOutDown');
-			var mySwiper1 = new Swiper('.visual_swiper1', {
+			mySwiper1 = new Swiper('.visual_swiper1', {
 				autoplay: true,//可选选项，自动滑动
 				speed: 800,//可选选项，滑动速度
 				autoplay: {
 					delay: 2500,//1秒切换一次
 				},
 			})
-			var mySwiper2 = new Swiper('.visual_swiper2', {
+			mySwiper2 = new Swiper('.visual_swiper2', {
 				autoplay: true,//可选选项，自动滑动
 				direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 				speed: 2000,//可选选项，滑动速度
@@ -1611,6 +1611,7 @@ function changeScreen2Info(){
 					return;
 				}
 				saerchReloadChart(backjson.data);
+				$(".returnMark").html(2);
 			}
 		}
 	});
@@ -2195,7 +2196,7 @@ function loadChart(searchObject){
 }
 
 //重新渲染chartDom
-function reloadChart(backjsonData,needDisPlayCenterCiecle){
+function reloadChart(backjsonData){
 	//教师类型分布
 	var teacherTypeCountCharts=$(".teacheeTypeCountAppendArea").find('.chartDom1').length;
 	if(teacherTypeCountCharts>1){
@@ -2221,6 +2222,7 @@ function reloadChart(backjsonData,needDisPlayCenterCiecle){
 	}
 
 	studentFaceCountSwiper1.autoplay.stop();
+	localStudentSearchSwiper.autoplay.stop();
 
 
 	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1,.SearchlocalStudentInfoAreaSwiper").hide();
@@ -2832,8 +2834,24 @@ function fsksClassPeriodChartDemo(currentInfo){
 
 //返回初始化页面
 function returnConfigPage(){
-	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1").show();
-	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,#returnConfigPage,.visual_swiper1_1,.SearchlocalStudentInfoAreaSwiper").hide();
+	if($(".returnMark")[0].innerText==="1"){
+		$(".visual_swiper2").show();
+		$('.SearchlocalStudentInfoAreaSwiper').hide();
+		var localStudentInfoArea=$(".localStudentInfoArea").find('.chartDom1').length;
+		if(localStudentInfoArea>1){
+			mySwiper2.autoplay.start();
+		}
+	}else{
+		$(".visual_swiper2").hide();
+		$('.SearchlocalStudentInfoAreaSwiper').show();
+		var SearchlocalStudentInfoArea=$(".SearchlocalStudentInfoArea").find('.chartDom1').length;
+		if(SearchlocalStudentInfoArea>1){
+			localStudentSearchSwiper.autoplay.start();
+		}
+	}
+	
+	$(".visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1").show();
+	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,#returnConfigPage,.visual_swiper1_1").hide();
 	$(".tableImgLeft,.tableImgRight").hide();
 	$(".tableSpanLeft").removeClass("tableSpanLeft");
 	$(".tableSpanRight").removeClass("tableSpanRight");
