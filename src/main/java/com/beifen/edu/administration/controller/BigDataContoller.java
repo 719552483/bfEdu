@@ -83,5 +83,4 @@ public class BigDataContoller {
         ResultVO result = bigDataService.getBigScreenTotalData();
         return result;
     }
-
 }

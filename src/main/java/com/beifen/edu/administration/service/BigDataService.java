@@ -56,6 +56,10 @@ public class BigDataService {
     @Autowired
     private Edu200Dao edu200Dao;
     @Autowired
+    private Edu105Dao edu105Dao;
+    @Autowired
+    private Edu000Dao edu000Dao;
+    @Autowired
     private ReflectUtils utils;
 
 
@@ -118,6 +122,18 @@ public class BigDataService {
     public ResultVO getBigScreenData(BigDataSearchPO bigDataSearch) {
         ResultVO resultVO;
         Map<String,Object> returnMap = new HashMap<>();
+
+        //获取年级信息
+        List<Edu105> edu105List = edu105Dao.findAll();
+        returnMap.put("schoolYearInfo",edu105List);
+
+        //获取学年信息
+        List<Edu400> edu400List = edu400Dao.findAll();
+        returnMap.put("yearInfo",edu400List);
+
+        //获取批次信息
+        List<Edu000> batchList = edu000Dao.queryejdm("pclx");
+        returnMap.put("batchInfo",batchList);
 
         //教学任务点查询
         List<Edu501> edu501List = edu501Dao.findAll();

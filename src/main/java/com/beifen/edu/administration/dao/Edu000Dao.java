@@ -47,4 +47,5 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	@Modifying
 	@Query(value = "delete from edu000 where BF000_ID in ?1", nativeQuery = true)
     void deleteInEdu000Ids(List<String> deleteArray);
+
 }
