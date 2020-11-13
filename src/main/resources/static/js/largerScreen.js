@@ -298,8 +298,9 @@ function changePageData(row,index){
 		dataType : 'json',
 		success : function(backjson) {
 			if(backjson.code===200){
-				reloadChart(backjson.data);
+				reloadChart(backjson.data,true);
 				changeChoosendStyle(index);
+				$(".startSearch").hide();
 			}else{
 				toastr.warning(backjson.msg);
 			}
@@ -841,28 +842,29 @@ function reStuffData(data){
 }
 
 //渲染开课数量
-function stuffoptenClassCount(chartInfo,isSingle) {
+function stuffoptenClassCount(chartInfo,isSingle,isFirstTime) {
 	var chartInfos = [];
 	for (var i = 0; i < chartInfo.length;i += 3) {
 		chartInfos.push(chartInfo.slice(i, i + 3));
 	}
 
-	for (var i = 0; i < chartInfos.length; i++) {
-		var className='courseCount_swiper-slide'+i;
-		var parentStr='<div class="swiper-slide '+className+'"></div>';
-		$(".courseCountAppendArea").append(parentStr);
-	}
+	if(typeof  isSingle ==="undefined"||!isSingle){
+		$(".courseCountAppendArea").empty();
+		$(".visual_swiperRightCourseCount").show();
+		$("#singleCourseCount").hide();
 
-	for (var i = 0; i < chartInfos.length; i++) {
-		var currentInfo = chartInfos[i];
-		var className='courseCount_swiper-slide'+i;
-		for (var c = 0; c < currentInfo.length; c++) {
-			var str="";
-			if(isSingle){
-				var option1 = cicleColor1(currentInfo[c]);
-				var openClassCount = echarts.init(document.getElementById('singleCourseCount'));
-				openClassCount.setOption(option1);
-			}else{
+		for (var i = 0; i < chartInfos.length; i++) {
+			var className='courseCount_swiper-slide'+i;
+			var parentStr='<div class="swiper-slide '+className+'"></div>';
+			$(".courseCountAppendArea").append(parentStr);
+		}
+
+		for (var i = 0; i < chartInfos.length; i++) {
+			var currentInfo = chartInfos[i];
+			var className='courseCount_swiper-slide'+i;
+			for (var c = 0; c < currentInfo.length; c++) {
+				var str="";
+
 				if(c==0){
 					var option1 = cicleColor1(currentInfo[c]);
 					str='<div class="visualSssf_right_box chartDom1" id="classOpenCount'+currentInfo[c].text+'"></div>';
@@ -884,16 +886,39 @@ function stuffoptenClassCount(chartInfo,isSingle) {
 				}
 			}
 		}
-	}
 
-	if(!isSingle){
-		mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
-			autoplay: true,//可选选项，自动滑动
-			speed: 800,//可选选项，滑动速度
-			autoplay: {
-				delay: 2500,//1秒切换一次
-			},
-		})
+		if(!isSingle && isFirstTime){
+			mySwiper1 = new Swiper('.visual_swiperRightCourseCount', {
+				autoplay: true,//可选选项，自动滑动
+				speed: 800,//可选选项，滑动速度
+				autoplay: {
+					delay: 2500,//1秒切换一次
+				},
+			})
+		}else{
+			var currentMySwiper1=$(".courseCountAppendArea").find(".swiper-slide").length;
+			if(currentMySwiper1>1){
+				$(".courseCountAppendArea").removeClass("stopTransform");
+				mySwiper1.autoplay.start();
+			}else{
+				mySwiper1.autoplay.stop();
+				$(".courseCountAppendArea").addClass("stopTransform");
+			}
+		}
+	}else{
+		$("#singleCourseCount").show();
+		$(".visual_swiperRightCourseCount").hide();
+
+		for (var i = 0; i < chartInfos.length; i++) {
+			var currentInfo = chartInfos[i];
+			var className='courseCount_swiper-slide'+i;
+			for (var c = 0; c < currentInfo.length; c++) {
+				var str="";
+				var option1 = cicleColor1(currentInfo[c]);
+				var openClassCount = echarts.init(document.getElementById('singleCourseCount'));
+				openClassCount.setOption(option1);
+			}
+		}
 	}
 }
 
@@ -1536,22 +1561,102 @@ function stuffStudentCount2(seriesdata,yAxisData){
 	}
 }
 
-//初始化加载chart
-function loadChart(){
-	var returnObject=new Object();
-	returnObject.departmentCode="";
-	returnObject.schoolYearCode="";
-	returnObject.batchCode="";
+//渲染年级批次学年选择
+function stuffChoosenArea(choosenInfo){
+	var str='<li><a choosendvalue="" class="reStuffChooend">全年级</a></li>';
+	//年级
+	var schoolYearInfo=choosenInfo.schoolYearInfo;
+	for (var i = 0; i < schoolYearInfo.length; i++) {
+		str+='<li><a class="reStuffChooend" choosendvalue="'+schoolYearInfo[i].edu105_ID+'">'+schoolYearInfo[i].njmc+'</a></li>';
+	}
+	$(".schoolYearArea").empty().append(str);
+
+	str='<li><a choosendvalue="" class="reStuffChooend">全批次</a></li>';
+	//批次
+	var batchInfo=choosenInfo.batchInfo;
+	for (var i = 0; i < batchInfo.length; i++) {
+		str+='<li><a class="reStuffChooend" choosendvalue="'+batchInfo[i].ejdm+'">'+batchInfo[i].ejdmz+'</a></li>';
+	}
+
+	$(".batchArea").empty().append(str);
+
+	str='<li><a choosendvalue="" class="reStuffChooend">全学年</a></li>';
+	//学年
+	var yearInfo=choosenInfo.yearInfo;
+	for (var i = 0; i < yearInfo.length; i++) {
+		str+='<li><a class="reStuffChooend" choosendvalue="'+yearInfo[i].edu400_ID+'">'+yearInfo[i].xnmc+'</a></li>';
+	}
+	$(".yearArea").empty().append(str);
+
+	$('.reStuffChooend').on('click',function(e){
+		reStuffChooend(e.currentTarget);
+	});
+
+	$('.changeScreen2Info').unbind('click');
+	$('.changeScreen2Info').bind('click', function(e) {
+		changeScreen2Info();
+		e.stopPropagation();
+	});
+}
+
+//根据选择重新渲染
+function reStuffChooend(eve){
+	var restuffClass=eve.parentElement.parentElement.parentElement.classList[1];
+	var restuffTxt=eve.innerText;
+	var restuffValue=eve.attributes[1].nodeValue;
+	$("."+restuffClass).find('a:eq(0)').html(restuffTxt).append('<span class="caret" style="margin-left: 4px;margin-top: -2px"></span>');
+	$("."+restuffClass).attr("choosend",restuffValue);
+}
+
+//根据检索条件切换2屏数据源
+function changeScreen2Info(){
+	var schoolYearCode=$(".currentSchoolYear")[0].attributes[1].nodeValue;
+	var batchCode=$(".currentBatch")[0].attributes[1].nodeValue;
+	var yearCode=$(".currentYear")[0].attributes[1].nodeValue;
+
+	var searchObject=new Object();
+	searchObject.departmentCode="";
+	schoolYearCode==="reStuffChooend"?searchObject.schoolYearCode="":searchObject.schoolYearCode=schoolYearCode;
+	batchCode==="reStuffChooend"?searchObject.batchCode="":searchObject.batchCode=batchCode;
+	yearCode==="reStuffChooend"?searchObject.yearCode="":searchObject.yearCode=yearCode;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/getBigScreenData",
 		data: {
-			"searchInfo":JSON.stringify(returnObject)
+			"searchInfo":JSON.stringify(searchObject)
 		},
 		dataType : 'json',
 		success : function(backjson) {
 			if(backjson.code===200){
+				if(backjson.data.departmentData.length==0){
+					toastr.warning('暂无数据');
+					return;
+				}
+				reloadChart(backjson.data,false);
+			}
+		}
+	});
+
+}
+
+//初始化加载chart
+function loadChart(searchObject){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getBigScreenData",
+		data: {
+			"searchInfo":JSON.stringify(searchObject)
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			if(backjson.code===200){
+				if(backjson.data.departmentData.length==0){
+					toastr.warning('暂无数据');
+					return;
+				}
 				$(".currentShowPage").html(2);
 				$(".Screen1").hide();
 				$(".Screen2").show();
@@ -1568,9 +1673,12 @@ function loadChart(){
 				//学员概貌分析
 				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData,false);
 				//授课情况统计
-				stuffoptenClassCount(backjson.data.courseData,false);
+				stuffoptenClassCount(backjson.data.courseData,false,true);
 				//学员统计人数
 				stuffStudentCount(backjson.data.studentsInLocal.seriesdata,backjson.data.studentsInLocal.yAxisData);
+
+				//年级批次学年选择
+				stuffChoosenArea(backjson.data);
 
 				$('#load').hide();
 				$(".Screen2").addClass("animated flipInX");
@@ -1580,7 +1688,10 @@ function loadChart(){
 }
 
 //重新渲染chartDom
-function reloadChart(backjsonData){
+function reloadChart(backjsonData,needDisPlayCenterCiecle){
+	//授课教师人数
+	stuffTeacherCountTable(backjsonData.departmentData);
+
 	//教师类型分布
 	var teacherTypeCountCharts=$(".teacheeTypeCountAppendArea").find('.chartDom1').length;
 	if(teacherTypeCountCharts>1){
@@ -1608,8 +1719,8 @@ function reloadChart(backjsonData){
 	studentFaceCountSwiper1.autoplay.stop();
 
 
-	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1").hide();
-	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,.visual_swiper1_1").show();
+	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiper1").hide();
+	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,.visual_swiper1_1").show();
 	$(".visual_swiper2_2").empty();
 
 	//教师类型分布
@@ -1618,19 +1729,29 @@ function reloadChart(backjsonData){
 	stuffclassHourTypeCount(backjsonData.periodTypeData,true);
 	//学员概貌分析
 	stuffstudentFaceCount(backjsonData.studentAgeData,backjsonData.studentJobData,true);
+
+
 	//授课情况统计
-	stuffoptenClassCount(backjsonData.courseData,true);
+	if(needDisPlayCenterCiecle){
+		stuffoptenClassCount(backjsonData.courseData,needDisPlayCenterCiecle,false);
+	}else {
+		stuffoptenClassCount(backjsonData.courseData,undefined,false);
+	}
+
 	//学员统计人数
 	stuffStudentCount2(backjsonData.studentsInLocal.seriesdata,backjsonData.studentsInLocal.yAxisData);
-	//中间隐藏的四个小chart
-	stuffCenterCiecle(backjsonData);
 
-	//返回初始页面
-	$('#returnConfigPage').unbind('click');
-	$('#returnConfigPage').bind('click', function(e) {
-		returnConfigPage();
-		e.stopPropagation();
-	});
+	if(needDisPlayCenterCiecle){
+		//中间隐藏的四个小chart
+		stuffCenterCiecle(backjsonData);
+
+		//返回初始页面
+		$('#returnConfigPage').unbind('click');
+		$('#returnConfigPage').bind('click', function(e) {
+			returnConfigPage();
+			e.stopPropagation();
+		});
+	}
 
 	studentFaceCountSwiper2.autoplay.start();
 }
@@ -2223,6 +2344,7 @@ function returnConfigPage(){
 	$(".tableSpanLeft").removeClass("tableSpanLeft");
 	$(".tableSpanRight").removeClass("tableSpanRight");
 	$(".tableChoosend").removeClass("tableChoosend");
+	$(".startSearch").show();
 
 	//隐藏
 	$('.smallBingtu').addClass('animated bounceOut');
@@ -2553,7 +2675,12 @@ function drawScreen1Map(id, allMapJson, currentTeachLocal) {
 //进入2屏
 function enterScreen2(){
 	$('#load').show();
-	loadChart( );
+	var searchObject=new Object();
+	searchObject.departmentCode="";
+	searchObject.schoolYearCode="";
+	searchObject.batchCode="";
+	searchObject.yearCode="";
+	loadChart(searchObject);
 }
 
 //删除加载动画

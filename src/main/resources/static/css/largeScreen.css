@@ -56,6 +56,30 @@
     color: #b56d92;
 }
 
+@font-face {font-family: "iconfont";
+    src: url('iconfont.eot?t=1605250484468'); /* IE9 */
+    src: url('iconfont.eot?t=1605250484468#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAALwAAsAAAAABqAAAAKhAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcAqBKIE5ATYCJAMICwYABCAFhG0HMRvgBcgusG3YE0GIDSxAQXUDAg+IIFy22ST/tFZ916UKicKhQIFEgXQYhcJ3I26+vPwp5Km0OhZwspUm2TSYjQrgimPPgO7Qx4nvzmKoz0gE7fwHBPCJe6d/5QtkvvMulznG+ccA40AKbG+LAgm4GBvGLniB9wk0G5fE4rigrA7YK+xlgbhj6A5gX0grCqs1CvWGvUW8sdGYXtIjXqPfx7/tsCepZfZDZ7f53SDrC3yB/FStOU8YXy4IdoiMVUAhrhrLJ6wEE1hpLlubBo7VG3yBSuAVR3UJ9tfZ3a1gFKqfSeNpH1U2gcJotgDnkyaRW4a1vX4ivtqfaPzySSU3L6O+Tn5Zrvs0SXz+ZVw/iCduljLvJjo/LZNfpoxfV4jPk983FjSrrpUu2blDDDOUm+1S5rq2+qB/IPw/Ysw/XpAnhuomh4Ym69zzJD7ef5zwBxEP/YY2Q2Rr0ylHBwMuzQXrkgaQBahQ9WKRn3/lcx4/uhLb3NLWUsDnp4rjSD8sCjSe0Bt+nKksQtAbOtudiuauIF6ypbshBVTymCo73u37VHvfXQZDY0HDkDQYQ9ZoliycVdS02EVdoz00W1F4uEUPiZUoTVg2AxA67SFp946s0xNZON9Q0+836jrDCs1uwuvMFvPBOOZKqENB3bBzADJdWKBcn+IY99YgWuU6pLwuEpJIkpkc1Gt05VohEpC0xAa5lzYoCgUpCfOwADyGOA5Ds4R7UJeiMSmKOUWrpZrepOnCPHB0RIJ0UCDdoE4DIEYXTEAFgxWOle/XQGgqTgepg1WXJyESGTM+pKehG0AWmoVBrEd5RdaLZqBQUCCKBONBBWAWwuFgkLl5Vg+ki0LDNKFolkLr9KOGmjXbW/m/OwTNbEcKZ2rWcI9V2aRiAAAAAAA=') format('woff2'),
+    url('iconfont.woff?t=1605250484468') format('woff'),
+    url('iconfont.ttf?t=1605250484468') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url('iconfont.svg?t=1605250484468#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-seachfScreen2:before {
+    content: "\e600";
+    font-size: 0.7vw;
+    color: #b0dbe8;
+    margin-left: 10px;
+}
+
 
 
 
@@ -498,4 +522,8 @@ border-bottom: 1px #ff000000 solid!important;
     height: 87px;
     float: left;
     margin-top: -5%;
+}
+
+.stopTransform{
+    transform:translate3d(0px, 0px, 0px)!important;
 }
