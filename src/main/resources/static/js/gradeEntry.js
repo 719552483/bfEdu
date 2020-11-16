@@ -301,6 +301,18 @@ function stuffStudentBaseInfoTable(tableInfo) {
 
 //预备录入成绩
 function wantGradeEntry(row,index){
+	var showGradeInput=$(".gradeInput");
+	var showNum=0;
+	for (var i = 0; i <showGradeInput.length ; i++) {
+		if(showGradeInput[i].style.display==="block"||showGradeInput[i].style.display==="inline-block"){
+			showNum++;
+		}
+	}
+	if(showNum>=1){
+		toastr.warning("请先录完上一个成绩");
+		return;
+	}
+
 	$(".wantGradeEntry"+index).hide();
 	$(".grade"+index).hide();
 	$(".comfirmGradeEntry"+index).show();
