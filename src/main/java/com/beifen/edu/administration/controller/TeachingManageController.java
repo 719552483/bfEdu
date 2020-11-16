@@ -419,6 +419,16 @@ public class TeachingManageController {
         return result;
     }
 
-
+    /**
+     * 教务查询授课成果
+     * @return
+     */
+    @RequestMapping("/searchCourseResult")
+    @ResponseBody
+    public ResultVO searchCourseResult(@RequestParam("searchInfo") String searchInfo) {
+        CourseResultPO courseResultPO = JSON.parseObject(searchInfo, CourseResultPO.class);
+        ResultVO result = teachingManageService.searchCourseResult(courseResultPO);
+        return result;
+    }
 
 }

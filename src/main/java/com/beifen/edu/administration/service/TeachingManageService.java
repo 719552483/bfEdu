@@ -11,6 +11,7 @@ import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,6 +60,8 @@ public class TeachingManageService {
     Edu207Dao edu207Dao;
     @Autowired
     Edu400Dao edu400Dao;
+    @Autowired
+    Edu005Dao edu005Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -1193,6 +1197,66 @@ public class TeachingManageService {
                 resultVO = ResultVO.setSuccess("当前学年共找到"+edu207List.size()+"条分散学识安排",edu207List);
             }
         }
+        return resultVO;
+    }
+
+    //教务查询授课成果
+    public ResultVO searchCourseResult(CourseResultPO courseResultPO) {
+        ResultVO resultVO;
+
+        Specification<Edu201> specification = new Specification<Edu201>() {
+            public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (courseResultPO.getXnid() != null && !"".equals(courseResultPO.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),  courseResultPO.getXnid()));
+                }
+                if (courseResultPO.getLs() != null && !"".equals(courseResultPO.getLs())) {
+                    predicates.add(cb.like(root.<String>get("ls"), "%"+courseResultPO.getLs()+"%"));
+                }
+                if (courseResultPO.getClassName() != null && !"".equals(courseResultPO.getClassName())) {
+                    predicates.add(cb.like(root.<String>get("className"), "%"+courseResultPO.getClassName()+"%"));
+                }
+                if (courseResultPO.getKcmc() != null && !"".equals(courseResultPO.getKcmc())) {
+                    predicates.add(cb.like(root.<String>get("kcmc"), "%"+courseResultPO.getKcmc()+"%"));
+                }
+                predicates.add(cb.equal(root.<String>get("sfsqks"),  "T"));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu201> edu201List = edu201Dao.findAll(specification);
+
+        if (edu201List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
+            return resultVO;
+        }
+
+        List<CourseResultPO> courseResultList = new ArrayList<>();
+        for (Edu201 e : edu201List) {
+            CourseResultPO data = new CourseResultPO();
+            try {
+                BeanUtils.copyProperties(data,e);
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            } catch (InvocationTargetException ex) {
+                ex.printStackTrace();
+            }
+            Long edu201Id = e.getEdu201_ID();
+            String countAll = edu005Dao.countAllByEdu201(edu201Id);
+            String countPass = edu005Dao.countPassByEdu201(edu201Id);
+            if(Integer.parseInt(countPass) != 0){
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                data.setPassingRate(usedPercent);
+            } else {
+                data.setPassingRate("0.00%");
+            }
+            courseResultList.add(data);
+        }
+
+        resultVO = ResultVO.setSuccess("共找到"+courseResultList+"条成果信息",courseResultList);
         return resultVO;
     }
 }
