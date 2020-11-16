@@ -947,7 +947,7 @@ function cicleColor1(currentInfo){
 				var result = ''
 				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#1d54f7"></span>';
 				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
-				result= "共"+all+ "门课程</br>"
+				result= "共"+all+ "条计划任务</br>"
 					   + dotHtml +
 					   "已完成："+currentInfo.courseCompleteCount+ "</br>"+
 						notHtml +
@@ -1063,7 +1063,7 @@ function cicleColor2(currentInfo){
 				var result = ''
 				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#02df94"></span>';
 				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
-				result= "共"+all+ "门课程</br>"
+				result= "共"+all+ "条计划任务</br>"
 					+ dotHtml +
 					"已完成："+currentInfo.courseCompleteCount+ "</br>"+
 					notHtml +
@@ -1179,7 +1179,7 @@ function cicleColor3(currentInfo){
 				var result = ''
 				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#eb3600"></span>';
 				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
-				result= "共"+all+ "门课程</br>"
+				result= "共"+all+ "条计划任务</br>"
 					+ dotHtml +
 					"已完成："+currentInfo.courseCompleteCount+ "</br>"+
 					notHtml +
@@ -2649,7 +2649,7 @@ function jzksClassPeriodChartDemo(currentInfo){
 				var result = ''
 				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#19daf7"></span>';
 				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
-				result= "共"+all+ "个课时</br>"
+				result= "共"+all+ "个学时</br>"
 					+ dotHtml +
 					"已完成："+currentInfo.periodCompleteCount+ "</br>"+
 					notHtml +
@@ -2676,7 +2676,7 @@ function jzksClassPeriodChartDemo(currentInfo){
 			hoverAnimation: false,
 			data: [{
 				value: value,
-				name: '已完成课时',
+				name: '已完成学时',
 				itemStyle: {
 					normal: {
 						borderWidth: borderWidth,
@@ -2772,7 +2772,7 @@ function fsksClassPeriodChartDemo(currentInfo){
 				var result = ''
 				var dotHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#fc5919"></span>';
 				var notHtml = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:gray"></span>';
-				result= "共"+all+ "个课时</br>"
+				result= "共"+all+ "个学时</br>"
 					+ dotHtml +
 					"已完成："+currentInfo.periodCompleteCount+ "</br>"+
 					notHtml +
@@ -2799,7 +2799,7 @@ function fsksClassPeriodChartDemo(currentInfo){
 			hoverAnimation: false,
 			data: [{
 				value: value,
-				name: '已完成课时',
+				name: '已完成学时',
 				itemStyle: {
 					normal: {
 						borderWidth: borderWidth,

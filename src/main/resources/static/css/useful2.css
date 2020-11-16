@@ -52,6 +52,15 @@ textarea::-webkit-input-placeholder {
 	font-weight: 600;
 }
 
+/*解决input输入框有值后背景变色*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-transition-delay: 111111s;
+	-webkit-transition: color 11111s ease-out, background-color 111111s ease-out;
+}
+
 .giveBottom .multi-select-container{
     margin-left: 17px;
     margin-top: 0px;
@@ -257,6 +266,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格单个操作*/
+#crouseRsForPresentQueryTable td:last-child,
 #studentAppraisalsTable td:last-child,
 #xnTable td:last-child,
 #taskApprovalTable td:last-child,
@@ -2402,6 +2412,10 @@ input:focus{
 	color: #115882;
 	font-size: 15px;
 	font-weight: 500;
+}
+
+.crouseRsForPresentQueryTableArea .bootstrap4 .search{
+	margin-top: 11px;
 }
 
 @keyframes serachAnimation {

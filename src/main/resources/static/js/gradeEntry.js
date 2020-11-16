@@ -158,6 +158,12 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				formatter: paramsMatter
 			}, {
+				field: 'studentCode',
+				title: '学号',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
 				field: 'grade',
 				title: '成绩',
 				align: 'left',

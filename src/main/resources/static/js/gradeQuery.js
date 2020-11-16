@@ -29,13 +29,13 @@ function stuffNj(){
 			hideloding();
 			var str = '';
 			if (backjson.code === 500) {
-				toastr.info(backjson.msg);
+				toastr.warning(backjson.msg);
 				str = '<option value="seleceConfigTip">暂无选择</option>';
 			}else{
 				str = '<option value="seleceConfigTip">请选择</option>';
-			}
-			for (var i = 0; i < backjson.data.length; i++) {
-				str += '<option value="'+backjson.data[i].edu400_ID+'">'+ backjson.data[i].xnmc+'</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					str += '<option value="'+backjson.data[i].edu400_ID+'">'+ backjson.data[i].xnmc+'</option>';
+				}
 			}
 			stuffManiaSelect("#grade", str);
 		}

@@ -265,4 +265,9 @@ public class PageRelatedController {
 	public String teachDatasConfigurationPage() {
 		return "teachDatasConfiguration";
 	}
+
+	@RequestMapping("crouseRsQuery")
+	public String crouseRsQueryPage() {
+		return "crouseRsQuery";
+	}
 }
