@@ -2189,7 +2189,6 @@ function loadChart(searchObject){
 				stuffChoosenArea(backjson.data);
 
 				$('#load').hide();
-				$(".Screen2").addClass("animated flipInX");
 			}
 		}
 	});
@@ -2222,8 +2221,10 @@ function reloadChart(backjsonData){
 	}
 
 	studentFaceCountSwiper1.autoplay.stop();
-	localStudentSearchSwiper.autoplay.stop();
 
+	if(typeof localStudentSearchSwiper!=="undefined"){
+		localStudentSearchSwiper.autoplay.stop();
+	}
 
 	$(".visual_swiper2,.visual_swiperRight2,.visual_swiperRight3,.visual_swiperRightCourseCount,.visual_swiper1,.SearchlocalStudentInfoAreaSwiper").hide();
 	$(".visual_swiper2_2,#singleTeacheeTypeCount,#singleClassHourTypeCount,#singleCourseCount,.visual_swiper1_1").show();
