@@ -494,7 +494,6 @@ function crouseRsForDeatilsReSearch(){
 	var reObject = new Object();
 	reObject.InputIds = "#xzbMc,#studentName";
 	reReloadSearchsWithSelect(reObject);
-	crouseRsForDeatilsSstartSearch();
 }
 
 //改变展示区域
@@ -516,6 +515,7 @@ function crouseRsForDeatilsBinBind(){
 	$('#crouseRsForDeatils_reReloadSearchs').unbind('click');
 	$('#crouseRsForDeatils_reReloadSearchs').bind('click', function(e) {
 		crouseRsForDeatilsReSearch();
+		crouseRsForDeatilsSstartSearch();
 		e.stopPropagation();
 	});
 
