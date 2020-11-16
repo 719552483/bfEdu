@@ -515,7 +515,12 @@ public class StudentManageService {
         ResultVO resultVO;
 
         Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
+        if(one == null) {
+            resultVO = ResultVO.setFailed("您不是本校学生,无法查询成绩");
+            return resultVO;
+        }
         String studentCode = one.getXh();
+
 
         Specification<Edu005> specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
