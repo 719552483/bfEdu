@@ -212,11 +212,15 @@ function hiddenBigVideo(){
 				autoplay: {
 					delay: 2500,//1秒切换一次
 				},
+				observer:true,//修改swiper自己或子元素时，自动初始化swiper
+				observeParents:false,//修改swiper的父元素时，自动初始化swiper
 			})
 			mySwiper2 = new Swiper('.visual_swiper2', {
 				autoplay: true,//可选选项，自动滑动
 				direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 				speed: 2000,//可选选项，滑动速度
+				observer:true,//修改swiper自己或子元素时，自动初始化swiper
+				observeParents:false,//修改swiper的父元素时，自动初始化swiper
 			});
 		}
 	}, 600);
@@ -480,6 +484,8 @@ function stuffTeacherTypeCount(teacherTypeData,isSingle){
 				autoplay: {
 					delay: 2500,//1秒切换一次
 				},
+				observer:true,//修改swiper自己或子元素时，自动初始化swiper
+				observeParents:false,//修改swiper的父元素时，自动初始化swiper
 			})
 		}
 	}
@@ -757,6 +763,8 @@ function stuffstudentFaceCount(studentAgeData,studentJobData,isSingle){
 			autoplay: {
 				delay: 2500,//1秒切换一次
 			},
+			observer:true,//修改swiper自己或子元素时，自动初始化swiper
+			observeParents:false,//修改swiper的父元素时，自动初始化swiper
 		})
 	}else{
 		studentFaceCountSwiper1 = new Swiper('.visual_swiper1', {
@@ -765,6 +773,8 @@ function stuffstudentFaceCount(studentAgeData,studentJobData,isSingle){
 			autoplay: {
 				delay: 2500,//1秒切换一次
 			},
+			observer:true,//修改swiper自己或子元素时，自动初始化swiper
+			observeParents:false,//修改swiper的父元素时，自动初始化swiper
 		})
 	}
 }
@@ -894,6 +904,8 @@ function stuffoptenClassCount(chartInfo,isSingle,isFirstTime) {
 			autoplay: {
 				delay: 2500,//1秒切换一次
 			},
+			observer:true,//修改swiper自己或子元素时，自动初始化swiper
+			observeParents:false,//修改swiper的父元素时，自动初始化swiper
 		})
 	}
 }
@@ -1385,6 +1397,8 @@ function stuffStudentCount(seriesdata,yAxisData){
 			autoplay: true,//可选选项，自动滑动
 			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 			speed: 1000,//可选选项，滑动速度
+			observer:true,//修改swiper自己或子元素时，自动初始化swiper
+			observeParents:false,//修改swiper的父元素时，自动初始化swiper
 		});
 	}
 }
@@ -1533,6 +1547,8 @@ function stuffStudentCount2(seriesdata,yAxisData){
 			autoplay: true,//可选选项，自动滑动
 			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 			speed: 1000,//可选选项，滑动速度
+			observer:true,//修改swiper自己或子元素时，自动初始化swiper
+			observeParents:false,//修改swiper的父元素时，自动初始化swiper
 		});
 	}
 }
@@ -2007,7 +2023,7 @@ function searchReStuffoptenClassCount(chartInfo){
 //点击检索重新学员统计人数
 function searchReStuffStudentCount(seriesdata,yAxisData){
 	$(".visual_swiper2").hide();
-	$(".SearchlocalStudentInfoAreaSwiper").show();
+	$(".SearchlocalStudentInfoAreaSwiper").show().find(".SearchlocalStudentInfoArea").empty();
 	var seriesdatas = [];
 	var yAxisDatas = [];
 
@@ -2145,6 +2161,8 @@ function searchReStuffStudentCount(seriesdata,yAxisData){
 			autoplay: true,//可选选项，自动滑动
 			direction: 'vertical',//可选选项，滑动方向 vertical||horizontal
 			speed: 1000,//可选选项，滑动速度
+			observer:true,//修改swiper自己或子元素时，自动初始化swiper
+			observeParents:false,//修改swiper的父元素时，自动初始化swiper
 		});
 	}
 }
