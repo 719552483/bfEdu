@@ -1097,6 +1097,10 @@ function showputedTask(IsmainAreaControl){
 			if (backjson.code === 200) {
 				$("#putOutTasks").hide();
 				stuffPutOutTaskTable(backjson.data);
+				var reObject = new Object();
+				reObject.InputIds = "#pyjhmc,#kcmc";
+				reObject.normalSelectIds = "#department";
+				reReloadSearchsWithSelect(reObject);
 				if (typeof(IsmainAreaControl) === "undefined") {
 					mainAreaControl();
 				}
