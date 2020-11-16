@@ -443,4 +443,15 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教务查询成绩详情
+     * @return
+     */
+    @RequestMapping("/searchAllXn")
+    @ResponseBody
+    public ResultVO searchAllXn() {
+        ResultVO result = teachingManageService.searchAllXn();
+        return result;
+    }
+
 }

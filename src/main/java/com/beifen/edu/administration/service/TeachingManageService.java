@@ -1311,5 +1311,17 @@ public class TeachingManageService {
         }
         return resultVO;
     }
+
+    //获取全部学年
+    public ResultVO searchAllXn() {
+        ResultVO resultVO;
+        List<Edu400> allXn = edu400Dao.findAllXn();
+        if (allXn.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无学年信息");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+allXn.size()+"条学年信息",allXn);
+        }
+        return resultVO;
+    }
 }
 
