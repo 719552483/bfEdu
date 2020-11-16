@@ -1256,7 +1256,7 @@ public class TeachingManageService {
             courseResultList.add(data);
         }
 
-        resultVO = ResultVO.setSuccess("共找到"+courseResultList+"条成果信息",courseResultList);
+        resultVO = ResultVO.setSuccess("共找到"+courseResultList+"条课程信息",courseResultList);
         return resultVO;
     }
 
