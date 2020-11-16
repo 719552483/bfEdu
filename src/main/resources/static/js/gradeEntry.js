@@ -316,9 +316,14 @@ function wantGradeEntry(row,index){
 
 //确认录入成绩
 function comfirmGradeEntry(row,index){
-	var currentGrade=$("#grade"+index).val();
+	var currentGrade;
 	if(row.isExamCrouse==="T"){
 		 currentGrade=$("#grade"+index).val();
+		if(currentGrade===""){
+			toastr.warning('成绩不能为空');
+			return;
+		}
+
 		if(!checkIsNumber(currentGrade) && currentGrade!==""){
 			toastr.warning('成绩必须是数字');
 			return;
