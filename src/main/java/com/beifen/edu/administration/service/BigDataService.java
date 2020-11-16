@@ -132,7 +132,7 @@ public class BigDataService {
         returnMap.put("schoolYearInfo",edu105List);
 
         //获取学年信息
-        List<Edu400> edu400List = edu400Dao.findAll();
+        List<Edu400> edu400List = edu400Dao.findAllXn();
         returnMap.put("yearInfo",edu400List);
 
         //获取批次信息
