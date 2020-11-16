@@ -431,4 +431,16 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教务查询成绩详情
+     * @return
+     */
+    @RequestMapping("/searchGradeInfo")
+    @ResponseBody
+    public ResultVO searchGradeInfo(@RequestParam("searchInfo") String searchInfo) {
+        Edu005 edu005 = JSON.parseObject(searchInfo, Edu005.class);
+        ResultVO result = teachingManageService.searchGradeInfo(edu005);
+        return result;
+    }
+
 }

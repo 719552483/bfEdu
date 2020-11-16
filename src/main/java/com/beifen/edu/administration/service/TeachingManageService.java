@@ -1259,5 +1259,57 @@ public class TeachingManageService {
         resultVO = ResultVO.setSuccess("共找到"+courseResultList+"条成果信息",courseResultList);
         return resultVO;
     }
+
+    //教务查询成绩详情
+    public ResultVO searchGradeInfo(Edu005 edu005) {
+        ResultVO resultVO;
+
+        Specification<Edu005> specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.like(root.<String>get("courseName"),"%"+edu005.getCourseName()+"%"));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"), edu005.getXnid()));
+                }
+                if (edu005.getStudentName() != null && !"".equals(edu005.getStudentName())) {
+                    predicates.add(cb.like(root.<String>get("studentName"), edu005.getStudentName()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.like(root.<String>get("className"), edu005.getClassName()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005List = edu005Dao.findAll(specification);
+
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无成绩信息");
+        } else {
+            //添加已得学分
+            for (Edu005 e : edu005List) {
+                if (e.getGrade() == null || "".equals(e.getGrade())){
+                    e.setGetCredit(0.00);
+                } else {
+                    if ("F".equals(e.getGrade())) {
+                        e.setGetCredit(0.00);
+                    } else if ("T".equals(e.getGrade())) {
+                        e.setGetCredit(e.getCredit());
+                    } else {
+                        double i = Double.parseDouble(e.getGrade());
+                        if (i < 60.00) {
+                            e.setGetCredit(0.00);
+                        } else {
+                            e.setGetCredit(e.getCredit());
+                        }
+                    }
+                }
+            }
+            resultVO = ResultVO.setSuccess("查询成功",edu005List);
+        }
+        return resultVO;
+    }
 }
 
