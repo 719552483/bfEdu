@@ -28,6 +28,6 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     String countAllByEdu201(Long edu201Id);
 
     //根据任务书查询通过成绩总数
-    @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and (t.grade = 'T' or t.grade > 60.00)",nativeQuery = true)
+    @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and t.is_passed = 'T'",nativeQuery = true)
     String countPassByEdu201(Long edu201Id);
 }

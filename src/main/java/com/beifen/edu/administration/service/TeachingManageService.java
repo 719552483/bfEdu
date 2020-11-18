@@ -1288,25 +1288,6 @@ public class TeachingManageService {
         if (edu005List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无成绩信息");
         } else {
-            //添加已得学分
-            for (Edu005 e : edu005List) {
-                if (e.getGrade() == null || "".equals(e.getGrade())){
-                    e.setGetCredit(0.00);
-                } else {
-                    if ("F".equals(e.getGrade())) {
-                        e.setGetCredit(0.00);
-                    } else if ("T".equals(e.getGrade())) {
-                        e.setGetCredit(e.getCredit());
-                    } else {
-                        double i = Double.parseDouble(e.getGrade());
-                        if (i < 60.00) {
-                            e.setGetCredit(0.00);
-                        } else {
-                            e.setGetCredit(e.getCredit());
-                        }
-                    }
-                }
-            }
             resultVO = ResultVO.setSuccess("查询成功",edu005List);
         }
         return resultVO;

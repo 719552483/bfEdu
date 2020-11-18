@@ -240,6 +240,22 @@ public class StaffManageService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(currentTime);
         edu005.setEntryDate(dateString);
+        if ("F".equals(edu005.getGrade())) {
+            edu005.setGetCredit(0.00);
+            edu005.setIsPassed("F");
+        } else if ("T".equals(edu005.getGrade())) {
+            edu005.setGetCredit(edu005.getCredit());
+            edu005.setIsPassed("T");
+        } else {
+            double i = Double.parseDouble(edu005.getGrade());
+            if (i < 60.00) {
+                edu005.setGetCredit(0.00);
+                edu005.setIsPassed("F");
+            } else {
+                edu005.setGetCredit(edu005.getCredit());
+                edu005.setIsPassed("T");
+            }
+        }
         edu005Dao.save(edu005);
         resultVO = ResultVO.setSuccess("成绩录入成功",dateString);
         return resultVO;
