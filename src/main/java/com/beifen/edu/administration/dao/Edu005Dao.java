@@ -32,6 +32,6 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     String countPassByEdu201(Long edu201Id);
 
     //根据条件检索成绩
-    @Query(value = "select * from edu005 t where t.xn = ?1 and t.class_name = ?2 and t.crouse_name = ?3 and t.student_code = ?4 ",nativeQuery = true)
+    @Query(value = "select * from edu005 t where t.xn = ?1 and t.class_name = ?2 and t.course_name = ?3 and t.student_code = ?4 ",nativeQuery = true)
     Edu005 findOneBySearchInfo(String xn, String className, String courseName, String studentCode);
 }

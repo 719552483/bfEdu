@@ -600,6 +600,13 @@ function wantImportGrades(){
 		checkGradeFile();
 		e.stopPropagation();
 	});
+
+	//确认导入文件
+	$('.confirmImportGrade').unbind('click');
+	$('.confirmImportGrade').bind('click', function(e) {
+		confirmImportGrade();
+		e.stopPropagation();
+	});
 }
 
 //检验导入文件
@@ -623,7 +630,7 @@ function checkGradeFile(){
 		success: function(backjosn){
 			$(".fileLoadingArea").hide();
 			if(backjosn.code===200){
-
+				showImportSuccessInfo("#importGradeModal",backjosn.msg);
 			}else{
 				showImportErrorInfo("#importGradeModal",backjosn.msg);
 			}
@@ -639,8 +646,54 @@ function checkGradeFile(){
 	});
 }
 
+//确认导入文件
+function confirmImportGrade(){
+	if ($("#gradeInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	var lrrInfo=new Object();
+	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
 
+	var formData = new FormData();
+	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+	formData.append("lrrInfo",JSON.stringify(lrrInfo));
 
+	$.ajax({
+		url:'/importGradeFile',
+		dataType:'json',
+		type:'POST',
+		async: true,
+		data: formData,
+		processData : false, // 使数据不做处理
+		contentType : false, // 不要设置Content-Type请求头
+		success: function(backjosn){
+			$(".fileLoadingArea").hide();
+			if(backjosn.code===200){
+				stuffStudentBaseInfoTable(backjosn.data);
+				toastr.success('成功导入'+backjosn.data.length+'条成绩');
+				var reObject = new Object();
+				reObject.fristSelectId = "#level";
+				reObject.actionSelectIds = "#department,#grade,#major";
+				reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
+				reObject.normalSelectIds = "#xn";
+				reReloadSearchsWithSelect(reObject);
+				$.hideModal("#importGradeModal")
+			}else{
+				showImportErrorInfo("#importGradeModal",backjosn.msg);
+			}
+		},beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+	});
+}
 
 //初始化页面按钮绑定事件
 function binBind() {
