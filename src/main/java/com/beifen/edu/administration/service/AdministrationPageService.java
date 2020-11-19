@@ -2633,11 +2633,11 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-		if ("xlsx".equals(suffix) || "xls".equals(suffix)) {
+		if (!"xlsx".equals(suffix) || !"xls".equals(suffix)) {
 			resultVO = ResultVO.setFailed("文件格式错误");
 			return resultVO;
 		}
-		HSSFWorkbook workbook = null;
+		HSSFWorkbook workbook;
 		try {
 			workbook = new HSSFWorkbook(new POIFSFileSystem(file.getInputStream()));
 			HSSFSheet sheet = workbook.getSheet("已选成绩详情");
