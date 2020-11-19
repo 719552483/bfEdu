@@ -24,6 +24,9 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -2557,5 +2560,56 @@ public class AdministrationPageService {
 			nameHave = false;
 		}
 		return nameHave;
+	}
+
+	//检索是否存在成绩
+	public List<Edu005> checkGradeInfo(Edu005 edu005) {
+		//根据条件筛选成绩表
+		Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+			public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+					predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+				}
+				if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+					predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+				}
+				if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+					predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+
+		List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+		return edu005List;
+	}
+
+	//创建成绩模板
+	public XSSFWorkbook creatGradeModel(List<Edu005> edu005List) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"学年","行政班名称","课程名称","学生姓名", "学号","成绩"};
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		for (int i = 0; i < edu005List.size(); i++) {
+			utils.appendCell(sheet,i,"",edu005List.get(i).getXnid(),-1,0,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i).getClassName(),-1,1,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i).getCourseName(),-1,2,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentName(),-1,3,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentCode(),-1,4,false);
+		}
+
+		return workbook;
 	}
 }

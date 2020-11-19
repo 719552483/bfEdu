@@ -2,10 +2,7 @@ package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.domian.Edu001;
-import com.beifen.edu.administration.domian.Edu005;
-import com.beifen.edu.administration.domian.Edu101;
-import com.beifen.edu.administration.domian.Edu600;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.AdministrationPageService;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.service.StaffManageService;
@@ -533,4 +530,44 @@ public class StaffManageController {
         return result;
     }
 
+
+    /**
+     * 下载成绩模板
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("downloadGradeModal")
+    @ResponseBody
+    public ResultVO downloadGradeModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "gradeInfo") String gradeInfo) {
+        // 根据ID查询已选学生信息
+        ResultVO result;
+        Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
+        List<Edu005> edu005List = administrationPageService.checkGradeInfo(edu005);
+        if(edu005List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以录入的成绩，请重新输入");
+        } else {
+            boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+            String fileName;
+            if(isIE){
+                fileName="modifyGrade";
+            }else{
+                fileName=edu005.getXn()+edu005.getClassName()+edu005.getCourseName()+"成绩模板";
+
+            }
+            //创建Excel文件
+            XSSFWorkbook workbook = administrationPageService.creatGradeModel(edu005List);
+            try {
+                utils.loadModal(response,fileName, workbook);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            result = ResultVO.setSuccess("下载成功");
+        }
+
+        return result;
+    }
 }

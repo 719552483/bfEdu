@@ -2915,7 +2915,7 @@ public class ReflectUtils {
      * @param valueCellIndex  真实值列的列索引
      * @param stuffTwoCell  是否填充两列 （false只填充一列）
      * */
-	private void appendCell(XSSFSheet sheet,int index,String mc,String value,int mcCellIndex,int valueCellIndex,boolean stuffTwoCell) {
+	public void appendCell(XSSFSheet sheet, int index, String mc, String value, int mcCellIndex, int valueCellIndex, boolean stuffTwoCell) {
 		if(mc!=null){
 			mc=mc.toString();
 		}
