@@ -2604,12 +2604,18 @@ public class AdministrationPageService {
 		}
 
 		for (int i = 0; i < edu005List.size(); i++) {
-			utils.appendCell(sheet,i,"",edu005List.get(i).getXnid(),-1,0,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i).getXn(),-1,0,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getClassName(),-1,1,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getCourseName(),-1,2,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentName(),-1,3,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentCode(),-1,4,false);
 		}
+
+		sheet.setColumnWidth(0, 12*256);
+		sheet.setColumnWidth(1, 16*256);
+		sheet.setColumnWidth(2, 30*256);
+		sheet.setColumnWidth(3, 10*256);
+		sheet.setColumnWidth(4, 20*256);
 
 		return workbook;
 	}
