@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,13 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -2618,5 +2626,44 @@ public class AdministrationPageService {
 		sheet.setColumnWidth(4, 20*256);
 
 		return workbook;
+	}
+
+	//批量导入成绩
+	public ResultVO checkGradeFile(MultipartFile file) {
+		ResultVO resultVO;
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xlsx".equals(suffix) || "xls".equals(suffix)) {
+			resultVO = ResultVO.setFailed("文件格式错误");
+			return resultVO;
+		}
+		HSSFWorkbook workbook = null;
+		try {
+			workbook = new HSSFWorkbook(new POIFSFileSystem(file.getInputStream()));
+			HSSFSheet sheet = workbook.getSheet("已选成绩详情");
+			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+			// 遍历集合数据，产生数据行
+			for (int i = 0; i < totalRows; i++) {
+				int rowIndex = i + 1;
+				HSSFRow contentRow = sheet.createRow(rowIndex);
+				HSSFCell cell = contentRow.getCell(5);
+				String data = cell.getDateCellValue().toString();
+				Boolean isNum = true;//data是否为数值型
+				if (data != null || "".equals(data)) {
+					//判断data是否为数值型
+					isNum = data.matches("^(-?\\d+)(\\.\\d+)?$");
+				}
+				if(!isNum) {
+					resultVO = ResultVO.setFailed("第"+rowIndex+"行成绩不是数字");
+					return resultVO;
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		resultVO = ResultVO.setSuccess("格式校验成功");
+		return resultVO;
 	}
 }

@@ -588,4 +588,16 @@ public class StaffManageController {
 
         return result;
     }
+
+    /**
+     * 校验导入成绩文件
+     * @param file
+     * @return
+     */
+    @RequestMapping("checkGradeFile")
+    @ResponseBody
+    public ResultVO checkGradeFile(MultipartFile file){
+        ResultVO result = administrationPageService.checkGradeFile(file);
+        return result;
+    }
 }
