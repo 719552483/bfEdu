@@ -4,9 +4,37 @@ $(function() {
 	drawStudentBaseInfoEmptyTable();
 	btnControl();
 	binBind();
+	getYearInfo();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	deafultSearch();
 });
+
+//获取学年信息
+function getYearInfo(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAllXn",
+		dataType : 'json',
+		success : function(backjson) {
+			if (backjson.code === 200) {
+				stuffYearSelect(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充学年下拉框
+function stuffYearSelect(yearInfo){
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < yearInfo.length; i++) {
+		str += '<option value="' + yearInfo[i].edu400_ID + '">' + yearInfo[i].xnmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#xn", str);
+}
 
 //初始化检索
 function deafultSearch(){
@@ -15,6 +43,7 @@ function deafultSearch(){
 	returnObject.department = "";
 	returnObject.grade = "";
 	returnObject.major = "";
+	returnObject.xnid = "";
 	returnObject.className = "";
 	returnObject.courseName = "";
 	returnObject.studentNumber = "";
@@ -400,6 +429,7 @@ function getSearchObject(){
 	var departmentValue = getNormalSelectValue("department");
 	var gradeValue =getNormalSelectValue("grade");
 	var majorValue =getNormalSelectValue("major");
+	var xnid =getNormalSelectValue("xn");
 	var className=$("#className").val();
 	var courseName=$("#courseName").val();
 	var studentNumber=$("#studentNumber").val();
@@ -411,6 +441,7 @@ function getSearchObject(){
 	returnObject.department = departmentValue;
 	returnObject.grade = gradeValue;
 	returnObject.major = majorValue;
+	returnObject.xnid = xnid;
 	returnObject.className = className;
 	returnObject.courseName = courseName;
 	returnObject.studentNumber = studentNumber;
@@ -456,6 +487,7 @@ function research(){
 	reObject.fristSelectId = "#level";
 	reObject.actionSelectIds = "#department,#grade,#major";
 	reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
+	reObject.normalSelectIds = "#xn";
 	reReloadSearchsWithSelect(reObject);
 	deafultSearch();
 }
