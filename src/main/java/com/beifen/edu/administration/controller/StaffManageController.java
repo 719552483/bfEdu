@@ -514,6 +514,7 @@ public class StaffManageController {
         edu001.setXzbname(jsonObject.getString("className"));
         Edu005 edu005 = new Edu005();
         edu005.setCourseName(jsonObject.getString("courseName"));
+        edu005.setXnid(jsonObject.getString("xnid"));
         ResultVO result = staffManageService.queryGrades(userId,edu001,edu005);
         return result;
     }
