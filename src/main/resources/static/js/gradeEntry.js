@@ -175,6 +175,12 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				formatter: xzbnameMatter
 			},{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
 				field: 'courseName',
 				title: '课程名称',
 				align: 'left',
