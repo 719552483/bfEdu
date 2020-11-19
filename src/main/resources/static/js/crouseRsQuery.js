@@ -522,6 +522,7 @@ function crouseRsForDeatilsBinBind(){
 	//返回
 	$('#return').unbind('click');
 	$('#return').bind('click', function(e) {
+		crouseRsForDeatilsReSearch();
 		changeShowArea();
 		e.stopPropagation();
 	});
