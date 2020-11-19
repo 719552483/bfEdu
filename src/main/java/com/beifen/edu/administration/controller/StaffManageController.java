@@ -530,6 +530,25 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 验证是成绩是否存在
+     *
+     * @return returnMap
+     */
+    @RequestMapping("wantDownloadGradeModal")
+    @ResponseBody
+    public ResultVO wantDownloadGradeModal(@RequestParam("gradeInfo") String gradeInfo) {
+        ResultVO result;
+        Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
+        List<Edu005> edu005List = administrationPageService.checkGradeInfo(edu005);
+        if(edu005List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以录入的成绩，请重新输入");
+        } else {
+            result = ResultVO.setSuccess("共找到"+edu005List.size()+"条可录入成绩");
+        }
+        return result;
+    }
+
 
     /**
      * 下载成绩模板
@@ -541,7 +560,6 @@ public class StaffManageController {
     @RequestMapping("downloadGradeModal")
     @ResponseBody
     public ResultVO downloadGradeModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "gradeInfo") String gradeInfo) {
-        // 根据ID查询已选学生信息
         ResultVO result;
         Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
         List<Edu005> edu005List = administrationPageService.checkGradeInfo(edu005);

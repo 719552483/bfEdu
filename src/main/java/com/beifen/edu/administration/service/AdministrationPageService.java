@@ -2577,6 +2577,7 @@ public class AdministrationPageService {
 				if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
 					predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
 				}
+//				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
