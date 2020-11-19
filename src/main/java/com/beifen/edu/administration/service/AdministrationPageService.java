@@ -2588,12 +2588,19 @@ public class AdministrationPageService {
 				if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
 					predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
 				}
-//				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
+				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
 
 		List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+		if(edu005List.size() != 0){
+			Edu201 one = edu201DAO.getOne(edu005List.get(0).getEdu201_ID());
+			if(!"T".equals(one.getSfsqks()) || one.getSfsqks() == null) {
+				edu005List = new ArrayList<>();
+			}
+		}
 
 		return edu005List;
 	}
