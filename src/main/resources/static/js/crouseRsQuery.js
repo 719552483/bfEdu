@@ -456,8 +456,8 @@ function getCourseForDeatilsSearchInfo(row) {
 //成绩详情开始检索
 function crouseRsForDeatilsSstartSearch(){
 	var searchInfo=new Object();
-	searchInfo.edu201_ID=$("#currentEdu201_ID").val();
-	searchInfo.courseName=$("#currentCourseName").val();
+	searchInfo.edu201_ID=$("#currentEdu201_ID")[0].innerText;
+	searchInfo.courseName=$("#currentCourseName")[0].innerText;
 	searchInfo.className=$("#xzbMc").val();
 	searchInfo.StudentName=$("#studentName").val();
 	$.ajax({
