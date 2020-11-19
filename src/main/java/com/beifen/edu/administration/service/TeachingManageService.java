@@ -1256,7 +1256,7 @@ public class TeachingManageService {
             courseResultList.add(data);
         }
 
-        resultVO = ResultVO.setSuccess("共找到"+courseResultList+"条课程信息",courseResultList);
+        resultVO = ResultVO.setSuccess("共找到"+courseResultList.size()+"条课程信息",courseResultList);
         return resultVO;
     }
 
@@ -1267,17 +1267,14 @@ public class TeachingManageService {
         Specification<Edu005> specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
-                    predicates.add(cb.like(root.<String>get("courseName"),"%"+edu005.getCourseName()+"%"));
-                }
-                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
-                    predicates.add(cb.equal(root.<String>get("xnid"), edu005.getXnid()));
-                }
                 if (edu005.getStudentName() != null && !"".equals(edu005.getStudentName())) {
                     predicates.add(cb.like(root.<String>get("studentName"), edu005.getStudentName()));
                 }
                 if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
                     predicates.add(cb.like(root.<String>get("className"), edu005.getClassName()));
+                }
+                if (edu005.getEdu201_ID() != null && !"".equals(edu005.getEdu201_ID())) {
+                    predicates.add(cb.equal(root.<Long>get("edu201_ID"), edu005.getEdu201_ID()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
