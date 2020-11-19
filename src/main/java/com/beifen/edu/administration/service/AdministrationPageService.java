@@ -113,6 +113,8 @@ public class AdministrationPageService {
 	@Autowired
 	private ApprovalProcessService approvalProcessService;
 	@Autowired
+	private StaffManageService staffManageService;
+	@Autowired
 	private RedisUtils redisUtils;
 
 	// 查询所有层次
@@ -2646,6 +2648,15 @@ public class AdministrationPageService {
 			for (int i = 0; i < totalRows; i++) {
 				int rowIndex = i + 1;
 				XSSFRow contentRow = sheet.getRow(rowIndex);
+				XSSFCell cell0 = contentRow.getCell(0);
+				XSSFCell cell1 = contentRow.getCell(1);
+				XSSFCell cell2 = contentRow.getCell(2);
+				XSSFCell cell3 = contentRow.getCell(3);
+				XSSFCell cell4 = contentRow.getCell(4);
+				if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null) {
+					resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
+					return resultVO;
+				}
 				XSSFCell cell = contentRow.getCell(5);
 				if(cell != null) {
 					String data = cell.toString();
@@ -2666,6 +2677,44 @@ public class AdministrationPageService {
 		}
 
 		resultVO = ResultVO.setSuccess("格式校验成功");
+		return resultVO;
+	}
+
+
+	//批量导入成绩
+	public ResultVO importGradeFile(MultipartFile file, String lrrmc, String userKey) {
+		ResultVO resultVO;
+		List<Edu005> edu005List = new ArrayList<>();
+		try {
+			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
+			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+			// 遍历集合数据，产生数据行
+			for (int i = 0; i < totalRows; i++) {
+				int rowIndex = i + 1;
+				XSSFRow contentRow = sheet.getRow(rowIndex);
+				String xn = contentRow.getCell(0).toString();
+				String className = contentRow.getCell(1).toString();
+				String courseName = contentRow.getCell(2).toString();
+				String studentCode = contentRow.getCell(4).toString();
+				XSSFCell gradeCell = contentRow.getCell(5);
+				if (gradeCell != null ) {
+					Edu005 edu005;
+					edu005 = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode);
+					if (edu005 != null) {
+						edu005.setGrade(gradeCell.toString());
+						edu005.setEdu101_ID(Long.parseLong(userKey));
+						edu005.setGradeEnter(lrrmc);
+						staffManageService.giveGrade(edu005);
+						edu005List.add(edu005);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		resultVO = ResultVO.setSuccess("共导入了"+edu005List.size()+"条成绩信息",edu005List);
 		return resultVO;
 	}
 }

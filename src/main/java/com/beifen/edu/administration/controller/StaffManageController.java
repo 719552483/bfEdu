@@ -600,4 +600,31 @@ public class StaffManageController {
         ResultVO result = administrationPageService.checkGradeFile(file);
         return result;
     }
+
+    /**
+     * 校验导入成绩文件
+     * @param file
+     * @return
+     */
+    @RequestMapping("importGradeFile")
+    @ResponseBody
+    public ResultVO importGradeFile(HttpServletRequest request){
+        ResultVO result;
+        MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        MultipartFile file = multipartRequest.getFile("file"); //文件流
+        String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+        //格式化录入人信息
+        JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+        String lrrmc = jsonObject.getString("lrr");
+        String userKey = jsonObject.getString("userykey");
+
+        ResultVO checkResult = administrationPageService.checkGradeFile(file);
+        if (checkResult.getCode() == 500) {
+            return checkResult;
+        }
+
+        result = administrationPageService.importGradeFile(file,lrrmc,userKey);
+
+        return result;
+    }
 }
