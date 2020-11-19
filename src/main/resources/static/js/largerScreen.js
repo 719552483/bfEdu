@@ -369,7 +369,7 @@ function stuffTeacherTypeCount(teacherTypeData,isSingle){
 		Titledatas.push(xAxisDatas.slice(i,i+groupNum));
 	}
 
-	for(var i=0;i<typeOne.length;i+=3){
+	for(var i=0;i<typeOne.length;i+=groupNum){
 		typeOneDatas.push(typeOne.slice(i,i+groupNum));
 		typeTwoDatas.push(typeTwo.slice(i,i+groupNum));
 		typeThreeDatas.push(typeThree.slice(i,i+groupNum));
