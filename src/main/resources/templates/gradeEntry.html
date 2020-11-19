@@ -57,6 +57,8 @@
 				<div class="tools">
 					<ul class="toolbar">
 						<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						<li class="click" id="wantLoadGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载成绩模板</li>
+						<li class="click" id="wantImportGrades"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入成绩</li>
 					</ul>
 					<ul class="toolbar1 manytools">
 						<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
@@ -164,11 +166,106 @@
 				</div>
 			</div>
        </div>
-			
 
 
 
-	
+		<!-- 下载成绩Modal -->
+		<div class="modal fade bs-example-modal-lg" id="wantLoadGradeModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content bodyOnlyOneRow">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">下载成绩模板</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+											<select class="isSowIndex" id="loadForXn">
+												<option value="seleceConfigTip">请选择</option>
+											</select>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">行政班名称<b>*</b></label>
+											<input name="" type="text" class="myInput colInput" id="loadForXzbmc" placeholder="请填写行政班名称..."/>
+										</div>
+									</ul>
+								</div>
+
+								<div class="col1 giveBottom">
+									<ul class="forminfo">
+										<div class="">
+											<label class="selectName" style="margin-top: 14px;">课程名称<b>*</b></label>
+											<input name="" type="text" class="myInput colInput" id="loadForKcmc" placeholder="请填写课程名称..."/>
+										</div>
+									</ul>
+								</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="ComfirmLoadGradeModel" value="下载模板"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 导入成绩Modal -->
+		<div class="modal fade bs-example-modal-lg" id="importGradeModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">批量导入成绩</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tools">
+							<ul class="toolbar">
+								<li class="click" id="checkGradeFile"><span><img src="images/ico05.png" style="width: 24px;"/></span>检验文件</li>
+							</ul>
+						</div>
+						<form enctype="multipart/form-data" id="GradeInfoForm" method="get">
+							<div class="col1 giveBottom">
+								<div class="fileContainer">
+									<a class="file">选择文件
+										<input type="file" id="gradeInfoFile" uploadSuccess="false"/>
+									</a>
+									<input type="text" readonly="readonly" class="myInput combinedClassTipInput" id="showFileName" placeholder="请选择上传文件..."/>
+								</div>
+							</div>
+							<div class="fileErrorTxTArea noneStart">
+								<div class="formtext myformtext"><img class="msgErrorbg" src="images/msg.png"/><b></b></div>
+							</div>
+							<div class="fileSuccessTxTArea noneStart">
+								<div class="formtext myformtext"><img class="msgSuccessbg" src="images/cbg.png"/><b></b></div>
+							</div>
+							<div class="fileLoadingArea noneStart">
+								<div class="spinner-box">
+									<div class="pulse-container">
+										<div class="pulse-bubble pulse-bubble-1"></div>
+										<div class="pulse-bubble pulse-bubble-2"></div>
+										<div class="pulse-bubble pulse-bubble-3"></div>
+									</div>
+									<div class="loadingtxt">文件解析中，请稍后...</div>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" actionType="import" class="sure confirmImportGrade" value="确定"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
 	
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">

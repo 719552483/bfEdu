@@ -1,5 +1,6 @@
 package com.beifen.edu.administration.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -2633,29 +2634,30 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-		if (!"xlsx".equals(suffix) || !"xls".equals(suffix)) {
+		if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
 			resultVO = ResultVO.setFailed("文件格式错误");
 			return resultVO;
 		}
-		HSSFWorkbook workbook;
 		try {
-			workbook = new HSSFWorkbook(new POIFSFileSystem(file.getInputStream()));
-			HSSFSheet sheet = workbook.getSheet("已选成绩详情");
+			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
 			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
 			// 遍历集合数据，产生数据行
 			for (int i = 0; i < totalRows; i++) {
 				int rowIndex = i + 1;
-				HSSFRow contentRow = sheet.createRow(rowIndex);
-				HSSFCell cell = contentRow.getCell(5);
-				String data = cell.getDateCellValue().toString();
-				Boolean isNum = true;//data是否为数值型
-				if (data != null || "".equals(data)) {
-					//判断data是否为数值型
-					isNum = data.matches("^(-?\\d+)(\\.\\d+)?$");
-				}
-				if(!isNum) {
-					resultVO = ResultVO.setFailed("第"+rowIndex+"行成绩不是数字");
-					return resultVO;
+				XSSFRow contentRow = sheet.getRow(rowIndex);
+				XSSFCell cell = contentRow.getCell(5);
+				if(cell != null) {
+					String data = cell.toString();
+					Boolean isNum = true;//data是否为数值型
+					if (data != null || "".equals(data)) {
+						//判断data是否为数值型
+						isNum = data.matches("^(-?\\d+)(\\.\\d+)?$");
+					}
+					if(!isNum) {
+						resultVO = ResultVO.setFailed("第"+rowIndex+"行成绩不是数字");
+						return resultVO;
+					}
 				}
 			}
 

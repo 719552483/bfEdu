@@ -34,6 +34,7 @@ function stuffYearSelect(yearInfo){
 			+ '</option>';
 	}
 	stuffManiaSelect("#xn", str);
+	stuffManiaSelect("#loadForXn", str);
 }
 
 //初始化检索
@@ -498,8 +499,158 @@ function research(){
 	deafultSearch();
 }
 
+//预备下载成绩模板
+function wantLoadGradeModel() {
+	reStuffWantLoadGradeModel();
+	$.showModal("#wantLoadGradeModal",true);
+
+	//预备下载成绩模板
+	$('#ComfirmLoadGradeModel').unbind('click');
+	$('#ComfirmLoadGradeModel').bind('click', function(e) {
+		ComfirmLoadGradeModel();
+		e.stopPropagation();
+	});
+}
+
+//确认下载成绩模板
+function ComfirmLoadGradeModel(){
+	var xnid=getNormalSelectValue("loadForXn");
+	var className=$("#loadForXzbmc").val();
+	var courseName=$("#loadForKcmc").val();
+
+	if(xnid===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	if(className===""){
+		toastr.warning("行政班名称不能为空");
+		return;
+	}
+
+	if(courseName===""){
+		toastr.warning("课程班名称不能为空");
+		return;
+	}
+
+	var gradeInfo=new Object();
+	gradeInfo.xnid=xnid;
+	gradeInfo.xn=getNormalSelectText("loadForXn");
+	gradeInfo.className=className;
+	gradeInfo.courseName=courseName;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/wantDownloadGradeModal",
+		data: {
+			"gradeInfo":JSON.stringify(gradeInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/downloadGradeModal";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "gradeInfo").attr("value",JSON.stringify(gradeInfo)));
+				form.appendTo('body').submit().remove();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//重置下载成绩模板区域
+function reStuffWantLoadGradeModel(){
+	var reObject = new Object();
+	reObject.InputIds = "#loadForXzbmc,#loadForKcmc";
+	reObject.normalSelectIds = "#loadForXn";
+	reReloadSearchsWithSelect(reObject);
+}
+
+//预备导入成绩
+function wantImportGrades(){
+	$.showModal("#importGradeModal",true);
+	$("#gradeInfoFile,#showFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#gradeInfoFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#gradeInfoFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#studentInfoFile").val("");
+			return
+		}
+		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//检验导入文件
+	$('#checkGradeFile').unbind('click');
+	$('#checkGradeFile').bind('click', function(e) {
+		checkGradeFile();
+		e.stopPropagation();
+	});
+}
+
+//检验导入文件
+function checkGradeFile(){
+	if ($("#gradeInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+
+	var formData = new FormData();
+	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+
+	$.ajax({
+		url:'/checkGradeFile',
+		dataType:'json',
+		type:'POST',
+		async: true,
+		data: formData,
+		processData : false, // 使数据不做处理
+		contentType : false, // 不要设置Content-Type请求头
+		success: function(backjosn){
+			$(".fileLoadingArea").hide();
+			if(backjosn.code===200){
+
+			}else{
+				showImportErrorInfo("#importGradeModal",backjosn.msg);
+			}
+		},beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+	});
+}
+
+
+
+
 //初始化页面按钮绑定事件
 function binBind() {
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+
 	//开始检索
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
@@ -511,6 +662,20 @@ function binBind() {
 	$('#research').unbind('click');
 	$('#research').bind('click', function(e) {
 		research();
+		e.stopPropagation();
+	});
+
+	//预备下载成绩模板
+	$('#wantLoadGradeModel').unbind('click');
+	$('#wantLoadGradeModel').bind('click', function(e) {
+		wantLoadGradeModel();
+		e.stopPropagation();
+	});
+
+	//预备导入成绩
+	$('#wantImportGrades').unbind('click');
+	$('#wantImportGrades').bind('click', function(e) {
+		wantImportGrades();
 		e.stopPropagation();
 	});
 }
