@@ -23,6 +23,14 @@ public class BigDataPeriodTypePO implements Serializable {
         this.fsxs = fsxs;
     }
 
+    public BigDataPeriodTypePO(String zxs, String llxs, String sjxs, String jzxs, String fsxs) {
+        this.zxs = zxs;
+        this.llxs = llxs;
+        this.sjxs = sjxs;
+        this.jzxs = jzxs;
+        this.fsxs = fsxs;
+    }
+
     public String getEdu104Id() {
         return edu104Id;
     }

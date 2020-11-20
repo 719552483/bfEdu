@@ -1,10 +1,7 @@
 package com.beifen.edu.administration.service;
 
 import com.alibaba.fastjson.JSON;
-import com.beifen.edu.administration.PO.ClassHourPO;
-import com.beifen.edu.administration.PO.Edu990PO;
-import com.beifen.edu.administration.PO.IndexChartPO;
-import com.beifen.edu.administration.PO.PageRequestPO;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
@@ -61,6 +58,8 @@ public class SystemManageService {
     Edu300Dao edu300Dao;
     @Autowired
     Edu200Dao edu200Dao;
+    @Autowired
+    Edu202Dao edu202Dao;
     @Autowired
     RedisUtils redisUtils;
     @Autowired
@@ -672,24 +671,29 @@ public class SystemManageService {
             indexChartPO.setSource(source);
         }
 
-        ClassHourPO classHourPO = edu200Dao.findSumClassHours();
+        List<Object[]> periodTypeList = edu202Dao.getAllPeriodType();
 
-        int totleHours = classHourPO.getTheoreticalClassHours() + classHourPO.getPracticeClassHours();
+        int totleHours = Integer.parseInt(periodTypeList.get(0)[0].toString());
+        int llxs = Integer.parseInt(periodTypeList.get(0)[1].toString());
+        int sjxs = Integer.parseInt(periodTypeList.get(0)[2].toString());
+        int fsxs = Integer.parseInt(periodTypeList.get(0)[3].toString());
+        int jzxs = Integer.parseInt(periodTypeList.get(0)[4].toString());
+
 
         List dataOne = new ArrayList();
         dataOne.add(0);
-        dataOne.add(totleHours - classHourPO.getTheoreticalClassHours());
+        dataOne.add(totleHours - llxs);
         dataOne.add(0);
-        dataOne.add(totleHours-classHourPO.getScatteredClassHours());
+        dataOne.add(totleHours - fsxs);
         dataOne.add(0);
         indexChartPO.setDataOne(dataOne);
 
         List dataTwo = new ArrayList();
         dataTwo.add(totleHours);
-        dataTwo.add(classHourPO.getTheoreticalClassHours());
-        dataTwo.add(classHourPO.getPracticeClassHours());
-        dataTwo.add(classHourPO.getScatteredClassHours());
-        dataTwo.add(classHourPO.getConcentratedClassHours());
+        dataTwo.add(llxs);
+        dataTwo.add(sjxs);
+        dataTwo.add(fsxs);
+        dataTwo.add(jzxs);
         indexChartPO.setDataTwo(dataTwo);
 
         resultVO = ResultVO.setSuccess("查询成功",indexChartPO);
