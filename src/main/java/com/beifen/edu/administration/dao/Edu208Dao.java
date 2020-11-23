@@ -29,6 +29,7 @@ public interface Edu208Dao extends  JpaRepository<EDU208, Long>,JpaSpecification
             "  and b.EDU201_ID = c.EDU201_ID\n" +
             "  and d.EDU203_ID = a.EDU203_ID\n" +
             "  and e.EDU001_ID = d.EDU001_ID\n" +
+            "  and a.EDU203_ID = ?1" +
             "  and a.TEACHER_TYPE = '01'",nativeQuery = true)
     List<Object[]> findAllByEdu203ID(String courseId);
 }

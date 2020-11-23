@@ -221,7 +221,91 @@ function stuffCheckOnEntryTable(tableInfo){
 
 //考勤详情
 function  chenckonDeatils(row,index){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchCourseCheckOnDetail",
+        async :false,
+        data: {
+            "courseId":row.edu203_id
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code === 200) {
+                stuffCheckOnDeatilsArea(backjson.data,row);
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
 
+//渲染考勤详情区域
+function stuffCheckOnDeatilsArea(checkOnInfo,row){
+    $("#tab1,#tab2,#tab3").empty();
+    $("#checkOnDeatilsModal").find(".moadalTitle").html(row.xn+"第"+row.week+"周 "+row.xqmc+" "+row.kjmc+" - "+row.kcmc);
+    $.showModal("#checkOnDeatilsModal",true);
+    $(".itab").find("li:eq(0)").find("a").trigger('click');
+
+    var checkTrueArray=new Array();
+    var checkFlaseArray=new Array();
+    var checkNulleArray=new Array();
+
+    for (var i = 0; i < checkOnInfo.length; i++) {
+        if(checkOnInfo[i].onCheckFlag==="01"){
+            checkTrueArray.push(checkOnInfo[i]);
+        }else if(checkOnInfo[i].onCheckFlag==="02"){
+            checkFlaseArray.push(checkOnInfo[i]);
+        }else{
+            checkNulleArray.push(checkOnInfo[i]);
+        }
+    }
+
+    //出勤名单
+    var str="";
+    if(checkTrueArray.length==0){
+        str="<span class='checkZero'>暂无出勤名单...</span>";
+    }else{
+        for (var i = 0; i < checkTrueArray.length; i++) {
+            str+='<div class="col5 singleCheckOn recordsImg2">'+checkTrueArray[i].studentName+'</div>';
+        }
+    }
+    $(".checkTrueArea").append(str);
+    $(".trueNum").html(checkTrueArray.length+"人");
+
+    str='';
+    //缺勤名单
+    if(checkFlaseArray.length==0){
+        str="<span class='checkZero'>暂无缺勤名单...</span>";
+    }else{
+        for (var i = 0; i < checkFlaseArray.length; i++) {
+            str+='<div class="col5 singleCheckOn recordsImg2">'+checkFlaseArray[i].studentName+'</div>';
+        }
+    }
+    $(".checkFlaseArea").append(str);
+    $(".falseNum").html(checkFlaseArray.length+"人");
+
+    str='';
+    //未录入名单
+    if(checkNulleArray.length==0){
+        str="<span class='checkZero'>暂无未录入名单...</span>";
+    }else{
+        for (var i = 0; i < checkNulleArray.length; i++) {
+            str+='<div class="col5 singleCheckOn recordsImg2">'+checkNulleArray[i].studentName+'</div>';
+        }
+    }
+    $(".checkNullArea").append(str);
+    $(".nullNum").html(checkNulleArray.length+"人");
 }
 
 //下载考勤模板
@@ -345,8 +429,6 @@ function  confirmImportCheckon(row,index){
         },
     });
 }
-
-
 
 //开始检索
 function startSearch(){

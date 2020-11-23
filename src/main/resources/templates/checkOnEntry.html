@@ -147,6 +147,38 @@
 		</div>
 	</div>
 
+	<!-- 考勤详情Modal -->
+	<div class="modal fade bs-example-modal-lg" id="checkOnDeatilsModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" style="min-width: 670px;">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+				</div>
+
+				<div class="modal-body">
+					<div id="usual1" class="usual">
+						<div class="itab">
+							<ul>
+								<li><a href="#tab1" class="selected">出勤名单<cite class="trueNum"></cite></a></li>
+								<li><a href="#tab2">缺勤名单<cite class="falseNum"></cite></a></li>
+								<li><a href="#tab3">未录入名单<cite class="nullNum"></cite></a></li>
+							</ul>
+						</div>
+						<div id="tab1" class="tabson myTabson checkTrueArea"></div>
+						<div id="tab2" class="tabson myTabson checkFlaseArea"></div>
+						<div id="tab3" class="tabson myTabson checkNullArea"></div>
+					</div>
+					<div class="clear"></div>
+					<div class="clear"></div>
+				</div>
+
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="cancel" value="返回"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-lg" role="document">
@@ -186,5 +218,8 @@
 		</div>
 	</div>
 
+	<script type="text/javascript">
+		$("#usual1 ul").idTabs();
+	</script>
 </body>
 </html>

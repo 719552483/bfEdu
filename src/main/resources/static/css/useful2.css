@@ -1939,7 +1939,7 @@ margin: 0px 0px -14px -15px!important;
 	text-indent: -10px;
 }
 
-.singleRecordsArea{
+.singleRecordsArea,.checkTrueArea,.checkFlaseArea,.checkNullArea{
 	margin-top: -4px;
 	min-height: 120px;
 	overflow: hidden;
@@ -1975,7 +1975,7 @@ margin: 0px 0px -14px -15px!important;
 	text-align: right;
 }
 
-.singleTeacher{
+.singleTeacher,.singleCheckOn{
 	text-align: center;
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -1998,6 +1998,12 @@ margin: 0px 0px -14px -15px!important;
 
 .select-mania-dropdown{
 	z-index: 999!important;
+}
+
+.checkZero{
+	text-align: center;
+	margin-top: 10px;
+	color: gray;
 }
 
 /*
