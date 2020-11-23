@@ -315,6 +315,10 @@ padding:1.6em 0em 0.6em 31px !important
 	min-width: 175px;
 }
 
+#checkOnEntryTable td:last-child{
+	width: 380px;
+	min-width: 380px;
+}
 
 #techerStudentListTable td:last-child{
 	width: 300px;
@@ -1584,6 +1588,7 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.checkOnEntryTableArea .bootstrap4 .search,
 .crouseRsForDeatilsTableArea .bootstrap4 .search,
 .dataExcavatingTableArea .bootstrap4 .search,
 .departmentPredictionTableArea .bootstrap4 .search,

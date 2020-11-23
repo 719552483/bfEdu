@@ -300,7 +300,7 @@ public class StaffManageService {
 
         //编写注意事项
         XSSFRow firstRow = sheet.createRow(0);// 第一行
-        XSSFCell cell = firstRow.getCell(0);
+        XSSFCell cell = firstRow.createCell(0);
         XSSFFont font = workbook.createFont();
         font.setColor(IndexedColors.RED.getIndex());//文字颜色
         CellStyle style = workbook.createCellStyle();

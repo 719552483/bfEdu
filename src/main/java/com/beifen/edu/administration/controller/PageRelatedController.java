@@ -270,4 +270,9 @@ public class PageRelatedController {
 	public String crouseRsQueryPage() {
 		return "crouseRsQuery";
 	}
+
+	@RequestMapping("checkOnEntry")
+	public String checkOnEntryPage() {
+		return "checkOnEntry";
+	}
 }
