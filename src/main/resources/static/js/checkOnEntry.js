@@ -281,7 +281,7 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
         }
     }
     $(".checkTrueArea").append(str);
-    $(".trueNum").html(checkTrueArray.length+"人");
+    $(".trueNum").html("("+checkTrueArray.length+"人)");
 
     str='';
     //缺勤名单
@@ -293,7 +293,7 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
         }
     }
     $(".checkFlaseArea").append(str);
-    $(".falseNum").html(checkFlaseArray.length+"人");
+    $(".falseNum").html("("+checkTrueArray.length+"人)");
 
     str='';
     //未录入名单
@@ -305,7 +305,7 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
         }
     }
     $(".checkNullArea").append(str);
-    $(".nullNum").html(checkNulleArray.length+"人");
+    $(".nullNum").html("("+checkTrueArray.length+"人)");
 }
 
 //下载考勤模板
