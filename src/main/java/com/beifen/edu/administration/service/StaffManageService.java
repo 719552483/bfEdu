@@ -7,19 +7,23 @@ import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.*;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +52,8 @@ public class StaffManageService {
     Edu107Dao edu107Dao;
     @Autowired
     Edu302Dao edu302Dao;
+    @Autowired
+    Edu208Dao edu208Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -304,6 +310,7 @@ public class StaffManageService {
         XSSFFont font = workbook.createFont();
         font.setColor(IndexedColors.RED.getIndex());//文字颜色
         CellStyle style = workbook.createCellStyle();
+        style.setFont(font);
         cell.setCellStyle(style);
         cell.setCellValue("注意：出勤情况请填写代码，01为正常，02为缺席");
 
@@ -311,7 +318,7 @@ public class StaffManageService {
         XSSFRow secondRow = sheet.createRow(1);// 第二行
         XSSFCell cells[] = new XSSFCell[1];
         // 所有标题数组
-        String[] titles = new String[] {"学年","课程名称","周数","星期","课节","学生姓名","学号","出勤情况"};
+        String[] titles = new String[] {"学年","课程名称","周数","星期","课节","行政班名称","学生姓名","学号","出勤情况"};
 
         // 循环设置标题
         for (int i = 0; i < titles.length; i++) {
@@ -331,13 +338,17 @@ public class StaffManageService {
         List<Edu001> studentInEdu300 = edu001Dao.getStudentInEdu300(edu300Ids);
 
         for (int i = 0; i < studentInEdu300.size(); i++) {
-            utils.appendCell(sheet,i,"",courseCheckOnPO.getXn(),-1,0,false);
-            utils.appendCell(sheet,i,courseCheckOnPO.getKcmc(),courseCheckOnPO.getEdu203_id(),-1,1,false);
-            utils.appendCell(sheet,i,"",courseCheckOnPO.getWeek(),-1,2,false);
-            utils.appendCell(sheet,i,"",courseCheckOnPO.getXqmc(),-1,3,false);
-            utils.appendCell(sheet,i,"",courseCheckOnPO.getKjmc(),-1,4,false);
-            utils.appendCell(sheet,i,studentInEdu300.get(i).getXm(),studentInEdu300.get(i).getEdu001_ID().toString(),-1,4,false);
-            utils.appendCell(sheet,i,"",studentInEdu300.get(i).getXh(),-1,4,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getXn(),-1,0,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getKcmc(),-1,1,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getWeek(),-1,2,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getXqmc(),-1,3,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getKjmc(),-1,4,false);
+            utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getXzbname(),-1,5,false);
+            utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getXm(),-1,6,false);
+            utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getXh(),-1,7,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getEdu203_id(),-1,9,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getEdu201_id(),-1,10,false);
+            utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getEdu001_ID().toString(),-1,11,false);
         }
 
         sheet.setColumnWidth(0, 12*256);
@@ -345,12 +356,129 @@ public class StaffManageService {
         sheet.setColumnWidth(2, 4*256);
         sheet.setColumnWidth(3, 8*256);
         sheet.setColumnWidth(4, 10*256);
-        sheet.setColumnWidth(5, 20*256);
+        sheet.setColumnWidth(5, 16*256);
         sheet.setColumnWidth(6, 10*256);
+        sheet.setColumnWidth(7, 20*256);
+        sheet.setColumnWidth(8, 10*256);
 
-        CellRangeAddress region = new CellRangeAddress(0, 0, 0, 6);
+        sheet.setColumnHidden((short)9, true);
+        sheet.setColumnHidden((short)10, true);
+        sheet.setColumnHidden((short)11, true);
+
+        CellRangeAddress region = new CellRangeAddress(0, 0, 0, 7);
         sheet.addMergedRegion(region);
 
         return workbook;
+    }
+
+    //校验导入考勤情况文件
+    public ResultVO checkCourseCheckOnFile(MultipartFile file) {
+        ResultVO resultVO;
+        String fileName = file.getOriginalFilename();
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
+            resultVO = ResultVO.setFailed("文件格式错误");
+            return resultVO;
+        }
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet sheet = workbook.getSheet("考勤情况详情");
+            int totalRows = sheet.getPhysicalNumberOfRows() - 2;
+            // 遍历集合数据，产生数据行
+            for (int i = 0; i < totalRows; i++) {
+                int rowIndex = i + 2;
+                XSSFRow contentRow = sheet.getRow(rowIndex);
+                XSSFCell cell0 = contentRow.getCell(0);
+                XSSFCell cell1 = contentRow.getCell(1);
+                XSSFCell cell2 = contentRow.getCell(2);
+                XSSFCell cell3 = contentRow.getCell(3);
+                XSSFCell cell4 = contentRow.getCell(4);
+                XSSFCell cell5 = contentRow.getCell(5);
+                XSSFCell cell6 = contentRow.getCell(6);
+                XSSFCell cell7 = contentRow.getCell(7);
+                XSSFCell cell9 = contentRow.getCell(9);
+                XSSFCell cell10 = contentRow.getCell(10);
+                XSSFCell cell11 = contentRow.getCell(11);
+                if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null || cell5 == null || cell6 == null || cell7 == null) {
+                    resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
+                    return resultVO;
+                }
+                if (cell9 == null || cell10 == null || cell11 == null ) {
+                    resultVO = ResultVO.setFailed("模版错误，请示使用下载的模版");
+                    return resultVO;
+                }
+                XSSFCell cell = contentRow.getCell(6);
+                if(cell != null) {
+                    String data = cell.toString();
+                    Boolean isFit = true;//data是否为数值型
+                    if (data != null) {
+                        //判断data是否为数值型
+                        if (!"01".equals(data) && !"02".equals(data)) {
+                            isFit = false;
+                        }
+                    }
+                    if(!isFit) {
+                        resultVO = ResultVO.setFailed("第"+rowIndex+"行考勤情况代码违规");
+                        return resultVO;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        resultVO = ResultVO.setSuccess("格式校验成功");
+        return resultVO;
+    }
+
+
+    //导入考情情况文件
+    public ResultVO importCourseCheckOnFile(MultipartFile file, String lrrmc, String userKey) {
+        ResultVO resultVO;
+        List<EDU208> EDU208List = new ArrayList<>();
+        CourseCheckOnPO checkOnPO = new CourseCheckOnPO();
+        try {
+            int count = 0;
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet sheet = workbook.getSheet("考勤情况详情");
+            int totalRows = sheet.getPhysicalNumberOfRows() - 2;
+            XSSFRow row = sheet.getRow(2);
+            String edu203_id = row.getCell(9).toString();
+            String edu201_id = row.getCell(10).toString();
+            // 遍历集合数据，产生数据行
+            for (int i = 0; i < totalRows; i++) {
+                int rowIndex = i + 2;
+                XSSFRow contentRow = sheet.getRow(rowIndex);
+                XSSFCell dataCell = contentRow.getCell(8);
+                String edu001_id = contentRow.getCell(11).toString();
+                if ( dataCell != null ) {
+                    EDU208 edu208 = new EDU208();
+                    edu208.setEdu001_ID(Long.parseLong(edu001_id));
+                    edu208.setEdu201_ID(Long.parseLong(edu201_id));
+                    edu208.setEdu203_ID(Long.parseLong(edu203_id));
+                    edu208.setOnCheckFlag(dataCell.toString());
+                    edu208Dao.save(edu208);
+                    if("01".equals(dataCell.toString())) {
+                        count++;
+                    }
+                    EDU208List.addAll((Collection<? extends EDU208>) edu208);
+                }
+            }
+
+            CourseCheckOnPO data = courseCheckOnDao.findOne(edu203_id);
+            double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(EDU208List.size()));
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            String usedPercent = nf.format(v);
+            data.setAttendance(usedPercent);
+            courseCheckOnDao.save(data);
+            BeanUtils.copyProperties(checkOnPO,data);
+        } catch (IOException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        resultVO = ResultVO.setSuccess("共导入了"+ EDU208List.size()+"条考勤记录",checkOnPO);
+        return resultVO;
     }
 }
