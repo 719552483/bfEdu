@@ -436,7 +436,7 @@ public class StaffManageService {
     //导入考情情况文件
     public ResultVO importCourseCheckOnFile(MultipartFile file, String lrrmc, String userKey) {
         ResultVO resultVO;
-        List<Edu208> edu208List = new ArrayList<>();
+        List<EDU208> EDU208List = new ArrayList<>();
         CourseCheckOnPO checkOnPO = new CourseCheckOnPO();
         try {
             int count = 0;
@@ -453,7 +453,7 @@ public class StaffManageService {
                 XSSFCell dataCell = contentRow.getCell(8);
                 String edu001_id = contentRow.getCell(11).toString();
                 if ( dataCell != null ) {
-                    Edu208 edu208 = new Edu208();
+                    EDU208 edu208 = new EDU208();
                     edu208.setEdu001_ID(Long.parseLong(edu001_id));
                     edu208.setEdu201_ID(Long.parseLong(edu201_id));
                     edu208.setEdu203_ID(Long.parseLong(edu203_id));
@@ -462,12 +462,12 @@ public class StaffManageService {
                     if("01".equals(dataCell.toString())) {
                         count++;
                     }
-                    edu208List.addAll((Collection<? extends Edu208>) edu208);
+                    EDU208List.addAll((Collection<? extends EDU208>) edu208);
                 }
             }
 
             CourseCheckOnPO data = courseCheckOnDao.findOne(edu203_id);
-            double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(edu208List.size()));
+            double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(EDU208List.size()));
             NumberFormat nf = NumberFormat.getPercentInstance();
             nf.setMinimumFractionDigits(2);//设置保留小数位
             String usedPercent = nf.format(v);
@@ -478,7 +478,7 @@ public class StaffManageService {
             e.printStackTrace();
         }
 
-        resultVO = ResultVO.setSuccess("共导入了"+edu208List.size()+"条考勤记录",checkOnPO);
+        resultVO = ResultVO.setSuccess("共导入了"+ EDU208List.size()+"条考勤记录",checkOnPO);
         return resultVO;
     }
 }
