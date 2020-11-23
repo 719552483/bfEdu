@@ -2757,7 +2757,7 @@ public class AdministrationPageService {
 		List<CourseCheckOnPO> checkOnDaoAll = courseCheckOnDao.findAll(specification);
 
 		if (checkOnDaoAll.size() != 0) {
-			resultVO = ResultVO.setSuccess("共找到"+checkOnDaoAll.size()+"个课节");
+			resultVO = ResultVO.setSuccess("共找到"+checkOnDaoAll.size()+"个课节",checkOnDaoAll);
 		} else {
 			resultVO = ResultVO.setFailed("未找到您的课节");
 		}
