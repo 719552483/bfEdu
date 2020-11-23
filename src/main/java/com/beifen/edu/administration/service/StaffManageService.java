@@ -466,11 +466,12 @@ public class StaffManageService {
                 edu208.setEdu203_ID(Long.parseLong(edu203_id));
                 if ( dataCell != null ) {
                     edu208.setOnCheckFlag(dataCell.toString());
+                    if("01".equals(dataCell.toString())) {
+                        count++;
+                    }
                 }
                 edu208Dao.save(edu208);
-                if("01".equals(dataCell.toString())) {
-                    count++;
-                }
+
             }
 
             double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(totalRows));
