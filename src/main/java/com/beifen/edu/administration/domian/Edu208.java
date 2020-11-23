@@ -5,7 +5,7 @@ import javax.persistence.*;
 //任务书与行政班关联表
 @Entity
 @Table(name = "Edu208")
-public class EDU208 {
+public class Edu208 {
     private Long Edu208_ID;//主键ID
     private Long Edu201_ID; //任务书ID
     private Long  Edu203_ID;//课节表ID

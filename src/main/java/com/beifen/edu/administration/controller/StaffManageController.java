@@ -687,7 +687,7 @@ public class StaffManageController {
     }
 
     /**
-     * 导入成绩文件
+     * 导入考勤文件
      * @return
      */
     @RequestMapping("importCourseCheckOnFile")

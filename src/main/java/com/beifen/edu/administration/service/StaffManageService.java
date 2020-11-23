@@ -7,21 +7,23 @@ import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.*;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +52,8 @@ public class StaffManageService {
     Edu107Dao edu107Dao;
     @Autowired
     Edu302Dao edu302Dao;
+    @Autowired
+    Edu208Dao edu208Dao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -335,13 +339,16 @@ public class StaffManageService {
 
         for (int i = 0; i < studentInEdu300.size(); i++) {
             utils.appendCell(sheet,i+1,"",courseCheckOnPO.getXn(),-1,0,false);
-            utils.appendCell(sheet,i+1,courseCheckOnPO.getEdu203_id(),courseCheckOnPO.getKcmc(),-1,1,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getKcmc(),-1,1,false);
             utils.appendCell(sheet,i+1,"",courseCheckOnPO.getWeek(),-1,2,false);
             utils.appendCell(sheet,i+1,"",courseCheckOnPO.getXqmc(),-1,3,false);
             utils.appendCell(sheet,i+1,"",courseCheckOnPO.getKjmc(),-1,4,false);
             utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getXzbname(),-1,5,false);
-            utils.appendCell(sheet,i+1,studentInEdu300.get(i).getEdu001_ID().toString(),studentInEdu300.get(i).getXm(),-1,6,false);
+            utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getXm(),-1,6,false);
             utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getXh(),-1,7,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getEdu203_id(),-1,9,false);
+            utils.appendCell(sheet,i+1,"",courseCheckOnPO.getEdu201_id(),-1,10,false);
+            utils.appendCell(sheet,i+1,"",studentInEdu300.get(i).getEdu001_ID().toString(),-1,11,false);
         }
 
         sheet.setColumnWidth(0, 12*256);
@@ -353,6 +360,10 @@ public class StaffManageService {
         sheet.setColumnWidth(6, 10*256);
         sheet.setColumnWidth(7, 20*256);
         sheet.setColumnWidth(8, 10*256);
+
+        sheet.setColumnHidden((short)9, true);
+        sheet.setColumnHidden((short)10, true);
+        sheet.setColumnHidden((short)11, true);
 
         CellRangeAddress region = new CellRangeAddress(0, 0, 0, 7);
         sheet.addMergedRegion(region);
@@ -385,8 +396,15 @@ public class StaffManageService {
                 XSSFCell cell5 = contentRow.getCell(5);
                 XSSFCell cell6 = contentRow.getCell(6);
                 XSSFCell cell7 = contentRow.getCell(7);
+                XSSFCell cell9 = contentRow.getCell(9);
+                XSSFCell cell10 = contentRow.getCell(10);
+                XSSFCell cell11 = contentRow.getCell(11);
                 if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null || cell5 == null || cell6 == null || cell7 == null) {
                     resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
+                    return resultVO;
+                }
+                if (cell9 == null || cell10 == null || cell11 == null ) {
+                    resultVO = ResultVO.setFailed("模版错误，请示使用下载的模版");
                     return resultVO;
                 }
                 XSSFCell cell = contentRow.getCell(6);
@@ -417,6 +435,50 @@ public class StaffManageService {
 
     //导入考情情况文件
     public ResultVO importCourseCheckOnFile(MultipartFile file, String lrrmc, String userKey) {
-        return null;
+        ResultVO resultVO;
+        List<Edu208> edu208List = new ArrayList<>();
+        CourseCheckOnPO checkOnPO = new CourseCheckOnPO();
+        try {
+            int count = 0;
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet sheet = workbook.getSheet("考勤情况详情");
+            int totalRows = sheet.getPhysicalNumberOfRows() - 2;
+            XSSFRow row = sheet.getRow(2);
+            String edu203_id = row.getCell(9).toString();
+            String edu201_id = row.getCell(10).toString();
+            // 遍历集合数据，产生数据行
+            for (int i = 0; i < totalRows; i++) {
+                int rowIndex = i + 2;
+                XSSFRow contentRow = sheet.getRow(rowIndex);
+                XSSFCell dataCell = contentRow.getCell(8);
+                String edu001_id = contentRow.getCell(11).toString();
+                if ( dataCell != null ) {
+                    Edu208 edu208 = new Edu208();
+                    edu208.setEdu001_ID(Long.parseLong(edu001_id));
+                    edu208.setEdu201_ID(Long.parseLong(edu201_id));
+                    edu208.setEdu203_ID(Long.parseLong(edu203_id));
+                    edu208.setOnCheckFlag(dataCell.toString());
+                    edu208Dao.save(edu208);
+                    if("01".equals(dataCell.toString())) {
+                        count++;
+                    }
+                    edu208List.addAll((Collection<? extends Edu208>) edu208);
+                }
+            }
+
+            CourseCheckOnPO data = courseCheckOnDao.findOne(edu203_id);
+            double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(edu208List.size()));
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            String usedPercent = nf.format(v);
+            data.setAttendance(usedPercent);
+            courseCheckOnDao.save(data);
+            BeanUtils.copyProperties(checkOnPO,data);
+        } catch (IOException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        resultVO = ResultVO.setSuccess("共导入了"+edu208List.size()+"条成绩信息",checkOnPO);
+        return resultVO;
     }
 }
