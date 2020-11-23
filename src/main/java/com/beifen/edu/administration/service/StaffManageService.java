@@ -1,5 +1,7 @@
 package com.beifen.edu.administration.service;
 
+import com.beifen.edu.administration.PO.BigDataTeacherTypePO;
+import com.beifen.edu.administration.PO.CheckOnDetailPO;
 import com.beifen.edu.administration.PO.CourseCheckOnPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
@@ -441,36 +443,34 @@ public class StaffManageService {
         CourseCheckOnPO checkOnPO = new CourseCheckOnPO();
         try {
             int count = 0;
-            int countAll = 0;
             XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
             XSSFSheet sheet = workbook.getSheet("考勤情况详情");
             int totalRows = sheet.getPhysicalNumberOfRows() - 2;
             XSSFRow row = sheet.getRow(2);
             String edu203_id = row.getCell(9).toString();
             String edu201_id = row.getCell(10).toString();
+
+            //删除原有数据
+            edu208Dao.deleteByEdu203Id(edu203_id);
+
             // 遍历集合数据，产生数据行
             for (int i = 0; i < totalRows; i++) {
                 int rowIndex = i + 2;
                 XSSFRow contentRow = sheet.getRow(rowIndex);
                 XSSFCell dataCell = contentRow.getCell(8);
                 String edu001_id = contentRow.getCell(11).toString();
-                if ( dataCell != null ) {
-                    EDU208 edu208 = new EDU208();
-                    edu208.setEdu001_ID(Long.parseLong(edu001_id));
-                    edu208.setEdu201_ID(Long.parseLong(edu201_id));
-                    edu208.setEdu203_ID(Long.parseLong(edu203_id));
-                    edu208.setOnCheckFlag(dataCell.toString());
-                    edu208Dao.save(edu208);
-                    if("01".equals(dataCell.toString())) {
-                        count++;
-                    }
-                    countAll++;
-                }
-            }
 
-            if (countAll == 0) {
-                resultVO = ResultVO.setFailed("并未导入任何数据");
-                return resultVO;
+                EDU208 edu208 = new EDU208();
+                edu208.setEdu001_ID(Long.parseLong(edu001_id));
+                edu208.setEdu201_ID(Long.parseLong(edu201_id));
+                edu208.setEdu203_ID(Long.parseLong(edu203_id));
+                if ( dataCell != null ) {
+                    edu208.setOnCheckFlag(dataCell.toString());
+                }
+                edu208Dao.save(edu208);
+                if("01".equals(dataCell.toString())) {
+                    count++;
+                }
             }
 
             double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(totalRows));
@@ -492,6 +492,16 @@ public class StaffManageService {
 
     //查询详情
     public ResultVO searchCourseCheckOnDetail(String courseId) {
-        return null;
+        ResultVO resultVO;
+        List<Object[]> dataList = edu208Dao.findAllByEdu203ID(courseId);
+        if(dataList.size() == 0) {
+            resultVO = ResultVO.setFailed("该课节未找到考勤记录");
+            return resultVO;
+        }
+        CheckOnDetailPO checkOnDetailPO = new CheckOnDetailPO();
+        List<CheckOnDetailPO> newCheckOnDetailPO = utils.castEntity(dataList, CheckOnDetailPO.class, checkOnDetailPO);
+
+        resultVO = ResultVO.setSuccess("共找到"+newCheckOnDetailPO.size()+"个学生",newCheckOnDetailPO);
+        return resultVO;
     }
 }
