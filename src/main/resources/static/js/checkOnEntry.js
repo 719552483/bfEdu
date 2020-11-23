@@ -234,7 +234,116 @@ function  downLoadCheckon(row,index){
 
 //导入考勤
 function  importCheckon(row,index){
+    $.showModal("#importCheckonModal",true);
+    $("#CheckonFile,#showFileName").val("");
+    $(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+    $("#CheckonFile").on("change", function(obj) {
+        //判断图片格式
+        var fileName = $("#CheckonFile").val();
+        var suffixIndex = fileName.lastIndexOf(".");
+        var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+        if (suffix != "xls" && suffix !== "xlsx") {
+            toastr.warning('请上传Excel类型的文件');
+            $("#studentInfoFile").val("");
+            return
+        }
+        $("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+    });
+    //检验导入文件
+    $('#checkCheckonFile').unbind('click');
+    $('#checkCheckonFile').bind('click', function(e) {
+        checkCheckonFile();
+        e.stopPropagation();
+    });
 
+    //确认导入文件
+    $('.confirmImportCheckon').unbind('click');
+    $('.confirmImportCheckon').bind('click', function(e) {
+        confirmImportCheckon(row,index);
+        e.stopPropagation();
+    });
+}
+
+//检验导入文件
+function  checkCheckonFile(){
+    if ($("#CheckonFile").val() === "") {
+        toastr.warning('请选择文件');
+        return;
+    }
+    var formData = new FormData();
+    formData.append("file",$('#CheckonFile')[0].files[0]);
+    $.ajax({
+        url:'/checkCourseCheckOnFile',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+            $(".fileLoadingArea").hide();
+            if(backjosn.code===200){
+                showImportSuccessInfo("#importCheckonModal",backjosn.msg);
+            }else{
+                showImportErrorInfo("#importCheckonModal",backjosn.msg);
+            }
+        },beforeSend: function(xhr) {
+            $(".fileLoadingArea").show();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+    });
+}
+
+//确认导入考勤
+function  confirmImportCheckon(row,index){
+    if ($("#CheckonFile").val() === "") {
+        toastr.warning('请选择文件');
+        return;
+    }
+
+    var lrrInfo=new Object();
+    lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+    lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
+
+    var formData = new FormData();
+    formData.append("file",$('#CheckonFile')[0].files[0]);
+    formData.append("lrrInfo",JSON.stringify(lrrInfo));
+
+    $.ajax({
+        url:'/importCourseCheckOnFile',
+        dataType:'json',
+        type:'POST',
+        async: true,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(backjosn){
+            $(".fileLoadingArea").hide();
+            if(backjosn.code===200){
+                $("#checkOnEntryTable").bootstrapTable('updateByUniqueId', {
+                    id: row.edu203_id,
+                    row: backjosn.data
+                });
+                toastr.success(backjosn.msg);
+                $.hideModal("#importGradeModal")
+            }else{
+                showImportErrorInfo("#importCheckonModal",backjosn.msg);
+            }
+        },beforeSend: function(xhr) {
+            $(".fileLoadingArea").show();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+    });
 }
 
 
@@ -295,6 +404,13 @@ function reReloadSearchs(){
 
 //初始化页面按钮绑定事件
 function btnBind() {
+    //提示框取消按钮
+    $('.cancelTipBtn,.cancel').unbind('click');
+    $('.cancelTipBtn,.cancel').bind('click', function(e) {
+        $.hideModal();
+        e.stopPropagation();
+    });
+
     //开始检索
     $('#startSearch').unbind('click');
     $('#startSearch').bind('click', function(e) {

@@ -407,7 +407,7 @@ public class StaffManageService {
                     resultVO = ResultVO.setFailed("模版错误，请示使用下载的模版");
                     return resultVO;
                 }
-                XSSFCell cell = contentRow.getCell(6);
+                XSSFCell cell = contentRow.getCell(8);
                 if(cell != null) {
                     String data = cell.toString();
                     Boolean isFit = true;//data是否为数值型
