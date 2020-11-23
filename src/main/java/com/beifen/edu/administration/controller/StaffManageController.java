@@ -639,4 +639,39 @@ public class StaffManageController {
         ResultVO result = administrationPageService.searchCourseCheckOn(searchInfoPO);
         return result;
     }
+
+    /**
+     * 下载考勤模板
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("downloadCourseCheckOnModal")
+    @ResponseBody
+    public ResultVO downloadCourseCheckOnModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "courseId") String courseId) {
+        ResultVO result;
+        CourseCheckOnPO courseCheckOnPO = staffManageService.getCourseCheckOnInfo(courseId);
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="modifyGrade";
+        }else{
+            fileName=courseCheckOnPO.getXn()+courseCheckOnPO.getKcmc()+"第"+courseCheckOnPO.getWeek()+"周"+courseCheckOnPO.getXqmc()+courseCheckOnPO.getKjmc()+"考勤情况";
+
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = staffManageService.creatCourseCheckOnModal(courseCheckOnPO);
+        try {
+            utils.loadModal(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+
+        return result;
+    }
+
 }

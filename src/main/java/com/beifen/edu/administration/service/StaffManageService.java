@@ -1,11 +1,16 @@
 package com.beifen.edu.administration.service;
 
+import com.beifen.edu.administration.PO.CourseCheckOnPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
@@ -42,7 +47,11 @@ public class StaffManageService {
     @Autowired
     Edu107Dao edu107Dao;
     @Autowired
+    Edu302Dao edu302Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
+    @Autowired
+    CourseCheckOnDao courseCheckOnDao;
     @Autowired
     RedisUtils redisUtils;
 
@@ -275,5 +284,73 @@ public class StaffManageService {
             resultVO = ResultVO.setSuccess("查询成功",edu101List);
         }
         return resultVO;
+    }
+
+
+    //获取考勤信息
+    public CourseCheckOnPO getCourseCheckOnInfo(String courseId) {
+        CourseCheckOnPO courseCheckOnPO = courseCheckOnDao.findOne(courseId);
+        return courseCheckOnPO;
+    }
+
+    //创建考勤情况模版
+    public XSSFWorkbook creatCourseCheckOnModal(CourseCheckOnPO courseCheckOnPO) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("考勤情况详情");
+
+        //编写注意事项
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFCell cell = firstRow.getCell(0);
+        XSSFFont font = workbook.createFont();
+        font.setColor(IndexedColors.RED.getIndex());//文字颜色
+        CellStyle style = workbook.createCellStyle();
+        cell.setCellStyle(style);
+        cell.setCellValue("注意：出勤情况请填写代码，01为正常，02为缺席");
+
+
+        XSSFRow secondRow = sheet.createRow(1);// 第二行
+        XSSFCell cells[] = new XSSFCell[1];
+        // 所有标题数组
+        String[] titles = new String[] {"学年","课程名称","周数","星期","课节","学生姓名","学号","出勤情况"};
+
+        // 循环设置标题
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = secondRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
+
+        //根据任务书获取学生名单
+        Edu201 one = edu201Dao.findOne(Long.parseLong(courseCheckOnPO.getEdu201_id()));
+        List<String> edu300Ids = new ArrayList<>();
+        if ("01".equals(one.getClassType())) {
+            edu300Ids.add(one.getClassId().toString());
+        } else {
+            List<String> edu300IdsByEdu301Id = edu302Dao.findEdu300IdsByEdu301Id(one.getClassId().toString());
+            edu300Ids.addAll(edu300IdsByEdu301Id);
+        }
+        List<Edu001> studentInEdu300 = edu001Dao.getStudentInEdu300(edu300Ids);
+
+        for (int i = 0; i < studentInEdu300.size(); i++) {
+            utils.appendCell(sheet,i,"",courseCheckOnPO.getXn(),-1,0,false);
+            utils.appendCell(sheet,i,courseCheckOnPO.getKcmc(),courseCheckOnPO.getEdu203_id(),-1,1,false);
+            utils.appendCell(sheet,i,"",courseCheckOnPO.getWeek(),-1,2,false);
+            utils.appendCell(sheet,i,"",courseCheckOnPO.getXqmc(),-1,3,false);
+            utils.appendCell(sheet,i,"",courseCheckOnPO.getKjmc(),-1,4,false);
+            utils.appendCell(sheet,i,studentInEdu300.get(i).getXm(),studentInEdu300.get(i).getEdu001_ID().toString(),-1,4,false);
+            utils.appendCell(sheet,i,"",studentInEdu300.get(i).getXh(),-1,4,false);
+        }
+
+        sheet.setColumnWidth(0, 12*256);
+        sheet.setColumnWidth(1, 30*256);
+        sheet.setColumnWidth(2, 4*256);
+        sheet.setColumnWidth(3, 8*256);
+        sheet.setColumnWidth(4, 10*256);
+        sheet.setColumnWidth(5, 20*256);
+        sheet.setColumnWidth(6, 10*256);
+
+        CellRangeAddress region = new CellRangeAddress(0, 0, 0, 6);
+        sheet.addMergedRegion(region);
+
+        return workbook;
     }
 }
