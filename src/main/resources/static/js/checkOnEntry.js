@@ -293,7 +293,7 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
         }
     }
     $(".checkFlaseArea").append(str);
-    $(".falseNum").html("("+checkTrueArray.length+"人)");
+    $(".falseNum").html("("+checkFlaseArray.length+"人)");
 
     str='';
     //未录入名单
@@ -305,7 +305,7 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
         }
     }
     $(".checkNullArea").append(str);
-    $(".nullNum").html("("+checkTrueArray.length+"人)");
+    $(".nullNum").html("("+checkNulleArray.length+"人)");
 }
 
 //下载考勤模板
