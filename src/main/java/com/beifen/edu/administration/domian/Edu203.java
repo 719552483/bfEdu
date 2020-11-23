@@ -22,7 +22,7 @@ public class Edu203 {
 	private String localName; //教学点名称
 	private String pointId; //任务点id
 	private String pointName; //任务点名称
-	private String sflrkqqk; //是否录入考勤情况
+	private String attendance; //出勤率
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -157,11 +157,11 @@ public class Edu203 {
 		this.pointName = pointName;
 	}
 
-	public String getSflrkqqk() {
-		return sflrkqqk;
+	public String getAttendance() {
+		return attendance;
 	}
 
-	public void setSflrkqqk(String sflrkqqk) {
-		this.sflrkqqk = sflrkqqk;
+	public void setAttendance(String attendance) {
+		this.attendance = attendance;
 	}
 }

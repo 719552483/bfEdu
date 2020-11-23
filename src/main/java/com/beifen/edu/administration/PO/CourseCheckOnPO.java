@@ -20,7 +20,7 @@ public class CourseCheckOnPO {
     private String edu101_id; //教师表主键
     private String teacher_name; //教师名称
     private String teacher_type; //教师类型
-    private String sflrkqqk; //是否录入考勤情况
+    private String attendance; //出勤率
 
     @Id
     public String getEdu203_id() {
@@ -127,11 +127,11 @@ public class CourseCheckOnPO {
         this.teacher_type = teacher_type;
     }
 
-    public String getSflrkqqk() {
-        return sflrkqqk;
+    public String getAttendance() {
+        return attendance;
     }
 
-    public void setSflrkqqk(String sflrkqqk) {
-        this.sflrkqqk = sflrkqqk;
+    public void setAttendance(String attendance) {
+        this.attendance = attendance;
     }
 }
