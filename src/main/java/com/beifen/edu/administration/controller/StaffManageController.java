@@ -603,7 +603,7 @@ public class StaffManageController {
     }
 
     /**
-     * 校验导入成绩文件
+     * 导入成绩文件
      * @return
      */
     @RequestMapping("importGradeFile")
@@ -663,7 +663,7 @@ public class StaffManageController {
         //创建Excel文件
         XSSFWorkbook workbook = staffManageService.creatCourseCheckOnModal(courseCheckOnPO);
         try {
-            utils.loadModal(response,fileName, workbook);
+            utils.loadModalwithNote(response,fileName, workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -673,5 +673,44 @@ public class StaffManageController {
 
         return result;
     }
+
+    /**
+     * 校验导入考勤情况文件
+     * @param file
+     * @return
+     */
+    @RequestMapping("checkCourseCheckOnFile")
+    @ResponseBody
+    public ResultVO checkCourseCheckOnFile(MultipartFile file){
+        ResultVO result = staffManageService.checkCourseCheckOnFile(file);
+        return result;
+    }
+
+    /**
+     * 导入成绩文件
+     * @return
+     */
+    @RequestMapping("importCourseCheckOnFile")
+    @ResponseBody
+    public ResultVO importCourseCheckOnFile(HttpServletRequest request){
+        ResultVO result;
+        MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        MultipartFile file = multipartRequest.getFile("file"); //文件流
+        String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+        //格式化录入人信息
+        JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+        String lrrmc = jsonObject.getString("lrr");
+        String userKey = jsonObject.getString("userykey");
+
+        ResultVO checkResult = staffManageService.checkCourseCheckOnFile(file);
+        if (checkResult.getCode() == 500) {
+            return checkResult;
+        }
+
+        result = staffManageService.importCourseCheckOnFile(file,lrrmc,userKey);
+
+        return result;
+    }
+
 
 }
