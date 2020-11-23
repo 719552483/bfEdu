@@ -330,7 +330,7 @@ function  confirmImportCheckon(row,index){
                     row: backjosn.data
                 });
                 toastr.success(backjosn.msg);
-                $.hideModal("#importGradeModal")
+                $.hideModal("#importCheckonModal");
             }else{
                 showImportErrorInfo("#importCheckonModal",backjosn.msg);
             }

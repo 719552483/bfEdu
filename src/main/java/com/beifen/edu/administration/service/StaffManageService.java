@@ -438,10 +438,10 @@ public class StaffManageService {
     //导入考情情况文件
     public ResultVO importCourseCheckOnFile(MultipartFile file, String lrrmc, String userKey) {
         ResultVO resultVO;
-        List<EDU208> EDU208List = new ArrayList<>();
         CourseCheckOnPO checkOnPO = new CourseCheckOnPO();
         try {
             int count = 0;
+            int countAll = 0;
             XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
             XSSFSheet sheet = workbook.getSheet("考勤情况详情");
             int totalRows = sheet.getPhysicalNumberOfRows() - 2;
@@ -464,12 +464,16 @@ public class StaffManageService {
                     if("01".equals(dataCell.toString())) {
                         count++;
                     }
-                    EDU208List.addAll((Collection<? extends EDU208>) edu208);
+                    countAll++;
                 }
             }
 
+            if (countAll == 0) {
+                resultVO = ResultVO.setFailed("并未导入任何数据");
+                return resultVO;
+            }
 
-            double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(EDU208List.size()));
+            double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(totalRows));
             NumberFormat nf = NumberFormat.getPercentInstance();
             nf.setMinimumFractionDigits(2);//设置保留小数位
             String usedPercent = nf.format(v);
@@ -481,7 +485,7 @@ public class StaffManageService {
             e.printStackTrace();
         }
 
-        resultVO = ResultVO.setSuccess("共导入了"+ EDU208List.size()+"条考勤记录",checkOnPO);
+        resultVO = ResultVO.setSuccess("导入成功",checkOnPO);
         return resultVO;
     }
 
