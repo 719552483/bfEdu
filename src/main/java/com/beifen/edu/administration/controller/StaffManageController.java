@@ -713,4 +713,17 @@ public class StaffManageController {
     }
 
 
+    /**
+     * 校验导入考勤情况文件
+     * @param file
+     * @return
+     */
+    @RequestMapping("searchCourseCheckOnDetail")
+    @ResponseBody
+    public ResultVO searchCourseCheckOnDetail(@RequestParam(value = "courseId") String courseId){
+        ResultVO result = staffManageService.searchCourseCheckOnDetail(courseId);
+        return result;
+    }
+
+
 }

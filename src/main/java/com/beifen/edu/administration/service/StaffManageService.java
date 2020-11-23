@@ -55,6 +55,8 @@ public class StaffManageService {
     @Autowired
     Edu208Dao edu208Dao;
     @Autowired
+    Edu203Dao edu203Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     CourseCheckOnDao courseCheckOnDao;
@@ -466,13 +468,14 @@ public class StaffManageService {
                 }
             }
 
-            CourseCheckOnPO data = courseCheckOnDao.findOne(edu203_id);
+
             double v = Double.parseDouble(String.valueOf(count)) / Double.parseDouble(String.valueOf(EDU208List.size()));
             NumberFormat nf = NumberFormat.getPercentInstance();
             nf.setMinimumFractionDigits(2);//设置保留小数位
             String usedPercent = nf.format(v);
-            data.setAttendance(usedPercent);
-            courseCheckOnDao.save(data);
+            //更新出勤率
+            edu203Dao.updateAttendance(edu203_id,usedPercent);
+            CourseCheckOnPO data = courseCheckOnDao.findOne(edu203_id);
             BeanUtils.copyProperties(checkOnPO,data);
         } catch (IOException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
@@ -480,5 +483,11 @@ public class StaffManageService {
 
         resultVO = ResultVO.setSuccess("共导入了"+ EDU208List.size()+"条考勤记录",checkOnPO);
         return resultVO;
+    }
+
+
+    //查询详情
+    public ResultVO searchCourseCheckOnDetail(String courseId) {
+        return null;
     }
 }

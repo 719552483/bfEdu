@@ -91,4 +91,11 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             "      and r.xnid = ?3" +
             "      and (to_number(n.week) < ?1 or (to_number(n.week) = ?1 and to_number(n.xqid) < ?2))",nativeQuery = true)
     Long getJzksClassPeriodCompleted(int week, int dayOfWeek,String edu401ID);
+
+
+    //更新出勤率
+    @Transactional
+    @Modifying
+    @Query(value = "update edu203 t set t.attendance = ?2 where t.Edu203_ID =?1", nativeQuery = true)
+    void updateAttendance(String edu203_id, String usedPercent);
 }
