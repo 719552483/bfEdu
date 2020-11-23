@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.beifen.edu.administration.PO.CourseCheckOnPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.AdministrationPageService;
@@ -603,7 +604,6 @@ public class StaffManageController {
 
     /**
      * 校验导入成绩文件
-     * @param file
      * @return
      */
     @RequestMapping("importGradeFile")
@@ -625,6 +625,18 @@ public class StaffManageController {
 
         result = administrationPageService.importGradeFile(file,lrrmc,userKey);
 
+        return result;
+    }
+
+    /**
+     * 考勤录入查询
+     * @return
+     */
+    @RequestMapping("searchCourseCheckOn")
+    @ResponseBody
+    public ResultVO searchCourseCheckOn(@RequestParam(value = "searchInfo") String searchInfo){
+        CourseCheckOnPO searchInfoPO = JSON.parseObject(searchInfo, CourseCheckOnPO.class);
+        ResultVO result = administrationPageService.searchCourseCheckOn(searchInfoPO);
         return result;
     }
 }

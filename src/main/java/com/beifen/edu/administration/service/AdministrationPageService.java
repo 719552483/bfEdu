@@ -22,6 +22,7 @@ import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.constant.SecondaryCodeConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.RedisUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -114,6 +115,8 @@ public class AdministrationPageService {
 	private ApprovalProcessService approvalProcessService;
 	@Autowired
 	private StaffManageService staffManageService;
+	@Autowired
+	private CourseCheckOnDao courseCheckOnDao;
 	@Autowired
 	private RedisUtils redisUtils;
 
@@ -2722,6 +2725,43 @@ public class AdministrationPageService {
 		}
 
 		resultVO = ResultVO.setSuccess("共导入了"+edu005List.size()+"条成绩信息",edu005List);
+		return resultVO;
+	}
+
+	//考勤录入查询
+    public ResultVO searchCourseCheckOn(CourseCheckOnPO searchInfoPO) {
+		ResultVO resultVO;
+		//根据条件筛选考情考情情况录入
+		Specification<CourseCheckOnPO> specification = new Specification<CourseCheckOnPO>() {
+			public Predicate toPredicate(Root<CourseCheckOnPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (searchInfoPO.getXnid() != null && !"".equals(searchInfoPO.getXnid())) {
+					predicates.add(cb.equal(root.<String>get("xnid"), searchInfoPO.getXnid()));
+				}
+				if (searchInfoPO.getWeek() != null && !"".equals(searchInfoPO.getWeek())) {
+					predicates.add(cb.equal(root.<String>get("week"), searchInfoPO.getWeek()));
+				}
+				if (searchInfoPO.getXqid() != null && !"".equals(searchInfoPO.getXqid())) {
+					predicates.add(cb.equal(root.<String>get("xqid"), searchInfoPO.getXqid()));
+				}
+				if (searchInfoPO.getKcmc() != null && !"".equals(searchInfoPO.getKcmc())) {
+					predicates.add(cb.equal(root.<String>get("kcmc"), searchInfoPO.getKcmc()));
+				}
+				if (searchInfoPO.getEdu101_id() != null && !"".equals(searchInfoPO.getEdu101_id())) {
+					predicates.add(cb.equal(root.<String>get("edu101_id"), searchInfoPO.getEdu101_id()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+
+		List<CourseCheckOnPO> checkOnDaoAll = courseCheckOnDao.findAll(specification);
+
+		if (checkOnDaoAll.size() != 0) {
+			resultVO = ResultVO.setSuccess("共找到"+checkOnDaoAll.size()+"个课节");
+		} else {
+			resultVO = ResultVO.setFailed("未找到您的课节");
+		}
+
 		return resultVO;
 	}
 }
