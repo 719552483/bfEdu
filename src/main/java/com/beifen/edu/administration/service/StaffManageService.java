@@ -478,7 +478,7 @@ public class StaffManageService {
             e.printStackTrace();
         }
 
-        resultVO = ResultVO.setSuccess("共导入了"+edu208List.size()+"条成绩信息",checkOnPO);
+        resultVO = ResultVO.setSuccess("共导入了"+edu208List.size()+"条考勤记录",checkOnPO);
         return resultVO;
     }
 }
