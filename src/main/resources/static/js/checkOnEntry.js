@@ -276,6 +276,7 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
     if(checkTrueArray.length==0){
         str="<span class='checkZero'>暂无出勤名单...</span>";
     }else{
+        // groupByClass(checkTrueArray);
         for (var i = 0; i < checkTrueArray.length; i++) {
             str+='<div class="col5 singleCheckOn recordsImg2">'+checkTrueArray[i].studentName+'</div>';
         }
@@ -456,6 +457,7 @@ function startSearch(){
                 stuffCheckOnEntryTable(backjson.data);
             } else {
                 toastr.warning(backjson.msg);
+                drawEmptyCheckOnEntryTable();
             }
         }
     });

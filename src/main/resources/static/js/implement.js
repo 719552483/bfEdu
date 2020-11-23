@@ -1710,7 +1710,7 @@ function compare(pro) {
     }
 }
 
-//js -- 对象分组（根据对象的某一属性）
+//js -- 对象分组（根据对象的某一属性 year）
 function group(arr) {
 	var map = {},
 		dest = [];
