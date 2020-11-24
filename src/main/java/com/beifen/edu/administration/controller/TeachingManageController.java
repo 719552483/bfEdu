@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 //教务管理控制层
 @Controller
@@ -426,8 +427,10 @@ public class TeachingManageController {
     @RequestMapping("/searchCourseResult")
     @ResponseBody
     public ResultVO searchCourseResult(@RequestParam("searchInfo") String searchInfo) {
-        CourseResultPO courseResultPO = JSON.parseObject(searchInfo, CourseResultPO.class);
-        ResultVO result = teachingManageService.searchCourseResult(courseResultPO);
+        Map<String,Object> map = JSON.parseObject(searchInfo, Map.class);
+        CourseResultPO courseResultPO = (CourseResultPO)map.get("searchInfo");
+        PageRequestPO pageRequest = (PageRequestPO)map.get("pageRequest");
+        ResultVO result = teachingManageService.searchCourseResult(courseResultPO,pageRequest);
         return result;
     }
 

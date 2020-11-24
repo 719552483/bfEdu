@@ -13,6 +13,9 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -1203,8 +1206,16 @@ public class TeachingManageService {
     }
 
     //教务查询授课成果
-    public ResultVO searchCourseResult(CourseResultPO courseResultPO) {
+    public ResultVO searchCourseResult(CourseResultPO courseResultPO,PageRequestPO pageRequest) {
         ResultVO resultVO;
+
+        Map<String, Object> returnMap = new HashMap<>();
+
+        Integer pageNumber = pageRequest.getPageNum();
+        Integer pageSize = pageRequest.getPageSize();
+
+        pageNumber = pageNumber < 0 ? 0 : pageNumber;
+        pageSize = pageSize < 0 ? 10 : pageSize;
 
         Specification<Edu201> specification = new Specification<Edu201>() {
             public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1226,7 +1237,12 @@ public class TeachingManageService {
             }
         };
 
-        List<Edu201> edu201List = edu201Dao.findAll(specification);
+        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"yhm");
+        Page<Edu201> pages = edu201Dao.findAll(specification,page);
+
+        List<Edu201> edu201List = pages.getContent();
+        long count = edu201Dao.count(specification);
+
 
         if (edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
@@ -1276,7 +1292,10 @@ public class TeachingManageService {
             courseResultList.add(data);
         }
 
-        resultVO = ResultVO.setSuccess("共找到"+courseResultList.size()+"条课程信息",courseResultList);
+        returnMap.put("rows",courseResultList);
+        returnMap.put("total",count);
+
+        resultVO = ResultVO.setSuccess("共找到"+courseResultList.size()+"条课程信息",returnMap);
         return resultVO;
     }
 
