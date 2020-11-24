@@ -1237,7 +1237,7 @@ public class TeachingManageService {
             }
         };
 
-        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"yhm");
+        PageRequest page = new PageRequest(pageNumber-1, pageSize, Sort.Direction.ASC,"pyjhmc");
         Page<Edu201> pages = edu201Dao.findAll(specification,page);
 
         List<Edu201> edu201List = pages.getContent();

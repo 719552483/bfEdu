@@ -2,7 +2,6 @@ $(function() {
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	getYearInfo();
 	binBind();
-	drawEmptyCrouseRsForPresentQueryTable();
 	getCourseForPresent();
 });
 
@@ -35,123 +34,136 @@ function stuffYearSelect(yearInfo){
 
 //获取合格率信息
 function getCourseForPresent(){
-	var searchInfo=getCourseForPresentSearchInfo();
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/searchCourseResult",
-		data:{
-			"searchInfo":JSON.stringify(searchInfo)
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code === 200) {
-				stuffCrouseRsForPresentQueryTable(backjson.data)
-			} else {
-				toastr.warning(backjson.msg);
-				drawEmptyCrouseRsForPresentQueryTable();
-			}
-		}
-	});
+	//初始化表格
+	var oTable = new stuffCrouseRsForPresentQueryTable();
+	oTable.Init();
 }
 
-//填充空的合格率表
-function drawEmptyCrouseRsForPresentQueryTable(){
-	stuffCrouseRsForPresentQueryTable({});
-}
-
-//填充空的合格率表
-function stuffCrouseRsForPresentQueryTable(tableInfo){
+//填充合格率表
+function stuffCrouseRsForPresentQueryTable(){
 	window.releaseNewsEvents = {
 		'click #gardeDeatils' : function(e, value, row, index) {
 			getGardeDeatils(row);
 		}
 	};
-	$('#crouseRsForPresentQueryTable').bootstrapTable('destroy').bootstrapTable({
-		data : tableInfo,
-		pagination : true,
-		pageNumber : 1,
-		pageSize : 10,
-		pageList : [ 10 ],
-		showToggle : false,
-		showFooter : false,
-		clickToSelect : true,
-		exportDataType: "all",
-		showExport: true,      //是否显示导出
-		exportOptions:{
-			fileName: '课程合格率导出'  //文件名称
-		},
-		search : true,
-		editable : false,
-		striped : true,
-		toolbar : '#toolbar',
-		showColumns : true,
-		onPageChange : function() {
-			drawPagination(".crouseRsForPresentQueryTableArea", "课程合格率");
-		},
-		columns : [
-			{
-				field : 'edu201_ID',
-				title: '唯一标识',
-				align : 'center',
-				visible : false
-			},{
-				field : 'xn',
-				title : '学年',
-				align : 'left',
-				formatter : paramsMatter
-			},{
-				field : 'classType',
-				title : '班级类型',
-				align : 'left',
-				visible : false,
-				formatter :classTypeMatter
-			}, {
-				field : 'className',
-				title : '班级名称',
-				align : 'left',
-				formatter : paramsMatter
-			},{
-				field : 'kcmc',
-				title : '课程名称',
-				align : 'left',
-				formatter : paramsMatter
-			},{
-				field : 'lsmc',
-				title : '任课教师',
-				align : 'left',
-				formatter : paramsMatter
-			},{
-				field : 'passingRate',
-				title : '及格率',
-				align : 'left',
-				width: "100px",
-				formatter :passingRateMatter
-			},{
-				field : 'checkOnRate',
-				title : '出勤率',
-				align : 'left',
-				width: "100px",
-				formatter :checkOnRateMatter
-			},{
-				field : 'action',
-				title : '操作',
-				align : 'center',
-				clickToSelect : false,
-				formatter : releaseNewsFormatter,
-				events : releaseNewsEvents,
-			}]
-	});
+
+	var oTableInit = new Object();
+	oTableInit.Init = function () {
+		$('#crouseRsForPresentQueryTable').bootstrapTable('destroy').bootstrapTable({
+			url:'/searchCourseResult',         //请求后台的URL（*）
+			method: 'POST',                      //请求方式（*）
+			striped: true,                      //是否显示行间隔色
+			cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			pagination: true,                   //是否显示分页（*）
+			queryParamsType: '',
+			dataType: 'json',
+			pageNumber: 1, //初始化加载第一页，默认第一页
+			queryParams: queryParams,//请求服务器时所传的参数
+			sidePagination: 'server',//指定服务器端分页
+			pageSize: 10,//单页记录数
+			pageList: [10,20,30,40],//分页步进值
+			search: false,
+			silent: false,
+			showRefresh: false,                  //是否显示刷新按钮
+			showToggle: false,
+			clickToSelect: true,
+			showExport: true,      //是否显示导出
+			exportDataType: "all",
+			exportOptions:{
+				fileName: '课程合格率导出'  //文件名称
+			},
+			striped: true,
+			toolbar: '#toolbar',
+			showColumns: true,
+			onPostBody: function() {
+				drawPagination(".crouseRsForPresentQueryTableArea", "授课成果");
+				drawSearchInput(".crouseRsForPresentQueryTableArea");
+				changeTableNoRsTip();
+				toolTipUp(".myTooltip");
+				changeColumnsStyle(".crouseRsForPresentQueryTableArea", "授课成果");
+				btnControl();
+			},
+			onPageChange : function() {
+				drawPagination(".crouseRsForPresentQueryTableArea", "授课成果");
+			},
+			columns : [
+				{
+					field : 'edu201_ID',
+					title: '唯一标识',
+					align : 'center',
+					visible : false
+				},{
+					field : 'xn',
+					title : '学年',
+					align : 'left',
+					formatter : paramsMatter
+				},{
+					field : 'classType',
+					title : '班级类型',
+					align : 'left',
+					visible : false,
+					formatter :classTypeMatter
+				}, {
+					field : 'className',
+					title : '班级名称',
+					align : 'left',
+					formatter : paramsMatter
+				},{
+					field : 'kcmc',
+					title : '课程名称',
+					align : 'left',
+					formatter : paramsMatter
+				},{
+					field : 'lsmc',
+					title : '任课教师',
+					align : 'left',
+					formatter : paramsMatter
+				},{
+					field : 'passingRate',
+					title : '及格率',
+					align : 'left',
+					width: "100px",
+					formatter :passingRateMatter
+				},{
+					field : 'checkOnRate',
+					title : '出勤率',
+					align : 'left',
+					width: "100px",
+					formatter :checkOnRateMatter
+				},{
+					field : 'action',
+					title : '操作',
+					align : 'center',
+					clickToSelect : false,
+					formatter : releaseNewsFormatter,
+					events : releaseNewsEvents,
+				}],
+			responseHandler: function (res) {  //后台返回的结果
+				if(res.code == 200){
+					var data = {
+						total: res.data.total,
+						rows: res.data.rows
+					};
+					return data;
+				}else{
+					var data = {
+						total: 0,
+						rows:[]
+					};
+					toastr.warning(res.msg);
+					return data;
+				}
+			}
+		});
+	};
+
+	// 得到查询的参数
+	function queryParams(params) {
+		var temp=getCourseForPresentSearchInfo();
+		temp.pageNum=params.pageNumber;
+		temp.pageSize=params.pageSize;
+		return JSON.stringify(temp);
+	}
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
@@ -181,27 +193,22 @@ function stuffCrouseRsForPresentQueryTable(tableInfo){
 	}
 
 	function checkOnRateMatter(value, row, index) {
-		if(value==null||typeof value==="undefined"||value===""){
+		if(row.checkOnRate==null||typeof row.checkOnRate==="undefined"||row.checkOnRate===""){
 			return [ '<span class="label label-default myTooltip" title="未录入">未录入</span>' ]
 				.join('');
 		}else{
-			var currentValue=parseFloat(value.split("%")[0]);
+			var currentValue=parseFloat(row.checkOnRate.split("%")[0]);
 			if(currentValue>0 && currentValue>=50){
-				return [ '<span class="label label-success myTooltip" title="'+value+'">'+value+'</span>' ]
+				return [ '<span class="label label-success myTooltip" title="'+row.checkOnRate+'">'+row.checkOnRate+'</span>' ]
 					.join('');
 			}else{
-				return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
+				return [ '<span class="label label-danger myTooltip" title="'+row.checkOnRate+'">'+row.checkOnRate+'</span>' ]
 					.join('');
 			}
 		}
 	}
 
-	drawPagination(".crouseRsForPresentQueryTableArea", "课程合格率");
-	drawSearchInput(".crouseRsForPresentQueryTableArea");
-	changeTableNoRsTip();
-	toolTipUp(".myTooltip");
-	changeColumnsStyle(".crouseRsForPresentQueryTableArea", "课程合格率");
-	btnControl();
+	return oTableInit;
 }
 
 //获取合格率检索条件
@@ -226,33 +233,7 @@ function startSearch(){
 		toastr.warning("检索条件不能为空");
 		return;
 	}
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/searchCourseResult",
-		data:{
-			"searchInfo":JSON.stringify(searchInfo)
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code === 200) {
-				stuffCrouseRsForPresentQueryTable(backjson.data)
-			} else {
-				toastr.warning(backjson.msg);
-				drawEmptyCrouseRsForPresentQueryTable();
-			}
-		}
-	});
+	getCourseForPresent();
 }
 
 //合格率重置检索
@@ -378,17 +359,34 @@ function stuffCrouseRsForDeatilsTable(tableInfo){
 				sortable: true,
 				formatter: gradeMatter
 			}, {
+				field: 'isResit',
+				title: '是否补考',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isResitMatter
+			},
+			{
+				field: 'isConfirm',
+				title: '成绩确认',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isConfirmMatter
+			},{
 				field: 'credit',
 				title: '课程总学分',
 				align: 'left',
 				sortable: true,
-				formatter: paramsMatter
+				formatter: paramsMatter,
+				visible : false
 			},{
 				field: 'getCredit',
 				title: '课程已获学分',
 				align: 'left',
 				sortable: true,
-				formatter: paramsMatter
+				formatter: paramsMatter,
+				visible : false
 			},{
 				field: 'gradeEnter',
 				title: '录入人',
@@ -454,6 +452,40 @@ function stuffCrouseRsForDeatilsTable(tableInfo){
 						.join('');
 				}
 			}
+		}
+	}
+
+	function isResitMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="未录入">未录入</div>'
+			]
+				.join('');
+		} else if(value==="T"){
+			return [
+				'<div class="myTooltip" title="是"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip" title="否"><i class="iconfont icon-chacha redTxt"></i></div>'
+			]
+				.join('');
+		}
+	}
+
+	function isConfirmMatter(value, row, index) {
+		if (value==="T") {
+			return [
+				'<div class="myTooltip" title="已确认"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="未确认">未确认</div>'
+			]
+				.join('');
 		}
 	}
 
