@@ -21,4 +21,8 @@ public interface Edu205Dao extends JpaRepository<Edu205, Long>, JpaSpecification
     //根据教师查询任务书id
     @Query(value = "select distinct e.Edu201_ID from edu205 e where e.Edu101_ID =?1", nativeQuery = true)
     List<String> findEdu201IdByTeacher(String userKey);
+
+    //确认老师与任务书是否存在关系
+    @Query(value = "select * from edu205 e where e.Edu101_ID =?1 and e.Edu201_ID = ?2",nativeQuery = true)
+    Edu205 findExist(String userKey, Long edu201_id);
 }

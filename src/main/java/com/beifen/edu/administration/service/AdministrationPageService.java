@@ -108,6 +108,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu993Dao edu993Dao;
 	@Autowired
+	private Edu205Dao edu205Dao;
+	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
@@ -2592,6 +2594,7 @@ public class AdministrationPageService {
 					predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
 				}
 				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
+				predicates.add(cb.isNull(root.<String>get("isConfirm")));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
@@ -2641,7 +2644,7 @@ public class AdministrationPageService {
 		return workbook;
 	}
 
-	//批量导入成绩
+	//校验导入成绩文件
 	public ResultVO checkGradeFile(MultipartFile file) {
 		ResultVO resultVO;
 		String fileName = file.getOriginalFilename();
@@ -2653,6 +2656,32 @@ public class AdministrationPageService {
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
+			XSSFRow firstRow = sheet.getRow(1);
+			String xn = firstRow.getCell(0).toString();
+			String className = firstRow.getCell(1).toString();
+			String courseName = firstRow.getCell(2).toString();
+
+
+			Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+				public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+					List<Predicate> predicates = new ArrayList<Predicate>();
+					predicates.add(cb.equal(root.<String>get("courseName"),courseName));
+					predicates.add(cb.equal(root.<String>get("xn"),xn));
+					predicates.add(cb.equal(root.<String>get("className"),className));
+					predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
+					predicates.add(cb.isNull(root.<String>get("isConfirm")));
+					return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+			};
+
+			List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+			if (edu005List.size() == 0 ) {
+				resultVO = ResultVO.setFailed("该课程成绩已确认，无法导入");
+				return resultVO;
+			}
+
+
 			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
 			// 遍历集合数据，产生数据行
 			for (int i = 0; i < totalRows; i++) {
@@ -2699,6 +2728,36 @@ public class AdministrationPageService {
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
 			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+
+			XSSFRow firstRow = sheet.getRow(1);
+			String checkXn = firstRow.getCell(0).toString();
+			String checkClassName = firstRow.getCell(1).toString();
+			String checkCourseName = firstRow.getCell(2).toString();
+
+			Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+				public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+					List<Predicate> predicates = new ArrayList<Predicate>();
+					predicates.add(cb.equal(root.<String>get("courseName"),checkCourseName));
+					predicates.add(cb.equal(root.<String>get("xn"),checkXn));
+					predicates.add(cb.equal(root.<String>get("className"),checkClassName));
+					predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
+					predicates.add(cb.isNull(root.<String>get("isConfirm")));
+					return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+			};
+
+			List<Edu005> checkList = edu005Dao.findAll(edu005Specification);
+
+			if(checkList.size() != 0) {
+				Long edu201_id = checkList.get(0).getEdu201_ID();
+				Edu205 edu205 = edu205Dao.findExist(userKey,edu201_id);
+
+				if (edu205 == null) {
+					resultVO = ResultVO.setFailed("您不是该课程的老师无法导入成绩");
+					return resultVO;
+				}
+			}
+
 			// 遍历集合数据，产生数据行
 			for (int i = 0; i < totalRows; i++) {
 				int rowIndex = i + 1;

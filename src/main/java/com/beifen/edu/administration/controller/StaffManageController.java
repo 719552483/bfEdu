@@ -532,6 +532,19 @@ public class StaffManageController {
     }
 
     /**
+     * 确认成绩并生成补考标识
+     *
+     * @return returnMap
+     */
+    @RequestMapping("confirmGrade")
+    @ResponseBody
+    public ResultVO confirmGrade(@RequestParam("gradeInfo") String gradeInfo,@RequestParam("userKey") String userKey) {
+        Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
+        ResultVO result = staffManageService.confirmGrade(edu005,userKey);
+        return result;
+    }
+
+    /**
      * 验证是成绩是否存在
      *
      * @return returnMap
