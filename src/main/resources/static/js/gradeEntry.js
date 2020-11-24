@@ -35,6 +35,8 @@ function stuffYearSelect(yearInfo){
 	}
 	stuffManiaSelect("#xn", str);
 	stuffManiaSelect("#loadForXn", str);
+	stuffManiaSelect("#confirmGradeForXn", str);
+	stuffManiaSelect("#xn_page2", str);
 }
 
 //初始化检索
@@ -114,6 +116,41 @@ function getMajorTrainingSelectInfo() {
 				}
 			}
 		});
+	});
+
+	SelectPublic("#level_page2","#department_page2","#grade_page2","#major_page2");
+	$("#major_page2").change(function() {
+		if(getNormalSelectValue("major_page2")===""){
+			return;
+		}
+		// $.ajax({
+		// 	method : 'get',
+		// 	cache : false,
+		// 	url : "/queryGrades",
+		// 	data: {
+		// 		"SearchCriteria":JSON.stringify(getSearchObject()),
+		// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		// 	},
+		// 	dataType : 'json',
+		// 	beforeSend: function(xhr) {
+		// 		requestErrorbeforeSend();
+		// 	},
+		// 	error: function(textStatus) {
+		// 		requestError();
+		// 	},
+		// 	complete: function(xhr, status) {
+		// 		requestComplete();
+		// 	},
+		// 	success : function(backjson) {
+		// 		hideloding();
+		// 		if (backjson.code===200) {
+		// 			stuffStudentBaseInfoTable(backjson.data);
+		// 		} else {
+		// 			toastr.warning(backjson.msg);
+		// 			drawStudentBaseInfoEmptyTable();
+		// 		}
+		// 	}
+		// });
 	});
 }
 
@@ -206,6 +243,21 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				formatter: gradeMatter
 			}, {
+				field: 'isResit',
+				title: '是否补考',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isResitMatter
+			},
+			{
+				field: 'isConfirm',
+				title: '成绩确认',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isConfirmMatter
+			},{
 				field: 'gradeEnter',
 				title: '录入人',
 				align: 'left',
@@ -254,6 +306,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	}
 
 	function gradeMatter(value, row, index) {
+		var className='';
 		if(row.isExamCrouse==="T"){
 			if (typeof value==="undefined"||value==null||value==="") {
 				return [ '<div>' +
@@ -261,8 +314,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
 				'</div>' ].join('');
 			} else {
+				parseFloat(value)>=60?className='greenTxt':className="redTxt";
 				return [ '<div class="myTooltip" title="'+value+'">' +
-				'<span class="grade grade'+index+'">'+value+'</span>' +
+				'<span class="'+className+' grade grade'+index+'">'+value+'</span>' +
 				'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
 				'</div>' ].join('');
 			}
@@ -272,6 +326,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				title="暂无成绩";
 			}else{
 				row.grade==="T"?title="通过":title="不通过";
+				title==="通过"?className='greenTxt':className="redTxt";
 			}
              var str='<option value="T">通过</option><option value="F">不通过</option>';
 			if(typeof value==="undefined"||value==null||value==="null"){
@@ -287,7 +342,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			}else{
 				return [
 					'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
-						'<span class="grade grade'+index+'">'+title+'</span>' +
+						'<span class="'+className+' grade grade'+index+'">'+title+'</span>' +
 						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
 						+ str +
 						'</select>'+
@@ -327,6 +382,40 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		}
 	}
 
+	function isResitMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="未录入">未录入</div>'
+			]
+				.join('');
+		} else if(value==="T"){
+			return [
+				'<div class="myTooltip" title="是"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip" title="否"><i class="iconfont icon-chacha redTxt"></i></div>'
+			]
+				.join('');
+		}
+	}
+
+	function isConfirmMatter(value, row, index) {
+		if (value==="T") {
+			return [
+				'<div class="myTooltip" title="已确认"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="未确认">未确认</div>'
+			]
+				.join('');
+		}
+	}
+
 	drawPagination(".studentBaseInfoTableArea", "学生信息");
 	drawSearchInput(".studentBaseInfoTableArea");
 	changeTableNoRsTip();
@@ -337,6 +426,11 @@ function stuffStudentBaseInfoTable(tableInfo) {
 
 //预备录入成绩
 function wantGradeEntry(row,index){
+	if(row.isConfirm==="T"&&row.isResit!=="T"){
+		toastr.warning("成绩已确认，不能再次录入");
+		return;
+	}
+
 	var showGradeInput=$(".gradeInput");
 	var showNum=0;
 	for (var i = 0; i <showGradeInput.length ; i++) {
@@ -695,6 +789,90 @@ function confirmImportGrade(){
 	});
 }
 
+//预备成绩确认
+function wantConfirmGrade(){
+	reStuffForConfirmGrade();
+	$.showModal("#confirmGradeModal",true);
+
+	//确认按钮
+	$('#confirmGrade').unbind('click');
+	$('#confirmGrade').bind('click', function(e) {
+		confirmGrade();
+		e.stopPropagation();
+	});
+}
+
+//成绩确认
+function confirmGrade(){
+	var xnid=getNormalSelectValue("confirmGradeForXn");
+	var className=$("#confirmGradeForXzbmc").val();
+	var courseName=$("#confirmGradeForKcmc").val();
+	if(xnid===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	if(className===""){
+		toastr.warning("行政班名称不能为空");
+		return;
+	}
+
+	if(courseName===""){
+		toastr.warning("课程班名称不能为空");
+		return;
+	}
+
+	var gradeInfo=new Object();
+	gradeInfo.xnid=xnid;
+	gradeInfo.xn=getNormalSelectText("loadForXn");
+	gradeInfo.className=className;
+	gradeInfo.courseName=courseName;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/confirmGrade",
+		data: {
+			"gradeInfo":JSON.stringify(gradeInfo),
+			"userKey":JSON.parse($.session.get('userInfo')).userKey
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var data=backjson.data;
+				for (var i = 0; i < data.length; i++) {
+					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+						id: backjson.data[i].edu005_ID,
+						row: backjson.data[i]
+					});
+				}
+				toolTipUp(".myTooltip");
+				toastr.success(backjson.msg);
+				$.hideModal("#confirmGradeModal");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//重置确认成绩条件
+function reStuffForConfirmGrade(){
+	var reObject = new Object();
+	reObject.InputIds = "#confirmGradeForXzbmc,#confirmGradeForKcmc";
+	reObject.normalSelectIds = "#confirmGradeForXn";
+	reReloadSearchsWithSelect(reObject);
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -731,5 +909,24 @@ function binBind() {
 		wantImportGrades();
 		e.stopPropagation();
 	});
+
+	//成绩确认
+	$('#wantConfirmGrade').unbind('click');
+	$('#wantConfirmGrade').bind('click', function(e) {
+		wantConfirmGrade();
+		e.stopPropagation();
+	});
+
+	//补考成绩录入
+	$('#wantRepeatGrade').unbind('click');
+	$('#wantRepeatGrade').bind('click', function(e) {
+		wantRepeatGrade();
+		e.stopPropagation();
+	});
 }
+
+
+
+
+
 

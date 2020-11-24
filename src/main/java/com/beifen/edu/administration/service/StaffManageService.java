@@ -545,7 +545,26 @@ public class StaffManageService {
 
         edu005Dao.updateConfirmGrade(confirmIdList);
 
-        Map<String, List<Edu005>> passMap = edu005List.stream().collect(Collectors.groupingBy(Edu005::getIsPassed, Collectors.toList()));
+        Specification<Edu005> newSpecification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                    predicates.add(cb.isNotNull(root.<String>get("isPassed")));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005s = edu005Dao.findAll(newSpecification);
+
+        Map<String, List<Edu005>> passMap = edu005s.stream().collect(Collectors.groupingBy(Edu005::getIsPassed, Collectors.toList()));
 
         passMap.forEach((key,value) -> {
             if("F".equals(key)) {

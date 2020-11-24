@@ -37,13 +37,13 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
 
     //更新确认标识
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query(value = "update edu005 t set t.is_confirm = 'T' where t.Edu005_ID in ?1", nativeQuery = true)
     void updateConfirmGrade(List<Long> confirmIdList);
 
     //更新补考标识
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query(value = "update edu005 t set t.is_resit = ?2 where t.Edu005_ID in ?1", nativeQuery = true)
     void updateResitFlag(List<Long> noPassIdList,String passFlag);
 }
