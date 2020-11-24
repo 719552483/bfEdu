@@ -1710,31 +1710,6 @@ function compare(pro) {
     }
 }
 
-//js -- 对象分组（根据对象的某一属性）
-function group(arr) {
-	var map = {},
-		dest = [];
-	for(var i = 0; i < arr.length; i++){
-		var ai = arr[i];
-		if(!map[ai.year]){
-			dest.push({
-				id: ai.year,
-				data: [ai]
-			});
-			map[ai.year] = ai;
-		}else{
-			for(var j = 0; j < dest.length; j++){
-				var dj = dest[j];
-				if(dj.year == ai.year){
-					dj.data.push(ai);
-					break;
-				}
-			}
-		}
-	}
-	return dest;
-}
-
 //把number转化成百分比
 function toPercent(num) {
     var returnsTR='';
