@@ -24,6 +24,8 @@ public class Edu005 {
     private String xn;//学年
     private String xnid;//学年id
     private String isPassed; //是否通过
+    private String isResit; //是否补考
+    private String isConfirm; //是否确认
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -173,5 +175,21 @@ public class Edu005 {
 
     public void setIsPassed(String isPassed) {
         this.isPassed = isPassed;
+    }
+
+    public String getIsResit() {
+        return isResit;
+    }
+
+    public void setIsResit(String isResit) {
+        this.isResit = isResit;
+    }
+
+    public String getIsConfirm() {
+        return isConfirm;
+    }
+
+    public void setIsConfirm(String isConfirm) {
+        this.isConfirm = isConfirm;
     }
 }

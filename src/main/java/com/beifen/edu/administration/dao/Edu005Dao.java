@@ -34,4 +34,16 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据条件检索成绩
     @Query(value = "select * from edu005 t where t.xn = ?1 and t.class_name = ?2 and t.course_name = ?3 and t.student_code = ?4 ",nativeQuery = true)
     Edu005 findOneBySearchInfo(String xn, String className, String courseName, String studentCode);
+
+    //更新确认标识
+    @Transactional
+    @Modifying
+    @Query(value = "update edu005 t set t.is_confirm = 'T' where t.Edu005_ID in ?1", nativeQuery = true)
+    void updateConfirmGrade(List<Long> confirmIdList);
+
+    //更新补考标识
+    @Transactional
+    @Modifying
+    @Query(value = "update edu005 t set t.is_resit = ?2 where t.Edu005_ID in ?1", nativeQuery = true)
+    void updateResitFlag(List<Long> noPassIdList,String passFlag);
 }

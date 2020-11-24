@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //教职工管理业务层
@@ -503,6 +500,84 @@ public class StaffManageService {
         List<CheckOnDetailPO> newCheckOnDetailPO = utils.castEntity(dataList, CheckOnDetailPO.class, checkOnDetailPO);
 
         resultVO = ResultVO.setSuccess("共找到"+newCheckOnDetailPO.size()+"个学生",newCheckOnDetailPO);
+        return resultVO;
+    }
+
+
+    //确认成绩并生成补考标识
+    public ResultVO confirmGrade(Edu005 edu005, String userKey) {
+        ResultVO resultVO;
+        //根据条件筛选成绩表
+        Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                predicates.add(cb.isNull(root.<String>get("isConfirm")));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到可确认的课程或该课程已经进行过确认操作");
+            return resultVO;
+        }
+
+        Long edu201_id = edu005List.get(0).getEdu201_ID();
+        Edu205 edu205 = edu205Dao.findExist(userKey,edu201_id);
+
+        if (edu205 == null) {
+            resultVO = ResultVO.setFailed("您不是该课程的老师无法确认成绩");
+            return resultVO;
+        }
+
+
+        List<Long> confirmIdList = edu005List.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+
+        edu005Dao.updateConfirmGrade(confirmIdList);
+
+        Map<String, List<Edu005>> passMap = edu005List.stream().collect(Collectors.groupingBy(Edu005::getIsPassed, Collectors.toList()));
+
+        passMap.forEach((key,value) -> {
+            if("F".equals(key)) {
+                List<Long> noPassIdList = value.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+                edu005Dao.updateResitFlag(noPassIdList,"T");
+            } else if ("T".equals(key)) {
+                List<Long> passIdList = value.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+                edu005Dao.updateResitFlag(passIdList,"F");
+            }
+        });
+
+        //根据条件筛选成绩表
+        Specification<Edu005> specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> newEdu005List = edu005Dao.findAll(specification);
+
+        resultVO = ResultVO.setSuccess("成绩确认成功",newEdu005List);
+
         return resultVO;
     }
 }
