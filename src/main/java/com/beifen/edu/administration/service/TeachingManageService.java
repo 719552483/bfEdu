@@ -1267,9 +1267,9 @@ public class TeachingManageService {
                     NumberFormat nf = NumberFormat.getPercentInstance();
                     nf.setMinimumFractionDigits(2);//设置保留小数位
                     String checkOnPercent = nf.format(v);
-                    data.setPassingRate(checkOnPercent);
+                    data.setCheckOnRate(checkOnPercent);
                 } else {
-                    data.setPassingRate("0.00%");
+                    data.setCheckOnRate("0.00%");
                 }
             }
 
