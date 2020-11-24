@@ -455,4 +455,15 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 教务查询成绩详情
+     * @return
+     */
+    @RequestMapping("/searchAttendanceDetail")
+    @ResponseBody
+    public ResultVO searchAttendanceDetail(@RequestParam("taskId") String taskId) {
+        ResultVO result = teachingManageService.searchAttendanceDetail(taskId);
+        return result;
+    }
+
 }

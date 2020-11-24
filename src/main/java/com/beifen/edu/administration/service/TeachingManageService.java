@@ -79,6 +79,8 @@ public class TeachingManageService {
     ScheduleViewDao scheduleViewDao;
     @Autowired
     YearScheduleViewDao yearScheduleViewDao;
+    @Autowired
+    CourseCheckOnDao courseCheckOnDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -1338,6 +1340,19 @@ public class TeachingManageService {
         } else {
             resultVO = ResultVO.setSuccess("共找到"+allXn.size()+"条学年信息",allXn);
         }
+        return resultVO;
+    }
+
+    //考勤情况详情
+    public ResultVO searchAttendanceDetail(String taskId) {
+        ResultVO resultVO;
+        List<CourseCheckOnPO> courseCheckOnList = courseCheckOnDao.findAllByEdu201(taskId);
+        if (courseCheckOnList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无考勤信息");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+courseCheckOnList.size()+"条考勤信息",courseCheckOnList);
+        }
+
         return resultVO;
     }
 }
