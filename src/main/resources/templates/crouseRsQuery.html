@@ -201,6 +201,26 @@
 			</div>
 		</div>
 
+	<!-- 出勤情况Modal -->
+	<div class="modal fade bs-example-modal-lg" id="checkOnModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="checkOnForCourseRsTableArea searchGivePaddingR">
+							<table class="tablelist myTableStyle" id="checkOnForCourseRsTable" style="margin-top: 10px;"></table>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="cancel" value="返回"/>
+					</div>
+				</div>
+			</div>
+	</div>
+
 	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-lg" role="document">
@@ -227,7 +247,6 @@
 			</div>
 		</div>
 	</div>
-
 
 	<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">

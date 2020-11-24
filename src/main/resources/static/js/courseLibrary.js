@@ -525,6 +525,7 @@ function comfirmmodifyCourseInfo(row){
 function wantAddClass() {
 	var xbInfo=getXbInfo();
 	droawAddModal(xbInfo);
+	$('#addNewClassModal').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 }
 
 //获取系部成功或的回调

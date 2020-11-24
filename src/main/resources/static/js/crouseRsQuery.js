@@ -44,6 +44,9 @@ function stuffCrouseRsForPresentQueryTable(){
 	window.releaseNewsEvents = {
 		'click #gardeDeatils' : function(e, value, row, index) {
 			getGardeDeatils(row);
+		},
+		'click #checkOnDeatils' : function(e, value, row, index) {
+			checkOnDeatils(row);
 		}
 	};
 
@@ -158,6 +161,7 @@ function stuffCrouseRsForPresentQueryTable(){
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
 		+ '<li class="queryBtn" id="gardeDeatils"><span><img src="img/info.png" style="width:24px"></span>成绩详情</li>'
+		+ '<li class="queryBtn" id="checkOnDeatils"><span><img src="images/d04.png" style="width:24px"></span>出勤情况</li>'
 		+ '</ul>' ].join('');
 	}
 
@@ -218,6 +222,127 @@ function reReloadSearchs(){
 	reReloadSearchsWithSelect(reObject);
 	$("#teacher").attr("choosendTeacherId","");
 	getCourseForPresent();
+}
+
+//出勤情况
+function checkOnDeatils(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAttendanceDetail",
+		data: {
+			"taskId":row.edu201_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffCheckOnTable(backjson.data,row);
+				$.showModal("#checkOnModal",true);
+				$("#checkOnModal").find(".moadalTitle").html(row.kcmc+"-出勤信息");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//渲染出勤情况表格
+function stuffCheckOnTable(tableInfo,row){
+	$('#checkOnForCourseRsTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: row.kcmc+'出勤情况导出'  //文件名称
+		},
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".checkOnForCourseRsTableArea", "出勤信息");
+		},
+		columns: [
+			 {
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'week',
+				title: '周数',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'xqmc',
+				title: '星期',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},  {
+				field: 'kjmc',
+				title: '课节',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'kcmc',
+				title: '课程名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'attendance',
+				title: '出勤率',
+				align: 'left',
+				sortable: true,
+				formatter: attendanceMatter
+			}
+		]
+	});
+
+	function attendanceMatter(value, row, index) {
+		if(value==null||typeof value==="undefined"||value===""){
+			return [ '<span class="label label-default myTooltip" title="未录入">未录入</span>' ]
+				.join('');
+		}else{
+			var currentValue=parseFloat(value.split("%")[0]);
+			if(currentValue>0 && currentValue>=50){
+				return [ '<span class="label label-success myTooltip" title="'+value+'">'+value+'</span>' ]
+					.join('');
+			}else{
+				return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
+					.join('');
+			}
+		}
+	}
+
+	drawPagination(".checkOnForCourseRsTableArea", "出勤信息");
+	drawSearchInput(".checkOnForCourseRsTableArea");
+	changeTableNoRsTip();
+	changeColumnsStyle( ".checkOnForCourseRsTableArea", "出勤信息");
+	toolTipUp(".myTooltip");
 }
 
 //获取详情
