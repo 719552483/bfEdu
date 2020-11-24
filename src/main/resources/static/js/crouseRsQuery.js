@@ -138,6 +138,12 @@ function stuffCrouseRsForPresentQueryTable(tableInfo){
 				width: "100px",
 				formatter :passingRateMatter
 			},{
+				field : 'checkOnRate',
+				title : '出勤率',
+				align : 'left',
+				width: "100px",
+				formatter :checkOnRateMatter
+			},{
 				field : 'action',
 				title : '操作',
 				align : 'center',
@@ -171,6 +177,22 @@ function stuffCrouseRsForPresentQueryTable(tableInfo){
 		}else{
 			return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
 				.join('');
+		}
+	}
+
+	function checkOnRateMatter(value, row, index) {
+		if(value==null||typeof value==="undefined"||value===""){
+			return [ '<span class="label label-default myTooltip" title="未录入">未录入</span>' ]
+				.join('');
+		}else{
+			var currentValue=parseFloat(value.split("%")[0]);
+			if(currentValue>0 && currentValue>=50){
+				return [ '<span class="label label-success myTooltip" title="'+value+'">'+value+'</span>' ]
+					.join('');
+			}else{
+				return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
+					.join('');
+			}
 		}
 	}
 
