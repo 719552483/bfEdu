@@ -113,6 +113,21 @@ function stuffStudentGradeTable(tableInfo) {
 				sortable: true,
 				formatter: gradeMatter
 			}, {
+				field: 'isResit',
+				title: '是否补考',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isResitMatter
+			},
+			{
+				field: 'isConfirm',
+				title: '成绩确认',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isConfirmMatter
+			},{
 				field: 'credit',
 				title: '课程总学分',
 				align: 'left',
@@ -192,6 +207,39 @@ function stuffStudentGradeTable(tableInfo) {
 		}
 	}
 
+	function isResitMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="未录入">未录入</div>'
+			]
+				.join('');
+		} else if(value==="T"){
+			return [
+				'<div class="myTooltip" title="是"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip" title="否"><i class="iconfont icon-chacha redTxt"></i></div>'
+			]
+				.join('');
+		}
+	}
+
+	function isConfirmMatter(value, row, index) {
+		if (value==="T") {
+			return [
+				'<div class="myTooltip" title="已确认"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="未确认">未确认</div>'
+			]
+				.join('');
+		}
+	}
 	drawPagination(".studentGradeTableArea", "成绩信息");
 	drawSearchInput(".studentGradeTableArea");
 	changeTableNoRsTip();

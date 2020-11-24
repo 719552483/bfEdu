@@ -36,7 +36,6 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#xn", str);
 	stuffManiaSelect("#loadForXn", str);
 	stuffManiaSelect("#confirmGradeForXn", str);
-	stuffManiaSelect("#xn_page2", str);
 }
 
 //初始化检索
@@ -116,41 +115,6 @@ function getMajorTrainingSelectInfo() {
 				}
 			}
 		});
-	});
-
-	SelectPublic("#level_page2","#department_page2","#grade_page2","#major_page2");
-	$("#major_page2").change(function() {
-		if(getNormalSelectValue("major_page2")===""){
-			return;
-		}
-		// $.ajax({
-		// 	method : 'get',
-		// 	cache : false,
-		// 	url : "/queryGrades",
-		// 	data: {
-		// 		"SearchCriteria":JSON.stringify(getSearchObject()),
-		// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-		// 	},
-		// 	dataType : 'json',
-		// 	beforeSend: function(xhr) {
-		// 		requestErrorbeforeSend();
-		// 	},
-		// 	error: function(textStatus) {
-		// 		requestError();
-		// 	},
-		// 	complete: function(xhr, status) {
-		// 		requestComplete();
-		// 	},
-		// 	success : function(backjson) {
-		// 		hideloding();
-		// 		if (backjson.code===200) {
-		// 			stuffStudentBaseInfoTable(backjson.data);
-		// 		} else {
-		// 			toastr.warning(backjson.msg);
-		// 			drawStudentBaseInfoEmptyTable();
-		// 		}
-		// 	}
-		// });
 	});
 }
 
