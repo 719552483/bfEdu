@@ -67,11 +67,7 @@ function stuffCrouseRsForPresentQueryTable(){
 			showRefresh: false,                  //是否显示刷新按钮
 			showToggle: false,
 			clickToSelect: true,
-			showExport: true,      //是否显示导出
-			exportDataType: "all",
-			exportOptions:{
-				fileName: '课程合格率导出'  //文件名称
-			},
+			showExport: false,      //是否显示导出
 			striped: true,
 			toolbar: '#toolbar',
 			showColumns: true,
@@ -124,12 +120,6 @@ function stuffCrouseRsForPresentQueryTable(){
 					align : 'left',
 					width: "100px",
 					formatter :passingRateMatter
-				},{
-					field : 'checkOnRate',
-					title : '出勤率',
-					align : 'left',
-					width: "100px",
-					formatter :checkOnRateMatter
 				},{
 					field : 'action',
 					title : '操作',
@@ -189,22 +179,6 @@ function stuffCrouseRsForPresentQueryTable(){
 		}else{
 			return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
 				.join('');
-		}
-	}
-
-	function checkOnRateMatter(value, row, index) {
-		if(row.checkOnRate==null||typeof row.checkOnRate==="undefined"||row.checkOnRate===""){
-			return [ '<span class="label label-default myTooltip" title="未录入">未录入</span>' ]
-				.join('');
-		}else{
-			var currentValue=parseFloat(row.checkOnRate.split("%")[0]);
-			if(currentValue>0 && currentValue>=50){
-				return [ '<span class="label label-success myTooltip" title="'+row.checkOnRate+'">'+row.checkOnRate+'</span>' ]
-					.join('');
-			}else{
-				return [ '<span class="label label-danger myTooltip" title="'+row.checkOnRate+'">'+row.checkOnRate+'</span>' ]
-					.join('');
-			}
 		}
 	}
 
