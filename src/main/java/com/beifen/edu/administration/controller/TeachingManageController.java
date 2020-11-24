@@ -8,6 +8,7 @@ import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.TeachingManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -426,11 +427,8 @@ public class TeachingManageController {
      */
     @RequestMapping("/searchCourseResult")
     @ResponseBody
-    public ResultVO searchCourseResult(@RequestParam("searchInfo") String searchInfo) {
-        Map<String,Object> map = JSON.parseObject(searchInfo, Map.class);
-        CourseResultPO courseResultPO = (CourseResultPO)map.get("searchInfo");
-        PageRequestPO pageRequest = (PageRequestPO)map.get("pageRequest");
-        ResultVO result = teachingManageService.searchCourseResult(courseResultPO,pageRequest);
+    public ResultVO searchCourseResult(@RequestBody CourseResultPagePO courseResultPagePO) {
+        ResultVO result = teachingManageService.searchCourseResult(courseResultPagePO);
         return result;
     }
 

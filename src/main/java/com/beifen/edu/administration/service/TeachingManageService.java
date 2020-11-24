@@ -1206,13 +1206,13 @@ public class TeachingManageService {
     }
 
     //教务查询授课成果
-    public ResultVO searchCourseResult(CourseResultPO courseResultPO,PageRequestPO pageRequest) {
+    public ResultVO searchCourseResult(CourseResultPagePO courseResultPagePO) {
         ResultVO resultVO;
 
         Map<String, Object> returnMap = new HashMap<>();
 
-        Integer pageNumber = pageRequest.getPageNum();
-        Integer pageSize = pageRequest.getPageSize();
+        Integer pageNumber = courseResultPagePO.getPageNum();
+        Integer pageSize = courseResultPagePO.getPageSize();
 
         pageNumber = pageNumber < 0 ? 0 : pageNumber;
         pageSize = pageSize < 0 ? 10 : pageSize;
@@ -1220,17 +1220,17 @@ public class TeachingManageService {
         Specification<Edu201> specification = new Specification<Edu201>() {
             public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                if (courseResultPO.getXnid() != null && !"".equals(courseResultPO.getXnid())) {
-                    predicates.add(cb.equal(root.<String>get("xnid"),  courseResultPO.getXnid()));
+                if (courseResultPagePO.getXnid() != null && !"".equals(courseResultPagePO.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),  courseResultPagePO.getXnid()));
                 }
-                if (courseResultPO.getLs() != null && !"".equals(courseResultPO.getLs())) {
-                    predicates.add(cb.like(root.<String>get("ls"), "%"+courseResultPO.getLs()+"%"));
+                if (courseResultPagePO.getLs() != null && !"".equals(courseResultPagePO.getLs())) {
+                    predicates.add(cb.like(root.<String>get("ls"), "%"+courseResultPagePO.getLs()+"%"));
                 }
-                if (courseResultPO.getClassName() != null && !"".equals(courseResultPO.getClassName())) {
-                    predicates.add(cb.like(root.<String>get("className"), "%"+courseResultPO.getClassName()+"%"));
+                if (courseResultPagePO.getClassName() != null && !"".equals(courseResultPagePO.getClassName())) {
+                    predicates.add(cb.like(root.<String>get("className"), "%"+courseResultPagePO.getClassName()+"%"));
                 }
-                if (courseResultPO.getKcmc() != null && !"".equals(courseResultPO.getKcmc())) {
-                    predicates.add(cb.like(root.<String>get("kcmc"), "%"+courseResultPO.getKcmc()+"%"));
+                if (courseResultPagePO.getKcmc() != null && !"".equals(courseResultPagePO.getKcmc())) {
+                    predicates.add(cb.like(root.<String>get("kcmc"), "%"+courseResultPagePO.getKcmc()+"%"));
                 }
                 predicates.add(cb.equal(root.<String>get("sfsqks"),  "T"));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
