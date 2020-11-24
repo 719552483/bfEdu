@@ -276,37 +276,86 @@ function stuffCheckOnDeatilsArea(checkOnInfo,row){
     if(checkTrueArray.length==0){
         str="<span class='checkZero'>暂无出勤名单...</span>";
     }else{
-        // groupByClass(checkTrueArray);
+        var trueNum=checkTrueArray.length;
+        checkTrueArray=groupByClassName(checkTrueArray);
         for (var i = 0; i < checkTrueArray.length; i++) {
-            str+='<div class="col5 singleCheckOn recordsImg2">'+checkTrueArray[i].studentName+'</div>';
+            var data=checkTrueArray[i].data;
+            str+='<div class="formtitle" style="clear:both;margin-bottom: 5px">' +
+                '<span>'+checkTrueArray[i].name+'</span>' +
+                '</div>';
+            for (var j = 0; j < data.length; j++) {
+                str+='<div class="col5 singleCheckOn recordsImg2">'+data[j].studentName+'</div>';
+            }
         }
     }
     $(".checkTrueArea").append(str);
-    $(".trueNum").html("("+checkTrueArray.length+"人)");
+    $(".trueNum").html("("+trueNum+"人)");
 
     str='';
     //缺勤名单
     if(checkFlaseArray.length==0){
         str="<span class='checkZero'>暂无缺勤名单...</span>";
     }else{
+        var falseNum=checkFlaseArray.length;
+        checkFlaseArray=groupByClassName(checkFlaseArray);
         for (var i = 0; i < checkFlaseArray.length; i++) {
-            str+='<div class="col5 singleCheckOn recordsImg2">'+checkFlaseArray[i].studentName+'</div>';
+            var data=checkFlaseArray[i].data;
+            str+='<div class="formtitle" style="clear:both;margin-bottom: 5px">' +
+                '<span>'+checkFlaseArray[i].name+'</span>' +
+                '</div>';
+            for (var j = 0; j < data.length; j++) {
+                str+='<div class="col5 singleCheckOn recordsImg2">'+data[j].studentName+'</div>';
+            }
         }
     }
     $(".checkFlaseArea").append(str);
-    $(".falseNum").html("("+checkFlaseArray.length+"人)");
+    $(".falseNum").html("("+falseNum+"人)");
 
     str='';
     //未录入名单
     if(checkNulleArray.length==0){
         str="<span class='checkZero'>暂无未录入名单...</span>";
     }else{
+        var nullNum=checkNulleArray.length;
+        checkNulleArray=groupByClassName(checkNulleArray);
         for (var i = 0; i < checkNulleArray.length; i++) {
-            str+='<div class="col5 singleCheckOn recordsImg2">'+checkNulleArray[i].studentName+'</div>';
+            var data=checkNulleArray[i].data;
+            str+='<div class="formtitle" style="clear:both;margin-bottom: 5px">' +
+                '<span>'+checkNulleArray[i].name+'</span>' +
+                '</div>';
+            for (var j = 0; j < data.length; j++) {
+                str+='<div class="col5 singleCheckOn recordsImg2">'+data[j].studentName+'</div>';
+            }
         }
     }
     $(".checkNullArea").append(str);
-    $(".nullNum").html("("+checkNulleArray.length+"人)");
+    $(".nullNum").html("("+nullNum+"人)");
+}
+
+//js -- 对象分组（根据对象的某一属性 year）
+function groupByClassName(arr) {
+    var map = {},
+        dest = [];
+    for(var i = 0; i < arr.length; i++){
+        var ai = arr[i];
+        if(!map[ai.className]){
+            dest.push({
+                id: ai.className,
+                name: ai.className,
+                data: [ai]
+            });
+            map[ai.className] = ai;
+        }else{
+            for(var j = 0; j < dest.length; j++){
+                var dj = dest[j];
+                if(dj.id == ai.className){
+                    dj.data.push(ai);
+                    break;
+                }
+            }
+        }
+    }
+    return dest;
 }
 
 //下载考勤模板
