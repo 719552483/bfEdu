@@ -63,6 +63,8 @@ public class TeachingManageService {
     @Autowired
     Edu005Dao edu005Dao;
     @Autowired
+    Edu208Dao edu208Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     TeachingScheduleViewDao teachingScheduleViewDao;
@@ -1242,6 +1244,8 @@ public class TeachingManageService {
                 ex.printStackTrace();
             }
             Long edu201Id = e.getEdu201_ID();
+
+            //查询及格数据
             String countAll = edu005Dao.countAllByEdu201(edu201Id);
             String countPass = edu005Dao.countPassByEdu201(edu201Id);
             if(Integer.parseInt(countPass) != 0){
@@ -1253,6 +1257,22 @@ public class TeachingManageService {
             } else {
                 data.setPassingRate("0.00%");
             }
+
+            //查询出勤数据
+            String countCheckOnAll = edu208Dao.countAllByEdu201(edu201Id);
+            if(Integer.parseInt(countCheckOnAll) != 0) {
+                String countCheckOnAllPass = edu208Dao.countPassByEdu201(edu201Id);
+                if(Integer.parseInt(countCheckOnAllPass) != 0){
+                    double v = Double.parseDouble(countCheckOnAllPass) / Double.parseDouble(countCheckOnAll);
+                    NumberFormat nf = NumberFormat.getPercentInstance();
+                    nf.setMinimumFractionDigits(2);//设置保留小数位
+                    String checkOnPercent = nf.format(v);
+                    data.setPassingRate(checkOnPercent);
+                } else {
+                    data.setPassingRate("0.00%");
+                }
+            }
+
             courseResultList.add(data);
         }
 

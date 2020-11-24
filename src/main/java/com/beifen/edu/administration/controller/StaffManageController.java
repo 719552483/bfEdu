@@ -492,6 +492,7 @@ public class StaffManageController {
         ResultVO result = administrationPageService.searchAllTeacher(edu101);
         return result;
     }
+
     /**
      * 查询需要录入成绩的名单
      * @param userId
@@ -516,32 +517,6 @@ public class StaffManageController {
         ResultVO result = staffManageService.queryGrades(userId,edu001,edu005);
         return result;
     }
-
-    /**
-     * 查询需要录入补考成绩的名单
-     * @param userId
-     * @param SearchCriteria
-     * @return
-     */
-    @RequestMapping("queryResitGrades")
-    @ResponseBody
-    public ResultVO queryResitGrades(@RequestParam("userId") String userId,@RequestParam("SearchCriteria") String SearchCriteria) {
-        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
-        Edu001 edu001 = new Edu001();
-        edu001.setPycc(jsonObject.getString("level"));
-        edu001.setSzxb(jsonObject.getString("department"));
-        edu001.setNj(jsonObject.getString("grade"));
-        edu001.setZybm(jsonObject.getString("major"));
-        edu001.setXm(jsonObject.getString("studentName"));
-        edu001.setXh(jsonObject.getString("studentNumber"));
-        edu001.setXzbname(jsonObject.getString("className"));
-        Edu005 edu005 = new Edu005();
-        edu005.setCourseName(jsonObject.getString("courseName"));
-        edu005.setXnid(jsonObject.getString("xnid"));
-        ResultVO result = staffManageService.queryResitGrades(userId,edu001,edu005);
-        return result;
-    }
-
 
     /**
      * 录入或修改成绩
@@ -754,7 +729,6 @@ public class StaffManageController {
 
     /**
      * 校验导入考勤情况文件
-     * @param file
      * @return
      */
     @RequestMapping("searchCourseCheckOnDetail")

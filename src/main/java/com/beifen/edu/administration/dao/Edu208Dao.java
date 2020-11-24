@@ -32,4 +32,11 @@ public interface Edu208Dao extends  JpaRepository<EDU208, Long>,JpaSpecification
             "  and a.EDU203_ID = ?1" +
             "  and a.TEACHER_TYPE = '01'",nativeQuery = true)
     List<Object[]> findAllByEdu203ID(String courseId);
+
+    //查询出勤总数
+    @Query(value = "select to_char(count(0)) from edu208 t where t.Edu201_ID =?1",nativeQuery = true)
+    String countAllByEdu201(Long edu201Id);
+
+    @Query(value = "select to_char(count(0)) from edu208 t where t.Edu201_ID =?1 and t.on_check_flag = '01'",nativeQuery = true)
+    String countPassByEdu201(Long edu201Id);
 }

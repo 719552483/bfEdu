@@ -11,6 +11,7 @@ public class CourseResultPO {
     private String ls;//老师
     private String lsmc;//老师姓名
     private String passingRate; //及格率
+    private String checkOnRate; //出勤率
 
     public CourseResultPO(){}
 
@@ -104,5 +105,13 @@ public class CourseResultPO {
 
     public void setPassingRate(String passingRate) {
         this.passingRate = passingRate;
+    }
+
+    public String getCheckOnRate() {
+        return checkOnRate;
+    }
+
+    public void setCheckOnRate(String checkOnRate) {
+        this.checkOnRate = checkOnRate;
     }
 }
