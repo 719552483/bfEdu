@@ -246,6 +246,10 @@ function stuffStudentGradeTable(tableInfo) {
 
 //预备选择学生
 function wantChooseStudent(){
+	var reObject = new Object();
+	reObject.InputIds = "#chooseStudent_className,#chooseStudent_StudentName,#chooseStudent_number";
+	reReloadSearchsWithSelect(reObject);
+
 	//初始化表格
 	var oTable = new stuffStudentTable();
 	oTable.Init();
