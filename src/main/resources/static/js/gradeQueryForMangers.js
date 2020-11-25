@@ -287,8 +287,7 @@ function stuffStudentTable(){
 			pageNumber: 1, //初始化加载第一页，默认第一页
 			queryParams: queryParams,//请求服务器时所传的参数
 			sidePagination: 'server',//指定服务器端分页
-			pageSize: 10,//单页记录数
-			pageList: [10,20,30,40],//分页步进值
+			pageSize: 5,//单页记录数
 			search: false,
 			silent: false,
 			showRefresh: false,                  //是否显示刷新按钮
