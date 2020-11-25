@@ -275,4 +275,9 @@ public class PageRelatedController {
 	public String checkOnEntryPage() {
 		return "checkOnEntry";
 	}
+
+	@RequestMapping("gradeQueryForMangers")
+	public String gradeQueryForMangersPage() {
+		return "gradeQueryForMangers";
+	}
 }
