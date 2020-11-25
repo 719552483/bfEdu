@@ -163,6 +163,10 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
 		},
+		onDblClickRow : function(row, $element, field) {
+			var index =parseInt($element[0].dataset.index);
+			wantGradeEntry(row,index);
+		},
 		columns: [
 			{
 				field: 'edu005_ID',
