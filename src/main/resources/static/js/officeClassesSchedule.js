@@ -4,8 +4,8 @@ $(function() {
 	binBind();
 	getBmInfo();
 	$('.isSowIndex').selectMania(); // 初始化下拉框
-	deafultSearch();
 	stuffDepartmnet();
+	deafultSearch();
 });
 
 //查询可选二级学院
@@ -19,7 +19,6 @@ function stuffDepartmnet(){
 		},
 		dataType : 'json',
 		success : function(backjson) {
-			hideloding();
 			if (backjson.code===200) {
 				var str = '<option value="seleceConfigTip">请选择</option>';
 				for (var i = 0; i < backjson.data.length; i++) {
@@ -79,7 +78,6 @@ function getBmInfo(){
 		url : "/getPkAndKkInfo",
 		dataType : 'json',
 		success : function(backjson) {
-			hideloding();
 			if (backjson.result) {
 				var roleOptionStr='<option value="seleceConfigTip">请选择部门</option>';
 				var kkbm=backjson.kkbm;
