@@ -794,6 +794,7 @@ function makePlan(row){
 		},
 		success : function(backjson) {
 			hideloding();
+			$(".myPlaceul").append('<li><a>'+row.pyjhmc+'</a></li>');
 			$(".startArea").toggle();
 			$(".culturePlanArea").toggle();
 			$(".edu107Id").html(row.edu107_ID);
@@ -816,6 +817,7 @@ function returnStart(){
 	$(".startArea").toggle();
 	$(".culturePlanArea").toggle();
 	$(".edu107Id,.planName").html("");
+	$('.myPlaceul').find("li:last").remove();
 }
 /**
  * tab3 end
@@ -890,6 +892,7 @@ function stuffMajorTrainingTable(tableInfo) {
 			field : 'sfsckkjh',
 			title : '是否生成开课计划',
 			align : 'center',
+			visible : false,
 			formatter : sfsckkjhMatter
 		}, {
 			field : 'kcmc',
@@ -1838,19 +1841,9 @@ function wantGeneratCoursePaln() {
 					toastr.info('请添加专业课程');
 					return;
 				}
-				if(backjson.data.classInfo.length===0){
-					toastr.info('请添加行政班');
-					return;
-				}
-				if(backjson.data.xnInfo.length===0){
-					toastr.info('暂无学年');
-					return;
-				}
 				$(".GeneratCoursePaln_currentMajorName").html($(".planName")[0].innerText);
 				$(".generatCoursePalnArea").show();
 				$(".culturePlanArea").hide();
-				stuffAllClassArea(backjson.data.classInfo);
-				stuffXnArea(backjson.data.xnInfo);
 				stuffGeneratCoursePalnTable(backjson.data.tableInfo);
 				generatCoursePalnBtnbind();
 			} else {
@@ -1858,32 +1851,6 @@ function wantGeneratCoursePaln() {
 			}
 		}
 	});
-}
-
-//填充学年区域
-function stuffXnArea(xnInfo){
-			var str = '<option value="seleceConfigTip">请选择</option>';
-			for (var i = 0; i < xnInfo.length; i++) {
-				str += '<option value="'+xnInfo[i].edu400_ID+'">'+ xnInfo[i].xnmc+'</option>';
-			}
-	stuffManiaSelect("#generatCourse_xn", str);
-}
-
-//填充班级选择区域
-function stuffAllClassArea(classInfo) {
-	$(".stuffCheckArea").empty();
-	$("#checkAll").attr("checked",true);
-	$("#recheckAll").attr("checked",false);
-	for (var i = 0; i < classInfo.length; i++) {
-		$(".stuffCheckArea").append(
-				'<div class="col4 giveBottom">'
-						+ '<div class="icheck-material-blue">'
-						+ ' <input type="checkbox" id="' + classInfo[i].edu300_ID
-						+ '" checked="true" onclick="singleCheck()"/>'
-						+ ' <label for="' + classInfo[i].edu300_ID + '">'
-						+ classInfo[i].xzbmc + '</label>' + '</div>'
-						+ '</div>');
-	}
 }
 
 var choosendCourse=new Array();
@@ -2061,15 +2028,6 @@ function showCourseInfo(row) {
 // 准备生成开课计划
 function startGeneratCourse() {
 	var courses = $('#generatCourseTable').bootstrapTable('getSelections');
-	if (getNormalSelectValue("generatCourse_xn")==="") {
-		toastr.warning('暂未选择学年');
-		return;
-	}
-
-	if (!checkExamine(".generatCoursePalnArea")) {
-		toastr.warning('暂未选择班级');
-		return;
-	}
 
 	if (courses.length === 0) {
 		toastr.warning('暂未选择课程');
@@ -2082,13 +2040,7 @@ function startGeneratCourse() {
 			return;
 		}
 	}
-	
-	// for (var i = 0; i < courses.length; i++) {
-	// 	if(courses[i].xbsp!=="pass"){
-	// 		toastr.warning('不能选择未通过审核的课程');
-	// 		return;
-	// 	}
-	// }
+
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选班级");
 	$(".remindActionType").html("开课计划");
@@ -2103,29 +2055,15 @@ function startGeneratCourse() {
 
 // 生成班级开课计划
 function confirmAddGeneratCoursePaln() {
-	var checkedClassesIdArray = new Array();
-	var checkedClassesNameArray = new Array();
 	var coursesArray = new Array();
-	var checkedClasses = $(".generatCoursePalnArea").find(".stuffCheckArea").find(".col4").find("input");
-	//获取行政班ID
-	for (var i = 0; i < checkedClasses.length; i++) {
-		if (checkedClasses[i].checked === true) {
-			checkedClassesIdArray.push(checkedClasses[i].id);
-			checkedClassesNameArray.push(checkedClasses[i].nextElementSibling.innerText);
-		}
-	}
-	
+
 	//获取培养计划ID
 	var courses = $('#generatCourseTable').bootstrapTable('getSelections');
 	for (var i = 0; i < courses.length; i++) {
 		coursesArray.push(courses[i].edu108_ID);
 	}
 	var sendObject=new Object();
-	sendObject.classIds=checkedClassesIdArray;
-	sendObject.classNames=checkedClassesNameArray;
 	sendObject.crouses=coursesArray;
-	sendObject.xn=getNormalSelectText("generatCourse_xn");
-	sendObject.xnid=getNormalSelectValue("generatCourse_xn");
 	sendGeneratCoursePalnInfo(sendObject);
 }
 

@@ -389,30 +389,6 @@ function stuffStudentTable(){
 		}
 	}
 
-	function ztMatter(value, row, index) {
-		if (row.zt==="在读") {
-			return [
-				'<div class="myTooltip greenTxt" title="在读">在读</div>'
-			]
-				.join('');
-		} else if(row.zt==="毕业"){
-			return [
-				'<div class="myTooltip normalTxt" title="'+row.zt+'">'+row.zt+'</div>'
-			]
-				.join('');
-		}else if(row.zt==="其他"){
-			return [
-				'<div class="myTooltip" title="'+row.zt+'">'+row.zt+'</div>'
-			]
-				.join('');
-		}else{
-			return [
-				'<div class="myTooltip redTxt" title="'+row.zt+'">'+row.zt+'</div>'
-			]
-				.join('');
-		}
-	}
-
 	return oTableInit;
 }
 
