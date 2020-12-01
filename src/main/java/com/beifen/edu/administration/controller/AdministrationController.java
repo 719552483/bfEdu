@@ -996,7 +996,6 @@ public class AdministrationController {
 		edu108.setKcxzCode(searchObject.getString("coursesNature"));
 		edu108.setKcmc(searchObject.getString("coursesName"));
 		edu108.setKsfsCode(searchObject.getString("testWay"));
-		edu108.setSfsckkjh(searchObject.getString("isSckkjh"));
 		ResultVO result = administrationPageService.culturePlanSeacchCrouse(edu108);
 		return result;
 	}
@@ -2039,6 +2038,11 @@ public class AdministrationController {
 		return returnMap;
 	}
 
+	/**
+	 * 根据关联字段查询二级代码
+	 * @param ejdmglzd
+	 * @return
+	 */
 	@RequestMapping("/queryEdu000")
 	@ResponseBody
 	public List<Edu000> queryEdu000(@RequestParam String ejdmglzd) {
@@ -2048,8 +2052,9 @@ public class AdministrationController {
 
 	/**
 	 * 确认排课
-	 * @param scheduleInfo
+	 * @param edu201Id
 	 * @param scheduleDetail
+	 * @param scatteredClass
 	 * @return
 	 */
 	@RequestMapping("/comfirmSchedule")
