@@ -282,7 +282,7 @@ function stuffAdministrationClassTable(tableInfo){
 
 		function rnrsMatter(value, row, index) {
 			if(row.rnrs===0){
-				return [ '<div class="myTooltip" title="暂未定额">暂未定额</div>' ].join('');
+				return [ '<div class="myTooltip normalTxt" title="暂未定额">暂未定额</div>' ].join('');
 			}else{
 				return [ '<div class="myTooltip" title="'+row.rnrs+'">'+row.rnrs+'人</div>' ].join('');
 			}
@@ -405,7 +405,7 @@ function stuffAdministrationClassDetails(row,ismodify){
 	actionStuffManiaSelectWithDeafult("#addAdministrationClass_major",row.zybm,row.zymc); //专业
 	$("#addAdministrationClass_classCode").val(row.xzbbh);
 	$("#addAdministrationClass_className").val(row.xzbmc);
-	$("#addAdministrationClass_houldNum").val(row.rnrs);
+	// $("#addAdministrationClass_houldNum").val(row.rnrs);
 	$("#addAdministrationClass_selfNum").val(row.zdybjxh);
 }
 
@@ -463,15 +463,15 @@ function confirmModifyAdministrationClass(row){
 	if(typeof NotNullSearchs ==='undefined'){
 		return;
 	}
-	if ($("#addAdministrationClass_houldNum").val()!==""&&isNaN($("#addAdministrationClass_houldNum").val())) {
-		toastr.warning('容纳人数只接受数字参数');
-		return;
-	}
+	// if ($("#addAdministrationClass_houldNum").val()!==""&&isNaN($("#addAdministrationClass_houldNum").val())) {
+	// 	toastr.warning('容纳人数只接受数字参数');
+	// 	return;
+	// }
 
 	var newClassInfo=getAdministrationClassDetails(true);
 	newClassInfo.edu300_ID=row.edu300_ID;
 	newClassInfo.xzbmc=$("#addAdministrationClass_className").val();
-	newClassInfo.rnrs=$("#addAdministrationClass_houldNum").val();
+	// newClassInfo.rnrs=$("#addAdministrationClass_houldNum").val();
 	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
@@ -635,10 +635,10 @@ function getAdministrationClassDetails(ismodify){
 		toastr.warning('班级名称不能为空');
 		return;
 	}
-	if ($("#addAdministrationClass_houldNum").val()!==""&&isNaN($("#addAdministrationClass_houldNum").val())) {
-		toastr.warning('容纳人数只接受数字参数');
-		return;
-	}
+	// if ($("#addAdministrationClass_houldNum").val()!==""&&isNaN($("#addAdministrationClass_houldNum").val())) {
+	// 	toastr.warning('容纳人数只接受数字参数');
+	// 	return;
+	// }
 
 	var newClassObject=new Object();
 	newClassObject.xzbmc=$("#addAdministrationClass_className").val();
@@ -659,7 +659,8 @@ function getAdministrationClassDetails(ismodify){
 //	newClassObject.xqmc=getNormalSelectText("addAdministrationClass_campus");
 //	newClassObject.xqbm=getNormalSelectValue("addAdministrationClass_campus");
 	newClassObject.zxrs=0;
-	$("#addAdministrationClass_houldNum").val()===""?newClassObject.rnrs=0:newClassObject.rnrs=parseInt($("#addAdministrationClass_houldNum").val());
+	newClassObject.rnrs=0;
+	// $("#addAdministrationClass_houldNum").val()===""?newClassObject.rnrs=0:newClassObject.rnrs=parseInt($("#addAdministrationClass_houldNum").val());
 	return newClassObject;
 }
 
@@ -668,7 +669,7 @@ function emptyAdministrationClassDetailsArea(){
 	stuffEJDElement(EJDMElementInfo); //校区
 	LinkageSelectPublic("#addAdministrationClass_level","#addAdministrationClass_department","#addAdministrationClass_garde","#addAdministrationClass_major"); //联动select
 	var reObject = new Object();
-	reObject.InputIds = "#addAdministrationClass_className,#addAdministrationClass_houldNum";
+	reObject.InputIds = "#addAdministrationClass_className";
 	reObject.actionSelectIds = "#addAdministrationClass_department,#addAdministrationClass_garde,#addAdministrationClass_major";
 	reReloadSearchsWithSelect(reObject);
 
