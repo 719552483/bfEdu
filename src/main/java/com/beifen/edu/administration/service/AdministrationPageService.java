@@ -520,6 +520,8 @@ public class AdministrationPageService {
 		for (int i = 0; i < edu108Ids.size(); i++) {
 			String edu108Id = edu108Ids.get(i).toString();
 			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108Id));
+			edu108.setSfsckkjh("T");
+			edu108DAO.save(edu108);
 
 			Edu107 edu107 = edu107DAO.findOne(edu108.getEdu107_ID());
 			Edu206 edu206 = new Edu206();
