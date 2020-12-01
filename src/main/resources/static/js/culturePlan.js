@@ -6,6 +6,9 @@ $(function() {
 	getAllRelationInfo();
 	tab1BtnBind();
 	$("input[type='number']").inputSpinner();
+	$("#addNewRelation_department").change(function() {
+		getMajroByDeparment(getNormalSelectValue("addNewRelation_department"),getNormalSelectValue("addNewRelation_department"));
+	});
 });
 
 /**
@@ -568,10 +571,6 @@ function stuffRelationTipSelect(){
 					}
 					stuffManiaSelect("#addNewRelation_department", str);
 				}
-
-				$("#addNewRelation_department").change(function() {
-					getMajroByDeparment(getNormalSelectValue("addNewRelation_department"),getNormalSelectValue("addNewRelation_department"));
-				});
 
 				//年级下拉框
 				if(allGrade.length!==0){
