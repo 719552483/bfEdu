@@ -91,49 +91,33 @@ public class StudentManageService {
     }
 
     // 为新生生成学号
-    public String getNewStudentXh(String edu300_ID) {
-        String newXh = "";
-        String xzbBm = edu300Dao.queryXzbByEdu300ID(edu300_ID).get(0).getXzbbm();
-        List<Edu001> thisClassAllStudents = edu001Dao.queryStudentInfoByAdministrationClass(edu300_ID);
-        if (thisClassAllStudents.size() != 0) {
-            List<Long> currentXhs = new ArrayList<Long>();
-            for (int i = 0; i < thisClassAllStudents.size(); i++) {
-                currentXhs.add(Long.parseLong(thisClassAllStudents.get(i).getXh()));
-            }
-            int newXhSuffix = 0;
-            String maxXh = String.valueOf(Collections.max(currentXhs));
-            maxXh = maxXh.replace(xzbBm, "");
-            newXhSuffix = Integer.parseInt(maxXh) + 1;
-            if (newXhSuffix <= 9) {
-                newXh = String.valueOf(xzbBm + "00" + newXhSuffix);
-            } else if (newXhSuffix > 9 && newXhSuffix <= 99) {
-                newXh = String.valueOf(xzbBm + "0" + newXhSuffix);
-            } else {
-                newXh = String.valueOf(xzbBm + newXhSuffix);
-            }
-        } else {
-            newXh = xzbBm + "001";
-        }
+    public String getNewStudentXh(Edu001 edu001) {
+        //todo（学号生成规则）
+//        String departmentId = edu001.getSzxb();
+//        String gradeId = edu001.getNj();
+//        String majorId = edu001.getZybm();
+        String classId = edu001.getEdu300_ID();
+        String newXh = "newXh"+classId;
         return newXh;
     }
 
     //添新学生
     public ResultVO<Edu001> addNewStudent(Edu001 edu001) {
-        ResultVO<Edu001> resultVO = new ResultVO<>();
-        // 判断新增学生是否会超过行政班容纳人数
-        boolean studentSpill = administrationClassesIsSpill(edu001.getEdu300_ID());
-        if (studentSpill) {
-            resultVO = ResultVO.setFailed("行政班容纳人数已达上限，请更换班级");
-            return resultVO;
-        }
-        // 判断身份证是否存在
-        boolean IDcardIshave = IDcardIshave(edu001.getSfzh());
-        if (IDcardIshave) {
-            resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
-            return resultVO;
-        }
+            ResultVO<Edu001> resultVO = new ResultVO<>();
+            // 判断新增学生是否会超过行政班容纳人数
+            boolean studentSpill = administrationClassesIsSpill(edu001.getEdu300_ID());
+            if (studentSpill) {
+                resultVO = ResultVO.setFailed("行政班容纳人数已达上限，请更换班级");
+                return resultVO;
+            }
+            // 判断身份证是否存在
+            boolean IDcardIshave = IDcardIshave(edu001.getSfzh());
+            if (IDcardIshave) {
+                resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
+                return resultVO;
+            }
 
-        String newXh = getNewStudentXh(edu001.getEdu300_ID()); //新生的学号
+        String newXh = getNewStudentXh(edu001); //新生的学号
         String yxbz = "1";
         edu001.setYxbz(yxbz);
         edu001.setXh(newXh);
@@ -178,7 +162,6 @@ public class StudentManageService {
         }
         resultVO = ResultVO.setSuccess("成功删除了"+count+"个学生");
         return resultVO;
-
     }
 
     // 修改学生时修改了行政班的情况
@@ -409,7 +392,7 @@ public class StudentManageService {
             for (int i = 0; i < importStudent.size(); i++) {
                 Edu001 edu001 = importStudent.get(i);
                 edu001.setYxbz(yxbz);
-                edu001.setXh(getNewStudentXh(edu001.getEdu300_ID())); //新生的学号
+                edu001.setXh(getNewStudentXh(edu001)); //新生的学号
                 addStudent(edu001); // 新增学生
                 count++;
             }

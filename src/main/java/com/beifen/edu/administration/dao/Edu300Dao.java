@@ -72,7 +72,7 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	void ZxrsMinusOne(String edu300_id);
 
 	//教学任务书查询行政班
-	@Query(value = "select e.* from edu300 e where e.sfsckkjh = 'T' and e.xbbm in ?1", nativeQuery = true)
+	@Query(value = "select e.* from edu300 e where e.xbbm in ?1", nativeQuery = true)
     List<Edu300> findAdministrativeClassForTask(List<String> departments);
 
 	// 根据行政班id集合查询行政班在校人数

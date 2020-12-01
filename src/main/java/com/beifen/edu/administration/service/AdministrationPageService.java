@@ -513,28 +513,13 @@ public class AdministrationPageService {
 	// 确认生成开课计划
 	public ResultVO generatCoursePlan(JSONObject culturePlan) {
 		ResultVO resultVO;
-		JSONArray classArray = culturePlan.getJSONArray("classIds");
-		JSONArray classNames = culturePlan.getJSONArray("classNames");
-		JSONArray edu108Ids = culturePlan.getJSONArray("crouses");
-		String xn = culturePlan.getString("xn");
-		String xnid = culturePlan.getString("xnid");
 
-		String isGeneratCoursePlan = "T";
-		// eud300 行政班更改开课计划属性
-		for (int i = 0; i < classArray.size(); i++) {
-			generatAdministrationCoursePlan(classArray.get(i).toString(), isGeneratCoursePlan);
-		}
+		JSONArray edu108Ids = culturePlan.getJSONArray("crouses");
 
 		// eud108 课程更改开课计划属性
 		for (int i = 0; i < edu108Ids.size(); i++) {
 			String edu108Id = edu108Ids.get(i).toString();
-
 			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108Id));
-			edu108.setXzbmc(classNames.toString());
-			edu108.setEdu300_ID(classArray.toString());
-			edu108.setSfsckkjh((isGeneratCoursePlan));
-			edu108.setXn(xn);
-			edu108.setXnid(xnid);
 
 			Edu107 edu107 = edu107DAO.findOne(edu108.getEdu107_ID());
 			Edu206 edu206 = new Edu206();
@@ -542,8 +527,6 @@ public class AdministrationPageService {
 			edu206.setPyjhmc(edu107.getPyjhmc());
 			edu206.setSffbjxrws("F");
 			edu206.setSfsqks("F");
-			edu206.setXn(xn);
-			edu206.setXnid(xnid);
 			edu206.setKcmc(edu108.getKcmc());
 			edu206.setZxs(edu108.getZxs().toString());
 			edu206.setLlxs(edu108.getLlxs());
@@ -2139,12 +2122,7 @@ public class AdministrationPageService {
 		Edu107 edu107 = edu107DAO.findOne(Long.parseLong(edu107_id));
 		// 培养计划下的课程
 		List<Edu108> couserInfo = queryCulturePlanCouses(Long.parseLong(edu107_id));
-		// 培养计划下的行政班
-		List<Edu300> currentAllAdministrationClasses = queryCulturePlanAdministrationClasses(edu107.getEdu103(), edu107.getEdu104(), edu107.getEdu105(), edu107.getEdu106());
-		List<Edu400> xnInfo = queryAllXn();
 		returnMap.put("tableInfo", couserInfo);
-		returnMap.put("xnInfo", xnInfo);
-		returnMap.put("classInfo", currentAllAdministrationClasses);
 		resultVO = ResultVO.setSuccess("查询成功",returnMap);
 		return resultVO;
 	}
