@@ -256,13 +256,15 @@ function stuffAdministrationClassTable(tableInfo){
 				align : 'left',
 				sortable: true,
 				formatter : paramsMatter
-			},{
-				field : 'rnrs',
-				title : '容纳人数',
-				align : 'left',
-				sortable: true,
-				formatter : rnrsMatter
-			},{
+			},
+			// 	{
+			// 	field : 'rnrs',
+			// 	title : '容纳人数',
+			// 	align : 'left',
+			// 	sortable: true,
+			// 	formatter : rnrsMatter
+			// },
+				{
 				field : 'action',
 				title : '操作',
 				align : 'center',
@@ -280,13 +282,13 @@ function stuffAdministrationClassTable(tableInfo){
 					+ '</ul>' ].join('');
 		}
 
-		function rnrsMatter(value, row, index) {
-			if(row.rnrs===0){
-				return [ '<div class="myTooltip normalTxt" title="暂未定额">暂未定额</div>' ].join('');
-			}else{
-				return [ '<div class="myTooltip" title="'+row.rnrs+'">'+row.rnrs+'人</div>' ].join('');
-			}
-		}
+		// function rnrsMatter(value, row, index) {
+		// 	if(row.rnrs===0){
+		// 		return [ '<div class="myTooltip normalTxt" title="暂未定额">暂未定额</div>' ].join('');
+		// 	}else{
+		// 		return [ '<div class="myTooltip" title="'+row.rnrs+'">'+row.rnrs+'人</div>' ].join('');
+		// 	}
+		// }
 
 		drawPagination(".administrationClassTableArea", "行政班信息");
 		drawSearchInput(".administrationClassTableArea");
