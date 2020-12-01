@@ -506,6 +506,7 @@ function getRelationSelectInfo(){
 	newRelationObject.edu105=relationGardeValue;
 	newRelationObject.edu106=relationMmajorValue;
 	newRelationObject.batchName=batchName;
+	newRelationObject.batch=batch;
 	newRelationObject.pyjhmc=relationName;
 	return newRelationObject;
 }
