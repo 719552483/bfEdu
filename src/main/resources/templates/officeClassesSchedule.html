@@ -109,7 +109,35 @@
 			</div>
        </div>
 
-
+		<!-- 选择学年Modal -->
+		<div class="modal fade bs-example-modal-lg" style="min-width: 600px;" id="chooseXnModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">选择学年</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="searchArea searchAreaWitheSelect" style="padding-right: 36px;margin-top: 20px;">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学年</label>
+										<select class="isSowIndex" id="Xn">
+											<option value="seleceConfigTip">暂无可选学年</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmChooseXn" value="确定"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<!-- 选择班级Modal -->
 		<div class="modal fade bs-example-modal-lg" style="min-width: 600px;" id="chooseClassModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
@@ -143,29 +171,7 @@
 									</div>
 								</ul>
 							</div>
-
-
-<!--							<div class="col1 giveBottom classChooseArea xzbclassChooseArea noneStart">-->
-<!--								<ul class="forminfo">-->
-<!--									<div class="">-->
-<!--										<label class="selectName" style="margin-top: 14px;">可选班级</label>-->
-<!--										<select class="isSowIndex" id="xzbclass">-->
-<!--										</select>-->
-<!--									</div>-->
-<!--								</ul>-->
-<!--							</div>-->
-
-<!--							<div class="col1 giveBottom classChooseArea jxbclassChooseArea">-->
-<!--								<ul class="forminfo">-->
-<!--									<div class="">-->
-<!--										<label class="selectName" style="margin-top: 14px;">可选班级</label>-->
-<!--										<select class="isSowIndex" id="jxbclass">-->
-<!--										</select>-->
-<!--									</div>-->
-<!--								</ul>-->
-<!--							</div>-->
 						</div>
-
 					</div>
 					<div class="clear"></div>
 					<div class="modal-footer tipbtn">

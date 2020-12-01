@@ -167,11 +167,24 @@ function stuffTaskInfoTable(tableInfo) {
 				checkbox: true
 			},
 			{
+				field: 'edu206_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			},
+			{
 				field: 'className',
 				title: '班级-(双击选择)',
 				align: 'left',
 				clickToSelect: false,
 				formatter: classNameMatter
+			},{
+				field: 'xn',
+				title: '学年-(双击选择)',
+				align: 'left',
+				clickToSelect: false,
+				formatter: xnMatter
 			}, {
 				field: 'kcmc',
 				title: '课程',
@@ -213,12 +226,14 @@ function stuffTaskInfoTable(tableInfo) {
 				title: '开课部门-(双击选择)',
 				align: 'left',
 				formatter: kkbmMatter,
+				visible: false,
 				clickToSelect: false
 			},	{
 				field: 'pkbm',
 				title: '排课部门-(双击选择)',
 				align: 'left',
 				formatter: pkbmMatter,
+				visible: false,
 				clickToSelect: false
 			},{
 				field: 'action',
@@ -349,10 +364,76 @@ function onDblClickScheduleClassesTable(row, $element, field){
 		wantChangeKkBM(index,"kkbm");
 	}else if(field==="className"){
 		wantChooseClass(row,"#scheduleClassesTable");
+	}else if(field==="xn"){
+		wantChooseXn(row,"#scheduleClassesTable");
 	}else{
 		return;
 	}
+}
 
+//预备选择学年
+function wantChooseXn(row,tableID){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAllXn",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$.showModal("#chooseXnModal",true);
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					str += '<option value="' + backjson.data[i].edu400_ID + '">' + backjson.data[i].xnmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#Xn", str);
+
+				//确认选择班级
+				$('#confirmChooseXn').unbind('click');
+				$('#confirmChooseXn').bind('click', function(e) {
+					confirmChooseXn(row,tableID);
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//确认选择班级
+function confirmChooseXn(row,tableID){
+	var choosedXn=getNormalSelectValue("Xn");
+	if(choosedXn===""){
+		toastr.warning("暂未选择学年");
+		return;
+	}
+
+	row.xnid=choosedXn;
+	row.xn=getNormalSelectText("Xn");
+	if(tableID==="scheduleClassesTable"){
+		$(tableID).bootstrapTable('updateByUniqueId', {
+			id: row.edu206_ID,
+			row: row
+		});
+	}else{
+		$(tableID).bootstrapTable('updateByUniqueId', {
+			id: row.edu201_ID,
+			row: row
+		});
+	}
+	toolTipUp(".myTooltip");
+	$.hideModal("#chooseXnModal");
 }
 
 //预备选择班级
@@ -781,6 +862,23 @@ function classNameMatter(value, row, index) {
 	}
 }
 
+//学年格式化
+function xnMatter(value, row, index) {
+	if(typeof value==="undefined"||value==null){
+		return [
+			'<div class="myTooltip" title="暂未选择学年，双击选择"><span class="redTxt classTxt'+index+'">暂未选择</span>' +
+			'</div>'
+		].join('');
+	}else{
+		return [
+			'<div class="myTooltip" title="'+value+'"><span class="normalTxt classTxt'+index+'">'+value+'</span>' +
+			'</div>'
+		].join('');
+	}
+}
+
+
+
 //开始检索教师
 function allTeacherStartSearch(){
 	var departmentName=$("#departmentName").val();
@@ -1025,6 +1123,11 @@ function checkPutOutInfo(putOutArray){
 			toastr.warning('有任务书暂未指定班级');
 			return;
 		}
+
+		if(typeof putOutArray[i].xnid==="undefined"||putOutArray[i].xnid==null||putOutArray[i].xnid==""){
+			toastr.warning('有任务书暂未指定学年');
+			return;
+		}
 	}
 
 	$.showModal("#remindModal",true);
@@ -1188,6 +1291,14 @@ function stuffPutOutTaskTable(tableInfo) {
 				formatter: classNameMatter
 			},
 			{
+				field: 'xn',
+				title: '学年-(双击选择)',
+				align: 'left',
+				clickToSelect: false,
+				sortable: true,
+				formatter: xnMatter
+			},
+			{
 				field: 'pyjhmc',
 				title: '培养计划名称',
 				align: 'left',
@@ -1210,6 +1321,7 @@ function stuffPutOutTaskTable(tableInfo) {
 				title: '教学班人数',
 				align: 'left',
 				sortable: true,
+				visible: false,
 				formatter: paramsMatter
 			},	{
 				field: 'lsmc',
@@ -1244,6 +1356,7 @@ function stuffPutOutTaskTable(tableInfo) {
 				align: 'left',
 				sortable: true,
 				formatter: putOutTaskkkbmMatter,
+				visible: false,
 				clickToSelect: false
 			},	{
 				field: 'pkbm',
@@ -1251,6 +1364,7 @@ function stuffPutOutTaskTable(tableInfo) {
 				align: 'left',
 				sortable: true,
 				formatter: putOutTaskpkbmMatter,
+				visible: false,
 				clickToSelect: false
 			},{
 				field: 'sszt',
@@ -1423,6 +1537,8 @@ function onDblClickputOutTaskTable(row, $element, field){
 		wantChangePutOutKKBM(index, "kkbm");
 	}else if(field==="className"){
 		wantChooseClass(row,"#putOutTaskTable");
+	}else if(field==="xn"){
+		wantChooseXn(row,"#putOutTaskTable");
 	}else{
 		return;
 	}
