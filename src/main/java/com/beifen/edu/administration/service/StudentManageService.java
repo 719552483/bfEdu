@@ -325,6 +325,11 @@ public class StudentManageService {
                     resultVO = ResultVO.setFailed("更换行政班需要新的学号，请确认学号后单独修改");
                     return resultVO;
                 }
+                List<Edu001> edu001List = edu001Dao.checkXH(edu001.getXh(), edu001.getEdu001_ID());
+                if(edu001List.size() != 0) {
+                    resultVO = ResultVO.setFailed("新输入的学号已存在，请重新输入");
+                    return resultVO;
+                }
                 updateStudent(oldEdu001,edu001);
             }
         }
