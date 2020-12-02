@@ -102,4 +102,8 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//查询在校学生
 	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006')",nativeQuery = true)
     Long findAllStudent();
+
+	//查询身份证号是否存在
+	@Query(value = "select * from edu001 e where e.sfzh = ?1 and e.Edu001_ID <> ?2 ",nativeQuery = true)
+	List<Edu001> checkIdCard(String sfzh, Long edu001_id);
 }

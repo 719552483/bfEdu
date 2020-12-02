@@ -2272,18 +2272,4 @@ public class AdministrationController {
 		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName);
 		return result;
 	}
-
-	/**
-	 * 学生转班
-	 * @param studentInfo
-	 * @return
-	 */
-
-	@RequestMapping("/changeStudentClass")
-	@ResponseBody
-	public ResultVO changeStudentClass(@RequestParam("studentInfo") String studentInfo) {
-		Edu001 edu001 = JSON.parseObject(studentInfo, Edu001.class);
-		ResultVO result = administrationPageService.changeStudentClass(edu001);
-		return result;
-	}
 }

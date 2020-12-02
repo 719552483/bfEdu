@@ -165,7 +165,7 @@ public class StudentManageService {
     }
 
     // 修改学生时修改了行政班的情况
-    public void updateStudent(Edu001 newStudentInfo) {
+    public void updateStudent(Edu001 oldStudentInfo,Edu001 newStudentInfo) {
         // 新行政班人数加一
         administrationPageService.addAdministrationClassesZXRS(newStudentInfo.getEdu300_ID());
 
@@ -175,6 +175,9 @@ public class StudentManageService {
             String oldXZBId = edu001Dao.queryStudentXzbCode(newStudentInfo.getEdu001_ID().toString());
             administrationPageService.cutAdministrationClassesZXRS(oldXZBId);
         }
+
+
+        administrationPageService.changeStudentClass(oldStudentInfo,newStudentInfo);
 
         // 修改学生
         edu001Dao.save(newStudentInfo);
@@ -287,70 +290,46 @@ public class StudentManageService {
 
 
     public ResultVO modifyStudent(Edu001 edu001, Edu600 edu600) {
-        ResultVO resultVO = new ResultVO();
-        List<Edu001> currentAllStudent = queryAllStudent();
+        ResultVO resultVO;
+        Edu001 oldEdu001 = queryStudentBy001ID(edu001.getEdu001_ID().toString());
         // 判断身份证是否存在
-        boolean IdcardHave= false;
-        for (int i = 0; i < currentAllStudent.size(); i++) {
-            if (!currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())
-                    && currentAllStudent.get(i).getSfzh().equals(edu001.getSfzh())) {
-                IdcardHave = true;
-                break;
-            }
-        }
-        if(IdcardHave) {
+        List<Edu001> cardList = edu001Dao.checkIdCard(edu001.getSfzh(),edu001.getEdu001_ID());
+        if(cardList.size() != 0) {
             resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
             return resultVO;
         }
 
+        //如果修改操作为修改学生状态为休学 发送审批流对象
+        if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
+            edu001.setZtCode("007");
+            edu001.setZt("休学申请中");
+            edu600.setBusinessKey(edu001.getEdu001_ID());
+            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+            if (!isSuccess) {
+                resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+                return resultVO;
+            }
+        }
 
         // 判断是否改变行政班
-        boolean isChangeXZB = false;
-        for (int i = 0; i < currentAllStudent.size(); i++) {
-            if (currentAllStudent.get(i).getEdu001_ID().equals(edu001.getEdu001_ID())) {
-                if (currentAllStudent.get(i).getEdu300_ID() == null
-                        || currentAllStudent.get(i).getEdu300_ID().equals("")) {
-                    isChangeXZB = true;
-                    break;
-                } else {
-                    if (!currentAllStudent.get(i).getEdu300_ID().equals(edu001.getEdu300_ID())) {
-                        isChangeXZB = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        // 不存在则修改学生
-        if (!IdcardHave) {
-            //如果修改操作为修改学生状态为休学 发送审批流对象
-            Edu001 oldEdu001 = queryStudentBy001ID(edu001.getEdu001_ID().toString());
-            if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
-                edu001.setZtCode("007");
-                edu001.setZt("休学申请中");
-                edu600.setBusinessKey(edu001.getEdu001_ID());
-            }
-            if (!isChangeXZB) {
-               edu001Dao.save(edu001);
+        if (oldEdu001.getEdu300_ID() == edu001.getEdu300_ID()) {
+           edu001Dao.save(edu001);
+        } else {
+            // 判断修改是否会超过行政班容纳人数
+            boolean studentSpill = administrationClassesIsSpill(edu001.getEdu300_ID());
+            if(studentSpill){
+                resultVO = ResultVO.setFailed("行政班容纳人数已达上限，请更换班级");
+                return resultVO;
             } else {
-                // 判断修改是否会超过行政班容纳人数
-                boolean studentSpill = administrationClassesIsSpill(edu001.getEdu300_ID());
-                if(studentSpill){
-                    resultVO = ResultVO.setFailed("行政班容纳人数已达上限，请更换班级");
+                if(edu001.getXh().equals(oldEdu001.getXh())) {
+                    resultVO = ResultVO.setFailed("更换行政班需要新的学号，请确认学号后单独修改");
                     return resultVO;
-                } else {
-                    updateStudent(edu001);
                 }
-            }
-            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-            if (isSuccess) {
-                resultVO = ResultVO.setSuccess("学生信息修改成功",edu001);
-            } else {
-                edu001Dao.save(oldEdu001);
-                resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+                updateStudent(oldEdu001,edu001);
             }
         }
+
+        resultVO = ResultVO.setSuccess("学生信息修改成功",edu001);
         return resultVO;
     }
 
@@ -432,22 +411,23 @@ public class StudentManageService {
             }
         }
 
-        Integer count = 0;
+        List<Edu001> oldList = new ArrayList<>();
         if(!returnMap.get("importStudent").equals("")){
             List<Edu001> modifyStudents = (List<Edu001>) returnMap.get("importStudent");
             for (int i = 0; i < modifyStudents.size(); i++) {
-                //如果修改操作为修改学生状态为休学 发送审批流对象
-                Edu001 oldEdu001 = queryStudentBy001ID(modifyStudents.get(i).getEdu001_ID().toString());
-                if(modifyStudents.get(i).getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
-                    modifyStudents.get(i).setZtCode("007");
-                    modifyStudents.get(i).setZt("休学申请中");
-                    edu600.setBusinessKey(modifyStudents.get(i).getEdu001_ID());
+                ResultVO modifyResult = modifyStudent(modifyStudents.get(i), edu600);//修改学生
+
+                if(!(modifyResult.getCode() == 200)) {
+                    for (Edu001 e : oldList) {
+                        edu001Dao.save(e);
+                    }
+                    resultVO = ResultVO.setFailed ("修改"+modifyStudents.get(i).getXm()+"时,发现"+modifyResult.getMsg());
+                    return resultVO;
+                } else {
+                    oldList.add((Edu001)modifyResult.getData());
                 }
-                updateStudent(modifyStudents.get(i)); //修改学生
-                approvalProcessService.initiationProcess(edu600);
-                count++;
             }
-            resultVO = ResultVO.setSuccess("成功修改了"+count+"个学生",modifyStudents);
+            resultVO = ResultVO.setSuccess("成功修改了"+modifyStudents.size()+"个学生",modifyStudents);
         }
 
         return resultVO;
