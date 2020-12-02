@@ -429,7 +429,9 @@ public class StudentManageService {
                     resultVO = ResultVO.setFailed ("修改"+modifyStudents.get(i).getXm()+"时,发现"+modifyResult.getMsg());
                     return resultVO;
                 } else {
-                    oldList.add((Edu001)modifyResult.getData());
+                    if(oldList.size() != 0) {
+                        oldList.add((Edu001)modifyResult.getData());
+                    }
                 }
             }
             resultVO = ResultVO.setSuccess("成功修改了"+modifyStudents.size()+"个学生",modifyStudents);
