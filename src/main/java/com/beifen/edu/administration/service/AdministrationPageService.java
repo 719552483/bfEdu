@@ -2872,7 +2872,7 @@ public class AdministrationPageService {
 		if(edu201List.size() != 0) {
 			for (Edu201 edu201 : edu201List) {
 				Edu005 edu005 = new Edu005();
-				edu005.setEdu101_ID(oldEdu001.getEdu001_ID());
+				edu005.setEdu001_ID(oldEdu001.getEdu001_ID());
 				edu005.setEdu201_ID(edu201.getEdu201_ID());
 				edu005.setEdu300_ID(Long.parseLong(newEdu001.getEdu300_ID()));
 				edu005.setCourseName(edu201.getKcmc());
