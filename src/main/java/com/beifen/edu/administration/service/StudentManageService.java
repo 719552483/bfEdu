@@ -175,8 +175,6 @@ public class StudentManageService {
             String oldXZBId = edu001Dao.queryStudentXzbCode(newStudentInfo.getEdu001_ID().toString());
             administrationPageService.cutAdministrationClassesZXRS(oldXZBId);
         }
-
-
         administrationPageService.changeStudentClass(oldStudentInfo,newStudentInfo);
 
         // 修改学生
@@ -313,7 +311,8 @@ public class StudentManageService {
 
         // 判断是否改变行政班
         if (oldEdu001.getEdu300_ID() == edu001.getEdu300_ID()) {
-           edu001Dao.save(edu001);
+            edu001.setXh(oldEdu001.getXh());
+            edu001Dao.save(edu001);
         } else {
             // 判断修改是否会超过行政班容纳人数
             boolean studentSpill = administrationClassesIsSpill(edu001.getEdu300_ID());
@@ -321,7 +320,7 @@ public class StudentManageService {
                 resultVO = ResultVO.setFailed("行政班容纳人数已达上限，请更换班级");
                 return resultVO;
             } else {
-                if(edu001.getXh().equals(oldEdu001.getXh())) {
+                if(edu001.getXh() == null || "".equals(edu001.getXh())) {
                     resultVO = ResultVO.setFailed("更换行政班需要新的学号，请确认学号后单独修改");
                     return resultVO;
                 }
