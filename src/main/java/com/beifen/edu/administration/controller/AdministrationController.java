@@ -2232,7 +2232,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 查询行政班
+	 * 任务书查询行政班
 	 * @param searchInfo
 	 * @return
 	 */
@@ -2245,7 +2245,24 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 查询行政班
+	 * 查询所有年级
+	 * @return
+	 */
+	@RequestMapping("/searchAllNj")
+	@ResponseBody
+	public ResultVO searchAllNj() {
+		ResultVO result;
+		List<Edu105> edu105s = administrationPageService.queryAllGrade();
+		if(edu105s.size() != 0) {
+			result = ResultVO.setSuccess("查询成功",edu105s);
+		} else {
+			result = ResultVO.setFailed("未找到年级信息");
+		}
+		return result;
+	}
+
+	/**
+	 * 任务书查询教学班
 	 * @param teachingClassName
 	 * @return
 	 */
@@ -2253,6 +2270,22 @@ public class AdministrationController {
 	@ResponseBody
 	public ResultVO taskSearchTeachingClass(@RequestParam("teachingClassName") String teachingClassName) {
 		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName);
+		return result;
+	}
+
+	/**
+	 * 学生转班
+	 * @param oldStudentInfo
+	 * @param newStudentInfo
+	 * @return
+	 */
+
+	@RequestMapping("/changeStudentClass")
+	@ResponseBody
+	public ResultVO changeStudentClass(@RequestParam("oldStudentInfo") String oldStudentInfo,@RequestParam("newStudentInfo") String newStudentInfo) {
+		Edu001 oldEdu001 = JSON.parseObject(oldStudentInfo, Edu001.class);
+		Edu001 newEdu001 = JSON.parseObject(newStudentInfo, Edu001.class);
+		ResultVO result = administrationPageService.changeStudentClass(oldEdu001,newEdu001);
 		return result;
 	}
 }

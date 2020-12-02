@@ -129,4 +129,10 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 	@Query(value = "select distinct t.xnid from Edu201 t")
     List<String> getYearList();
+
+	@Query(value = "select c.* from edu204 a, edu202 b,edu201 c\n" +
+			"where a.EDU201_ID = b.EDU201_ID\n" +
+			"and c.EDU201_ID = b.EDU201_ID\n" +
+			"and a.EDU300_ID = ?1", nativeQuery = true)
+    List<Edu201> findTaskWithNewClass(String edu300_id);
 }

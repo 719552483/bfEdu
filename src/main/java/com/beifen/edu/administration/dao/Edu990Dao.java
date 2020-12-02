@@ -64,4 +64,10 @@ public interface Edu990Dao extends JpaRepository<Edu990, Long>,JpaSpecificationE
 	//分页查询用户
 	@Query(value = "SELECT * FROM (SELECT t.*,ROWNUM r FROM EDU990 t WHERE ROWNUM <= ?1*?2) WHERE r > (?1-1)*?2",nativeQuery = true)
 	List<Edu990> findAllInPage(Integer pageNum, Integer pageSize);
+
+	//学生转班级修改用户名
+	@Transactional
+	@Modifying
+	@Query(value = "update edu990 t set t.yhm = ?2 where t.yhm = ?1", nativeQuery = true)
+    void changeYhmByStudentXh(String xh, String xh1);
 }

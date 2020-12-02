@@ -108,6 +108,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu993Dao edu993Dao;
 	@Autowired
+	private Edu990Dao edu990Dao;
+	@Autowired
 	private Edu205Dao edu205Dao;
 	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
@@ -2852,6 +2854,54 @@ public class AdministrationPageService {
 		} else {
 			resultVO = ResultVO.setFailed("未找到符合要求的教学班");
 		}
+
+		return resultVO;
+	}
+
+
+	//学生转班级
+	public ResultVO changeStudentClass(Edu001 oldEdu001,Edu001 newEdu001) {
+		ResultVO resultVO;
+		//修改用户名
+		edu990Dao.changeYhmByStudentXh(oldEdu001.getXh(),newEdu001.getXh());
+		//删除成绩表信息
+		edu005Dao.deleteByEdu001Id(oldEdu001.getEdu001_ID());
+		//查询需要生成成绩单的任务书
+		List<Edu201> edu201List = edu201DAO.findTaskWithNewClass(newEdu001.getEdu300_ID());
+		//生成成绩单
+		if(edu201List.size() != 0) {
+			for (Edu201 edu201 : edu201List) {
+				Edu005 edu005 = new Edu005();
+				edu005.setEdu101_ID(oldEdu001.getEdu001_ID());
+				edu005.setEdu201_ID(edu201.getEdu201_ID());
+				edu005.setEdu300_ID(Long.parseLong(newEdu001.getEdu300_ID()));
+				edu005.setCourseName(edu201.getKcmc());
+				edu005.setClassName(newEdu001.getXzbname());
+				edu005.setStudentName(oldEdu001.getXm());
+				edu005.setStudentCode(newEdu001.getXh());
+				edu005.setIsExamCrouse(edu201.getSfxylcj());
+				edu005.setCredit(edu201.getXf());
+				edu005.setXnid(edu201.getXnid());
+				edu005.setXn(edu201.getXn());
+				edu005Dao.save(edu005);
+			}
+		}
+
+		//更新学生信息
+		oldEdu001.setPycc(newEdu001.getPycc());
+		oldEdu001.setPyccmc(newEdu001.getPyccmc());
+		oldEdu001.setSzxb(newEdu001.getSzxb());
+		oldEdu001.setSzxbmc(newEdu001.getSzxb());
+		oldEdu001.setNj(newEdu001.getNj());
+		oldEdu001.setNjmc(newEdu001.getNjmc());
+		oldEdu001.setZybm(newEdu001.getZybm());
+		oldEdu001.setZymc(newEdu001.getZymc());
+		oldEdu001.setEdu300_ID(newEdu001.getEdu300_ID());
+		oldEdu001.setXzbname(newEdu001.getXzbname());
+		oldEdu001.setXh(newEdu001.getXh());
+		edu001DAO.save(oldEdu001);
+
+		resultVO = ResultVO.setSuccess("操作成功");
 
 		return resultVO;
 	}

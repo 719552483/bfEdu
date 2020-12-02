@@ -46,4 +46,11 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Modifying(clearAutomatically = true)
     @Query(value = "update edu005 t set t.is_resit = ?2 where t.Edu005_ID in ?1", nativeQuery = true)
     void updateResitFlag(List<Long> noPassIdList,String passFlag);
+
+
+    //根据学生主键删除成绩表信息
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from edu005 where Edu001_ID = ?1", nativeQuery = true)
+    void deleteByEdu001Id(Long edu001_id);
 }
