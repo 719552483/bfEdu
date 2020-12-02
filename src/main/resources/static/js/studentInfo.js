@@ -746,7 +746,7 @@ function modifyStudent(row,index){
 	LinkageSelectPublic("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy",row.pycc);
 	$("#addStudentxzb").change(function() {
 		$(".XhArea").show();
-		$("#addStudentNum").val("");
+		$("#addStudentNum").val(row.xh);
 	});
 	//修改学生确认按钮
 	$('.confirmBtn').unbind('click');
