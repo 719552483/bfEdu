@@ -1578,6 +1578,10 @@ function confirmModifyStudentInfo() {
 						showImportErrorInfo("#modifyStudentsModal",backjosn.data.checkTxt);
 						return
 					}
+					if(!backjosn.data.matchXh){
+						showImportErrorInfo("#modifyStudentsModal",backjosn.msg);
+						return
+					}
 				}
 	        },beforeSend: function(xhr) {
 	           $(".fileLoadingArea").show();
