@@ -2803,4 +2803,56 @@ public class AdministrationPageService {
 
 		return resultVO;
 	}
+
+	//任务书查询行政班
+	public ResultVO taskSearchAdministrativeClass(Edu300 edu300) {
+		ResultVO resultVO;
+		Specification<Edu300> specification = new Specification<Edu300>() {
+			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
+					predicates.add(cb.like(root.<String>get("xzbmc"), "%"+edu300.getXzbmc()+"%"));
+				}
+				if (edu300.getNjbm() != null && !"".equals(edu300.getNjbm())) {
+					predicates.add(cb.equal(root.<String>get("njbm"), edu300.getNjbm()));
+				}
+				if (edu300.getBatch() != null && !"".equals(edu300.getBatch())) {
+					predicates.add(cb.equal(root.<String>get("batch"), edu300.getBatch()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu300> edu300List = edu300DAO.findAll(specification);
+
+		if (edu300List.size() != 0) {
+			resultVO = ResultVO.setSuccess("共找到"+edu300List.size()+"个行政班",edu300List);
+		} else {
+			resultVO = ResultVO.setFailed("未找到符合要求的行政班");
+		}
+
+		return resultVO;
+	}
+
+	//任务书查询教学班
+	public ResultVO taskSearchTeachingClass(String teachingClassName) {
+		ResultVO resultVO;
+		Specification<Edu301> specification = new Specification<Edu301>() {
+			public Predicate toPredicate(Root<Edu301> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (teachingClassName != null && !"".equals(teachingClassName)) {
+					predicates.add(cb.like(root.<String>get("jxbmc"), "%"+teachingClassName+"%"));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu301> edu301List = edu301DAO.findAll(specification);
+
+		if (edu301List.size() != 0) {
+			resultVO = ResultVO.setSuccess("共找到"+edu301List.size()+"个教学班",edu301List);
+		} else {
+			resultVO = ResultVO.setFailed("未找到符合要求的教学班");
+		}
+
+		return resultVO;
+	}
 }

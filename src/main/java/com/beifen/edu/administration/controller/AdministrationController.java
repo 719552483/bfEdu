@@ -2231,5 +2231,28 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 * 查询行政班
+	 * @param searchInfo
+	 * @return
+	 */
+	@RequestMapping("/taskSearchAdministrativeClass")
+	@ResponseBody
+	public ResultVO taskSearchAdministrativeClass(@RequestParam("searchInfo") String searchInfo) {
+		Edu300 edu300 = JSON.parseObject(searchInfo, Edu300.class);
+		ResultVO result = administrationPageService.taskSearchAdministrativeClass(edu300);
+		return result;
+	}
 
+	/**
+	 * 查询行政班
+	 * @param teachingClassName
+	 * @return
+	 */
+	@RequestMapping("/taskSearchTeachingClass")
+	@ResponseBody
+	public ResultVO taskSearchTeachingClass(@RequestParam("teachingClassName") String teachingClassName) {
+		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName);
+		return result;
+	}
 }
