@@ -147,29 +147,84 @@
 						<div class="tiptop"><span class="moadalTitle">选择班级</span><a class="cancel" shape="rect"></a></div>
 					</div>
 					<div class="modal-body">
-						<div class="searchArea searchAreaWitheSelect" style="padding-right: 36px;">
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">班级类型</label>
-										<select class="isSowIndex" id="classType">
-											<option value="seleceConfigTip">请选择</option>
-											<option value="01">行政班</option>
-											<option value="02">教学班</option>
-										</select>
-									</div>
+						<div id="usual1" class="usual">
+							<div class="itab">
+								<ul>
+									<li><a href="#tab1" class="selected" calssType="01">行政班</a></li>
+									<li><a href="#tab2" calssType="02">教学班</a></li>
 								</ul>
 							</div>
 
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">可选班级</label>
-										<select class="isSowIndex" id="class">
-											<option value="seleceConfigTip">暂无选择</option>
-										</select>
+							<div id="tab1" class="tabson myTabson">
+								<div class="tools paddingL" style="padding-top:1%">
+									<ul class="toolbar" style="float: none">
+										<li class="click" id="xzb_StartSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+										<li class="click" id="xzb_ReSearch"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+									</ul>
+								</div>
+
+								<div class="searchArea moreInfoSelectStyle">
+									<div class="col3 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;">年级</label>
+												<select class="isSowIndex" id="grade">
+													<option value="seleceConfigTip">暂无年级</option>
+												</select>
+											</div>
+										</ul>
 									</div>
-								</ul>
+
+									<div class="col3 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;">批次</label>
+												<select class="isSowIndex" id="batch">
+													<option value="seleceConfigTip">暂无批次</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+
+									<div class="col3 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 6px;">班级名称</label>
+												<input name="" type="text" class="myInput manyInfoInput"
+													   id="xzbmc" placeholder="请输入行政班名称..." />
+											</div>
+										</ul>
+									</div>
+								</div>
+
+								<div class="xzbTableArea">
+									<table class="tablelist myTableStyle" id="xzbTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>
+								</div>
+							</div>
+
+							<div id="tab2" class="tabson myTabson">
+								<div class="tools paddingL" style="padding-top:1%">
+									<ul class="toolbar" style="float: none">
+										<li class="click" id="jxb_StartSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+										<li class="click" id="jxb_ReSearch"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+									</ul>
+								</div>
+
+								<div class="searchArea moreInfoSelectStyle">
+									<div class="col3 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 6px;">班级名称</label>
+												<input name="" type="text" class="myInput manyInfoInput"
+													   id="jxbmc" placeholder="请输入教学班名称..." />
+											</div>
+										</ul>
+									</div>
+								</div>
+
+								<div class="jxbTableArea">
+									<table class="tablelist myTableStyle" id="jxbTable" data-unique-id="edu301_ID" style="margin-top: 10px;"></table>
+								</div>
 							</div>
 						</div>
 					</div>

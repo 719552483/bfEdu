@@ -2436,6 +2436,11 @@ input:focus{
 	margin-top: 11px;
 }
 
+.jxbTableArea .fixed-table-pagination div.pagination{
+	margin-top: 38px;
+	margin-bottom:0px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

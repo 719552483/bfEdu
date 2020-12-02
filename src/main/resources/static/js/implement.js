@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 
 //获取redies
-function  getFromRedis(keName){
+function getFromRedis(keName){
 	var returnData=new Object();
 	$.ajax({
 		method: 'post',
