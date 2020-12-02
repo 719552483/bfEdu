@@ -426,7 +426,8 @@ public class StudentManageService {
                     for (Edu001 e : oldList) {
                         edu001Dao.save(e);
                     }
-                    resultVO = ResultVO.setFailed ("修改"+modifyStudents.get(i).getXm()+"时,发现"+modifyResult.getMsg());
+                    returnMap.put("matchXh",false);
+                    resultVO = ResultVO.setFailed ("修改"+modifyStudents.get(i).getXm()+"时,发现"+modifyResult.getMsg(),returnMap);
                     return resultVO;
                 } else {
                     if(oldList.size() != 0) {
