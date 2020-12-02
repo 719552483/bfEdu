@@ -8,6 +8,54 @@ $(function() {
 	btnControl();
 	binBind();
 	getStudentInfo();
+	$("#addStudentzy").change(function() {
+		var levelValue = getNormalSelectValue("addStudentpycc");
+		var departmentValue = getNormalSelectValue("addStudentxb");
+		var gradeValue =getNormalSelectValue("addStudentnj");
+		var majorValue =getNormalSelectValue("addStudentzy");
+
+		var culturePlanObject=new Object();
+		culturePlanObject.level=levelValue;
+		culturePlanObject.department=departmentValue;
+		culturePlanObject.grade=gradeValue;
+		culturePlanObject.major=majorValue;
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryCulturePlanAdministrationClasses",
+			data: {
+				"culturePlanInfo":JSON.stringify(culturePlanObject)
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.result) {
+					var str = '<option value="seleceConfigTip">暂无选择</option>';
+					if (backjson.classesInfo.length===0) {
+						toastr.warning('暂无班级');
+					}else{
+						str = '<option value="seleceConfigTip">请选择</option>';
+						for (var i = 0; i < backjson.classesInfo.length; i++) {
+							str += '<option value="' + backjson.classesInfo[i].edu300_ID + '">' + backjson.classesInfo[i].xzbmc
+								+ '</option>';
+						}
+					}
+					stuffManiaSelect("#addStudentxzb", str);
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
 });
 
 //获取所有学生
@@ -573,6 +621,7 @@ function exportStudent(){
 //展示学生详情
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
+	$("#addStudentModal").find(".formtext").hide();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$(".XhArea").show();
 	//清空模态框中元素原始值
@@ -622,7 +671,7 @@ function stuffStudentDetails(row){
 	stuffRelationSelect("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy",row.pycc,row.szxb,row.nj,row.zybm);
 }
 
-//填充可选行政阿布呢
+//填充可选行政班
 function stuffCanChooseClass(pycc,szxb,nj,zybm,edu300_ID){
 	var culturePlanObject=new Object();
 	culturePlanObject.level=pycc;
@@ -684,6 +733,7 @@ function modifyStudent(row,index){
 		return;
 	}
 	$.showModal("#addStudentModal",true);
+	$("#addStudentModal").find(".formtext").show();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$(".XhArea").hide();
 	//清空模态框中元素原始值
@@ -694,58 +744,29 @@ function modifyStudent(row,index){
 	stuffStudentDetails(row);
 	//为模态框联动select绑定事件
 	LinkageSelectPublic("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy",row.pycc);
-	$("#addStudentzy").change(function() {
-		var levelValue = getNormalSelectValue("addStudentpycc");
-		var departmentValue = getNormalSelectValue("addStudentxb");
-		var gradeValue =getNormalSelectValue("addStudentnj");
-		var majorValue =getNormalSelectValue("addStudentzy");
-		
-		var culturePlanObject=new Object();
-		culturePlanObject.level=levelValue;
-		culturePlanObject.department=departmentValue;
-		culturePlanObject.grade=gradeValue;
-		culturePlanObject.major=majorValue;
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/queryCulturePlanAdministrationClasses",
-			data: {
-	             "culturePlanInfo":JSON.stringify(culturePlanObject) 
-	        },
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				hideloding();
-				if (backjson.result) {
-					var str = '<option value="seleceConfigTip">暂无选择</option>';
-					if (backjson.classesInfo.length===0) {
-						toastr.warning('暂无班级');
-					}else{
-						str = '<option value="seleceConfigTip">请选择</option>';
-						for (var i = 0; i < backjson.classesInfo.length; i++) {
-							str += '<option value="' + backjson.classesInfo[i].edu300_ID + '">' + backjson.classesInfo[i].xzbmc
-								+ '</option>';
-						}
-					}
-					stuffManiaSelect("#addStudentxzb", str);
-				} else {
-					toastr.warning('操作失败，请重试');
-				}
-			}
-		});
+	$("#addStudentxzb").change(function() {
+		$(".XhArea").show();
+		$("#addStudentNum").val("");
 	});
 	//修改学生确认按钮
 	$('.confirmBtn').unbind('click');
 	$('.confirmBtn').bind('click', function(e) {
 		var modifyStudentInfo=getAddStudentInfo();
+		var newXh=$("#addStudentNum").val();
+		if(newXh===""){
+			toastr.warning('新学号不能为空');
+			return;
+		}
+
+		if(!checkIsNumber(newXh) && newXh!==""){
+			toastr.warning('新学号必须是数字');
+			return;
+		}
+
+		if(newXh.length<11){
+			toastr.warning('新学号必须大于等于十一位');
+			return;
+		}
 		if(typeof modifyStudentInfo ==='undefined'){
 			return;
 		}
@@ -789,15 +810,15 @@ function confirmModifyStudent(row){
 		return;
 	}
 	modifyStudentInfo.edu001_ID=row.edu001_ID;
-	modifyStudentInfo.xh=row.xh;
+	modifyStudentInfo.xh=$("#addStudentNum").val();;
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/modifyStudent",
 		data: {
-             "updateinfo":JSON.stringify(modifyStudentInfo),
-			 "approvalobect":JSON.stringify(getApprovalobect())
-        },
+			"updateinfo":JSON.stringify(modifyStudentInfo),
+			"approvalobect":JSON.stringify(getApprovalobect())
+		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -817,7 +838,8 @@ function confirmModifyStudent(row){
 				toastr.success(backjson.msg);
 				toolTipUp(".myTooltip");
 			} else {
-				$.hideModal("#remindModal");
+				$.hideModal("#remindModal",false);
+				$.showModal("#addStudentModal",true);
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -919,8 +941,10 @@ function sendStudentRemoveInfo(removeArray){
 
 //预备新增学生
 function wantAddStudent() {
+	$('#addStudentxzb').off('change');
 	//显示模态框
 	$.showModal("#addStudentModal",true);
+	$("#addStudentModal").find(".formtext").hide();
 	$("#addStudentModal").find(".moadalTitle").html("新增学生");
 	$(".XhArea").hide();
 	//清空模态框中元素原始值
