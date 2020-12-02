@@ -2860,8 +2860,9 @@ public class AdministrationPageService {
 
 
 	//学生转班级
-	public ResultVO changeStudentClass(Edu001 oldEdu001,Edu001 newEdu001) {
+	public ResultVO changeStudentClass(Edu001 newEdu001) {
 		ResultVO resultVO;
+		Edu001 oldEdu001 = edu001DAO.findOne(newEdu001.getEdu001_ID());
 		//修改用户名
 		edu990Dao.changeYhmByStudentXh(oldEdu001.getXh(),newEdu001.getXh());
 		//删除成绩表信息

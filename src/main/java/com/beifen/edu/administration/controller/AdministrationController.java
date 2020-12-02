@@ -2275,17 +2275,15 @@ public class AdministrationController {
 
 	/**
 	 * 学生转班
-	 * @param oldStudentInfo
-	 * @param newStudentInfo
+	 * @param studentInfo
 	 * @return
 	 */
 
 	@RequestMapping("/changeStudentClass")
 	@ResponseBody
-	public ResultVO changeStudentClass(@RequestParam("oldStudentInfo") String oldStudentInfo,@RequestParam("newStudentInfo") String newStudentInfo) {
-		Edu001 oldEdu001 = JSON.parseObject(oldStudentInfo, Edu001.class);
-		Edu001 newEdu001 = JSON.parseObject(newStudentInfo, Edu001.class);
-		ResultVO result = administrationPageService.changeStudentClass(oldEdu001,newEdu001);
+	public ResultVO changeStudentClass(@RequestParam("studentInfo") String studentInfo) {
+		Edu001 edu001 = JSON.parseObject(studentInfo, Edu001.class);
+		ResultVO result = administrationPageService.changeStudentClass(edu001);
 		return result;
 	}
 }
