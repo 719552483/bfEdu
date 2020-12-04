@@ -53,4 +53,11 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Modifying(clearAutomatically = true)
     @Query(value = "delete from edu005 where Edu001_ID = ?1", nativeQuery = true)
     void deleteByEdu001Id(Long edu001_id);
+
+
+    //取消成绩确认和补考标识
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update edu005 t set t.is_resit = null , t.is_confirm = null where t.xnid = ?1 and t.course_name = ?2 and t.class_name = ?3", nativeQuery = true)
+    void cancelGradeInfo(String xnid, String courseName, String className);
 }

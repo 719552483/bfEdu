@@ -53,7 +53,12 @@ public class ApprovalProcessService {
     @Autowired
     private Edu112Dao edu112Dao;
     @Autowired
+    private Edu008Dao edu008Dao;
+    @Autowired
+    private StaffManageService staffManageService;
+    @Autowired
     private RedisUtils redisUtils;
+
     @Autowired
     private ReflectUtils utils;
 
@@ -122,6 +127,7 @@ public class ApprovalProcessService {
                 department = edu1071.getEdu104();
                 break;
             case"05":
+            case"07":
                 Edu001 edu001 = edu001Dao.findOne(businessKey);
                 department = edu001.getSzxb();
                 break;
@@ -130,9 +136,9 @@ public class ApprovalProcessService {
                 Edu101 one = edu101Dao.findOne(Long.parseLong(edu112.getTeacherId()));
                 department = one.getSzxb();
                 break;
-            case"07":
-                Edu101 edu101 = edu101Dao.findOne(businessKey);
-                department = edu101.getXm();
+            case"08":
+                Edu008 edu008 = edu008Dao.findOne(businessKey);
+                department = edu008.getDepartmentCode();
                 break;
             default:
                 department = "0000";
@@ -171,8 +177,12 @@ public class ApprovalProcessService {
                 Edu101 edu101 = edu101Dao.findOne(businessKey);
                 keyWord = edu101.getXm();
                 break;
+            case"08":
+                Edu008 edu008 = edu008Dao.findOne(businessKey);
+                keyWord = edu008.getClassName()+edu008.getCourseName();
+                break;
             default:
-                keyWord = "查无此类型";
+                keyWord = "未知类型";
                 break;
         }
         return keyWord;
@@ -345,6 +355,9 @@ public class ApprovalProcessService {
                 case"07":
                     edu101Dao.updateState(businessKey, "pass");
                     break;
+                case"08":
+                    staffManageService.cancelGradeInfo(businessKey);
+                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -373,6 +386,8 @@ public class ApprovalProcessService {
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
                     break;
+                case"08":
+                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -399,6 +414,8 @@ public class ApprovalProcessService {
                     break;
                 case"07":
                     edu101Dao.updateState(businessKey, "nopass");
+                    break;
+                case"08":
                     break;
                 default:
                     isSuccess = false;
@@ -638,6 +655,9 @@ public class ApprovalProcessService {
                 break;
             case"07":
                 object = edu101Dao.queryTeacherBy101ID(businessKey);
+                break;
+            case"08":
+                object = edu008Dao.findOne(Long.parseLong(businessKey));
                 break;
             default:
                 break;

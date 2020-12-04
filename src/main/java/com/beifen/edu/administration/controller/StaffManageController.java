@@ -738,5 +738,18 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 取消成绩确认
+     * @return
+     */
+    @RequestMapping("cancelGrade")
+    @ResponseBody
+    public ResultVO cancelGrade(@RequestParam(value = "gradeInfo") String gradeInfo,@RequestParam(value = "approvalInfo") String approvalInfo){
+        Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
+        Edu600 edu600 = JSON.parseObject(approvalInfo, Edu600.class);
+        ResultVO result = staffManageService.cancelGrade(edu005,edu600);
+        return result;
+    }
+
 
 }

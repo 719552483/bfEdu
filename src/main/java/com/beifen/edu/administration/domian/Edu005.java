@@ -2,7 +2,7 @@ package com.beifen.edu.administration.domian;
 
 import javax.persistence.*;
 
-//学生评价表
+//学生成绩表
 @Entity
 @Table(name="Edu005")
 public class Edu005 {

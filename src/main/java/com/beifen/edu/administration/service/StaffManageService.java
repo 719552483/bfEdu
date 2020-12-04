@@ -56,6 +56,8 @@ public class StaffManageService {
     @Autowired
     Edu203Dao edu203Dao;
     @Autowired
+    Edu008Dao edu008Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     CourseCheckOnDao courseCheckOnDao;
@@ -598,5 +600,71 @@ public class StaffManageService {
         resultVO = ResultVO.setSuccess("成绩确认成功",newEdu005List);
 
         return resultVO;
+    }
+
+
+    //成绩取消确认
+    public ResultVO cancelGrade(Edu005 edu005, Edu600 edu600) {
+        ResultVO resultVO;
+
+        Specification<Edu005> specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005List = edu005Dao.findAll(specification);
+
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到符合条件的成绩，请确认后重新输入");
+            return resultVO;
+        }
+
+        //根据任务书查询二级学院代码
+        Long edu201_id = edu005List.get(0).getEdu201_ID();
+        Edu201 edu201 = edu201Dao.findOne(edu201_id);
+        Edu108 edu1081 = edu108Dao.findOne(edu201.getEdu108_ID());
+        Edu107 edu1071 = edu107Dao.findOne(edu1081.getEdu107_ID());
+        String departmentCode = edu1071.getEdu104();
+
+        //添加取消确认成绩信息表
+        Edu008 edu008 = new Edu008();
+        edu008.setXnid(edu005.getXnid());
+        edu008.setXn(edu005.getXn());
+        edu008.setClassName(edu005.getClassName());
+        edu008.setCourseName(edu005.getCourseName());
+        edu008.setXnid(edu005.getXnid());
+        edu008.setDepartmentCode(departmentCode);
+        edu008Dao.save(edu008);
+
+        //设置业务主键并发起审批
+        edu600.setBusinessKey(edu008.getEdu008_ID());
+        boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+
+        if (isSuccess) {
+            resultVO = ResultVO.setSuccess("审批发起成功");
+        } else {
+            edu008Dao.delete(edu008.getEdu008_ID());
+            resultVO = ResultVO.setFailed("审批流程发起失败，请联系管理员");
+        }
+
+        return resultVO;
+    }
+
+
+    //取消成绩确认标识和补考标识
+    public void cancelGradeInfo(String edu008Id) {
+        Edu008 edu008 = edu008Dao.findOne(Long.parseLong(edu008Id));
+        edu005Dao.cancelGradeInfo(edu008.getXnid(),edu008.getCourseName(),edu008.getClassName());
     }
 }
