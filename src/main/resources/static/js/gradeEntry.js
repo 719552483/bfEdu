@@ -915,7 +915,7 @@ function getApprovalobect(){
 	var approvalObject=new Object();
 	approvalObject.businessType="08";
 	approvalObject.proposerType=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
-	approvalObject.proposerKey=JSON.parse($.session.get('userInfo')).userKey;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;;
 	approvalObject.approvalStyl="1";
 	return approvalObject;
 }
