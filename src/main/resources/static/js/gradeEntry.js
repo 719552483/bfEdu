@@ -902,7 +902,7 @@ function cancelGrade(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				toastr.warning(backjson.msg);
+				toastr.success(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
 			}
