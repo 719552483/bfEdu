@@ -36,6 +36,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#xn", str);
 	stuffManiaSelect("#loadForXn", str);
 	stuffManiaSelect("#confirmGradeForXn", str);
+	stuffManiaSelect("#cancelGradeForXn", str);
 }
 
 //初始化检索
@@ -792,7 +793,7 @@ function confirmGrade(){
 
 	var gradeInfo=new Object();
 	gradeInfo.xnid=xnid;
-	gradeInfo.xn=getNormalSelectText("loadForXn");
+	gradeInfo.xn=getNormalSelectText("confirmGradeForXn");
 	gradeInfo.className=className;
 	gradeInfo.courseName=courseName;
 	$.ajax({
@@ -841,6 +842,92 @@ function reStuffForConfirmGrade(){
 	reReloadSearchsWithSelect(reObject);
 }
 
+//预备取消成绩确认
+function wantCancelGrade(){
+	reStuffForCancelGrade();
+	$.showModal("#cancelGradeModal",true);
+
+	//确认按钮
+	$('#cancelGrade').unbind('click');
+	$('#cancelGrade').bind('click', function(e) {
+		cancelGrade();
+		e.stopPropagation();
+	});
+}
+
+//取消成绩确认
+function cancelGrade(){
+	var xnid=getNormalSelectValue("cancelGradeForXn");
+	var className=$("#cancelGradeForXzbmc").val();
+	var courseName=$("#cancelGradeForKcmc").val();
+	if(xnid===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	if(className===""){
+		toastr.warning("行政班名称不能为空");
+		return;
+	}
+
+	if(courseName===""){
+		toastr.warning("课程班名称不能为空");
+		return;
+	}
+
+	var gradeInfo=new Object();
+	gradeInfo.xnid=xnid;
+	gradeInfo.xn=getNormalSelectText("cancelGradeForXn");
+	gradeInfo.className=className;
+	gradeInfo.courseName=courseName;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/cancelGrade",
+		data: {
+			"gradeInfo":JSON.stringify(gradeInfo),
+			"approvalInfo":JSON.stringify(getApprovalobect())
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				toastr.warning(backjson.msg);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//取消成绩确认审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="08";
+	approvalObject.proposerType=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	approvalObject.proposerKey=JSON.parse($.session.get('userInfo')).userKey;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
+}
+
+//重置确认成绩条件
+function reStuffForCancelGrade(){
+	var reObject = new Object();
+	reObject.InputIds = "#cancelGradeForXzbmc,#cancelGradeForKcmc";
+	reObject.normalSelectIds = "#cancelGradeForXn";
+	reReloadSearchsWithSelect(reObject);
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -884,6 +971,14 @@ function binBind() {
 		wantConfirmGrade();
 		e.stopPropagation();
 	});
+
+	//取消成绩确认
+	$('#wantCancelGrade').unbind('click');
+	$('#wantCancelGrade').bind('click', function(e) {
+		wantCancelGrade();
+		e.stopPropagation();
+	});
+
 
 	//补考成绩录入
 	$('#wantRepeatGrade').unbind('click');
