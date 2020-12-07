@@ -2272,4 +2272,28 @@ public class AdministrationController {
 		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName);
 		return result;
 	}
+
+	/**
+	 * 查询公众号权限
+	 * @return
+	 */
+	@RequestMapping("/selectGzhAuthority")
+	@ResponseBody
+	public ResultVO selectGzhAuthority() {
+		ResultVO result = administrationPageService.selectGzhAuthority();
+		return result;
+	}
+
+	/**
+	 * 修改公众号权限
+	 * @param authorityInfo
+	 * @return
+	 */
+	@RequestMapping("/updateGzhAuthority")
+	@ResponseBody
+	public ResultVO updateGzhAuthority(@RequestParam("authorityInfo") String authorityInfo) {
+		Edu995 edu995 = JSON.parseObject(authorityInfo, Edu995.class);
+		ResultVO result = administrationPageService.updateGzhAuthority(edu995);
+		return result;
+	}
 }

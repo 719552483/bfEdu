@@ -112,6 +112,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu205Dao edu205Dao;
 	@Autowired
+	private Edu995Dao edu995Dao;
+	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
@@ -2903,6 +2905,29 @@ public class AdministrationPageService {
 
 		resultVO = ResultVO.setSuccess("操作成功");
 
+		return resultVO;
+	}
+
+
+	//查询公众号权限
+	public ResultVO selectGzhAuthority() {
+		ResultVO resultVO;
+		List<Edu995> edu995List = edu995Dao.findAll();
+
+		if (edu995List.size() != 0) {
+			resultVO = ResultVO.setSuccess("共找到"+edu995List.size()+"条权限信息",edu995List);
+		} else {
+			resultVO = ResultVO.setFailed("未找到符合要求的教学班");
+		}
+
+		return resultVO;
+	}
+
+	//修改公众号权限
+	public ResultVO updateGzhAuthority(Edu995 edu995) {
+		ResultVO resultVO;
+		edu995Dao.save(edu995);
+		resultVO = ResultVO.setSuccess("修改成功");
 		return resultVO;
 	}
 }

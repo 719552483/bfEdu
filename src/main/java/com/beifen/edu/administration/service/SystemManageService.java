@@ -61,6 +61,8 @@ public class SystemManageService {
     @Autowired
     Edu202Dao edu202Dao;
     @Autowired
+    Edu995Dao edu995Dao;
+    @Autowired
     RedisUtils redisUtils;
     @Autowired
     Edu994Dao edu994Dao;
@@ -279,6 +281,11 @@ public class SystemManageService {
             resultVO = ResultVO.setFailed("角色名重复，请重新输入");
         } else {
             edu991Dao.save(edu991);
+            Edu995 edu995 = new Edu995();
+            edu995.setBF991_ID(edu991.getBF991_ID());
+            edu995.setJs(edu991.getJs());
+            edu991.setAnqx(edu991.getAnqx());
+            edu995Dao.save(edu995);
             resultVO = ResultVO.setSuccess("操作成功",edu991.getBF991_ID());
         }
         return resultVO;
@@ -301,6 +308,8 @@ public class SystemManageService {
             edu992Dao.deleteByEdu991Id(s);
             //删除主表
             edu991Dao.removeRole(s);
+            //删除公众号权限表
+            edu995Dao.deleteByEdu991Id(s);
         }
         resultVO = ResultVO.setSuccess("共计删除了"+roleIdList.size()+"个角色");
         return resultVO;
