@@ -461,7 +461,7 @@ public class AdministrationPageService {
 
 	// 查询某系部下的年级
 	public List<Edu107> departmentMatchGrade(String departmentCode) {
-		List<Edu107> edu107s = edu107DAO.departmentMatchGrade(departmentCode);
+		List<Edu107> edu107s = edu107DAO.findAll();
 		return edu107s;
 	}
 
