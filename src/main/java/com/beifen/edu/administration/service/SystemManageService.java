@@ -624,7 +624,7 @@ public class SystemManageService {
     public ResultVO removeSecondaryCode(List<String> deleteArray) {
         ResultVO resultVO;
         edu000Dao.deleteInEdu000Ids(deleteArray);
-        resultVO = ResultVO.setSuccess("共删除了"+deleteArray.size()+"个教学点");
+        resultVO = ResultVO.setSuccess("共删除了"+deleteArray.size()+"个二级代码");
         return resultVO;
     }
 
