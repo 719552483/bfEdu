@@ -43,7 +43,7 @@ function stufflocalInfoTable(tableInfo) {
         }
     };
 
-    $('#localInfoTable').bootstrapTable('destroy').bootstrapTable({
+    $('#localPointAssestTable').bootstrapTable('destroy').bootstrapTable({
         data: tableInfo,
         pagination: true,
         pageNumber: 1,
@@ -70,11 +70,7 @@ function stufflocalInfoTable(tableInfo) {
             toolTipUp(".myTooltip");
         },
         columns: [
-            {
-                field: 'check',
-                checkbox: true,
-            },{
-                field: 'edu501Id',
+            {     field: 'edu501Id',
                 title: '唯一标识',
                 align: 'center',
                 sortable: true,
