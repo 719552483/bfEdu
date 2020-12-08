@@ -54,9 +54,6 @@ function stufflocalInfoTable(tableInfo) {
         },
         columns: [
             {
-                field: 'check',
-                checkbox: true,
-            },{
                 field: 'edu500Id',
                 title: '唯一标识',
                 align: 'center',
