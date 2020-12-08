@@ -301,6 +301,20 @@ function groupChangeAction() {
 			}
 		}
 	}
+	var allHide=true;
+	var allbacimg=$(".bacimg");
+	for (var i = 0; i < allbacimg.length; ++i) {
+		if(allbacimg[i].style.display==="block"){
+			allHide=false;
+			break;
+		}
+	}
+
+	if(allHide){
+		$(".noAuthorityArea").show()
+	}else{
+		$(".noAuthorityArea").hide()
+	}
 }
 
 
