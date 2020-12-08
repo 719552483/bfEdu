@@ -26,7 +26,7 @@ function stufflocalInfoTable(tableInfo) {
         }
     };
 
-    $('#localInfoTable').bootstrapTable('destroy').bootstrapTable({
+    $('#localAssetsTable').bootstrapTable('destroy').bootstrapTable({
         data: tableInfo,
         pagination: true,
         pageNumber: 1,
