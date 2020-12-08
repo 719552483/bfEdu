@@ -15,6 +15,7 @@ function drawlocalInfoTableEmptyTable() {
     stufflocalInfoTable({});
 }
 
+var choosend=new Array();
 //渲染教学点表
 function stufflocalInfoTable(tableInfo) {
     window.releaseNewsEvents = {
@@ -49,8 +50,23 @@ function stufflocalInfoTable(tableInfo) {
         sidePagination: "client",
         toolbar: '#toolbar',
         showColumns: true,
+        onCheck : function(row) {
+            onCheckRelation(row);
+        },
+        onUncheck : function(row) {
+            onUncheckRelation(row);
+        },
+        onCheckAll : function(rows) {
+            onCheckAllRelation(rows);
+        },
+        onUncheckAll : function(rows,rows2) {
+            onUncheckAllRelation(rows2);
+        },
         onPageChange: function() {
-            drawPagination(".localInfoTableArea", "教学任务点信息");
+            drawPagination(".localInfoTableArea", "二级代码信息");
+            for (var i = 0; i < choosend.length; i++) {
+                $("#localInfoTable").bootstrapTable("checkBy", {field:"bf000_ID", values:[choosend[i].bf000_ID]})
+            }
         },
         onPostBody: function() {
             toolTipUp(".myTooltip");
@@ -60,7 +76,7 @@ function stufflocalInfoTable(tableInfo) {
                 field: 'check',
                 checkbox: true,
             },{
-                field: 'edu000Id',
+                field: 'bf000_ID',
                 title: '唯一标识',
                 align: 'center',
                 sortable: true,
@@ -118,6 +134,60 @@ function stufflocalInfoTable(tableInfo) {
     changeColumnsStyle(".localInfoTableArea", "二级代码信息");
     toolTipUp(".myTooltip");
     btnControl();
+}
+
+//单选学生
+function onCheckRelation(row){
+    if(choosend.length<=0){
+        choosend.push(row);
+    }else{
+        var add=true;
+        for (var i = 0; i < choosend.length; i++) {
+            if(choosend[i].bf000_ID===row.bf000_ID){
+                add=false;
+                break;
+            }
+        }
+        if(add){
+            choosend.push(row);
+        }
+    }
+}
+
+//单反选学生
+function onUncheckRelation(row){
+    if(choosend.length<=1){
+        choosend.length=0;
+    }else{
+        for (var i = 0; i < choosend.length; i++) {
+            if(choosend[i].bf000_ID===row.bf000_ID){
+                choosend.splice(i,1);
+            }
+        }
+    }
+}
+
+//全选学生
+function onCheckAllRelation(row){
+    for (var i = 0; i < row.length; i++) {
+        choosend.push(row[i]);
+    }
+}
+
+//全反选学生
+function onUncheckAllRelation(row){
+    var a=new Array();
+    for (var i = 0; i < row.length; i++) {
+        a.push(row[i].bf000_ID);
+    }
+
+
+    for (var i = 0; i < choosend.length; i++) {
+        if(a.indexOf(choosend[i].bf000_ID)!==-1){
+            choosend.splice(i,1);
+            i--;
+        }
+    }
 }
 
 //单个删除二级代码

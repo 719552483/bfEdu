@@ -35,7 +35,7 @@ function getallRole() {
 				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
 			}else{
 				for (var i = 0; i < roleOption.length; i++) {
-					roleOptionStr += '<option value="' +  roleOption[i].bf991_ID + '">' +  roleOption[i].js + '</option>';
+					roleOptionStr += '<option value="' +  roleOption[i].bf990_ID + '">' +  roleOption[i].js + '</option>';
 				}
 			}
 
@@ -250,6 +250,7 @@ function getUserInfo() {
 	oTable.Init();
 }
 
+var choosend=new Array();
 //填充所有用户table
 function stuffTable() {
 	window.allUserEvents = {
@@ -284,6 +285,7 @@ function stuffTable() {
 			pageList: [10,20,30,40],//分页步进值
 			search: false,
 			silent: false,
+			clickToSelect: true,
 			showRefresh: false,                  //是否显示刷新按钮
 			showToggle: false,
 			onPostBody: function() {
@@ -293,7 +295,27 @@ function stuffTable() {
 				toolTipUp(".myTooltip");
 				changeColumnsStyle(".allUserTableArea", "用户信息");
 			},
-			onPageChange: function() {drawPagination(".allUserTableArea", "用户信息");},
+			onCheck : function(row) {
+				onCheckRelation(row);
+			},
+			onUncheck : function(row) {
+				onUncheckRelation(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllRelation(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllRelation(rows2);
+			},
+			onPageChange: function() {
+				drawPagination(".allUserTableArea", "用户信息");
+
+			},
+			onPostBody: function() {
+				for (var i = 0; i < choosend.length; i++) {
+					$("#allUserTable").bootstrapTable("checkBy", {field:"bf990_ID", values:[choosend[i].bf990_ID]})
+				}
+			},
 			columns: [	{
 							field: 'check',
 							checkbox: true
@@ -333,6 +355,7 @@ function stuffTable() {
 							title: '操作',
 							align: 'center',
 							width: '16%',
+							clickToSelect: false,
 							formatter: allUserFormatter,
 							events: allUserEvents,
 						}],
@@ -419,6 +442,60 @@ function stuffTable() {
 	}
 
 	return oTableInit;
+}
+
+//单选学生
+function onCheckRelation(row){
+	if(choosend.length<=0){
+		choosend.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosend.length; i++) {
+			if(choosend[i].bf990_ID===row.bf990_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosend.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckRelation(row){
+	if(choosend.length<=1){
+		choosend.length=0;
+	}else{
+		for (var i = 0; i < choosend.length; i++) {
+			if(choosend[i].bf990_ID===row.bf990_ID){
+				choosend.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllRelation(row){
+	for (var i = 0; i < row.length; i++) {
+		choosend.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllRelation(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].bf990_ID);
+	}
+
+
+	for (var i = 0; i < choosend.length; i++) {
+		if(a.indexOf(choosend[i].bf990_ID)!==-1){
+			choosend.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //修改用户
@@ -630,7 +707,7 @@ function getRoleMoreSelectVALUES(id) {
 	var valuesNames =new Array();
 	for (var r = 0; r < roleOption.length; r++) {
 		for (var v = 0; v < values.length; v++) {
-			if(roleOption[r].bf991_ID===parseInt(values[v])){
+			if(roleOption[r].bf990_ID===parseInt(values[v])){
 				valuesNames.push(roleOption[r].js);
 			}
 		}
