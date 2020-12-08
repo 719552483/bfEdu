@@ -276,6 +276,11 @@ public class PageRelatedController {
 		return "checkOnEntry";
 	}
 
+	@RequestMapping("gzhMenuManger")
+	public String gzhMenuMangerPage() {
+		return "gzhMenuManger";
+	}
+
 	@RequestMapping("gradeQueryForMangers")
 	public String gradeQueryForMangersPage() {
 		return "gradeQueryForMangers";

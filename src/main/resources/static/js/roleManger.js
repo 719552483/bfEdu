@@ -12,9 +12,7 @@ function drawAuthorityGroup() {
 	var str = '<option value="全部">全部</option>';
 	var allMenuParents = $(parent.frames["leftFrame"].document).find(".leftmenu").find('.title'); //frame获取父窗口中的menu
 	for (var i = 0; i < allMenuParents.length; i++) {
-		if (i !== 0) {
-			str += '<option value="' + allMenuParents[i].innerText + '">' + allMenuParents[i].innerText + '</option>';
-		}
+		str += '<option value="' + allMenuParents[i].innerText + '">' + allMenuParents[i].innerText + '</option>';
 	}
 	$("#authorityGroup").append(str);
 	$('.isSowIndex').selectMania(); //初始化下拉框
@@ -441,7 +439,6 @@ function getAllRoleInfo() {
 			hideloding();
 			if (backjson.code === 200) {
 				stuffTable(backjson.data.allRole);
-				toastr.info(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -582,7 +579,7 @@ function showRoleAuthoritys(row, index) {
 function canleShowRoleAuthoritys(row, index) {
 	$("#tab1,#canleShowRoleAuthoritys,.formtext").hide();
 	$("#addRole,#tab2,#shortcutsAllChose,#shortcutsRefresh,.forminfo").show();
-	choseCurrentAuthoritys(row, index)
+	// choseCurrentAuthoritys(row, index)
 }
 
 //修改角色
@@ -593,7 +590,7 @@ function wantModifyRole(row, index) {
 	$("#add_rolename").val(row.js).focus();
 	shortcutsRefresh();
 	choseCurrentAuthoritys(row, index);
-	multiSelectWithDefault("#anqx",row.anqx.split(",")); //授课学期
+	multiSelectWithDefault("#anqx",row.anqx.split(",")); //按钮权限
 }
 
 //在所有权限去勾选当前角色所拥护的权限
