@@ -121,11 +121,11 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	List<String> getTaskByEdu108Ids(List<Long> edu108ids);
 
 	//查询任务书是否存在
-	@Query(value = "select * from edu201 e where e.kcmc = ?1 and e.class_id = ?2 and e.ls = ?3 and e.zyls = ?4 and e.xnid = ?5", nativeQuery = true)
-	List<Edu201> findExistTask(String kcmc, Long classId, String ls, String zyls,String xnid);
+	@Query(value = "select * from edu201 e where e.kcmc = ?1 and e.class_id = ?2 and e.ls = ?3 and e.zyls = ?4", nativeQuery = true)
+	List<Edu201> findExistTask(String kcmc, Long classId, String ls, String zyls);
 
-	@Query(value = "select * from edu201 e where e.kcmc = ?1 and e.class_id = ?2 and e.ls = ?3 and e.zyls is null and e.xnid = ?4", nativeQuery = true)
-	List<Edu201> findExistTaskWithOutZyls(String kcmc, Long classId, String ls,String xnid);
+	@Query(value = "select * from edu201 e where e.kcmc = ?1 and e.class_id = ?2 and e.ls = ?3 and e.zyls is null", nativeQuery = true)
+	List<Edu201> findExistTaskWithOutZyls(String kcmc, Long classId, String ls);
 
 	@Query(value = "select distinct t.xnid from Edu201 t")
     List<String> getYearList();
