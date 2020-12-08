@@ -460,6 +460,7 @@ function getAllRoleInfo() {
 	});
 }
 
+var choosend=new Array();
 //填充角色表
 function stuffTable(tableInfo) {
 	window.allRoleEvents = {
@@ -488,8 +489,23 @@ function stuffTable(tableInfo) {
 		striped: true,
 		toolbar: '#toolbar',
 		showColumns: true,
+		onCheck : function(row) {
+			onCheckRelation(row);
+		},
+		onUncheck : function(row) {
+			onUncheckRelation(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllRelation(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllRelation(rows2);
+		},
 		onPageChange: function() {
 			drawPagination(".allRoleTableArea", "角色信息");
+			for (var i = 0; i < choosend.length; i++) {
+				$("#allRoleTable").bootstrapTable("checkBy", {field:"bf991_ID", values:[choosend[i].bf991_ID]})
+			}
 		},
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
@@ -522,12 +538,12 @@ function stuffTable(tableInfo) {
 				field: 'anqx',
 				title: '按钮权限',
 				sortable: true,
-				clickToSelect: false,
 				formatter: anqxFormatter,
 				align: 'left'
 			}, {
 				field: 'action',
 				title: '操作',
+				clickToSelect: false,
 				align: 'center',
 				formatter: allRoleFormatter,
 				events: allRoleEvents
@@ -578,6 +594,60 @@ function stuffTable(tableInfo) {
 	changeColumnsStyle( ".allRoleTableArea", "学生信息");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+}
+
+//单选学生
+function onCheckRelation(row){
+	if(choosend.length<=0){
+		choosend.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosend.length; i++) {
+			if(choosend[i].bf991_ID===row.bf991_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosend.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckRelation(row){
+	if(choosend.length<=1){
+		choosend.length=0;
+	}else{
+		for (var i = 0; i < choosend.length; i++) {
+			if(choosend[i].bf991_ID===row.bf991_ID){
+				choosend.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllRelation(row){
+	for (var i = 0; i < row.length; i++) {
+		choosend.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllRelation(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].bf991_ID);
+	}
+
+
+	for (var i = 0; i < choosend.length; i++) {
+		if(a.indexOf(choosend[i].bf991_ID)!==-1){
+			choosend.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //查看角色所有权限
