@@ -835,7 +835,7 @@ function AddnewKj(){
 
 	//重置select组
 	var reObject = new Object();
-	reObject.normalSelectIds = "#kj,#xq";
+	reObject.normalSelectIds = "#kj";
 	reReloadSearchsWithSelect(reObject);
 
 	$('.choosendKjInfoImg').unbind('click');
