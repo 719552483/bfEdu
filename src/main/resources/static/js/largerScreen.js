@@ -292,6 +292,7 @@ function changePageData(row,index){
 	returnObject.departmentCode=row.edu104Id;
 	returnObject.schoolYearCode="";
 	returnObject.batchCode="";
+	returnObject.yearCode=$(".currentYear")[0].attributes[1].nodeValue;
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -303,8 +304,9 @@ function changePageData(row,index){
 		success : function(backjson) {
 			if(backjson.code===200){
 				reloadChart(backjson.data);
-				changeChoosendStyle(index);
+				changeChoosendStyle(row,index);
 				$(".startSearch").hide();
+				$(".startSearchFor3").show();
 			}else{
 				toastr.warning(backjson.msg);
 			}
@@ -313,7 +315,7 @@ function changePageData(row,index){
 }
 
 //改变table选择的样式
-function changeChoosendStyle(index){
+function changeChoosendStyle(row,index){
 	$(".tableImgLeft,.tableImgRight").hide();
 	$(".tableSpanLeft").removeClass("tableSpanLeft");
 	$(".tableSpanRight").removeClass("tableSpanRight");
@@ -330,6 +332,40 @@ function changeChoosendStyle(index){
 	}else{
 		$(".tableImgLeft,.tableImgRight").css("marginTop","3%");
 	}
+	//3屏检索
+	$('.changeScreen3Info').unbind('click');
+	$('.changeScreen3Info').bind('click', function(e) {
+		changeScreen3Info(row,index);
+		e.stopPropagation();
+	});
+}
+
+//3屏检索
+function changeScreen3Info(row,index){
+	var returnObject=new Object();
+	returnObject.departmentCode=row.edu104Id;
+	returnObject.schoolYearCode="";
+	returnObject.batchCode="";
+	returnObject.yearCode=$(".currentYear")[0].attributes[1].nodeValue;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getBigScreenData",
+		data: {
+			"searchInfo":JSON.stringify(returnObject)
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			if(backjson.code===200){
+				reloadChart(backjson.data);
+				changeChoosendStyle(row,index);
+				$(".startSearch").hide();
+				$(".startSearchFor3").show();
+			}else{
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //渲染教师类型分布chart
@@ -2876,7 +2912,7 @@ function returnConfigPage(){
 	$(".tableSpanRight").removeClass("tableSpanRight");
 	$(".tableChoosend").removeClass("tableChoosend");
 	$(".startSearch").show();
-
+	$(".startSearchFor3").hide();
 	//隐藏
 	$('.smallBingtu').addClass('animated bounceOut');
 	var wait = setInterval(function() {
