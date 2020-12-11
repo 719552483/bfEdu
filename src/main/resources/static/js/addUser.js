@@ -294,6 +294,9 @@ function stuffTable() {
 				changeTableNoRsTip();
 				toolTipUp(".myTooltip");
 				changeColumnsStyle(".allUserTableArea", "用户信息");
+				for (var i = 0; i < choosend.length; i++) {
+					$("#allUserTable").bootstrapTable("checkBy", {field:"bf990_ID", values:[choosend[i].bf990_ID]})
+				}
 			},
 			onCheck : function(row) {
 				onCheckRelation(row);
@@ -309,12 +312,6 @@ function stuffTable() {
 			},
 			onPageChange: function() {
 				drawPagination(".allUserTableArea", "用户信息");
-
-			},
-			onPostBody: function() {
-				for (var i = 0; i < choosend.length; i++) {
-					$("#allUserTable").bootstrapTable("checkBy", {field:"bf990_ID", values:[choosend[i].bf990_ID]})
-				}
 			},
 			columns: [	{
 							field: 'check',

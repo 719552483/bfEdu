@@ -2459,6 +2459,10 @@ input:focus{
 	margin-top: 33px;
 }
 
+.allUserTableArea .multi-select-container {
+	margin-top: -20px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
