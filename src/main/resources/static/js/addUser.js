@@ -704,7 +704,7 @@ function getRoleMoreSelectVALUES(id) {
 	var valuesNames =new Array();
 	for (var r = 0; r < roleOption.length; r++) {
 		for (var v = 0; v < values.length; v++) {
-			if(roleOption[r].bf990_ID===parseInt(values[v])){
+			if(roleOption[r].bf991_ID===parseInt(values[v])){
 				valuesNames.push(roleOption[r].js);
 			}
 		}
