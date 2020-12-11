@@ -35,7 +35,7 @@ function getallRole() {
 				roleOptionStr= '<option value="seleceConfigTip">暂无可选权限</option>';
 			}else{
 				for (var i = 0; i < roleOption.length; i++) {
-					roleOptionStr += '<option value="' +  roleOption[i].bf990_ID + '">' +  roleOption[i].js + '</option>';
+					roleOptionStr += '<option value="' +  roleOption[i].bf991_ID + '">' +  roleOption[i].js + '</option>';
 				}
 			}
 
