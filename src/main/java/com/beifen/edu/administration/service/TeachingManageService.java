@@ -819,7 +819,7 @@ public class TeachingManageService {
         }
 
         if("type2".equals(schedulePO.getCrouseType())) {
-            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).collect(Collectors.toList());
+            List<String> edu201Ids = schoolTimetableList.stream().map(SchoolTimetablePO::getEdu201_id).distinct().collect(Collectors.toList());
             List<Edu207> edu207List = edu207Dao.findAllByEdu201Ids(edu201Ids, timeTable.getWeekTime());
             if (edu207List.size() == 0) {
                 resultVO = ResultVO.setFailed("当前周课程暂无分散学时安排");

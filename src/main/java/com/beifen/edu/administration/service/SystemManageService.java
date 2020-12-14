@@ -14,15 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -212,22 +208,22 @@ public class SystemManageService {
         String userId = edu990.getBF990_ID().toString();
         if(edu990.getUserKey() != null) {
             deparmentIds = edu994Dao.findAllDepartmentIds(userId);
-            userType = "02";
-            redisUtils.set("userType:"+userId ,userType);
             if (deparmentIds.size() == 0) {
-                if(edu990.getYhm().length() >= 11) {
+                if(!(edu990.getYhm().length() < 7)) {
                     Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
                     deparmentIds.add(edu001.getSzxb());
                     userType = "01";
-                    redisUtils.set("userType:"+userId ,userType);
                 } else {
                     Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
                     deparmentIds.add(one.getSzxb());
+                    userType = "02";
                 }
             }
         } else {
+            userType = "03";
             deparmentIds.add("0");
         }
+        redisUtils.set("userType:"+userId ,userType);
         redisUtils.set("department:"+userId ,deparmentIds);
 
 
