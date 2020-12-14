@@ -763,8 +763,8 @@ function modifyStudent(row,index){
 			return;
 		}
 
-		if(newXh.length<11){
-			toastr.warning('新学号必须大于等于十一位');
+		if(newXh.length<9){
+			toastr.warning('新学号必须大于等于9位');
 			return;
 		}
 		if(typeof modifyStudentInfo ==='undefined'){
