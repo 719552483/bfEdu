@@ -112,7 +112,7 @@ function saveNewAccountSetUp(username,pwd,confirmPwd){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/userSetup",
+		url : "/changePassWord",
 		data: {
             "accountSetupInfo":JSON.stringify(modifyObject)
         },
