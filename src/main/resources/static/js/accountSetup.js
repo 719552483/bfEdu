@@ -114,7 +114,7 @@ function saveNewAccountSetUp(username,pwd,confirmPwd){
 		cache : false,
 		url : "/changePassWord",
 		data: {
-            "accountSetupInfo":JSON.stringify(modifyObject)
+            "userInfo":JSON.stringify(modifyObject)
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
