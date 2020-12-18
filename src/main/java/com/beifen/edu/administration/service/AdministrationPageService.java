@@ -1022,9 +1022,9 @@ public class AdministrationPageService {
 		edu201DAO.changeTaskStatus(id, status);
 	}
 
-	// 查询所有学年
+	// 查询所有学年getAllXngetAllXn
 	public List<Edu400> queryAllXn() {
-		return edu400DAO.findAll();
+		return edu400DAO.findAllXn();
 	}
 
 	// 根据ID查询学年

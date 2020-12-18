@@ -335,4 +335,18 @@ public class SystemManageController {
         ResultVO result = systemManageService.searchNotes(userId,roleId);
         return result;
     }
+
+    /**
+     * 修改密码
+     * @param userInfo
+     * @return
+     */
+    @RequestMapping("/changePassWord")
+    @ResponseBody
+    public ResultVO changePassWord(@RequestParam("userInfo") String userInfo) {
+        Edu990 edu990 = JSON.parseObject("userInfo", Edu990.class);
+        ResultVO result = systemManageService.changePassWord(edu990);
+        return result;
+    }
+
 }

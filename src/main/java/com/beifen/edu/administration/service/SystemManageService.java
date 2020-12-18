@@ -737,4 +737,17 @@ public class SystemManageService {
         return resultVO;
     }
 
+    //修改密码
+    public ResultVO changePassWord(Edu990 edu990) {
+        ResultVO resultVO;
+        Edu990 one = edu990Dao.findOne(edu990.getBF990_ID());
+        if (one == null) {
+            resultVO = ResultVO.setFailed("未找到对应用户，请联系管理员");
+        } else {
+            one.setMm(edu990.getMm());
+            edu990Dao.save(one);
+            resultVO = ResultVO.setSuccess("修改成功");
+        }
+        return resultVO;
+    }
 }
