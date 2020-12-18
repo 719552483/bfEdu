@@ -2,7 +2,6 @@ package com.beifen.edu.administration.service;
 
 import com.beifen.edu.administration.PO.Edu600BO;
 import com.beifen.edu.administration.PO.Edu601PO;
-import com.beifen.edu.administration.PO.TrainingPlanP0;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
@@ -671,7 +670,7 @@ public class ApprovalProcessService {
      * @return
      */
     public List<Edu601PO> getApprovalHistory(Edu600BO edu600BO) {
-        List<Edu601> historyList = new ArrayList<>();
+        List<Edu601> historyList;
         List<Edu601PO> historyListEx = new ArrayList<>();
 
 
@@ -728,7 +727,7 @@ public class ApprovalProcessService {
             }
 
                 return historyListEx;
-            }
+    }
 
     /**
      * 获取审批历史记录分组
@@ -736,11 +735,9 @@ public class ApprovalProcessService {
      * @return
      */
     public List<Edu601PO> getHistoryDetail(Edu600BO edu600BO) {
-        List<Edu601> historyList;
         List<Edu601PO> historyListEx = new ArrayList<>();
 
-        historyList = edu601Dao.getHistoryDetailByEdu600Id(edu600BO.getEdu600Id().toString());
-
+        List<Edu601> historyList = edu601Dao.getHistoryDetailByEdu600Id(edu600BO.getEdu600Id().toString());
         try {
             for (Edu601 e :  historyList) {
                 Edu601PO approvalEx = new Edu601PO();
