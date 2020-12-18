@@ -4,9 +4,10 @@ $(function() {
 	stuffTimeStamp();
 });
 
-//填充登录时间
+//填充登录时间和用户名
 function stuffTimeStamp(){
 	var userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	var userName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -27,6 +28,7 @@ function stuffTimeStamp(){
 		success : function(backjson) {
 			hideloding();
 			$(".loginTimeStamp").html(backjson.data.scdlsj);
+			$("#setup_username").val(userName);
 		}
 	});
 }
