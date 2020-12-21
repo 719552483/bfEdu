@@ -228,16 +228,7 @@ public class SystemManageService {
 
 
         //保存用户信息
-        String userName = "";
-        if(edu990.getUserKey() != null) {
-            Edu101 edu101 = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
-            if (edu101 == null) {
-                Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
-                userName = edu001.getXm();
-            } else {
-                userName = edu101.getXm();
-            }
-        }
+        String userName = edu990.getPersonName();
         redisUtils.set("userName:"+userId ,userName);
         return isSuccess;
     }
