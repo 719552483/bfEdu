@@ -667,4 +667,9 @@ public class StaffManageService {
         Edu008 edu008 = edu008Dao.findOne(Long.parseLong(edu008Id));
         edu005Dao.cancelGradeInfo(edu008.getXnid(),edu008.getCourseName(),edu008.getClassName());
     }
+
+    //更新教师信息
+    public void updateTeacher(Edu101 edu101) {
+        edu101Dao.save(edu101);
+    }
 }

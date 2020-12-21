@@ -126,13 +126,17 @@ public class ApprovalProcessService {
                 department = edu1071.getEdu104();
                 break;
             case"05":
-            case"07":
                 Edu001 edu001 = edu001Dao.findOne(businessKey);
                 department = edu001.getSzxb();
                 break;
+            case"07":
+                Edu101 edu101 = edu101Dao.findOne(businessKey);
+                department = edu101.getSzxb();
+                break;
             case"06":
                 Edu112 edu112 = edu112Dao.findOne(businessKey);
-                Edu101 one = edu101Dao.findOne(Long.parseLong(edu112.getTeacherId()));
+                Edu990 edu990 = edu990Dao.findOne(edu112.getEdu990_ID());
+                Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
                 department = one.getSzxb();
                 break;
             case"08":

@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.CourseCheckOnPO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.dao.Edu101Dao;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.AdministrationPageService;
 import com.beifen.edu.administration.service.ApprovalProcessService;
@@ -39,6 +40,8 @@ public class StaffManageController {
     private ApprovalProcessService approvalProcessService;
     @Autowired
     private StaffManageService staffManageService;
+    @Autowired
+    private Edu101Dao edu101Dao;
 
     ReflectUtils utils = new ReflectUtils();
     /**
@@ -103,12 +106,15 @@ public class StaffManageController {
         List<Edu101> allTeacher = staffManageService.queryAllTeacher();
         // 判断身份证是否存在
         boolean IDcardIshave = false;
+
         for (int i = 0; i < allTeacher.size(); i++) {
             if(allTeacher.get(i).getSfzh()!=null){
-                if(!(allTeacher.get(i).getEdu101_ID()==(edu101.getEdu101_ID()))
-                        &&allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
+                List<Edu101> edu101List = edu101Dao.teacherIDcardIsExist(allTeacher.get(i).getSfzh(),allTeacher.get(i).getEdu101_ID());
+                if(edu101List.size()!=0){
                     IDcardIshave=true;
-                    break;
+                    returnMap.put("IDcardIshave", IDcardIshave);
+                    returnMap.put("result", false);
+                    return returnMap;
                 }
             }
         }
@@ -120,7 +126,7 @@ public class StaffManageController {
                 edu600.setBusinessKey(edu101.getEdu101_ID());
                 approvalProcessService.initiationProcess(edu600);
             }
-            staffManageService.addTeacher(edu101);
+            staffManageService.updateTeacher(edu101);
         }
 
         returnMap.put("IDcardIshave", IDcardIshave);
