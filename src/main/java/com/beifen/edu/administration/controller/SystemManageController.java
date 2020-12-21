@@ -344,7 +344,7 @@ public class SystemManageController {
     @RequestMapping("/changePassWord")
     @ResponseBody
     public ResultVO changePassWord(@RequestParam("userInfo") String userInfo) {
-        Edu990 edu990 = JSON.parseObject("userInfo", Edu990.class);
+        Edu990 edu990 = JSON.parseObject(userInfo, Edu990.class);
         ResultVO result = systemManageService.changePassWord(edu990);
         return result;
     }

@@ -28,6 +28,10 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	@Query(value = "select * from edu101 e where e.sfzh=?1", nativeQuery = true)
 	public List<Edu101> teacherIDcardIshave(String sfzh);
 
+	// 查询教师身份证号是否已存在
+	@Query(value = "select * from edu101 e where e.sfzh=?1 and e.Edu101_ID<>?2", nativeQuery = true)
+	public List<Edu101> teacherIDcardIsExist(String sfzh,Long edu101id);
+
 	// 根据id查询教师所有信息
 	@Query(value = "select * from edu101 e where e.Edu101_ID=?1", nativeQuery = true)
 	public Edu101 queryTeacherBy101ID(String techerId);
