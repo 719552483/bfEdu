@@ -228,7 +228,10 @@ public class SystemManageService {
 
 
         //保存用户信息
-        String userName = edu990.getPersonName();
+        String userName = "";
+        if (edu990.getPersonName() != null) {
+            userName = edu990.getPersonName();
+        }
         redisUtils.set("userName:"+userId ,userName);
         return isSuccess;
     }
