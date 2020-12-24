@@ -13,7 +13,7 @@ import com.beifen.edu.administration.domian.Edu105;
 public interface Edu105Dao extends JpaRepository<Edu105, Long>, JpaSpecificationExecutor<Edu105> {
 
 	// 查询二级代码
-	@Query(value = "select * from edu105", nativeQuery = true)
+	@Query(value = "select * from edu105 order by njmc", nativeQuery = true)
 	public List<Edu105> queryAllGrade();
 
 	// 根据id删除年级

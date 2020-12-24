@@ -544,11 +544,14 @@ public class ApprovalProcessService {
             BeanUtils.copyProperties(edu600,edu600BO);
             //流转前保存审批记录
             edu600.setApprovalState(approvalFlag);
-            saveApprovalHistory(edu600, approvalFlag);
+            Edu601 edu601 = saveApprovalHistory(edu600, approvalFlag);
             //进入流转将当前节点变为上一节点
             edu600.setLastRole(edu600BO.getCurrentRole());
             edu600.setLastExaminerKey(edu600BO.getExaminerkey());
             isSuccess = processFlow(edu600, approvalFlag);
+            if(!isSuccess) {
+                edu601Dao.delete(edu601.getEdu601Id());
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -677,7 +680,6 @@ public class ApprovalProcessService {
         List<Edu601> historyList;
         List<Edu601PO> historyListEx = new ArrayList<>();
 
-
         Specification<Edu601> specification = new Specification<Edu601>() {
             public Predicate toPredicate(Root<Edu601> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -730,7 +732,7 @@ public class ApprovalProcessService {
                 e.printStackTrace();
             }
 
-                return historyListEx;
+        return historyListEx;
     }
 
     /**

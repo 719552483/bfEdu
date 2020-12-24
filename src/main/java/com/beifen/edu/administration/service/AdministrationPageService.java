@@ -440,11 +440,11 @@ public class AdministrationPageService {
 	public ResultVO levelMatchDepartment(String leveCode, String userId) {
 		ResultVO resultVO;
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
-		List<Edu107> edu107s = edu107DAO.levelMatchDepartment(leveCode,departments);
-		if(edu107s.size() == 0) {
+		List<Edu104> edu104List = edu104DAO.query104BYdepartments(departments);
+		if(edu104List.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无符合要求的二级学院信息");
 		} else {
-			resultVO = ResultVO.setSuccess("查询成功",edu107s);
+			resultVO = ResultVO.setSuccess("查询成功",edu104List);
 		}
 		return resultVO;
 	}
@@ -462,15 +462,15 @@ public class AdministrationPageService {
 	}
 
 	// 查询某系部下的年级
-	public List<Edu107> departmentMatchGrade(String departmentCode) {
-		List<Edu107> edu107s = edu107DAO.findAll();
-		return edu107s;
+	public List<Edu105> departmentMatchGrade(String departmentCode) {
+		List<Edu105> edu105List = edu105DAO.queryAllGrade();
+		return edu105List;
 	}
 
 	// 查询某年级下的专业
-	public List<Edu107> gradeMatchMajor(String gradeCode,String departmentCode) {
-		List<Edu107> edu107s = edu107DAO.gradeMatchMajor(gradeCode, departmentCode);
-		return edu107s;
+	public List<Edu106> gradeMatchMajor(String gradeCode,String departmentCode) {
+		List<Edu106> allByDepartmentCode = edu106DAO.findAllByDepartmentCode(departmentCode);
+		return allByDepartmentCode;
 	}
 
 	// 查询培养计划下的专业课程

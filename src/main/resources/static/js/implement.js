@@ -361,16 +361,11 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				hideloding();
 				if (backjson.code === 200) {
 					var departments=new Array();
-					var all=new Array();
 					for (var i = 0; i < backjson.data.length; i++) {
 						var departmentObject=new Object();
-						departmentObject.name=backjson.data[i].edu104mc;
-						departmentObject.value=backjson.data[i].edu104;
-						var isHave=all.indexOf(backjson.data[i].edu104);
-						if(isHave===-1){
-							departments.push(departmentObject);
-							all.push(backjson.data[i].edu104);
-						}
+						departmentObject.name=backjson.data[i].xbmc;
+						departmentObject.value=backjson.data[i].edu104_ID;
+						departments.push(departmentObject);
 					}
 					drawNextSelect(levelInputId, departments, departmentInputId);
 				} else {
@@ -405,16 +400,11 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				if (backjson.result) {
 					hideloding();
 					var grades=new Array();
-					var all=new Array();
 					for (var i = 0; i < backjson.grade.length; i++) {
 						var gradeObject=new Object();
-						gradeObject.name=backjson.grade[i].edu105mc;
-						gradeObject.value=backjson.grade[i].edu105;
-						var isHave=all.indexOf(backjson.grade[i].edu105);
-						if(isHave===-1){
-							grades.push(gradeObject);
-							all.push(backjson.grade[i].edu105);
-						}
+						gradeObject.name=backjson.grade[i].njmc;
+						gradeObject.value=backjson.grade[i].edu105_ID;
+						grades.push(gradeObject);
 					}
 					drawNextSelect(departmentInputId, grades,gradeInputId);
 				} else {
@@ -450,16 +440,11 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 				if (backjson.result) {
 					hideloding();
 					var majors=new Array();
-					var all=new Array();
 					for (var i = 0; i < backjson.major.length; i++) {
 						var majorObject=new Object();
-						majorObject.name=backjson.major[i].edu106mc;
-						majorObject.value=backjson.major[i].edu106;
-						var isHave=all.indexOf(backjson.major[i].edu106);
-						if(isHave===-1){
-							majors.push(majorObject);
-							all.push(backjson.major[i].edu106);
-						}
+						majorObject.name=backjson.major[i].zymc;
+						majorObject.value=backjson.major[i].edu106_ID;
+						majors.push(majorObject);
 					}
 					drawNextSelect(gradeInputId, majors, majorInputId);
 				} else {
