@@ -212,16 +212,19 @@ public class SystemManageService {
                 if(!(edu990.getYhm().length() < 7)) {
                     Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
                     deparmentIds.add(edu001.getSzxb());
-                    userType = "01";
                 } else {
                     Edu101 one = edu101Dao.findOne(Long.parseLong(edu990.getUserKey()));
                     deparmentIds.add(one.getSzxb());
-                    userType = "02";
                 }
             }
         } else {
-            userType = "03";
             deparmentIds.add("0");
+        }
+
+        if(!(edu990.getYhm().length() < 7)) {
+            userType = "01";
+        } else {
+            userType = "02";
         }
         redisUtils.set("userType:"+userId ,userType);
         redisUtils.set("department:"+userId ,deparmentIds);
