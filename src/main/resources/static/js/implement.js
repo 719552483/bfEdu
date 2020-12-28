@@ -455,6 +455,179 @@ function LinkageSelectPublic(levelInputId,departmentInputId,gradeInputId,majorIn
 	});
 }
 
+//成绩录入和授课名单联动select公共方法
+function SelectPublic(levelInputId,departmentInputId,gradeInputId,majorInputId,configValue){
+	//获取层次
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryAllLevel",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.result) {
+				hideloding();
+				var str = '';
+				if (typeof(configValue) === "undefined") {
+					str = '<option value="seleceConfigTip">请选择</option>';
+				}else{
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						if (backjson.allLevel[i].pyccbm===configValue) {
+							str = '<option value="' + backjson.allLevel[i].edu103_ID + '">' + backjson.allLevel[i].pyccmc+ '</option>';
+						}
+					}
+				}
+
+
+				if (typeof(configValue) === "undefined") {
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						str += '<option value="' + backjson.allLevel[i].edu103_ID + '">' + backjson.allLevel[i].pyccmc
+							+ '</option>';
+					}
+				}else{
+					for (var i = 0; i < backjson.allLevel.length; i++) {
+						if (backjson.allLevel[i].pyccbm!==configValue) {
+							str += '<option value="' + backjson.allLevel[i].edu103_ID + '">' + backjson.allLevel[i].pyccmc
+								+ '</option>';
+						}
+					}
+				}
+
+				stuffManiaSelect(levelInputId, str);
+			} else {
+				toastr.warning('获取层次失败，请重试');
+			}
+		}
+	});
+
+	//层次change
+	$(levelInputId).change(function() {
+		var choosedLevel=getNormalSelectValue(levelInputId.substring(1, levelInputId.length));
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/alllevelMatchDepartment",
+			data: {
+				"leveCode":choosedLevel,
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code === 200) {
+					var departments=new Array();
+					for (var i = 0; i < backjson.data.length; i++) {
+						var departmentObject=new Object();
+						departmentObject.name=backjson.data[i].xbmc;
+						departmentObject.value=backjson.data[i].edu104_ID;
+						departments.push(departmentObject);
+					}
+					drawNextSelect(levelInputId, departments, departmentInputId);
+				} else {
+					toastr.warning(backjson.msg);
+					drawNextSelect(levelInputId, {}, departmentInputId);
+				}
+			}
+		});
+	});
+
+	//系部change
+	$(departmentInputId).change(function() {
+		var choosedDepartment=getNormalSelectValue(departmentInputId.substring(1, departmentInputId.length));
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/departmentMatchGrade",
+			data: {
+				"departmentCode":choosedDepartment
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				if (backjson.result) {
+					hideloding();
+					var grades=new Array();
+					for (var i = 0; i < backjson.grade.length; i++) {
+						var gradeObject=new Object();
+						gradeObject.name=backjson.grade[i].njmc;
+						gradeObject.value=backjson.grade[i].edu105_ID;
+						grades.push(gradeObject);
+					}
+					drawNextSelect(departmentInputId, grades,gradeInputId);
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+
+	//年级change
+	$(gradeInputId).change(function() {
+		var choosedGrade=getNormalSelectValue(gradeInputId.substring(1, gradeInputId.length));
+		var choosedDepartment=getNormalSelectValue(departmentInputId.substring(1, departmentInputId.length));
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/gradeMatchMajor",
+			data: {
+				"departmentCode":choosedDepartment,
+				"gradeCode":choosedGrade
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				if (backjson.result) {
+					hideloding();
+					var majors=new Array();
+					for (var i = 0; i < backjson.major.length; i++) {
+						var majorObject=new Object();
+						majorObject.name=backjson.major[i].zymc;
+						majorObject.value=backjson.major[i].edu106_ID;
+						majors.push(majorObject);
+					}
+					drawNextSelect(gradeInputId, majors, majorInputId);
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+}
+
+
 //删除动画方法
 function reomveAnimation(domClass, animationClass) {
 	var wait = setInterval(function() {
