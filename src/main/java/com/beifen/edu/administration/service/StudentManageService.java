@@ -310,7 +310,7 @@ public class StudentManageService {
         }
 
         // 判断是否改变行政班
-        if (oldEdu001.getEdu300_ID() == edu001.getEdu300_ID()) {
+        if (oldEdu001.getEdu300_ID().equals(edu001.getEdu300_ID())) {
             edu001.setXh(oldEdu001.getXh());
             edu001Dao.save(edu001);
         } else {
