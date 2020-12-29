@@ -22,6 +22,7 @@ public class Edu993 {
 	private String businessId;// 业务主键
 	private String isHandle; //是否处理
 	private String createDate;// 发布时间
+	private String isRead;// 是否已读
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -106,5 +107,13 @@ public class Edu993 {
 
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getIsRead() {
+		return isRead;
+	}
+
+	public void setIsRead(String isRead) {
+		this.isRead = isRead;
 	}
 }
