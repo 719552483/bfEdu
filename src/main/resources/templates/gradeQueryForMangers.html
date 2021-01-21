@@ -54,6 +54,7 @@
 				<div class="tools">
 					<ul class="toolbar">
 						<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						<li class="click" id="exportGrade"><span><img src="images/i01.png" style="width: 24px;"/></span>成绩导出</li>
 					</ul>
 					<ul class="toolbar1 manytools">
 						<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
@@ -156,6 +157,105 @@
 			</div>
 		</div>
 
+		<!-- 成绩导出Modal -->
+		<div class="modal fade bs-example-modal-lg" id="exportGradeModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">成绩导出</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 7px;">行政班</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											   id="export_classes" choosendClassId="" placeholder="点击选择行政班..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 7px;">课程</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											   id="export_crouse" choosendCrouseIds="" placeholder="点击选择课程..." />
+									</div>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmExportGrade" value="开始导出"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 选择班级Modal -->
+		<div class="modal fade bs-example-modal-lg" id="chooseCalssModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">行政班列表</span><a class="specialCanle specialCanle1" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tools paddingL" style="padding-top:1%">
+							<ul class="toolbar" style="float: none">
+								<li class="click" id="chooseCalss_StartSearch"><span><img
+										src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+								<li class="click" id="chooseCalss_ReSearch"><span><img
+										src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+							</ul>
+						</div>
+
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="col3 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 7px;">班级名称</label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											   id="chooseCalss_className" placeholder="请输入班级名称..." />
+									</div>
+								</ul>
+							</div>
+						</div>
+
+						<div class="chooseClassTableArea">
+							<table class="tablelist myTableStyle" id="chooseClassTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmChoosedClalss" value="确定"/>&nbsp;
+						<input name="" type="button" class="specialCanle specialCanle1" value="返回"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 选择课程Modal -->
+		<div class="modal fade bs-example-modal-lg" id="chooseCruoseModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="specialCanle specialCanle2" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="chooseCrouseTableArea">
+							<table class="tablelist myTableStyle" id="chooseCrouseTable" data-unique-id="edu108_ID" style="margin-top: 10px;"></table>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmChooseCrouse" value="确定"/>&nbsp;
+						<input name="" type="button" class="specialCanle specialCanle2" value="返回"/>
+					</div>
+				</div>
+			</div>
+		</div>
 	 <!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 				<div class="spinner-box">
