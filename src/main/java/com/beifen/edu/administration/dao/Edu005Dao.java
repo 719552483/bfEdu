@@ -60,4 +60,12 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Modifying(clearAutomatically = true)
     @Query(value = "update edu005 t set t.is_resit = null , t.is_confirm = null where t.xnid = ?1 and t.course_name = ?2 and t.class_name = ?3", nativeQuery = true)
     void cancelGradeInfo(String xnid, String courseName, String className);
+
+    //根据班级、学科查询成绩
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "select * from EDU005 where CLASS_NAME = ?1 and COURSE_NAME = ?2", nativeQuery = true)
+    List<Edu005> studentGetGradesByClass(String className,String courseName);
+
+
 }

@@ -323,6 +323,34 @@ public class StudentManageController {
     }
 
     /**
+     * 根据班级、学科查询成绩
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/studentGetGradesByClass")
+    @ResponseBody
+    public ResultVO studentGetGradesByClass(@RequestParam("className") String className,@RequestParam("courseName") String courseName) {
+        ResultVO result =studentManageService.studentGetGradesByClass(className,courseName);
+        return result;
+    }
+
+    /**
+     * 根据班级查询学科
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/searchCourseByClass")
+    @ResponseBody
+    public ResultVO searchCourseByClass(@RequestParam("edu300_ID") String edu300_ID) {
+        ResultVO result =studentManageService.searchCourseByClass(edu300_ID);
+        return result;
+    }
+
+
+
+    /**
      * 学生查询相关学年
      * @param userKey
      * @return

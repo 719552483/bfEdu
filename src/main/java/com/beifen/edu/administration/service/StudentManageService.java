@@ -49,6 +49,8 @@ public class StudentManageService {
     @Autowired
     private Edu005Dao edu005Dao;
     @Autowired
+    private Edu108Dao edu108Dao;
+    @Autowired
     private Edu204Dao edu204Dao;
     @Autowired
     private Edu400Dao edu400Dao;
@@ -514,6 +516,32 @@ public class StudentManageService {
             resultVO = ResultVO.setFailed("暂无成绩信息");
         } else {
             resultVO = ResultVO.setSuccess("查询成功",edu005List);
+        }
+        return resultVO;
+    }
+
+
+
+    //根据班级、学科查询成绩
+    public ResultVO studentGetGradesByClass(String className,String courseName) {
+        ResultVO resultVO;
+        List<Edu005> edu005List = edu005Dao.studentGetGradesByClass(className,courseName);
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无成绩信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu005List);
+        }
+        return resultVO;
+    }
+
+    // 根据班级查询学科
+    public ResultVO searchCourseByClass(String edu300_ID) {
+        ResultVO resultVO;
+        List<Edu108> edu108List = edu108Dao.searchCourseByClass(edu300_ID);
+        if (edu108List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无课程信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu108List);
         }
         return resultVO;
     }
