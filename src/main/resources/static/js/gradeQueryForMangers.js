@@ -929,13 +929,13 @@ function confirmChooseCrouse(){
 function confirmExportGrade(){
 	var classes=$("#export_classes").attr("choosendClassId");
 	var crouses=$("#export_crouse").attr("choosendCrouseIds");
-	var grade=getNormalSelectValue("export_grade")
+	var trem=getNormalSelectValue("export_grade")
 	if(classes===""){
 		toastr.warning("请选择班级");
 		return;
 	}
 
-	if(grade===""){
+	if(trem===""){
 		toastr.warning("请选择学年");
 		return;
 	}
@@ -943,7 +943,7 @@ function confirmExportGrade(){
 	var sendObject=new Object();
 	sendObject.classes=classes;
 	sendObject.crouses=crouses;
-	sendObject.grade=grade;
+	sendObject.trem=trem;
 
 	var url = "/exportGrade";
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
