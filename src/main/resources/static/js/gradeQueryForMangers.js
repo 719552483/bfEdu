@@ -34,6 +34,7 @@ function stuffNj(){
 				}
 			}
 			stuffManiaSelect("#grade", str);
+			stuffManiaSelect("#export_grade", str);
 		}
 	});
 }
@@ -511,6 +512,11 @@ function exportGrade(){
 	$("#export_crouse").val("");
 	$("#export_classes").attr("choosendClassId","");
 	$("#export_crouse").attr("choosendCrouseIds","");
+
+	var reObject = new Object();
+	reObject.normalSelectIds = "#export_grade";
+	reReloadSearchsWithSelect(reObject);
+
 	$.showModal("#exportGradeModal",true);
 }
 
@@ -923,10 +929,21 @@ function confirmChooseCrouse(){
 function confirmExportGrade(){
 	var classes=$("#export_classes").attr("choosendClassId");
 	var crouses=$("#export_crouse").attr("choosendCrouseIds");
+	var grade=getNormalSelectValue("export_grade")
+	if(classes===""){
+		toastr.warning("请选择班级");
+		return;
+	}
+
+	if(grade===""){
+		toastr.warning("请选择学年");
+		return;
+	}
 
 	var sendObject=new Object();
 	sendObject.classes=classes;
 	sendObject.crouses=crouses;
+	sendObject.grade=grade;
 
 	var url = "/exportGrade";
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
