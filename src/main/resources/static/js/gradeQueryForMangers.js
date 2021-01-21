@@ -983,9 +983,8 @@ function btnBind(){
 	});
 
 	//重置检索
-	$('#research').unbind('click');
+	$('#research').unbind('click');}
 	$('#research').bind('click', function(e) {
 		research();
 		e.stopPropagation();
 	});
-}
