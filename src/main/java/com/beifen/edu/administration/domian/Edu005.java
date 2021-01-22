@@ -26,6 +26,7 @@ public class Edu005 {
     private String isPassed; //是否通过
     private String isResit; //是否补考
     private String isConfirm; //是否确认
+    private String isMx;//是否免修
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -191,5 +192,13 @@ public class Edu005 {
 
     public void setIsConfirm(String isConfirm) {
         this.isConfirm = isConfirm;
+    }
+
+    public String getIsMx() {
+        return isMx;
+    }
+
+    public void setIsMx(String isMx) {
+        this.isMx = isMx;
     }
 }

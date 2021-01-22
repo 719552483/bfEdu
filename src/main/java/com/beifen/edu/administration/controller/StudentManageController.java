@@ -348,7 +348,15 @@ public class StudentManageController {
         return result;
     }
 
-
+    /**
+    * 修改免修状态
+    * */
+    @RequestMapping("/updateMXStatus")
+    @ResponseBody
+    public ResultVO updateMXStatus(@RequestParam("edu005_ID") String edu005_ID) {
+        ResultVO result =studentManageService.updateMXStatus(edu005_ID);
+        return result;
+    }
 
     /**
      * 学生查询相关学年

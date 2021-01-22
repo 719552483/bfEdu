@@ -546,6 +546,14 @@ public class StudentManageService {
         return resultVO;
     }
 
+    // 修改免修状态
+    public ResultVO updateMXStatus(String edu005_ID) {
+        ResultVO resultVO;
+        edu005Dao.updateMXStatus(edu005_ID);
+        resultVO = ResultVO.setSuccess("修改成功");
+        return resultVO;
+    }
+
 
     //学生查询相关学年
     public ResultVO studentGetSchoolYear(String userKey) {

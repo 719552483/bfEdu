@@ -2593,7 +2593,7 @@ public class AdministrationPageService {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"学年","行政班名称","课程名称","学生姓名", "学号","成绩"};
+		String[] titles = new String[] {"学年","行政班名称","课程名称","学生姓名", "学号","成绩","免修状态"};
 
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
@@ -2607,6 +2607,55 @@ public class AdministrationPageService {
 			utils.appendCell(sheet,i,"",edu005List.get(i).getCourseName(),-1,2,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentName(),-1,3,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentCode(),-1,4,false);
+			utils.appendCell(sheet,i,"","免修",-1,5,false);
+		}
+
+		sheet.setColumnWidth(0, 12*256);
+		sheet.setColumnWidth(1, 16*256);
+		sheet.setColumnWidth(2, 30*256);
+		sheet.setColumnWidth(3, 10*256);
+		sheet.setColumnWidth(4, 20*256);
+
+		return workbook;
+	}
+
+	//查询成绩导出成绩excel
+	public List<Edu005> getExportGrade(String classes,String trem,List<String> list) {
+		//根据条件筛选成绩表
+		List<Edu005> edu005List = edu005Dao.getExportGrade(classes,trem,list);
+		return edu005List;
+	}
+
+
+	//导出成绩excel
+	public XSSFWorkbook exportGrade(List<Edu005> edu005List,int size) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[size+1]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+		titles[0] = "学生姓名";
+		for(int j = 0;j<size;j++){
+			titles[j+1] = edu005List.get(j).getCourseName();
+		}
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		for (int i = 1; i < edu005List.size()/size+1; i++) {
+			utils.appendCell(sheet,i-1,"",edu005List.get(i*size-1).getStudentName(),-1,0,false);
+			for(int j = 1;j<size+1;j++){
+				if(edu005List.get(i*j-1).getGrade() != null && !"".equals(edu005List.get(i*j-1).getGrade())){
+					utils.appendCell(sheet,i-1,"",edu005List.get(i*j-1).getGrade(),-1,j,false);
+				}else{
+					utils.appendCell(sheet,i-1,"","暂无成绩",-1,j,false);
+				}
+			}
 		}
 
 		sheet.setColumnWidth(0, 12*256);

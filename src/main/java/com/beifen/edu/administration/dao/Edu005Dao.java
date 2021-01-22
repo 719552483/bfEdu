@@ -67,5 +67,17 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "select * from EDU005 where CLASS_NAME = ?1 and COURSE_NAME = ?2", nativeQuery = true)
     List<Edu005> studentGetGradesByClass(String className,String courseName);
 
+    //导出成绩excel
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "select * from edu005 where edu300_ID = ?1 and xnid = ?2 and COURSE_NAME in (?3) ORDER BY STUDENT_NAME,COURSE_NAME", nativeQuery = true)
+    List<Edu005> getExportGrade(String classes,String trem,List<String> list);
+
+
+    //导出成绩excel
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE edu005 set IS_MX = '01' WHERE Edu005_ID =?1", nativeQuery = true)
+    void updateMXStatus(String edu005_ID);
 
 }
