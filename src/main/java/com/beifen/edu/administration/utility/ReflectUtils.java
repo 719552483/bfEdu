@@ -2977,6 +2977,8 @@ public class ReflectUtils {
 			ImportNewClassSeclect(hiddenSheetName,workbook);
 		}else if(filename.equals("modifyClasses")||filename.equals("批量更新课程模板")){
 			ModifyNewClassSeclect(hiddenSheetName,workbook);
+		}else if(filename.equals("modifyGrade")||filename.contains("成绩模板")){
+			ModifyGradeSeclect(hiddenSheetName,workbook);
 		}
 	}
 
@@ -3791,7 +3793,23 @@ public class ReflectUtils {
 //			}
 		}
 	}
-	
+
+	//为导入成绩文件填充需要的下拉框
+	public static void ModifyGradeSeclect(String hiddenSheetName,XSSFWorkbook workbook){
+		List < String > mxlxlist = new ArrayList < String > ();
+		List<Edu000> mxlx = reflectUtils.administrationPageService.queryEjdm("IS_MX");
+		for (int i = 0; i < mxlx.size(); i++) {
+			mxlxlist.add(mxlx.get(i).getEjdmz());
+		}
+		String[]mx = mxlxlist.toArray(new String[mxlxlist.size()]);
+		hiddenSheetName = hiddenSheetName+(1);
+
+		int[] mxIndex={6};
+		cell2Select(workbook,hiddenSheetName,mx,mxIndex,false);
+	}
+
+
+
 	//单元格变为下拉框
     public static void cell2Select(XSSFWorkbook workbook,String hiddenShhetName,String[] useArrays,int[] useIndex,boolean useIndexNeedAdd){
     	int  maxRoeNum=1048575;

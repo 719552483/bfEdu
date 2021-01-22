@@ -2607,7 +2607,7 @@ public class AdministrationPageService {
 			utils.appendCell(sheet,i,"",edu005List.get(i).getCourseName(),-1,2,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentName(),-1,3,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i).getStudentCode(),-1,4,false);
-			utils.appendCell(sheet,i,"","免修",-1,5,false);
+			utils.appendCell(sheet,i,"",edu000DAO.queryEjdmMcByEjdmZ(edu005List.get(i).getIsMx(),"IS_MX"),-1,6,false);
 		}
 
 		sheet.setColumnWidth(0, 12*256);
@@ -2790,13 +2790,19 @@ public class AdministrationPageService {
 				String courseName = contentRow.getCell(2).toString();
 				String studentCode = contentRow.getCell(4).toString();
 				XSSFCell gradeCell = contentRow.getCell(5);
-				if (gradeCell != null ) {
+				XSSFCell mxzt = contentRow.getCell(6);
+				if (gradeCell != null || mxzt != null) {
 					Edu005 edu005;
 					edu005 = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode);
 					if (edu005 != null) {
-						edu005.setGrade(gradeCell.toString());
+						if(gradeCell != null){
+							edu005.setGrade(gradeCell.toString());
+						}
 						edu005.setEdu101_ID(Long.parseLong(userKey));
 						edu005.setGradeEnter(lrrmc);
+						if(mxzt != null){
+							edu005.setIsMx(edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX"));
+						}
 						staffManageService.giveGrade(edu005);
 						edu005List.add(edu005);
 					}
