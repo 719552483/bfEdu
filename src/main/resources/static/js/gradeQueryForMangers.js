@@ -915,8 +915,8 @@ function confirmChooseCrouse(){
 	var choosendCrousesIds=new Array();
 	var choosendCrousesNames=new Array();
 	for (var i = 0; i < choosendCrouses.length; i++) {
-		choosendCrousesIds.push(choosendCrouses[0].edu108_ID);
-		choosendCrousesNames.push(choosendCrouses[0].kcmc);
+		choosendCrousesIds.push(choosendCrouses[i].edu108_ID);
+		choosendCrousesNames.push(choosendCrouses[i].kcmc);
 	}
 
 	$("#export_crouse").attr("choosendCrouseIds",choosendCrousesNames);
