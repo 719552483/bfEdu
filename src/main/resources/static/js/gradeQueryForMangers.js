@@ -919,7 +919,7 @@ function confirmChooseCrouse(){
 		choosendCrousesNames.push(choosendCrouses[0].kcmc);
 	}
 
-	$("#export_crouse").attr("choosendCrouseIds",choosendCrousesIds);
+	$("#export_crouse").attr("choosendCrouseIds",choosendCrousesNames);
 	$("#export_crouse").val(choosendCrousesNames);
 	$.hideModal("#chooseCruoseModal",false);
 	$.showModal("#exportGradeModal",true);
