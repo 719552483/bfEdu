@@ -547,9 +547,9 @@ public class StudentManageService {
     }
 
     // 修改免修状态
-    public ResultVO updateMXStatus(String edu005_ID) {
+    public ResultVO updateMXStatus(String edu005_ID,String mxStatus) {
         ResultVO resultVO;
-        edu005Dao.updateMXStatus(edu005_ID);
+        edu005Dao.updateMXStatus(edu005_ID,mxStatus);
         resultVO = ResultVO.setSuccess("修改成功");
         return resultVO;
     }

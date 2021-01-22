@@ -353,8 +353,8 @@ public class StudentManageController {
     * */
     @RequestMapping("/updateMXStatus")
     @ResponseBody
-    public ResultVO updateMXStatus(@RequestParam("edu005_ID") String edu005_ID) {
-        ResultVO result =studentManageService.updateMXStatus(edu005_ID);
+    public ResultVO updateMXStatus(@RequestParam("edu005_ID") String edu005_ID,@RequestParam("mxStatus") String mxStatus) {
+        ResultVO result =studentManageService.updateMXStatus(edu005_ID,mxStatus);
         return result;
     }
 
