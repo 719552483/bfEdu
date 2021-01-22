@@ -77,7 +77,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //导出成绩excel
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE edu005 set IS_MX = '01' WHERE Edu005_ID =?1", nativeQuery = true)
-    void updateMXStatus(String edu005_ID);
+    @Query(value = "UPDATE edu005 set IS_MX = ?2 WHERE Edu005_ID =?1", nativeQuery = true)
+    void updateMXStatus(String edu005_ID,String mxStatus);
 
 }
