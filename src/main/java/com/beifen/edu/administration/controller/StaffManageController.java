@@ -623,10 +623,10 @@ public class StaffManageController {
         String classes = jsonObject.getString("classes");
         String crouses = jsonObject.getString("crouses");
         String trem = jsonObject.getString("trem");
-//        List<String> list = Arrays.asList(crouses.split(","));
-        List<String> list = new ArrayList<String>();
-        list.add("电工基本技能");
-        list.add("电子应用技术");
+        List<String> list = Arrays.asList(crouses.split(","));
+//        List<String> list = new ArrayList<String>();
+//        list.add("电工基本技能");
+//        list.add("电子应用技术");
 
         List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
         if(edu005List.size() == 0) {
