@@ -135,7 +135,10 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		},
 		'click #cancelGradeEntry': function(e, value, row, index) {
 			cancelGradeEntry(row,index);
-		}
+		},
+		'click #wantGradeFree': function(e, value, row, index) {
+			wantGradeFree(row,index);
+		},
 	};
 
 	$('#gradeEntryTable').bootstrapTable('destroy').bootstrapTable({
@@ -204,6 +207,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				title: '学号',
 				align: 'left',
 				sortable: true,
+				visible: false,
 				formatter: paramsMatter
 			}, {
 				field: 'grade',
@@ -212,6 +216,13 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				formatter: gradeMatter
 			}, {
+				field: 'isMx',
+				title: '免修状态',
+				align: 'center',
+				width:'10',
+				sortable: true,
+				formatter: isMxMatter
+			},{
 				field: 'isResit',
 				title: '是否补考',
 				align: 'center',
@@ -250,14 +261,25 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	});
 
 	function releaseNewsFormatter(value, row, index) {
-		return [
-			'<ul class="toolbar tabletoolbar">' +
-			'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
-			'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
-			'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
-			'</ul>'
-		]
-			.join('');
+		if(row.isMx==="0"||row.isMx==null){
+			return [
+				'<ul class="toolbar tabletoolbar">' +
+				'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+				'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+				'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+				'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+				'</ul>'
+			]
+				.join('');
+		}else{
+			return [
+				'<ul class="toolbar tabletoolbar">' +
+				'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+				'</ul>'
+			]
+				.join('');
+		}
+
 	}
 	
 	function xzbnameMatter(value, row, index) {
@@ -274,52 +296,106 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		}
 	}
 
+	function isMxMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined"||value==='0') {
+			return [
+				'<div class="myTooltip normalTxt" title="正常">正常</div>'
+			]
+				.join('');
+		} else if(value==='01'){
+			return [
+				'<div class="myTooltip normalTxt" title="免修">免修</div>'
+			]
+				.join('');
+		}else if(value==='02'){
+			return [
+				'<div class="myTooltip normalTxt" title="缓考">缓考</div>'
+			]
+				.join('');
+		}else if(value==='03'){
+			return [
+				'<div class="myTooltip normalTxt" title="休学">休学</div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip normalTxt" title="退学">退学</div>'
+			]
+				.join('');
+		}
+	}
+
 	function gradeMatter(value, row, index) {
 		var className='';
-		if(row.isExamCrouse==="T"){
-			if (typeof value==="undefined"||value==null||value==="") {
-				return [ '<div>' +
-				'<span class="grade grade'+index+'"></span>' +
-				'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
-				'</div>' ].join('');
-			} else {
-				parseFloat(value)>=60?className='greenTxt':className="redTxt";
-				return [ '<div class="myTooltip" title="'+value+'">' +
-				'<span class="'+className+' grade grade'+index+'">'+value+'</span>' +
-				'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
-				'</div>' ].join('');
-			}
-		}else{
-			var title="";
-			if(row.grade==null){
-				title="暂无成绩";
-			}else{
-				row.grade==="T"?title="通过":title="不通过";
-				title==="通过"?className='greenTxt':className="redTxt";
-			}
-             var str='<option value="T">通过</option><option value="F">不通过</option>';
-			if(typeof value==="undefined"||value==null||value==="null"){
+		if(row.isMx!=='0'&&row.isMx!==""&&row.isMx!=null&&typeof row.isMx!=="undefined"){
+			if(row.isMx==='01'){
 				return [
-					'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
-					'<span class="grade grade'+index+'"></span>' +
-					'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
-						+ str +
-					'</select>'+
-					'</div>'
+					'<div class="myTooltip normalTxt" title="免修">免修</div>'
+				]
+					.join('');
+			}else if(row.isMx==='02'){
+				return [
+					'<div class="myTooltip normalTxt" title="缓考">缓考</div>'
+				]
+					.join('');
+			}else if(row.isMx==='03'){
+				return [
+					'<div class="myTooltip normalTxt" title="休学">休学</div>'
 				]
 					.join('');
 			}else{
 				return [
-					'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
+					'<div class="myTooltip normalTxt" title="退学">退学</div>'
+				]
+					.join('');
+			}
+		}else{
+			if(row.isExamCrouse==="T"){
+				if (typeof value==="undefined"||value==null||value==="") {
+					return [ '<div>' +
+					'<span class="grade grade'+index+'"></span>' +
+					'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
+					'</div>' ].join('');
+				} else {
+					parseFloat(value)>=60?className='greenTxt':className="redTxt";
+					return [ '<div class="myTooltip" title="'+value+'">' +
+					'<span class="'+className+' grade grade'+index+'">'+value+'</span>' +
+					'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
+					'</div>' ].join('');
+				}
+			}else{
+				var title="";
+				if(row.grade==null){
+					title="暂无成绩";
+				}else{
+					row.grade==="T"?title="通过":title="不通过";
+					title==="通过"?className='greenTxt':className="redTxt";
+				}
+				var str='<option value="T">通过</option><option value="F">不通过</option>';
+				if(typeof value==="undefined"||value==null||value==="null"){
+					return [
+						'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
+						'<span class="grade grade'+index+'"></span>' +
+						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
+						+ str +
+						'</select>'+
+						'</div>'
+					]
+						.join('');
+				}else{
+					return [
+						'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
 						'<span class="'+className+' grade grade'+index+'">'+title+'</span>' +
 						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
 						+ str +
 						'</select>'+
-					'</div>'
-				]
-					.join('');
+						'</div>'
+					]
+						.join('');
+				}
 			}
 		}
+
 		$('.isSowIndex').selectMania(); // 初始化下拉框
 	}
 
@@ -413,6 +489,7 @@ function wantGradeEntry(row,index){
 	}
 
 	$(".wantGradeEntry"+index).hide();
+	$(".wantGradeFree"+index).hide();
 	$(".grade"+index).hide();
 	$(".comfirmGradeEntry"+index).show();
 	$(".cancelGradeEntry"+index).show();
@@ -448,6 +525,7 @@ function comfirmGradeEntry(row,index){
 //取消录入成绩
 function cancelGradeEntry(row,index){
 	$(".wantGradeEntry"+index).show();
+	$(".wantGradeFree"+index).show();
 	$(".grade"+index).show();
 	$(".comfirmGradeEntry"+index).hide();
 	$(".cancelGradeEntry"+index).hide();
@@ -486,6 +564,67 @@ function sendGrade(currentGrade,row) {
 			if (backjson.code===200) {
 				row.entryDate=backjson.data;
 				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: row});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//预备成绩免修
+function wantGradeFree(row,index){
+	var IS_MX=queryEJDMElementInfo().IS_MX;
+	if(typeof IS_MX==="undefined"||IS_MX==null){
+		toastr.warning("暂无免修状态");
+		return;
+	}
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < IS_MX.length; i++) {
+		str += '<option value="' + IS_MX[i].ejdm + '">' + IS_MX[i].ejdmz
+			+ '</option>';
+	}
+	stuffManiaSelect("#gradeFreeStatus", str);
+	$.showModal("#gradeFreeModal",true);
+
+	//确认免修
+	$('#confirmGradeFree').unbind('click');
+	$('#confirmGradeFree').bind('click', function(e) {
+		confirmGradeFree(row);
+		e.stopPropagation();
+	});
+}
+
+//确认免修
+function confirmGradeFree(row){
+	var mxStatus=getNormalSelectValue("gradeFreeStatus");
+	if(mxStatus===""){
+		toastr.warning('请选择免修状态');
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/updateMXStatus",
+		data: {
+			"edu005_ID":row.edu005_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				row.isMx=mxStatus;
+				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: row});
+				toastr.warning('操作成功');
+				$.hideModal("#gradeFreeModal")
 			} else {
 				toastr.warning(backjson.msg);
 			}
