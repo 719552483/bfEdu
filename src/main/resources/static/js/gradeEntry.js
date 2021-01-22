@@ -624,7 +624,7 @@ function confirmGradeFree(row){
 			if (backjson.code===200) {
 				row.isMx=mxStatus;
 				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: row});
-				toastr.warning('操作成功');
+				toastr.success('操作成功');
 				$.hideModal("#gradeFreeModal")
 			} else {
 				toastr.warning(backjson.msg);
