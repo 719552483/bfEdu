@@ -606,7 +606,8 @@ function confirmGradeFree(row){
 		cache : false,
 		url : "/updateMXStatus",
 		data: {
-			"edu005_ID":row.edu005_ID
+			"edu005_ID":row.edu005_ID,
+			'mxStatus':mxStatus
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
