@@ -2628,6 +2628,13 @@ public class AdministrationPageService {
 		return edu005List;
 	}
 
+	//导出不及格成绩excel
+	public List<Edu0051> exportMakeUpGrade(String trem,String crouses) {
+		//根据条件筛选成绩表
+		List<Edu0051> edu0051List = edu0051Dao.exportMakeUpGrade(trem,crouses);
+		return edu0051List;
+	}
+
 	//查询补考成绩
 	public ResultVO getHistoryGrade(String Edu005_Id){
 		ResultVO resultVO;
@@ -2665,6 +2672,41 @@ public class AdministrationPageService {
 					utils.appendCell(sheet,i-1,"","暂无成绩",-1,j,false);
 				}
 			}
+		}
+
+		sheet.setColumnWidth(0, 12*256);
+		sheet.setColumnWidth(1, 16*256);
+		sheet.setColumnWidth(2, 30*256);
+		sheet.setColumnWidth(3, 10*256);
+		sheet.setColumnWidth(4, 20*256);
+
+		return workbook;
+	}
+
+	//导出不及格成绩excel
+	public XSSFWorkbook exportMUGrade(List<Edu0051> edu0051List) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"学年","行政班名称","课程名称","学生姓名", "学号","录入时间","成绩"};
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		for (int i = 0; i < edu0051List.size(); i++) {
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getXn(),-1,0,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getClassName(),-1,1,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getCourseName(),-1,2,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentName(),-1,3,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentCode(),-1,4,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getGradeEnter(),-1,5,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
 		}
 
 		sheet.setColumnWidth(0, 12*256);

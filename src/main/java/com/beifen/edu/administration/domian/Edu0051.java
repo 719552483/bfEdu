@@ -19,6 +19,9 @@ public class Edu0051 {
     private String gradeEnter;//录入人姓名
     private String entryDate;//录入日期
     private String grade;//成绩
+    private String xnid;//学年id
+    private String xn;//学年
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -127,6 +130,22 @@ public class Edu0051 {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public String getXnid() {
+        return xnid;
+    }
+
+    public void setXnid(String xnid) {
+        this.xnid = xnid;
+    }
+
+    public String getXn() {
+        return xn;
+    }
+
+    public void setXn(String xn) {
+        this.xn = xn;
     }
 
 }

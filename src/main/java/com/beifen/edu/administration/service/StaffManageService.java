@@ -309,9 +309,11 @@ public class StaffManageService {
             edu0051.setGradeEnter(edu005.getGradeEnter());
             edu0051.setEntryDate(edu005.getEntryDate());
             edu0051.setGrade(edu005.getGrade());
+            edu0051.setXnid(edu005.getXnid());
+            edu0051.setXn(edu005.getXn());
             edu0051Dao.save(edu0051);
         }
-        resultVO = ResultVO.setSuccess("成绩录入成功",dateString);
+        resultVO = ResultVO.setSuccess("成绩录入成功",edu005);
         return resultVO;
     }
 
@@ -646,6 +648,8 @@ public class StaffManageService {
                 edu0051.setGradeEnter(e005.getGradeEnter());
                 edu0051.setEntryDate(e005.getEntryDate());
                 edu0051.setGrade(e005.getGrade());
+                edu0051.setXnid(edu005.getXnid());
+                edu0051.setXn(edu005.getXn());
                 edu0051Dao.save(edu0051);
             }
         }

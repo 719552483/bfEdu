@@ -668,6 +668,47 @@ public class StaffManageController {
     }
 
     /**
+     * 导出不合格成绩excel
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("exportMakeUpGrade")
+    @ResponseBody
+    public ResultVO exportMakeUpGrade(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "queryInfo") String queryInfo) {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(queryInfo);
+//        String classes = jsonObject.getString("classes");
+        String crouse = jsonObject.getString("crouse");
+        String trem = jsonObject.getString("trem");
+
+        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        if(edu0051List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
+        }else{
+            boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+            String fileName;
+            if(isIE){
+                fileName="makeupGrade";
+            }else{
+                fileName=edu0051List.get(0).getCourseName()+"成绩单";
+            }
+            //创建Excel文件
+            XSSFWorkbook workbook = administrationPageService.exportMUGrade(edu0051List);
+            try {
+                utils.loadModal(response,fileName, workbook);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            result = ResultVO.setSuccess("下载成功");
+        }
+        return result;
+    }
+
+    /**
      * 校验导入成绩文件
      * @param file
      * @return
