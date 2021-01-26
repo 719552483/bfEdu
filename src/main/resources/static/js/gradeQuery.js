@@ -303,7 +303,9 @@ function reExamInfo(row){
 				var historyTxt="";
 				for (var i = 0; i < backjson.data.length; i++) {
 					var currentHistory= backjson.data[i];
-					historyTxt+='<div class="historyArea"><p class="Historystep">补考'+(i+1)+'</p><div>' +
+					var reExamText="";
+					i<=0?reExamText="正常考试":reExamText="第"+i+"次补考";
+					historyTxt+='<div class="historyArea"><p class="Historystep">'+reExamText+'</p><div>' +
 						'<span><cite>课程名称：</cite><b>'+nullMatter(currentHistory.courseName)+'</b></span>'+
 						'<span><cite>补考成绩：</cite><b>'+nullMatter(currentHistory.grade)+'</b></span>'+
 						'<span><cite>补考时间：</cite><b>'+nullMatter(currentHistory.entryDate)+'</b></span>'+
