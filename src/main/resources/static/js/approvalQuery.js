@@ -230,7 +230,7 @@ function approvalHistory(row){
 				}
 				$(".historyInfo").append(historyTxt);
 			} else {
-				toastr.warning('操作，请重试');
+				toastr.warning('操作失败，请重试');
 			}
 		}
 	});
