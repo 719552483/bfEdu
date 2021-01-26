@@ -139,6 +139,9 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		'click #wantGradeFree': function(e, value, row, index) {
 			wantGradeFree(row,index);
 		},
+		'click #reExamInfo': function(e, value, row, index) {
+			reExamInfo(row,index);
+		}
 	};
 
 	$('#gradeEntryTable').bootstrapTable('destroy').bootstrapTable({
@@ -158,7 +161,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 		    fileName: '学生成绩导出'  //文件名称
 		},
 		striped: true,
-	    sidePagination: "client",   
+	    sidePagination: "client",
 		toolbar: '#toolbar',
 		showColumns: true,
 		onPageChange: function() {
@@ -282,20 +285,42 @@ function stuffStudentBaseInfoTable(tableInfo) {
 					.join('');
 			}else{
 				if(isPass){
-					return [
-						'<div class="myTooltip normalTxt" title="暂无操作">暂无操作</div>'
-					]
-						.join('');
-				}else{
-					return [
-						'<ul class="toolbar tabletoolbar">' +
-						'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
-						'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
-						'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
-						'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+					if(row.exam_num!=null&&row.exam_num>0){
+						return [
+							'<ul class="toolbar tabletoolbar">' +
+							'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
 						'</ul>'
-					]
-						.join('');
+						]
+							.join('');
+					}else{
+						return [
+							'<div class="myTooltip normalTxt" title="暂无操作">暂无操作</div>'
+						]
+							.join('');
+					}
+				}else{
+					if(row.exam_num!=null&&row.exam_num>0){
+						return [
+							'<ul class="toolbar tabletoolbar">' +
+							'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+							'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+							'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+							'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+							'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+							'</ul>'
+						]
+							.join('');
+					}else{
+						return [
+							'<ul class="toolbar tabletoolbar">' +
+							'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+							'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+							'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+							'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+							'</ul>'
+						]
+							.join('');
+					}
 				}
 			}
 		}else{
@@ -310,7 +335,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				.join('');
 		}
 	}
-	
+
 	function xzbnameMatter(value, row, index) {
 		if (value===""||value==null||typeof value==="undefined") {
 			return [
@@ -538,6 +563,7 @@ function wantGradeEntry(row,index){
 
 	$(".wantGradeEntry"+index).hide();
 	$(".wantGradeFree"+index).hide();
+	$(".reExamInfo"+index).hide();
 	$(".grade"+index).hide();
 	$(".comfirmGradeEntry"+index).show();
 	$(".cancelGradeEntry"+index).show();
@@ -574,6 +600,7 @@ function comfirmGradeEntry(row,index){
 function cancelGradeEntry(row,index){
 	$(".wantGradeEntry"+index).show();
 	$(".wantGradeFree"+index).show();
+	$(".reExamInfo"+index).show();
 	$(".grade"+index).show();
 	$(".comfirmGradeEntry"+index).hide();
 	$(".cancelGradeEntry"+index).hide();
@@ -673,6 +700,36 @@ function confirmGradeFree(row){
 				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: row});
 				toastr.success('操作成功');
 				$.hideModal("#gradeFreeModal")
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获取补考详情
+function reExamInfo(row,index){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getHistoryGrade",
+		data: {
+			"Edu005Id":row.edu005_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				
 			} else {
 				toastr.warning(backjson.msg);
 			}
