@@ -311,6 +311,7 @@ public class StaffManageService {
             edu0051.setGrade(edu005.getGrade());
             edu0051.setXnid(edu005.getXnid());
             edu0051.setXn(edu005.getXn());
+            edu0051.setExam_num(edu005.getExam_num());
             edu0051Dao.save(edu0051);
         }
         resultVO = ResultVO.setSuccess("成绩录入成功",edu005);
@@ -650,6 +651,7 @@ public class StaffManageService {
                 edu0051.setGrade(e005.getGrade());
                 edu0051.setXnid(edu005.getXnid());
                 edu0051.setXn(edu005.getXn());
+                edu0051.setExam_num(0);
                 edu0051Dao.save(edu0051);
             }
         }
