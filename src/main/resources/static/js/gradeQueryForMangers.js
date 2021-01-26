@@ -713,6 +713,7 @@ function confirmChoosedClass(){
 
 //预备选择课程
 function wantChooseExportCrouse(){
+	choosendCrouses=new Array();
 	var chosendClass=$("#export_classes").attr("choosendClassId");
 	if(chosendClass===""){
 		toastr.warning('请先选择班级');
