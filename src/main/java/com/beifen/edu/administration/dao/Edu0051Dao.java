@@ -18,7 +18,7 @@ public interface Edu0051Dao extends JpaRepository<Edu0051, Long>, JpaSpecificati
     //查询补考成绩
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "select * from EDU0051 where edu005_id = ?1", nativeQuery = true)
+    @Query(value = "select * from EDU0051 where edu005_id = ?1 ORDER BY ENTRY_DATE", nativeQuery = true)
     List<Edu0051> getHistoryGrade(String Edu005_Id);
 
     //查询补考成绩
