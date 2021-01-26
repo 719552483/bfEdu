@@ -729,7 +729,27 @@ function reExamInfo(row,index){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				
+				if(backjson.data.length===0){
+					toastr.warning("暂无补考信息");
+					return;
+				}
+				$.showModal("#reExamInfoModal",false);
+				$("#reExamInfoModal").find(".moadalTitle").html(row.studentName+"-"+row.courseName+"补考记录");
+				$(".historyInfo").empty();
+				var historyTxt="";
+				for (var i = 0; i < backjson.data.length; i++) {
+					var currentHistory= backjson.data[i];
+					historyTxt+='<div class="historyArea"><p class="Historystep">补考'+(i+1)+'</p><div>' +
+						'<span><cite>课程名称：</cite><b>'+nullMatter(currentHistory.courseName)+'</b></span>'+
+						'<span><cite>补考成绩：</cite><b>'+nullMatter(currentHistory.grade)+'</b></span>'+
+						'<span><cite>补考时间：</cite><b>'+nullMatter(currentHistory.entryDate)+'</b></span>'+
+						'<span><cite>操作人：</cite><b>'+nullMatter(currentHistory.gradeEnter)+'</b></span>'+
+						'</div></div>' ;
+					if((i+1)!=backjson.data.length){
+						historyTxt+='<img class="spiltImg" src="images/uew_icon_hover.png"></img>';
+					}
+				}
+				$(".historyInfo").append(historyTxt);
 			} else {
 				toastr.warning(backjson.msg);
 			}
