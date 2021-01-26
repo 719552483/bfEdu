@@ -209,7 +209,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				visible: false,
 				formatter: paramsMatter
-			}, {
+			} ,{
 				field: 'grade',
 				title: '成绩',
 				align: 'left',
@@ -229,7 +229,14 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				width:'10',
 				formatter: isResitMatter
-			},
+			},{
+				field: 'exam_num',
+				title: '补考次数',
+				align: 'left',
+				sortable: true,
+				visible: false,
+				formatter: examNnumMatter
+			} ,
 			{
 				field: 'isConfirm',
 				title: '成绩确认',
@@ -261,7 +268,37 @@ function stuffStudentBaseInfoTable(tableInfo) {
 	});
 
 	function releaseNewsFormatter(value, row, index) {
-		if(row.isMx==="0"||row.isMx==null){
+		if(row.isConfirm==="T"){//成绩是否确认
+			var isMx=true;//是否免修
+			var isPass=true;//是否及格
+			row.isMx==="0"||row.isMx==="05"||row.isMx==null||typeof row.isMx==="undefined"?isMx=false:isMx=true;
+			row.grade==="T"||row.grade>=60?isPass=true:isPass=false;
+			if(isMx){
+				return [
+					'<ul class="toolbar tabletoolbar">' +
+					'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+					'</ul>'
+				]
+					.join('');
+			}else{
+				if(isPass){
+					return [
+						'<div class="myTooltip normalTxt" title="暂无操作">暂无操作</div>'
+					]
+						.join('');
+				}else{
+					return [
+						'<ul class="toolbar tabletoolbar">' +
+						'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+						'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+						'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+						'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+						'</ul>'
+					]
+						.join('');
+				}
+			}
+		}else{
 			return [
 				'<ul class="toolbar tabletoolbar">' +
 				'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
@@ -271,15 +308,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				'</ul>'
 			]
 				.join('');
-		}else{
-			return [
-				'<ul class="toolbar tabletoolbar">' +
-				'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
-				'</ul>'
-			]
-				.join('');
 		}
-
 	}
 	
 	function xzbnameMatter(value, row, index) {
@@ -292,6 +321,20 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			return [
 					'<div class="myTooltip" title="'+value+'">'+value+'</div>'
 				]
+				.join('');
+		}
+	}
+
+	function examNnumMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="暂未补考">暂未补考</div>'
+			]
+				.join('');
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="'+value+'次">'+value+'次</div>'
+			]
 				.join('');
 		}
 	}
@@ -317,9 +360,14 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				'<div class="myTooltip normalTxt" title="休学">休学</div>'
 			]
 				.join('');
-		}else{
+		}else if(value==='04'){
 			return [
 				'<div class="myTooltip normalTxt" title="退学">退学</div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip normalTxt" title="缺考">缺考</div>'
 			]
 				.join('');
 		}
@@ -327,7 +375,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 
 	function gradeMatter(value, row, index) {
 		var className='';
-		if(row.isMx!=='0'&&row.isMx!==""&&row.isMx!=null&&typeof row.isMx!=="undefined"){
+		if((row.isMx!=='0'&&row.isMx!==""&&row.isMx!=null&&typeof row.isMx!=="undefined") && (row.isMx!=='05')){
 			if(row.isMx==='01'){
 				return [
 					'<div class="myTooltip normalTxt" title="免修">免修</div>'
@@ -353,7 +401,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 			if(row.isExamCrouse==="T"){
 				if (typeof value==="undefined"||value==null||value==="") {
 					return [ '<div>' +
-					'<span class="grade grade'+index+'"></span>' +
+					'<span class="grade grade'+index+'">暂无成绩</span>' +
 					'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
 					'</div>' ].join('');
 				} else {
@@ -375,7 +423,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				if(typeof value==="undefined"||value==null||value==="null"){
 					return [
 						'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
-						'<span class="grade grade'+index+'"></span>' +
+						'<span class="grade grade'+index+'">暂无成绩</span>' +
 						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
 						+ str +
 						'</select>'+
@@ -471,8 +519,8 @@ function stuffStudentBaseInfoTable(tableInfo) {
 
 //预备录入成绩
 function wantGradeEntry(row,index){
-	if(row.isConfirm==="T"&&row.isResit!=="T"){
-		toastr.warning("成绩已确认，不能再次录入");
+	if(row.exam_num!=null&&row.exam_num>=5){
+		toastr.warning("最多补考五次");
 		return;
 	}
 
@@ -562,8 +610,7 @@ function sendGrade(currentGrade,row) {
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				row.entryDate=backjson.data;
-				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: row});
+				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: backjson.data});
 			} else {
 				toastr.warning(backjson.msg);
 			}
