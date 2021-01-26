@@ -54,7 +54,8 @@
 				<div class="tools">
 					<ul class="toolbar">
 						<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
-						<li class="click" id="exportGrade"><span><img src="images/i01.png" style="width: 24px;"/></span>成绩导出</li>
+						<li class="click" id="exportGrade"><span><img src="images/i01.png" style="width: 24px;"/></span>班级成绩导出</li>
+						<li class="click" id="exportNoPassGrade"><span><img src="images/d06.png" style="width: 24px;"/></span>不及格成绩导出</li>
 					</ul>
 					<ul class="toolbar1 manytools">
 						<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
@@ -162,7 +163,7 @@
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">成绩导出</span><a class="cancel" shape="rect"></a></div>
+						<div class="tiptop"><span class="moadalTitle">班级成绩导出</span><a class="cancel" shape="rect"></a></div>
 					</div>
 					<div class="modal-body">
 						<div class="searchArea moreInfoSelectStyle">
@@ -201,6 +202,46 @@
 					<div class="clear"></div>
 					<div class="modal-footer tipbtn">
 						<input name="" type="button" class="sure" id="confirmExportGrade" value="开始导出"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 不及格成绩导出Modal -->
+		<div class="modal fade bs-example-modal-lg" id="exportNoPassGradeModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">不及格成绩导出</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 7px;">课程名称<b>*</b></label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											   id="exportNoPassGrade_crouseName" choosendClassId="" placeholder="请输入课程名称..." />
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+										<select class="isSowIndex" id="exportNoPassGrade_grade">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmExportNoPassGrade" value="开始导出"/>&nbsp;
 						<input name="" type="button" class="cancel" value="取消"/>
 					</div>
 				</div>

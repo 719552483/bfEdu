@@ -35,6 +35,7 @@ function stuffNj(){
 			}
 			stuffManiaSelect("#grade", str);
 			stuffManiaSelect("#export_grade", str);
+			stuffManiaSelect("#exportNoPassGrade_grade", str);
 		}
 	});
 }
@@ -1025,8 +1026,75 @@ function confirmExportGrade(){
 	form.appendTo('body').submit().remove();
 }
 
+//预备不及格成绩导出
+function exportNoPassGrade(){
+	$("#exportNoPassGrade_crouseName").val("");
+
+	var reObject = new Object();
+	reObject.normalSelectIds = "#exportNoPassGrade_grade";
+	reReloadSearchsWithSelect(reObject);
+
+	$.showModal("#exportNoPassGradeModal",true);
+}
+
+//确认不及格成绩导出
+function confirmExportNoPassGrade(){
+	var crouseName=$("#exportNoPassGrade_crouseName").val();
+	var trem=getNormalSelectValue("exportNoPassGrade_grade")
+	if(crouseName===""){
+		toastr.warning("课程名称不能为空");
+		return;
+	}
+
+	if(trem===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	var sendObject=new Object();
+	sendObject.crouse=crouseName;
+	sendObject.trem=trem;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/exportMakeUpGradeCheck",
+		data: {
+			"queryInfo":JSON.stringify(sendObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var url = "/exportMakeUpGrade";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "queryInfo").attr("value",JSON.stringify(sendObject)));
+				form.appendTo('body').submit().remove();
+				$.hideModal("#exportNoPassGradeModal");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //初始化页面按钮绑定事件
 function btnBind(){
+	//重置检索
+	$('#research').unbind('click');
+	$('#research').bind('click', function(e) {
+		research();
+		e.stopPropagation();
+	});
+
 	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
@@ -1066,16 +1134,25 @@ function btnBind(){
 		e.stopPropagation();
 	});
 
+	//预备不及格成绩导出
+	$('#exportNoPassGrade').unbind('click');
+	$('#exportNoPassGrade').bind('click', function(e) {
+		exportNoPassGrade();
+		e.stopPropagation();
+	});
+
+	//确认不及格成绩导出
+	$('#confirmExportNoPassGrade').unbind('click');
+	$('#confirmExportNoPassGrade').bind('click', function(e) {
+		confirmExportNoPassGrade();
+		e.stopPropagation();
+	});
+
 	//开始检索
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
 		startSearch();
 		e.stopPropagation();
 	});
+	}
 
-	//重置检索
-	$('#research').unbind('click');}
-	$('#research').bind('click', function(e) {
-		research();
-		e.stopPropagation();
-	});
