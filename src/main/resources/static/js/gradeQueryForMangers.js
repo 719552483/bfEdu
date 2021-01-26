@@ -72,6 +72,9 @@ function stuffStudentGradeTable(tableInfo) {
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
 		},
+		onDblClickRow : function(row, $element, field) {
+			reExamInfo(row);
+		},
 		columns: [
 			{
 				field: 'edu005_ID',
@@ -116,6 +119,12 @@ function stuffStudentGradeTable(tableInfo) {
 				sortable: true,
 				width:'10',
 				formatter: isResitMatter
+			},{
+				field: 'exam_num',
+				title: '补考次数(双击详情)',
+				align: 'left',
+				sortable: true,
+				formatter: examNnumMatter
 			},
 			{
 				field: 'isConfirm',
@@ -223,6 +232,20 @@ function stuffStudentGradeTable(tableInfo) {
 		}
 	}
 
+	function examNnumMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="暂未补考">暂未补考</div>'
+			]
+				.join('');
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="'+value+'次">'+value+'次</div>'
+			]
+				.join('');
+		}
+	}
+
 	function isConfirmMatter(value, row, index) {
 		if (value==="T") {
 			return [
@@ -243,6 +266,56 @@ function stuffStudentGradeTable(tableInfo) {
 	changeColumnsStyle(".studentGradeTableArea", "成绩信息");
 	toolTipUp(".myTooltip");
 	btnControl();
+}
+
+//获取补考详情
+function reExamInfo(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getHistoryGrade",
+		data: {
+			"Edu005Id":row.edu005_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				if(backjson.data.length===0){
+					toastr.warning("暂无补考信息");
+					return;
+				}
+				$.showModal("#reExamInfoModal",false);
+				$("#reExamInfoModal").find(".moadalTitle").html(row.studentName+"-"+row.courseName+"补考记录");
+				$(".historyInfo").empty();
+				var historyTxt="";
+				for (var i = 0; i < backjson.data.length; i++) {
+					var currentHistory= backjson.data[i];
+					historyTxt+='<div class="historyArea"><p class="Historystep">补考'+(i+1)+'</p><div>' +
+						'<span><cite>课程名称：</cite><b>'+nullMatter(currentHistory.courseName)+'</b></span>'+
+						'<span><cite>补考成绩：</cite><b>'+nullMatter(currentHistory.grade)+'</b></span>'+
+						'<span><cite>补考时间：</cite><b>'+nullMatter(currentHistory.entryDate)+'</b></span>'+
+						'<span><cite>操作人：</cite><b>'+nullMatter(currentHistory.gradeEnter)+'</b></span>'+
+						'</div></div>' ;
+					if((i+1)!=backjson.data.length){
+						historyTxt+='<img class="spiltImg" src="images/uew_icon_hover.png"></img>';
+					}
+				}
+				$(".historyInfo").append(historyTxt);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //预备选择学生
