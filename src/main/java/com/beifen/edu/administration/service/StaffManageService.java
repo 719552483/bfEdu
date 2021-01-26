@@ -46,6 +46,8 @@ public class StaffManageService {
     @Autowired
     Edu005Dao edu005Dao;
     @Autowired
+    Edu0051Dao edu0051Dao;
+    @Autowired
     Edu108Dao edu108Dao;
     @Autowired
     Edu107Dao edu107Dao;
@@ -264,6 +266,9 @@ public class StaffManageService {
         if(edu005.getIsMx() != null && !edu005.getIsMx().equals("0")){
             if(edu005.getIsMx().equals("01")){
                 edu005.setGetCredit(edu005.getCredit());
+                edu005.setIsPassed("T");
+            }else{
+                edu005.setIsPassed("F");
             }
         }else{
             if ("F".equals(edu005.getGrade())) {
@@ -281,9 +286,31 @@ public class StaffManageService {
                     edu005.setGetCredit(edu005.getCredit());
                     edu005.setIsPassed("T");
                 }
+            } if("T".equals(edu005.getIsResit())){
+                if(edu005.getExam_num() == null){
+                    edu005.setExam_num(1);
+                }else{
+                    edu005.setExam_num(edu005.getExam_num()+1);
+                }
             }
         }
         edu005Dao.save(edu005);
+        if("T".equals(edu005.getIsResit()) && "T".equals(edu005.getIsConfirm())){
+            Edu0051 edu0051 = new Edu0051();
+            edu0051.setEdu005_ID(edu005.getEdu005_ID());
+            edu0051.setEdu001_ID(edu005.getEdu001_ID());
+            edu0051.setEdu201_ID(edu005.getEdu201_ID());
+            edu0051.setEdu300_ID(edu005.getEdu300_ID());
+            edu0051.setEdu101_ID(edu005.getEdu101_ID());
+            edu0051.setCourseName(edu005.getCourseName());
+            edu0051.setClassName(edu005.getClassName());
+            edu0051.setStudentName(edu005.getStudentName());
+            edu0051.setStudentCode(edu005.getStudentCode());
+            edu0051.setGradeEnter(edu005.getGradeEnter());
+            edu0051.setEntryDate(edu005.getEntryDate());
+            edu0051.setGrade(edu005.getGrade());
+            edu0051Dao.save(edu0051);
+        }
         resultVO = ResultVO.setSuccess("成绩录入成功",dateString);
         return resultVO;
     }
@@ -602,6 +629,26 @@ public class StaffManageService {
         };
 
         List<Edu005> newEdu005List = edu005Dao.findAll(specification);
+
+        for(int i = 0;i < newEdu005List.size();i++){
+            Edu005 e005 = newEdu005List.get(i);
+            if("T".equals(e005.getIsResit()) && "T".equals(e005.getIsConfirm()) && e005.getGrade()!=null){
+                Edu0051 edu0051 = new Edu0051();
+                edu0051.setEdu005_ID(e005.getEdu005_ID());
+                edu0051.setEdu001_ID(e005.getEdu001_ID());
+                edu0051.setEdu201_ID(e005.getEdu201_ID());
+                edu0051.setEdu300_ID(e005.getEdu300_ID());
+                edu0051.setEdu101_ID(e005.getEdu101_ID());
+                edu0051.setCourseName(e005.getCourseName());
+                edu0051.setClassName(e005.getClassName());
+                edu0051.setStudentName(e005.getStudentName());
+                edu0051.setStudentCode(e005.getStudentCode());
+                edu0051.setGradeEnter(e005.getGradeEnter());
+                edu0051.setEntryDate(e005.getEntryDate());
+                edu0051.setGrade(e005.getGrade());
+                edu0051Dao.save(edu0051);
+            }
+        }
 
         resultVO = ResultVO.setSuccess("成绩确认成功",newEdu005List);
 

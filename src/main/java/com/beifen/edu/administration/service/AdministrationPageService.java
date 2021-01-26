@@ -50,6 +50,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu005Dao edu005Dao;
 	@Autowired
+	private Edu0051Dao edu0051Dao;
+	@Autowired
 	private Edu200Dao edu200DAO;
 	@Autowired
 	private Edu201Dao edu201DAO;
@@ -2626,6 +2628,13 @@ public class AdministrationPageService {
 		return edu005List;
 	}
 
+	//查询补考成绩
+	public ResultVO getHistoryGrade(String Edu005_Id){
+		ResultVO resultVO;
+		List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(Edu005_Id);
+		resultVO = ResultVO.setSuccess("查找成功",edu0051List);
+		return resultVO;
+	}
 
 	//导出成绩excel
 	public XSSFWorkbook exportGrade(List<Edu005> edu005List,int size) {
@@ -2718,6 +2727,10 @@ public class AdministrationPageService {
 				if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null) {
 					resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
 					return resultVO;
+				}
+				XSSFCell cell6 = contentRow.getCell(6);
+				if (cell6 != null && !"正常".equals(cell6.toString())){
+					continue;
 				}
 				XSSFCell cell = contentRow.getCell(5);
 				if(cell != null) {

@@ -607,6 +607,20 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 查询补考成绩
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("getHistoryGrade")
+    @ResponseBody
+    public ResultVO getHistoryGrade(@RequestParam(value = "Edu005Id") String Edu005Id) {
+        ResultVO result = administrationPageService.getHistoryGrade(Edu005Id);
+        return result;
+    }
+
 
     /**
      * 导出成绩excel

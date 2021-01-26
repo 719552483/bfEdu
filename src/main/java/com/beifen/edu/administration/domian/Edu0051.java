@@ -4,9 +4,10 @@ import javax.persistence.*;
 
 //学生成绩表
 @Entity
-@Table(name="Edu005")
-public class Edu005 {
-    private Long Edu005_ID;//主键
+@Table(name="Edu0051")
+public class Edu0051 {
+    private Long Edu0051_ID;//主键
+    private Long Edu005_ID;//成绩单id
     private Long Edu001_ID;//学生id
     private Long Edu201_ID;//任务书id
     private Long Edu300_ID;//行政班id
@@ -17,23 +18,20 @@ public class Edu005 {
     private String studentCode;//学生学号
     private String gradeEnter;//录入人姓名
     private String entryDate;//录入日期
-    private String isExamCrouse;//是否为考试课
     private String grade;//成绩
-    private Double credit;//学分
-    private Double getCredit;//已得学分
-    private String xn;//学年
-    private String xnid;//学年id
-    private String isPassed; //是否通过
-    private String isResit; //是否补考
-    private String isConfirm; //是否确认
-    private String isMx;//是否免修
-    private Integer exam_num;//补考次数
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
-    @Column(name = "Edu005_ID")
+    @Column(name = "Edu0051_ID")
 
+    public Long getEdu0051_ID() {
+        return Edu0051_ID;
+    }
+
+    public void setEdu0051_ID(Long edu0051_ID) {
+        Edu0051_ID = edu0051_ID;
+    }
 
     public Long getEdu005_ID() {
         return Edu005_ID;
@@ -123,14 +121,6 @@ public class Edu005 {
         this.entryDate = entryDate;
     }
 
-    public String getIsExamCrouse() {
-        return isExamCrouse;
-    }
-
-    public void setIsExamCrouse(String isExamCrouse) {
-        this.isExamCrouse = isExamCrouse;
-    }
-
     public String getGrade() {
         return grade;
     }
@@ -139,75 +129,4 @@ public class Edu005 {
         this.grade = grade;
     }
 
-    public Double getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Double credit) {
-        this.credit = credit;
-    }
-
-    public Double getGetCredit() {
-        return getCredit;
-    }
-
-    public void setGetCredit(Double getCredit) {
-        this.getCredit = getCredit;
-    }
-
-    public String getXn() {
-        return xn;
-    }
-
-    public void setXn(String xn) {
-        this.xn = xn;
-    }
-
-    public String getXnid() {
-        return xnid;
-    }
-
-    public void setXnid(String xnid) {
-        this.xnid = xnid;
-    }
-
-    public String getIsPassed() {
-        return isPassed;
-    }
-
-    public void setIsPassed(String isPassed) {
-        this.isPassed = isPassed;
-    }
-
-    public String getIsResit() {
-        return isResit;
-    }
-
-    public void setIsResit(String isResit) {
-        this.isResit = isResit;
-    }
-
-    public String getIsConfirm() {
-        return isConfirm;
-    }
-
-    public void setIsConfirm(String isConfirm) {
-        this.isConfirm = isConfirm;
-    }
-
-    public String getIsMx() {
-        return isMx;
-    }
-
-    public void setIsMx(String isMx) {
-        this.isMx = isMx;
-    }
-
-    public Integer getExam_num() {
-        return exam_num;
-    }
-
-    public void setExam_num(Integer exam_num) {
-        this.exam_num = exam_num;
-    }
 }
