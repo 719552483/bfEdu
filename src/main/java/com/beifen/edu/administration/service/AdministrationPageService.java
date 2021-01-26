@@ -2705,8 +2705,13 @@ public class AdministrationPageService {
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getCourseName(),-1,2,false);
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentName(),-1,3,false);
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentCode(),-1,4,false);
-			utils.appendCell(sheet,i,"",edu0051List.get(i).getGradeEnter(),-1,5,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getEntryDate(),-1,5,false);
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
+			if(edu0051List.get(i).getExam_num() == 0){
+				utils.appendCell(sheet,i,"","正考成绩",-1,7,false);
+			}else{
+				utils.appendCell(sheet,i,"","第"+edu0051List.get(i).getExam_num()+"次补考成绩",-1,7,false);
+			}
 		}
 
 		sheet.setColumnWidth(0, 12*256);
@@ -2714,6 +2719,8 @@ public class AdministrationPageService {
 		sheet.setColumnWidth(2, 30*256);
 		sheet.setColumnWidth(3, 10*256);
 		sheet.setColumnWidth(4, 20*256);
+		sheet.setColumnWidth(5, 30*256);
+		sheet.setColumnWidth(7, 20*256);
 
 		return workbook;
 	}

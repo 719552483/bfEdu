@@ -21,6 +21,7 @@ public class Edu0051 {
     private String grade;//成绩
     private String xnid;//学年id
     private String xn;//学年
+    private Integer exam_num;
 
 
     @Id
@@ -146,6 +147,14 @@ public class Edu0051 {
 
     public void setXn(String xn) {
         this.xn = xn;
+    }
+
+    public Integer getExam_num() {
+        return exam_num;
+    }
+
+    public void setExam_num(Integer exam_num) {
+        this.exam_num = exam_num;
     }
 
 }
