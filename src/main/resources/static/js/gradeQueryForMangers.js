@@ -791,11 +791,16 @@ function confirmChoosedClass(){
 function wantChooseExportCrouse(){
 	choosendCrouses=new Array();
 	var chosendClass=$("#export_classes").attr("choosendClassId");
+	var choosendTerm=getNormalSelectValue("export_grade");
 	if(chosendClass===""){
 		toastr.warning('请先选择班级');
 		return;
 	}
-	searchCourseByClass(chosendClass);
+	if(choosendTerm===""){
+		toastr.warning('请先选择学年');
+		return;
+	}
+	searchCourseByClass(chosendClass,choosendTerm);
 
 	//提示框取消按钮
 	$('.specialCanle2').unbind('click');
@@ -814,13 +819,14 @@ function wantChooseExportCrouse(){
 }
 
 //根据班级获取课程
-function searchCourseByClass(chosendClass){
+function searchCourseByClass(chosendClass,choosendTerm){
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/searchCourseByClass",
 		data: {
-			"edu300_ID":chosendClass
+			"edu300_ID":chosendClass,
+			"term":choosendTerm
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
