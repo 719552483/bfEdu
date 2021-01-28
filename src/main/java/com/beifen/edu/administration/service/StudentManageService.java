@@ -49,7 +49,7 @@ public class StudentManageService {
     @Autowired
     private Edu005Dao edu005Dao;
     @Autowired
-    private Edu108Dao edu108Dao;
+    private Edu201Dao edu201Dao;
     @Autowired
     private Edu204Dao edu204Dao;
     @Autowired
@@ -535,13 +535,13 @@ public class StudentManageService {
     }
 
     // 根据班级查询学科
-    public ResultVO searchCourseByClass(String edu300_ID) {
+    public ResultVO searchCourseByClass(String edu300_ID,String trem) {
         ResultVO resultVO;
-        List<Edu108> edu108List = edu108Dao.searchCourseByClass(edu300_ID);
-        if (edu108List.size() == 0) {
+        List<Edu201> edu201List = edu201Dao.searchCourseByClass(edu300_ID,trem);
+        if (edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无课程信息");
         } else {
-            resultVO = ResultVO.setSuccess("查询成功",edu108List);
+            resultVO = ResultVO.setSuccess("查询成功",edu201List);
         }
         return resultVO;
     }

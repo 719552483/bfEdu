@@ -343,8 +343,8 @@ public class StudentManageController {
 
     @RequestMapping("/searchCourseByClass")
     @ResponseBody
-    public ResultVO searchCourseByClass(@RequestParam("edu300_ID") String edu300_ID) {
-        ResultVO result =studentManageService.searchCourseByClass(edu300_ID);
+    public ResultVO searchCourseByClass(@RequestParam("edu300_ID") String edu300_ID,@RequestParam("term") String term) {
+        ResultVO result =studentManageService.searchCourseByClass(edu300_ID,term);
         return result;
     }
 

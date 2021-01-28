@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.beifen.edu.administration.domian.Edu108;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -135,4 +136,10 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 			"and c.EDU201_ID = b.EDU201_ID\n" +
 			"and a.EDU300_ID = ?1", nativeQuery = true)
     List<Edu201> findTaskWithNewClass(String edu300_id);
+
+	// 根据班级查询学科
+	@org.springframework.transaction.annotation.Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "select * from Edu201 where class_id like %?1% and xnid = ?2", nativeQuery = true)
+	List<Edu201> searchCourseByClass(String edu300_ID, String trem);
 }
