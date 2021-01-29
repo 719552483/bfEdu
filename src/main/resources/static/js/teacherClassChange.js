@@ -385,13 +385,15 @@ function getChangeInfo(eve){
 }
 
 //确认操作
-function confirmChoose(changInfo) {
+function confirmChoose(info) {
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/changeSchedule",
+		url: "/changeScheduleNew",
 		data:{
-			"changInfo":JSON.stringify(changInfo)
+			"changInfo":JSON.stringify(info.changInfo),
+			"oldchangInfo":JSON.stringify(info.oldchangInfo),
+			"type":info.type
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
