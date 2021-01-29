@@ -638,8 +638,28 @@ public class TeachingManageService {
     //教师调课
     public ResultVO changeSchedule(Edu203 edu203) {
         ResultVO resultVO;
+        Edu203 edu2031 = edu203Dao.findOne(edu203.getEdu203_ID());
+        List<Edu203> thanList = edu203Dao.thanClasses(edu2031.getEdu202_ID(),edu2031.getWeek(),edu2031.getKjid(),edu2031.getXqid());
+        List<Edu203> lessList = edu203Dao.lessClasses(edu2031.getEdu202_ID(),edu2031.getWeek(),edu2031.getKjid(),edu2031.getXqid());
         edu203.setKsz(edu203.getWeek());
         edu203.setJsz(edu203.getWeek());
+        edu203.setEdu101_id(edu2031.getEdu101_id());
+        edu203.setTeacherName(edu2031.getTeacherName());
+        edu203.setTeacherType(edu2031.getTeacherType());
+        edu203.setLocalId(edu2031.getLocalId());
+        edu203.setLocalName(edu2031.getLocalName());
+        edu203.setPointId(edu2031.getPointId());
+        edu203.setPointName(edu2031.getPointName());
+        for (int i = 0;i<thanList.size();i++){
+            Edu203 than = thanList.get(i);
+            than.setKsz((Integer.parseInt(edu2031.getWeek())+1)+"");
+            edu203Dao.save(than);
+        }
+        for (int i = 0;i<lessList.size();i++){
+            Edu203 less = lessList.get(i);
+            less.setJsz((Integer.parseInt(edu2031.getWeek())-1)+"");
+            edu203Dao.save(less);
+        }
         edu203Dao.save(edu203);
         resultVO = ResultVO.setSuccess("调整成功");
         return resultVO;

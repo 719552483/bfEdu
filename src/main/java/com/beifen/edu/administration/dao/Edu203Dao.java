@@ -98,4 +98,16 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Modifying
     @Query(value = "update edu203 t set t.attendance = ?2 where t.Edu203_ID =?1", nativeQuery = true)
     void updateAttendance(String edu203_id, String usedPercent);
+
+    //查询开始周大于调课的
+    @Transactional
+    @Modifying
+    @Query(value = "select * from EDU203 where EDU202_ID = ?1 and ksz <= ?2 and jsz >= ?2 and kjid = ?3 and xqid = ?4 and week >?2", nativeQuery = true)
+    List<Edu203> thanClasses(String edu202_id,String week,String kjid,String xqid);
+
+    //查询开始周小于调课的
+    @Transactional
+    @Modifying
+    @Query(value = "select * from EDU203 where EDU202_ID = ?1 and ksz <= ?2 and jsz >= ?2 and kjid = ?3 and xqid = ?4 and week <?2", nativeQuery = true)
+    List<Edu203> lessClasses(String edu202_id,String week,String kjid,String xqid);
 }
