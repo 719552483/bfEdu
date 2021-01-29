@@ -257,11 +257,12 @@ public class TeachingManageService {
         //根据信息查询所有课表信息searchScatteredClassByTeacher
         List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101Id(edu101.getEdu101_ID().toString(),
                 timeTable.getWeekTime(), timeTable.getSemester());
-        if(schoolTimetableList.size() == 0) {
+        List<SchoolTimetablePO> schoolTimetableLists = replaceScheduleweek(schoolTimetableList);
+        if(schoolTimetableLists.size() == 0) {
             resultVO = ResultVO.setFailed("当前周未找到您的课程");
         } else {
-            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
-            resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableLists));
+            resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableLists.size()+"个课程",timeTable);
         }
         return resultVO;
     }
@@ -636,7 +637,54 @@ public class TeachingManageService {
     }
 
     //教师调课
-    public ResultVO changeSchedule(Edu203 edu203) {
+    public ResultVO changeSchedule(Edu203 edu203,Edu203 edu203old,String type) {
+        ResultVO resultVO;
+        if("1".equals(type)){
+
+        }else if("2".equals(type)){
+            Specification<Edu203> specification = new Specification<Edu203>() {
+                public Predicate toPredicate(Root<Edu203> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    predicates.add(cb.equal(root.<String>get("edu101_ID"), edu203old.getEdu101_id()));
+                    predicates.add(cb.equal(root.<String>get("edu202_ID"), edu203old.getEdu202_ID()));
+                    predicates.add(cb.equal(root.<String>get("week"), edu203old.getWeek()));
+                    predicates.add(cb.equal(root.<String>get("xqid"), edu203old.getXqid()));
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                }
+            };
+            List<Edu203> list = edu203Dao.findAll(specification);
+        }else if("3".equals(type)){
+            Specification<Edu203> specification = new Specification<Edu203>() {
+                public Predicate toPredicate(Root<Edu203> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    predicates.add(cb.equal(root.<String>get("edu101_ID"), edu203old.getEdu101_id()));
+                    predicates.add(cb.equal(root.<String>get("edu202_ID"), edu203old.getEdu202_ID()));
+                    predicates.add(cb.equal(root.<String>get("week"), edu203old.getWeek()));
+                    predicates.add(cb.equal(root.<String>get("xqid"), edu203old.getXqid()));
+                    predicates.add(cb.equal(root.<String>get("kjid"), edu203old.getKjid()));
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                }
+            };
+            List<Edu203> list = edu203Dao.findAll(specification);
+            for (int i = 0;i<list.size();i++){
+                Edu203 newEdu203 = new Edu203();
+                Edu203 oldedu203 = list.get(i);
+                newEdu203.setEdu203_ID(oldedu203.getEdu203_ID());
+                newEdu203.setEdu202_ID(oldedu203.getEdu202_ID());
+                newEdu203.setKjid(edu203.getKjid());
+                newEdu203.setKjmc(edu203.getKjmc());
+                newEdu203.setWeek(edu203.getWeek());
+                newEdu203.setXqid(edu203.getXqid());
+                newEdu203.setXqmc(edu203.getXqmc());
+                changeScheduleOne(newEdu203);
+            }
+        }
+        resultVO = ResultVO.setSuccess("调整成功");
+        return resultVO;
+    }
+
+    //教师调课-单课节
+    public ResultVO changeScheduleOne(Edu203 edu203) {
         ResultVO resultVO;
         Edu203 edu2031 = edu203Dao.findOne(edu203.getEdu203_ID());
         List<Edu203> thanList = edu203Dao.thanClasses(edu2031.getEdu202_ID(),edu2031.getWeek(),edu2031.getKjid(),edu2031.getXqid());
@@ -653,14 +701,14 @@ public class TeachingManageService {
         for (int i = 0;i<thanList.size();i++){
             Edu203 than = thanList.get(i);
             than.setKsz((Integer.parseInt(edu2031.getWeek())+1)+"");
-            edu203Dao.save(than);
+//            edu203Dao.save(than);
         }
         for (int i = 0;i<lessList.size();i++){
             Edu203 less = lessList.get(i);
             less.setJsz((Integer.parseInt(edu2031.getWeek())-1)+"");
-            edu203Dao.save(less);
+//            edu203Dao.save(less);
         }
-        edu203Dao.save(edu203);
+//        edu203Dao.save(edu203);
         resultVO = ResultVO.setSuccess("调整成功");
         return resultVO;
     }
@@ -946,6 +994,39 @@ public class TeachingManageService {
             resultVO = ResultVO.setSuccess("当前学年共找到"+yearSchedulePOS.size()+"个课程",timeTable);
         }
         return resultVO;
+    }
+
+    //重新整理周课表
+    private List<SchoolTimetablePO> replaceScheduleweek(List<SchoolTimetablePO> yearSchedules) {
+        List<SchoolTimetablePO> newList = new ArrayList<>();
+        int size = yearSchedules.size();
+        for (int i = 0; i < size ; i++) {
+            String kjid = yearSchedules.get(i).getKjid();
+            String xqid = yearSchedules.get(i).getXqid();
+            List<SchoolTimetablePO> orderList = new ArrayList<>();
+            for ( int j = i ;j < size; j++) {
+                SchoolTimetablePO info = yearSchedules.get(j);
+                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid())) {
+                    orderList.add(info);
+                }
+                if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()))) {
+                    break;
+                }
+            }
+            List<String> ssz = new ArrayList<>();
+            for (SchoolTimetablePO e : orderList) {
+                if (e.getKsz().equals(e.getJsx())) {
+                    ssz.add("第"+e.getKsz()+"周");
+                } else {
+                    ssz.add("第"+e.getKsz()+"-"+e.getJsx()+"周");
+                }
+            }
+            SchoolTimetablePO addInfo = orderList.get(0);
+            addInfo.setSzz(utils.listToString(ssz,','));
+            newList.add(addInfo);
+            i += orderList.size()-1;
+        }
+        return newList;
     }
 
     //重新整理学年课表
