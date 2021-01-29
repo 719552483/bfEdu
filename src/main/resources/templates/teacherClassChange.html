@@ -102,45 +102,99 @@
 						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
 					</div>
 					<div class="modal-body">
-						<div class="searchArea searchAreaWitheSelect">
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;width: 9%!important;">周数<b>*</b></label>
-										<select id="choose_weekTime" class="isSowIndex">
-											<option value="seleceConfigTip">暂无选择</option>
-										</select>
-									</div>
+						<div id="usual1" class="usual">
+							<div class="itab">
+								<ul>
+									<li><a href="#tab1" class="selected">预备调课目标</a></li>
+									<li><a href="#tab2">调课新目标</a></li>
 								</ul>
 							</div>
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;width: 9%!important;">星期<b>*</b></label>
-										<select class="isSowIndex xqSowIndex" id="xq">
-											<option value="seleceConfigTip">请选择</option>
-											<option value="01">星期一</option>
-											<option value="02">星期二</option>
-											<option value="03">星期三</option>
-											<option value="04">星期四</option>
-											<option value="05">星期五</option>
-											<option value="06">星期六</option>
-											<option value="07">星期日</option>
-										</select>
+
+							<div id="tab1" class="tabson myTabson">
+								<div class="searchArea searchAreaWitheSelect">
+									<div class="col1 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;width: 9%!important;">周数<b>*</b></label>
+												<select id="oldweekTime" class="isSowIndex">
+													<option value="seleceConfigTip">暂无选择</option>
+												</select>
+											</div>
+										</ul>
 									</div>
-								</ul>
+									<div class="col1 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;width: 9%!important;">星期</label>
+												<select class="isSowIndex xqSowIndex" id="oldXq">
+													<option value="seleceConfigTip">请选择</option>
+													<option value="01">星期一</option>
+													<option value="02">星期二</option>
+													<option value="03">星期三</option>
+													<option value="04">星期四</option>
+													<option value="05">星期五</option>
+													<option value="06">星期六</option>
+													<option value="07">星期日</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+									<div class="col1 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;width: 9%!important;">课节</label>
+												<select class="isSowIndex kjSowIndex" id="oldKj">
+													<option value="seleceConfigTip">请选择</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+								</div>
 							</div>
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;width: 9%!important;">课节<b>*</b></label>
-										<select class="isSowIndex kjSowIndex" id="kj">
-											<option value="seleceConfigTip">请选择</option>
-										</select>
+
+							<div id="tab2" class="tabson myTabson">
+								<div class="searchArea searchAreaWitheSelect">
+									<div class="col1 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;width: 9%!important;">周数<b>*</b></label>
+												<select id="choose_weekTime" class="isSowIndex">
+													<option value="seleceConfigTip">暂无选择</option>
+												</select>
+											</div>
+										</ul>
 									</div>
-								</ul>
+									<div class="col1 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;width: 9%!important;">星期</label>
+												<select class="isSowIndex xqSowIndex" id="xq">
+													<option value="seleceConfigTip">请选择</option>
+													<option value="01">星期一</option>
+													<option value="02">星期二</option>
+													<option value="03">星期三</option>
+													<option value="04">星期四</option>
+													<option value="05">星期五</option>
+													<option value="06">星期六</option>
+													<option value="07">星期日</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+									<div class="col1 giveBottom">
+										<ul class="forminfo">
+											<div class="">
+												<label class="selectName" style="margin-top: 14px;width: 9%!important;">课节</label>
+												<select class="isSowIndex kjSowIndex" id="kj">
+													<option value="seleceConfigTip">请选择</option>
+												</select>
+											</div>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
+
 						<div class="clear"></div>
 					</div>
 					<div class="modal-footer tipbtn">

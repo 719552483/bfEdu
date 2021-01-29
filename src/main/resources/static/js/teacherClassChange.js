@@ -240,6 +240,12 @@ function showChooseModal(eve){
 		return;
 	}
 
+	//默认展示tab1
+	$("#ChooseModal").find("#tab1").show();
+	$("#ChooseModal").find("#tab2").hide();
+	$("#ChooseModal").find(".itab").find("li:eq(0)").find("a").addClass("selected");
+	$("#ChooseModal").find(".itab").find("li:eq(1)").find("a").removeClass("selected");
+
 	var searchInfo=getScheduleSearchInfo(true);
 	if(typeof searchInfo==="undefined"){
 		return;
@@ -254,21 +260,28 @@ function showChooseModal(eve){
 
 	$("#ChooseModal").find(".moadalTitle").html(titletxt);
 	stuffKjArae();
+	stuffOldWeekArae();
 	$.showModal("#ChooseModal",true);
 
 
 	//提示框取消按钮
 	$('.confirmChoose').unbind('click');
 	$('.confirmChoose').bind('click', function(e) {
-		var changInfo=getChangeInfo();
+		var changInfo=getChangeInfo(eve);
 		if(typeof changInfo==="undefined"){
 			return;
 		}
-		changInfo.Edu203_ID=eve.currentTarget.childNodes[1].id;
-		changInfo.Edu202_ID=eve.currentTarget.childNodes[1].attributes[2].nodeValue;
 		confirmChoose(changInfo);
 		e.stopPropagation();
 	});
+}
+
+//填充调课目标原始周数
+function stuffOldWeekArae(){
+	var choosendWeek=getNormalSelectValue("weekTime");
+	var choosendWeekTxt=getNormalSelectText("weekTime");
+	var str= '<option value="' + choosendWeek + '">'+choosendWeekTxt+'</option>';
+	stuffManiaSelect("#oldweekTime", str);
 }
 
 //填充课节下拉框
@@ -279,41 +292,95 @@ function stuffKjArae(){
 			+ '</option>';
 	}
 	stuffManiaSelect("#kj", str);
+	stuffManiaSelect("#oldKj", str);
 }
 
 //清空选择域的值
 function emptyChoose(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#choose_weekTime,#xq,#kj";
+	reObject.normalSelectIds = "#choose_weekTime,#xq,#kj,#oldXq,#oldKj";
 	reReloadSearchsWithSelect(reObject);
 }
 
 //获得改变的信息
-function getChangeInfo(){
+function getChangeInfo(eve){
+	var type=0;
+	//old
+	var oldWeekTime=getNormalSelectValue("oldweekTime"); //必定不为空
+	var oldXq=getNormalSelectValue("oldXq");
+	var oldKj=getNormalSelectValue("oldKj");
+
+	//new
 	var choose_weekTime=getNormalSelectValue("choose_weekTime");
 	var xq=getNormalSelectValue("xq");
 	var kj=getNormalSelectValue("kj");
-	if(choose_weekTime===""){
-		toastr.warning('请选择周数');
+
+	if(oldXq===""&&oldKj===""){
+		type=1;
+	}
+
+	if(oldXq===""&&oldKj!==""){
+		toastr.warning('请选择预备调课目标星期');
 		return ;
 	}
 
-	if(xq===""){
-		toastr.warning('请选择星期');
-		return ;
+	if(oldXq!==""&&oldKj===""){
+		type=2;
 	}
 
-	if(kj===""){
-		toastr.warning('请选择课节');
-		return ;
+	if(oldXq!==""&&oldKj!==""){
+		type=3;
 	}
+
+	if(type==1){
+		if(choose_weekTime===""){
+			toastr.warning('请选择调课新目标周数');
+			return ;
+		}
+	}else if(type==2){
+		if(choose_weekTime===""){
+			toastr.warning('请选择调课新目标周数');
+			return ;
+		}
+		if(xq===""){
+			toastr.warning('请选择调课新目标星期');
+			return ;
+		}
+	}else{
+		if(choose_weekTime===""){
+			toastr.warning('请选择调课新目标周数');
+			return ;
+		}
+		if(xq===""){
+			toastr.warning('请选择调课新目标星期');
+			return ;
+		}
+		if(kj===""){
+			toastr.warning('请选择调课新目标课节');
+			return ;
+		}
+	}
+
+	var changInfo=new Object();
+	changInfo.week=choose_weekTime;
+	changInfo.xqid=xq;
+	changInfo.xqmc=getNormalSelectText("xq");
+	changInfo.kjid=kj;
+	changInfo.kjmc=getNormalSelectText("kj");
+
+	var oldchangInfo=new Object();
+	oldchangInfo.week=oldWeekTime;
+	oldchangInfo.xqid=oldXq;
+	oldchangInfo.xqmc=getNormalSelectText("oldXq");
+	oldchangInfo.kjid=oldKj;
+	oldchangInfo.kjmc=getNormalSelectText("oldKj");
+	oldchangInfo.Edu202_ID=eve.currentTarget.childNodes[1].attributes[2].nodeValue;
+	oldchangInfo.Edu101_ID=eve.currentTarget.attributes[1].nodeValue;
 
 	var returnObject=new Object();
-	returnObject.week=choose_weekTime;
-	returnObject.xqid=xq;
-	returnObject.xqmc=getNormalSelectText("xq");
-	returnObject.kjid=kj;
-	returnObject.kjmc=getNormalSelectText("kj");
+	returnObject.type=type;
+	returnObject.changInfo=changInfo;//修改后对象信息
+	returnObject.oldchangInfo=oldchangInfo;//原对象信息 需要有Edu202_id和Edu101_id
 	return returnObject;
 }
 
