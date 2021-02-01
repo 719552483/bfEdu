@@ -2252,9 +2252,9 @@ public class AdministrationPageService {
 
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + studentBreakPO.getUserId());
-		
+
 		List<String> studentIdList = edu006Dao.findStudentIdList();
-		
+
 		if (studentIdList.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无违纪学生");
 			return resultVO;
@@ -2853,20 +2853,29 @@ public class AdministrationPageService {
 				String studentCode = contentRow.getCell(4).toString();
 				XSSFCell gradeCell = contentRow.getCell(5);
 				XSSFCell mxzt = contentRow.getCell(6);
-				if (gradeCell != null || mxzt != null) {
+				String mx = edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX");
+				if (gradeCell != null || mx != null ) {
 					Edu005 edu005;
 					edu005 = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode);
 					if (edu005 != null) {
-						if(gradeCell != null){
+						if(mx != null){
+							edu005.setIsMx(mx);
+							if(gradeCell == null && "0".equals(mx)){
+								continue;
+							}else if(gradeCell != null && "0".equals(mx)){
+								edu005.setGrade(gradeCell.toString());
+							}
+							edu005.setEdu101_ID(Long.parseLong(userKey));
+							edu005.setGradeEnter(lrrmc);
+							staffManageService.giveGrade(edu005);
+							edu005List.add(edu005);
+						}else if(gradeCell != null){
 							edu005.setGrade(gradeCell.toString());
+							edu005.setEdu101_ID(Long.parseLong(userKey));
+							edu005.setGradeEnter(lrrmc);
+							staffManageService.giveGrade(edu005);
+							edu005List.add(edu005);
 						}
-						edu005.setEdu101_ID(Long.parseLong(userKey));
-						edu005.setGradeEnter(lrrmc);
-						if(mxzt != null){
-							edu005.setIsMx(edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX"));
-						}
-						staffManageService.giveGrade(edu005);
-						edu005List.add(edu005);
 					}
 				}
 			}
@@ -2879,7 +2888,7 @@ public class AdministrationPageService {
 	}
 
 	//考勤录入查询
-    public ResultVO searchCourseCheckOn(CourseCheckOnPO searchInfoPO) {
+	public ResultVO searchCourseCheckOn(CourseCheckOnPO searchInfoPO) {
 		ResultVO resultVO;
 		//根据条件筛选考情考情情况录入
 		Specification<CourseCheckOnPO> specification = new Specification<CourseCheckOnPO>() {

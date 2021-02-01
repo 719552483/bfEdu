@@ -538,6 +538,8 @@ public class StudentManageService {
     public ResultVO searchCourseByClass(String edu300_ID,String trem) {
         ResultVO resultVO;
         List<Edu201> edu201List = edu201Dao.searchCourseByClass(edu300_ID,trem);
+        List<Edu201> edu201List2 = edu201Dao.searchCourseByClass2(edu300_ID,trem);
+        edu201List.addAll(edu201List2);
         if (edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无课程信息");
         } else {
