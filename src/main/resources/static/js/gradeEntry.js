@@ -1,12 +1,12 @@
 var EJDMElementInfo;
 $(function() {
+	deafultSearch();
 	getMajorTrainingSelectInfo();
 	drawStudentBaseInfoEmptyTable();
 	btnControl();
 	binBind();
 	getYearInfo();
 	$('.isSowIndex').selectMania(); //初始化下拉框
-	deafultSearch();
 });
 
 //获取学年信息
