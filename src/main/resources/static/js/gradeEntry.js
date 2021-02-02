@@ -97,17 +97,7 @@ function getMajorTrainingSelectInfo() {
 				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 			},
 			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
 			success : function(backjson) {
-				hideloding();
 				if (backjson.code===200) {
 					stuffStudentBaseInfoTable(backjson.data);
 				} else {
