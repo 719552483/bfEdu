@@ -1044,10 +1044,10 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		List<Edu402> edu402List = checkJsName(edu402);
 		if(edu402List.size() != 0) {
-			resultVO = ResultVO.setFailed("角色名称重复，请重新输入");
+			resultVO = ResultVO.setFailed("角色重复，请重新输入");
 		}else {
 			edu402DAO.save(edu402);
-			resultVO = ResultVO.setSuccess("操作成功",edu402.getEdu402_ID());
+			resultVO = ResultVO.setSuccess("操作成功",edu402);
 		}
 		return resultVO;
 	}
