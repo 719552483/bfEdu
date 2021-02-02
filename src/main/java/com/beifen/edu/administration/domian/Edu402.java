@@ -18,7 +18,7 @@ public class Edu402 {
 		return Edu402_ID;
 	}
 	public void setEdu402_ID(Long Edu402_ID) {
-		Edu402_ID = Edu402_ID;
+		this.Edu402_ID = Edu402_ID;
 	}
 	public String getJsmc() {
 		return jsmc;

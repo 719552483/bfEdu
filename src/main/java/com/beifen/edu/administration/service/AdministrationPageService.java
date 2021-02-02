@@ -1059,8 +1059,8 @@ public class AdministrationPageService {
 				if (edu402.getEdu402_ID() != null && !"".equals(edu402.getEdu402_ID())) {
 					predicates.add(cb.notEqual(root.<String>get("edu402_ID"), edu402.getEdu402_ID()));
 				}
-				if (edu402.getJsmc() != null && !"".equals(edu402.getJsmc())) {
-					predicates.add(cb.equal(root.<String>get("jsmc"), edu402.getJsmc()));
+				if (edu402.getJsid() != null && !"".equals(edu402.getJsid())) {
+					predicates.add(cb.equal(root.<String>get("jsid"), edu402.getJsid()));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
