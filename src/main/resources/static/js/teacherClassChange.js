@@ -120,9 +120,11 @@ function getScheduleClassesInfo() {
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getScheduleInfo",
+		url: "/getScheduleInfoNew",
 		data:{
-			"searchObject":JSON.stringify(searchObject)
+			"searchObject":JSON.stringify(searchObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"jsId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
