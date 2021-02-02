@@ -241,6 +241,19 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 * 新增修改调课角色
+	 */
+	@RequestMapping("/addChangeCrouseRole")
+	@ResponseBody
+	public ResultVO addNewJs(@RequestParam String newUserInfo) {
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(newUserInfo);
+		Edu402 edu402 = (Edu402) JSONObject.toBean(jsonObject, Edu402.class);
+		ResultVO result = administrationPageService.addNewJs(edu402);
+		return result;
+	}
+
 
 	/**
 	 *预备开始排课时 处理相关信息

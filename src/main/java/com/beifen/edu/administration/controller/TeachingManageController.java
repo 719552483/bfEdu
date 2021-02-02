@@ -107,6 +107,26 @@ public class TeachingManageController {
     }
 
     /**
+     * 教师课程表查询
+     * @param searchObject
+     * @return
+     */
+    @RequestMapping("/getScheduleInfoNew")
+    @ResponseBody
+    public ResultVO getScheduleInfo(@RequestParam("searchObject") String searchObject,@RequestParam("userId") String userId,@RequestParam("jsId") String jsId) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        if(!"10800".equals(jsId)){
+            result = ResultVO.setFailed("您不是干事角色，无法修改课程");
+        }else{
+            JSONObject jsonObject = JSONObject.parseObject(searchObject);
+            TimeTablePO timeTable = JSONObject.toJavaObject(jsonObject, TimeTablePO.class);
+            result = teachingManageService.getScheduleInfoNew(timeTable,userId);
+        }
+        return result;
+    }
+
+    /**
      * 学生课程表查询
      * @param searchObject
      * @return

@@ -268,6 +268,79 @@ public class TeachingManageService {
     }
 
     /**
+     * 教师课程表查询
+     * @param timeTable
+     * @return
+     */
+    public ResultVO getScheduleInfoNew(TimeTablePO timeTable,String userId) {
+        ResultVO resultVO;
+
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+        Edu107 edu107 = new Edu107();
+        Edu108 edu108 = new Edu108();
+        Specification<Edu107> Edu107Specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                Path<Object> path = root.get("edu104");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <departments.size() ; i++) {
+                    in.value(departments.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu107> relationEntities = edu107Dao.findAll(Edu107Specification);
+
+        if (relationEntities.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无课表");
+            return resultVO;
+        }
+        List<Long> edu107Ids = relationEntities.stream().map(Edu107::getEdu107_ID).collect(Collectors.toList());
+
+        Specification<Edu108> edu108specification = new Specification<Edu108>() {
+            public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                Path<Object> path = root.get("edu107_ID");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <edu107Ids.size() ; i++) {
+                    in.value(edu107Ids.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu108> edu108List = edu108Dao.findAll(edu108specification);
+
+        if(edu108List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无课表");
+            return resultVO;
+        }
+
+        List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
+        List<String> edu201List = edu201Dao.queryCoursePlanIds(edu108Ids);
+        List<String> list = new ArrayList<String>();
+        for(int i = 0;i <edu201List.size();i++){
+            String ss = edu201List.get(i);
+            list.addAll(Arrays.asList(ss.split(",")));
+        }
+
+        //根据信息查询所有课表信息searchScatteredClassByTeacher
+        List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101IdNew(list,
+                timeTable.getWeekTime(), timeTable.getSemester());
+        List<SchoolTimetablePO> schoolTimetableLists = replaceScheduleweek(schoolTimetableList);
+        if(schoolTimetableLists.size() == 0) {
+            resultVO = ResultVO.setFailed("当前周未找到课程");
+        } else {
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableLists));
+            resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableLists.size()+"个课程",timeTable);
+        }
+        return resultVO;
+    }
+
+    /**
      * 查询学生课表
      * @param timeTable
      * @return

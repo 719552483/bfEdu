@@ -78,6 +78,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu400Dao edu400DAO;
 	@Autowired
+	private Edu402Dao edu402DAO;
+	@Autowired
 	private Edu401Dao edu401DAO;
 	@Autowired
 	private Edu203Dao edu203Dao;
@@ -1035,6 +1037,36 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setSuccess("操作成功",edu400.getEdu400_ID());
 		}
 		return resultVO;
+	}
+
+	// 新增角色
+	public ResultVO addNewJs(Edu402 edu402) {
+		ResultVO resultVO;
+		List<Edu402> edu402List = checkJsName(edu402);
+		if(edu402List.size() != 0) {
+			resultVO = ResultVO.setFailed("角色名称重复，请重新输入");
+		}else {
+			edu402DAO.save(edu402);
+			resultVO = ResultVO.setSuccess("操作成功",edu402.getEdu402_ID());
+		}
+		return resultVO;
+	}
+	//检查角色名称
+	private List<Edu402> checkJsName(Edu402 edu402) {
+		Specification<Edu402> specification = new Specification<Edu402>() {
+			public Predicate toPredicate(Root<Edu402> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu402.getEdu402_ID() != null && !"".equals(edu402.getEdu402_ID())) {
+					predicates.add(cb.notEqual(root.<String>get("edu402_ID"), edu402.getEdu402_ID()));
+				}
+				if (edu402.getJsmc() != null && !"".equals(edu402.getJsmc())) {
+					predicates.add(cb.equal(root.<String>get("jsmc"), edu402.getJsmc()));
+				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu402> all = edu402DAO.findAll(specification);
+		return all;
 	}
 
 	//检查学年名称
@@ -2049,7 +2081,9 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu400> allXn = edu400DAO.findAllXn();
+		List<Edu402> allJs = edu402DAO.findAll();
 		returnMap.put("allXn", allXn);
+		returnMap.put("allJs", allJs);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
