@@ -18,8 +18,8 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	//根据ID查询任务书
 	@Query(value = "select * from edu201 e where e.Edu201_ID=?1", nativeQuery = true)
 	public Edu201 queryTaskByID(String iD);
-	
-	
+
+
 	// 根据教师id 查询教师id为主要老师的任务书
 	@Query(value = "select * from edu201 e where e.zyls like %?1%", nativeQuery = true)
 	public List<Edu201> queryMainTaskByTeacherID(String teacherId);
@@ -73,13 +73,13 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE edu201 SET sszt =?2 WHERE Edu201_ID =?1", nativeQuery = true)
-    void updateState(String businessKey, String pass);
+	void updateState(String businessKey, String pass);
 
 	//排课后改变任务是是否已排课
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE edu201 SET sfypk ='T' WHERE Edu201_ID =?1", nativeQuery = true)
-    void taskPutSchedule(String edu201ID);
+	void taskPutSchedule(String edu201ID);
 
 	//排课后改变任务是是否已排课
 	@Modifying
@@ -129,17 +129,23 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	List<Edu201> findExistTaskWithOutZyls(String kcmc, Long classId, String ls);
 
 	@Query(value = "select distinct t.xnid from Edu201 t")
-    List<String> getYearList();
+	List<String> getYearList();
 
 	@Query(value = "select c.* from edu204 a, edu202 b,edu201 c\n" +
 			"where a.EDU201_ID = b.EDU201_ID\n" +
 			"and c.EDU201_ID = b.EDU201_ID\n" +
 			"and a.EDU300_ID = ?1", nativeQuery = true)
-    List<Edu201> findTaskWithNewClass(String edu300_id);
+	List<Edu201> findTaskWithNewClass(String edu300_id);
 
 	// 根据班级查询学科
 	@org.springframework.transaction.annotation.Transactional
 	@Modifying(clearAutomatically = true)
-	@Query(value = "select * from Edu201 where class_id like %?1% and xnid = ?2", nativeQuery = true)
+	@Query(value = "select * from Edu201 where class_id like %?1% and xnid = ?2 and sfypk='T'", nativeQuery = true)
 	List<Edu201> searchCourseByClass(String edu300_ID, String trem);
+
+	// 根据班级查询学科
+	@org.springframework.transaction.annotation.Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "select * from Edu201 where class_id in (select edu301_id from EDU301 t where bhxzbid like %?1%) and xnid = ?2 and sfypk='T'", nativeQuery = true)
+	List<Edu201> searchCourseByClass2(String edu300_ID, String trem);
 }
