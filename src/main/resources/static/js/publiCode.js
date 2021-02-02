@@ -1791,6 +1791,7 @@ function getAllStuffTab2Info(){
 					stuffManiaSelect(".xnForSelect", str);
 				}
 				stuffAllXnTable(backjson.data.allXn);
+				stuffChangeCrouseRoleTable(backjson.data.allJs);
 				// stuffAllKjTable(backjson.allkj);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -2244,6 +2245,196 @@ function WeeksBetw(date1, date2) {
 	return parseInt(zzs);
 }
 
+//填充调课角色表
+function stuffChangeCrouseRoleTable(tableInfo){
+	window.releaseNewsEvents = {
+		'click #modifyChangeCrouseRole': function(e, value, row, index) {
+			modifyChangeCrouseRole(row,index);
+		}
+	};
+
+	$('#changeCrouseRoleTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 5,
+		pageList: [5],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".changeCrouseRoleTableArea", "调课角色");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [{
+			field: 'edu402_ID',
+			title: 'edu402_ID',
+			align: 'center',
+			sortable: true,
+			visible: false
+		},{
+			field: '角色id',
+			title: 'jsid',
+			align: 'center',
+			sortable: true,
+			visible: false
+		},
+			{
+				field: 'jsmc',
+				title: '角色名称',
+				align: 'left',
+				sortable: true
+			},{
+				field: 'action',
+				title: '操作',
+				align: 'center',
+				clickToSelect: false,
+				formatter: releaseNewsFormatter,
+				events: releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [
+			'<ul class="toolbar tabletoolbar">' +
+			'<li id="modifyChangeCrouseRole" class="modifyBtn modifyXn'+index+'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+			'</ul>'
+		]
+			.join('');
+	}
+
+	drawSearchInput(".changeCrouseRoleTableArea");
+	drawPagination(".changeCrouseRoleTableArea", "调课角色");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//获取所有角色
+function stuffAllRole(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRole",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200 && backjson.data.allRole.length!=0) {
+				var allRole=backjson.data.allRole;
+				var str = '<option value="seleceConfigTip">暂不选择</option>';
+				for (var i = 0; i <allRole.length; i++) {
+					str += '<option value="' + allRole[i].bf991_ID + '">' + allRole[i].js + '</option>';
+				}
+				stuffManiaSelect("#ChangeCrouseRole_allRole", str);
+				$.showModal("#addChangeCrouseRoleModal",true);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//预备添加调课角色
+function wantAddChangeCrouseRole(){
+	var cruentRole=$("#changeCrouseRoleTable").bootstrapTable("getData");
+	if(cruentRole.length>0){
+		toastr.warning('角色已存在');
+		return;
+	}
+	stuffAllRole();
+	//确认角色
+	$('.confimaddChangeCrouseRole').unbind('click');
+	$('.confimaddChangeCrouseRole').bind('click', function(e) {
+		confimaddChangeCrouseRole(false);
+		e.stopPropagation();
+	});
+}
+
+//修改调课角色
+function modifyChangeCrouseRole(row,index){
+	stuffAllRole();
+
+	//修改角色
+	$('.confimaddChangeCrouseRole').unbind('click');
+	$('.confimaddChangeCrouseRole').bind('click', function(e) {
+		confimaddChangeCrouseRole(true,row);
+		e.stopPropagation();
+	});
+}
+
+//确认调课角色
+function confimaddChangeCrouseRole(isModify,oldRoleInfo){
+	var choosendRole=getNormalSelectValue("ChangeCrouseRole_allRole");
+	if(choosendRole===""){
+		toastr.warning('请选择角色');
+		return;
+	}
+	var choosendRoleText=getNormalSelectText("ChangeCrouseRole_allRole");
+	var sendObject=new Object();
+	if(isModify){
+		sendObject.jsid=choosendRole;
+		sendObject.jsmc=choosendRoleText;
+		sendObject.edu402_ID=oldRoleInfo.edu402_ID;
+		sendChangeRoleInfo(sendObject,isModify,oldRoleInfo);
+	}else{
+		sendObject.jsid=choosendRole;
+		sendObject.jsmc=choosendRoleText;
+		sendChangeRoleInfo(sendObject,isModify);
+	}
+}
+
+//发送角色信息
+function sendChangeRoleInfo(roleInfo,isModify,oldRoleInfo){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addChangeCrouseRole",
+		dataType : 'json',
+		data: {
+			"newUserInfo":JSON.stringify(roleInfo)
+		},
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				if(isModify){
+					$("#changeCrouseRoleTable").bootstrapTable("updateByUniqueId", {id: oldRoleInfo.edu402_ID, row: backjson.data});
+				}else{
+					$('#changeCrouseRoleTable').bootstrapTable("prepend", backjson.data);
+				}
+				toastr.success('操作成功');
+				$.hideModal("#addChangeCrouseRoleModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
 
 // //填充课节表
 // function stuffAllKjTable(allkj){
@@ -2611,10 +2802,17 @@ function tab2BtnBind(){
 		e.stopPropagation();
 	});
 	
-	//新增课节
-	$('#addClassTimePart').unbind('click');
-	$('#addClassTimePart').bind('click', function(e) {
-		addClassTimePart();
+	// //新增课节
+	// $('#addClassTimePart').unbind('click');
+	// $('#addClassTimePart').bind('click', function(e) {
+	// 	addClassTimePart();
+	// 	e.stopPropagation();
+	// });
+
+	//新增调课角色
+	$('#addChangeCrouseRole').unbind('click');
+	$('#addChangeCrouseRole').bind('click', function(e) {
+		wantAddChangeCrouseRole();
 		e.stopPropagation();
 	});
 }

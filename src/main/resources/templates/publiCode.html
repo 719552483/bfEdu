@@ -148,6 +148,7 @@
 					<label>模块导航</label> <select class="isSowIndex" id="publicCodeModel">
 						<option value="all">全部</option>
 						<option value="termManger">学年管理</option>
+						<option value="changeCrouseRole">调课角色指定</option>
 <!--						<option value="classTimePartManger">课节管理</option>-->
 <!--						<option value="otherTimePartManger">额外课节管理</option>-->
 <!--						<option value="setUpDepartment">开课部门</option>-->
@@ -182,6 +183,21 @@
 				
 			</div>
 
+			<div id="changeCrouseRole" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>调课角色指定</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addChangeCrouseRole"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+					<div class="changeCrouseRoleTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="changeCrouseRoleTable" data-unique-id="edu402_ID" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+			</div>
 <!--			<div id="classTimePartManger" class="publicCodeCHildren">-->
 <!--				<div class="formbody">-->
 <!--					<div class="formtitle">-->
@@ -667,7 +683,35 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<!-- 调课角色Modal -->
+	<div class="modal fade bs-example-modal-lg" id="addChangeCrouseRoleModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content bodyOnlyOneRow">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle">选择调课角色</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">角色</label>
+									<select class="isSowIndex" id="ChangeCrouseRole_allRole">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confimaddChangeCrouseRole" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
 <!--	 &lt;!&ndash; 培养计划Modal &ndash;&gt;-->
 <!--	<div class="modal fade bs-example-modal-lg" id="addNewRelationModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">-->
 <!--		<div class="modal-dialog modal-lg" role="document">-->
