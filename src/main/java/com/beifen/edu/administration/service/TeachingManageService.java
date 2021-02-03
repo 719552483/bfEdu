@@ -64,6 +64,8 @@ public class TeachingManageService {
     @Autowired
     Edu400Dao edu400Dao;
     @Autowired
+    Edu402Dao edu402Dao;
+    @Autowired
     Edu005Dao edu005Dao;
     @Autowired
     Edu208Dao edu208Dao;
@@ -272,9 +274,13 @@ public class TeachingManageService {
      * @param timeTable
      * @return
      */
-    public ResultVO getScheduleInfoNew(TimeTablePO timeTable,String userId) {
+    public ResultVO getScheduleInfoNew(TimeTablePO timeTable,String userId,String jsId) {
         ResultVO resultVO;
-
+        String js = edu402Dao.findjsId();
+        if(!js.equals(jsId)){
+            resultVO = ResultVO.setFailed("您不是干事角色，无法修改课程");
+            return resultVO;
+        }
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
         Edu107 edu107 = new Edu107();
         Edu108 edu108 = new Edu108();
