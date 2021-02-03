@@ -2520,6 +2520,27 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	public ResultVO searchScheduleInfoAgain(String edu202Id) {
+		ResultVO resultVO;
+		Map<String,Object> returnMap = new HashMap<>();
+		Edu202 edu202 = edu202DAO.findOne(Long.parseLong(edu202Id));
+		Edu201 edu201 = edu201DAO.findOne(edu202.getEdu201_ID());
+		List<Edu203> edu203List = edu203Dao.getClassPeriodByEdu202Id(edu202Id);
+		Long fsxs = edu207Dao.findFsxsSumByEdu201Id(edu202.getEdu201_ID().toString());
+		if(new Double(edu201.getJzxs()).intValue() == (edu203List.size()*2) && fsxs.intValue() == new Double(edu201.getFsxs()).intValue()){
+			returnMap.put("status","T");
+		}else{
+			returnMap.put("status","F");
+			List<Edu207> edu207List = edu207Dao.findAllByEdu201Id(edu201.getEdu201_ID().toString());
+			returnMap.put("edu201",edu201);
+			returnMap.put("edu203List",edu203List);
+			returnMap.put("edu207List",edu207List);
+		}
+		resultVO = ResultVO.setSuccess("查询成功",returnMap);
+		return resultVO;
+	}
+
+
 	//查询排课所有信息
 	public ResultVO searchScheduleInfo(String edu202Id) {
 		ResultVO resultVO;

@@ -2086,6 +2086,18 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 查询再次排课信息
+	 * @param edu202Id
+	 * @return
+	 */
+	@RequestMapping("/searchScheduleInfoAgain")
+	@ResponseBody
+	public ResultVO searchScheduleInfoAgain(@RequestParam("edu202Id") String edu202Id) {
+		ResultVO resultVO = administrationPageService.searchScheduleInfoAgain(edu202Id);
+		return resultVO;
+	}
+
+	/**
 	 * 查询排课所有信息
 	 * @param edu202Id
 	 * @return

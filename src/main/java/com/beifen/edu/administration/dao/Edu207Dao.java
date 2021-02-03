@@ -32,6 +32,10 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
     @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1", nativeQuery = true)
     List<Edu207> findAllByEdu201IdsWithoutWeek(List<String> edu201Ids);
 
+    //根据edu201ID集合查询学年分散学识安排
+    @Query(value = "select sum(CLASS_HOURS) from EDU207 where EDU201_ID = ?1", nativeQuery = true)
+    Long findFsxsSumByEdu201Id(String EDU201_ID);
+
     //根据二级学院获取分散学时总数
     @Query(value = "select sum(CLASS_HOURS)\n" +
             "    from (select distinct b.EDU104_ID, b.XBMC \n" +
