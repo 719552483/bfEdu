@@ -1301,7 +1301,7 @@ function scheduleFormatter(value, row, index) {
 			var baseTeacherName;
 			value[i].baseTeacherName===''||value[i].baseTeacherName==null||typeof value[i].baseTeacherName==="undefined"?baseTeacherName='暂无助教':baseTeacherName=value[i].baseTeacherName.replace(reg, "");
 			htmlStr += '<div classRoomID="' + value[i].classRoomId
-					+ '" teacherID="' + value[i].teacherId + '" classTypeId="'
+					+ '" teacherID="' + value[i].edu101_id + '" classTypeId="'
 					+ value[i].classTypeId + '" classID="' + value[i].classId
 					+ '" courseId="' + value[i].courseId
 					+ '" crouseType="'+value[i].courseType+'"  class="singleSchedule singleScheduleHover '
