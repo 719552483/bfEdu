@@ -747,6 +747,11 @@ public class TeachingManageService {
                     newEdu203.setKjmc(oldedu203.getKjmc());
                     newEdu203.setXqid(oldedu203.getXqid());
                     newEdu203.setXqmc(oldedu203.getXqmc());
+                    if(edu203.getEdu101_id() != null && !"".equals(edu203.getEdu101_id())){
+                        newEdu203.setEdu101_id(edu203.getEdu101_id());
+                        newEdu203.setTeacherName(edu203.getTeacherName());
+                        newEdu203.setTeacherType(edu203.getTeacherType());
+                    }
                     changeScheduleOne(newEdu203);
                 }
             }
@@ -778,6 +783,11 @@ public class TeachingManageService {
                     newEdu203.setXqmc(edu203.getXqmc());
                     newEdu203.setKjid(oldedu203.getKjid());
                     newEdu203.setKjmc(oldedu203.getKjmc());
+                    if(edu203.getEdu101_id() != null && !"".equals(edu203.getEdu101_id())){
+                        newEdu203.setEdu101_id(edu203.getEdu101_id());
+                        newEdu203.setTeacherName(edu203.getTeacherName());
+                        newEdu203.setTeacherType(edu203.getTeacherType());
+                    }
                     changeScheduleOne(newEdu203);
                 }
             }
@@ -808,6 +818,11 @@ public class TeachingManageService {
                     newEdu203.setWeek(edu203.getWeek());
                     newEdu203.setXqid(edu203.getXqid());
                     newEdu203.setXqmc(edu203.getXqmc());
+                    if(edu203.getEdu101_id() != null && !"".equals(edu203.getEdu101_id())){
+                        newEdu203.setEdu101_id(edu203.getEdu101_id());
+                        newEdu203.setTeacherName(edu203.getTeacherName());
+                        newEdu203.setTeacherType(edu203.getTeacherType());
+                    }
                     changeScheduleOne(newEdu203);
                 }
             }
@@ -824,9 +839,11 @@ public class TeachingManageService {
         List<Edu203> lessList = edu203Dao.lessClasses(edu2031.getEdu202_ID(),edu2031.getWeek(),edu2031.getKjid(),edu2031.getXqid());
         edu203.setKsz(edu203.getWeek());
         edu203.setJsz(edu203.getWeek());
-        edu203.setEdu101_id(edu2031.getEdu101_id());
-        edu203.setTeacherName(edu2031.getTeacherName());
-        edu203.setTeacherType(edu2031.getTeacherType());
+        if(edu203.getEdu101_id() == null || "".equals(edu203.getEdu101_id())){
+            edu203.setEdu101_id(edu2031.getEdu101_id());
+            edu203.setTeacherName(edu2031.getTeacherName());
+            edu203.setTeacherType(edu2031.getTeacherType());
+        }
         edu203.setLocalId(edu2031.getLocalId());
         edu203.setLocalName(edu2031.getLocalName());
         edu203.setPointId(edu2031.getPointId());
