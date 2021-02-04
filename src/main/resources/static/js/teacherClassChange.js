@@ -365,14 +365,13 @@ function getChangeInfo(eve){
 		}
 	}
 
-	var choosed=$("#allClassMangersTable").bootstrapTable("getSelections");
 	var changInfo=new Object();
 	changInfo.week=choose_weekTime;
 	changInfo.xqid=xq;
 	changInfo.xqmc=getNormalSelectText("xq");
 	changInfo.kjid=kj;
 	changInfo.kjmc=getNormalSelectText("kj");
-	changInfo.Edu101_id=$("#choose_teacher").attr("choosendTeacherId",choosed[0].edu101_ID);
+	changInfo.Edu101_id=$("#choose_teacher").attr("choosendTeacherId");
 	changInfo.teacherName=$("#choose_teacher").val();
 
 
