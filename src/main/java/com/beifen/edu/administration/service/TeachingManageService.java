@@ -750,7 +750,7 @@ public class TeachingManageService {
                     if(edu203.getEdu101_id() != null && !"".equals(edu203.getEdu101_id())){
                         newEdu203.setEdu101_id(edu203.getEdu101_id());
                         newEdu203.setTeacherName(edu203.getTeacherName());
-                        newEdu203.setTeacherType(edu203.getTeacherType());
+//                        newEdu203.setTeacherType(edu203.getTeacherType());
                     }
                     changeScheduleOne(newEdu203);
                 }
@@ -786,7 +786,7 @@ public class TeachingManageService {
                     if(edu203.getEdu101_id() != null && !"".equals(edu203.getEdu101_id())){
                         newEdu203.setEdu101_id(edu203.getEdu101_id());
                         newEdu203.setTeacherName(edu203.getTeacherName());
-                        newEdu203.setTeacherType(edu203.getTeacherType());
+//                        newEdu203.setTeacherType(edu203.getTeacherType());
                     }
                     changeScheduleOne(newEdu203);
                 }
@@ -821,7 +821,7 @@ public class TeachingManageService {
                     if(edu203.getEdu101_id() != null && !"".equals(edu203.getEdu101_id())){
                         newEdu203.setEdu101_id(edu203.getEdu101_id());
                         newEdu203.setTeacherName(edu203.getTeacherName());
-                        newEdu203.setTeacherType(edu203.getTeacherType());
+//                        newEdu203.setTeacherType(edu203.getTeacherType());
                     }
                     changeScheduleOne(newEdu203);
                 }
@@ -842,8 +842,8 @@ public class TeachingManageService {
         if(edu203.getEdu101_id() == null || "".equals(edu203.getEdu101_id())){
             edu203.setEdu101_id(edu2031.getEdu101_id());
             edu203.setTeacherName(edu2031.getTeacherName());
-            edu203.setTeacherType(edu2031.getTeacherType());
         }
+        edu203.setTeacherType(edu2031.getTeacherType());
         edu203.setLocalId(edu2031.getLocalId());
         edu203.setLocalName(edu2031.getLocalName());
         edu203.setPointId(edu2031.getPointId());
