@@ -332,8 +332,13 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 #relationTable td:last-child{
-	width: 306px;
-	min-width: 306px;
+	 width: 306px;
+	 min-width: 306px;
+ }
+
+#puttedTable td:last-child{
+	width: 250px;
+	min-width: 250px;
 }
 
 /*审批表按钮样式控制*/

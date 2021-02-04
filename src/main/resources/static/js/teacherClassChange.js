@@ -266,7 +266,7 @@ function showChooseModal(eve){
 	$.showModal("#ChooseModal",true);
 
 
-	//提示框取消按钮
+	//确认
 	$('.confirmChoose').unbind('click');
 	$('.confirmChoose').bind('click', function(e) {
 		var changInfo=getChangeInfo(eve);
@@ -301,6 +301,8 @@ function stuffKjArae(){
 function emptyChoose(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#choose_weekTime,#xq,#kj,#oldXq,#oldKj";
+	reObject.InputIds = "#choose_teacher";
+	$("#choose_teacher").attr("choosendTeacherId","");
 	reReloadSearchsWithSelect(reObject);
 }
 
@@ -369,6 +371,9 @@ function getChangeInfo(eve){
 	changInfo.xqmc=getNormalSelectText("xq");
 	changInfo.kjid=kj;
 	changInfo.kjmc=getNormalSelectText("kj");
+	changInfo.Edu101_id=$("#choose_teacher").attr("choosendTeacherId",choosed[0].edu101_ID);;
+	changInfo.teacherName=$("#choose_teacher").val();
+
 
 	var oldchangInfo=new Object();
 	oldchangInfo.week=oldWeekTime;
@@ -453,12 +458,218 @@ function getScheduleSearchInfo(needType){
 	return returnObject;
 }
 
+//选择教师模态框事件绑定
+function teacherModalBtnBind(){
+	var reObject = new Object();
+	reObject.InputIds = "#departmentName,#mangerName,#mangerNumber";
+	reReloadSearchsWithSelect(reObject);
+	//开始检索
+	$('#allClassMangers_StartSearch').unbind('click');
+	$('#allClassMangers_StartSearch').bind('click', function(e) {
+		allClassMangersStartSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#allClassMangers_ReSearch').unbind('click');
+	$('#allClassMangers_ReSearch').bind('click', function(e) {
+		allClassMangersReSearch();
+		e.stopPropagation();
+	});
+
+	//确认选择
+	$('#confirmChoosedTeacher').unbind('click');
+	$('#confirmChoosedTeacher').bind('click', function(e) {
+		confirmChoosedTeacher();
+		e.stopPropagation();
+	});
+}
+
+//教师开始检索
+function allClassMangersStartSearch(){
+	var departmentName=$("#departmentName").val();
+	var mangerName=$("#mangerName").val();
+	var mangerNumber=$("#mangerNumber").val();
+	if(departmentName===""&&mangerName===""&&mangerNumber===""){
+		toastr.warning('检索条件为空');
+		return;
+	}
+	var serachObject=new Object();
+	departmentName===""?serachObject.departmentName="":serachObject.departmentName=departmentName;
+	mangerName===""?serachObject.xm="":serachObject.xm=mangerName;
+	mangerNumber===""?serachObject.jzgh="":serachObject.jzgh=mangerNumber;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeacher",
+		data: {
+			"SearchCriteria":JSON.stringify(serachObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllClassMangersTable(backjson.data);
+			} else {
+				stuffAllClassMangersTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//教师重置检索
+function allClassMangersReSearch(){
+	var reObject = new Object();
+	reObject.InputIds = "#departmentName,#mangerName,#mangerNumber";
+	reReloadSearchsWithSelect(reObject);
+	getTeacherInfo();
+}
+
+//确认选择教师
+function confirmChoosedTeacher(){
+	var choosed=$("#allClassMangersTable").bootstrapTable("getSelections");
+	if(choosed.length==0){
+		toastr.warning('请选择教师');
+		return;
+	}
+	$("#choose_teacher").val(choosed[0].xm);
+	$("#choose_teacher").attr("choosendTeacherId",choosed[0].edu101_ID);
+	$.hideModal("#allClassMangersModal",false);
+	$.showModal("#ChooseModal",true);
+}
+
+//获取所有教师
+function getTeacherInfo(actionModal){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryAllTeacher",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllClassMangersTable(backjson.data);
+				if(typeof actionModal==="undefined"){
+					$.hideModal("#ChooseModal",false);
+					$.showModal("#allClassMangersModal",true);
+				}
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充教师表
+function stuffAllClassMangersTable(tableInfo){
+	$('#allClassMangersTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		singleSelect: true,// 单选checkbox
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : false,
+		onPageChange : function() {
+			drawPagination(".allClassMangersTableArea", "教师信息");
+		},
+		columns : [ {
+			field : 'edu101_ID',
+			title : 'id',
+			align : 'center',
+			visible : false
+		},{
+			field: 'check',
+			checkbox: true
+		},{
+			field : 'szxbmc',
+			title : '二级学院',
+			align : 'left',
+			formatter : paramsMatter
+
+		}, {
+			field : 'xm',
+			title : '姓名',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'jzgh',
+			title : '教工号',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'xb',
+			title : '性别',
+			align : 'left',
+			formatter : sexFormatter
+		}]
+	});
+
+	// 性别文字化
+	function sexFormatter(value, row, index) {
+		if (value === "M") {
+			return [ '<div class="myTooltip" title="男">男</div>' ].join('');
+		} else {
+			return [ '<div class="myTooltip" title="女">女</div>' ].join('');
+		}
+	}
+	drawPagination(".allClassMangersTableArea", "教师信息");
+	drawSearchInput(".allClassMangersTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
 //初始化页面按钮绑定事件
 function btnBind() {
 	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
 	$('.cancelTipBtn,.cancel').bind('click', function(e) {
 		$.hideModal();
+		e.stopPropagation();
+	});
+
+	//二级模态框返回按钮事件
+	$('.specialCanle').unbind('click');
+	$('.specialCanle').bind('click', function(e) {
+		$.hideModal("#allClassMangersModal",false);
+		$.showModal("#ChooseModal",true);
+		e.stopPropagation();
+	});
+
+	//教师focus
+	$('#choose_teacher').focus(function(e){
+		teacherModalBtnBind();
+		getTeacherInfo();
 		e.stopPropagation();
 	});
 }
