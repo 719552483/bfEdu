@@ -326,15 +326,15 @@ public class TeachingManageService {
         }
 
         List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
-        List<String> edu201List = edu201Dao.queryCoursePlanIds(edu108Ids);
-        List<String> list = new ArrayList<String>();
-        for(int i = 0;i <edu201List.size();i++){
-            String ss = edu201List.get(i);
-            list.addAll(Arrays.asList(ss.split(",")));
-        }
+        List<String> edu201List = edu201Dao.queryCoursePlanIdsNew(edu108Ids);
+//        List<String> list = new ArrayList<String>();
+//        for(int i = 0;i <edu201List.size();i++){
+//            String ss = edu201List.get(i);
+//            list.addAll(Arrays.asList(ss.split(",")));
+//        }
 
         //根据信息查询所有课表信息searchScatteredClassByTeacher
-        List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101IdNew(list,
+        List<SchoolTimetablePO> schoolTimetableList = teachingScheduleViewDao.findAllByEdu101IdNew(edu201List,
                 timeTable.getWeekTime(), timeTable.getSemester());
         List<SchoolTimetablePO> schoolTimetableLists = replaceScheduleweek(schoolTimetableList);
         if(schoolTimetableLists.size() == 0) {
