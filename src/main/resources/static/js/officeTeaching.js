@@ -580,19 +580,21 @@ function configedAlllastStep(){
 
 //检查是否排完集中并且正确
 function checkJzPK(){
-	var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
-	var currentWaitJzxs;
-	if(choosendClass.jzxs!=0){
-	 	currentWaitJzxs=parseInt($(".cycleWaitHousr ")[0].innerText);
-		if(currentWaitJzxs>0){
-			$("#tab2").find(".cannottxt").show();
-			$("#tab2").find(".fsMainArea").hide();
-			toastr.warning('集中学时剩余'+currentWaitJzxs+'课时未排，请先排完集中学时');
-		}else{
-			$("#tab2").find(".cannottxt").hide();
-			$("#tab2").find(".fsMainArea").show();
-		}
-	}
+	$("#tab2").find(".cannottxt").hide();
+	$("#tab2").find(".fsMainArea").show();
+	// var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
+	// var currentWaitJzxs;
+	// if(choosendClass.jzxs!=0){
+		// currentWaitJzxs=parseInt($(".cycleWaitHousr ")[0].innerText);
+		// if(currentWaitJzxs>0){
+		// 	$("#tab2").find(".cannottxt").show();
+		// 	$("#tab2").find(".fsMainArea").hide();
+		// 	toastr.warning('集中学时剩余'+currentWaitJzxs+'课时未排，请先排完集中学时');
+		// }else{
+		// 	$("#tab2").find(".cannottxt").hide();
+		// 	$("#tab2").find(".fsMainArea").show();
+		// }
+	// }
 }
 
 //检查是否起码排完集中
@@ -1019,7 +1021,7 @@ function checkJzPk(PKInfo,scheduleInfo){
 	var all=$(".singleCycle").find(".choosendCycleInfo");
 	if(all.length===0){
 		rs=false;
-		toastr.warning('集中学时不正确');
+		toastr.warning('暂无集中学时安排');
 		return rs;
 	}
 
@@ -1037,7 +1039,7 @@ function checkJzPk(PKInfo,scheduleInfo){
 		}
 	}
 
-	if(shouldJzxs!=currentJzxs){
+	if(currentJzxs>shouldJzxs){
 		rs=false;
 		toastr.warning('集中学时不正确');
 		return rs;
@@ -1060,7 +1062,7 @@ function checkSFxs(){
 	for (var i = 0; i <choosendFsxsDom.length ; i++) {
 		choosendFsxs+=parseInt(choosendFsxsDom[i].classHours);
 	}
-	if(shouldNum!=choosendFsxs){
+	if(choosendFsxs>shouldNum){
 		toastr.warning('分散学时不正确');
 		return false;
 	}
@@ -1340,6 +1342,9 @@ function stuffPuttedOutTable(tableInfo){
 		},
 		'click #removePutted' : function(e, value, row, index) {
 			removePutted(row);
+		},
+		'click #changePutted' : function(e, value, row, index) {
+			changePutted(row);
 		}
 	};
 
@@ -1446,6 +1451,7 @@ function stuffPuttedOutTable(tableInfo){
 	function puttedFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
 		+ '<li id="puttedInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+		+ '<li id="changePutted"><span><img src="images/icon03.png" style="width:24px"></span>再排</li>'
 		+ '<li id="removePutted"><span><img src="images/close1.png"></span>删除</li>'
 		+ '</ul>' ].join('');
 	}
@@ -1465,6 +1471,53 @@ function stuffPuttedOutTable(tableInfo){
 	drawSearchInput(".puttedTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+}
+
+//再排
+function changePutted(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchScheduleInfoAgain",
+		data: {
+			"edu202Id":row.edu202_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				if(backjson.data.status==="T"){
+					toastr.warning('课程已排完');
+					return;
+				}
+				stuffChangePuttedInfo(backjson.data,row);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+
+	});
+}
+
+//再排时渲染已排信息
+function stuffChangePuttedInfo(puttedInfo,rowInfo){
+	$(".scheduleClassesMainArea,.puttedScheduleArea").hide();
+	$(".scheduleSingleClassArea").show();
+
+	var culturePlanInfo=getNotNullSearchs();
+	if(typeof culturePlanInfo ==='undefined'){
+		return;
+	}
+	showStartScheduleArea(culturePlanInfo,rowInfo)
 }
 
 //已排详情
