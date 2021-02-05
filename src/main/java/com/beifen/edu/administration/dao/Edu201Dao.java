@@ -95,8 +95,8 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "select e.ls from Edu201 e where e.edu108_ID in ?1 and e.sfypk = 'T'  and e.sszt = 'pass' GROUP BY ls",nativeQuery = true)
 	List<String> queryCoursePlanIds(List<Long> current108s);
 
-	@Query(value = "select e.Edu201_ID from Edu201 e where e.edu108_ID in ?1 and e.sfypk = 'T'  and e.sszt = 'pass'",nativeQuery = true)
-	List<String> queryCoursePlanIdsNew(List<Long> current108s);
+	@Query(value = "select e.Edu201_ID from Edu201 e where e.edu108_ID in ?1 and e.sfypk = 'T'  and e.sszt = 'pass' and xnid = ?2",nativeQuery = true)
+	List<String> queryCoursePlanIdsNew(List<Long> current108s,String xnid);
 
 	//根据权限获已发布的教学任务书
 	@Query(value = "select a.* from edu201 a,edu108 b,edu107 c " +
