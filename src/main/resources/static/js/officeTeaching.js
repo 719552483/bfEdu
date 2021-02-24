@@ -300,15 +300,28 @@ function drawJzXueDomArea(isZero,choosedTask,jxdInfo,termInfo,kjInfo,type){
 		$(".scheduleSingleClassArea").find("#tab2").find(".cannottxt").hide();
 		$(".scheduleSingleClassArea").find("#tab2").find(".fsMainArea").show();
 
-		$(".fsPuttedHousr").html(0);
-		$(".fsWaitHousr").html(choosedTask[0].fsxs);
+		var yearId='';
+		var yearName=''
+		if(type===2){
+			$(".fsPuttedHousr").html(0);
+			$(".fsWaitHousr").html(choosedTask.fsxs);
+			yearId=choosedTask.xnid;
+			yearName=choosedTask.xn;
+		}else{
+			$(".fsPuttedHousr").html(0);
+			$(".fsWaitHousr").html(choosedTask[0].fsxs);
+			yearId=choosedTask[0].xnid;
+			yearName=choosedTask[0].xn;
+		}
+
+
 
 		$.ajax({
 			method: 'get',
 			cache: false,
 			url: "/getYearWeek",
 			data:{
-				"yearId":choosedTask[0].xnid
+				"yearId":yearId
 			},
 			dataType: 'json',
 			beforeSend: function (xhr) {
@@ -324,7 +337,7 @@ function drawJzXueDomArea(isZero,choosedTask,jxdInfo,termInfo,kjInfo,type){
 				hideloding();
 				if (backjson.code===200) {
 					drawStartAndEndWeek(backjson.data);
-					$(".choosendTerm").html(choosedTask[0].xn+"学年");
+					$(".choosendTerm").html(yearName+"学年");
 				} else {
 					toastr.warning(backjson.msg);
 				}
@@ -569,7 +582,7 @@ function configedJz(){
 			return;
 		}
 
-		var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
+		var checkJzPkRs=checkJzPk();
 		if(!checkJzPkRs){
 			return;
 		}
@@ -615,6 +628,13 @@ function configedAlllastStep(){
 
 //检查是否排完集中并且正确
 function checkJzPK(){
+	var term=getNormalSelectValue("term");
+	var jzsx=parseInt($(".jzxsSpan")[0].innerText);
+	isNaN(jzsx)?jzsx=0:jzsx=jzsx;
+	if(term===""&&jzsx!=0){
+		toastr.warning('请选择学aa年');
+		return;
+	}
 	$("#tab2").find(".cannottxt").hide();
 	$("#tab2").find(".fsMainArea").show();
 	// var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
@@ -634,11 +654,16 @@ function checkJzPK(){
 
 //检查是否起码排完集中
 function  checkAllPK(){
-	var PKInfo=getJzPKInfo(false);
-	var scheduleInfo=scheduleDetailInfo(false);
-	if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
-		$("#tab3").find(".cannottxt").show();
-		$("#tab3").find(".rsArea").hide();
+	if(isRe=false){
+		var PKInfo=getJzPKInfo(false);
+		var scheduleInfo=scheduleDetailInfo(false);
+		if(typeof PKInfo ==='undefined'||scheduleInfo.length==0){
+			$("#tab3").find(".cannottxt").show();
+			$("#tab3").find(".rsArea").hide();
+		}else{
+			$("#tab3").find(".cannottxt").hide();
+			$("#tab3").find(".rsArea").show();
+		}
 	}else{
 		$("#tab3").find(".cannottxt").hide();
 		$("#tab3").find(".rsArea").show();
@@ -729,6 +754,7 @@ function addCoursePlan(){
 	}
 
 	var appendStr="";
+	var added=$(".choosendCycleInfo");
 	for (var i = 0; i < reAreas.length; i++) {
 		var startWeek=reAreas[i].attributes[8].nodeValue;
 		var endWeek=reAreas[i].attributes[9].nodeValue;
@@ -744,7 +770,13 @@ function addCoursePlan(){
 		var teacherName=reAreas[i].attributes[7].nodeValue;
 		var locationName=reAreas[i].attributes[14].nodeValue;
 		var pointName=reAreas[i].attributes[15].nodeValue;
-
+		var id='choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek);
+		for (let j = 0; j <added.length; j++) {
+			if(added[j].id==id){
+				toastr.warning('课节已安排');
+				return;
+			}
+		}
 		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
 			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
 			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
@@ -991,7 +1023,7 @@ function confirmPk(){
 			return;
 		}
 
-		var checkJzPkRs=checkJzPk(PKInfo,scheduleInfo);
+		var checkJzPkRs=checkJzPk();
 		if(!checkJzPkRs){
 			return;
 		}
@@ -1051,7 +1083,7 @@ function confirmPk(){
 }
 
 //验证集中排课结果
-function checkJzPk(PKInfo,scheduleInfo){
+function checkJzPk(){
 	var rs=true;
 	var all=$(".singleCycle").find(".choosendCycleInfo");
 	if(all.length===0){
@@ -1106,16 +1138,21 @@ function checkSFxs(){
 }
 
 //获得集中排课信息
-function getJzPKInfo(needToastr){
+function getJzPKInfo(needToastr,isRe,edu202_ID){
 	var term=getNormalSelectValue("term");
 	var termMc=getNormalSelectText("term");
-	var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
 
 	if(term===""){
 		if(typeof needToastr==="undefined"){
 			toastr.warning('请选择学年');
 		}
 		return;
+	}
+	var taskId='';
+	if(typeof isRe==="undefined"){
+		taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
+	}else{
+		taskId = edu202_ID;
 	}
 
 	var returnObject=new Object();
@@ -1539,6 +1576,7 @@ function changePutted(row){
 					toastr.warning('课程已排完');
 					return;
 				}
+				$(".jzxsSpan").html(backjson.data.edu201.jzxs);
 				showStartScheduleArea(null,null,2);
 				stuffChangePuttedInfo(backjson.data,row);
 			} else {
@@ -1593,6 +1631,7 @@ function stuffChangePuttedInfo(puttedInfo,rowInfo){
 				destoryLastStuff();
 				stuffReTitle(rowInfo,puttedInfo);
 				scheduleSingleClassBtnBind();
+				stuffReRs(rowInfo,puttedInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1608,7 +1647,79 @@ function stuffReTitle(culturePlanInfo,choosedTask){
 	$(".fsxsSpan").html(choosedTask.edu201.fsxs);
 	var cyclePuttedHousr=choosedTask.edu203List.length*2;
 	$(".cyclePuttedHousr").html(cyclePuttedHousr);
-	$(".cycleWaitHousr").html(parseInt(choosedTask.edu201.zxs)-cyclePuttedHousr);
+	$(".cycleWaitHousr").html(parseInt(choosedTask.edu201.jzxs)-cyclePuttedHousr);
+	if(choosedTask.edu207List.length!=0){
+		var cyclePuttedFsHousr=choosedTask.edu207List.length*2;
+		$(".fsPuttedHousr").html(cyclePuttedFsHousr);
+		$(".fsWaitHousr").html(parseInt(choosedTask.edu201.fsxs)-cyclePuttedFsHousr);
+	}
+}
+
+var isRe=false;
+//再排时填充已排课时结果
+function stuffReRs(rowInfo,puttedInfo){
+	isRe=true;
+	//集中
+	var puttedJzCycles=puttedInfo.edu203List;
+	var appendStr="";
+	var added=$(".choosendCycleInfo");
+	for (var i = 0; i < puttedJzCycles.length; i++) {
+		var startWeek=puttedJzCycles[i].ksz;
+		var endWeek=puttedJzCycles[i].jsz;
+		var currentXq=puttedJzCycles[i].xqid;
+		var currentKj=puttedJzCycles[i].kjid;
+		var teacherID=puttedJzCycles[i].edu101_id;
+		var location=puttedJzCycles[i].localId;
+		var point=puttedJzCycles[i].pointId;
+
+		var startWeekmc=puttedJzCycles[i].week;
+		var endWeekmc=puttedJzCycles[i].jsz;
+		var currentXqmc=puttedJzCycles[i].xqmc;
+		var currentKjmc=puttedJzCycles[i].kjmc;
+		var teacherName=puttedJzCycles[i].teacherName;
+		var locationName=puttedJzCycles[i].localName;
+		var pointName=puttedJzCycles[i].pointName;
+		var id='choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek);
+		for (let j = 0; j <added.length; j++) {
+			if(added[j].id==id){
+				toastr.warning('课节已安排');
+				return;
+			}
+		}
+
+		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
+			'集中授课：第'+startWeekmc+'周  至  第'+endWeekmc+'周 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
+			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
+	}
+	$(".choosendCycleArea,.singleCycle").append(appendStr);
+	$(".lastCycleArea").show();
+
+	$('.choosendCycleInfoImg').unbind('click');
+	$('.choosendCycleInfoImg').bind('click', function(e) {
+		removeCycle(e);
+		e.stopPropagation();
+	});
+
+	//分散
+	appendStr="";
+	var puttedFsCycles=puttedInfo.edu207List;
+	for (var i = 0; i < puttedFsCycles.length; i++) {
+		appendStr+='<div class="choosendfsKjInfo" xs="'+puttedFsCycles[i].classHours+'" fsxq="'+puttedFsCycles[i].week+'" id="choosendfsKj'+puttedFsCycles[i].week+'">分散授课安排：第'+puttedFsCycles[i].week+'周  '+puttedFsCycles[i].classHours+'个学时' +
+			'<img class="choosendfsKjImg choosendfsKjInfoImg" src="images/close1.png"/>' +
+			'</div>';
+
+	}
+
+	$(".singlefsKj,.choosendfsKjArea").append(appendStr);
+	if(appendStr!==''){
+		$(".fskjRsArea").show();
+	}
+
+	$('.choosendfsKjInfoImg').unbind('click');
+	$('.choosendfsKjInfoImg').bind('click', function(e) {
+		removefsKj(e);
+		e.stopPropagation();
+	});
 }
 
 //已排详情
