@@ -1091,7 +1091,117 @@ public class AdministrationPageService {
 	public List<Edu401> queryAllDeafultKj() {
 		return edu401DAO.findAll();
 	}
+	public boolean reSaveSchedule(String edu202Id, List<Edu203> edu203List, List<Edu207> edu207List) {
+		boolean isSuccess = true;
+		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
+		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+		Double jzxs = edu201.getJzxs();
+		if(edu207List.size() != 0) {
+			for (Edu207 edu207 : edu207List) {
+				Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
+				edu207.setClassName(edu201.getClassName());
+				edu207.setEdu201_ID(edu201.getEdu201_ID().toString());
+				edu207.setCourseName(edu201.getKcmc());
+				edu207.setClassId(edu201.getClassId().toString());
+				edu207.setEdu108_ID(edu108.getEdu108_ID().toString());
+				edu207.setCourseType(edu201.getClassType());
+				edu207Dao.save(edu207);
+			}
+		}
 
+		if(edu203List.size() != 0) {
+			//重新排列课节集合
+			Collections.sort(edu203List, new Comparator<Edu203>() {
+				public int compare(Edu203 arg0, Edu203 arg1) {
+					// 第一次比较星期
+					int i = arg0.getXqid().compareTo(arg1.getXqid());
+					// 如果星期相同则进行第二次比较
+					if (i == 0) {
+						// 第二次比较课节
+						int j = arg0.getKjid().compareTo(arg1.getKjid());
+						return j;
+					}
+					return i;
+				}
+			});
+			Map<String, List<Edu203>> Edu203ByPoint = edu203List.stream().collect(Collectors.groupingBy(Edu203::getPointId));
+
+			//按周保存排课计划
+			AtomicInteger currentXs = new AtomicInteger();
+			List<String> weekList = new ArrayList<>();
+
+			Edu203ByPoint.forEach((key, value) -> {
+				String localId = value.get(0).getLocalId();
+				String localName = value.get(0).getLocalName();
+				String pointId = value.get(0).getPointId();
+				String pointName = value.get(0).getPointName();
+
+				classCycle:
+				for (Edu203 e : value) {
+					int weekCount = Integer.parseInt(e.getJsz()) - Integer.parseInt(e.getKsz()) + 1;
+					if(e.getKsz().equals(e.getJsz())) {
+						weekList.add("第"+e.getKsz()+"周");
+					} else {
+						weekList.add("第"+e.getKsz()+"周-第"+e.getJsz()+"周");
+					}
+					for (int i = 0; i < weekCount; i++) {
+						Edu203 save = new Edu203();
+						save.setEdu202_ID(edu202Id);
+						Integer week = (Integer.parseInt(e.getKsz()) + i);
+						save.setWeek(week.toString());
+						save.setKsz(e.getKsz());
+						save.setJsz(e.getJsz());
+						save.setKjid(e.getKjid());
+						save.setKjmc(e.getKjmc());
+						save.setXqid(e.getXqid());
+						save.setXqmc(e.getXqmc());
+						save.setEdu101_id(e.getEdu101_id());
+						save.setTeacherName(e.getTeacherName());
+						save.setTeacherType("01");
+						save.setLocalId(localId);
+						save.setLocalName(localName);
+						save.setPointId(pointId);
+						save.setPointName(pointName);
+						edu203Dao.save(save);
+						if(edu201.getZyls() != null) {
+							String[] zyls = edu201.getZyls().split(",");
+							String[] zylsmc = edu201.getZylsmc().split(",");
+							for(int n = 0;n < zyls.length; n++){
+								Edu203 one = new Edu203();
+								one.setEdu202_ID(edu202Id);
+								one.setWeek(week.toString());
+								one.setKsz(e.getKsz());
+								one.setJsz(e.getJsz());
+								one.setKjid(e.getKjid());
+								one.setKjmc(e.getKjmc());
+								one.setXqid(e.getXqid());
+								one.setXqmc(e.getXqmc());
+								one.setEdu101_id(zyls[n]);
+								one.setTeacherName(zylsmc[n]);
+								one.setTeacherType("02");
+								one.setLocalId(localId);
+								one.setLocalName(localName);
+								one.setPointId(pointId);
+								one.setPointName(pointName);
+								edu203Dao.save(one);
+							}
+						}
+						currentXs.addAndGet(2);
+						if (currentXs.get() >= jzxs) {
+							break classCycle;
+						}
+					}
+				}
+			});
+			List<String> list = (List<String>)utils.heavyListMethod(weekList);
+			list.sort((a, b) -> a.compareTo(b.toString()));
+			String weekName = utils.listToString(list, ',');
+			edu202.setSzz(weekName);
+			edu202DAO.save(edu202);
+		}
+
+		return isSuccess;
+	}
 
 	//确认排课
 	public boolean saveSchedule(String edu201Id, List<Edu203> edu203List, List<Edu207> edu207List) {
