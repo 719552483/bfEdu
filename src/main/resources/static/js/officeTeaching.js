@@ -196,11 +196,26 @@ function startSchedule(){
 		toastr.warning('请选择排课课程');
 		return;
 	}
-	showStartScheduleArea(culturePlanInfo,choosedTask);
+	//返回按钮事件绑定
+	$('#returnStartSchedule').unbind('click');
+	$('#returnStartSchedule').bind('click', function(e) {
+		returnStartSchedule();
+		e.stopPropagation();
+	});
+	showStartScheduleArea(culturePlanInfo,choosedTask,1);
 }
 
-//展示开始排课区域
-function  showStartScheduleArea(culturePlanInfo,choosedTask){
+//根据类型  展示开始排课区域
+function  showStartScheduleArea(culturePlanInfo,choosedTask,showType){
+	if(showType==1){
+		dealScheduleClassInfo(culturePlanInfo,choosedTask);
+	}else{
+		dealPuttedScheduleClassInfo();
+	}
+}
+
+//处理未排课程信息
+function dealScheduleClassInfo(culturePlanInfo,choosedTask){
 	$.ajax({
 		method: 'get',
 		cache: false,
@@ -251,6 +266,18 @@ function  showStartScheduleArea(culturePlanInfo,choosedTask){
 	});
 }
 
+//处理已排但未拍完课程信息
+function dealPuttedScheduleClassInfo(){
+	//返回按钮事件绑定
+	$('#returnStartSchedule').unbind('click');
+	$('#returnStartSchedule').bind('click', function(e) {
+		returnStartSchedule(1);
+		e.stopPropagation();
+	});
+	$(".scheduleClassesMainArea,.puttedScheduleArea").hide();
+	$(".scheduleSingleClassArea").show();
+}
+
 //根据集中分散学时判断按钮的展示
 function judgementStepDisplay(jzxs,fsxs){
 	$(".configedFs_lastStep").show();
@@ -261,9 +288,9 @@ function judgementStepDisplay(jzxs,fsxs){
 }
 
 //集中学时区域dom渲染
-function drawJzXueDomArea(isZero,choosedTask,jxdInfo,termInfo,kjInfo){
+function drawJzXueDomArea(isZero,choosedTask,jxdInfo,termInfo,kjInfo,type){
 	var configSelectTxt='<option value="seleceConfigTip">请选择</option>';
-	stuffTermArae(choosedTask,configSelectTxt);
+	stuffTermArae(choosedTask,configSelectTxt,type);
 	stuffJxdArae(jxdInfo,configSelectTxt);
 	drawStartAndEndWeek(termInfo);
 	stuffKjArae(kjInfo,configSelectTxt,configSelectTxt);
@@ -349,20 +376,35 @@ function destoryLastStuff(){
 }
 
 //填充学年下拉框
-function stuffTermArae(termInfo,str){
-	for (var i = 0; i < termInfo.length; i++) {
-		str += '<option value="' + termInfo[i].xnid + '">' + termInfo[i].xn
+function stuffTermArae(termInfo,str,type){
+	if(typeof type==="undefined"){
+		for (var i = 0; i < termInfo.length; i++) {
+			str += '<option value="' + termInfo[i].xnid + '">' + termInfo[i].xn
+				+ '</option>';
+		}
+	}else{
+		str += '<option value="' + termInfo.xnid + '">' + termInfo.xn
 			+ '</option>';
 	}
 	stuffManiaSelect("#term", str);
 
 	str='';
-	var allTeacher=termInfo[0].ls.split(",");
-	var allTeacherName=termInfo[0].lsmc.split(",");
-	for (var i = 0; i < allTeacher.length; i++) {
-		str += '<option value="' + allTeacher[i] + '">' + allTeacherName[i]
-			+ '</option>';
+	if(typeof type==="undefined"){
+		var allTeacher=termInfo[0].ls.split(",");
+		var allTeacherName=termInfo[0].lsmc.split(",");
+		for (var i = 0; i < allTeacher.length; i++) {
+			str += '<option value="' + allTeacher[i] + '">' + allTeacherName[i]
+				+ '</option>';
+		}
+	}else{
+		var allTeacher=termInfo.ls.split(",");
+		var allTeacherName=termInfo.lsmc.split(",");
+		for (var i = 0; i < allTeacher.length; i++) {
+			str += '<option value="' + allTeacher[i] + '">' + allTeacherName[i]
+				+ '</option>';
+		}
 	}
+
 	stuffManiaSelect("#teacher", str);
 }
 
@@ -431,19 +473,12 @@ function stuffKjArae(kjInfo,str){
 }
 
 //单个课程排课区域返回按钮
-function returnStartSchedule(){
-	controlScheduleArea();
+function returnStartSchedule(type){
+	controlScheduleArea(type);
 }
 
 //单个课程排课区域按钮事件绑定
 function scheduleSingleClassBtnBind(){
-	//返回按钮事件绑定
-	$('#returnStartSchedule').unbind('click');
-	$('#returnStartSchedule').bind('click', function(e) {
-		returnStartSchedule();
-		e.stopPropagation();
-	});
-
 	//tab1的下一步
 	$('.configedJz').unbind('click');
 	$('.configedJz').bind('click', function(e) {
@@ -1206,9 +1241,14 @@ function stuffLocationInfo(){
 }
 
 //返回待排课程区域
-function controlScheduleArea(){
-	$(".scheduleClassesMainArea").toggle();
-	$(".scheduleSingleClassArea").toggle();
+function controlScheduleArea(type){
+	if(typeof type==="undefined"){
+		$(".scheduleClassesMainArea").toggle();
+		$(".scheduleSingleClassArea").toggle();
+	}else{
+		$(".puttedScheduleArea").show();
+		$(".scheduleSingleClassArea,.scheduleClassesMainArea").hide();
+	}
 }
 
 //必选检索条件检查
@@ -1499,6 +1539,7 @@ function changePutted(row){
 					toastr.warning('课程已排完');
 					return;
 				}
+				showStartScheduleArea(null,null,2);
 				stuffChangePuttedInfo(backjson.data,row);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1510,14 +1551,64 @@ function changePutted(row){
 
 //再排时渲染已排信息
 function stuffChangePuttedInfo(puttedInfo,rowInfo){
-	$(".scheduleClassesMainArea,.puttedScheduleArea").hide();
-	$(".scheduleSingleClassArea").show();
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/dealScheduleClassInfo",
+		data:{
+			"edu103Id":rowInfo.pyjhcc
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				if(backjson.kjInfo.length<=0){
+					toastr.warning('暂无默认课节信息');
+					return;
+				}
+				if(backjson.jxdInfo.length<=0){
+					toastr.warning('暂无可选教学点场地信息');
+					return;
+				}
 
-	var culturePlanInfo=getNotNullSearchs();
-	if(typeof culturePlanInfo ==='undefined'){
-		return;
-	}
-	showStartScheduleArea(culturePlanInfo,rowInfo)
+				var isZero=true;
+				puttedInfo.edu201.jzxs===0?isZero=true:isZero=false;
+				drawJzXueDomArea(isZero,puttedInfo.edu201,backjson.jxdInfo,backjson.termInfo[0],backjson.kjInfo,2);
+
+				isZero=true;
+				puttedInfo.edu201.fsxs===0?isZero=true:isZero=false;
+				drawFsXueDomArea(isZero);
+
+				judgementStepDisplay(puttedInfo.edu201.jzxs,puttedInfo.edu201.fsxs);
+
+				destoryLastStuff();
+				stuffReTitle(rowInfo,puttedInfo);
+				scheduleSingleClassBtnBind();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//填充再排标题
+function stuffReTitle(culturePlanInfo,choosedTask){
+	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.pyjhmc+'-'+culturePlanInfo.className+
+		"(总学时：" + choosedTask.edu201.zxs + "课时  集中学时：" + choosedTask.edu201.jzxs + "课时  分散学时：" + choosedTask.edu201.fsxs + "课时)");
+	$(".jzxsSpan").html(choosedTask.edu201.jzxs);
+	$(".fsxsSpan").html(choosedTask.edu201.fsxs);
+	var cyclePuttedHousr=choosedTask.edu203List.length*2;
+	$(".cyclePuttedHousr").html(cyclePuttedHousr);
+	$(".cycleWaitHousr").html(parseInt(choosedTask.edu201.zxs)-cyclePuttedHousr);
 }
 
 //已排详情
