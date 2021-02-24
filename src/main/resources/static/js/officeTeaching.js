@@ -1700,25 +1700,24 @@ function stuffReRs(rowInfo,puttedInfo){
 			}
 		}
 
-		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
-			'集中授课：第'+startWeekmc+'周  至  第'+endWeekmc+'周 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
-			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
+		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">'
+			+'集中授课：第'+startWeekmc+'周  至  第'+endWeekmc+'周 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName
+			;
 	}
 	$(".choosendCycleArea,.singleCycle").append(appendStr);
 	$(".lastCycleArea").show();
 
-	$('.choosendCycleInfoImg').unbind('click');
-	$('.choosendCycleInfoImg').bind('click', function(e) {
-		removeCycle(e);
-		e.stopPropagation();
-	});
+	// $('.choosendCycleInfoImg').unbind('click');
+	// $('.choosendCycleInfoImg').bind('click', function(e) {
+	// 	removeCycle(e);
+	// 	e.stopPropagation();
+	// });
 
 	//分散
 	appendStr="";
 	var puttedFsCycles=puttedInfo.edu207List;
 	for (var i = 0; i < puttedFsCycles.length; i++) {
 		appendStr+='<div class="choosendfsKjInfo" xs="'+puttedFsCycles[i].classHours+'" fsxq="'+puttedFsCycles[i].week+'" id="choosendfsKj'+puttedFsCycles[i].week+'">分散授课安排：第'+puttedFsCycles[i].week+'周  '+puttedFsCycles[i].classHours+'个学时' +
-			'<img class="choosendfsKjImg choosendfsKjInfoImg" src="images/close1.png"/>' +
 			'</div>';
 
 	}
@@ -1728,11 +1727,11 @@ function stuffReRs(rowInfo,puttedInfo){
 		$(".fskjRsArea").show();
 	}
 
-	$('.choosendfsKjInfoImg').unbind('click');
-	$('.choosendfsKjInfoImg').bind('click', function(e) {
-		removefsKj(e);
-		e.stopPropagation();
-	});
+	// $('.choosendfsKjInfoImg').unbind('click');
+	// $('.choosendfsKjInfoImg').bind('click', function(e) {
+	// 	removefsKj(e);
+	// 	e.stopPropagation();
+	// });
 }
 
 //再排  单个课程排课区域按钮事件绑定
@@ -1877,8 +1876,8 @@ function confirmPk2(rowInfo){
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-				var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
-				$("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
+				// var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
+				// $("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
 				controlScheduleArea();
 				toastr.success('排课成功');
 			} else {
