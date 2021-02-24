@@ -1768,7 +1768,7 @@ function reScheduleSingleClassBtnBind(rowInfo){
 	//确认排课按钮
 	$('#confirm').unbind('click');
 	$('#confirm').bind('click', function(e) {
-		confirmPk2(rowInfo.edu202_ID);
+		confirmPk2(rowInfo);
 		e.stopPropagation();
 	});
 
@@ -1815,7 +1815,7 @@ function reScheduleSingleClassBtnBind(rowInfo){
 }
 
 //确认排课
-function confirmPk2(Edu202Id){
+function confirmPk2(rowInfo){
 	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
 	var scheduleInfo;
 	var PKInfo;
@@ -1836,15 +1836,14 @@ function confirmPk2(Edu202Id){
 		}
 	}else{
 		scheduleInfo=new Array();
-		var choosed = $("#WaitTaskTable").bootstrapTable("getSelections");
 		var PKInfo=new Object();
-		PKInfo.xnid=choosed[0].xnid;
-		PKInfo.xnmc=choosed[0].xn;
+		PKInfo.xnid=rowInfo.xnid;
+		PKInfo.xnmc=rowInfo.xn;
 		PKInfo.skddmc="";
 		PKInfo.skddid="";
 		PKInfo.pointid="";
 		PKInfo.point="";
-		PKInfo.edu201_ID=choosed[0].edu201_ID;
+		PKInfo.edu201_ID=rowInfo.edu201_ID;
 	}
 
 	var fsxsInfo=new Array();
@@ -1861,7 +1860,7 @@ function confirmPk2(Edu202Id){
 		cache: false,
 		url: "/reComfirmSchedule",
 		data:{
-			"Edu202Id":Edu202Id,
+			"Edu202Id":rowInfo.edu202_ID,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
 			"scatteredClass":JSON.stringify(fsxsInfo)
 		},
