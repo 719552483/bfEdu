@@ -187,6 +187,7 @@ function stuffWaitTaskTable(tableInfo){
 
 //开始排课
 function startSchedule(){
+	$(".isRe").html('F');
 	var culturePlanInfo=getNotNullSearchs();
 	if(typeof culturePlanInfo ==='undefined'){
 		return;
@@ -490,7 +491,7 @@ function returnStartSchedule(type){
 	controlScheduleArea(type);
 }
 
-//单个课程排课区域按钮事件绑定
+//待排  单个课程排课区域按钮事件绑定
 function scheduleSingleClassBtnBind(){
 	//tab1的下一步
 	$('.configedJz').unbind('click');
@@ -616,13 +617,22 @@ function configedFsNextStep(){
 	}
 }
 
-//tab3的下一步
-function configedAlllastStep(){
-	var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
-	if(choosendClass.fsxs!=0){
-		$(".itab").find("li:eq(1)").find("a").trigger('click');
+//tab3的上一步
+function configedAlllastStep(rowInfo){
+	var isRe=$(".isRe")[0].innerText;
+	if(isRe==="F"){
+		var choosendClass= $("#WaitTaskTable").bootstrapTable("getSelections")[0];
+		if(choosendClass.fsxs!=0){
+			$(".itab").find("li:eq(1)").find("a").trigger('click');
+		}else{
+			$(".itab").find("li:eq(0)").find("a").trigger('click');
+		}
 	}else{
-		$(".itab").find("li:eq(0)").find("a").trigger('click');
+		if(rowInfo.fsxs!=0){
+			$(".itab").find("li:eq(1)").find("a").trigger('click');
+		}else{
+			$(".itab").find("li:eq(0)").find("a").trigger('click');
+		}
 	}
 }
 
@@ -632,7 +642,7 @@ function checkJzPK(){
 	var jzsx=parseInt($(".jzxsSpan")[0].innerText);
 	isNaN(jzsx)?jzsx=0:jzsx=jzsx;
 	if(term===""&&jzsx!=0){
-		toastr.warning('请选择学aa年');
+		toastr.warning('请选择学年');
 		return;
 	}
 	$("#tab2").find(".cannottxt").hide();
@@ -1138,7 +1148,7 @@ function checkSFxs(){
 }
 
 //获得集中排课信息
-function getJzPKInfo(needToastr,isRe,edu202_ID){
+function getJzPKInfo(needToastr){
 	var term=getNormalSelectValue("term");
 	var termMc=getNormalSelectText("term");
 
@@ -1149,11 +1159,7 @@ function getJzPKInfo(needToastr,isRe,edu202_ID){
 		return;
 	}
 	var taskId='';
-	if(typeof isRe==="undefined"){
-		taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
-	}else{
-		taskId = edu202_ID;
-	}
+	$(".isRe")[0].innerText==="F"?taskId=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID:taskId="";
 
 	var returnObject=new Object();
 	returnObject.xnid=term;
@@ -1198,10 +1204,16 @@ function getfsxs(){
 	var allFsxsDom=$("#tab3").find(".choosendfsKjInfo");
 	for (var i = 0; i <allFsxsDom.length ; i++) {
 		var singleObject=new Object();
-		singleObject.classHours=allFsxsDom[i].attributes[1].nodeValue;;
+		var taskId='';
+		var courseName='';
+		$(".isRe")[0].innerText==="F"?taskId=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID:taskId="";
+		$(".isRe")[0].innerText==="F"?courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc:courseName="";
+		singleObject.classHours=allFsxsDom[i].attributes[1].nodeValue;
 		singleObject.week=allFsxsDom[i].attributes[2].nodeValue;
-		singleObject.Edu201_ID=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
-		singleObject.courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc;
+		// singleObject.Edu201_ID=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
+		// singleObject.courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc;
+		singleObject.Edu201_ID=taskId;
+		singleObject.courseName=courseName;
 		returnArray.push(singleObject);
 	}
 	return returnArray;
@@ -1552,6 +1564,7 @@ function stuffPuttedOutTable(tableInfo){
 
 //再排
 function changePutted(row){
+	$(".isRe").html('T');
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -1630,7 +1643,7 @@ function stuffChangePuttedInfo(puttedInfo,rowInfo){
 
 				destoryLastStuff();
 				stuffReTitle(rowInfo,puttedInfo);
-				scheduleSingleClassBtnBind();
+				reScheduleSingleClassBtnBind(rowInfo);
 				stuffReRs(rowInfo,puttedInfo);
 			} else {
 				toastr.warning('操作失败，请重试');
@@ -1719,6 +1732,160 @@ function stuffReRs(rowInfo,puttedInfo){
 	$('.choosendfsKjInfoImg').bind('click', function(e) {
 		removefsKj(e);
 		e.stopPropagation();
+	});
+}
+
+//再排  单个课程排课区域按钮事件绑定
+function reScheduleSingleClassBtnBind(rowInfo){
+	//tab1的下一步
+	$('.configedJz').unbind('click');
+	$('.configedJz').bind('click', function(e) {
+		configedJz();
+		e.stopPropagation();
+	});
+
+	//tab2的上一步
+	$('.configedFs_lastStep').unbind('click');
+	$('.configedFs_lastStep').bind('click', function(e) {
+		configedFslastStep();
+		e.stopPropagation();
+	});
+
+	//tab2的下一步
+	$('.configedFs_NextStep').unbind('click');
+	$('.configedFs_NextStep').bind('click', function(e) {
+		configedFsNextStep();
+		e.stopPropagation();
+	});
+
+	//tab3的下一步
+	$('.configedAll_lastStep').unbind('click');
+	$('.configedAll_lastStep').bind('click', function(e) {
+		configedAlllastStep(rowInfo);
+		e.stopPropagation();
+	});
+
+	//确认排课按钮
+	$('#confirm').unbind('click');
+	$('#confirm').bind('click', function(e) {
+		confirmPk2(rowInfo.edu202_ID);
+		e.stopPropagation();
+	});
+
+	//为学年绑定change事件 重载开始结束周信息
+	$("#term").change(function(e) {
+		redrawStartAndEndWeek();
+		e.stopPropagation();
+	});
+
+	//为开始周绑定change事件
+	$("#endWeek").change(function(e) {
+		weekChange();
+		e.stopPropagation();
+	});
+
+	//为授课地点绑定change事件
+	$("#skdd").change(function(e) {
+		skddChange();
+		e.stopPropagation();
+	});
+
+	$("#kj").change(function(e) {
+		KjBtnschange();
+		e.stopPropagation();
+	});
+
+	$('#addnewKj').unbind('click');
+	$('#addnewKj').bind('click', function(e) {
+		AddnewKj();
+		e.stopPropagation();
+	});
+
+	$('#addCoursePlan').unbind('click');
+	$('#addCoursePlan').bind('click', function(e) {
+		addCoursePlan();
+		e.stopPropagation();
+	});
+
+	$('#addNewFsKj').unbind('click');
+	$('#addNewFsKj').bind('click', function(e) {
+		addNewFsKj();
+		e.stopPropagation();
+	});
+}
+
+//确认排课
+function confirmPk2(Edu202Id){
+	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
+	var scheduleInfo;
+	var PKInfo;
+	if(currentJzxs!=0){
+		PKInfo=getJzPKInfo();
+		if(typeof PKInfo ==='undefined'){
+			return;
+		}
+
+		scheduleInfo=scheduleDetailInfo();
+		if(scheduleInfo.length==0){
+			return;
+		}
+
+		var checkJzPkRs=checkJzPk();
+		if(!checkJzPkRs){
+			return;
+		}
+	}else{
+		scheduleInfo=new Array();
+		var choosed = $("#WaitTaskTable").bootstrapTable("getSelections");
+		var PKInfo=new Object();
+		PKInfo.xnid=choosed[0].xnid;
+		PKInfo.xnmc=choosed[0].xn;
+		PKInfo.skddmc="";
+		PKInfo.skddid="";
+		PKInfo.pointid="";
+		PKInfo.point="";
+		PKInfo.edu201_ID=choosed[0].edu201_ID;
+	}
+
+	var fsxsInfo=new Array();
+	if($(".fsxsSpan")[0].innerText!=="0"){
+		var checkSFxsRs=checkSFxs();
+		if(!checkSFxsRs){
+			return;
+		}
+		fsxsInfo=getfsxs();
+	}
+
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/reComfirmSchedule",
+		data:{
+			"Edu202Id":Edu202Id,
+			"scheduleDetail":JSON.stringify(scheduleInfo),
+			"scatteredClass":JSON.stringify(fsxsInfo)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
+				$("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
+				controlScheduleArea();
+				toastr.success('排课成功');
+			} else {
+				toastr.warning('排课课时不等于任务书总课时');
+			}
+		}
 	});
 }
 
