@@ -30,8 +30,8 @@ public class Edu005 {
     private Integer exam_num;//补考次数
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
-    @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SEQUENCENAME")
+    @SequenceGenerator(name = "SEQ_SEQUENCENAME", sequenceName = "SEQ_SEQUENCENAME")
     @Column(name = "Edu005_ID")
 
 
