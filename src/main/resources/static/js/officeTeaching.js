@@ -1173,21 +1173,24 @@ function scheduleDetailInfo(needToastr){
 	var returnArray=new Array();
 	var all=$("#tab3").find(".choosendCycleArea")[0].childNodes;
 	for (var i = 0; i < all.length; i++) {
-		var thisObject=new Object();
-		var current=all[i].attributes;
-		thisObject.xqmc=current[1].nodeValue;
-		thisObject.kjmc=current[2].nodeValue;
-		thisObject.xqid=current[3].nodeValue;
-		thisObject.kjid=current[4].nodeValue;
-		thisObject.ksz=current[5].nodeValue;
-		thisObject.jsz=current[6].nodeValue;
-		thisObject.Edu101_id=current[8].nodeValue;
-		thisObject.teacherName=current[9].nodeValue;
-		thisObject.localId=current[10].nodeValue;
-		thisObject.pointId=current[11].nodeValue;
-		thisObject.localName=current[12].nodeValue;
-		thisObject.pointName=current[13].nodeValue;
-		returnArray.push(thisObject);
+		if(all[i].firstElementChild!=null){
+			var thisObject=new Object();
+			var current=all[i].attributes;
+			thisObject.xqmc=current[1].nodeValue;
+			thisObject.kjmc=current[2].nodeValue;
+			thisObject.xqid=current[3].nodeValue;
+			thisObject.kjid=current[4].nodeValue;
+			thisObject.ksz=current[5].nodeValue;
+			thisObject.jsz=current[6].nodeValue;
+			thisObject.Edu101_id=current[8].nodeValue;
+			thisObject.teacherName=current[9].nodeValue;
+			thisObject.localId=current[10].nodeValue;
+			thisObject.pointId=current[11].nodeValue;
+			thisObject.localName=current[12].nodeValue;
+			thisObject.pointName=current[13].nodeValue;
+			returnArray.push(thisObject);
+		}
+
 	}
 
 	if(returnArray.length==0){
@@ -1203,18 +1206,20 @@ function getfsxs(){
 	var returnArray=new Array();
 	var allFsxsDom=$("#tab3").find(".choosendfsKjInfo");
 	for (var i = 0; i <allFsxsDom.length ; i++) {
-		var singleObject=new Object();
-		var taskId='';
-		var courseName='';
-		$(".isRe")[0].innerText==="F"?taskId=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID:taskId="";
-		$(".isRe")[0].innerText==="F"?courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc:courseName="";
-		singleObject.classHours=allFsxsDom[i].attributes[1].nodeValue;
-		singleObject.week=allFsxsDom[i].attributes[2].nodeValue;
-		// singleObject.Edu201_ID=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
-		// singleObject.courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc;
-		singleObject.Edu201_ID=taskId;
-		singleObject.courseName=courseName;
-		returnArray.push(singleObject);
+		if(allFsxsDom[i].nextElementSibling==null){
+			var singleObject=new Object();
+			var taskId='';
+			var courseName='';
+			$(".isRe")[0].innerText==="F"?taskId=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID:taskId="";
+			$(".isRe")[0].innerText==="F"?courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc:courseName="";
+			singleObject.classHours=allFsxsDom[i].attributes[1].nodeValue;
+			singleObject.week=allFsxsDom[i].attributes[2].nodeValue;
+			// singleObject.Edu201_ID=$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
+			// singleObject.courseName=$("#WaitTaskTable").bootstrapTable("getSelections")[0].kcmc;
+			singleObject.Edu201_ID=taskId;
+			singleObject.courseName=courseName;
+			returnArray.push(singleObject);
+		}
 	}
 	return returnArray;
 }
