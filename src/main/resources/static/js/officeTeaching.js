@@ -188,6 +188,7 @@ function stuffWaitTaskTable(tableInfo){
 //开始排课
 function startSchedule(){
 	$(".isRe").html('F');
+	$("#rePutInfo").hide();
 	var culturePlanInfo=getNotNullSearchs();
 	if(typeof culturePlanInfo ==='undefined'){
 		return;
@@ -1616,6 +1617,7 @@ function changePutted(row){
 					toastr.warning('课程已排完');
 					return;
 				}
+				$("#rePutInfo").show();
 				$(".jzxsSpan").html(backjson.data.edu201.jzxs);
 				showStartScheduleArea(null,null,2);
 				stuffChangePuttedInfo(backjson.data,row);
@@ -1840,7 +1842,7 @@ function reScheduleSingleClassBtnBind(rowInfo){
 	});
 }
 
-//确认排课
+//再排确认排课
 function confirmPk2(rowInfo){
 	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
 	var scheduleInfo;
@@ -1886,6 +1888,8 @@ function confirmPk2(rowInfo){
 		cache: false,
 		url: "/reComfirmSchedule",
 		data:{
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"userName":$(parent.frames["topFrame"].document).find(".userName")[0].innerText,
 			"Edu202Id":rowInfo.edu202_ID,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
 			"scatteredClass":JSON.stringify(fsxsInfo)
@@ -2120,7 +2124,7 @@ function research(){
 //已排排重置检索
 function putted_reSearch(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz";
+	reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz,#puttedkcStatus";
 	reReloadSearchsWithSelect(reObject);
 	getPuttedScheduleInfo();
 }
