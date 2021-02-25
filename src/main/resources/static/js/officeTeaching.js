@@ -2023,11 +2023,14 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	$("#puttedLs").val(puttedInfo.ls);
 	$('#puttedInfoModal').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 
-
 	var classPeriodMap=scheduleCompletedDetails.classPeriodMap;
-
-	for (var key in classPeriodMap) {
-		stuffPuttedJzPk(classPeriodMap[key]);
+	if(JSON.stringify(classPeriodMap) !== "{}"){
+		for (var key in classPeriodMap) {
+			stuffPuttedJzPk(classPeriodMap[key]);
+		}
+		$(".jzformtitle").show();
+	}else{
+		$(".jzformtitle").hide();
 	}
 
 	if(scatterList.length===0){
