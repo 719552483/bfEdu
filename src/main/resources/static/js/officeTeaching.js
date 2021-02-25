@@ -1650,6 +1650,12 @@ function changePutted(row){
 				$(".jzxsSpan").html(backjson.data.edu201.jzxs);
 				showStartScheduleArea(null,null,2);
 				stuffChangePuttedInfo(backjson.data,row);
+				//开始检索任务书
+				$('#rePutInfo').unbind('click');
+				$('#rePutInfo').bind('click', function(e) {
+					getRePutInfo(row);
+					e.stopPropagation();
+				});
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1942,6 +1948,51 @@ function confirmPk2(rowInfo){
 				toastr.success('排课成功');
 			} else {
 				toastr.warning('排课课时不等于任务书总课时');
+			}
+		}
+	});
+}
+
+//再排详情
+function getRePutInfo(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getRePutInfo",
+		data: {
+			"edu202Id":row.edu202_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				if(backjson.data.length==0){
+					toastr.warning('暂无再排信息');
+					return;
+				}
+				$(".rePutInfoArea").empty()
+				$("#rePutInfoModal").find(".moadalTitle").html(row.className+' ('+row.kcmc+') -再排信息');
+				$("#rePutJxbMC").val(row.className);
+				$("#rePutkCMC").val(row.kcmc);
+				$("#rePutLs").val(row.ls);
+				$.showModal("#rePutInfoModal",false);
+				var str='<div class="puttedJzTitle"></div>';
+				for (var i = 0; i <backjson.data.length ; i++) {
+					str+='<div class="PuttedKjArea">第'+backjson.data[i].week+'周  '+backjson.data[i].lessons+' -'+backjson.data[i].czsj+'&#12288;<i class="iconfont icon-jiaoshi"></i>操作人:'+backjson.data[i].username+'</div>';
+					str+='<div class="clear"></div>';
+				}
+				$(".rePutInfoArea").append(str);
+			} else {
+				toastr.warning('操作失败，请重试');
 			}
 		}
 	});
