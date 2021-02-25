@@ -1088,12 +1088,15 @@ function confirmPk(){
 		fsxsInfo=getfsxs();
 	}
 
+	var sfpw=checkDone(scheduleInfo,fsxsInfo,currentJzxs,$(".fsxsSpan")[0].innerText);
+
 	$.ajax({
 		method: 'get',
 		cache: false,
 		url: "/comfirmSchedule",
 		data:{
 			"Edu201Id":PKInfo.edu201_ID.toString(),
+			"sfpw":sfpw,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
 			"scatteredClass":JSON.stringify(fsxsInfo)
 		},
@@ -1585,6 +1588,12 @@ function stuffPuttedOutTable(tableInfo){
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
+			},{
+				field: 'sfypw',
+				title: '排课状态',
+				align: 'left',
+				sortable: true,
+				formatter: sfypwMatter
 			}, {
 				field : 'action',
 				title : '操作',
@@ -1614,6 +1623,17 @@ function stuffPuttedOutTable(tableInfo){
 				.join('');
 		}
 	}
+
+	function sfypwMatter(value, row, index) {
+		if (row.sfypw==="1") {
+			return [ '<div class="greenTxt" title="已排完">已排完</div>' ]
+				.join('');
+		} else if (row.sfypw==="2"){
+			return [ '<div class="redTxt" title="未排完">未排完</div>' ]
+				.join('');
+		}
+	}
+
 
 	drawPagination(".puttedTableArea", "已排课表");
 	changeColumnsStyle(".puttedTableArea", "已排课表");
@@ -2241,6 +2261,44 @@ function startSearch(){
 			}
 		}
 	});
+}
+
+//判断课程是否已排完
+function checkDone(jz,fs,currentJz,currentFs){
+	var returnRs='';
+	var jzDone=true;
+	var fsDone=true;
+	if(parseInt(currentJz)!=0){
+		var puttedJz=0;
+		for (var i = 0; i < jz.length; i++) {
+			puttedJz+=((jz[i].jsz-jz[i].ksz)+1)*2;
+		}
+		if(puttedJz==parseInt(currentJz)){
+			jzDone=true;
+		}else{
+			jzDone=false;
+		}
+	}
+
+	if(parseInt(currentFs)!=0){
+		var puttedFs=0;
+		for (var i = 0; i < fs.length; i++) {
+			puttedFs+=parseInt(fs[i].classHours);
+		}
+		if(puttedFs==parseInt(currentFs)){
+			fsDone=true;
+		}else{
+			fsDone=false;
+		}
+	}
+
+	if(jzDone&&fsDone){
+		returnRs=1;
+	}else{
+		returnRs=2;
+	}
+
+	return returnRs;
 }
 
 //初始化页面按钮绑定事件
