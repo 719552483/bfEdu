@@ -1373,13 +1373,35 @@ function puttedSchedule(){
 					toastr.warning('暂无已排课程');
 					drawEmptyPuttedTable();
 				}else{
-					stuffPuttedOutTable(backjson.taskList);
+					stuffPuttedOutTable(sortPuttedCrouse(backjson.taskList));
 				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
 		}
 	});
+}
+
+//根据时间 排序已排课表
+function sortPuttedCrouse(taskList){
+	var returnArray=new Array();
+	var hadDate=new Array();
+	var noDate=new Array();
+	for (var i = 0; i < taskList.length; i++) {
+		if(taskList[i].pksj!=null&&taskList[i].pksj!==""&&typeof taskList[i].pksj!=="undefined"){
+			hadDate.push(taskList[i]);
+		}else{
+			noDate.push(taskList[i]);
+		}
+	}
+
+	returnArray= hadDate.sort(function(a,b){
+		return a.pksj < b.pksj ? 1 : -1
+	});
+
+	returnArray.push.apply(returnArray,noDate);
+
+	return returnArray;
 }
 
 //渲染空的已排课表table

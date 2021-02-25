@@ -1297,8 +1297,8 @@ function scheduleFormatter(value, row, index) {
 	if ($.isArray(value)) {
 		for (var i = 0; i < value.length; i++) {
 			var reg = new RegExp('"',"g");
-			// var teacherNamestr = value[i].teacherName.replace(reg, "");
-			var teacherNamestr = value[i].userName.replace(reg, "");
+			var teacherNamestr = value[i].teacherName.replace(reg, "");
+			// var teacherNamestr = value[i].userName.replace(reg, "");
 			var baseTeacherName;
 			value[i].baseTeacherName===''||value[i].baseTeacherName==null||typeof value[i].baseTeacherName==="undefined"?baseTeacherName='暂无助教':baseTeacherName=value[i].baseTeacherName.replace(reg, "");
 			htmlStr += '<div classRoomID="' + value[i].classRoomId
