@@ -1759,7 +1759,7 @@ function stuffReRs(rowInfo,puttedInfo){
 		}
 
 		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
-			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
+			'集中授课：第'+startWeekmc+'周  至  '+endWeekmc+'周 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
 			'</div>';
 	}
 	$(".choosendCycleArea,.singleCycle").append(appendStr);
