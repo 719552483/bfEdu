@@ -1934,7 +1934,7 @@ function confirmPk2(rowInfo){
 		fsxsInfo=getfsxs();
 	}
 
-	var sfpw=checkDone(scheduleInfo,fsxsInfo,currentJzxs,$(".fsxsSpan")[0].innerText);
+	var sfpw=checkDone(scheduleInfo,fsxsInfo,currentJzxs,$(".fsxsSpan")[0].innerText,true);
 
 	$.ajax({
 		method: 'get',
@@ -1961,10 +1961,12 @@ function confirmPk2(rowInfo){
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-				// var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
-				// $("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
+				$("#puttedTable").bootstrapTable('updateByUniqueId', {
+					id: rowInfo.edu202_ID,
+					row: rowInfo
+				});
 				controlScheduleArea();
-				toastr.success('排课成功');
+				toastr.success('再排成功');
 			} else {
 				toastr.warning('排课课时不等于任务书总课时');
 			}
@@ -2267,41 +2269,77 @@ function startSearch(){
 }
 
 //判断课程是否已排完
-function checkDone(jz,fs,currentJz,currentFs){
+function checkDone(jz,fs,currentJz,currentFs,isRe){
 	var returnRs='';
 	var jzDone=true;
 	var fsDone=true;
-	if(parseInt(currentJz)!=0){
-		var puttedJz=0;
-		for (var i = 0; i < jz.length; i++) {
-			puttedJz+=((jz[i].jsz-jz[i].ksz)+1)*2;
+	if(typeof  isRe==="undefined"){
+		if(parseInt(currentJz)!=0){
+			var puttedJz=0;
+			for (var i = 0; i < jz.length; i++) {
+				puttedJz+=((jz[i].jsz-jz[i].ksz)+1)*2;
+			}
+			if(puttedJz==parseInt(currentJz)){
+				jzDone=true;
+			}else{
+				jzDone=false;
+			}
 		}
-		if(puttedJz==parseInt(currentJz)){
-			jzDone=true;
-		}else{
-			jzDone=false;
-		}
-	}
 
-	if(parseInt(currentFs)!=0){
-		var puttedFs=0;
-		for (var i = 0; i < fs.length; i++) {
-			puttedFs+=parseInt(fs[i].classHours);
+		if(parseInt(currentFs)!=0){
+			var puttedFs=0;
+			for (var i = 0; i < fs.length; i++) {
+				puttedFs+=parseInt(fs[i].classHours);
+			}
+			if(puttedFs==parseInt(currentFs)){
+				fsDone=true;
+			}else{
+				fsDone=false;
+			}
 		}
-		if(puttedFs==parseInt(currentFs)){
-			fsDone=true;
-		}else{
-			fsDone=false;
-		}
-	}
 
-	if(jzDone&&fsDone){
-		returnRs=1;
+		if(jzDone&&fsDone){
+			returnRs=1;
+		}else{
+			returnRs=2;
+		}
+
+		return returnRs;
 	}else{
-		returnRs=2;
-	}
+		if(parseInt(currentJz)!=0){
+			var puttedJz=0;
+			var puttedJzlesson=$(".rsArea").find(".choosendCycleArea").find(".choosendCycleInfo");
+			for (var i = 0; i < puttedJzlesson.length; i++) {
+				puttedJz+=((puttedJzlesson[i].attributes[6].nodeValue-puttedJzlesson[i].attributes[5].nodeValue)+1)*2;
+			}
 
-	return returnRs;
+			if(puttedJz==parseInt(currentJz)){
+				jzDone=true;
+			}else{
+				jzDone=false;
+			}
+		}
+
+		if(parseInt(currentFs)!=0){
+			var puttedFs=0;
+			var puttedFslesson=$(".rsArea").find(".choosendfsKjArea").find(".choosendfsKjInfo");
+			for (var i = 0; i < puttedFslesson.length; i++) {
+				puttedFs+=parseInt(puttedFslesson[i].attributes[1].nodeValue);
+			}
+			if(puttedFs==parseInt(currentFs)){
+				fsDone=true;
+			}else{
+				fsDone=false;
+			}
+		}
+
+		if(jzDone&&fsDone){
+			returnRs=1;
+		}else{
+			returnRs=2;
+		}
+		return returnRs;
+	}
 }
 
 //初始化页面按钮绑定事件
