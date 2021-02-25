@@ -1934,6 +1934,8 @@ function confirmPk2(rowInfo){
 		fsxsInfo=getfsxs();
 	}
 
+	var sfpw=checkDone(scheduleInfo,fsxsInfo,currentJzxs,$(".fsxsSpan")[0].innerText);
+
 	$.ajax({
 		method: 'get',
 		cache: false,
@@ -1941,6 +1943,7 @@ function confirmPk2(rowInfo){
 		data:{
 			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
 			"userName":$(parent.frames["topFrame"].document).find(".userName")[0].innerText,
+			"sfpw":sfpw,
 			"Edu202Id":rowInfo.edu202_ID,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
 			"scatteredClass":JSON.stringify(fsxsInfo)
