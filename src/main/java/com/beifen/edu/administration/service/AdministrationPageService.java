@@ -1143,7 +1143,7 @@ public class AdministrationPageService {
 				edu2011.setUsername(userName);
 				edu2011.setType("1");
 				edu2011.setWeek(edu203.getKsz()+"-"+edu203.getJsz());
-				edu2011.setLessons(edu203.getKjmc()+"-"+edu203.getKjmc());
+				edu2011.setLessons(edu203.getXqmc()+"-"+edu203.getKjmc());
 				edu2011DAO.save(edu2011);
 			}
 
