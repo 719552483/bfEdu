@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "Edu2011")
 public class Edu2011 {
 	private Long Edu2011_ID; //ID
-	private String Edu201_Id;//任务书ID
+	private String Edu202_Id;//任务书ID
 	private String classId;  //教学班ID
 	private String className;  //班级名称
 	private String kcmc;  //课程名称
@@ -39,12 +39,12 @@ public class Edu2011 {
 		this.classId = classId;
 	}
 
-	public String getEdu201_Id() {
-		return Edu201_Id;
+	public String getEdu202_Id() {
+		return Edu202_Id;
 	}
 
-	public void setEdu201_Id(String edu201_Id) {
-		Edu201_Id = edu201_Id;
+	public void setEdu202_Id(String edu202_Id) {
+		Edu202_Id = edu202_Id;
 	}
 
 	public String getClassName() {

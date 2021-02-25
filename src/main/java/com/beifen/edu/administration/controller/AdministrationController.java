@@ -2106,7 +2106,19 @@ public class AdministrationController {
 		returnMap.put("result", isSuccess);
 		return returnMap;
 	}
-
+	/**
+	 * 再次排课记录
+	 * @param edu202Id
+	 * @return
+	 */
+	@RequestMapping("/getRePutInfo")
+	@ResponseBody
+	public ResultVO getRePutInfo(@RequestParam("edu202Id") String edu202Id) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		ResultVO resultVO =  administrationPageService.reComfirmSchedule(edu202Id);
+		return resultVO;
+	}
 	/**
 	 * 查询再次排课信息
 	 * @param edu202Id

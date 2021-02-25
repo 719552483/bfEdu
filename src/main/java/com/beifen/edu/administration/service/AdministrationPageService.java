@@ -1093,6 +1093,15 @@ public class AdministrationPageService {
 	public List<Edu401> queryAllDeafultKj() {
 		return edu401DAO.findAll();
 	}
+
+	public ResultVO reComfirmSchedule(String edu202Id) {
+		ResultVO resultVO;
+		List<Edu2011> list = edu2011DAO.reComfirmSchedule(edu202Id);
+		resultVO = ResultVO.setSuccess("操作成功",list);
+		return resultVO;
+	}
+
+
 	public boolean reSaveSchedule(String edu202Id, List<Edu203> edu203List, List<Edu207> edu207List,String userId,String userName) {
 		boolean isSuccess = true;
 		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
@@ -1113,7 +1122,7 @@ public class AdministrationPageService {
 				edu207.setCourseType(edu201.getClassType());
 				edu207Dao.save(edu207);
 				Edu2011 edu2011 = new Edu2011();
-				edu2011.setEdu201_Id(edu202.getEdu201_ID().toString());
+				edu2011.setEdu202_Id(edu202Id);
 				edu2011.setClassId(edu201.getClassId().toString());
 				edu2011.setClassName(edu201.getClassName());
 				edu2011.setKcmc(edu201.getKcmc());
@@ -1126,15 +1135,10 @@ public class AdministrationPageService {
 				edu2011DAO.save(edu2011);
 			}
 		}
-
-
-
 		if(edu203List.size() != 0) {
-
-
 			for (Edu203 edu203 : edu203List) {
 				Edu2011 edu2011 = new Edu2011();
-				edu2011.setEdu201_Id(edu202.getEdu201_ID().toString());
+				edu2011.setEdu202_Id(edu202Id);
 				edu2011.setClassId(edu201.getClassId().toString());
 				edu2011.setClassName(edu201.getClassName());
 				edu2011.setKcmc(edu201.getKcmc());
@@ -1146,8 +1150,6 @@ public class AdministrationPageService {
 				edu2011.setLessons(edu203.getXqmc()+"-"+edu203.getKjmc());
 				edu2011DAO.save(edu2011);
 			}
-
-
 			//重新排列课节集合
 			Collections.sort(edu203List, new Comparator<Edu203>() {
 				public int compare(Edu203 arg0, Edu203 arg1) {
