@@ -785,7 +785,7 @@ function addCoursePlan(){
 		//判断完全一致
 		for (let j = 0; j <added.length; j++) {
 			if(added[j].id==id){
-				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'已安排');
+				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'  已安排');
 				return;
 			}
 		}
@@ -813,7 +813,7 @@ function addCoursePlan(){
 			}
 		}
 		if(startEndSame&&xqkjSame){
-			toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'已安排');
+			toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'  已安排');
 			return;
 		}
 
@@ -925,7 +925,7 @@ function AddnewKj(){
 	}
 
 	if($(".singleKj").find("#choosendKjInfo"+(startWeek+endWeek+currentXq+currentKj)).length!==0){
-		toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmc+'已安排');
+		toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmc+'  已安排');
 		return;
 	}
 
@@ -1753,7 +1753,7 @@ function stuffReRs(rowInfo,puttedInfo){
 		var id='choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek);
 		for (let j = 0; j <added.length; j++) {
 			if(added[j].id==id){
-				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'已安排');
+				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'  已安排');
 				return;
 			}
 		}
