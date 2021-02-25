@@ -24,7 +24,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     void deleteByscheduleId(String scheduleId);
 
     //根据课程id查询课节
-    @Query(value = "select  * from(select a.*,row_number() over(partition by a.jsz,a.ksz,a.xqid,a.kjid order by a.edu202_ID) su from Edu203 a where edu202_ID = ?1) where su = 1", nativeQuery = true)
+    @Query(value = "select  * from(select a.*,row_number() over(partition by a.jsz,a.ksz,a.xqid,a.kjid order by a.edu202_ID) su from Edu203 a where edu202_ID = ?1 ORDER BY TO_NUMBER(week)) where su = 1", nativeQuery = true)
     List<Edu203> getClassPeriodByEdu202Id(String edu202Id);
 
     @Query(value = "select * from Edu203 e where e.point_id = ?1", nativeQuery = true)
