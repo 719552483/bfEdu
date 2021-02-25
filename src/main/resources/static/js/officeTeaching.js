@@ -782,12 +782,41 @@ function addCoursePlan(){
 		var locationName=reAreas[i].attributes[14].nodeValue;
 		var pointName=reAreas[i].attributes[15].nodeValue;
 		var id='choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek);
+		//判断完全一致
 		for (let j = 0; j <added.length; j++) {
 			if(added[j].id==id){
-				toastr.warning('课节已安排');
+				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'已安排');
 				return;
 			}
 		}
+
+		//判断开始结束周一致或包含
+		var startEndSame=false;
+		for (let j = 0; j <added.length; j++) {
+			var thisStartWeek=parseInt(added[j].attributes[5].nodeValue);
+			var thisEndWeek=parseInt(added[j].attributes[6].nodeValue);
+			var currentStartWeek=parseInt(startWeek);
+			if(currentStartWeek>=thisStartWeek&&currentStartWeek<=thisEndWeek){
+				startEndSame=true;
+				break;
+			}
+		}
+
+		//判断星期课节一致或包含
+		var xqkjSame=false;
+		for (let j = 0; j <added.length; j++) {
+			var thisXq=added[j].attributes[3].nodeValue;
+			var thisKj=added[j].attributes[4].nodeValue;
+			if(thisXq===currentXq&&thisKj===currentKj){
+				xqkjSame=true;
+				break;
+			}
+		}
+		if(startEndSame&&xqkjSame){
+			toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'已安排');
+			return;
+		}
+
 		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
 			'集中授课：'+startWeekmc+'  至  '+endWeekmc+' 每周'+currentXqmc+'  '+currentKjmc+'课' +'&#12288;任课教师:'+teacherName+'&#12288;授课地点:'+locationName+'-'+pointName+
 			'<img class="choosendKjImg choosendCycleInfoImg" src="images/close1.png"/></div>';
@@ -896,7 +925,7 @@ function AddnewKj(){
 	}
 
 	if($(".singleKj").find("#choosendKjInfo"+(startWeek+endWeek+currentXq+currentKj)).length!==0){
-		toastr.warning('该课节安排已选择');
+		toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmc+'已安排');
 		return;
 	}
 
@@ -1724,7 +1753,7 @@ function stuffReRs(rowInfo,puttedInfo){
 		var id='choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek);
 		for (let j = 0; j <added.length; j++) {
 			if(added[j].id==id){
-				toastr.warning('课节已安排');
+				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'已安排');
 				return;
 			}
 		}
