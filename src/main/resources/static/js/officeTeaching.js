@@ -188,7 +188,6 @@ function stuffWaitTaskTable(tableInfo){
 //开始排课
 function startSchedule(){
 	$(".isRe").html('F');
-	$("#rePutInfo").hide();
 	var culturePlanInfo=getNotNullSearchs();
 	if(typeof culturePlanInfo ==='undefined'){
 		return;
@@ -1491,6 +1490,9 @@ function stuffPuttedOutTable(tableInfo){
 		},
 		'click #changePutted' : function(e, value, row, index) {
 			changePutted(row);
+		},
+		'click #rePutInfo' : function(e, value, row, index) {
+			getRePutInfo(row);
 		}
 	};
 
@@ -1598,6 +1600,7 @@ function stuffPuttedOutTable(tableInfo){
 		return [ '<ul class="toolbar tabletoolbar">'
 		+ '<li id="puttedInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
 		+ '<li id="changePutted"><span><img src="images/icon03.png" style="width:24px"></span>再排</li>'
+		+ '<li id="rePutInfo"><span><img src="images/ico02.png" style="width:24px"></span>再排记录</li>'
 		+ '<li id="removePutted"><span><img src="images/close1.png"></span>删除</li>'
 		+ '</ul>' ].join('');
 	}
@@ -1646,16 +1649,9 @@ function changePutted(row){
 					toastr.warning('课程已排完');
 					return;
 				}
-				$("#rePutInfo").show();
 				$(".jzxsSpan").html(backjson.data.edu201.jzxs);
 				showStartScheduleArea(null,null,2);
 				stuffChangePuttedInfo(backjson.data,row);
-				//开始检索任务书
-				$('#rePutInfo').unbind('click');
-				$('#rePutInfo').bind('click', function(e) {
-					getRePutInfo(row);
-					e.stopPropagation();
-				});
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -1979,7 +1975,7 @@ function getRePutInfo(row){
 					toastr.warning('暂无再排信息');
 					return;
 				}
-				$(".rePutInfoArea").empty()
+				$(".rePutInfoArea").empty();
 				$("#rePutInfoModal").find(".moadalTitle").html(row.className+' ('+row.kcmc+') -再排信息');
 				$("#rePutJxbMC").val(row.className);
 				$("#rePutkCMC").val(row.kcmc);
