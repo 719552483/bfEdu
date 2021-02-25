@@ -1102,7 +1102,7 @@ public class AdministrationPageService {
 	}
 
 
-	public boolean reSaveSchedule(String edu202Id, List<Edu203> edu203List, List<Edu207> edu207List,String userId,String userName) {
+	public boolean reSaveSchedule(String edu202Id, List<Edu203> edu203List, List<Edu207> edu207List,String userId,String userName,String sfpw) {
 		boolean isSuccess = true;
 		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
@@ -1110,6 +1110,8 @@ public class AdministrationPageService {
 		String time = df.format(new Date());
 		edu201.setPksj(time);
 		edu201DAO.save(edu201);
+		edu202.setSfypw(sfpw);
+		edu202DAO.save(edu202);
 		Double jzxs = edu201.getJzxs();
 		if(edu207List.size() != 0) {
 			for (Edu207 edu207 : edu207List) {
@@ -1244,7 +1246,7 @@ public class AdministrationPageService {
 	}
 
 	//确认排课
-	public boolean saveSchedule(String edu201Id, List<Edu203> edu203List, List<Edu207> edu207List) {
+	public boolean saveSchedule(String edu201Id, List<Edu203> edu203List, List<Edu207> edu207List,String sfpw) {
 		boolean isSuccess = true;
 		//根据排课计划查找任务书
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu201Id);
@@ -1256,6 +1258,7 @@ public class AdministrationPageService {
 		edu202.setEdu201_ID(Long.parseLong(edu201Id));
 		edu202.setXnid(Long.parseLong(edu201.getXnid()));
 		edu202.setXnmc(edu201.getXn());
+		edu202.setSfypw(sfpw);
 		edu202DAO.save(edu202);
 		String edu202_id = edu202.getEdu202_ID().toString();
 
