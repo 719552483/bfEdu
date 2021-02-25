@@ -17,6 +17,7 @@ public class Edu202 {
 	private Long xnid; // 学年id
 	private String xnmc;// 学年名称
 	private String szz; //所在周
+	private String sfypw;//排课是否已排完
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -42,6 +43,14 @@ public class Edu202 {
 	}
 	public String getXnmc() {
 		return xnmc;
+	}
+
+	public String getSfypw() {
+		return sfypw;
+	}
+
+	public void setSfypw(String sfypw) {
+		this.sfypw = sfypw;
 	}
 
 	public void setXnmc(String xnmc) {

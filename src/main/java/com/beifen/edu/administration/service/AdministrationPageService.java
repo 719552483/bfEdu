@@ -1913,6 +1913,10 @@ public class AdministrationPageService {
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
 					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
+				if (teachingSchedule.getSfypw() != null && !"".equals(teachingSchedule.getSfypw()) && "0".equals(teachingSchedule.getSfypw())) {
+					predicates.add(cb.equal(root.<String>get("sfypw"), teachingSchedule.getSfypw()));
+				}
+
 				Path<Object> path = root.get("pyjhxb");//定义查询的字段
 				CriteriaBuilder.In<Object> in = cb.in(path);
 				for (int i = 0; i <departments.size() ; i++) {
@@ -2672,14 +2676,24 @@ public class AdministrationPageService {
 
 	public ResultVO searchScheduleInfoAgain(String edu202Id) {
 		ResultVO resultVO;
-		Map<String,Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<>();
 		Edu202 edu202 = edu202DAO.findOne(Long.parseLong(edu202Id));
 		Edu201 edu201 = edu201DAO.findOne(edu202.getEdu201_ID());
-		List<Edu203> edu203List = edu203Dao.getClassPeriodByEdu202Id(edu202Id);
-
+		List<Edu203> edu203List = edu203Dao.getClassPeriodByEdu202IdDist(edu202Id);
+		List<Edu203> edu203ListSize = edu203Dao.getClassPeriodByEdu202Id(edu202Id);
 		Long fsxs = edu207Dao.findFsxsSumByEdu201Id(edu202.getEdu201_ID().toString());
-		if(new Double(edu201.getJzxs()).intValue() == (edu203List.size()*2) && fsxs.intValue() == new Double(edu201.getFsxs()).intValue()){
+		if (fsxs == null && new Double(edu201.getJzxs()).intValue() == (edu203ListSize.size()*2)) {
 			returnMap.put("status","T");
+		}else if(fsxs != null){
+			if(new Double(edu201.getJzxs()).intValue() == (edu203ListSize.size()*2) && fsxs.intValue() == new Double(edu201.getFsxs()).intValue()){
+				returnMap.put("status","T");
+			}else{
+				returnMap.put("status","F");
+				List<Edu207> edu207List = edu207Dao.findAllByEdu201Id(edu201.getEdu201_ID().toString());
+				returnMap.put("edu201",edu201);
+				returnMap.put("edu203List",edu203List);
+				returnMap.put("edu207List",edu207List);
+			}
 		}else{
 			returnMap.put("status","F");
 			List<Edu207> edu207List = edu207Dao.findAllByEdu201Id(edu201.getEdu201_ID().toString());

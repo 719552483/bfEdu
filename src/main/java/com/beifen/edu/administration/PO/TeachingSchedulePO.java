@@ -27,7 +27,15 @@ public class TeachingSchedulePO {
     private String id;
     private String sfxylcj;
     private String pksj;
+    private String sfypw;
 
+    public String getSfypw() {
+        return sfypw;
+    }
+
+    public void setSfypw(String sfypw) {
+        this.sfypw = sfypw;
+    }
 
     public String getPyjhcc() {
         return pyjhcc;
