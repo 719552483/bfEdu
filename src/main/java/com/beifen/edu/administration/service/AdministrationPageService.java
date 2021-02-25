@@ -56,6 +56,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu201Dao edu201DAO;
 	@Autowired
+	private Edu2011Dao edu2011DAO;
+	@Autowired
 	private Edu202Dao edu202DAO;
 	@Autowired
 	private Edu101Dao edu101DAO;
@@ -1091,10 +1093,14 @@ public class AdministrationPageService {
 	public List<Edu401> queryAllDeafultKj() {
 		return edu401DAO.findAll();
 	}
-	public boolean reSaveSchedule(String edu202Id, List<Edu203> edu203List, List<Edu207> edu207List) {
+	public boolean reSaveSchedule(String edu202Id, List<Edu203> edu203List, List<Edu207> edu207List,String userId,String userName) {
 		boolean isSuccess = true;
 		Edu202 edu202 = edu202DAO.findEdu202ById(edu202Id);
 		Edu201 edu201 = edu201DAO.queryTaskByID(edu202.getEdu201_ID().toString());
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+		String time = df.format(new Date());
+		edu201.setPksj(time);
+		edu201DAO.save(edu201);
 		Double jzxs = edu201.getJzxs();
 		if(edu207List.size() != 0) {
 			for (Edu207 edu207 : edu207List) {
@@ -1106,10 +1112,42 @@ public class AdministrationPageService {
 				edu207.setEdu108_ID(edu108.getEdu108_ID().toString());
 				edu207.setCourseType(edu201.getClassType());
 				edu207Dao.save(edu207);
+				Edu2011 edu2011 = new Edu2011();
+				edu2011.setEdu201_Id(edu202.getEdu201_ID().toString());
+				edu2011.setClassId(edu201.getClassId().toString());
+				edu2011.setClassName(edu201.getClassName());
+				edu2011.setKcmc(edu201.getKcmc());
+				edu2011.setCzsj(time);
+				edu2011.setUserId(userId);
+				edu2011.setUsername(userName);
+				edu2011.setType("2");
+				edu2011.setWeek(edu207.getWeek());
+				edu2011.setLessons(edu207.getClassHours().toString());
+				edu2011DAO.save(edu2011);
 			}
 		}
 
+
+
 		if(edu203List.size() != 0) {
+
+
+			for (Edu203 edu203 : edu203List) {
+				Edu2011 edu2011 = new Edu2011();
+				edu2011.setEdu201_Id(edu202.getEdu201_ID().toString());
+				edu2011.setClassId(edu201.getClassId().toString());
+				edu2011.setClassName(edu201.getClassName());
+				edu2011.setKcmc(edu201.getKcmc());
+				edu2011.setCzsj(time);
+				edu2011.setUserId(userId);
+				edu2011.setUsername(userName);
+				edu2011.setType("1");
+				edu2011.setWeek(edu203.getKsz()+"-"+edu203.getJsz());
+				edu2011.setLessons(edu203.getKjmc()+"-"+edu203.getKjmc());
+				edu2011DAO.save(edu2011);
+			}
+
+
 			//重新排列课节集合
 			Collections.sort(edu203List, new Comparator<Edu203>() {
 				public int compare(Edu203 arg0, Edu203 arg1) {
@@ -2636,6 +2674,7 @@ public class AdministrationPageService {
 		Edu202 edu202 = edu202DAO.findOne(Long.parseLong(edu202Id));
 		Edu201 edu201 = edu201DAO.findOne(edu202.getEdu201_ID());
 		List<Edu203> edu203List = edu203Dao.getClassPeriodByEdu202Id(edu202Id);
+
 		Long fsxs = edu207Dao.findFsxsSumByEdu201Id(edu202.getEdu201_ID().toString());
 		if(new Double(edu201.getJzxs()).intValue() == (edu203List.size()*2) && fsxs.intValue() == new Double(edu201.getFsxs()).intValue()){
 			returnMap.put("status","T");

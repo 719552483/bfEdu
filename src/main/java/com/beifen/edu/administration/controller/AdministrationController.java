@@ -2086,7 +2086,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 确认排课
+	 * 再次排课
 	 * @param edu202Id
 	 * @param scheduleDetail
 	 * @param scatteredClass
@@ -2094,12 +2094,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/reComfirmSchedule")
 	@ResponseBody
-	public Object reComfirmSchedule(@RequestParam("Edu202Id") String edu202Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass) {
+	public Object reComfirmSchedule(@RequestParam("userId") String userId,@RequestParam("userName") String userName,@RequestParam("Edu202Id") String edu202Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass) {
 		Map<String, Object> returnMap = new HashMap();
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
-		boolean isSuccess = administrationPageService.reSaveSchedule(edu202Id, edu203List, edu207List);
+		boolean isSuccess = administrationPageService.reSaveSchedule(edu202Id, edu203List, edu207List,userId,userName);
 //		if(isSuccess){
 //			administrationPageService.taskPutSchedule(edu201Id);
 //		}
