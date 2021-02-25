@@ -1447,7 +1447,8 @@ public class TeachingManageService {
         classIds.add(Long.parseLong(timeTablePO.getCurrentUserId()));
         String[] classIdList = utils.listToString(classIds, ',').split(",");
         //根据信息查询所有课表信息
-        List<String> edu201Ids = studentScheduleViewDao.findEdu201IdsByEdu301Ids(classIdList, timeTablePO.getSemester());
+//        List<String> edu201Ids = studentScheduleViewDao.findEdu201IdsByEdu301Ids(classIdList, timeTablePO.getSemester());
+        List<String> edu201Ids = edu201Dao.findEdu201IdsByclassIds(classIdList, timeTablePO.getSemester());
         if(edu201Ids.size() == 0) {
             resultVO = ResultVO.setFailed("当前学年未找到您的课程");
         } else {
