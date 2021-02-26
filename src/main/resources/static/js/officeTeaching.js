@@ -1743,11 +1743,14 @@ function stuffReTitle(culturePlanInfo,choosedTask){
 	for (var i = 0; i <choosedTask.edu203List.length ; i++) {
 		cyclePuttedHousr+=((choosedTask.edu203List[i].jsz-choosedTask.edu203List[i].ksz)+1)*2;
 	}
-
 	$(".cyclePuttedHousr").html(cyclePuttedHousr);
 	$(".cycleWaitHousr").html(parseInt(choosedTask.edu201.jzxs)-cyclePuttedHousr);
+
 	if(choosedTask.edu207List.length!=0){
-		var cyclePuttedFsHousr=choosedTask.edu207List.length*2;
+		var cyclePuttedFsHousr=0;
+		for (var i = 0; i < choosedTask.edu207List.length; i++) {
+			cyclePuttedFsHousr+=choosedTask.edu207List[i].classHours;
+		}
 		$(".fsPuttedHousr").html(cyclePuttedFsHousr);
 		$(".fsWaitHousr").html(parseInt(choosedTask.edu201.fsxs)-cyclePuttedFsHousr);
 	}
