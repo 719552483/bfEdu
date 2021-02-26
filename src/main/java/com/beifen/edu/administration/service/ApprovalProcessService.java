@@ -74,7 +74,7 @@ public class ApprovalProcessService {
         edu600.setApprovalEnd("F");
         edu600.setCreatDate(new Date());
         edu600.setUpdateDate(new Date());
-
+        edu600.setIsDelete("F");
         Long businessKey = edu600.getBusinessKey();
         String businessType = edu600.getBusinessType();
         String keyWord = creatApprovalKeyWord(businessKey,businessType);
@@ -464,6 +464,7 @@ public class ApprovalProcessService {
                     if (edu600.getProposerKey() != null && !"".equals(edu600.getProposerKey())) {
                         predicates.add(cb.equal(root.<String> get("proposerKey"), edu600.getProposerKey()));
                     }
+                    predicates.add(cb.equal(root.<String> get("isDelete"), "F"));
                     Path<Object> path = root.get("departmentCode");//定义查询的字段
                     CriteriaBuilder.In<Object> in = cb.in(path);
                     for (int i = 0; i <departments.size() ; i++) {

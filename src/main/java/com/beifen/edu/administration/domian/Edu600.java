@@ -27,6 +27,7 @@ public class Edu600 {
     private String keyWord;//审批关键词
     private Date creatDate;//发起时间
     private Date updateDate;//修改时间
+    private String isDelete;//是否已删除
 
 
 
@@ -40,6 +41,14 @@ public class Edu600 {
 
     public void setEdu600Id(Long edu600Id) {
         this.edu600Id = edu600Id;
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
     }
 
     public Long getLastExaminerKey() {

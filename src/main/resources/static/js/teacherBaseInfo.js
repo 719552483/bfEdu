@@ -429,6 +429,9 @@ function sendNewTeacherInfo(newTeacherInfo,approvalobect){
 				}
 				newTeacherInfo.edu101_ID=backjson.newId;
 				newTeacherInfo.jzgh=backjson.jzgh;
+				if(newTeacherInfo.jzglxbm==="004"){
+					newTeacherInfo.wpjzgspzt='passing';
+				}
 				$('#teacherBaseInfoTable').bootstrapTable("prepend", newTeacherInfo);
 				$(".myTooltip").tooltipify();
 				toastr.success('新增成功');

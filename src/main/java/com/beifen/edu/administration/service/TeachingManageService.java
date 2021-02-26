@@ -70,6 +70,8 @@ public class TeachingManageService {
     @Autowired
     Edu208Dao edu208Dao;
     @Autowired
+    Edu600Dao edu600Dao;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     TeachingScheduleViewDao teachingScheduleViewDao;
@@ -231,6 +233,9 @@ public class TeachingManageService {
             edu113Dao.delteByEdu112Id(s);
             //删除出差申请主表
             edu112Dao.delete(Long.parseLong(s));
+            Edu600 e = edu600Dao.countoneByBUSINESSKEY(s);
+            e.setIsDelete("T");
+            edu600Dao.save(e);
             count++;
         }
 
