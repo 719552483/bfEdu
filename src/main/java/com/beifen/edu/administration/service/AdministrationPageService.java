@@ -1916,7 +1916,7 @@ public class AdministrationPageService {
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
 					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
 				}
-				if (teachingSchedule.getSfypw() != null && !"".equals(teachingSchedule.getSfypw()) && "0".equals(teachingSchedule.getSfypw())) {
+				if (teachingSchedule.getSfypw() != null && !"".equals(teachingSchedule.getSfypw()) && !"0".equals(teachingSchedule.getSfypw())) {
 					predicates.add(cb.equal(root.<String>get("sfypw"), teachingSchedule.getSfypw()));
 				}
 
