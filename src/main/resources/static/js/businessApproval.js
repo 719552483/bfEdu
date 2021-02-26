@@ -74,6 +74,7 @@ function drawTeacherBaseInfoEmptyTable() {
 	stuffTeacherBaseInfoTable({});
 }
 
+var choosend=new Array();
 //渲染教师表
 function stuffTeacherBaseInfoTable(tableInfo) {
 	window.releaseNewsEvents = {
@@ -105,8 +106,24 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 		onPageChange: function() {
 			drawPagination(".teacherBaseInfoTableArea", "教职工信息");
 		},
+		onCheck : function(row) {
+			onCheckForTeacherBaseInfo(row);
+		},
+		onUncheck : function(row) {
+			onUncheckForTeacherBaseInfo(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllForTeacherBaseInfo(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllForTeacherBaseInfo(rows2);
+		},
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
+			//勾选已选数据
+			for (var i = 0; i < choosend.length; i++) {
+				$("#teacherBaseInfoTable").bootstrapTable("checkBy", {field:"edu101_ID", values:[choosend[i].edu101_ID]})
+			}
 		},
 		columns: [
 			{
@@ -214,7 +231,6 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				.join('');
 		}
 	}
-	
 
 	drawPagination(".teacherBaseInfoTableArea", "教职工信息");
 	drawSearchInput(".teacherBaseInfoTableArea");
@@ -222,6 +238,60 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 	changeColumnsStyle(".teacherBaseInfoTableArea", "教职工信息");
 	toolTipUp(".myTooltip");
 	btnControl();
+}
+
+//单选
+function onCheckForTeacherBaseInfo(row){
+	if(choosend.length<=0){
+		choosend.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosend.length; i++) {
+			if(choosend[i].edu101_ID===row.edu101_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosend.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheckForTeacherBaseInfo(row){
+	if(choosend.length<=1){
+		choosend.length=0;
+	}else{
+		for (var i = 0; i < choosend.length; i++) {
+			if(choosend[i].edu101_ID===row.edu101_ID){
+				choosend.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllForTeacherBaseInfo(row){
+	for (var i = 0; i < row.length; i++) {
+		choosend.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllForTeacherBaseInfo(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu101_ID);
+	}
+
+
+	for (var i = 0; i < choosend.length; i++) {
+		if(a.indexOf(choosend[i].edu101_ID)!==-1){
+			choosend.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //预备单个教师安排出差
