@@ -1738,7 +1738,12 @@ function stuffReTitle(culturePlanInfo,choosedTask){
 		"(总学时：" + choosedTask.edu201.zxs + "课时  集中学时：" + choosedTask.edu201.jzxs + "课时  分散学时：" + choosedTask.edu201.fsxs + "课时)");
 	$(".jzxsSpan").html(choosedTask.edu201.jzxs);
 	$(".fsxsSpan").html(choosedTask.edu201.fsxs);
-	var cyclePuttedHousr=choosedTask.edu203List.length*2;
+
+	var cyclePuttedHousr=0;
+	for (var i = 0; i <choosedTask.edu203List.length ; i++) {
+		cyclePuttedHousr+=((choosedTask.edu203List[i].jsz-choosedTask.edu203List[i].ksz)+1)*2;
+	}
+
 	$(".cyclePuttedHousr").html(cyclePuttedHousr);
 	$(".cycleWaitHousr").html(parseInt(choosedTask.edu201.jzxs)-cyclePuttedHousr);
 	if(choosedTask.edu207List.length!=0){
