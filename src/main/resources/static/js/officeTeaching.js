@@ -167,7 +167,7 @@ function stuffWaitTaskTable(tableInfo){
 				}
 			]
 		});
-		
+
 		function sfxylcjMatter(value, row, index) {
 			if (row.sfxylcj==="T") {
 				return [ '<div class="myTooltip" title="需要录成绩"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
@@ -1372,7 +1372,7 @@ function getNotNullSearchs() {
 	var majorText =getNormalSelectText("major");
 	var kcxzText =getNormalSelectText("kcxz");
 
-	
+
 	var returnObject = new Object();
 	returnObject.level = levelValue;
 	returnObject.department = departmentValue;
@@ -1504,6 +1504,7 @@ function getPuttedScheduleInfo(){
 	});
 }
 
+var choosendPutted=new Array();
 //渲染已排课表table
 function stuffPuttedOutTable(tableInfo){
 	window.puttedEvents = {
@@ -1539,8 +1540,24 @@ function stuffPuttedOutTable(tableInfo){
 		onPageChange: function() {
 			drawPagination(".puttedTableArea", "已排课表");
 		},
+		onCheck : function(row) {
+			onCheck(row);
+		},
+		onUncheck : function(row) {
+			onUncheck(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAll(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAll(rows2);
+		},
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
+			//勾选已选数据
+			for (var i = 0; i < choosendPutted.length; i++) {
+				$("#puttedTable").bootstrapTable("checkBy", {field:"edu202_ID", values:[choosendPutted[i].edu202_ID]})
+			}
 		},
 		columns: [
 			{
@@ -1661,6 +1678,60 @@ function stuffPuttedOutTable(tableInfo){
 	drawSearchInput(".puttedTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+}
+
+//单选
+function onCheck(row){
+	if(choosendPutted.length<=0){
+		choosendPutted.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendPutted.length; i++) {
+			if(choosendPutted[i].edu202_ID===row.edu202_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendPutted.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheck(row){
+	if(choosendPutted.length<=1){
+		choosendPutted.length=0;
+	}else{
+		for (var i = 0; i < choosendPutted.length; i++) {
+			if(choosendPutted[i].edu202_ID===row.edu202_ID){
+				choosendPutted.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendPutted.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu202_ID);
+	}
+
+
+	for (var i = 0; i < choosendPutted.length; i++) {
+		if(a.indexOf(choosendPutted[i].edu202_ID)!==-1){
+			choosendPutted.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //再排
