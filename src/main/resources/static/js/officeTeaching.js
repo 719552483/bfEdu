@@ -1474,7 +1474,7 @@ function getPuttedScheduleInfo(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				stuffPuttedOutTable(backjson.taskList);
+				stuffPuttedOutTable(sortPuttedCrouse(backjson.taskList));
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -2224,6 +2224,7 @@ function getPuttedSelectValue(){
    searchObject.pyjhnj=getNormalSelectValue("puttedgrade");
    searchObject.pyjhzy=getNormalSelectValue("puttedmajor");
    searchObject.kcxzid=getNormalSelectValue("puttedkcxz");
+	searchObject.sfypw=getNormalSelectValue("puttedkcStatus");
    return searchObject;
 }
 
