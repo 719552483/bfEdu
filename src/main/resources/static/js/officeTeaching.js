@@ -571,21 +571,35 @@ function scheduleSingleClassBtnBind(){
 }
 
 //tab1的下一步
-function configedJz(){
+function configedJz(isRe){
 	if($(".fsxsSpan")[0].innerText!=="0"){
-		var PKInfo=getJzPKInfo();
-		if(typeof PKInfo ==='undefined'){
-			return;
-		}
+		if(typeof isRe==="undefined"){
+			var PKInfo=getJzPKInfo();
+			if(typeof PKInfo ==='undefined'){
+				return;
+			}
 
-		var scheduleInfo=scheduleDetailInfo();
-		if(scheduleInfo.length==0){
-			return;
-		}
+			var scheduleInfo=scheduleDetailInfo();
+			if(scheduleInfo.length==0){
+				return;
+			}
 
-		var checkJzPkRs=checkJzPk();
-		if(!checkJzPkRs){
-			return;
+			var checkJzPkRs=checkJzPk();
+			if(!checkJzPkRs){
+				return;
+			}
+		}else{
+			var PKInfo=getJzPKInfo();
+			if(typeof PKInfo ==='undefined'){
+				return;
+			}
+
+			scheduleDetailInfo(false);
+
+			var checkJzPkRs=checkJzPk();
+			if(!checkJzPkRs){
+				return;
+			}
 		}
 		$(".itab").find("li:eq(1)").find("a").trigger('click');
 	}else{
@@ -604,10 +618,18 @@ function configedFslastStep(){
 }
 
 //tab2的下一步
-function configedFsNextStep(){
-	var checkSFxsRs=checkSFxs();
-	if(!checkSFxsRs){
-		return;
+function configedFsNextStep(isRe){
+	var checkSFxsRs;
+	if(typeof isRe==="undefined"){
+		checkSFxsRs=checkSFxs();
+		if(!checkSFxsRs){
+			return;
+		}
+	}else{
+		checkSFxsRs=checkSFxs(true);
+		if(!checkSFxsRs){
+			return;
+		}
 	}
 	$(".itab").find("li:eq(2)").find("a").trigger('click');
 	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
@@ -1125,10 +1147,10 @@ function confirmPk(){
 }
 
 //验证集中排课结果
-function checkJzPk(){
+function checkJzPk(isRe){
 	var rs=true;
 	var all=$(".singleCycle").find(".choosendCycleInfo");
-	if(all.length===0){
+	if(all.length===0&&typeof isRe==="undefined"){
 		rs=false;
 		toastr.warning('暂无集中学时安排');
 		return rs;
@@ -1158,11 +1180,11 @@ function checkJzPk(){
 }
 
 //验证分散排课结果
-function checkSFxs(){
+function checkSFxs(isRe){
 	var rs=true;
 	var shouldNum=$(".fsxsSpan")[0].innerText;
 	var choosendFsxsDom=getfsxs();
-	if(choosendFsxsDom.length===0){
+	if(choosendFsxsDom.length===0&&typeof isRe==="undefined"){
 		toastr.warning('暂未选择分散学时');
 		return false;
 	}
@@ -1238,7 +1260,7 @@ function getfsxs(){
 	var returnArray=new Array();
 	var allFsxsDom=$("#tab3").find(".choosendfsKjInfo");
 	for (var i = 0; i <allFsxsDom.length ; i++) {
-		if(allFsxsDom[i].nextElementSibling==null){
+		if(typeof allFsxsDom[i].childNodes[1]!=="undefined"){
 			var singleObject=new Object();
 			var taskId='';
 			var courseName='';
@@ -1634,7 +1656,6 @@ function stuffPuttedOutTable(tableInfo){
 		}
 	}
 
-
 	drawPagination(".puttedTableArea", "已排课表");
 	changeColumnsStyle(".puttedTableArea", "已排课表");
 	drawSearchInput(".puttedTableArea");
@@ -1827,7 +1848,7 @@ function reScheduleSingleClassBtnBind(rowInfo){
 	//tab1的下一步
 	$('.configedJz').unbind('click');
 	$('.configedJz').bind('click', function(e) {
-		configedJz();
+		configedJz(true);
 		e.stopPropagation();
 	});
 
@@ -1841,7 +1862,7 @@ function reScheduleSingleClassBtnBind(rowInfo){
 	//tab2的下一步
 	$('.configedFs_NextStep').unbind('click');
 	$('.configedFs_NextStep').bind('click', function(e) {
-		configedFsNextStep();
+		configedFsNextStep(true);
 		e.stopPropagation();
 	});
 
@@ -1912,12 +1933,9 @@ function confirmPk2(rowInfo){
 			return;
 		}
 
-		scheduleInfo=scheduleDetailInfo();
-		if(scheduleInfo.length==0){
-			return;
-		}
+		scheduleInfo=scheduleDetailInfo(false);
 
-		var checkJzPkRs=checkJzPk();
+		var checkJzPkRs=checkJzPk(true);
 		if(!checkJzPkRs){
 			return;
 		}
@@ -1935,7 +1953,7 @@ function confirmPk2(rowInfo){
 
 	var fsxsInfo=new Array();
 	if($(".fsxsSpan")[0].innerText!=="0"){
-		var checkSFxsRs=checkSFxs();
+		var checkSFxsRs=checkSFxs(true);
 		if(!checkSFxsRs){
 			return;
 		}
@@ -1943,6 +1961,11 @@ function confirmPk2(rowInfo){
 	}
 
 	var sfpw=checkDone(scheduleInfo,fsxsInfo,currentJzxs,$(".fsxsSpan")[0].innerText,true);
+
+	if(scheduleInfo.length==0&&fsxsInfo.length==0){
+		toastr.warning('暂未进行任何操作');
+		return;
+	}
 
 	$.ajax({
 		method: 'get',
