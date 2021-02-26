@@ -303,6 +303,7 @@ function businessStart(row,index){
 	emtypModal();
 	var choosendArray=new Array();
 	choosendArray.push(row);
+	stuffChoosendTeacher(choosendArray);
 	$('.confirmStartBtn').unbind('click');
 	$('.confirmStartBtn').bind('click', function(e) {
 		sendBusinessStart(choosendArray);
