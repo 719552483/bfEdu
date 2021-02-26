@@ -2017,10 +2017,10 @@ function getRePutInfo(row){
 				var str='<div class="puttedJzTitle"></div>';
 				for (var i = 0; i <backjson.data.length ; i++) {
 					if(backjson.data[i].type==="1"){
-						str+='<div class="PuttedKjArea">集中授课:第'+backjson.data[i].week+'周  '+backjson.data[i].lessons+'&#12288;<i class="iconfont icon-jiaoshi"></i>操作人:'+backjson.data[i].username+' &#12288;<i class="iconfont icon-SHIJIAN"></i>操作时间:'+backjson.data[i].czsj+'</div>';
+						str+='<div class="PuttedKjArea PuttedKjArea2">集中授课:第'+backjson.data[i].week+'周  '+backjson.data[i].lessons+'&#12288;<i class="iconfont icon-jiaoshi"></i>操作人:'+backjson.data[i].username+' &#12288;<i class="iconfont icon-SHIJIAN"></i>操作时间:'+backjson.data[i].czsj+'</div>';
 						str+='<div class="clear"></div>';
 					}else{
-						str+='<div class="PuttedKjArea">分散授课:第'+backjson.data[i].week+'周  '+backjson.data[i].lessons+'学时&#12288;<i class="iconfont icon-jiaoshi"></i>操作人:'+backjson.data[i].username+' &#12288;<i class="iconfont icon-SHIJIAN"></i>操作时间:'+backjson.data[i].czsj+'</div>';
+						str+='<div class="PuttedKjArea PuttedKjArea2">分散授课:第'+backjson.data[i].week+'周  '+backjson.data[i].lessons+'学时&#12288;<i class="iconfont icon-jiaoshi"></i>操作人:'+backjson.data[i].username+' &#12288;<i class="iconfont icon-SHIJIAN"></i>操作时间:'+backjson.data[i].czsj+'</div>';
 						str+='<div class="clear"></div>';
 					}
 				}

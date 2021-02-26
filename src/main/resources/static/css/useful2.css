@@ -1893,6 +1893,11 @@ margin: 0px 0px -14px -15px!important;
 	background-size: 8px 8px;
 }
 
+.PuttedKjArea2{
+	background-position-y: 8px;
+	margin-bottom: 8px;
+}
+
 .newUserAuthority{
 	margin-bottom: 28px;
 	margin-top: 25px;
