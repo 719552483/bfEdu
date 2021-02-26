@@ -1736,6 +1736,11 @@ function onUncheckAll(row){
 
 //再排
 function changePutted(row){
+	if(row.sfypw==="1"){
+		toastr.warning('课程已排完');
+		return;
+	}
+
 	$(".isRe").html('T');
 	$.ajax({
 		method : 'get',
@@ -1757,10 +1762,6 @@ function changePutted(row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				if(backjson.data.status==="T"){
-					toastr.warning('课程已排完');
-					return;
-				}
 				$(".jzxsSpan").html(backjson.data.edu201.jzxs);
 				showStartScheduleArea(null,null,2);
 				stuffChangePuttedInfo(backjson.data,row);
