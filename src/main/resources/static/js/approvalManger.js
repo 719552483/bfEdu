@@ -405,6 +405,7 @@ function stuffStudentInfoArea(businessInfo){
 	$('#approvalDetailsModal').find(".modal-body").find(".myInput").attr("disabled", true) // 将input元素设置为readonly
 }
 
+//填充出差信息区域
 function stuffChuChaiInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("出差审批详情");
 

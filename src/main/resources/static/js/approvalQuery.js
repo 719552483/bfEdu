@@ -270,7 +270,6 @@ function approvalInfo(row) {
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-
 				judgmentBusinessShowArea(row.businessType,backjson.businessInfo);
 			} else {
 				toastr.warning('操作，请重试');
@@ -295,7 +294,9 @@ function judgmentBusinessShowArea(businessType,businessInfo){
 	   stuffTaskInfoArea(businessInfo);
    }else if(businessType==="05"){//学生审批
 	   stuffStudentInfoArea(businessInfo);
-   }else if(businessType==="06"||businessType==="07"){//教师审批
+   }else if(businessType==="06"){//出差审批
+	   stuffChuChaiInfoArea(businessInfo);
+   }else if(businessType==="07"){ //外聘教师审批
 	   stuffTeacherInfoArea(businessInfo);
    }else if(businessType==="08"){//考试审批
 	   stuffExamInfoArea(businessInfo);
@@ -305,7 +306,7 @@ function judgmentBusinessShowArea(businessType,businessInfo){
 //填充课程审批信息区域
 function stuffClassInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("课程审批详情");
-	$(".studentStopApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
+	$(".studentStopApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea,.chuChaiApprovalArea").hide();
 	$(".classApprovalArea").show();
 	$("#className").val(businessInfo.kcmc);
 	$("#classCode").val(businessInfo.kcdm);
@@ -349,14 +350,14 @@ function stuffCulturePlanInfoArea(businessInfo){
 	}
 	$(".culturePlanApprovalArea").append(Str);
 	$("#approvalDetailsModal").find(".moadalTitle").html("培养计划审批详情");
-	$(".classApprovalArea,.studentStopApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
+	$(".classApprovalArea,.studentStopApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea,.chuChaiApprovalArea").hide();
 	$(".culturePlanApprovalArea").show();
 }
 
 //教学任务书审批信息区域
 function stuffTaskInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("教学任务书审批详情");
-	$(".classApprovalArea,.culturePlanApprovalArea,.studentStopApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
+	$(".classApprovalArea,.culturePlanApprovalArea,.studentStopApprovalArea,.teacherApprovalArea,.examApprovalArea,.chuChaiApprovalArea").hide();
 	$(".taskApprovalArea").show();
 	$("#task_jxbmc").val(businessInfo.className);
 	$("#task_kcmc").val(businessInfo.kcmc);
@@ -371,7 +372,7 @@ function stuffTaskInfoArea(businessInfo){
 //填充学生信息区域
 function stuffStudentInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
-	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
+	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.teacherApprovalArea,.examApprovalArea,.chuChaiApprovalArea").hide();
 	$(".studentStopApprovalArea").show();
 	$("#studentName").val(businessInfo.xm);
 	$("#studentXH").val(businessInfo.xh);
@@ -391,7 +392,7 @@ function stuffStudentInfoArea(businessInfo){
 //填充教师信息区域
 function stuffTeacherInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("学生休学审批详情");
-	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.studentStopApprovalArea,.examApprovalArea").hide();
+	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.studentStopApprovalArea,.examApprovalArea,.chuChaiApprovalArea").hide();
 	$(".teacherApprovalArea").show();
 	$("#teacherName").val(businessInfo.xm);
 	$("#teacherJzgh").val(businessInfo.jzgh);
@@ -414,7 +415,7 @@ function stuffTeacherInfoArea(businessInfo){
 //填充考试信息区域
 function stuffExamInfoArea(businessInfo){
 	$("#approvalDetailsModal").find(".moadalTitle").html("考试审批详情");
-	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.studentStopApprovalArea,.teacherApprovalArea").hide();
+	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.studentStopApprovalArea,.teacherApprovalArea,.chuChaiApprovalArea").hide();
 	$(".examApprovalArea").show();
 	$("#exam_kcmc").val(businessInfo.kcmc);
 	$("#exam_bj").val(businessInfo.className);
@@ -423,6 +424,24 @@ function stuffExamInfoArea(businessInfo){
 	businessInfo.sfxylcj==="T"?$("#exam_sfxylcj").val("是"):$("#exam_sfxylcj").val("否");
 	$("#exam_kkbm").val(businessInfo.kkbm);
 	$("#exam_pkbm").val(businessInfo.pkbm);
+}
+
+//填充出差信息区域
+function stuffChuChaiInfoArea(businessInfo){
+	$("#approvalDetailsModal").find(".moadalTitle").html("出差审批详情");
+
+	$(".classApprovalArea,.culturePlanApprovalArea,.taskApprovalArea,.studentStopApprovalArea,.teacherApprovalArea,.examApprovalArea").hide();
+	$(".chuChaiApprovalArea").show();
+	$("#chuchai_ksrq").val(businessInfo.startTime);
+	$("#chuchai_jsrq").val(businessInfo.endTime);
+	$("#chuchai_ccd").val(businessInfo.destination);
+	$("#chuchai_bz").val(businessInfo.businessExplain);
+	var str='';
+	var teachers=businessInfo.teacherName.split(",");
+	for (var i = 0; i < teachers.length; i++) {
+		str+='<div class="col5 singleTeacher1 recordsImg2">'+teachers[i]+'</div>';
+	}
+	$(".singleRecordsArea1").append(str);
 }
 
 //获取审批历史记录分组
