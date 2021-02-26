@@ -7,6 +7,7 @@ $(function() {
 	drawTeacherBaseInfoEmptyTable();
 	btnControl();
 	binBind();
+	startSearch();
 });
 
 
@@ -311,15 +312,15 @@ function businessStart(row,index){
 
 //预备多个教师安排出差
 function businessStarts(row,index){
-	var chosend = $('#teacherBaseInfoTable').bootstrapTable('getAllSelections');
+	var chosend = choosend;
 	if(chosend.length===0){
 		toastr.warning('暂未选择教职工');
 		return;
 	}
 	drawCalenr("#startTime",true);
 	drawCalenr("#endTime",true);
-	$.showModal("#startModal",true);
 	emtypModal();
+	stuffChoosendTeacher(chosend);
 	var choosendArray=new Array();
 	for (var i = 0; i < chosend.length; i++) {
 		choosendArray.push(chosend[i]);
@@ -329,6 +330,15 @@ function businessStarts(row,index){
 		sendBusinessStart(choosendArray);
 		e.stopPropagation();
 	});
+	$.showModal("#startModal",true);
+}
+
+//填充已选教师
+function stuffChoosendTeacher(chosend){
+	$(".singleRecordsArea1").empty();
+	for (var i = 0; i < chosend.length; i++) {
+		$(".singleRecordsArea1").append('<div class="col5 singleTeacher1 recordsImg2">'+chosend[i].xm+'</div>');
+	}
 }
 
 //发送出差请求
@@ -509,14 +519,14 @@ function researchTeachers(){
 	reObject.InputIds = "#teacherName,#teacherJzgh";
 	reObject.normalSelectIds = "#department,#major,#teacherZc";
 	reReloadSearchsWithSelect(reObject);
-	drawTeacherBaseInfoEmptyTable();
+	startSearch();
 }
 /*tab1 end*/
 
 /*tab2 start*/
 //渲染tab2
 function showTab2(){
-    stuffRecordsEmptyTable();
+	recordsSearch();
     tab2BtnBind();
 }
 
@@ -645,7 +655,7 @@ function reloadRecordsSearch(){
 	reObject.InputIds = "#records_startUserName,#records_TeacherName,#records_location";
 	reObject.normalSelectIds = "#records_status";
 	reReloadSearchsWithSelect(reObject);
-	stuffRecordsEmptyTable();
+	recordsSearch();
 }
 
 //查看记录详情

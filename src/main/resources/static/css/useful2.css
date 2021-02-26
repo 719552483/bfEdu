@@ -1978,7 +1978,7 @@ margin: 0px 0px -14px -15px!important;
 	text-indent: -10px;
 }
 
-.singleRecordsArea,.checkTrueArea,.checkFlaseArea,.checkNullArea{
+.singleRecordsArea,.checkTrueArea,.checkFlaseArea,.checkNullArea,.singleRecordsArea1{
 	margin-top: -4px;
 	min-height: 120px;
 	overflow: hidden;
@@ -1991,7 +1991,7 @@ margin: 0px 0px -14px -15px!important;
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
 }
 
-.teacherBusiness_singleRecordsArea{
+.teacherBusiness_singleRecordsArea,.teacherBusiness_singleRecordsArea1{
 	float: right;
 	width: 78%;
 }
@@ -2014,7 +2014,7 @@ margin: 0px 0px -14px -15px!important;
 	text-align: right;
 }
 
-.singleTeacher,.singleCheckOn{
+.singleTeacher,.singleCheckOn,.singleTeacher1{
 	text-align: center;
 	padding-top: 5px;
 	padding-bottom: 5px;
