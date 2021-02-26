@@ -1038,7 +1038,16 @@ function removeRecord(row){
 	}
 	var idArray=new Array();
 	idArray.push(row.edu112_ID);
-	sendRemoveRecord(idArray);
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.startTime+'至'+row.endTime+' '+row.destination+'出差任务');
+	$(".remindActionType").html("删除");
+
+	$('#confirmRemind').unbind('click');
+	$('#confirmRemind').bind('click', function(e) {
+		sendRemoveRecord(idArray);
+		e.stopPropagation();
+	});
 }
 
 //批量删除记录
@@ -1060,7 +1069,16 @@ function removeRecords(){
 	for (var i = 0; i < choosed.length; i++) {
 		idArray.push(choosed[i].edu112_ID);
 	}
-	sendRemoveRecord(idArray);
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html('已选出差任务');
+	$(".remindActionType").html("删除");
+
+	$('#confirmRemind').unbind('click');
+	$('#confirmRemind').bind('click', function(e) {
+		sendRemoveRecord(idArray);
+		e.stopPropagation();
+	});
 }
 
 //发送删除记录请求
