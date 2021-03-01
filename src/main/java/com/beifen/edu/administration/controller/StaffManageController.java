@@ -638,10 +638,6 @@ public class StaffManageController {
         String crouses = jsonObject.getString("crouses");
         String trem = jsonObject.getString("trem");
         List<String> list = Arrays.asList(crouses.split(","));
-//        List<String> list = new ArrayList<String>();
-//        list.add("电工基本技能");
-//        list.add("电子应用技术");
-
         List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
         if(edu005List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
@@ -663,6 +659,56 @@ public class StaffManageController {
                 e.printStackTrace();
             }
             result = ResultVO.setSuccess("下载成功");
+        }
+        return result;
+    }
+
+    /**
+     * 导出成绩excel-查询
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("selectGrade")
+    @ResponseBody
+    public ResultVO selectGrade(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "queryInfo") String queryInfo) {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(queryInfo);
+        String classes = jsonObject.getString("classes");
+        String crouses = jsonObject.getString("crouses");
+        String trem = jsonObject.getString("trem");
+        List<String> list = Arrays.asList(crouses.split(","));
+        List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        if(edu005List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到数据，请重新输入");
+        }else{
+            result = ResultVO.setSuccess("查找成功",edu005List);
+        }
+        return result;
+    }
+
+    /**
+     * 查询-导出不合格成绩excel
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("selectMakeUpGradeCheck")
+    @ResponseBody
+    public ResultVO selectMakeUpGradeCheck(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "queryInfo") String queryInfo) {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(queryInfo);
+//        String classes = jsonObject.getString("classes");
+        String crouse = jsonObject.getString("crouse");
+        String trem = jsonObject.getString("trem");
+
+        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        if(edu0051List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
+        }else{
+            result = ResultVO.setSuccess("查找成功",edu0051List);
         }
         return result;
     }
