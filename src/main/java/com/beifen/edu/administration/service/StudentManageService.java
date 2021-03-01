@@ -497,9 +497,9 @@ public class StudentManageService {
         Specification<Edu005> specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
-                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
-                    predicates.add(cb.like(root.<String>get("courseName"),"%"+edu005.getCourseName()+"%"));
-                }
+//                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+//                    predicates.add(cb.like(root.<String>get("courseName"),"%"+edu005.getCourseName()+"%"));
+//                }
                 if (edu005.getGrade() != null && !"".equals(edu005.getGrade())) {
                     predicates.add(cb.equal(root.<String>get("xnid"), edu005.getGrade()));
                 }
