@@ -584,6 +584,8 @@ function research() {
 
 //预备成绩导出
 function exportGrade(){
+	$("#exportGradeModal").find(".searchArea").show();
+	$("#exportGradeModal").find(".exportGradeLookArea").hide();
 	$("#export_classes").val("");
 	$("#export_crouse").val("");
 	$("#export_classes").attr("choosendClassId","");
@@ -594,6 +596,7 @@ function exportGrade(){
 	reReloadSearchsWithSelect(reObject);
 
 	$.showModal("#exportGradeModal",true);
+	$("#exportGradeModal").find('.moadalTitle').html("班级成绩导出");
 }
 
 //预备选择班级
@@ -1034,15 +1037,127 @@ function confirmExportGrade(){
 	form.appendTo('body').submit().remove();
 }
 
+//确认成绩导出预览
+function exportGradeLook(){
+	var classes=$("#export_classes").attr("choosendClassId");
+	var crouses=$("#export_crouse").attr("choosendCrouseIds");
+	var trem=getNormalSelectValue("export_grade")
+	if(classes===""){
+		toastr.warning("请选择班级");
+		return;
+	}
+
+	if(trem===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	var sendObject=new Object();
+	sendObject.classes=classes;
+	sendObject.crouses=crouses;
+	sendObject.trem=trem;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/selectGrade",
+		data: {
+			"queryInfo":JSON.stringify(sendObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code==200) {
+				$("#exportGradeModal").find(".searchArea").hide();
+				$("#exportGradeModal").find(".exportGradeLookArea").show();
+				$("#exportGradeModal").find('.moadalTitle').html($("#export_classes").val()+' '+getNormalSelectText("export_grade")+' '+$("#export_crouse").val()+' -成绩导出预览')
+				//返回
+				$('#exportGradeLookRetuen').unbind('click');
+				$('#exportGradeLookRetuen').bind('click', function(e) {
+					$("#exportGradeModal").find('.moadalTitle').html("班级成绩导出");
+					$("#exportGradeModal").find(".searchArea").show();
+					$("#exportGradeModal").find(".exportGradeLookArea").hide();
+					e.stopPropagation();
+				});
+				stuffExportGradeLookTable(backjson.data,$("#export_crouse").val());
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//渲染成绩导出预览表
+function stuffExportGradeLookTable(tableInfo,crouseName){
+	$('#exportGradeLookTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: false,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".exportGradeLookTableArea", "成绩信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field: 'edu001_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			}, {
+				field: 'studentName',
+				title: '学生姓名',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'grade',
+				title: crouseName,
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}
+		]
+	});
+
+	drawPagination(".exportGradeLookTableArea", "成绩信息");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
 //预备不及格成绩导出
 function exportNoPassGrade(){
 	$("#exportNoPassGrade_crouseName").val("");
+	$("#exportNoPassGradeModal").find(".searchArea").show();
+	$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").hide();
 
 	var reObject = new Object();
 	reObject.normalSelectIds = "#exportNoPassGrade_grade";
 	reReloadSearchsWithSelect(reObject);
 
 	$.showModal("#exportNoPassGradeModal",true);
+	$("#exportNoPassGradeModal").find('.moadalTitle').html("不及格成绩导出");
 }
 
 //确认不及格成绩导出
@@ -1094,6 +1209,113 @@ function confirmExportNoPassGrade(){
 	});
 }
 
+//确认不及格成绩导出预览
+function exportNoPassGradeLook(){
+	var crouseName=$("#exportNoPassGrade_crouseName").val();
+	var trem=getNormalSelectValue("exportNoPassGrade_grade");
+	if(crouseName===""){
+		toastr.warning("课程名称不能为空");
+		return;
+	}
+
+	if(trem===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	var sendObject=new Object();
+	sendObject.crouse=crouseName;
+	sendObject.trem=trem;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/selectMakeUpGradeCheck",
+		data: {
+			"queryInfo":JSON.stringify(sendObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code == 200) {
+				$("#exportNoPassGradeModal").find(".searchArea").hide();
+				$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").show();
+				$("#exportNoPassGradeModal").find('.moadalTitle').html(getNormalSelectText("exportNoPassGrade_grade")+' '+crouseName+' -不及格成绩导出预览')
+				//返回
+				$('#exportNoPassGradeRetuen').unbind('click');
+				$('#exportNoPassGradeRetuen').bind('click', function(e) {
+					$("#exportNoPassGradeModal").find('.moadalTitle').html("不及格成绩导出");
+					$("#exportNoPassGradeModal").find(".searchArea").show();
+					$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").hide();
+					e.stopPropagation();
+				});
+				stuffExportNoPassGradeLookTable(backjson.data,crouseName);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//渲染不及格成绩导出预览表
+function stuffExportNoPassGradeLookTable(tableInfo,crouseName){
+	$('#exportNoPassGradeTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: false,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".exportNoPassGradeAreaTable", "成绩信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field: 'edu001_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			}, {
+				field: 'studentName',
+				title: '学生姓名',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'grade',
+				title: crouseName,
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}
+		]
+	});
+
+	drawPagination(".exportNoPassGradeAreaTable", "成绩信息");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
 //初始化页面按钮绑定事件
 function btnBind(){
 	//重置检索
@@ -1142,6 +1364,13 @@ function btnBind(){
 		e.stopPropagation();
 	});
 
+	//确认成绩导出预览
+	$('#exportGradeLook').unbind('click');
+	$('#exportGradeLook').bind('click', function(e) {
+		exportGradeLook();
+		e.stopPropagation();
+	});
+
 	//预备不及格成绩导出
 	$('#exportNoPassGrade').unbind('click');
 	$('#exportNoPassGrade').bind('click', function(e) {
@@ -1153,6 +1382,13 @@ function btnBind(){
 	$('#confirmExportNoPassGrade').unbind('click');
 	$('#confirmExportNoPassGrade').bind('click', function(e) {
 		confirmExportNoPassGrade();
+		e.stopPropagation();
+	});
+
+	//确认不及格成绩导出预览
+	$('#exportNoPassGradeLook').unbind('click');
+	$('#exportNoPassGradeLook').bind('click', function(e) {
+		exportNoPassGradeLook();
 		e.stopPropagation();
 	});
 
