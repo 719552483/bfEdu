@@ -146,9 +146,9 @@ public class StaffManageService {
         ResultVO resultVO;
 
         //从redis中查询二级学院管理权限
-        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+//        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
-        List<Edu101> teacherList = edu101Dao.queryAllTeacherByUserId(departments);
+        List<Edu101> teacherList = edu101Dao.queryAllTeacherByUserId();
 
         if(teacherList.size() == 0) {
             resultVO = ResultVO.setFailed("暂无教师信息");
