@@ -919,7 +919,7 @@ function stuffCrouseClassTable(tableInfo,type){
 		}
 	}else{
 		chekType={
-			field : chekType,
+			field : 'radio',
 			radio : true
 		}
 	}
