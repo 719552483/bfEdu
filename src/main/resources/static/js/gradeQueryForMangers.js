@@ -939,21 +939,23 @@ function stuffCrouseClassTable(tableInfo,type){
 		toolbar : '#toolbar',
 		showColumns : true,
 		onCheck : function(row) {
-			onCheck(row);
+			onCheck(row,type);
 		},
 		onUncheck : function(row) {
-			onUncheck(row);
+			onUncheck(row,type);
 		},
 		onCheckAll : function(rows) {
-			onCheckAll(rows);
+			onCheckAll(rows,type);
 		},
 		onUncheckAll : function(rows,rows2) {
-			onUncheckAll(rows2);
+			onUncheckAll(rows2,type);
 		},
 		onPageChange : function() {
 			drawPagination(".chooseCrouseTableArea", "课程信息");
-			for (var i = 0; i < choosendCrouses.length; i++) {
-				$("#chooseCrouseTable").bootstrapTable("checkBy", {field:"edu108_ID", values:[choosendCrouses[i].edu108_ID]})
+			if(type==1){
+				for (var i = 0; i < choosendCrouses.length; i++) {
+					$("#chooseCrouseTable").bootstrapTable("checkBy", {field:"edu108_ID", values:[choosendCrouses[i].edu108_ID]})
+				}
 			}
 		},
 		onPostBody: function() {
@@ -1002,77 +1004,94 @@ function stuffCrouseClassTable(tableInfo,type){
 }
 
 //单选课程
-function onCheck(row){
-	if(choosendCrouses.length<=0){
-		choosendCrouses.push(row);
-	}else{
-		var add=true;
-		for (var i = 0; i < choosendCrouses.length; i++) {
-			if(choosendCrouses[i].edu108_ID===row.edu108_ID){
-				add=false;
-				break;
-			}
-		}
-		if(add){
+function onCheck(row,type){
+	if(type==1){
+		if(choosendCrouses.length<=0){
 			choosendCrouses.push(row);
+		}else{
+			var add=true;
+			for (var i = 0; i < choosendCrouses.length; i++) {
+				if(choosendCrouses[i].edu108_ID===row.edu108_ID){
+					add=false;
+					break;
+				}
+			}
+			if(add){
+				choosendCrouses.push(row);
+			}
 		}
 	}
 }
 
 //单反选课程
-function onUncheck(row){
-	if(choosendCrouses.length<=1){
-		choosendCrouses.length=0;
-	}else{
-		for (var i = 0; i < choosendCrouses.length; i++) {
-			if(choosendCrouses[i].edu108_ID===row.edu108_ID){
-				choosendCrouses.splice(i,1);
+function onUncheck(row,type){
+	if(type==1){
+		if(choosendCrouses.length<=1){
+			choosendCrouses.length=0;
+		}else{
+			for (var i = 0; i < choosendCrouses.length; i++) {
+				if(choosendCrouses[i].edu108_ID===row.edu108_ID){
+					choosendCrouses.splice(i,1);
+				}
 			}
 		}
 	}
 }
 
 //全选教课程
-function onCheckAll(row){
-	for (var i = 0; i < row.length; i++) {
-		choosendCrouses.push(row[i]);
+function onCheckAll(row,type){
+	if(type==1){
+		for (var i = 0; i < row.length; i++) {
+			choosendCrouses.push(row[i]);
+		}
 	}
 }
 
 //全反选课程
-function onUncheckAll(row){
-	var a=new Array();
-	for (var i = 0; i < row.length; i++) {
-		a.push(row[i].edu108_ID);
-	}
+function onUncheckAll(row,type){
+	if(type==1){
+		var a=new Array();
+		for (var i = 0; i < row.length; i++) {
+			a.push(row[i].edu108_ID);
+		}
 
 
-	for (var i = 0; i < choosendCrouses.length; i++) {
-		if(a.indexOf(choosendCrouses[i].edu108_ID)!==-1){
-			choosendCrouses.splice(i,1);
-			i--;
+		for (var i = 0; i < choosendCrouses.length; i++) {
+			if(a.indexOf(choosendCrouses[i].edu108_ID)!==-1){
+				choosendCrouses.splice(i,1);
+				i--;
+			}
 		}
 	}
 }
 
 //确认选择课程
 function confirmChooseCrouse(type){
-	if(choosendCrouses.length==0){
-		toastr.warning('请选择课程');
-		return;
-	}
 	var choosendCrousesIds=new Array();
 	var choosendCrousesNames=new Array();
-	for (var i = 0; i < choosendCrouses.length; i++) {
-		choosendCrousesIds.push(choosendCrouses[i].edu108_ID);
-		choosendCrousesNames.push(choosendCrouses[i].kcmc);
-	}
 	if(type==1){
+		if(choosendCrouses.length==0){
+			toastr.warning('请选择课程');
+			return;
+		}
+		for (var i = 0; i < choosendCrouses.length; i++) {
+			choosendCrousesIds.push(choosendCrouses[i].edu108_ID);
+			choosendCrousesNames.push(choosendCrouses[i].kcmc);
+		}
 		$("#export_crouse").attr("choosendCrouseIds",choosendCrousesNames);
 		$("#export_crouse").val(choosendCrousesNames);
 		$.hideModal("#chooseCruoseModal",false);
 		$.showModal("#exportGradeModal",true);
 	}else{
+		var tableSelected= $("#chooseCrouseTable").bootstrapTable("getSelections");
+		if(tableSelected.length==0){
+			toastr.warning('请选择课程');
+			return;
+		}
+		for (var i = 0; i < tableSelected.length; i++) {
+			choosendCrousesIds.push(tableSelected[i].edu108_ID);
+			choosendCrousesNames.push(tableSelected[i].kcmc);
+		}
 		$("#exportNoPassGrade_crouseName").attr("choosendCrouseIds",choosendCrousesNames);
 		$("#exportNoPassGrade_crouseName").val(choosendCrousesNames);
 		$.hideModal("#chooseCruoseModal",false);
