@@ -621,6 +621,21 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 溯源数据
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("rootsData")
+    @ResponseBody
+    public ResultVO rootsData() {
+        ResultVO result = administrationPageService.rootsData();
+        return result;
+    }
+
+
 
     /**
      * 导出成绩excel

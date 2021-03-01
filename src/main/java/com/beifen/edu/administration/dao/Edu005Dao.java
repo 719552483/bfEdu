@@ -80,4 +80,10 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "UPDATE edu005 set IS_MX = ?2 WHERE Edu005_ID =?1", nativeQuery = true)
     void updateMXStatus(String edu005_ID,String mxStatus);
 
+    //查询溯源数据
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "SELECT * FROM EDU005 where grade < 60 and EDU005_ID not in (select EDU005_ID from EDU0051) and is_resit = 'T'", nativeQuery = true)
+    List<Edu005> rootsData();
 }
+
