@@ -349,6 +349,20 @@ public class StudentManageController {
     }
 
     /**
+     * 根据学年查询学科
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/searchCourseByXN")
+    @ResponseBody
+    public ResultVO searchCourseByXN(@RequestParam("term") String term) {
+        ResultVO result =studentManageService.searchCourseByXN(term);
+        return result;
+    }
+
+
+    /**
     * 修改免修状态
     * */
     @RequestMapping("/updateMXStatus")

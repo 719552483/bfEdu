@@ -159,4 +159,9 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	//学生查询任务书id
 	@Query(value = "select EDU201_ID from EDU201 where CLASS_ID in ?1 and xnid = ?2 and sfypk = 'T'",nativeQuery = true)
 	List<String> findEdu201IdsByclassIds(String[] classIds, String semester);
+
+	@org.springframework.transaction.annotation.Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "select DISTINCT kcmc from Edu201 where  xnid = ?1 and sfypk='T'", nativeQuery = true)
+	List<String> searchCourseByXN(String trem);
 }

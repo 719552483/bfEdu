@@ -548,6 +548,18 @@ public class StudentManageService {
         return resultVO;
     }
 
+    // 根据学年查询学科
+    public ResultVO searchCourseByXN(String trem) {
+        ResultVO resultVO;
+        List<String> edu201List = edu201Dao.searchCourseByXN(trem);
+        if (edu201List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无课程信息");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu201List);
+        }
+        return resultVO;
+    }
+
     // 修改免修状态
     public ResultVO updateMXStatus(String edu005_ID,String mxStatus) {
         ResultVO resultVO;
