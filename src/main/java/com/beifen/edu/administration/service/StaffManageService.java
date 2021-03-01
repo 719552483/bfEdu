@@ -322,7 +322,7 @@ public class StaffManageService {
     //查询所有老师
     public ResultVO queryAllTeachers() {
         ResultVO resultVO;
-        List<Edu101> edu101List = edu101Dao.findAll();
+        List<Edu101> edu101List = edu101Dao.findAllteachers();
         if(edu101List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无可选老师");
         } else {
