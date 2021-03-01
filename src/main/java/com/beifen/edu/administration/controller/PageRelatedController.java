@@ -285,4 +285,11 @@ public class PageRelatedController {
 	public String gradeQueryForMangersPage() {
 		return "gradeQueryForMangers";
 	}
+
+	@RequestMapping("questionForManger")
+	public String questionForMangerPage() {
+		return "questionForManger";
+	}
+
+
 }
