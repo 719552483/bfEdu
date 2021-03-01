@@ -2125,7 +2125,7 @@ top角色切换滚动体样式
 	font-size: 13px;
 }
 
-.allClassTableArea .fixed-table-container{
+.allClassTableArea .fixed-table-container,.exportGradeLookTableArea,.exportNoPassGradeAreaTable{
 	padding-left: 31px;
 	padding-right: 30px;
 }
