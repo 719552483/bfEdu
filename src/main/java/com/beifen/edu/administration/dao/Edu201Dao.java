@@ -162,6 +162,6 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 	@org.springframework.transaction.annotation.Transactional
 	@Modifying(clearAutomatically = true)
-	@Query(value = "select DISTINCT kcmc from Edu201 where  xnid = ?1 and sfypk='T'", nativeQuery = true)
-	List<String> searchCourseByXN(String trem);
+	@Query(value = "select  * from(select a.*,row_number() over(partition by a.kcmc order by a.kcmc) su from Edu201 a where xnid = ?1 and sfypk='T') where su = 1", nativeQuery = true)
+	List<Edu201> searchCourseByXN(String trem);
 }

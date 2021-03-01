@@ -551,7 +551,7 @@ public class StudentManageService {
     // 根据学年查询学科
     public ResultVO searchCourseByXN(String trem) {
         ResultVO resultVO;
-        List<String> edu201List = edu201Dao.searchCourseByXN(trem);
+        List<Edu201> edu201List = edu201Dao.searchCourseByXN(trem);
         if (edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无课程信息");
         } else {
