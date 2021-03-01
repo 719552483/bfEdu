@@ -2862,7 +2862,46 @@ public class AdministrationPageService {
 	public ResultVO getHistoryGrade(String Edu005_Id){
 		ResultVO resultVO;
 		List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(Edu005_Id);
-		resultVO = ResultVO.setSuccess("查找成功",edu0051List);
+		List<Edu0051> edu0051List2 = new ArrayList<>();
+		if(edu0051List.get(0).getExam_num()!= 0){
+			Edu0051 edu0051 = new Edu0051();
+			edu0051.setCourseName(edu0051List.get(0).getCourseName());
+			edu0051.setGrade("暂无数据");
+			edu0051.setEntryDate("暂无数据");
+			edu0051.setExam_num(0);
+			edu0051.setGradeEnter("暂无数据");
+			edu0051List2.add(edu0051);
+		}
+		edu0051List2.addAll(edu0051List);
+		resultVO = ResultVO.setSuccess("查找成功",edu0051List2);
+		return resultVO;
+	}
+
+	//溯源数据
+	public ResultVO rootsData(){
+		ResultVO resultVO;
+		List<Edu005> edu005List = edu005Dao.rootsData();
+		for(int i = 0;i<edu005List.size();i++){
+			Edu005 e = edu005List.get(i);
+			Edu0051 edu0051 = new Edu0051();
+			edu0051.setEdu005_ID(e.getEdu005_ID());
+			edu0051.setEdu001_ID(e.getEdu001_ID());
+			edu0051.setEdu201_ID(e.getEdu201_ID());
+			edu0051.setEdu300_ID(e.getEdu300_ID());
+			edu0051.setEdu101_ID(e.getEdu101_ID());
+			edu0051.setCourseName(e.getCourseName());
+			edu0051.setClassName(e.getClassName());
+			edu0051.setStudentName(e.getStudentName());
+			edu0051.setStudentCode(e.getStudentCode());
+			edu0051.setGradeEnter(e.getGradeEnter());
+			edu0051.setEntryDate(e.getEntryDate());
+			edu0051.setGrade(e.getGrade());
+			edu0051.setXnid(e.getXnid());
+			edu0051.setXn(e.getXn());
+			edu0051.setExam_num(0);
+			edu0051Dao.save(edu0051);
+		}
+		resultVO = ResultVO.setSuccess("溯源成功,共"+edu005List.size()+"条数据");
 		return resultVO;
 	}
 
