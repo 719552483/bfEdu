@@ -81,14 +81,14 @@
 							</div>
 						</ul>
 					</div>
-					<div class="col4 giveBottom">
-						<ul class="forminfo">
-							<div class="">
-								<label class="selectName" style="margin-top: 14px;">课程名称</label>
-								<input name="" type="text" class="myInput searchInput" id="courseName" placeholder="请填写课程名称..."/>
-							</div>
-						</ul>
-					</div>
+<!--					<div class="col4 giveBottom">-->
+<!--						<ul class="forminfo">-->
+<!--							<div class="">-->
+<!--								<label class="selectName" style="margin-top: 14px;">课程名称</label>-->
+<!--								<input name="" type="text" class="myInput searchInput" id="courseName" placeholder="请填写课程名称..."/>-->
+<!--							</div>-->
+<!--						</ul>-->
+<!--					</div>-->
 				</div>
 
 				<div class="studentGradeTableArea columnsStyle searchGivePaddingR">
@@ -232,9 +232,10 @@
 							<div class="col1 giveBottom">
 								<ul class="forminfo">
 									<div class="">
-										<label class="selectName" style="margin-top: 7px;">课程名称<b>*</b></label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="exportNoPassGrade_crouseName" choosendClassId="" placeholder="请输入课程名称..." />
+										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+										<select class="isSowIndex" id="exportNoPassGrade_grade">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
 									</div>
 								</ul>
 							</div>
@@ -242,10 +243,9 @@
 							<div class="col1 giveBottom">
 								<ul class="forminfo">
 									<div class="">
-										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
-										<select class="isSowIndex" id="exportNoPassGrade_grade">
-											<option value="seleceConfigTip">请选择</option>
-										</select>
+										<label class="selectName" style="margin-top: 7px;">课程名称<b>*</b></label>
+										<input name="" type="text" class="myInput manyInfoInput"
+											   id="exportNoPassGrade_crouseName" choosendCrouseIds="" placeholder="请输入课程名称..." />
 									</div>
 								</ul>
 							</div>

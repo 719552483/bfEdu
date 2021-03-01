@@ -557,7 +557,7 @@ function startSearch(){
 //获取检索对象
 function getSearchObject(){
 	var grade = getNormalSelectValue("grade");
-	var courseName=$("#courseName").val();
+	// var courseName=$("#courseName").val();
 	var student=$("#student").attr("studentId");
 
 	if(student===""){
@@ -568,14 +568,14 @@ function getSearchObject(){
 	var returnObject = new Object();
 	returnObject.student = student;
 	returnObject.grade = grade;
-	returnObject.courseName = courseName;
+	// returnObject.courseName = courseName;
 	return returnObject;
 }
 
 //重置检索
 function research() {
 	var reObject = new Object();
-	reObject.InputIds = "#student,#courseName";
+	reObject.InputIds = "#student";
 	reObject.normalSelectIds = "#grade";
 	reReloadSearchsWithSelect(reObject);
 	$("#student").attr("studentId","");
@@ -791,38 +791,54 @@ function confirmChoosedClass(){
 }
 
 //预备选择课程
-function wantChooseExportCrouse(){
-	choosendCrouses=new Array();
-	var chosendClass=$("#export_classes").attr("choosendClassId");
-	var choosendTerm=getNormalSelectValue("export_grade");
-	if(chosendClass===""){
-		toastr.warning('请先选择班级');
-		return;
+function wantChooseExportCrouse(type){
+	if(type==1){
+		choosendCrouses=new Array();
+		var chosendClass=$("#export_classes").attr("choosendClassId");
+		var choosendTerm=getNormalSelectValue("export_grade");
+		if(chosendClass===""){
+			toastr.warning('请先选择班级');
+			return;
+		}
+		if(choosendTerm===""){
+			toastr.warning('请先选择学年');
+			return;
+		}
+		searchCourseByClass(chosendClass,choosendTerm,type);
+		//提示框取消按钮
+		$('.specialCanle2').unbind('click');
+		$('.specialCanle2').bind('click', function(e) {
+			$.hideModal("#chooseCruoseModal",false);
+			$.showModal("#exportGradeModal",true);
+			e.stopPropagation();
+		});
+	}else{
+		var chosendTerm=getNormalSelectValue("exportNoPassGrade_grade");
+		var chosendTermText=getNormalSelectText("exportNoPassGrade_grade");
+		if(chosendTerm===""){
+			toastr.warning('请先选择学年');
+			return;
+		}
+		searchCourseByXN(chosendTerm,chosendTermText,type);
+		//提示框取消按钮
+		$('.specialCanle2').unbind('click');
+		$('.specialCanle2').bind('click', function(e) {
+			$.hideModal("#chooseCruoseModal",false);
+			$.showModal("#exportNoPassGradeModal",true);
+			e.stopPropagation();
+		});
 	}
-	if(choosendTerm===""){
-		toastr.warning('请先选择学年');
-		return;
-	}
-	searchCourseByClass(chosendClass,choosendTerm);
-
-	//提示框取消按钮
-	$('.specialCanle2').unbind('click');
-	$('.specialCanle2').bind('click', function(e) {
-		$.hideModal("#chooseCruoseModal",false);
-		$.showModal("#exportGradeModal",true);
-		e.stopPropagation();
-	});
 
 	//确认选择课程
 	$('#confirmChooseCrouse').unbind('click');
 	$('#confirmChooseCrouse').bind('click', function(e) {
-		confirmChooseCrouse();
+		confirmChooseCrouse(type);
 		e.stopPropagation();
 	});
 }
 
 //根据班级获取课程
-function searchCourseByClass(chosendClass,choosendTerm){
+function searchCourseByClass(chosendClass,choosendTerm,type){
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -844,12 +860,48 @@ function searchCourseByClass(chosendClass,choosendTerm){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
+				choosendCrouses.length = 0;
 				$("#chooseCruoseModal").find(".moadalTitle").html($("#export_classes").val()+"课程");
 				$.hideModal("#exportGradeModal",false);
 				$.showModal("#chooseCruoseModal",true);
-				stuffCrouseClassTable(backjson.data);
+				stuffCrouseClassTable(backjson.data,type);
 			} else {
-				stuffCrouseClassTable({});
+				stuffCrouseClassTable({},type);
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//根据学年获取课程
+function searchCourseByXN(choosendTerm,chosendTermText,type){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseByXN",
+		data: {
+			"term":choosendTerm
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				choosendCrouses.length = 0;
+				$("#chooseCruoseModal").find(".moadalTitle").html(chosendTermText+"课程库");
+				$.hideModal("#exportNoPassGradeModal",false);
+				$.showModal("#chooseCruoseModal",true);
+				stuffCrouseClassTable(backjson.data,type);
+			} else {
+				stuffCrouseClassTable({},type);
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -858,7 +910,19 @@ function searchCourseByClass(chosendClass,choosendTerm){
 
 var choosendCrouses=new Array();
 //填充课程表
-function stuffCrouseClassTable(tableInfo){
+function stuffCrouseClassTable(tableInfo,type){
+	var chekType;
+	if(type==1){
+		chekType={
+			field: 'check',
+			checkbox: true
+		}
+	}else{
+		chekType={
+			field : chekType,
+			radio : true
+		}
+	}
 	$('#chooseCrouseTable').bootstrapTable('destroy').bootstrapTable({
 		data : tableInfo,
 		pagination : true,
@@ -895,10 +959,9 @@ function stuffCrouseClassTable(tableInfo){
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
 		},
-		columns: [ {
-			field: 'check',
-			checkbox: true
-		},  {
+		columns: [
+			chekType,
+			{
 			field : 'edu108_ID',
 			title: '唯一标识',
 			align : 'center',
@@ -993,7 +1056,7 @@ function onUncheckAll(row){
 }
 
 //确认选择课程
-function confirmChooseCrouse(){
+function confirmChooseCrouse(type){
 	if(choosendCrouses.length==0){
 		toastr.warning('请选择课程');
 		return;
@@ -1004,11 +1067,17 @@ function confirmChooseCrouse(){
 		choosendCrousesIds.push(choosendCrouses[i].edu108_ID);
 		choosendCrousesNames.push(choosendCrouses[i].kcmc);
 	}
-
-	$("#export_crouse").attr("choosendCrouseIds",choosendCrousesNames);
-	$("#export_crouse").val(choosendCrousesNames);
-	$.hideModal("#chooseCruoseModal",false);
-	$.showModal("#exportGradeModal",true);
+	if(type==1){
+		$("#export_crouse").attr("choosendCrouseIds",choosendCrousesNames);
+		$("#export_crouse").val(choosendCrousesNames);
+		$.hideModal("#chooseCruoseModal",false);
+		$.showModal("#exportGradeModal",true);
+	}else{
+		$("#exportNoPassGrade_crouseName").attr("choosendCrouseIds",choosendCrousesNames);
+		$("#exportNoPassGrade_crouseName").val(choosendCrousesNames);
+		$.hideModal("#chooseCruoseModal",false);
+		$.showModal("#exportNoPassGradeModal",true);
+	}
 }
 
 //确认成绩导出
@@ -1149,6 +1218,7 @@ function stuffExportGradeLookTable(tableInfo,crouseName){
 //预备不及格成绩导出
 function exportNoPassGrade(){
 	$("#exportNoPassGrade_crouseName").val("");
+	$("#exportNoPassGrade_crouseName").attr("choosendCrouseIds",'');
 	$("#exportNoPassGradeModal").find(".searchArea").show();
 	$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").hide();
 
@@ -1162,15 +1232,15 @@ function exportNoPassGrade(){
 
 //确认不及格成绩导出
 function confirmExportNoPassGrade(){
-	var crouseName=$("#exportNoPassGrade_crouseName").val();
-	var trem=getNormalSelectValue("exportNoPassGrade_grade")
-	if(crouseName===""){
-		toastr.warning("课程名称不能为空");
+	var crouseName=$("#exportNoPassGrade_crouseName").attr("choosendCrouseIds");
+	var trem=getNormalSelectValue("exportNoPassGrade_grade");
+	if(trem===""){
+		toastr.warning("请选择学年");
 		return;
 	}
 
-	if(trem===""){
-		toastr.warning("请选择学年");
+	if(crouseName===""){
+		toastr.warning("请选择课程");
 		return;
 	}
 
@@ -1213,13 +1283,13 @@ function confirmExportNoPassGrade(){
 function exportNoPassGradeLook(){
 	var crouseName=$("#exportNoPassGrade_crouseName").val();
 	var trem=getNormalSelectValue("exportNoPassGrade_grade");
-	if(crouseName===""){
-		toastr.warning("课程名称不能为空");
+	if(trem===""){
+		toastr.warning("请选择学年");
 		return;
 	}
 
-	if(trem===""){
-		toastr.warning("请选择学年");
+	if(crouseName===""){
+		toastr.warning("课程名称不能为空");
 		return;
 	}
 
@@ -1259,7 +1329,7 @@ function exportNoPassGradeLook(){
 				});
 				stuffExportNoPassGradeLookTable(backjson.data,crouseName);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -1346,7 +1416,13 @@ function btnBind(){
 
 	//课程focus
 	$('#export_crouse').focus(function(e){
-		wantChooseExportCrouse();
+		wantChooseExportCrouse(1);
+		e.stopPropagation();
+	});
+
+	//课程focus
+	$('#exportNoPassGrade_crouseName').focus(function(e){
+		wantChooseExportCrouse(2);
 		e.stopPropagation();
 	});
 
