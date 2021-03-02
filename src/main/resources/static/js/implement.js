@@ -712,18 +712,18 @@ function drawPagination(tableAreaClass, paginationTxt,serverPage,tableType) {
 		e.stopPropagation();
 	});
 
-	$(".bootstrap4").find(".keep-open").unbind('click');
-	$(".bootstrap4").find(".keep-open").bind('click', function(e) {
-		$(".bootstrap4").find(".keep-open").find(".dropdown-menu").toggle();
-		
-		$(".dropdown-menu").find("label").unbind('click');
-		$(".dropdown-menu").find("label").bind('click', function(e) {
+	$(tableAreaClass).find(".bootstrap4").find(".keep-open").unbind('click');
+	$(tableAreaClass).find(".bootstrap4").find(".keep-open").bind('click', function(e) {
+		$(tableAreaClass).find(".bootstrap4").find(".keep-open").find(".dropdown-menu").toggle();
+
+		$(tableAreaClass).find(".dropdown-menu").find("label").unbind('click');
+		$(tableAreaClass).find(".dropdown-menu").find("label").bind('click', function(e) {
 			drawPagination(tableAreaClass, paginationTxt);
 			e.stopPropagation();
 		});
 		
 		$('body').click(function(e) {
-			$('.dropdown-menu').hide();
+			$(tableAreaClass).find('.dropdown-menu').hide();
 	    });
 		e.stopPropagation();
 	});
@@ -1441,13 +1441,24 @@ function byage(strBirthday){
 
 // 列操作改变样式并且绑定点击事件填充toolTip
 function changeColumnsStyle(changeAreaClass, txt) {
-	var colum = $(changeAreaClass).find(".columns").find(".keep-open").find("i").removeClass().addClass("iconfont icon-liebiao");
+	$(changeAreaClass).find(".columns").find(".keep-open").find("i").removeClass().addClass("iconfont icon-liebiao");
 
-	$(changeAreaClass).find(".columns").find(".keep-open").find("ul").find("input").bind('click',function(e) {
+	$(changeAreaClass).find(".columns").find(".keep-open").find("input").bind('click',function(e) {
 				drawPagination(changeAreaClass, txt);
 				toolTipUp(".myTooltip");
 				e.stopPropagation();
 	});
+
+	// $(changeAreaClass).find(".columns").find(".keep-open").find("button").unbind('click');
+	// // $(changeAreaClass).find(".columns").find(".keep-open").find("button").bind(function(e) {
+	// // 	alert(1)
+	// // });
+	//
+	// // 失焦
+	// $(area).find(".fixed-table-toolbar").find(".search").find("input").blur(function(e) {
+	// 	$(area).find(".searchIcon").removeClass("serachFocus");
+	// 	toolTipUp(".myTooltip");
+	// });
 }
 
 //导航定位
