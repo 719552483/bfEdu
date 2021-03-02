@@ -336,7 +336,6 @@ function confirmModifyTeacher(row,index){
 
 //发送修改教师请求
 function sendModifyTeacher(row,modifyTeacherInfo){
-	modifyTeacherInfo.jzgh=row.jzgh;
 	modifyTeacherInfo.edu101_ID=row.edu101_ID;
 	$.ajax({
 		method : 'get',
@@ -357,12 +356,8 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 			requestComplete();
 		},
 		success : function(backjson) {
-			if (backjson.result) {
-				hideloding();
-				if (backjson.IDcardIshave) {
-					toastr.warning('身份证号码已存在');
-					return;
-				}
+			hideloding();
+			if (backjson.code==200) {
 				$("#teacherBaseInfoTable").bootstrapTable('updateByUniqueId', {
 					id: modifyTeacherInfo.edu101_ID,
 					row: modifyTeacherInfo
@@ -371,7 +366,7 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 				toastr.success('修改成功');
 				$.hideModal("#remindModal");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
