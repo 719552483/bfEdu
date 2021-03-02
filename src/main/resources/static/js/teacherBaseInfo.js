@@ -262,9 +262,11 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 
 //展示教师详情
 function teacherDetails(row,index){
+	$("#teacherNameCode").val(row.jzgh);
 	$.showModal("#addTeacherModal",false);
 	$("#addTeacherModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
+	$(".teacherNameCodeArea").show();
 	//清空模态框中元素原始值
 	rebackTeacherInfo();
 	drawCalenr("#addTeacherCsrq");
@@ -296,6 +298,7 @@ function modifyTeacher(row,index){
 		toastr.warning('该教职工暂不可进行此操作');
 		return ;
 	}
+	$("#teacherNameCode").val(row.jzgh);
 	$.showModal("#addTeacherModal",true);
 	$("#addTeacherModal").find(".moadalTitle").html("修改教职工-"+row.xm);
 	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
@@ -377,6 +380,7 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 //预备添加教师
 function wantAddTeacher(){
 	rebackTeacherInfo();
+	$(".teacherNameCodeArea").hide();
 	$("#addTeacherModal").find(".moadalTitle").html("新增教职工");
 	$('#addTeacherModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
 	$.showModal("#addTeacherModal",true);
@@ -997,7 +1001,18 @@ function getnewTeacherInfo(){
 	var sfzh=$("#addTeacherSfzh").val();
 	var dxsj=$("#addTeacherDxsj").val();
 	var lxfs=$("#addTeacherLxfs").val();
-	
+	var jzgh=$("#teacherNameCode").val();
+
+	if(jzgh===""){
+		toastr.warning('教职工号不能为空');
+		return;
+	}
+
+	if(!checkIsNumber(jzgh)){
+		toastr.warning('教职工号只能为数字');
+		return;
+	}
+
 	if(xm===""){
 		toastr.warning('姓名不能为空');
 		return;
@@ -1060,6 +1075,7 @@ function getnewTeacherInfo(){
 	returnObject.dxsj=dxsj;
 	returnObject.lxfs=lxfs;
 	returnObject.nl=nl;
+	returnObject.jzgh=jzgh;
 	return returnObject;
 }
 
