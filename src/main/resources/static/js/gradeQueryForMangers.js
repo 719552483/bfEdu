@@ -1194,7 +1194,7 @@ function stuffExportGradeLookTable(tableInfo,crouseName){
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
-		search: false,
+		search: true,
 		editable: false,
 		striped: true,
 		sidePagination: "client",
@@ -1220,8 +1220,14 @@ function stuffExportGradeLookTable(tableInfo,crouseName){
 				sortable: true,
 				formatter: paramsMatter
 			}, {
+				field: 'courseName',
+				title: '课程名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
 				field: 'grade',
-				title: crouseName,
+				title: '分数',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
@@ -1231,6 +1237,7 @@ function stuffExportGradeLookTable(tableInfo,crouseName){
 
 	drawPagination(".exportGradeLookTableArea", "成绩信息");
 	changeTableNoRsTip();
+	drawSearchInput(".exportGradeLookTableArea");
 	toolTipUp(".myTooltip");
 }
 
@@ -1365,12 +1372,12 @@ function stuffExportNoPassGradeLookTable(tableInfo,crouseName){
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
-		search: false,
+		search: true,
 		editable: false,
 		striped: true,
 		sidePagination: "client",
 		toolbar: '#toolbar',
-		showColumns: false,
+		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".exportNoPassGradeAreaTable", "成绩信息");
 		},
@@ -1384,24 +1391,77 @@ function stuffExportNoPassGradeLookTable(tableInfo,crouseName){
 				align: 'center',
 				sortable: true,
 				visible: false
-			}, {
+			},{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			},{
+				field: 'className',
+				title: '行政班名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
 				field: 'studentName',
 				title: '学生姓名',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
-			}, {
-				field: 'grade',
-				title: crouseName,
+			},{
+				field: 'courseName',
+				title: '课程名称',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
+			},{
+				field: 'studentCode',
+				title: '学号',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			}, {
+				field: 'entryDate',
+				title: '录入时间',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			},{
+				field: 'grade',
+				title: '成绩',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'exam_num',
+				title: '考试状态',
+				align: 'left',
+				sortable: true,
+				formatter: examNumMatter
 			}
 		]
 	});
 
+	function examNumMatter(value, row, index) {
+		var str='';
+		if (value==0) {
+			str='正考成绩';
+		} else {
+			str='第'+value+'次补考';
+		}
+
+		return [ '<div class="myTooltip normalTxt" title="'+str+'">'+str+'</div>' ]
+			.join('');
+	}
+
 	drawPagination(".exportNoPassGradeAreaTable", "成绩信息");
+	changeColumnsStyle(".exportNoPassGradeAreaTable", "成绩信息");
 	changeTableNoRsTip();
+	drawSearchInput(".exportNoPassGradeAreaTable");
 	toolTipUp(".myTooltip");
 }
 
@@ -1493,5 +1553,5 @@ function btnBind(){
 		startSearch();
 		e.stopPropagation();
 	});
-	}
+}
 

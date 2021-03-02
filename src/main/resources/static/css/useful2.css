@@ -2457,6 +2457,12 @@ input:focus{
 	padding-left: 2em;
 }
 
+.exportNoPassGradeAreaTable .bootstrap4 .columns,
+.exportNoPassGradeAreaTable .bootstrap4 .search,
+.exportGradeLookTableArea .bootstrap4 .search{
+	margin-top: -40px;
+}
+
 .puttedJzTitle{
 	text-align: left;
 	width: 100%;
