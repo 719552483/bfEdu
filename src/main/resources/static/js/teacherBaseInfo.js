@@ -367,7 +367,7 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 				$.hideModal("#remindModal");
 			} else {
 				$.hideModal("#remindModal",false);
-				$.showModal("#addTeacherModal");
+				$.showModal("#addTeacherModal",true);
 				toastr.warning(backjson.msg);
 			}
 		}
