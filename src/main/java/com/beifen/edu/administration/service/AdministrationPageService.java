@@ -1484,7 +1484,7 @@ public class AdministrationPageService {
 	public ResultVO searchTeacher(Edu101 edu101,String userId) {
 		ResultVO resultVO;
 		//从redis中查询二级学院管理权限
-		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+//		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
 		Specification<Edu101> specification = new Specification<Edu101>() {
 			public Predicate toPredicate(Root<Edu101> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1507,12 +1507,12 @@ public class AdministrationPageService {
 				if (edu101.getZc() != null && !"".equals(edu101.getZc())) {
 					predicates.add(cb.equal(root.<String>get("zc"), edu101.getZc()));
 				}
-				Path<Object> path = root.get("szxb");//定义查询的字段
-				CriteriaBuilder.In<Object> in = cb.in(path);
-				for (int i = 0; i <departments.size() ; i++) {
-					in.value(departments.get(i));//存入值
-				}
-				predicates.add(cb.and(in));
+//				Path<Object> path = root.get("szxb");//定义查询的字段
+//				CriteriaBuilder.In<Object> in = cb.in(path);
+//				for (int i = 0; i <departments.size() ; i++) {
+//					in.value(departments.get(i));//存入值
+//				}
+//				predicates.add(cb.and(in));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};

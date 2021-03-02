@@ -135,8 +135,15 @@ public class StaffManageService {
 
     // 为教师生成学号
     public String getNewTeacherJzgh() {
-        String jzgh_before =utils.getRandom(2);
-        String newXh = "1"+jzgh_before+utils.getRandom(3);
+        String newXh = "";
+        for(;;){
+            String jzgh_before =utils.getRandom(2);
+            newXh = "1"+jzgh_before+utils.getRandom(3);
+            String s = edu101Dao.queryJzghSFCZ(newXh);
+            if("0".equals(s)){
+                break;
+            }
+        }
         return newXh;
     }
 
@@ -728,7 +735,31 @@ public class StaffManageService {
     }
 
     //更新教师信息
-    public void updateTeacher(Edu101 edu101) {
+    public ResultVO updateTeacher(Edu101 edu101) {
+        ResultVO resultVO;
+        Edu101 e = edu101Dao.findOne(edu101.getEdu101_ID());
+        String s = e.getJzgh();
+        if(s.equals(edu101.getJzgh())){
+            edu101Dao.save(edu101);
+            resultVO = ResultVO.setSuccess("修改成功");
+            return resultVO;
+        }
+        String num = edu101Dao.queryJzghSFCZ(edu101.getJzgh());
+        if (!"0".equals(num)){
+            resultVO = ResultVO.setFailed("教职工号重复，请重新修改！");
+            return resultVO;
+        }
+        Edu990 e990 = edu990Dao.checkIsHaveUser(edu101.getJzgh());
+        if(e990 != null){
+            resultVO = ResultVO.setFailed("教职工号与其他用户账号重复，请重新修改！");
+            return resultVO;
+        }
+
+        Edu990 e9901 = edu990Dao.getUserInfo(s);
+        e9901.setYhm(edu101.getJzgh());
+        edu990Dao.save(e9901);
         edu101Dao.save(edu101);
+        resultVO = ResultVO.setSuccess("修改成功");
+        return resultVO;
     }
 }
