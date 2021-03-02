@@ -366,6 +366,8 @@ function sendModifyTeacher(row,modifyTeacherInfo){
 				toastr.success('修改成功');
 				$.hideModal("#remindModal");
 			} else {
+				$.hideModal("#remindModal",false);
+				$.showModal("#addTeacherModal");
 				toastr.warning(backjson.msg);
 			}
 		}
