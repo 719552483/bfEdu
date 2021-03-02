@@ -431,8 +431,8 @@ function stuffTable() {
 
 	function userNameFormatter(value, row, index) {
 		return [
-			'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable Mydfinput" value="' + row.yhm +
-			'"><span title="'+row.yhm+'" class="myTooltip blockName' +
+			'<input id="userNameInTable' + row.bf990_ID + '" type="text" class="dfinput UserNameInTable Mydfinput dfinputForNonStyle" value="' + row.yhm +
+			'" readonly="readonly"  disabled="disabled"><span title="'+row.yhm+'" class="myTooltip blockName' +
 			row.bf990_ID + '">' + row.yhm + '</span>'
 		]
 			.join('');
@@ -508,7 +508,8 @@ function modifiRole(row) {
 	$(".currentId").html(row.bf990_ID);
 	$("#userRol"+row.bf990_ID).multiSelect();
 	$("#userDeparment"+row.bf990_ID).multiSelect();
-	var jsIdARRAY=row.jsId.split(",");
+	var jsIdARRAY=new Array();
+	row.jsId==null||typeof row.jsId==="undefined"||row.jsId===""?jsIdARRAY.length=0:jsIdARRAY=row.jsId.split(",");
 	var jsSelect=$(".multipleInTableArea"+row.bf990_ID).find(".multi-select-menuitems").find("input");
 
 	var stuffArray=new Array();
@@ -524,7 +525,8 @@ function modifiRole(row) {
 	$("#userRol"+row.bf990_ID).val(stuffArray);
 
 	var stuffArray2=new Array();
-	var XBIdARRAY=row.deparmentIds.split(",");
+	var XBIdARRAY=new Array();
+	row.deparmentIds==null||typeof row.deparmentIds==="undefined"||row.deparmentIds===""?XBIdARRAY.length=0:XBIdARRAY=row.deparmentIds.split(",");
 	var xbSelect=$(".deparmentInTableArea"+row.bf990_ID).find(".multi-select-menuitems").find("input");
 	for (var i = 0; i < xbSelect.length; i++) {
 		var currentXb=xbSelect[i].attributes[2].nodeValue;

@@ -499,6 +499,15 @@ float: left;
 	width: 80% !important;
 }
 
+.dfinputForNonStyle{
+	 border-top: none!important;
+	border-left: none!important;
+	 border-right: none!important;
+	 border-bottom: none!important;
+	 background: none!important;
+	background-color: #eff8fb;
+}
+
 .tableInput {
 	width: 88% !important;
 	background-color: rgba(183, 215, 232, 0.050980392156862744);
