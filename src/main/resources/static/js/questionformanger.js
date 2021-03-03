@@ -230,7 +230,7 @@ function comfirmAddRadioAndCheck(row){
     var radioOrCheckValue=$("#radioAndCheckTable").bootstrapTable('getData');
     for (var i = 0; i < radioOrCheckValue.length; i++) {
         if(value===radioOrCheckValue[i].answerTxt){
-            toastr.warning(value+'有相同选项');
+            toastr.warning('选项 - '+value+' - 存在重复');
             return;
         }
     }
@@ -330,7 +330,7 @@ function confirmAddQ_A(){
     }
 
     if(radioOrCheckValue.length<2){
-        toastr.warning('至少需要两个答案');
+        toastr.warning('至少需要两个选项');
         return;
     }
 
