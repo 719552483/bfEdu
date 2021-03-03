@@ -1,23 +1,16 @@
 package com.beifen.edu.administration.service;
 
 
-import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.dao.*;
-import com.beifen.edu.administration.domian.*;
-import com.beifen.edu.administration.utility.ReflectUtils;
+import com.beifen.edu.administration.dao.Edu801Dao;
+import com.beifen.edu.administration.domian.Edu801;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.*;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-//教学任务点业务层
+//调查问卷业务层
 @Service
 public class QuestionNaireService {
 
@@ -28,17 +21,16 @@ public class QuestionNaireService {
 //    ReflectUtils utils = new ReflectUtils();
 
     /**
-     * 检查同校区是否有重复教学点
+     * 查询所有调查问卷
      * @return
      */
-    //搜索全部教学点
     public ResultVO searchAllQuestion() {
         ResultVO resultVO;
         List<Edu801> edu801List = edu801Dao.findAll();
         if(edu801List.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无教学点信息");
+            resultVO = ResultVO.setFailed("暂无调查问卷");
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+edu801List.size()+"个教学点",edu801List);
+            resultVO = ResultVO.setSuccess("共找到"+edu801List.size()+"个调查问卷",edu801List);
         }
         return resultVO;
     }

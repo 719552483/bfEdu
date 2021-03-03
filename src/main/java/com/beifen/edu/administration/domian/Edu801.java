@@ -12,7 +12,7 @@ public class Edu801 {
     private String createPerson;//录入人
     private String personName;//录入人名称
     private String createDate;//录入时间
-
+    private String permissions;//哪些学院的学员需要答题
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -64,5 +64,13 @@ public class Edu801 {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
     }
 }
