@@ -14,6 +14,7 @@ public class Edu801 {
     private String personName;//录入人名称
     private String createDate;//录入时间
     private String permissions;//哪些学院的学员需要答题
+    private String permissionsName;//哪些学院名称
 //    @ElementCollection(targetClass=Edu802.class,fetch= FetchType.LAZY)
 //    @CollectionTable(name="Edu802",joinColumns=@JoinColumn(name="Edu801_ID"))
     @Id
@@ -75,5 +76,13 @@ public class Edu801 {
 
     public void setPermissions(String permissions) {
         this.permissions = permissions;
+    }
+
+    public String getPermissionsName() {
+        return permissionsName;
+    }
+
+    public void setPermissionsName(String permissionsName) {
+        this.permissionsName = permissionsName;
     }
 }

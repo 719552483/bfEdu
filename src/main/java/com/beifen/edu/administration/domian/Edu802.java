@@ -12,7 +12,7 @@ public class Edu802 {
     private String createPerson;//录入人
     private String personName;//录入人名称
     private String createDate;//录入时间
-    private String type;//题目类型(1单选2多选3评分4简答)
+    private String type;//题目类型(checked单选radio多选3评分4简答)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")

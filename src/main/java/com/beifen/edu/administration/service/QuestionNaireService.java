@@ -55,14 +55,16 @@ public class QuestionNaireService {
         List<Edu802PO> edu802POList = edu801.getEdu802List();
         for(int i = 0;i<edu802POList.size();i++){
             Edu802PO edu802PO = edu802POList.get(i);
+            edu802PO.setEdu801_ID(edu801.getEdu801_ID());
             edu802Dao.save(edu802PO);
-            if("1".equals(edu802PO.getType())||"2".equals(edu802PO.getType())){
+            if("checked".equals(edu802PO.getType())||"radio".equals(edu802PO.getType())){
                 List<Edu803> edu803List = edu802PO.getEdu803List();
                 for(int j = 0;j<edu802POList.size();j++){
                     Edu803 edu803 = edu803List.get(j);
-                    int options = Integer.parseInt(edu803.getOptions())+64;
+                    int options = Integer.parseInt(edu803.getOptions())+65;
                     char c = (char) options;
                     edu803.setOptions(String.valueOf(c));
+                    edu803.setEdu803_ID(edu802PO.getEdu802_ID());
                     edu803Dao.save(edu803);
                 }
             }
