@@ -356,6 +356,8 @@ function  stuffNewAandQtoMainArea(NewAandQ) {
         drawCheck(NewAandQ);
     }else if(NewAandQ.type==="rate"){
         drawRate(NewAandQ);
+    }else if(NewAandQ.type==="answer"){
+        drawAnswer(NewAandQ);
     }
     $(".main_cannottxt").hide();
     $(".areaForNewQ_A").show();
@@ -410,6 +412,19 @@ function drawRate(info){
     }
     $(".areaForNewQ_A").append(str+'</fieldset></div><div class="clear"></div>');
     toolTipUp(".tooltipCite");
+}
+
+//渲染问答题
+function drawAnswer(info) {
+    var allA_QIndex=$(".singleA_Q").length;
+    var answerGuid=guid();
+
+    var str='<div class="singleA_Q" type="'+info.type+'">'
+            +'<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>'
+            +'<textarea style="max-width: 920px;margin-top: -10px;margin-left:25px " maxlength="300"  type="text" class="breakOptionTextArea" id="'+answerGuid+'" placeholder="请回答(最多300个字符,中文2个，英文1个)..." />'
+            +'</div>';
+    ;
+    $(".areaForNewQ_A").append(str);
 }
 
 //页面可视主区域控制
