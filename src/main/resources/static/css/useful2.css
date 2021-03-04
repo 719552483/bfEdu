@@ -208,10 +208,14 @@ padding:1.6em 0em 0.6em 31px !important
   background-color: red !important;
 }*/
 
-.myTableStyle td {
+.myTableStyle td ,
+.overArea{
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.myTableStyle td {
 	max-width: 100px;
 }
 
@@ -2529,11 +2533,19 @@ input:focus{
 .singleA_Q{
 	padding-left: 50px;
 	padding-right: 50px;
+	margin-bottom: 8px;
 }
 
 .noneOutline:focus {
 	   outline: #f9f9f900!important;
  }
+
+.tooltipCite{
+	font-size: 1vw;
+	font-weight: 600;
+	color: #3a81a0;
+	font-family: unset;
+}
 
 @keyframes serachAnimation {
     10% {

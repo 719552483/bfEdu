@@ -54,6 +54,8 @@ function confrimAddQuestion(){
     // $("input:checkbox[name='group']:checked").each(function(){
     //     packageCodeList.push($(this).val());//向数组中添加元素
     // });
+    // var r = $("input[name='rating']:checked").val();
+
 }
 
 //预备新增问题
@@ -329,7 +331,7 @@ function confirmAddQ_A(){
         return;
     }
 
-    if(radioOrCheckValue.length<2){
+    if((type==="radio"||type==="check")&&radioOrCheckValue.length<2){
         toastr.warning('至少需要两个选项');
         return;
     }
@@ -350,6 +352,10 @@ function confirmAddQ_A(){
 function  stuffNewAandQtoMainArea(NewAandQ) {
     if(NewAandQ.type==="radio"){
         drawRadio(NewAandQ);
+    }else if(NewAandQ.type==="check"){
+        drawCheck(NewAandQ);
+    }else if(NewAandQ.type==="rate"){
+        drawRate(NewAandQ);
     }
     $(".main_cannottxt").hide();
     $(".areaForNewQ_A").show();
@@ -364,16 +370,46 @@ function drawRadio(info){
     var str='<div class="singleA_Q" type="'+info.type+'">'+
              '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>';
     for (var i = 0; i < values.length; i++) {
-        str+='<div class="col4 giveBottom">'
-            +'<input type="radio" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/>'+values[i].answerTxt
-            + '</div></div>';
+        str+='<div class="col4 giveBottom overArea">'
+            +'<input type="radio" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
+            + '</cite></div>';
     }
 
-    $(".areaForNewQ_A").append(str+'<div class="clear"></div>');
+    $(".areaForNewQ_A").append(str+'</div><div class="clear"></div>');
+    toolTipUp(".tooltipCite");
 }
 
-function a(e) {
-    // e.checked?e.checked=false:e.checked=true;
+//渲染多选题
+function drawCheck(info){
+    var values=info.radioOrCheckValue;
+    var allA_QIndex=$(".singleA_Q").length;
+
+    var str='<div class="singleA_Q" type="'+info.type+'">'+
+        '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>';
+    for (var i = 0; i < values.length; i++) {
+        str+='<div class="col4 giveBottom overArea">'
+            +'<input type="checkbox" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
+            + '</cite></div>';
+    }
+
+    $(".areaForNewQ_A").append(str+'</div><div class="clear"></div>');
+    toolTipUp(".tooltipCite");
+}
+
+//渲染评分题
+function drawRate(info){
+    var allA_QIndex=$(".singleA_Q").length;
+    var rateGuid=guid();
+
+    var str='<div class="singleA_Q" type="'+info.type+'">' +
+        '<fieldset class="starability-slot starability-growRotate">' +
+        '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>';
+    for (var i = 5; i > 0; i--) {
+        str+='<input type="radio" id="rate'+allA_QIndex+i+'" name="'+rateGuid+'" value="'+i+'" />'
+            +'<label for="rate'+allA_QIndex+i+'" title="'+i+'分" class="tooltipCite">'+i+'分</label>';
+    }
+    $(".areaForNewQ_A").append(str+'</fieldset></div><div class="clear"></div>');
+    toolTipUp(".tooltipCite");
 }
 
 //页面可视主区域控制
