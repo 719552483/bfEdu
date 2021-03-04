@@ -7,13 +7,13 @@ import com.beifen.edu.administration.domian.Edu803;
 import java.util.List;
 
 public class Edu801PO extends Edu801 {
-    private List<Edu802PO> edu802List;
+    private List<Edu802PO> allQuestions;
 
     public List<Edu802PO> getEdu802List() {
-        return edu802List;
+        return allQuestions;
     }
 
-    public void setEdu802List(List<Edu802PO> edu802List) {
-        this.edu802List = edu802List;
+    public void setEdu802List(List<Edu802PO> allQuestions) {
+        this.allQuestions = allQuestions;
     }
 }

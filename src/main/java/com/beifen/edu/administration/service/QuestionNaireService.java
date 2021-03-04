@@ -61,9 +61,9 @@ public class QuestionNaireService {
                 List<Edu803> edu803List = edu802PO.getEdu803List();
                 for(int j = 0;j<edu802POList.size();j++){
                     Edu803 edu803 = edu803List.get(j);
-                    int options = Integer.parseInt(edu803.getOptions())+65;
+                    int options = Integer.parseInt(edu803.getIndex())+65;
                     char c = (char) options;
-                    edu803.setOptions(String.valueOf(c));
+                    edu803.setIndex(String.valueOf(c));
                     edu803.setEdu803_ID(edu802PO.getEdu802_ID());
                     edu803Dao.save(edu803);
                 }

@@ -8,12 +8,13 @@ import javax.persistence.*;
 public class Edu803 {
     private Long Edu803_ID;//主键
     private Long Edu802_ID;//调查问卷题目ID
-    private String options;//选项(A,B,C,D...)
-    private String answer;//答案
+    private String index;//选项(A,B,C,D...)
+    private String text;//答案
     private String createPerson;//录入人
     private String personName;//录入人名称
     private String createDate;//录入时间
-    private String num;//学生选择数量(1单选2多选3评分4简答)
+    private String num;//学生选择数量
+    private String value;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -33,22 +34,6 @@ public class Edu803 {
 
     public void setEdu802_ID(Long edu802_ID) {
         Edu802_ID = edu802_ID;
-    }
-
-    public String getOptions() {
-        return options;
-    }
-
-    public void setOptions(String options) {
-        this.options = options;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
     }
 
     public String getCreatePerson() {
@@ -81,5 +66,29 @@ public class Edu803 {
 
     public void setNum(String num) {
         this.num = num;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
