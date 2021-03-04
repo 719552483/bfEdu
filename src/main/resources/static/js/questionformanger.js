@@ -49,13 +49,104 @@ function wantAddQuestion(){
 
 //确认新增问卷
 function confrimAddQuestion(){
-    // var r = $("input[name='group1']:checked").val();
-    // var packageCodeList=new Array();
-    // $("input:checkbox[name='group']:checked").each(function(){
-    //     packageCodeList.push($(this).val());//向数组中添加元素
-    // });
-    // var r = $("input[name='rating']:checked").val();
+    var newQuestionInfo=getNewQuestionInfo();
+    if(typeof newQuestionInfo==="undefined"){
+        return;
+    }
 
+    $.showModal("#remindModal",true);
+    $(".remindType").html('问卷');
+    $(".remindActionType").html("生成");
+    $(".myformtextTipArea").show();
+
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        sendNewQuestionInfo(newQuestionInfo);
+        e.stopPropagation();
+    });
+}
+
+//获取新问卷信息
+function getNewQuestionInfo() {
+    var sendInfo=new Object();
+    var title=$("#questionTitle").val();
+    var department=getNormalSelectValue("department");
+    var departmentTxt=getNormalSelectText("department");
+    var currentAll=$('.singleA_Q');
+
+    if(title===''){
+        toastr.warning("问卷标题不能为空");
+        return;
+    }
+
+    if(department===''){
+        toastr.warning("二级学院不能为空");
+        return;
+    }
+
+    if(currentAll.length==0){
+        toastr.warning("暂未生成任何问题");
+        return;
+    }
+
+    var allQuestions=new Array();
+    for (let i = 0; i <currentAll.length ; i++) {
+        var className=currentAll[i].classList[1];
+        var allQuestion=new Object();
+        allQuestion.type=$("."+className)[0].attributes[1].nodeValue;
+        allQuestion.title=$("."+className).find(".questionTxt")[0].innerText;
+        var ckeckOrRaidoInfo=new Array();
+        if(allQuestion.type==="radio"||allQuestion.type==="check"){
+           var allInput= $("."+className).find(".col4").find("input");
+            for (var j = 0; j < allInput.length; j++) {
+                var ckeckOrRaidoObject=new Object();
+                ckeckOrRaidoObject.Index=j;
+                ckeckOrRaidoObject.value=allInput[j].attributes[3].nodeValue;
+                ckeckOrRaidoObject.text=allInput[j].nextElementSibling.innerText;
+                ckeckOrRaidoInfo.push(ckeckOrRaidoObject);
+            }
+        }
+        allQuestion.ckeckOrRaidoInfo=ckeckOrRaidoInfo;
+        allQuestions.push(allQuestion);
+    }
+
+    sendInfo.title=title;
+    sendInfo.createPerson=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+    sendInfo.personName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
+    sendInfo.permissions=department;
+    sendInfo.permissionsName=departmentTxt;
+    sendInfo.allQuestions=allQuestions;
+    return sendInfo;
+}
+
+//发送新问卷信息
+function sendNewQuestionInfo(newQuestionInfo){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/addQuestion",
+        data: {
+            "questionInfo":JSON.stringify(newQuestionInfo)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code==200) {
+                $.hideModal("#remindModal");
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
 }
 
 //预备新增问题
@@ -369,8 +460,8 @@ function drawRadio(info){
     var values=info.radioOrCheckValue;
     var allA_QIndex=$(".singleA_Q").length;
 
-    var str='<div class="singleA_Q" type="'+info.type+'">'+
-             '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>';
+    var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
+             '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':<img class="choosendfsKjImg tooltipCite removeThisQ" title="删除" src="images/close1.png"></cite><p class="questionTxt">'+info.title+'</p></span>';
     for (var i = 0; i < values.length; i++) {
         str+='<div class="col4 giveBottom overArea">'
             +'<input type="radio" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
@@ -379,6 +470,12 @@ function drawRadio(info){
 
     $(".areaForNewQ_A").append(str+'</div><div class="clear"></div>');
     toolTipUp(".tooltipCite");
+
+    $('.removeThisQ').unbind('click');
+    $('.removeThisQ').bind('click', function(e) {
+        removeThisQ(e);
+        e.stopPropagation();
+    });
 }
 
 //渲染多选题
@@ -386,8 +483,8 @@ function drawCheck(info){
     var values=info.radioOrCheckValue;
     var allA_QIndex=$(".singleA_Q").length;
 
-    var str='<div class="singleA_Q" type="'+info.type+'">'+
-        '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>';
+    var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
+        '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':<img class="choosendfsKjImg tooltipCite removeThisQ" title="删除" src="images/close1.png"></cite><p class="questionTxt">'+info.title+'</p></span>';
     for (var i = 0; i < values.length; i++) {
         str+='<div class="col4 giveBottom overArea">'
             +'<input type="checkbox" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
@@ -396,6 +493,12 @@ function drawCheck(info){
 
     $(".areaForNewQ_A").append(str+'</div><div class="clear"></div>');
     toolTipUp(".tooltipCite");
+
+    $('.removeThisQ').unbind('click');
+    $('.removeThisQ').bind('click', function(e) {
+        removeThisQ(e);
+        e.stopPropagation();
+    });
 }
 
 //渲染评分题
@@ -403,15 +506,21 @@ function drawRate(info){
     var allA_QIndex=$(".singleA_Q").length;
     var rateGuid=guid();
 
-    var str='<div class="singleA_Q" type="'+info.type+'">' +
+    var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">' +
         '<fieldset class="starability-slot starability-growRotate">' +
-        '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>';
+        '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':<img class="choosendfsKjImg tooltipCite removeThisQ" title="删除" src="images/close1.png"></cite><p class="questionTxt">'+info.title+'</p></span>';
     for (var i = 5; i > 0; i--) {
         str+='<input type="radio" id="rate'+allA_QIndex+i+'" name="'+rateGuid+'" value="'+i+'" />'
             +'<label for="rate'+allA_QIndex+i+'" title="'+i+'分" class="tooltipCite">'+i+'分</label>';
     }
     $(".areaForNewQ_A").append(str+'</fieldset></div><div class="clear"></div>');
     toolTipUp(".tooltipCite");
+
+    $('.removeThisQ').unbind('click');
+    $('.removeThisQ').bind('click', function(e) {
+        removeThisQ(e);
+        e.stopPropagation();
+    });
 }
 
 //渲染问答题
@@ -419,12 +528,39 @@ function drawAnswer(info) {
     var allA_QIndex=$(".singleA_Q").length;
     var answerGuid=guid();
 
-    var str='<div class="singleA_Q" type="'+info.type+'">'
-            +'<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':</cite><p class="questionTxt">'+info.title+'</p></span>'
+    var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'
+            +'<span class="questionTitle">' +
+            '<cite>Q'+(allA_QIndex+1)+':' +
+            '<img class="choosendfsKjImg tooltipCite removeThisQ noneOutline" title="删除" src="images/close1.png">' +
+            '</cite><p class="questionTxt">'+info.title+'</p>' +
+            '</span>'
             +'<textarea style="max-width: 920px;margin-top: -10px;margin-left:25px " maxlength="300"  type="text" class="breakOptionTextArea" id="'+answerGuid+'" placeholder="请回答(最多300个字符,中文2个，英文1个)..." />'
             +'</div>';
     ;
     $(".areaForNewQ_A").append(str);
+    toolTipUp(".tooltipCite");
+
+    $('.removeThisQ').unbind('click');
+    $('.removeThisQ').bind('click', function(e) {
+        removeThisQ(e);
+        e.stopPropagation();
+    });
+}
+
+//删除当前问题
+function removeThisQ(eve){
+    $.showModal("#remindModal",true);
+    $(".remindType").html(eve.currentTarget.parentNode.childNodes[0].nodeValue.substring(0,eve.currentTarget.parentNode.childNodes[0].nodeValue.length-1));
+    $(".remindActionType").html("删除");
+    $(".myformtextTipArea").hide();
+
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeClass=eve.currentTarget.parentNode.parentNode.parentNode.classList[1];
+        $("."+removeClass).remove();
+        $.hideModal("#remindModal");
+        e.stopPropagation();
+    });
 }
 
 //页面可视主区域控制

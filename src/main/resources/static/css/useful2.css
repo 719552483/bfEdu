@@ -2534,6 +2534,8 @@ input:focus{
 	padding-left: 50px;
 	padding-right: 50px;
 	margin-bottom: 8px;
+	border-bottom: 1px #e6e2e2 dashed;
+	padding-bottom: 40px;
 }
 
 .noneOutline:focus {
