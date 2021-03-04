@@ -1,33 +1,29 @@
 package com.beifen.edu.administration.domian;
 
 import javax.persistence.*;
-import java.util.List;
 
-//调查问卷表
+//调查问卷题目表
 @Entity
-@Table(name = "Edu801")
-public class Edu801 {
-    private Long Edu801_ID;//主键
+@Table(name = "Edu802")
+public class Edu802 {
+    private Long Edu802_ID;//主键
     private String title;//标题
-    private Integer num;//答卷学生数量
+    private Long Edu801_ID;//调查问卷ID
     private String createPerson;//录入人
     private String personName;//录入人名称
     private String createDate;//录入时间
-    private String permissions;//哪些学院的学员需要答题
-    private String permissionsName;//哪些学院名称
-//    @ElementCollection(targetClass=Edu802.class,fetch= FetchType.LAZY)
-//    @CollectionTable(name="Edu802",joinColumns=@JoinColumn(name="Edu801_ID"))
+    private String type;//题目类型(checked单选radio多选3评分4简答)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
-    @Column(name = "Edu801_ID")
+    @Column(name = "Edu802_ID")
 
-    public Long getEdu801_ID() {
-        return Edu801_ID;
+    public Long getEdu802_ID() {
+        return Edu802_ID;
     }
 
-    public void setEdu801_ID(Long edu801_ID) {
-        Edu801_ID = edu801_ID;
+    public void setEdu802_ID(Long Edu802_ID) {
+        Edu802_ID = Edu802_ID;
     }
 
     public String getTitle() {
@@ -36,14 +32,6 @@ public class Edu801 {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
     }
 
     public String getCreatePerson() {
@@ -70,19 +58,19 @@ public class Edu801 {
         this.createDate = createDate;
     }
 
-    public String getPermissions() {
-        return permissions;
+    public Long getEdu801_ID() {
+        return Edu801_ID;
     }
 
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
+    public void setEdu801_ID(Long edu801_ID) {
+        Edu801_ID = edu801_ID;
     }
 
-    public String getPermissionsName() {
-        return permissionsName;
+    public String getType() {
+        return type;
     }
 
-    public void setPermissionsName(String permissionsName) {
-        this.permissionsName = permissionsName;
+    public void setType(String type) {
+        this.type = type;
     }
 }
