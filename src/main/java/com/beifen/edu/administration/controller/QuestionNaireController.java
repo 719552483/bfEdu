@@ -44,6 +44,18 @@ public class QuestionNaireController {
     }
 
     /**
+     * 查询调查问卷详情
+     * @param
+     * @return
+     */
+    @RequestMapping("/searchQuestionDetail")
+    @ResponseBody
+    public ResultVO searchQuestionDetail(@RequestParam("edu801Id") String edu801Id) {
+        ResultVO result = questionNaireService.searchQuestionDetail(edu801Id);
+        return result;
+    }
+
+    /**
      * 新增调查问卷
      * @param
      * @return

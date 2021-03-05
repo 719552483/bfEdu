@@ -52,6 +52,39 @@ public class QuestionNaireService {
     }
 
     /**
+     * 查询调查问卷详情
+     * @return
+     */
+    public ResultVO searchQuestionDetail(String edu801Id) {
+        ResultVO resultVO;
+        Edu801 edu801 = edu801Dao.findOne(Long.parseLong(edu801Id));
+        if(edu801 == null){
+            resultVO = ResultVO.setFailed("该调查问卷已被删除，请刷新后重试");
+        }else{
+           List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
+           List<Edu802PO> edu802POList = new ArrayList<>();
+
+            for(Edu802 edu802 : edu802List){
+                Edu802PO eee = new Edu802PO();
+                try {
+                    BeanUtils.copyProperties(eee, edu802);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                if("check".equals(eee.getType())||"radio".equals(eee.getType())){
+                    List<Edu803> edu803List = edu803Dao.findByEdu802Id(eee.getEdu802_ID().toString());
+                    eee.setCkeckOrRaidoInfo(edu803List);
+                }
+                edu802POList.add(eee);
+           }
+            resultVO = ResultVO.setSuccess("查询成功",edu802POList);
+        }
+        return resultVO;
+    }
+
+    /**
      * 新增调查问卷
      * @return
      */
