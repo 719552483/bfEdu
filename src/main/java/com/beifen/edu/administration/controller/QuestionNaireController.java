@@ -1,17 +1,11 @@
 package com.beifen.edu.administration.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.Edu801PO;
 import com.beifen.edu.administration.PO.Edu802PO;
-import com.beifen.edu.administration.PO.TestTaskSearchPO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.domian.Edu101;
-import com.beifen.edu.administration.domian.Edu801;
-import com.beifen.edu.administration.domian.Edu802;
 import com.beifen.edu.administration.domian.Edu803;
 import com.beifen.edu.administration.service.QuestionNaireService;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -52,6 +45,18 @@ public class QuestionNaireController {
     @ResponseBody
     public ResultVO searchQuestionDetail(@RequestParam("edu801Id") String edu801Id) {
         ResultVO result = questionNaireService.searchQuestionDetail(edu801Id);
+        return result;
+    }
+
+    /**
+     * 删除调查问卷
+     * @param
+     * @return
+     */
+    @RequestMapping("/deleteQuestion")
+    @ResponseBody
+    public ResultVO deleteQuestion(@RequestParam("edu801Id") String edu801Id) {
+        ResultVO result = questionNaireService.deleteQuestion(edu801Id);
         return result;
     }
 

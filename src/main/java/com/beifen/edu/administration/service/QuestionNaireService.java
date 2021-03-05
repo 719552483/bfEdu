@@ -58,10 +58,18 @@ public class QuestionNaireService {
     public ResultVO searchQuestionDetail(String edu801Id) {
         ResultVO resultVO;
         Edu801 edu801 = edu801Dao.findOne(Long.parseLong(edu801Id));
+        Edu801PO edu801PO = new Edu801PO();
         if(edu801 == null){
             resultVO = ResultVO.setFailed("该调查问卷已被删除，请刷新后重试");
         }else{
-           List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
+            try {
+                BeanUtils.copyProperties(edu801PO, edu801);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
            List<Edu802PO> edu802POList = new ArrayList<>();
 
             for(Edu802 edu802 : edu802List){
@@ -79,8 +87,22 @@ public class QuestionNaireService {
                 }
                 edu802POList.add(eee);
            }
-            resultVO = ResultVO.setSuccess("查询成功",edu802POList);
+            edu801PO.setAllQuestions(edu802POList);
+            resultVO = ResultVO.setSuccess("查询成功",edu801PO);
         }
+        return resultVO;
+    }
+
+    /**
+     * 删除调查问卷
+     * @return
+     */
+    public ResultVO deleteQuestion(String edu801Id) {
+        ResultVO resultVO;
+        edu803Dao.deleteByEdu801Id(edu801Id);
+        edu802Dao.deleteByEdu801Id(edu801Id);
+        edu801Dao.delete(Long.parseLong(edu801Id));
+        resultVO = ResultVO.setSuccess("删除成功");
         return resultVO;
     }
 
