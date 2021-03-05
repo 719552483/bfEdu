@@ -10,9 +10,15 @@ import com.beifen.edu.administration.dao.Edu803Dao;
 import com.beifen.edu.administration.domian.Edu801;
 import com.beifen.edu.administration.domian.Edu802;
 import com.beifen.edu.administration.domian.Edu803;
+import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,20 +57,40 @@ public class QuestionNaireService {
      */
     public ResultVO addQuestion(Edu801PO edu801) {
         ResultVO resultVO;
-        edu801Dao.save(edu801);
-        List<Edu802PO> edu802POList = edu801.getEdu802List();
-        for(int i = 0;i<edu802POList.size();i++){
-            Edu802PO edu802PO = edu802POList.get(i);
-            edu802PO.setEdu801_ID(edu801.getEdu801_ID());
-            edu802Dao.save(edu802PO);
-            if("checked".equals(edu802PO.getType())||"radio".equals(edu802PO.getType())){
-                List<Edu803> edu803List = edu802PO.getEdu803List();
-                for(int j = 0;j<edu802POList.size();j++){
+        Edu801 e = new Edu801();
+        try {
+            BeanUtils.copyProperties(e, edu801);
+            e.setNum(0);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+            e.setCreateDate(df.format(new Date()));
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+        }
+        edu801Dao.save(e);
+        List<Edu802PO> edu802POList = edu801.getAllQuestions();
+        for(Edu802PO edu802PO : edu802POList){
+            Edu802 ee = new Edu802();
+            try {
+                BeanUtils.copyProperties(ee, edu802PO);
+                ee.setEdu801_ID(e.getEdu801_ID());
+                edu802Dao.save(ee);
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            } catch (InvocationTargetException ex) {
+                ex.printStackTrace();
+            }
+
+            if("check".equals(ee.getType())||"radio".equals(ee.getType())){
+                List<Edu803> edu803List = edu802PO.getCkeckOrRaidoInfo();
+                for(int j = 0;j<edu803List.size();j++){
                     Edu803 edu803 = edu803List.get(j);
-                    int options = Integer.parseInt(edu803.getIndex())+65;
+                    int options = Integer.parseInt(edu803.getCheckOrRadioIndex())+65;
                     char c = (char) options;
-                    edu803.setIndex(String.valueOf(c));
-                    edu803.setEdu803_ID(edu802PO.getEdu802_ID());
+                    edu803.setCheckOrRadioIndex(String.valueOf(c));
+                    edu803.setEdu802_ID(ee.getEdu802_ID());
+                    edu803.setNum(0);
                     edu803Dao.save(edu803);
                 }
             }

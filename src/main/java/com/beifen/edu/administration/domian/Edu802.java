@@ -23,7 +23,7 @@ public class Edu802 {
     }
 
     public void setEdu802_ID(Long Edu802_ID) {
-        Edu802_ID = Edu802_ID;
+        this.Edu802_ID = Edu802_ID;
     }
 
     public String getTitle() {

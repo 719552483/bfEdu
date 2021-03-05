@@ -100,9 +100,9 @@ function getNewQuestionInfo() {
            var allInput= $("."+className).find(".col4").find("input");
             for (var j = 0; j < allInput.length; j++) {
                 var ckeckOrRaidoObject=new Object();
-                ckeckOrRaidoObject.Index=j;
-                ckeckOrRaidoObject.value=allInput[j].attributes[3].nodeValue;
-                ckeckOrRaidoObject.text=allInput[j].nextElementSibling.innerText;
+                ckeckOrRaidoObject.checkOrRadioIndex=j;
+                ckeckOrRaidoObject.checkOrRadioValue=allInput[j].attributes[3].nodeValue;
+                ckeckOrRaidoObject.checkOrRadioText=allInput[j].nextElementSibling.innerText;
                 ckeckOrRaidoInfo.push(ckeckOrRaidoObject);
             }
         }

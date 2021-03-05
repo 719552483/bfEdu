@@ -6,13 +6,17 @@ import com.beifen.edu.administration.domian.Edu803;
 import java.util.List;
 
 public class Edu802PO extends Edu802 {
-    private List<Edu803> checkOrRadioInfo;
+    private List<Edu803> ckeckOrRaidoInfo;
 
-    public List<Edu803> getEdu803List() {
-        return checkOrRadioInfo;
+    public Edu802PO(){
+
     }
 
-    public void setEdu803List(List<Edu803> checkOrRadioInfo) {
-        this.checkOrRadioInfo = checkOrRadioInfo;
+    public List<Edu803> getCkeckOrRaidoInfo() {
+        return ckeckOrRaidoInfo;
+    }
+
+    public void setCkeckOrRaidoInfo(List<Edu803> ckeckOrRaidoInfo) {
+        this.ckeckOrRaidoInfo = ckeckOrRaidoInfo;
     }
 }
