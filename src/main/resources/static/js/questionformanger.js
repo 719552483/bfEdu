@@ -298,10 +298,7 @@ function questionDetails(row) {
         success : function(backjson) {
             hideloding();
             if (backjson.code==200) {
-                // tableRemoveAction("#allQuestionTable", removeArray, ".allQuestionTableArea", "问卷");
-                // $.hideModal("#remindModal");
-                // toastr.success(backjson.msg);
-                // $(".myTooltip").tooltipify();
+                stuffHaveQuestionDetails(backjson.data);
             } else {
                 toastr.warning(backjson.msg);
             }
@@ -309,6 +306,17 @@ function questionDetails(row) {
     });
 }
 
+//填充问卷详情
+function stuffHaveQuestionDetails(info) {
+    $(".areaForNewQ_A").empty();
+    $("#questionTitle").val(info.title);
+    stuffManiaSelectWithDeafult("#department",info.permissions);
+    for (var i = 0; i < info.allQuestions.length; i++) {
+        stuffNewAandQtoMainArea(info.allQuestions[i]);
+    }
+    $(".confrimAddQuestion,#addQ_A,.main_cannottxt,.choosendfsKjImg ").hide();
+    mainAreaToggle();
+}
 
 //预备新增问卷
 function wantAddQuestion(){
@@ -318,7 +326,7 @@ function wantAddQuestion(){
     reObject.normalSelectIds="#department";
     reReloadSearchsWithSelect(reObject);
     $(".areaForNewQ_A").empty();
-    $(".main_cannottxt").show();
+    $(".main_cannottxt,.confrimAddQuestion,#addQ_A,.main_cannottxt").show();
 }
 
 //确认新增问卷
@@ -742,15 +750,22 @@ function  stuffNewAandQtoMainArea(NewAandQ) {
 
 //渲染单选题
 function drawRadio(info){
-    var values=info.radioOrCheckValue;
+    var values;
+    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
     var allA_QIndex=$(".singleA_Q").length;
 
     var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
              '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':<img class="choosendfsKjImg tooltipCite removeThisQ" title="删除" src="images/close1.png"></cite><p class="questionTxt">'+info.title+'</p></span>';
     for (var i = 0; i < values.length; i++) {
-        str+='<div class="col4 giveBottom overArea">'
-            +'<input type="radio" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
-            + '</cite></div>';
+        if(typeof values[i].ID!=="undefined"){
+            str+='<div class="col4 giveBottom overArea">'
+                +'<input type="radio" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
+                + '</cite></div>';
+        }else{
+            str+='<div class="col4 giveBottom overArea">'
+                +'<input type="radio" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].checkOrRadioValue+'"/><cite class="tooltipCite" title="'+values[i].checkOrRadioText+'">'+values[i].checkOrRadioText
+                + '</cite></div>';
+        }
     }
 
     $(".areaForNewQ_A").append(str+'</div><div class="clear"></div>');
@@ -765,15 +780,22 @@ function drawRadio(info){
 
 //渲染多选题
 function drawCheck(info){
-    var values=info.radioOrCheckValue;
+    var values;
+    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
     var allA_QIndex=$(".singleA_Q").length;
 
     var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
         '<span class="questionTitle"><cite>Q'+(allA_QIndex+1)+':<img class="choosendfsKjImg tooltipCite removeThisQ" title="删除" src="images/close1.png"></cite><p class="questionTxt">'+info.title+'</p></span>';
     for (var i = 0; i < values.length; i++) {
-        str+='<div class="col4 giveBottom overArea">'
-            +'<input type="checkbox" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
-            + '</cite></div>';
+        if(typeof values[i].ID!=="undefined"){
+            str+='<div class="col4 giveBottom overArea">'
+                +'<input type="checkbox" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].ID+'"/><cite class="tooltipCite" title="'+values[i].answerTxt+'">'+values[i].answerTxt
+                + '</cite></div>';
+        }else{
+            str+='<div class="col4 giveBottom overArea">'
+                +'<input type="checkbox" name="Q'+(allA_QIndex+1)+'" class="blue noneOutline" value="'+values[i].checkOrRadioValue+'"/><cite class="tooltipCite" title="'+values[i].checkOrRadioText+'">'+values[i].checkOrRadioText
+                + '</cite></div>';
+        }
     }
 
     $(".areaForNewQ_A").append(str+'</div><div class="clear"></div>');
