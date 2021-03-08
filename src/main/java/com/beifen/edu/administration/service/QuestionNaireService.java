@@ -11,6 +11,7 @@ import com.beifen.edu.administration.domian.Edu801;
 import com.beifen.edu.administration.domian.Edu802;
 import com.beifen.edu.administration.domian.Edu803;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import net.sf.json.JSONArray;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,11 +98,15 @@ public class QuestionNaireService {
      * 删除调查问卷
      * @return
      */
-    public ResultVO deleteQuestion(String edu801Id) {
+    public ResultVO deleteQuestion(JSONArray deleteArray) {
         ResultVO resultVO;
-        edu803Dao.deleteByEdu801Id(edu801Id);
-        edu802Dao.deleteByEdu801Id(edu801Id);
-        edu801Dao.delete(Long.parseLong(edu801Id));
+        for (int i = 0; i < deleteArray.size(); i++) {
+            String edu801Id = deleteArray.getString(i);
+            edu803Dao.deleteByEdu801Id(edu801Id);
+            edu802Dao.deleteByEdu801Id(edu801Id);
+            edu801Dao.delete(Long.parseLong(edu801Id));
+
+        }
         resultVO = ResultVO.setSuccess("删除成功");
         return resultVO;
     }

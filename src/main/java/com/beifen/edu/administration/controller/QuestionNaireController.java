@@ -6,6 +6,7 @@ import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu803;
 import com.beifen.edu.administration.service.QuestionNaireService;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,8 +56,9 @@ public class QuestionNaireController {
      */
     @RequestMapping("/deleteQuestion")
     @ResponseBody
-    public ResultVO deleteQuestion(@RequestParam("edu801Id") String edu801Id) {
-        ResultVO result = questionNaireService.deleteQuestion(edu801Id);
+    public ResultVO deleteQuestion(@RequestParam String removeInfo) {
+        JSONArray deleteArray = JSONArray.fromObject(removeInfo);
+        ResultVO result = questionNaireService.deleteQuestion(deleteArray);
         return result;
     }
 
