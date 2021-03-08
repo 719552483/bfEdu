@@ -555,14 +555,13 @@ public class SystemManageService {
         ResultVO resultVO;
 
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
-
         String userType = redisUtils.get(RedisDataConstant.USER_TYPE + userId).toString();
         List<Edu700> edu700List;
 
         if ("01".equals(userType)) {
             edu700List = edu700Dao.getNoticesForStudentIndex(departments);
         } else {
-            edu700List = edu700Dao.getNoticesForTeacherIndex(departments,userId);
+            edu700List = edu700Dao.getNoticesForTeacherIndex(/*departments,*/userId);
         }
 
         if (edu700List.size() == 0) {
@@ -715,7 +714,7 @@ public class SystemManageService {
         Edu990 edu990 = edu990Dao.queryUserById(userId);
         String userKey = edu990.getUserKey();
 
-        List<Edu993> noticesByRole = edu993Dao.getNoticesByRole(departments, roleId);
+        List<Edu993> noticesByRole = edu993Dao.getNoticesByRole(/*departments,*/ roleId);
         if (noticesByRole.size() != 0) {
             edu993List.addAll(noticesByRole);
         }
