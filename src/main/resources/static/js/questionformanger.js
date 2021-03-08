@@ -26,25 +26,299 @@ function getAllQuestion() {
             if (backjson.code==200) {
                 stuffAllQuestionTable(backjson.data);
             } else {
+                stuffAllQuestionTable({});
                 toastr.warning(backjson.msg);
             }
         }
     });
 }
 
+var choosend=new Array();
 //渲染已发布问卷表
 function stuffAllQuestionTable(tableInfo){
+    window.releaseNewsEvents = {
+        'click #questionDetails' : function(e, value, row, index) {
+            questionDetails(row);
+        },
+        'click #questionRemove' : function(e, value, row, index) {
+            removeQuestion(row);
+        }
+    };
 
+    $('#allQuestionTable').bootstrapTable('destroy').bootstrapTable({
+            data : tableInfo,
+            pagination : true,
+            pageNumber : 1,
+            pageSize : 10,
+            pageList : [10],
+            showToggle : false,
+            showFooter : false,
+            clickToSelect : true,
+            showExport: false,      //是否显示导出
+            search : true,
+            editable : false,
+            striped : true,
+            toolbar : '#toolbar',
+            showColumns : true,
+            onCheck : function(row) {
+                onCheck(row);
+            },
+            onUncheck : function(row) {
+                onUncheck(row);
+            },
+            onCheckAll : function(rows) {
+                onCheckAll(rows);
+            },
+            onUncheckAll : function(rows,rows2) {
+                onUncheckAll(rows2);
+            },
+            onPageChange : function() {
+                drawPagination(".allQuestionTableArea", "问卷");
+                for (var i = 0; i < choosend.length; i++) {
+                    $("#allQuestionTable").bootstrapTable("checkBy", {field:"edu801_ID", values:[choosend[i].edu801_ID]})
+                }
+            },
+            onPostBody: function() {
+                toolTipUp(".myTooltip");
+            },
+            columns: [ {
+                field : 'check',
+                checkbox : true
+            },  {
+                field : 'edu801_ID',
+                title: '唯一标识',
+                align : 'center',
+                sortable: true,
+                visible : false
+            },{
+                field : 'title',
+                title : '问卷标题',
+                align : 'left',
+                sortable: true,
+                formatter : paramsMatter
+            },{
+                field : 'permissionsName',
+                title : '所属二级学院',
+                align : 'left',
+                sortable: true,
+                formatter :paramsMatter
+            }, {
+                field : 'personName',
+                title : '作者',
+                align : 'left',
+                sortable: true,
+                formatter : paramsMatter
+            },{
+                field : 'createDate',
+                title : '生成时间',
+                align : 'left',
+                sortable: true,
+                formatter : paramsMatter
+            },{
+                field : 'num',
+                title : '答题人数',
+                align : 'left',
+                sortable: true,
+                formatter : numMatter
+            }, {
+                field : 'action',
+                title : '操作',
+                align : 'center',
+                clickToSelect : false,
+                formatter : releaseNewsFormatter,
+                events : releaseNewsEvents,
+            }]
+        });
+
+    function releaseNewsFormatter(value, row, index) {
+        return [ '<ul class="toolbar tabletoolbar">'
+        + '<li id="questionDetails"><span><img src="images/t02.png" style="width:24px"></span>详情</li>'
+        + '<li id="questionRemove"><span><img src="images/t03.png" style="width:24px"></span>删除</li>'
+        + '</ul>' ].join('');
+    }
+
+    function numMatter(value, row, index) {
+        var str='';
+        value==0?str='暂时无人答题..':str=value+'人';
+        return [ '<div class="myTooltip normalTxt" title="'+str+'">'+str+'</div>' ]
+            .join('');
+    }
+
+    drawPagination(".allQuestionTableArea", "问卷");
+    drawSearchInput(".allQuestionTableArea");
+    changeTableNoRsTip();
+    toolTipUp(".myTooltip");
+    changeColumnsStyle(".allQuestionTableArea", "问卷");
+}
+
+//单选
+function onCheck(row){
+    if(choosend.length<=0){
+        choosend.push(row);
+    }else{
+        var add=true;
+        for (var i = 0; i < choosend.length; i++) {
+            if(choosend[i].edu801_ID===row.edu801_ID){
+                add=false;
+                break;
+            }
+        }
+        if(add){
+            choosend.push(row);
+        }
+    }
+}
+
+//单反选
+function onUncheck(row){
+    if(choosend.length<=1){
+        choosend.length=0;
+    }else{
+        for (var i = 0; i < choosend.length; i++) {
+            if(choosend[i].edu801_ID===row.edu801_ID){
+                choosend.splice(i,1);
+            }
+        }
+    }
+}
+
+//全选
+function onCheckAll(row){
+    for (var i = 0; i < row.length; i++) {
+        choosend.push(row[i]);
+    }
+}
+
+//全反选
+function onUncheckAll(row){
+    var a=new Array();
+    for (var i = 0; i < row.length; i++) {
+        a.push(row[i].edu801_ID);
+    }
+
+
+    for (var i = 0; i < choosend.length; i++) {
+        if(a.indexOf(choosend[i].edu801_ID)!==-1){
+            choosend.splice(i,1);
+            i--;
+        }
+    }
+}
+
+//单个删除问卷
+function removeQuestion(row){
+    $.showModal("#remindModal",true);
+    $(".remindType").html("该问卷");
+    $(".remindActionType").html("删除");
+    $(".myformtextTipArea").hide();
+
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeArray = new Array;
+        removeArray.push(row.edu801_ID);
+        sendReomveInfo(removeArray);
+        e.stopPropagation();
+    });
 }
 
 //批量删除问卷
 function removeQuestions(){
-alert(1)
+    if (choosend.length === 0) {
+        toastr.warning('暂未选择任何问卷');
+        return;
+    }
+
+    $.showModal("#remindModal",true);
+    $(".remindType").html("已选问卷");
+    $(".remindActionType").html("删除");
+    $(".myformtextTipArea").hide();
+
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeArray = new Array;
+        for (var i = 0; i < choosend.length; i++) {
+            removeArray.push(choosend[i].edu801_ID);
+        }
+        sendReomveInfo(removeArray);
+        e.stopPropagation();
+    });
 }
+
+//发送删除请求
+function sendReomveInfo(removeArray){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/deleteQuestion",
+        data: {
+            "removeInfo":JSON.stringify(removeArray)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code==200) {
+                tableRemoveAction("#allQuestionTable", removeArray, ".allQuestionTableArea", "问卷");
+                $.hideModal("#remindModal");
+                $(".myTooltip").tooltipify();
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//查看问卷详情
+function questionDetails(row) {
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchQuestionDetail",
+        data: {
+            "edu801Id":JSON.stringify(row.edu801_ID)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code==200) {
+                // tableRemoveAction("#allQuestionTable", removeArray, ".allQuestionTableArea", "问卷");
+                // $.hideModal("#remindModal");
+                // toastr.success(backjson.msg);
+                // $(".myTooltip").tooltipify();
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
 
 //预备新增问卷
 function wantAddQuestion(){
     mainAreaToggle();
+    var reObject = new Object();
+    reObject.InputIds = "#questionTitle";
+    reObject.normalSelectIds="#department";
+    reReloadSearchsWithSelect(reObject);
+    $(".areaForNewQ_A").empty();
+    $(".main_cannottxt").show();
 }
 
 //确认新增问卷
@@ -73,10 +347,18 @@ function getNewQuestionInfo() {
     var department=getNormalSelectValue("department");
     var departmentTxt=getNormalSelectText("department");
     var currentAll=$('.singleA_Q');
+    var choosend = $("#allQuestionTable").bootstrapTable("getData");
 
     if(title===''){
         toastr.warning("问卷标题不能为空");
         return;
+    }
+
+    for (var i = 0; i < choosend.length; i++) {
+        if(choosend[i].title===title){
+            toastr.warning("问卷标题已存在");
+            return;
+        }
     }
 
     if(department===''){
@@ -137,11 +419,14 @@ function sendNewQuestionInfo(newQuestionInfo){
         },
         complete: function(xhr, status) {
             requestComplete();
+            getAllQuestion();
+            mainAreaToggle();
         },
         success : function(backjson) {
             hideloding();
             if (backjson.code==200) {
                 $.hideModal("#remindModal");
+                toastr.success('新增问卷成功');
             } else {
                 toastr.warning(backjson.msg);
             }
