@@ -393,7 +393,7 @@ function wantAddTeacher(){
 
 //确认添加教师
 function confirmaddTeacher(){
-	var newTeacherInfo=getnewTeacherInfo();
+	var newTeacherInfo=getnewTeacherInfo(false);
 	var approvalobect=getApprovalobect();
 	if(typeof newTeacherInfo ==='undefined'){
 		return;
@@ -976,7 +976,7 @@ function getSearchValue(){
 }
 
 //获得新增教师的信息
-function getnewTeacherInfo(){
+function getnewTeacherInfo(neenJzgh){
 	var xb = getNormalSelectValue("addTeacherSex");
 	var jzglxbm = getNormalSelectValue("addTeacherType");
 	var jzglx = getNormalSelectText("addTeacherType");
@@ -1000,12 +1000,12 @@ function getnewTeacherInfo(){
 	var lxfs=$("#addTeacherLxfs").val();
 	var jzgh=$("#teacherNameCode").val();
 
-	if(jzgh===""){
+	if(jzgh===""&&typeof neenJzgh==="undefined"){
 		toastr.warning('教职工号不能为空');
 		return;
 	}
 
-	if(!checkIsNumber(jzgh)){
+	if(!checkIsNumber(jzgh) &&typeof neenJzgh==="undefined"){
 		toastr.warning('教职工号只能为数字');
 		return;
 	}
