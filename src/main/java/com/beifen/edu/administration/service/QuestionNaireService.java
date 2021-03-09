@@ -4,12 +4,8 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.Edu801PO;
 import com.beifen.edu.administration.PO.Edu802PO;
 import com.beifen.edu.administration.VO.ResultVO;
-import com.beifen.edu.administration.dao.Edu801Dao;
-import com.beifen.edu.administration.dao.Edu802Dao;
-import com.beifen.edu.administration.dao.Edu803Dao;
-import com.beifen.edu.administration.domian.Edu801;
-import com.beifen.edu.administration.domian.Edu802;
-import com.beifen.edu.administration.domian.Edu803;
+import com.beifen.edu.administration.dao.*;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import org.apache.commons.beanutils.BeanUtils;
@@ -19,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +30,11 @@ public class QuestionNaireService {
     Edu802Dao edu802Dao;
     @Autowired
     Edu803Dao edu803Dao;
+    @Autowired
+    Edu990Dao edu990Dao;
+    @Autowired
+    Edu001Dao edu001Dao;
+
 
 
 //    ReflectUtils utils = new ReflectUtils();
@@ -44,6 +46,31 @@ public class QuestionNaireService {
     public ResultVO searchAllQuestion() {
         ResultVO resultVO;
         List<Edu801> edu801List = edu801Dao.findAll();
+        if(edu801List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无调查问卷");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu801List.size()+"个调查问卷",edu801List);
+        }
+        return resultVO;
+    }
+
+    /**
+     * 根据用户id查询所有调查问卷
+     * @return
+     */
+    public ResultVO searchAllQuestionByUserId(String userId) {
+        ResultVO resultVO;
+        Edu990 edu990 = edu990Dao.findOne(Long.parseLong(userId));
+        List<Edu801> edu801List = new ArrayList<Edu801>();
+        if("学生".equals(edu990.getJs())){
+            Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu990.getUserKey()));
+            String szxb = edu001.getSzxb();
+            List<String> s = Arrays.asList(szxb.split(","));
+            edu801List = edu801Dao.searchAllQuestionByUserId(s);
+        }else{
+            List<String> s = Arrays.asList(edu990.getDeparmentIds().split(","));
+            edu801List = edu801Dao.searchAllQuestionByUserId(s);
+        }
         if(edu801List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无调查问卷");
         } else {

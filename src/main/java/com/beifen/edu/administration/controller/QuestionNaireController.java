@@ -38,6 +38,18 @@ public class QuestionNaireController {
     }
 
     /**
+     * 根据用户id查询所有调查问卷
+     * @param
+     * @return
+     */
+    @RequestMapping("/searchAllQuestionByUserId")
+    @ResponseBody
+    public ResultVO searchAllQuestionByUserId(@RequestParam("userId") String userId) {
+        ResultVO result = questionNaireService.searchAllQuestionByUserId(userId);
+        return result;
+    }
+
+    /**
      * 查询调查问卷详情
      * @param
      * @return
