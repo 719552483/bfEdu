@@ -208,7 +208,8 @@ padding:1.6em 0em 0.6em 31px !important
   background-color: red !important;
 }*/
 
-.myTableStyle td ,
+.multi-step h5,
+.myTableStyle td,
 .overArea{
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -2551,6 +2552,80 @@ input:focus{
 	color: #3a81a0;
 	font-family: unset;
 }
+
+.multi-step .modal-header span{
+    display: block;
+    background: url(../images/close.png) no-repeat;
+    width: 22px;
+    height: 22px;
+    float: right;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.multi-step .modal-header span:hover {
+    background: url(../images/close1.png) no-repeat;
+}
+
+.multi-step .modal-header .modal-steps{
+    margin-top: 40px;
+}
+
+.multi-step .modal-header .step label{
+    color: #696262;
+}
+
+.multi-step .modal-header .modal-title{
+    height: 40px;
+    line-height: 40px;
+    background: url(../images/tcbg.gif) repeat-x;
+    cursor: pointer;
+    text-align: left!important;
+    text-indent: 20px;
+    font-weight: bold;
+    font-size: 14px!important;
+    color: white!important;
+	padding-right: 50px;
+	width:94%;
+	max-width: 94%;
+}
+
+.multi-step .modal-header .close {
+    margin-top: -40px;
+	width: 20%;
+	background: url(../images/tcbg.gif) repeat-x;
+	height: 40px;
+}
+
+.multi-step .close {
+    opacity: inherit!important;
+}
+
+.multi-step .close:focus {
+	outline: none;
+}
+
+.multi-step .modal-footer .btn + .btn {
+	float: right;
+}
+
+.multi-step .modal-footer .btn-skip {
+	float: left!important;
+}
+
+.multi-step .content-inner{
+	padding-top: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.multi-step .step-content:last-child .content-inner{
+	text-align: center;
+	font-size: 1.3em;
+	font-weight: 600;
+	color: #6e9cb7;
+}
+
 
 @keyframes serachAnimation {
     10% {

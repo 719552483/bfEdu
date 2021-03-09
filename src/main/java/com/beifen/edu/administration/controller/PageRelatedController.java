@@ -291,5 +291,9 @@ public class PageRelatedController {
 		return "questionForManger";
 	}
 
+	@RequestMapping("questionnaire")
+	public String questionnairePage() {
+		return "questionnaire";
+	}
 
 }
