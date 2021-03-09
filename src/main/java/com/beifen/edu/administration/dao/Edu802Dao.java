@@ -13,7 +13,7 @@ import java.util.List;
 @Configuration
 public interface Edu802Dao extends JpaRepository<Edu802, Long>, JpaSpecificationExecutor<Edu802> {
     //根据801id查询List
-    @Query(value = "select * from edu802 where EDU801_ID = ?1",nativeQuery = true)
+    @Query(value = "select * from edu802 where EDU801_ID = ?1 ORDER BY EDU802_ID",nativeQuery = true)
     List<Edu802> findByEdu801Id(String edu801Id);
     //根据801Id删除
     @Transactional

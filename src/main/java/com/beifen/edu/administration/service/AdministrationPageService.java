@@ -1615,6 +1615,7 @@ public class AdministrationPageService {
 
 		//从redis中查询二级学院管理权限
 		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		String jzglx = edu101DAO.queryTeacherByUserId(userId);
 
 		Specification<Edu300> specification = new Specification<Edu300>() {
 			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1634,15 +1635,14 @@ public class AdministrationPageService {
 				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
 					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
 				}
-
-				Path<Object> path = root.get("xbbm");//定义查询的字段
-				CriteriaBuilder.In<Object> in = cb.in(path);
-				for (int i = 0; i <departments.size() ; i++) {
-					in.value(departments.get(i));//存入值
+				if(!"教辅人员".equals(jzglx)){
+					Path<Object> path = root.get("xbbm");//定义查询的字段
+					CriteriaBuilder.In<Object> in = cb.in(path);
+					for (int i = 0; i <departments.size() ; i++) {
+						in.value(departments.get(i));//存入值
+					}
+					predicates.add(cb.and(in));
 				}
-				predicates.add(cb.and(in));
-
-
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
