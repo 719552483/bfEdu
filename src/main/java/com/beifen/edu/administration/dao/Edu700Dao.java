@@ -37,8 +37,11 @@ public interface Edu700Dao extends JpaRepository<Edu700, Long>, JpaSpecification
     List<Edu700> getNoticesForStudentIndex(List<String> departments);
 
     //查询老师通知
-    @Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.show_in_index = 'T' and e.Edu104_ID in ?1 or e.Edu101_ID = ?2",nativeQuery = true)
-    List<Edu700> getNoticesForTeacherIndex(List<String> departments,String userId);
+    //@Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.show_in_index = 'T' and e.Edu104_ID in ?1 or e.Edu101_ID = ?2",nativeQuery = true)
+
+    //List<Edu700> getNoticesForTeacherIndex(List<String> departments,String userId);
+    @Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.show_in_index = 'T'  or e.Edu101_ID = ?1",nativeQuery = true)
+    List<Edu700> getNoticesForTeacherIndex(String userId);
 
     // 改变通知是否首页展示
     @Transactional

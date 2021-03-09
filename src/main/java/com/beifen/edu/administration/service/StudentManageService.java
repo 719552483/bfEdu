@@ -252,12 +252,12 @@ public class StudentManageService {
                     predicates.add(cb.like(root.<String> get("xzbname"), '%' + edu001.getXzbname() + '%'));
                 }
 
-                Path<Object> path = root.get("szxb");//定义查询的字段
-                CriteriaBuilder.In<Object> in = cb.in(path);
-                for (int i = 0; i <departments.size() ; i++) {
-                    in.value(departments.get(i));//存入值
-                }
-                predicates.add(cb.and(in));
+//                Path<Object> path = root.get("szxb");//定义查询的字段
+//                CriteriaBuilder.In<Object> in = cb.in(path);
+//                for (int i = 0; i <departments.size() ; i++) {
+//                    in.value(departments.get(i));//存入值
+//                }
+//                predicates.add(cb.and(in));
 
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
