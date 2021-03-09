@@ -68,8 +68,9 @@ public class QuestionNaireService {
             List<String> s = Arrays.asList(szxb.split(","));
             edu801List = edu801Dao.searchAllQuestionByUserId(s);
         }else{
-            List<String> s = Arrays.asList(edu990.getDeparmentIds().split(","));
-            edu801List = edu801Dao.searchAllQuestionByUserId(s);
+//            List<String> s = Arrays.asList(edu990.getDeparmentIds().split(","));
+//            edu801List = edu801Dao.searchAllQuestionByUserId(s);
+            edu801List = edu801Dao.findAll();
         }
         if(edu801List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无调查问卷");

@@ -949,8 +949,14 @@ public class ReflectUtils {
 					edu101.setJzgh(correctjzgh);
 				}
 			}
-			
-			
+
+			if(isNull(edu101.getSzxbmc())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-所属二级学院不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
 			//非空验证
 			if(isNull(edu101.getXm())){
 				chaeckPass=false;
@@ -2007,14 +2013,14 @@ public class ReflectUtils {
         case 2:
             result="jzglx";
             break;
-        case 3:
+		case 3:
+			result="szxbmc";
+			break;
+        case 4:
             result="csrq";
             break;
-        case 4:
-            result="sfzh";
-            break;
         case 5:
-            result="szxbmc";
+            result="sfzh";
             break;
         case 6:
             result="zymc";
@@ -2875,7 +2881,7 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"*姓名","*性别", "*教职工类型", "*出生日期", "身份证号", "所属系部","所属专业",
+		String[] titles = new String[] {"*姓名","*性别", "*教职工类型", "*所属二级学院", "*出生日期", "身份证号","所属专业",
 				"婚否", "民族", "职称", "文化程度 ", "到校时间", "政治面貌 ", "联系方式" };
 		
 		// 循环设置标题
@@ -3632,7 +3638,7 @@ public class ReflectUtils {
 		
 		int[] xbIndex={1};
 		int[] jcglxIndex={2};
-		int[] shxbIndex={5};
+		int[] shxbIndex={3};
 		int[] zyIndex={6};
 		int[] hfIndex={7};
 		int[] mzIndex={8};
