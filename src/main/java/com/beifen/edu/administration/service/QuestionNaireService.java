@@ -31,6 +31,8 @@ public class QuestionNaireService {
     @Autowired
     Edu803Dao edu803Dao;
     @Autowired
+    Edu804Dao edu804Dao;
+    @Autowired
     Edu990Dao edu990Dao;
     @Autowired
     Edu001Dao edu001Dao;
@@ -79,6 +81,59 @@ public class QuestionNaireService {
         }
         return resultVO;
     }
+
+
+
+    /**
+     * 开始答题
+     * @return
+     */
+    public ResultVO questionsAnswer(String edu801Id,String userId) {
+        ResultVO resultVO;
+        String ids = edu804Dao.questionsAnswer(userId);
+        if(ids != null){
+            List<String> idList = Arrays.asList(ids.split(","));
+            if(idList.contains(edu801Id)){
+                resultVO = ResultVO.setFailed("该调查问卷答过!");
+                return resultVO;
+            }
+        }
+        Edu801 edu801 = edu801Dao.findOne(Long.parseLong(edu801Id));
+        Edu801PO edu801PO = new Edu801PO();
+        if(edu801 == null){
+            resultVO = ResultVO.setFailed("该调查问卷已被删除，请刷新后重试");
+        }else{
+            try {
+                BeanUtils.copyProperties(edu801PO, edu801);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
+            List<Edu802PO> edu802POList = new ArrayList<>();
+
+            for(Edu802 edu802 : edu802List){
+                Edu802PO eee = new Edu802PO();
+                try {
+                    BeanUtils.copyProperties(eee, edu802);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                if("check".equals(eee.getType())||"radio".equals(eee.getType())){
+                    List<Edu803> edu803List = edu803Dao.findByEdu802Id(eee.getEdu802_ID().toString());
+                    eee.setCkeckOrRaidoInfo(edu803List);
+                }
+                edu802POList.add(eee);
+            }
+            edu801PO.setAllQuestions(edu802POList);
+            resultVO = ResultVO.setSuccess("查询成功",edu801PO);
+        }
+        return resultVO;
+    }
+
 
     /**
      * 查询调查问卷详情

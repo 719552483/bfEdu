@@ -62,6 +62,18 @@ public class QuestionNaireController {
     }
 
     /**
+     * 开始答题
+     * @param
+     * @return
+     */
+    @RequestMapping("/questionsAnswer")
+    @ResponseBody
+    public ResultVO questionsAnswer(@RequestParam("edu801Id") String edu801Id,@RequestParam("userId") String userId) {
+        ResultVO result = questionNaireService.questionsAnswer(edu801Id,userId);
+        return result;
+    }
+
+    /**
      * 删除调查问卷
      * @param
      * @return
