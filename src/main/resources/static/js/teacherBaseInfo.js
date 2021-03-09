@@ -1048,6 +1048,11 @@ function getnewTeacherInfo(neenJzgh){
 		toastr.warning('年龄不足18岁,请确认出生日期');
 		return;
 	}
+
+	if(szxb===''){
+		toastr.warning('二级学院不能为空');
+		return;
+	}
 	
 	var returnObject = new Object();
 	returnObject.xb=xb;
