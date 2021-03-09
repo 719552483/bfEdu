@@ -39,6 +39,8 @@ public class StudentManageService {
     @Autowired
     private Edu001Dao edu001Dao;
     @Autowired
+    private Edu101Dao edu101Dao;
+    @Autowired
     private Edu300Dao edu300Dao;
     @Autowired
     private Edu990Dao edu990Dao;
@@ -212,6 +214,8 @@ public class StudentManageService {
         Map<String, Object> returnMap = new HashMap<>();
         List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
 
+        String jzglx = edu101Dao.queryTeacherByUserId(userId);
+
         pageNumber = pageNumber < 0 ? 0 : pageNumber;
         pageSize = pageSize < 0 ? 10 : pageSize;
 
@@ -251,14 +255,14 @@ public class StudentManageService {
                 if (edu001.getXzbname() != null && !"".equals(edu001.getXzbname())) {
                     predicates.add(cb.like(root.<String> get("xzbname"), '%' + edu001.getXzbname() + '%'));
                 }
-
-//                Path<Object> path = root.get("szxb");//定义查询的字段
-//                CriteriaBuilder.In<Object> in = cb.in(path);
-//                for (int i = 0; i <departments.size() ; i++) {
-//                    in.value(departments.get(i));//存入值
-//                }
-//                predicates.add(cb.and(in));
-
+                if(!"教辅人员".equals(jzglx)){
+                    Path<Object> path = root.get("szxb");//定义查询的字段
+                    CriteriaBuilder.In<Object> in = cb.in(path);
+                    for (int i = 0; i <departments.size() ; i++) {
+                        in.value(departments.get(i));//存入值
+                    }
+                    predicates.add(cb.and(in));
+                }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
