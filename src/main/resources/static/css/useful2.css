@@ -2538,8 +2538,12 @@ input:focus{
 	padding-left: 50px;
 	padding-right: 50px;
 	margin-bottom: 8px;
-	border-bottom: 1px #e6e2e2 dashed;
 	padding-bottom: 40px;
+	padding-top: 10px;
+}
+
+.singleA_Q:not(:first-child){
+	border-top: 1px #e6e2e2 dashed;
 }
 
 .noneOutline:focus {
@@ -2624,6 +2628,18 @@ input:focus{
 	font-size: 1.3em;
 	font-weight: 600;
 	color: #6e9cb7;
+}
+
+.multi-step .questionTitle{
+	margin-left: -15px;
+}
+
+.multi-step .questionTxt{
+	padding-left: 0px;
+}
+
+#doQuestionModal{
+	overflow-y: scroll!important;
 }
 
 
