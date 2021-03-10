@@ -308,16 +308,19 @@ function getQuestionRs(){
 		var type=allArea[i].attributes[1].nodeValue;
 		var currentId=allArea[i].classList[1].replace("singleA_Q","");
 		if(type==="radio"||type==="rate"){
+			returnObject.type=type;
 			returnObject.questionId=currentId;
 			typeof $('input:radio[name="Q'+currentId+'"]:checked').val()==="undefined"?returnObject.answer='':returnObject.answer=$('input:radio[name="Q'+currentId+'"]:checked').val();
 		}else if(type==="check"){
 			var checkBoxVlue=new Array();
+			returnObject.type=type;
 			returnObject.questionId=currentId;
 			$('input:checkbox[name="Q'+currentId+'"]:checked').each(function() {
 				checkBoxVlue.push($(this).val());
 			});
 			returnObject.answer=checkBoxVlue;
 		}else if(type==="answer"){
+			returnObject.type=type;
 			returnObject.questionId=currentId;
 			returnObject.answer=$("#Q"+currentId).val();
 		}
