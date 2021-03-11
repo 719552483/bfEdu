@@ -751,7 +751,7 @@ function  stuffNewAandQtoMainArea(NewAandQ) {
 //渲染单选题
 function drawRadio(info){
     var values;
-    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
+    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue.reverse():values=info.ckeckOrRaidoInfo.reverse();
     var allA_QIndex=$(".singleA_Q").length;
 
     var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
@@ -781,7 +781,7 @@ function drawRadio(info){
 //渲染多选题
 function drawCheck(info){
     var values;
-    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
+    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue.reverse():values=info.ckeckOrRaidoInfo.reverse();
     var allA_QIndex=$(".singleA_Q").length;
 
     var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
