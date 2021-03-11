@@ -786,7 +786,7 @@ function drawRadio(info,needReverse){
 function drawCheck(info,needReverse){
     var values;
     typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
-    if(typeof needReverse!=="undefined"){
+    if(typeof needReverse==="undefined"){
         values=values.reverse();
     }
     var allA_QIndex=$(".singleA_Q").length;
