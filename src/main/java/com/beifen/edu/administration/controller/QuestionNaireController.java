@@ -62,6 +62,19 @@ public class QuestionNaireController {
     }
 
     /**
+     * 答题
+     * @param
+     * @return
+     */
+    @RequestMapping("/answerQuestion")
+    @ResponseBody
+    public ResultVO answerQuestion(@RequestParam("edu801Id") String edu801Id,@RequestParam("userId") String userId,@RequestParam("questionDetail") String questionDetail) {
+        JSONArray jsonArray = JSONArray.fromObject(questionDetail);
+        ResultVO result = questionNaireService.answerQuestion(edu801Id,userId,jsonArray);
+        return result;
+    }
+
+    /**
      * 开始答题
      * @param
      * @return

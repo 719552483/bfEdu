@@ -13,6 +13,10 @@ public interface Edu806Dao extends JpaRepository<Edu806, Long>, JpaSpecification
     //根据801Id删除
     @Transactional
     @Modifying
-    @Query(value = "delete from Edu806Dao where EDU801_ID = ?1",nativeQuery = true)
+    @Query(value = "delete from Edu806 where EDU801_ID = ?1",nativeQuery = true)
     void deleteByEdu801Id(String edu801Id);
+
+    //根据802Id查询
+    @Query(value = "SELECT * FROM EDU806 where EDU802_ID = ?1",nativeQuery = true)
+    Edu806 queryByEdu802Id(String edu802Id);
 }

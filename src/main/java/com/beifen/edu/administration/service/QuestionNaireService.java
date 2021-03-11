@@ -8,11 +8,13 @@ import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +34,8 @@ public class QuestionNaireService {
     Edu803Dao edu803Dao;
     @Autowired
     Edu804Dao edu804Dao;
+    @Autowired
+    Edu805Dao edu805Dao;
     @Autowired
     Edu806Dao edu806Dao;
     @Autowired
@@ -84,8 +88,71 @@ public class QuestionNaireService {
         return resultVO;
     }
 
-
-
+    /**
+     * 答题
+     * @return
+     */
+    public ResultVO answerQuestion(String edu801Id,String userId,JSONArray jsonArray) {
+        for (int i = 0;i<jsonArray.size();i++){
+            JSONObject jo = jsonArray.getJSONObject(i);
+            String type = jo.getString("type");
+            if("radio".equals(type)){
+                String answer = jo.getString("answer");
+                if(answer != null && !"".equals(answer)){
+                    Edu803 edu803 = edu803Dao.findOne(Long.parseLong(answer));
+                    edu803.setNum(edu803.getNum()+1);
+                    edu803Dao.save(edu803);
+                }
+            }else if("check".equals(type)){
+                JSONArray answerList = jo.getJSONArray("answer");
+                if(answerList != null && answerList.size() != 0){
+                    for (int j = 0;j<answerList.size();j++){
+                        String edu803Id = (String)answerList.get(j);
+                        Edu803 edu803 = edu803Dao.findOne(Long.parseLong(edu803Id));
+                        edu803.setNum(edu803.getNum()+1);
+                        edu803Dao.save(edu803);
+                    }
+                }
+            }else if("rate".equals(type)){
+                String answer = jo.getString("answer");
+                String questionId = jo.getString("questionId");
+                if(answer != null && !"".equals(answer)){
+                    Edu806 edu806 = edu806Dao.queryByEdu802Id(questionId);
+                    edu806.setNum(edu806.getNum()+1);
+                    edu806.setScore(edu806.getScore()+Double.parseDouble(answer));
+                    DecimalFormat df = new DecimalFormat("#.0");
+                    Double d = edu806.getScore()/edu806.getNum();
+                    edu806.setAverage(Double.parseDouble(df.format(d)));
+                    edu806Dao.save(edu806);
+                }
+            }else if("answer".equals(type)){
+                String answer = jo.getString("answer");
+                String questionId = jo.getString("questionId");
+                if(answer != null && !"".equals(answer)){
+                    Edu805 edu805 = new Edu805();
+                    edu805.setAnswer(answer);
+                    edu805.setEdu801_ID(edu801Id);
+                    edu805.setEdu802_ID(questionId);
+                    edu805.setUser_ID(userId);
+                    edu805Dao.save(edu805);
+                }
+            }
+        }
+        Edu801 edu801 = edu801Dao.findOne(Long.parseLong(edu801Id));
+        edu801.setNum(edu801.getNum()+1);
+        edu801Dao.save(edu801);
+        Edu804 edu804 = edu804Dao.queryByUserId(userId);
+        if(edu804 == null){
+            edu804 = new Edu804();
+            edu804.setEdu801_IDS(edu801Id);
+            edu804.setUser_ID(userId);
+            edu804Dao.save(edu804);
+        }else{
+            edu804.setEdu801_IDS(edu804.getEdu801_IDS()+","+edu801Id);
+            edu804Dao.save(edu804);
+        }
+        return ResultVO.setSuccess("答题成功");
+    }
     /**
      * 开始答题
      * @return

@@ -15,4 +15,7 @@ public interface Edu804Dao extends JpaRepository<Edu804, Long>, JpaSpecification
     @Query(value = "select Edu801_ids from Edu804 where USER_ID = ?1",nativeQuery = true)
     String questionsAnswer(String userId);
 
+    @Query(value = "select * from Edu804 where USER_ID = ?1",nativeQuery = true)
+    Edu804 queryByUserId(String userId);
+
 }
