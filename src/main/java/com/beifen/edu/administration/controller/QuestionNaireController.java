@@ -116,4 +116,17 @@ public class QuestionNaireController {
         ResultVO result = questionNaireService.addQuestion(jsonRootBean);
         return result;
     }
+
+
+    /**
+     * 查询调查问卷统计
+     * @param
+     * @return
+     */
+    @RequestMapping("/searchQuestionStatistical")
+    @ResponseBody
+    public ResultVO searchQuestionStatistical(@RequestParam("edu801Id") String edu801Id) {
+        ResultVO result = questionNaireService.searchQuestionStatistical(edu801Id);
+        return result;
+    }
 }

@@ -11,6 +11,7 @@ public class Edu805 {
     private String Edu802_ID;//问题ID
     private String user_ID;//用户ID
     private String answer;//答案
+    private String createDate;//录入时间
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -54,5 +55,13 @@ public class Edu805 {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
 }

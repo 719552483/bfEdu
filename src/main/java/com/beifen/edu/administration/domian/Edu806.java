@@ -9,9 +9,8 @@ public class Edu806 {
     private Long Edu806_ID;//主键
     private Long Edu801_ID;//调查问卷ID
     private Long Edu802_ID;//问题ID
-    private int num;//答题人数
-    private double score;//总评分
-    private double average;//平均分数
+    private String user_ID;//用户ID
+    private int sore;//分数
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -41,27 +40,19 @@ public class Edu806 {
         Edu802_ID = edu802_ID;
     }
 
-    public int getNum() {
-        return num;
+    public String getUser_ID() {
+        return user_ID;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setUser_ID(String user_ID) {
+        this.user_ID = user_ID;
     }
 
-    public double getScore() {
-        return score;
+    public int getSore() {
+        return sore;
     }
 
-    public void setScore(double score) {
-        this.score = score;
-    }
-
-    public double getAverage() {
-        return average;
-    }
-
-    public void setAverage(double average) {
-        this.average = average;
+    public void setSore(int sore) {
+        this.sore = sore;
     }
 }

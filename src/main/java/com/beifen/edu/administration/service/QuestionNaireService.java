@@ -117,12 +117,11 @@ public class QuestionNaireService {
                 String answer = jo.getString("answer");
                 String questionId = jo.getString("questionId");
                 if(answer != null && !"".equals(answer)){
-                    Edu806 edu806 = edu806Dao.queryByEdu802Id(questionId);
-                    edu806.setNum(edu806.getNum()+1);
-                    edu806.setScore(edu806.getScore()+Double.parseDouble(answer));
-                    DecimalFormat df = new DecimalFormat("#.0");
-                    Double d = edu806.getScore()/edu806.getNum();
-                    edu806.setAverage(Double.parseDouble(df.format(d)));
+                    Edu806 edu806 = new Edu806();
+                    edu806.setEdu802_ID(Long.parseLong(questionId));
+                    edu806.setEdu801_ID(Long.parseLong(edu801Id));
+                    edu806.setUser_ID(userId);
+                    edu806.setSore(Integer.parseInt(answer));
                     edu806Dao.save(edu806);
                 }
             }else if("answer".equals(type)){
@@ -130,6 +129,8 @@ public class QuestionNaireService {
                 String questionId = jo.getString("questionId");
                 if(answer != null && !"".equals(answer)){
                     Edu805 edu805 = new Edu805();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+                    edu805.setCreateDate(df.format(new Date()));
                     edu805.setAnswer(answer);
                     edu805.setEdu801_ID(edu801Id);
                     edu805.setEdu802_ID(questionId);
@@ -246,6 +247,8 @@ public class QuestionNaireService {
         return resultVO;
     }
 
+
+
     /**
      * 删除调查问卷
      * @return
@@ -255,6 +258,7 @@ public class QuestionNaireService {
         for (int i = 0; i < deleteArray.size(); i++) {
             String edu801Id = deleteArray.getString(i);
             edu806Dao.deleteByEdu801Id(edu801Id);
+            edu805Dao.deleteByEdu801Id(edu801Id);
             edu803Dao.deleteByEdu801Id(edu801Id);
             edu802Dao.deleteByEdu801Id(edu801Id);
             edu801Dao.delete(Long.parseLong(edu801Id));
@@ -306,7 +310,7 @@ public class QuestionNaireService {
                     edu803.setNum(0);
                     edu803Dao.save(edu803);
                 }
-            }else if("rate".equals(ee.getType())){
+            }/*else if("rate".equals(ee.getType())){
                 Edu806 edu806 = new Edu806();
                 edu806.setEdu801_ID(e.getEdu801_ID());
                 edu806.setEdu802_ID(ee.getEdu802_ID());
@@ -314,9 +318,52 @@ public class QuestionNaireService {
                 edu806.setScore(0);
                 edu806.setAverage(0);
                 edu806Dao.save(edu806);
-            }
+            }*/
         }
         resultVO = ResultVO.setSuccess("添加成功");
+        return resultVO;
+    }
+
+
+    /**
+     * 查询调查问卷统计
+     * @return
+     */
+    public ResultVO searchQuestionStatistical(String edu801Id) {
+        ResultVO resultVO;
+        Edu801 edu801 = edu801Dao.findOne(Long.parseLong(edu801Id));
+        Edu801PO edu801PO = new Edu801PO();
+        if(edu801 == null){
+            resultVO = ResultVO.setFailed("该调查问卷已被删除，请刷新后重试");
+        }else{
+            try {
+                BeanUtils.copyProperties(edu801PO, edu801);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
+            List<Edu802PO> edu802POList = new ArrayList<>();
+
+            for(Edu802 edu802 : edu802List){
+                Edu802PO eee = new Edu802PO();
+                try {
+                    BeanUtils.copyProperties(eee, edu802);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                if("check".equals(eee.getType())||"radio".equals(eee.getType())){
+                    List<Edu803> edu803List = edu803Dao.findByEdu802Id(eee.getEdu802_ID().toString());
+                    eee.setCkeckOrRaidoInfo(edu803List);
+                }
+                edu802POList.add(eee);
+            }
+            edu801PO.setAllQuestions(edu802POList);
+            resultVO = ResultVO.setSuccess("查询成功",edu801PO);
+        }
         return resultVO;
     }
 }
