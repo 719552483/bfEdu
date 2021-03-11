@@ -51,7 +51,7 @@ function getAllQuestion(role){
 function stuffAllQuestionTable(tableInfo,isStudent){
 	window.releaseNewsEvents = {
 		'click #answerCount' : function(e, value, row, index) {
-			// questionDetails(row);
+			answerCount(row);
 		},
 		'click #beginAnswer' : function(e, value, row, index) {
 			beginAnswer(row);
@@ -385,6 +385,293 @@ function sendAnswer(answers){
 		}
 	});
 	$.hideModal();
+}
+
+//查看问卷结果统计
+function answerCount(row){
+	// $.ajax({
+	// 	method : 'get',
+	// 	cache : false,
+	// 	url : "/answerQuestion",
+	// 	data: {
+	// 		"edu801Id":$("#edu108Id")[0].innerText,
+	// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+	// 		"questionDetail":JSON.stringify(answers)
+	// 	},
+	// 	dataType : 'json',
+	// 	beforeSend: function(xhr) {
+	// 		requestErrorbeforeSend();
+	// 	},
+	// 	error: function(textStatus) {
+	// 		requestError();
+	// 	},
+	// 	complete: function(xhr, status) {
+	// 		requestComplete();
+	// 	},
+	// 	success : function(backjson) {
+	// 		hideloding();
+	// 		if (backjson.code === 200) {
+	// 			toastr.success("问卷提交成功");
+	// 			$.hideModal();
+	// 		} else {
+	// 			toastr.warning(backjson.msg);
+	// 		}
+	// 	}
+	// });
+	$(".allArea").hide();
+	$(".answerCountArea").show();
+	stuffCountChart([]);
+
+	//返回主页面
+	$('#returnAll').unbind('click');
+	$('#returnAll').bind('click', function(e) {
+		$(".allArea").show();
+		$(".answerCountArea").hide();
+		e.stopPropagation();
+	});
+}
+
+//填充统计chart
+function stuffCountChart(countInfo){
+	// for (var i = 0; i < allQuestions.length; i++) {
+	// 	var questionObject=new Object();
+	// 	if(allQuestions[i].type==="radio"){
+	// 		questionObject=drawRadio(allQuestions[i],i);
+	// 	}else if(allQuestions[i].type==="check"){
+	// 		questionObject=drawCheck(allQuestions[i],i);
+	// 	}else if(allQuestions[i].type==="rate"){
+	// 		questionObject=drawRate(allQuestions[i],i);
+	// 	}else if(allQuestions[i].type==="answer"){
+	// 		questionObject=drawAnswer(allQuestions[i],i);
+	// 	}
+	// }
+
+	$(".countChartArea").append('<div class="questionCountChart col1" id="radio_chart1" style="height: 312px;"></div>')
+	drawRadioCount("radio_chart1");
+
+	$(".countChartArea").append('<div class="questionCountChart col1" id="check_chart1" style="height: 312px;"></div>')
+	drawCheckCount("check_chart1");
+
+	$(".countChartArea").append('<div class="questionCountChart col1" id="rete_chart1" style="height: 312px;"></div>')
+	drawRateCount("rete_chart1");
+
+	// $(".countChartArea").append('')
+	// drawAnswerCount("answer_Area1");
+}
+
+//单选结果统计模板
+function drawRadioCount(drawId){
+	var myChart = echarts.init(document.getElementById(drawId));
+	option = {
+		title: {
+			text: '标题-单选',
+			textStyle: {
+				color: 'rgba(94, 173, 197, 0.81)',
+				fontSize: '20'
+			}
+		},
+		legend: {
+			show:false
+		},
+		animationEasing: 'elasticOut',
+		color: 'rgba(22,178,209,0.66)',
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+			},
+			formatter: function (params) {
+				var tar = params[1];
+				return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+			}
+		},
+		grid: {
+			left: '3%',
+			right: '4%',
+			bottom: '15%',
+			containLabel: true
+		},
+		xAxis: {
+			type: 'category',
+			splitLine: {show: false},
+			data: ['总费用', '房租', '水电费', '交通费', '伙食费', '日用品数']
+		},
+		yAxis: {
+			splitLine: {show: false},
+			type: 'value'
+		},
+		series: [
+			{
+				name: '',
+				type: 'bar',
+				stack: '总量',
+				itemStyle: {
+					barBorderColor: 'rgba(0,0,0,0)',
+					color: 'rgba(0,0,0,0)'
+				},
+				emphasis: {
+					itemStyle: {
+						barBorderColor: 'rgba(0,0,0,0)',
+						color: 'rgba(0,0,0,0)'
+					}
+				},
+				data: [0, 1700, 1400, 1200, 300, 0]
+			},
+			{
+				name: '生活费',
+				type: 'bar',
+				stack: '总量',
+				label: {
+					show: true,
+					position: 'inside'
+				},
+				data: [2900, 1200, 300, 200, 900, 300]
+			}
+		]
+	};
+
+	myChart.setOption(option);
+}
+
+//多选结果统计模板
+function drawCheckCount(drawId){
+	var myChart = echarts.init(document.getElementById(drawId));
+	option = {
+		title: {
+			text: '标题-多选',
+			textStyle: {
+				color: 'rgba(94, 173, 197, 0.81)',
+				fontSize: '20'
+			}
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+				type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+			}
+		},
+		color: 'rgba(22,178,209,0.66)',
+		animationEasing: 'elasticOut',
+		dataset: {
+			source: [
+				['score', 'amount', 'product'],
+				[0, 58212, 'Matcha Latte'],
+				[0, 78254, 'Milk Tea'],
+				[0, 41032, 'Cheese Cocoa'],
+				[0, 12755, 'Cheese Brownie'],
+				[0, 20145, 'Matcha Cocoa'],
+				[0, 79146, 'Tea'],
+				[0, 91852, 'Orange Juice'],
+				[0, 101852, 'Lemon Juice'],
+				[0, 20112, 'Walnut Brownie']
+			]
+		},
+		grid: {
+			left: '3%',
+			right: '4%',
+			bottom: '15%',
+			containLabel: true
+		},
+		xAxis: {name: 'amount'},
+		yAxis: {splitLine: {show: false},type: 'category'},
+		series: [
+			{
+				type: 'bar',
+				encode: {
+					// Map the "amount" column to X axis.
+					x: 'amount',
+					// Map the "product" column to Y axis
+					y: 'product'
+				}
+			}
+		]
+	};
+	myChart.setOption(option);
+}
+
+//评分结果统计模板
+function drawRateCount(drawId){
+	var myChart = echarts.init(document.getElementById(drawId));
+	option = {
+		title: {
+			text: '标题-评分',
+			textStyle: {
+				color: 'rgba(94, 173, 197, 0.81)',
+				fontSize: '20'
+			}
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'cross',
+				crossStyle: {
+					color: '#999'
+				}
+			}
+		},
+		legend: {
+			left: 'center',
+			bottom:'bottom',
+			data: ['数量', '百分比']
+		},
+		grid: {
+			left: '3%',
+			right: '4%',
+			bottom: '15%',
+			containLabel: true
+		},
+		xAxis: [
+			{
+				type: 'category',
+				data: ['1颗星', '2颗星', '3颗星', '4颗星', '5颗星'],
+				axisPointer: {
+					type: 'shadow'
+				}
+			}
+		],
+		yAxis: [
+
+			{
+				type: 'value',
+				name: '数量',
+				axisLabel: {
+					formatter: '{value} 人'
+				}
+			},
+			{
+				type: 'value',
+				splitLine: {show: false},
+				name: '百分比',
+				min: 0,
+				max: 100,
+				interval: 20,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			}
+		],
+		series: [
+			{
+				name: '数量',
+				type: 'bar',
+				color: 'rgba(22,178,209,0.66)',
+				data: [2.0, 4.9, 7.0, 23.2, 25.6]
+			},
+			{
+				name: '百分比',
+				type: 'line',
+				yAxisIndex: 1,
+				color: 'rgba(221,25,20,0.94)',
+				data: [20,10, 40, 15, 15]
+			}
+		]
+	};
+
+	myChart.setOption(option);
+}
+
+function drawAnswerCount(drawId){
+
 }
 
 //页面按钮事件绑定

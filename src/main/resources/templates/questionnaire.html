@@ -30,6 +30,7 @@
 <script src="sripts/jquery.multi-select.min.js" type="text/javascript"></script>
 <script src='sripts/jquery-tooltipify.min.js' type='text/javascript'></script>
 <script src='sripts/MultiStep.min.js' type='text/javascript'></script>
+<script src='sripts/echarts.min.js' type='text/javascript'></script>
 </head>
 
 <body>
@@ -49,12 +50,83 @@
 		</div>
 
 		<div class="answerCountArea noneStart">
-				555555555
+			<div class="tools">
+				<ul class="toolbar">
+					<li class="click" id="returnAll"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+				</ul>
+			</div>
+
+			<div class="countChartArea">
+
+
+			</div>
+			<div class="questionCountChart col1 msgBox" id="answer_Area1">
+				<div class="title">标题-问答</div>
+				<div class="list">
+					<ul>
+						<li>
+							<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>
+							<div class="content">
+								<div class="userName"><a href="javascript:;">永不上线</a>:</div>
+								<div class="msgInfo">新增删除广播功能。</div>
+								<div class="times"><span>07月05日 15:14</span></div>
+							</div>
+
+						</li>
+						<li>
+							<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>
+							<div class="content">
+								<div class="userName"><a href="javascript:;">永不上线</a>:</div>
+								<div class="msgInfo">新增Ctrl+Enter快捷键发送广播。</div>
+								<div class="times"><span>07月05日 12:20</span></div>
+
+							</div>
+						</li>
+						<li>
+							<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>
+							<div class="content">
+								<div class="userName"><a href="javascript:;">永不上线</a>:</div>
+								<div class="msgInfo">新增选择头像功能。</div>
+
+								<div class="times"><span>07月05日 12:08</span></div>
+							</div>
+						</li>
+						<li>
+							<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>
+							<div class="content">
+								<div class="userName"><a href="javascript:;">永不上线</a>:</div>
+
+								<div class="msgInfo">增加了记录广播时间的功能。</div>
+								<div class="times"><span>07月04日 16:55</span></div>
+							</div>
+						</li>
+						<li>
+							<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>
+							<div class="content">
+
+								<div class="userName"><a href="javascript:;">永不上线</a>:</div>
+								<div class="msgInfo">增加了输入字符检测功能，英文/半角为半个字符，汉字/全角为一个字符。</div>
+								<div class="times"><span>07月04日 08:30</span></div>
+							</div>
+						</li>
+						<li>
+
+							<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>
+							<div class="content">
+								<div class="userName"><a href="javascript:;">永不上线</a>:</div>
+								<div class="msgInfo">仿腾讯微博效果，欢迎大家测试！</div>
+								<div class="times"><span>07月03日 20:19</span></div>
+							</div>
+
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 
 	<cite id="edu108Id" class="noneStart"></cite>
-    <!--  -->
+    <!--答题模态框-->
     <div class="modal fade bs-example-modal-lg" style="overflow: unset; overflow-y: unset;" id="doQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -70,36 +142,6 @@
             </div>
         </div>
     </div>
-
-	<!-- 提示Modal -->
-	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
-				</div>
-				<div class="modal-body">
-					<div class="tipinfo">
-						<div class="formtext myformtext myformtextTipArea" style="padding-left: 10px;">
-							<b>* 为了调查问卷结果数据的一致性，问卷生成后将不可进行修改操作</b>
-						</div>
-						<span><img src="images/ticon.png" /></span>
-						<div class="tipright">
-							<p>
-								是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
-							</p>
-							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="modal-footer tipbtn">
-					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
-					<input name="" type="button" class="cancel" value="取消"/>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
