@@ -15,6 +15,16 @@ public class Edu803 {
     private String createDate;//录入时间
     private int num;//学生选择数量
     private String checkOrRadioValue;
+    private double percentage;//选项所占百分比
+
+    public double getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(double percentage) {
+        this.percentage = percentage;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
     @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")

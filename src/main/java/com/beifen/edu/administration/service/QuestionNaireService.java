@@ -33,6 +33,8 @@ public class QuestionNaireService {
     @Autowired
     Edu804Dao edu804Dao;
     @Autowired
+    Edu806Dao edu806Dao;
+    @Autowired
     Edu990Dao edu990Dao;
     @Autowired
     Edu001Dao edu001Dao;
@@ -185,6 +187,7 @@ public class QuestionNaireService {
         ResultVO resultVO;
         for (int i = 0; i < deleteArray.size(); i++) {
             String edu801Id = deleteArray.getString(i);
+            edu806Dao.deleteByEdu801Id(edu801Id);
             edu803Dao.deleteByEdu801Id(edu801Id);
             edu802Dao.deleteByEdu801Id(edu801Id);
             edu801Dao.delete(Long.parseLong(edu801Id));
@@ -236,6 +239,14 @@ public class QuestionNaireService {
                     edu803.setNum(0);
                     edu803Dao.save(edu803);
                 }
+            }else if("rate".equals(ee.getType())){
+                Edu806 edu806 = new Edu806();
+                edu806.setEdu801_ID(e.getEdu801_ID());
+                edu806.setEdu802_ID(ee.getEdu802_ID());
+                edu806.setNum(0);
+                edu806.setScore(0);
+                edu806.setAverage(0);
+                edu806Dao.save(edu806);
             }
         }
         resultVO = ResultVO.setSuccess("添加成功");
