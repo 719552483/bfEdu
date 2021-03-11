@@ -312,7 +312,7 @@ function stuffHaveQuestionDetails(info) {
     $("#questionTitle").val(info.title);
     stuffManiaSelectWithDeafult("#department",info.permissions);
     for (var i = 0; i < info.allQuestions.length; i++) {
-        stuffNewAandQtoMainArea(info.allQuestions[i]);
+        stuffNewAandQtoMainArea(info.allQuestions[i],false);
     }
     $(".confrimAddQuestion,#addQ_A,.main_cannottxt,.choosendfsKjImg ").hide();
     mainAreaToggle();
@@ -733,11 +733,11 @@ function confirmAddQ_A(){
 }
 
 //将新增的问答信息填充到主页面
-function  stuffNewAandQtoMainArea(NewAandQ) {
+function  stuffNewAandQtoMainArea(NewAandQ,needReverse) {
     if(NewAandQ.type==="radio"){
-        drawRadio(NewAandQ);
+        drawRadio(NewAandQ,needReverse);
     }else if(NewAandQ.type==="check"){
-        drawCheck(NewAandQ);
+        drawCheck(NewAandQ,needReverse);
     }else if(NewAandQ.type==="rate"){
         drawRate(NewAandQ);
     }else if(NewAandQ.type==="answer"){
@@ -749,9 +749,13 @@ function  stuffNewAandQtoMainArea(NewAandQ) {
 }
 
 //渲染单选题
-function drawRadio(info){
+function drawRadio(info,needReverse){
     var values;
-    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue.reverse():values=info.ckeckOrRaidoInfo.reverse();
+    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
+    if(typeof needReverse==="undefined"){
+        values=values.reverse();
+    }
+
     var allA_QIndex=$(".singleA_Q").length;
 
     var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
@@ -779,9 +783,12 @@ function drawRadio(info){
 }
 
 //渲染多选题
-function drawCheck(info){
+function drawCheck(info,needReverse){
     var values;
-    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue.reverse():values=info.ckeckOrRaidoInfo.reverse();
+    typeof info.ckeckOrRaidoInfo==="undefined"?values=info.radioOrCheckValue:values=info.ckeckOrRaidoInfo;
+    if(typeof needReverse!=="undefined"){
+        values=values.reverse();
+    }
     var allA_QIndex=$(".singleA_Q").length;
 
     var str='<div class="singleA_Q singleA_Q'+(allA_QIndex+1)+'" type="'+info.type+'">'+
