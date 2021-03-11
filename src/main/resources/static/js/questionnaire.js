@@ -193,6 +193,7 @@ function beginAnswer(row){
 				$("#doQuestionModal").find(".modal-header").find(".close").find("span").html('');
 				$("#doQuestionModal").addClass("finalCheckCssArea");
 				toolTipUp(".tooltipCite");
+				$("#edu108Id").html(row.edu801_ID);
 
 				//提示框取消按钮
 				$("#doQuestionModal").find(".modal-header").find(".close").unbind('click');
@@ -354,35 +355,35 @@ function checkAnswer(answers){
 
 //发送答案信息
 function sendAnswer(answers){
-	// $.ajax({
-	// 	method : 'get',
-	// 	cache : false,
-	// 	url : "/",
-	// 	data: {
-	// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
-	// 		"SearchCriteria":JSON.stringify(serachObject)
-	// 	},
-	// 	dataType : 'json',
-	// 	beforeSend: function(xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function(textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function(xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success : function(backjson) {
-	// 		hideloding();
-	// 		if (backjson.code === 200) {
-	// 			toastr.info(backjson.msg);
-	// 			stuffAdministrationClassTable(backjson.data);
-	// 		} else {
-	// 			drawAdministrationClassEmptyTable();
-	// 			toastr.warning(backjson.msg);
-	// 		}
-	// 	}
-	// });
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/answerQuestion",
+		data: {
+			"edu801Id":$("#edu108Id")[0].innerText,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"questionDetail":JSON.stringify(answers)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				toastr.success("问卷提交成功");
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 	$.hideModal();
 }
 
