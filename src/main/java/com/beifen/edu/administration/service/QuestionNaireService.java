@@ -387,7 +387,7 @@ public class QuestionNaireService {
                     int num = edu806Dao.querySumByEdu802IdSore(edu802.getEdu802_ID().toString(),j);
                     peopleNum.add(num);
                     if(sum == 0){
-                        percentageList.add("0.00");
+                        percentageList.add("0.00"+"%");
                     }else{
                         double b  = (num*100.00)/sum;
                         percentageList.add(String.format("%.2f", b)+"%");
