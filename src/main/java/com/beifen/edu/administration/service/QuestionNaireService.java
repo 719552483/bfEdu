@@ -367,7 +367,7 @@ public class QuestionNaireService {
 //                oneList.add(sum);
                 //['score', 'amount', 'product'],
                 oneList.add("score");
-                oneList.add("amount");
+                oneList.add("人数");
                 oneList.add("product");
                 checkList.add(oneList);
                 for(int j = 0;j<edu803List.size();j++){
@@ -390,7 +390,7 @@ public class QuestionNaireService {
                         percentageList.add("0.00");
                     }else{
                         double b  = (num*100.00)/sum;
-                        percentageList.add(String.format("%.2f", b));
+                        percentageList.add(String.format("%.2f", b)+"%");
                     }
                 }
                 resultMap.put("peopleNum",peopleNum);
