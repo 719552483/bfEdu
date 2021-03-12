@@ -2,6 +2,7 @@ $(function() {
 	btnBind();
 	var role=JSON.parse($.session.get('userInfo')).js.split(",");
 	getAllQuestion(role);
+	chartListener();
 });
 
 //获取可做的问卷
@@ -389,82 +390,70 @@ function sendAnswer(answers){
 
 //查看问卷结果统计
 function answerCount(row){
-	// $.ajax({
-	// 	method : 'get',
-	// 	cache : false,
-	// 	url : "/answerQuestion",
-	// 	data: {
-	// 		"edu801Id":$("#edu108Id")[0].innerText,
-	// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
-	// 		"questionDetail":JSON.stringify(answers)
-	// 	},
-	// 	dataType : 'json',
-	// 	beforeSend: function(xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function(textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function(xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success : function(backjson) {
-	// 		hideloding();
-	// 		if (backjson.code === 200) {
-	// 			toastr.success("问卷提交成功");
-	// 			$.hideModal();
-	// 		} else {
-	// 			toastr.warning(backjson.msg);
-	// 		}
-	// 	}
-	// });
-	$(".allArea").hide();
-	$(".answerCountArea").show();
-	stuffCountChart([]);
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchQuestionStatistical",
+		data: {
+			"edu801Id":row.edu801_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$(".allArea").hide();
+				$(".answerCountArea").show();
+				$(".questionCountChart,.msgBox").remove();
+				stuffCountChart(backjson.data);
+				$(".questionCountTitle").html('问卷 -<cite>'+row.title+'</cite>- 结果分析展示:');
 
-	//返回主页面
-	$('#returnAll').unbind('click');
-	$('#returnAll').bind('click', function(e) {
-		$(".allArea").show();
-		$(".answerCountArea").hide();
-		e.stopPropagation();
+				//返回主页面
+				$('#returnAll').unbind('click');
+				$('#returnAll').bind('click', function(e) {
+					$(".allArea").show();
+					$(".answerCountArea").hide();
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
 	});
 }
 
 //填充统计chart
 function stuffCountChart(countInfo){
-	// for (var i = 0; i < allQuestions.length; i++) {
-	// 	var questionObject=new Object();
-	// 	if(allQuestions[i].type==="radio"){
-	// 		questionObject=drawRadio(allQuestions[i],i);
-	// 	}else if(allQuestions[i].type==="check"){
-	// 		questionObject=drawCheck(allQuestions[i],i);
-	// 	}else if(allQuestions[i].type==="rate"){
-	// 		questionObject=drawRate(allQuestions[i],i);
-	// 	}else if(allQuestions[i].type==="answer"){
-	// 		questionObject=drawAnswer(allQuestions[i],i);
-	// 	}
-	// }
-
-	$(".countChartArea").append('<div class="questionCountChart col1" id="radio_chart1" style="height: 312px;"></div>')
-	drawRadioCount("radio_chart1");
-
-	$(".countChartArea").append('<div class="questionCountChart col1" id="check_chart1" style="height: 312px;"></div>')
-	drawCheckCount("check_chart1");
-
-	$(".countChartArea").append('<div class="questionCountChart col1" id="rete_chart1" style="height: 312px;"></div>')
-	drawRateCount("rete_chart1");
-
-	// $(".countChartArea").append('')
-	// drawAnswerCount("answer_Area1");
+	for (var i = 0; i < countInfo.length; i++) {
+		if(countInfo[i].type==="radio"){
+			$(".countChartArea").append('<div class="questionCountChart col1" id="radio_chart'+i+'" style="height: 312px;"></div>')
+			drawRadioCount("radio_chart"+i,countInfo[i],i);
+		}else if(countInfo[i].type==="check"){
+			$(".countChartArea").append('<div class="questionCountChart col1" id="check_chart'+i+'" style="height: 312px;"></div>')
+			drawCheckCount("check_chart"+i,countInfo[i],i);
+		}else if(countInfo[i].type==="rate"){
+			$(".countChartArea").append('<div class="questionCountChart col1" id="rete_chart'+i+'" style="height: 312px;"></div>')
+			drawRateCount("rete_chart"+i,countInfo[i],i);
+		}else if(countInfo[i].type==="answer"){
+			drawAnswerCount("answer_Area"+i,countInfo[i],i);
+		}
+	}
 }
 
 //单选结果统计模板
-function drawRadioCount(drawId){
+function drawRadioCount(drawId,radioInfo,index){
 	var myChart = echarts.init(document.getElementById(drawId));
 	option = {
 		title: {
-			text: '标题-单选',
+			text:'Q'+(index+1)+'- '+radioInfo.title,
 			textStyle: {
 				color: 'rgba(94, 173, 197, 0.81)',
 				fontSize: '20'
@@ -482,7 +471,7 @@ function drawRadioCount(drawId){
 			},
 			formatter: function (params) {
 				var tar = params[1];
-				return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+				return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value+'人';
 			}
 		},
 		grid: {
@@ -494,10 +483,12 @@ function drawRadioCount(drawId){
 		xAxis: {
 			type: 'category',
 			splitLine: {show: false},
-			data: ['总费用', '房租', '水电费', '交通费', '伙食费', '日用品数']
+			data: radioInfo.titleList
 		},
 		yAxis: {
-			splitLine: {show: false},
+			name: '人数',
+			splitLine: {show: true},
+			minInterval: 1,
 			type: 'value'
 		},
 		series: [
@@ -515,17 +506,17 @@ function drawRadioCount(drawId){
 						color: 'rgba(0,0,0,0)'
 					}
 				},
-				data: [0, 1700, 1400, 1200, 300, 0]
+				data: radioInfo.hiddenList
 			},
 			{
-				name: '生活费',
+				name: '人数',
 				type: 'bar',
 				stack: '总量',
 				label: {
 					show: true,
 					position: 'inside'
 				},
-				data: [2900, 1200, 300, 200, 900, 300]
+				data: radioInfo.numberList
 			}
 		]
 	};
@@ -534,11 +525,11 @@ function drawRadioCount(drawId){
 }
 
 //多选结果统计模板
-function drawCheckCount(drawId){
+function drawCheckCount(drawId,checkInfo,index){
 	var myChart = echarts.init(document.getElementById(drawId));
 	option = {
 		title: {
-			text: '标题-多选',
+			text:'Q'+(index+1)+'- '+checkInfo.title,
 			textStyle: {
 				color: 'rgba(94, 173, 197, 0.81)',
 				fontSize: '20'
@@ -548,23 +539,17 @@ function drawCheckCount(drawId){
 			trigger: 'axis',
 			axisPointer: {            // 坐标轴指示器，坐标轴触发有效
 				type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+			},
+			formatter: function (params) {
+				var tar= params[0];
+				return tar.name + '<br/>'+
+					'人数: ' + tar.value[1]+'人';
 			}
 		},
 		color: 'rgba(22,178,209,0.66)',
 		animationEasing: 'elasticOut',
 		dataset: {
-			source: [
-				['score', 'amount', 'product'],
-				[0, 58212, 'Matcha Latte'],
-				[0, 78254, 'Milk Tea'],
-				[0, 41032, 'Cheese Cocoa'],
-				[0, 12755, 'Cheese Brownie'],
-				[0, 20145, 'Matcha Cocoa'],
-				[0, 79146, 'Tea'],
-				[0, 91852, 'Orange Juice'],
-				[0, 101852, 'Lemon Juice'],
-				[0, 20112, 'Walnut Brownie']
-			]
+			source: checkInfo.checkList
 		},
 		grid: {
 			left: '3%',
@@ -572,14 +557,14 @@ function drawCheckCount(drawId){
 			bottom: '15%',
 			containLabel: true
 		},
-		xAxis: {name: 'amount'},
+		xAxis: {name: '人数',minInterval: 1},
 		yAxis: {splitLine: {show: false},type: 'category'},
 		series: [
 			{
 				type: 'bar',
 				encode: {
 					// Map the "amount" column to X axis.
-					x: 'amount',
+					x: '人数',
 					// Map the "product" column to Y axis
 					y: 'product'
 				}
@@ -590,11 +575,11 @@ function drawCheckCount(drawId){
 }
 
 //评分结果统计模板
-function drawRateCount(drawId){
+function drawRateCount(drawId,reteInfo,index){
 	var myChart = echarts.init(document.getElementById(drawId));
 	option = {
 		title: {
-			text: '标题-评分',
+			text:'Q'+(index+1)+'- '+reteInfo.title,
 			textStyle: {
 				color: 'rgba(94, 173, 197, 0.81)',
 				fontSize: '20'
@@ -607,12 +592,19 @@ function drawRateCount(drawId){
 				crossStyle: {
 					color: '#999'
 				}
+			},
+			formatter: function (params) {
+				var num= params[0];
+				var percent = params[1];
+				return num.name + '<br/>'+
+					num.seriesName + ' : ' + num.value+'人<br/>'+
+					percent.seriesName + ' : ' + percent.value+'%';
 			}
 		},
 		legend: {
 			left: 'center',
 			bottom:'bottom',
-			data: ['数量', '百分比']
+			data: ['人数', '百分比']
 		},
 		grid: {
 			left: '3%',
@@ -630,10 +622,11 @@ function drawRateCount(drawId){
 			}
 		],
 		yAxis: [
-
 			{
 				type: 'value',
-				name: '数量',
+				name: '人数',
+				minInterval: 1,
+				splitLine: {show: true},
 				axisLabel: {
 					formatter: '{value} 人'
 				}
@@ -652,17 +645,17 @@ function drawRateCount(drawId){
 		],
 		series: [
 			{
-				name: '数量',
+				name: '人数',
 				type: 'bar',
 				color: 'rgba(22,178,209,0.66)',
-				data: [2.0, 4.9, 7.0, 23.2, 25.6]
+				data: reteInfo.peopleNum
 			},
 			{
 				name: '百分比',
 				type: 'line',
 				yAxisIndex: 1,
 				color: 'rgba(221,25,20,0.94)',
-				data: [20,10, 40, 15, 15]
+				data: reteInfo.percentageList
 			}
 		]
 	};
@@ -670,8 +663,37 @@ function drawRateCount(drawId){
 	myChart.setOption(option);
 }
 
-function drawAnswerCount(drawId){
+//简答题展示模板
+function drawAnswerCount(drawId,answerInfo,index){
+	var str='<div class="col1 msgBox" id="'+drawId+'">'+
+			'<div class="title">Q'+(index+1)+'- '+answerInfo.title+'</div>'+
+			'<div class="list"><ul>';
 
+	for (var i = 0; i < answerInfo.result.length; i++) {
+		str+='<li>' +
+			'<div class="userPic"><img src="images/i07.png" style="width: 100%;"/></div>' +
+			'<div class="content">' +
+			'<div class="userName"><a>'+answerInfo.result[i].user_Name+'</a>:</div>'+
+			'<div class="msgInfo">'+answerInfo.result[i].answer+'</div>'+
+			'<div class="times"><span>'+answerInfo.result[i].createDate+'</span></div>'+
+			'</div>'+
+			'</li>';
+	}
+
+	str+='</ul></div></div>';
+	$(".countChartArea").append(str);
+}
+
+// chart自适应
+function chartListener(){
+	window.addEventListener("resize", function() {
+		var resizeElements=$('.questionCountChart');
+		for (var i = 0; i < resizeElements.length; i++) {
+			var id=resizeElements[i].id;
+			var myChart = echarts.init(document.getElementById(id));
+			myChart.resize();
+		}
+	});
 }
 
 //页面按钮事件绑定

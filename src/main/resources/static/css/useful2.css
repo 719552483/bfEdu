@@ -1828,7 +1828,7 @@ margin: 0px 0px -14px -15px!important;
 	font-weight: 600;
 }
 
-.scheduleRsTitle,.real-timeTitle{
+.scheduleRsTitle,.real-timeTitle,.questionCountTitle{
 	font-size: 15px;
 	font-family: sans-serif;
 	color: rgb(50 107 134 / 95%);
@@ -2670,6 +2670,16 @@ input:focus{
 	color: rgb(125 188 208 / 92%);
 	font-size: 20px;
 	font-weight: 800;
+}
+
+.questionCountTitle cite{
+	color: red;
+	font-size: 17px;
+	font-family: sans-serif;
+}
+
+.msgBox ul li:last-child {
+	padding-bottom:25px;
 }
 
 @keyframes serachAnimation {
