@@ -132,6 +132,8 @@ public class QuestionNaireService {
                     edu805.setEdu801_ID(edu801Id);
                     edu805.setEdu802_ID(questionId);
                     edu805.setUser_ID(userId);
+                    Edu990 edu990 = edu990Dao.findOne(Long.parseLong(userId));
+                    edu805.setUser_Name(edu990.getPersonName());
                     edu805Dao.save(edu805);
                 }
             }

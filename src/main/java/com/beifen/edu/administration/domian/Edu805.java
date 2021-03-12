@@ -10,6 +10,7 @@ public class Edu805 {
     private String Edu801_ID;//调查问卷ID
     private String Edu802_ID;//问题ID
     private String user_ID;//用户ID
+    private String user_Name;//用户姓名
     private String answer;//答案
     private String createDate;//录入时间
     @Id
@@ -63,5 +64,13 @@ public class Edu805 {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public String getUser_Name() {
+        return user_Name;
+    }
+
+    public void setUser_Name(String user_Name) {
+        this.user_Name = user_Name;
     }
 }
