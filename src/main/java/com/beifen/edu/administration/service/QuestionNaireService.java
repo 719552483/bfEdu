@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 //调查问卷业务层
@@ -332,38 +329,77 @@ public class QuestionNaireService {
     public ResultVO searchQuestionStatistical(String edu801Id) {
         ResultVO resultVO;
         Edu801 edu801 = edu801Dao.findOne(Long.parseLong(edu801Id));
-        Edu801PO edu801PO = new Edu801PO();
-        if(edu801 == null){
-            resultVO = ResultVO.setFailed("该调查问卷已被删除，请刷新后重试");
-        }else{
-            try {
-                BeanUtils.copyProperties(edu801PO, edu801);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
-            List<Edu802PO> edu802POList = new ArrayList<>();
-
-            for(Edu802 edu802 : edu802List){
-                Edu802PO eee = new Edu802PO();
-                try {
-                    BeanUtils.copyProperties(eee, edu802);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+        List<Map> resultList = new ArrayList<>();
+        List<Edu802> edu802List = edu802Dao.findByEdu801Id(edu801Id);
+        for(int i = 0;i<edu802List.size();i++){
+            Edu802 edu802 = edu802List.get(i);
+            String type = edu802.getType();
+            Map resultMap = new HashMap();
+            resultMap.put("type",type);
+            resultMap.put("title",edu802.getTitle());
+            if("radio".equals(type)){
+                List<Edu803> edu803List = edu803Dao.findByEdu802Id(edu802.getEdu802_ID().toString());
+                int sum = edu803Dao.findSumByEdu802Id(edu802.getEdu802_ID().toString());
+                List<String> titleList = new ArrayList<>();
+                List<Integer> numberList = new ArrayList<>();
+                List<Integer> hiddenList = new ArrayList<>();
+                titleList.add("总数量");
+                numberList.add(sum);
+                hiddenList.add(0);
+                for(int j = 0;j<edu803List.size();j++){
+                    Edu803 edu803 = edu803List.get(j);
+                    titleList.add(edu803.getCheckOrRadioText());
+                    numberList.add(edu803.getNum());
+                    hiddenList.add(sum-edu803.getNum());
+                    sum = sum-edu803.getNum();
                 }
-                if("check".equals(eee.getType())||"radio".equals(eee.getType())){
-                    List<Edu803> edu803List = edu803Dao.findByEdu802Id(eee.getEdu802_ID().toString());
-                    eee.setCkeckOrRaidoInfo(edu803List);
+                resultMap.put("titleList",titleList);
+                resultMap.put("numberList",numberList);
+                resultMap.put("hiddenList",hiddenList);
+            }else if("check".equals(type)){
+                List<Edu803> edu803List = edu803Dao.findByEdu802Id(edu802.getEdu802_ID().toString());
+                int sum = edu803Dao.findSumByEdu802Id(edu802.getEdu802_ID().toString());
+                List<Object> checkList = new ArrayList<>();
+                List<Object> oneList = new ArrayList<>();
+//                oneList.add("总数量");
+//                oneList.add(sum);
+                //['score', 'amount', 'product'],
+                oneList.add("score");
+                oneList.add("amount");
+                oneList.add("product");
+                checkList.add(oneList);
+                for(int j = 0;j<edu803List.size();j++){
+                    Edu803 edu803 = edu803List.get(j);
+                    List<Object> opentionList = new ArrayList<>();
+                    opentionList.add(0);
+                    opentionList.add(edu803.getNum());
+                    opentionList.add(edu803.getCheckOrRadioText());
+                    checkList.add(opentionList);
                 }
-                edu802POList.add(eee);
+                resultMap.put("checkList",checkList);
+            }else if("rate".equals(type)){
+                int sum = edu806Dao.querySumByEdu802Id(edu802.getEdu802_ID().toString());
+                List<Integer> peopleNum = new ArrayList<>();
+                List<String> percentageList = new ArrayList<>();
+                for(int j = 1;j<6;j++){
+                    int num = edu806Dao.querySumByEdu802IdSore(edu802.getEdu802_ID().toString(),j);
+                    peopleNum.add(num);
+                    if(sum == 0){
+                        percentageList.add("0.00");
+                    }else{
+                        double b  = (num*100.00)/sum;
+                        percentageList.add(String.format("%.2f", b));
+                    }
+                }
+                resultMap.put("peopleNum",peopleNum);
+                resultMap.put("percentageList",percentageList);
+            }else if("answer".equals(type)){
+                List<Edu805> edu805List = edu805Dao.queryByEdu802Id(edu802.getEdu802_ID().toString());
+                resultMap.put("result",edu805List);
             }
-            edu801PO.setAllQuestions(edu802POList);
-            resultVO = ResultVO.setSuccess("查询成功",edu801PO);
+            resultList.add(resultMap);
         }
+        resultVO = ResultVO.setSuccess("添加成功",resultList);
         return resultVO;
     }
 }

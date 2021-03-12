@@ -15,6 +15,11 @@ public interface Edu803Dao extends JpaRepository<Edu803, Long>, JpaSpecification
     //根据802id查询List
     @Query(value = "select * from edu803 where EDU802_ID = ?1 ORDER BY CHECK_OR_RADIO_INDEX",nativeQuery = true)
     List<Edu803> findByEdu802Id(String edu802Id);
+
+    //根据802id查询sum
+    @Query(value = "select sum(num) from edu803 where EDU802_ID = ?1 ORDER BY CHECK_OR_RADIO_INDEX",nativeQuery = true)
+    int findSumByEdu802Id(String edu802Id);
+
     //根据801Id删除
     @Transactional
     @Modifying
