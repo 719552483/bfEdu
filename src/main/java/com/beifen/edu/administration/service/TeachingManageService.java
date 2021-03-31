@@ -1040,7 +1040,8 @@ public class TeachingManageService {
             timeTable.setCurrentUserId(schedulePO.getCurrentUserId());
             timeTable.setSemester(schedulePO.getSemester());
             timeTable.setWeekTime(schedulePO.getWeekTime());
-            timeTable.setNewInfo(timeTablePackage(schoolTimetableList));
+            List<SchoolTimetablePO> schoolTimetableLists = replaceScheduleweek(schoolTimetableList);
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableLists));
             resultVO = ResultVO.setSuccess("当前周共找到"+schoolTimetableList.size()+"个课程",timeTable);
         }
 
