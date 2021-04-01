@@ -1307,6 +1307,20 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 搜索行政班-下载不及格导入成绩模板
+	 *
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("searchAdministrationClassGradeModelMakeUp")
+	@ResponseBody
+	public ResultVO searchAdministrationClassGradeModelMakeUp(@RequestParam("userId") String userId,@RequestParam("term")String term,@RequestParam("couserName")String couserName) {
+		List<String> list = Arrays.asList(couserName.split(","));
+		ResultVO result = administrationPageService.searchAdministrationClassGradeModelMakeUp(userId,term,list);
+		return result;
+	}
+
+	/**
 	 * 生成开课计划查询课程库和班级信息
 	 * @param edu107_Id
 	 * @return

@@ -361,6 +361,19 @@ public class StudentManageController {
         return result;
     }
 
+    /**
+     * 根据学年、用户id查询学科
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/searchCourseByXNAndID")
+    @ResponseBody
+    public ResultVO searchCourseByXNAndID(@RequestParam("term") String term,@RequestParam("userId")String userId) {
+        ResultVO result =studentManageService.searchCourseByXNAndID(term,userId);
+        return result;
+    }
+
 
     /**
     * 修改免修状态

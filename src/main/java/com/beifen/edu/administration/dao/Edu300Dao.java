@@ -2,6 +2,7 @@ package com.beifen.edu.administration.dao;
 
 import java.util.List;
 
+import com.beifen.edu.administration.domian.Edu201;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -97,4 +98,13 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 
 	@Query(value = "select * from Edu300 e where e.edu300_ID <> ?1 and e.xzbmc = ?2",nativeQuery = true)
     List<Edu300> checkClassRepeat(Long edu300_id, String xzbmc);
+
+
+	@Query(value = "select * from EDU300 where EDU300_ID in (select EDU300_ID from edu005 where EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?1)  GROUP BY EDU300_ID)", nativeQuery = true)
+	List<Edu300> searchclassByID(String edu101Id);
+
+	@Query(value = "\n" +
+			"select * from EDU300 where EDU300_ID in (select EDU300_ID from edu005 where EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?1) and xnid = ?2 and COURSE_NAME in ?3 GROUP BY EDU300_ID)", nativeQuery = true)
+	List<Edu300> searchAdministrationClassGradeModelMakeUp(String edu101Id,String trem,List<String> couserName);
+
 }
