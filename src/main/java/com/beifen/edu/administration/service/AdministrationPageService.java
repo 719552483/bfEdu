@@ -1657,6 +1657,54 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	// 搜索行政班
+	public ResultVO searchAdministrationClassGradeModel(Edu300 edu300,String userId) {
+		ResultVO resultVO;
+
+		//从redis中查询二级学院管理权限
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+		String jzglx = edu101DAO.queryTeacherByUserId(userId);
+
+		Specification<Edu300> specification = new Specification<Edu300>() {
+			public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu300.getPyccbm() != null && !"".equals(edu300.getPyccbm())) {
+					predicates.add(cb.equal(root.<String>get("pyccbm"), edu300.getPyccbm()));
+				}
+				if (edu300.getXbbm() != null && !"".equals(edu300.getXbbm())) {
+					predicates.add(cb.equal(root.<String>get("xbbm"), edu300.getXbbm()));
+				}
+				if (edu300.getNjbm() != null && !"".equals(edu300.getNjbm())) {
+					predicates.add(cb.equal(root.<String>get("njbm"), edu300.getNjbm()));
+				}
+				if (edu300.getZybm() != null && !"".equals(edu300.getZybm())) {
+					predicates.add(cb.equal(root.<String>get("zybm"), edu300.getZybm()));
+				}
+				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
+					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
+				}
+//				if(!"教辅人员".equals(jzglx)){
+//					Path<Object> path = root.get("xbbm");//定义查询的字段
+//					CriteriaBuilder.In<Object> in = cb.in(path);
+//					for (int i = 0; i <departments.size() ; i++) {
+//						in.value(departments.get(i));//存入值
+//					}
+//					predicates.add(cb.and(in));
+//				}
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu300> classEntities = edu300DAO.findAll(specification);
+
+		if(classEntities.size() == 0 ){
+			resultVO = ResultVO.setFailed("暂未查到行政班信息");
+		} else {
+			resultVO = ResultVO.setSuccess("共找到"+classEntities.size()+"个行政班",classEntities);
+		}
+
+		return resultVO;
+	}
+
 	public String getDepartmentCode (String edu104Id) {
 		String departmentCode = "00";
 		Edu104 edu104 = edu104DAO.query104BYID(edu104Id);

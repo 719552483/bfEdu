@@ -1278,6 +1278,35 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 搜索行政班-下载导入成绩模板
+	 *
+	 * @param SearchCriteria
+	 *            搜索条件
+	 * @return returnMap
+	 */
+	@RequestMapping("searchAdministrationClassGradeModel")
+	@ResponseBody
+	public ResultVO searchAdministrationClassGradeModel(@RequestParam String SearchCriteria,@RequestParam("userId") String userId) {
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		// 根据层次等信息查出培养计划id
+		String levelCode = searchObject.getString("level");
+		String departmentCode = searchObject.getString("department");
+		String gradeCode = searchObject.getString("grade");
+		String majorCode = searchObject.getString("major");
+		String className = searchObject.getString("className");
+
+		// 填充搜索对象
+		Edu300 edu300 = new Edu300();
+		edu300.setPyccbm(levelCode);
+		edu300.setXbbm(departmentCode);
+		edu300.setNjbm(gradeCode);
+		edu300.setZybm(majorCode);
+		edu300.setXzbmc(className);
+		ResultVO result = administrationPageService.searchAdministrationClassGradeModel(edu300,userId);
+		return result;
+	}
+
+	/**
 	 * 生成开课计划查询课程库和班级信息
 	 * @param edu107_Id
 	 * @return
