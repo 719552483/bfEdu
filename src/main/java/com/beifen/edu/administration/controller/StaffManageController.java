@@ -750,6 +750,39 @@ public class StaffManageController {
     }
 
     /**
+     * 校验-导出不合格成绩excel模板
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping(" ")
+    @ResponseBody
+    public ResultVO exportMakeUpGradeCheckModel(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "queryInfo") String queryInfo) {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(queryInfo);
+//        String classes = jsonObject.getString("classes");
+        String crouse = jsonObject.getString("crouse");
+        String trem = jsonObject.getString("trem");
+        String classes = jsonObject.getString("classes");
+        String userId = jsonObject.getString("userId");
+        List<String> cc = Arrays.asList(crouse.split(","));
+        List<Edu005> edu005List  = new ArrayList<>();
+        if(!"".equals(classes) && classes != null){
+            List<String> classs = Arrays.asList(classes.split(","));
+            edu005List = administrationPageService.exportMakeUpGradeCheckModel(trem,cc,classs,userId);
+        }else{
+            edu005List = administrationPageService.exportMakeUpGradeCheckModel(trem,cc,userId);
+        }
+        if(edu005List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
+        }else{
+            result = ResultVO.setSuccess("成功");
+        }
+        return result;
+    }
+
+    /**
      * 导出不合格成绩excel
      *
      * @return returnMap

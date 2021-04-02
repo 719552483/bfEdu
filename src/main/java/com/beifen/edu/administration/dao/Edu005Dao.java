@@ -85,5 +85,18 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Modifying(clearAutomatically = true)
     @Query(value = "SELECT * FROM EDU005 where grade < 60 and EDU005_ID not in (select EDU005_ID from EDU0051) and is_resit = 'T'", nativeQuery = true)
     List<Edu005> rootsData();
+
+
+    //导出不及格成绩excel模板
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "select * from edu005 where  is_Confirm = 'T' and GRADE < 60 and xnid = ?1 and COURSE_NAME in ?2 and EDU300_ID  in ?3 and EDU101_ID =?4 order by CLASS_NAME", nativeQuery = true)
+    List<Edu005> exportMakeUpGradeCheckModel(String classes,List<String> trem,List<String> list,String edu101Id);
+
+    //导出不及格成绩excel模板
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "select * from edu005 where  is_Confirm = 'T' and GRADE < 60 and xnid = ?1 and COURSE_NAME in ?2 and EDU101_ID =?3 order by CLASS_NAME", nativeQuery = true)
+    List<Edu005> exportMakeUpGradeCheckModel(String classes,List<String> trem,String edu101Id);
 }
 

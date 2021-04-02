@@ -2893,6 +2893,22 @@ public class AdministrationPageService {
 		return edu0051List;
 	}
 
+    //导出不及格成绩excel模板
+    public List<Edu005> exportMakeUpGradeCheckModel(String trem,List<String> crouses,String userId) {
+        //根据条件筛选成绩表
+		String edu101Id = edu101DAO.queryTeacherIdByUserId(userId);
+        List<Edu005> edu005List = edu005Dao.exportMakeUpGradeCheckModel(trem,crouses,edu101Id);
+        return edu005List;
+    }
+
+    //导出不及格成绩excel模板
+    public List<Edu005> exportMakeUpGradeCheckModel(String trem,List<String> crouses,List<String> classes,String userId) {
+        //根据条件筛选成绩表
+		String edu101Id = edu101DAO.queryTeacherIdByUserId(userId);
+        List<Edu005> edu005List = edu005Dao.exportMakeUpGradeCheckModel(trem,crouses,classes,edu101Id);
+        return edu005List;
+    }
+
 	//查询补考成绩
 	public ResultVO getHistoryGrade(String Edu005_Id){
 		ResultVO resultVO;
