@@ -756,7 +756,7 @@ public class StaffManageController {
      * @throws ParseException
      * @throws Exception
      */
-    @RequestMapping(" ")
+    @RequestMapping("exportMakeUpGradeCheckModel")
     @ResponseBody
     public ResultVO exportMakeUpGradeCheckModel(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "queryInfo") String queryInfo) {
         ResultVO result;
