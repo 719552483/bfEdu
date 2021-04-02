@@ -816,7 +816,11 @@ public class StaffManageController {
             if(isIE){
                 fileName="makeupGrade";
             }else{
-                fileName="补考成绩录入单";
+                if("F".equals(edu005List.get(0).getIsExamCrouse())){
+                    fileName="补考成绩录入单";
+                }else{
+                    fileName="补考成绩录入名单";
+                }
             }
             //创建Excel文件
             XSSFWorkbook workbook = administrationPageService.exportMUGradeModel(edu005List);
@@ -906,6 +910,44 @@ public class StaffManageController {
         }
 
         result = administrationPageService.importGradeFile(file,lrrmc,userKey);
+
+        return result;
+    }
+
+    /**
+     * 校验导入补考成绩文件
+     * @param file
+     * @return
+     */
+    @RequestMapping("checkGradeFileMakeUp")
+    @ResponseBody
+    public ResultVO checkGradeFileMakeUp(MultipartFile file){
+        ResultVO result = administrationPageService.checkGradeFileMakeUp(file);
+        return result;
+    }
+
+    /**
+     * 导入补考成绩文件
+     * @return
+     */
+    @RequestMapping("importGradeFileMakeUp")
+    @ResponseBody
+    public ResultVO importGradeFileMakeUp(HttpServletRequest request){
+        ResultVO result;
+        MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        MultipartFile file = multipartRequest.getFile("file"); //文件流
+        String lrrInfo = multipartRequest.getParameter("lrrInfo"); //接收客户端传入文件携带的录入人参数
+        //格式化录入人信息
+        JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+        String lrrmc = jsonObject.getString("lrr");
+        String userKey = jsonObject.getString("userykey");
+
+        ResultVO checkResult = administrationPageService.checkGradeFileMakeUp(file);
+        if (checkResult.getCode() == 500) {
+            return checkResult;
+        }
+
+        result = administrationPageService.importGradeFileMakeUp(file,lrrmc,userKey);
 
         return result;
     }

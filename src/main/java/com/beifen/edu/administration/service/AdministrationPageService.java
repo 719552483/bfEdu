@@ -1428,6 +1428,7 @@ public class AdministrationPageService {
 			edu005.setXnid(edu201.getXnid());
 			edu005.setIsExamCrouse(edu201.getSfxylcj());
 			edu005.setCredit(edu201.getXf());
+			edu005.setEdu101_ID(Long.parseLong(edu201.getLs()));
 			edu005Dao.save(edu005);
 		}
 	}
@@ -1671,6 +1672,23 @@ public class AdministrationPageService {
 		} else {
 			resultVO = ResultVO.setSuccess("共找到"+classEntities.size()+"个行政班",classEntities);
 		}
+
+		return resultVO;
+	}
+
+	public ResultVO addEdu101Id() {
+		ResultVO resultVO;
+
+		List<Edu005> list = edu005Dao.addEdu101Id();
+		for (int i = 0;i<list.size();i++){
+			Edu005 edu005 = list.get(i);
+			Long edu201 = edu005.getEdu201_ID();
+			Edu201 e = edu201DAO.findOne(edu201);
+			edu005.setEdu101_ID(Long.parseLong(e.getLs()));
+			edu005Dao.save(edu005);
+		}
+
+		resultVO = ResultVO.setSuccess("更新成功");
 
 		return resultVO;
 	}
@@ -2827,7 +2845,7 @@ public class AdministrationPageService {
 				if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
 					predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
 				}
-				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
+//				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
 				predicates.add(cb.isNull(root.<String>get("isConfirm")));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -3060,6 +3078,8 @@ public class AdministrationPageService {
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getCourseName(),-1,2,false);
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentName(),-1,3,false);
 			utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentCode(),-1,4,false);
+			utils.appendCell(sheet,i,"",edu0051List.get(i).getIsExamCrouse(),-1,6,false);
+
 //			utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
 //			if(edu0051List.get(i).getExam_num() == 0){
 //				utils.appendCell(sheet,i,"","正考成绩",-1,7,false);
@@ -3073,8 +3093,7 @@ public class AdministrationPageService {
 		sheet.setColumnWidth(2, 30*256);
 		sheet.setColumnWidth(3, 10*256);
 		sheet.setColumnWidth(4, 20*256);
-		sheet.setColumnWidth(5, 30*256);
-
+		sheet.setColumnHidden((short)6, true);
 		return workbook;
 	}
 
@@ -3157,6 +3176,114 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+
+	//校验导入补考成绩文件
+	public ResultVO checkGradeFileMakeUp(MultipartFile file) {
+		ResultVO resultVO;
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
+			resultVO = ResultVO.setFailed("文件格式错误");
+			return resultVO;
+		}
+		try {
+			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
+//			XSSFRow firstRow = sheet.getRow(1);
+//			String xn = firstRow.getCell(0).toString();
+//			String className = firstRow.getCell(1).toString();
+//			String courseName = firstRow.getCell(2).toString();
+
+
+
+			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+			// 遍历集合数据，产生数据行
+			for (int i = 0; i < totalRows; i++) {
+				int rowIndex = i + 1;
+				XSSFRow contentRow = sheet.getRow(rowIndex);
+				XSSFCell cell0 = contentRow.getCell(0);
+				XSSFCell cell1 = contentRow.getCell(1);
+				XSSFCell cell2 = contentRow.getCell(2);
+				XSSFCell cell3 = contentRow.getCell(3);
+				XSSFCell cell4 = contentRow.getCell(4);
+				if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null) {
+					resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
+					return resultVO;
+				}
+				XSSFCell cell6 = contentRow.getCell(6);
+				XSSFCell cell = contentRow.getCell(5);
+				if(cell != null) {
+					String data = cell.toString();
+					Boolean isNum = true;//data是否为数值型
+					if (data != null || "".equals(data)) {
+						//判断data是否为数值型
+						if("F".equals(cell6) && !"通过".equals(data) && !"不通过".equals(data)){
+							resultVO = ResultVO.setFailed("第"+rowIndex+"行成绩只能为通过或不通过");
+							return resultVO;
+						}else{
+							isNum = data.matches("^(-?\\d+)(\\.\\d+)?$");
+						}
+					}
+					if(!isNum) {
+						resultVO = ResultVO.setFailed("第"+rowIndex+"行成绩不是数字");
+						return resultVO;
+					}
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		resultVO = ResultVO.setSuccess("格式校验成功");
+		return resultVO;
+	}
+
+	//批量导入补考成绩
+	public ResultVO importGradeFileMakeUp(MultipartFile file, String lrrmc, String userKey) {
+		ResultVO resultVO;
+		List<Edu005> edu005List = new ArrayList<>();
+		try {
+			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
+			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+
+			// 遍历集合数据，产生数据行
+			for (int i = 0; i < totalRows; i++) {
+				int rowIndex = i + 1;
+				XSSFRow contentRow = sheet.getRow(rowIndex);
+				String xn = contentRow.getCell(0).toString();
+				String className = contentRow.getCell(1).toString();
+				String courseName = contentRow.getCell(2).toString();
+				String studentCode = contentRow.getCell(4).toString();
+				XSSFCell gradeCell = contentRow.getCell(5);
+//				XSSFCell mxzt = contentRow.getCell(6);
+//				String mx = edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX");
+				if (gradeCell != null) {
+					Edu005 edu005;
+					edu005 = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode);
+					if (edu005 != null) {
+						if(gradeCell != null){
+							if("通过".equals(gradeCell.toString())){
+								edu005.setGrade("T");
+							}else if("不通过".equals(gradeCell.toString())){
+								edu005.setGrade("F");
+							}else{
+								edu005.setGrade(gradeCell.toString());
+							}
+							staffManageService.giveGrade(edu005);
+							edu005List.add(edu005);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		resultVO = ResultVO.setSuccess("共导入了"+edu005List.size()+"条成绩信息",edu005List);
+		return resultVO;
+	}
 
 	//批量导入成绩
 	public ResultVO importGradeFile(MultipartFile file, String lrrmc, String userKey) {

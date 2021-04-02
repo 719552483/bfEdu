@@ -90,13 +90,19 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //导出不及格成绩excel模板
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "select * from edu005 where  is_Confirm = 'T' and GRADE < 60 and xnid = ?1 and COURSE_NAME in ?2 and EDU300_ID  in ?3 and EDU101_ID =?4 order by CLASS_NAME", nativeQuery = true)
+    @Query(value = "select * from edu005 where  is_Confirm = 'T' and ((is_Exam_Crouse = 'F' and (grade != 'T' or grade is null )) or (is_Exam_Crouse = 'T' and grade <60)) and xnid = ?1 and COURSE_NAME in ?2 and EDU300_ID  in ?3 and EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?4) order by CLASS_NAME", nativeQuery = true)
     List<Edu005> exportMakeUpGradeCheckModel(String classes,List<String> trem,List<String> list,String edu101Id);
 
     //导出不及格成绩excel模板
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "select * from edu005 where  is_Confirm = 'T' and GRADE < 60 and xnid = ?1 and COURSE_NAME in ?2 and EDU101_ID =?3 order by CLASS_NAME", nativeQuery = true)
+    @Query(value = "select * from edu005 where  is_Confirm = 'T' and ((is_Exam_Crouse = 'F' and (grade != 'T' or grade is null )) or (is_Exam_Crouse = 'T' and grade <60)) and xnid = ?1 and COURSE_NAME in ?2 and EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?3) order by CLASS_NAME", nativeQuery = true)
     List<Edu005> exportMakeUpGradeCheckModel(String classes,List<String> trem,String edu101Id);
+
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "select * from edu005 where edu101_id is null", nativeQuery = true)
+    List<Edu005> addEdu101Id();
 }
 

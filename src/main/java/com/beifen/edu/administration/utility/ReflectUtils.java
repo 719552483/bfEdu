@@ -2985,6 +2985,8 @@ public class ReflectUtils {
 			ModifyNewClassSeclect(hiddenSheetName,workbook);
 		}else if(filename.equals("modifyGrade")||filename.contains("成绩模板")){
 			ModifyGradeSeclect(hiddenSheetName,workbook);
+		}else if(filename.equals("补考成绩录入单")){
+			ModifyGradeSeclectMakeUp(hiddenSheetName,workbook);
 		}
 	}
 
@@ -3801,6 +3803,17 @@ public class ReflectUtils {
 	}
 
 	//为导入成绩文件填充需要的下拉框
+	public static void ModifyGradeSeclectMakeUp(String hiddenSheetName,XSSFWorkbook workbook){
+		List < String > mxlxlist = new ArrayList < String > ();
+		mxlxlist.add("通过");
+		mxlxlist.add("不通过");
+		String[]mx = mxlxlist.toArray(new String[mxlxlist.size()]);
+		hiddenSheetName = hiddenSheetName+(1);
+
+		int[] mxIndex={5};
+		cell2Select(workbook,hiddenSheetName,mx,mxIndex,false);
+	}
+
 	public static void ModifyGradeSeclect(String hiddenSheetName,XSSFWorkbook workbook){
 		List < String > mxlxlist = new ArrayList < String > ();
 		List<Edu000> mxlx = reflectUtils.administrationPageService.queryEjdm("IS_MX");
@@ -3813,7 +3826,6 @@ public class ReflectUtils {
 		int[] mxIndex={6};
 		cell2Select(workbook,hiddenSheetName,mx,mxIndex,false);
 	}
-
 
 
 	//单元格变为下拉框

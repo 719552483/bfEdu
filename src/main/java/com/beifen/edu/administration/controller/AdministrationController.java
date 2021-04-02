@@ -1321,6 +1321,19 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 为005表里的数据修改edu101的值
+	 *
+	 * @return returnMap
+	 */
+	@RequestMapping("addEdu101Id")
+	@ResponseBody
+	public ResultVO addEdu101Id() {
+		ResultVO result = administrationPageService.addEdu101Id();
+		return result;
+	}
+
+
+	/**
 	 * 生成开课计划查询课程库和班级信息
 	 * @param edu107_Id
 	 * @return
