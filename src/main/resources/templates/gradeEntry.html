@@ -39,7 +39,6 @@
 	</head>
 
 	<body>
-
 		<div class="place">
 			<span>位置：</span>
 			<ul class="placeul myPlaceul">
@@ -65,8 +64,11 @@
 						</ul>
 						<ul class="toolbar1 manytools">
 							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+							<li class="click" id="wantLoadNoPassGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载不及格成绩模板</li>
+							<li class="click" id="wantConfirmNotPassGrade"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入不及格成绩</li>
 						</ul>
 					</div>
+					<div class="clear"></div>
 
 					<div class="searchArea searchAreaWitheSelect">
 						<div class="col4 giveBottom">
@@ -206,7 +208,7 @@
 									<ul class="forminfo">
 										<div class="">
 											<label class="selectName" style="margin-top: 14px;">课程<b>*</b></label>
-											<input name="" type="text" class="myInput colInput" readonly="readonly" id="loadForKcmc" placeholder="请填写课程名称..."/>
+											<input name="" type="text" class="myInput colInput" readonly="readonly" id="loadForKcmc" placeholder="点击选择课程..."/>
 										</div>
 									</ul>
 								</div>
@@ -452,27 +454,6 @@
 						<div class="tiptop"><span class="moadalTitle">行政班列表</span><a class="specialCanle specialCanle1" shape="rect"></a></div>
 					</div>
 					<div class="modal-body">
-						<div class="tools paddingL" style="padding-top:1%">
-							<ul class="toolbar" style="float: none">
-								<li class="click" id="chooseCalss_StartSearch"><span><img
-										src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
-								<li class="click" id="chooseCalss_ReSearch"><span><img
-										src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
-							</ul>
-						</div>
-
-						<div class="searchArea moreInfoSelectStyle">
-							<div class="col3 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 7px;">班级名称</label>
-										<input name="" type="text" class="myInput manyInfoInput"
-											   id="chooseCalss_className" placeholder="请输入班级名称..." />
-									</div>
-								</ul>
-							</div>
-						</div>
-
 						<div class="chooseClassTableArea">
 							<table class="tablelist myTableStyle" id="chooseClassTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>
 						</div>
@@ -500,6 +481,54 @@
 					<div class="modal-footer tipbtn">
 						<input name="" type="button" class="sure" id="confirmChooseCrouse" value="确定"/>&nbsp;
 						<input name="" type="button" class="specialCanle specialCanle2" value="返回"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- 下载不及格Modal -->
+	<div class="modal fade bs-example-modal-lg" id="wantEnteryNotPassModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content bodyOnlyOneRow">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">下载不及格成绩模板</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+										<select class="isSowIndex" id="loadNotPassForXn">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">课程<b>*</b></label>
+										<input name="" type="text" class="myInput colInput" readonly="readonly" id="loadNotPassForKcmc" placeholder="点击选择课程..."/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">行政班</label>
+										<input name="" type="text" readonly="readonly" class="myInput colInput" id="loadNotPassForXzbmc" choosendClassId="" placeholder="点击选择行政班..."/>
+									</div>
+								</ul>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="ComfirmLoadNotPassGradeModel" value="下载模板"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
 					</div>
 				</div>
 			</div>
