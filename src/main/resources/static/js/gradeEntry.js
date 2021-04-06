@@ -900,6 +900,7 @@ function reStuffWantLoadGradeModel(){
 
 //预备导入成绩
 function wantImportGrades(){
+	$("#importGradeModal").find(".moadalTitle").html("批量导入成绩");
 	$.showModal("#importGradeModal",true);
 	$("#gradeInfoFile,#showFileName").val("");
 	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
@@ -1896,6 +1897,137 @@ function ComfirmLoadGradeModelForNotPass(){
 	});
 }
 
+//不及格预备导入成绩
+function wantImportGradesforNotPass(){
+	$("#importGradeModal").find(".moadalTitle").html("批量二次导入(不及格)成绩");
+	$.showModal("#importGradeModal",true);
+	$("#gradeInfoFile,#showFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#gradeInfoFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#gradeInfoFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#studentInfoFile").val("");
+			return
+		}
+		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//不及格检验导入文件
+	$('#checkGradeFile').unbind('click');
+	$('#checkGradeFile').bind('click', function(e) {
+		checkGradeFileforNotPass();
+		e.stopPropagation();
+	});
+
+	//不及格确认导入文件
+	$('.confirmImportGrade').unbind('click');
+	$('.confirmImportGrade').bind('click', function(e) {
+		confirmImportGradeforNotPass();
+		e.stopPropagation();
+	});
+}
+
+//不及格检验导入文件
+function checkGradeFileforNotPass(){
+	if ($("#gradeInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+
+	var formData = new FormData();
+	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+
+	$.ajax({
+		url:'/checkGradeFileMakeUp',
+		dataType:'json',
+		type:'POST',
+		async: true,
+		data: formData,
+		processData : false, // 使数据不做处理
+		contentType : false, // 不要设置Content-Type请求头
+		success: function(backjosn){
+			$(".fileLoadingArea").hide();
+			if(backjosn.code===200){
+				showImportSuccessInfo("#importGradeModal",backjosn.msg);
+			}else{
+				showImportErrorInfo("#importGradeModal",backjosn.msg);
+			}
+		},beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+	});
+}
+
+//不及格确认导入文件
+function confirmImportGradeforNotPass(){
+	if ($("#gradeInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	var lrrInfo=new Object();
+	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
+
+	var formData = new FormData();
+	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+	formData.append("lrrInfo",JSON.stringify(lrrInfo));
+
+	$.ajax({
+		url:'/importGradeFileMakeUp',
+		dataType:'json',
+		type:'POST',
+		async: true,
+		data: formData,
+		processData : false, // 使数据不做处理
+		contentType : false, // 不要设置Content-Type请求头
+		success: function(backjosn){
+			$(".fileLoadingArea").hide();
+			if(backjosn.code===200){
+				var currentMainTable=$("#gradeEntryTable").bootstrapTable("getData");
+
+				for (var i = 0; i < currentMainTable.length; i++) {
+					for (var b = 0; b < backjosn.data.length; b++) {
+						if(currentMainTable[i].edu005_ID==backjosn.data[i].edu005_ID){
+							$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+								id: backjosn.data[b].edu005_ID,
+								row: backjosn.data[b]
+							});
+						}
+					}
+				}
+
+				toastr.success('成功导入'+backjosn.data.length+'条成绩');
+				var reObject = new Object();
+				reObject.fristSelectId = "#level";
+				reObject.actionSelectIds = "#department,#grade,#major";
+				reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
+				reObject.normalSelectIds = "#xn";
+				reReloadSearchsWithSelect(reObject);
+				$.hideModal("#importGradeModal")
+			}else{
+				showImportErrorInfo("#importGradeModal",backjosn.msg);
+			}
+		},beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+	});
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -1975,6 +2107,13 @@ function binBind() {
 	//下载不及格模板modal班级focus
 	$('#loadNotPassForXzbmc').focus(function(e){
 		getclassforNotPass();
+		e.stopPropagation();
+	});
+
+	//不及格预备导入成绩
+	$('#wantConfirmNotPassGrade').unbind('click');
+	$('#wantConfirmNotPassGrade').bind('click', function(e) {
+		wantImportGradesforNotPass();
 		e.stopPropagation();
 	});
 }
