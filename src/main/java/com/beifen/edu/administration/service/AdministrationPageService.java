@@ -3261,7 +3261,7 @@ public class AdministrationPageService {
 //				String mx = edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX");
 				if (gradeCell != null) {
 					Edu005 edu005;
-					edu005 = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode);
+					edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
 					if (edu005 != null) {
 						if(gradeCell != null){
 							if("通过".equals(gradeCell.toString())){
@@ -3271,11 +3271,17 @@ public class AdministrationPageService {
 							}else{
 								edu005.setGrade(gradeCell.toString());
 							}
-							staffManageService.giveGrade(edu005);
+//							staffManageService.giveGrade(edu005);
 							edu005List.add(edu005);
 						}
+					}else{
+						resultVO = ResultVO.setFailed("第"+(i+1)+"行不是该任课教课的学生");
+						return resultVO;
 					}
 				}
+			}
+			for(int i = 0;i<edu005List.size();i++){
+				staffManageService.giveGrade(edu005List.get(i));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -922,8 +922,16 @@ public class StaffManageController {
     @RequestMapping("checkGradeFileMakeUp")
     @ResponseBody
     public ResultVO checkGradeFileMakeUp(MultipartFile file){
-        ResultVO result = administrationPageService.checkGradeFileMakeUp(file);
-        return result;
+        ResultVO resultVO = new ResultVO();
+        try {
+            resultVO = administrationPageService.checkGradeFileMakeUp(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultVO = ResultVO.setFailed("模版错误，导入失败");
+            return resultVO;
+        }
+
+        return resultVO;
     }
 
     /**
