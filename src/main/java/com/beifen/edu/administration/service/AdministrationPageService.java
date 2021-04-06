@@ -3178,7 +3178,7 @@ public class AdministrationPageService {
 
 
 	//校验导入补考成绩文件
-	public ResultVO checkGradeFileMakeUp(MultipartFile file) {
+	public ResultVO checkGradeFileMakeUp(MultipartFile file,String userKey) {
 		ResultVO resultVO;
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -3209,6 +3209,16 @@ public class AdministrationPageService {
 				if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null) {
 					resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
 					return resultVO;
+				}else{
+					String xn = contentRow.getCell(0).toString();
+					String className = contentRow.getCell(1).toString();
+					String courseName = contentRow.getCell(2).toString();
+					String studentCode = contentRow.getCell(4).toString();
+					Edu005 edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
+					if(edu005 == null){
+						resultVO = ResultVO.setFailed("第"+rowIndex+"行您不是该课程的任课教课");
+						return resultVO;
+					}
 				}
 				XSSFCell cell6 = contentRow.getCell(6);
 				XSSFCell cell = contentRow.getCell(5);
@@ -3275,7 +3285,7 @@ public class AdministrationPageService {
 							edu005List.add(edu005);
 						}
 					}else{
-						resultVO = ResultVO.setFailed("第"+(i+1)+"行不是该任课教课的学生");
+						resultVO = ResultVO.setFailed("第"+(i+1)+"行您不是该课程的任课教课");
 						return resultVO;
 					}
 				}

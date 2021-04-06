@@ -916,15 +916,19 @@ public class StaffManageController {
 
     /**
      * 校验导入补考成绩文件
-     * @param file
      * @return
      */
     @RequestMapping("checkGradeFileMakeUp")
     @ResponseBody
-    public ResultVO checkGradeFileMakeUp(MultipartFile file){
+    public ResultVO checkGradeFileMakeUp(/*MultipartFile file,*/HttpServletRequest request){
         ResultVO resultVO = new ResultVO();
+        MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        MultipartFile file = multipartRequest.getFile("file");
+        String lrrInfo = multipartRequest.getParameter("lrrInfo");
+        JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
+        String userKey = jsonObject.getString("userykey");
         try {
-            resultVO = administrationPageService.checkGradeFileMakeUp(file);
+            resultVO = administrationPageService.checkGradeFileMakeUp(file,userKey);
         } catch (Exception e) {
             e.printStackTrace();
             resultVO = ResultVO.setFailed("模版错误，导入失败");
@@ -949,12 +953,16 @@ public class StaffManageController {
         JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
         String lrrmc = jsonObject.getString("lrr");
         String userKey = jsonObject.getString("userykey");
-
-        ResultVO checkResult = administrationPageService.checkGradeFileMakeUp(file);
-        if (checkResult.getCode() == 500) {
+        ResultVO checkResult = new ResultVO();
+        try {
+            checkResult = administrationPageService.checkGradeFileMakeUp(file,userKey);
+            if(checkResult.getCode() == 500){
+                return checkResult;
+            }
+        }catch (Exception e){
+            checkResult = ResultVO.setFailed("模版错误，导入失败");
             return checkResult;
         }
-
         result = administrationPageService.importGradeFileMakeUp(file,lrrmc,userKey);
 
         return result;
