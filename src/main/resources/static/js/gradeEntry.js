@@ -1996,7 +1996,7 @@ function confirmImportGradeforNotPass(){
 
 				for (var i = 0; i < currentMainTable.length; i++) {
 					for (var b = 0; b < backjosn.data.length; b++) {
-						if(currentMainTable[i].edu005_ID==backjosn.data[i].edu005_ID){
+						if(currentMainTable[i].edu005_ID==backjosn.data[b].edu005_ID){
 							$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
 								id: backjosn.data[b].edu005_ID,
 								row: backjosn.data[b]
