@@ -1937,8 +1937,13 @@ function checkGradeFileforNotPass(){
 		return;
 	}
 
+	var lrrInfo=new Object();
+	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
+
 	var formData = new FormData();
 	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+	formData.append("lrrInfo",JSON.stringify(lrrInfo));
 
 	$.ajax({
 		url:'/checkGradeFileMakeUp',
