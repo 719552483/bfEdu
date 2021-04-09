@@ -2931,6 +2931,10 @@ public class AdministrationPageService {
 	public ResultVO getHistoryGrade(String Edu005_Id){
 		ResultVO resultVO;
 		List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(Edu005_Id);
+		if(edu0051List.size() == 0){
+			resultVO = ResultVO.setFailed("暂无数据");
+			return resultVO;
+		}
 		List<Edu0051> edu0051List2 = new ArrayList<>();
 		if(edu0051List.get(0).getExam_num()!= 0){
 			Edu0051 edu0051 = new Edu0051();
