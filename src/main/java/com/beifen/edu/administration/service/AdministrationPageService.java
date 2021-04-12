@@ -1637,7 +1637,7 @@ public class AdministrationPageService {
 				if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
 					predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
 				}
-				if(!"教辅人员".equals(jzglx)){
+				if(jzglx!=null && !"".equals(jzglx) && !jzglx.contains("教辅人员")){
 					Path<Object> path = root.get("xbbm");//定义查询的字段
 					CriteriaBuilder.In<Object> in = cb.in(path);
 					for (int i = 0; i <departments.size() ; i++) {
