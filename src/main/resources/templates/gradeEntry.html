@@ -56,11 +56,11 @@
 				<div class="scheduleClassesMainArea">
 					<div class="tools">
 						<ul class="toolbar">
-							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 							<li class="click" id="wantLoadGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载导入成绩模板</li>
 							<li class="click" id="wantImportGrades"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入成绩</li>
 							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>成绩确认</li>
 							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>取消成绩确认</li>
+							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
 						<ul class="toolbar1 manytools">
 							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
@@ -285,6 +285,15 @@
 							<div class="col1 giveBottom">
 								<ul class="forminfo">
 									<div class="">
+										<label class="selectName" style="margin-top: 14px;">行政班<b>*</b></label>
+										<input name="" type="text" class="myInput colInput" id="cancelGradeForXzbmc" choosendClassId="" placeholder="点击选择行政班..." readonly="readonly"/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
 										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
 										<select class="isSowIndex" id="cancelGradeForXn">
 											<option value="seleceConfigTip">请选择</option>
@@ -296,17 +305,8 @@
 							<div class="col1 giveBottom">
 								<ul class="forminfo">
 									<div class="">
-										<label class="selectName" style="margin-top: 14px;">行政班名称<b>*</b></label>
-										<input name="" type="text" class="myInput colInput" id="cancelGradeForXzbmc" placeholder="请填写行政班名称..."/>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">课程名称<b>*</b></label>
-										<input name="" type="text" class="myInput colInput" id="cancelGradeForKcmc" placeholder="请填写课程名称..."/>
+										<label class="selectName" style="margin-top: 14px;">课程<b>*</b></label>
+										<input name="" type="text" class="myInput colInput" id="cancelGradeForKcmc" placeholder="点击选择课程名称..." readonly="readonly"/>
 									</div>
 								</ul>
 							</div>
@@ -333,6 +333,15 @@
 							<div class="col1 giveBottom">
 								<ul class="forminfo">
 									<div class="">
+										<label class="selectName" style="margin-top: 14px;">行政班<b>*</b></label>
+										<input name="" type="text" class="myInput colInput" id="confirmGradeForXzbmc" choosendClassId="" placeholder="点击选择行政班..." readonly="readonly"/>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
 										<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
 										<select class="isSowIndex" id="confirmGradeForXn">
 											<option value="seleceConfigTip">请选择</option>
@@ -344,17 +353,8 @@
 							<div class="col1 giveBottom">
 								<ul class="forminfo">
 									<div class="">
-										<label class="selectName" style="margin-top: 14px;">行政班名称<b>*</b></label>
-										<input name="" type="text" class="myInput colInput" id="confirmGradeForXzbmc" placeholder="请填写行政班名称..."/>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">课程名称<b>*</b></label>
-										<input name="" type="text" class="myInput colInput" id="confirmGradeForKcmc" placeholder="请填写课程名称..."/>
+										<label class="selectName" style="margin-top: 14px;">课程<b>*</b></label>
+										<input name="" type="text" class="myInput colInput" id="confirmGradeForKcmc" placeholder="点击选择课程..." readonly="readonly"/>
 									</div>
 								</ul>
 							</div>

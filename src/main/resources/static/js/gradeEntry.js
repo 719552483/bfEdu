@@ -1041,12 +1041,12 @@ function confirmGrade(){
 	}
 
 	if(className===""){
-		toastr.warning("行政班名称不能为空");
+		toastr.warning("请选择行政班");
 		return;
 	}
 
 	if(courseName===""){
-		toastr.warning("课程班名称不能为空");
+		toastr.warning("请选择课程班");
 		return;
 	}
 
@@ -1161,7 +1161,16 @@ function cancelGrade(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
+				var data=backjson.data;
+				for (var i = 0; i < data.length; i++) {
+					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+						id: backjson.data[i].edu005_ID,
+						row: backjson.data[i]
+					});
+				}
+				toolTipUp(".myTooltip");
 				toastr.success(backjson.msg);
+				$.hideModal("#confirmGradeModal");
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -2033,6 +2042,300 @@ function confirmImportGradeforNotPass(){
 	});
 }
 
+//成绩确认班级focus
+function confirmGradeForXzbmc(){
+	var serachObject=new Object();
+	serachObject.level='';
+	serachObject.department='';
+	serachObject.grade='';
+	serachObject.major='';
+	serachObject.className='';
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAdministrationClassGradeModel",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(serachObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$.hideModal("#confirmGradeModal",false);
+				$.showModal("#chooseCalssModal",true);
+				stuffAdministrationClassTable(backjson.data);
+				//提示框取消按钮
+				$('.specialCanle1').unbind('click');
+				$('.specialCanle1').bind('click', function(e) {
+					$.hideModal("#chooseCalssModal",false);
+					$.showModal("#confirmGradeModal",true);
+					e.stopPropagation();
+				});
+
+				//确认选择行政班
+				$('#confirmChoosedClalss').unbind('click');
+				$('#confirmChoosedClalss').bind('click', function(e) {
+					confirmChoosedClalssForconfirmGrade();
+					e.stopPropagation();
+				});
+			} else {
+				stuffAdministrationClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//成绩确认-确认选择行政班
+function confirmChoosedClalssForconfirmGrade(){
+	var choosendClass=$("#chooseClassTable").bootstrapTable("getSelections");
+	if(choosendClass.length==0){
+		toastr.warning('请选择班级');
+		return;
+	}
+
+	$("#confirmGradeForXzbmc").val(choosendClass[0].xzbmc);
+	$("#confirmGradeForXzbmc").attr("choosendClassId",choosendClass[0].edu300_ID);
+	$.hideModal("#chooseCalssModal",false);
+	$.showModal("#confirmGradeModal",true);
+}
+
+//成绩确认-课程focus
+function confirmGradeForKcmc(){
+	var chosendClass=$("#confirmGradeForXzbmc").attr("choosendClassId");
+	var choosendTerm=getNormalSelectValue("confirmGradeForXn");
+	if(chosendClass===""){
+		toastr.warning('请先选择班级');
+		return;
+	}
+	if(choosendTerm===""){
+		toastr.warning('请先选择学年');
+		return;
+	}
+	searchCourseByClassForConfirmGrade(chosendClass,choosendTerm);
+}
+
+//成绩确认-获取课程
+function searchCourseByClassForConfirmGrade(chosendClass,choosendTerm){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseByClass",
+		data: {
+			"edu300_ID":chosendClass,
+			"term":choosendTerm
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$("#chooseCruoseModal").find(".moadalTitle").html("可选课程库");
+				$.hideModal("#confirmGradeModal",false);
+				$.showModal("#chooseCruoseModal",true);
+				stuffCrouseClassTable(backjson.data);
+
+				//提示框取消按钮
+				$('.specialCanle2').unbind('click');
+				$('.specialCanle2').bind('click', function(e) {
+					$.hideModal("#chooseCruoseModal",false);
+					$.showModal("#confirmGradeModal",true);
+					e.stopPropagation();
+				});
+
+				//确认选择课程
+				$('#confirmChooseCrouse').unbind('click');
+				$('#confirmChooseCrouse').bind('click', function(e) {
+					confirmChooseCrouseForConfirmGrade();
+					e.stopPropagation();
+				});
+			} else {
+				stuffCrouseClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//成绩确认-确认选择课程
+function confirmChooseCrouseForConfirmGrade(){
+	var tableSelected= $("#chooseCrouseTable").bootstrapTable("getSelections");
+	if(tableSelected.length==0){
+		toastr.warning('请选择课程');
+		return;
+	}
+	$("#confirmGradeForKcmc").val(tableSelected[0].kcmc);
+	$.hideModal("#chooseCruoseModal",false);
+	$.showModal("#confirmGradeModal",true);
+}
+
+
+
+
+
+//取消成绩确认班级focus
+function cancelGradeForXzbmc(){
+	var serachObject=new Object();
+	serachObject.level='';
+	serachObject.department='';
+	serachObject.grade='';
+	serachObject.major='';
+	serachObject.className='';
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAdministrationClassGradeModel",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(serachObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$.hideModal("#cancelGradeModal",false);
+				$.showModal("#chooseCalssModal",true);
+				stuffAdministrationClassTable(backjson.data);
+				//提示框取消按钮
+				$('.specialCanle1').unbind('click');
+				$('.specialCanle1').bind('click', function(e) {
+					$.hideModal("#chooseCalssModal",false);
+					$.showModal("#cancelGradeModal",true);
+					e.stopPropagation();
+				});
+
+				//确认选择行政班
+				$('#confirmChoosedClalss').unbind('click');
+				$('#confirmChoosedClalss').bind('click', function(e) {
+					confirmChoosedClalssForCancelGrade();
+					e.stopPropagation();
+				});
+			} else {
+				stuffAdministrationClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//取消成绩-确认选择行政班
+function confirmChoosedClalssForCancelGrade(){
+	var choosendClass=$("#chooseClassTable").bootstrapTable("getSelections");
+	if(choosendClass.length==0){
+		toastr.warning('请选择班级');
+		return;
+	}
+
+	$("#cancelGradeForXzbmc").val(choosendClass[0].xzbmc);
+	$("#cancelGradeForXzbmc").attr("choosendClassId",choosendClass[0].edu300_ID);
+	$.hideModal("#chooseCalssModal",false);
+	$.showModal("#cancelGradeModal",true);
+}
+
+//取消成绩确认-课程focus
+function cancelGradeForKcmc(){
+	var chosendClass=$("#cancelGradeForXzbmc").attr("choosendClassId");
+	var choosendTerm=getNormalSelectValue("cancelGradeForXn");
+	if(chosendClass===""){
+		toastr.warning('请先选择班级');
+		return;
+	}
+	if(choosendTerm===""){
+		toastr.warning('请先选择学年');
+		return;
+	}
+	searchCourseByClassForCancelGrade(chosendClass,choosendTerm);
+}
+
+//取消成绩确认-获取课程
+function searchCourseByClassForCancelGrade(chosendClass,choosendTerm){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseByClass",
+		data: {
+			"edu300_ID":chosendClass,
+			"term":choosendTerm
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$("#chooseCruoseModal").find(".moadalTitle").html("可选课程库");
+				$.hideModal("#cancelGradeModal",false);
+				$.showModal("#chooseCruoseModal",true);
+				stuffCrouseClassTable(backjson.data);
+
+				//提示框取消按钮
+				$('.specialCanle2').unbind('click');
+				$('.specialCanle2').bind('click', function(e) {
+					$.hideModal("#chooseCruoseModal",false);
+					$.showModal("#cancelGradeModal",true);
+					e.stopPropagation();
+				});
+
+				//确认选择课程
+				$('#confirmChooseCrouse').unbind('click');
+				$('#confirmChooseCrouse').bind('click', function(e) {
+					confirmChooseCrouseForCancelGrade();
+					e.stopPropagation();
+				});
+			} else {
+				stuffCrouseClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//成绩确认-确认选择课程
+function confirmChooseCrouseForCancelGrade(){
+	var tableSelected= $("#chooseCrouseTable").bootstrapTable("getSelections");
+	if(tableSelected.length==0){
+		toastr.warning('请选择课程');
+		return;
+	}
+	$("#cancelGradeForKcmc").val(tableSelected[0].kcmc);
+	$.hideModal("#chooseCruoseModal",false);
+	$.showModal("#cancelGradeModal",true);
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -2077,10 +2380,34 @@ function binBind() {
 		e.stopPropagation();
 	});
 
+	//成绩确认班级focus
+	$('#confirmGradeForXzbmc').focus(function(e){
+		confirmGradeForXzbmc();
+		e.stopPropagation();
+	});
+
+	//成绩确认课程focus
+	$('#confirmGradeForKcmc').focus(function(e){
+		confirmGradeForKcmc();
+		e.stopPropagation();
+	});
+
 	//取消成绩确认
 	$('#wantCancelGrade').unbind('click');
 	$('#wantCancelGrade').bind('click', function(e) {
 		wantCancelGrade();
+		e.stopPropagation();
+	});
+
+	//取消成绩确认班级focus
+	$('#cancelGradeForXzbmc').focus(function(e){
+		cancelGradeForXzbmc();
+		e.stopPropagation();
+	});
+
+	//取消成绩确认课程focus
+	$('#cancelGradeForKcmc').focus(function(e){
+		cancelGradeForKcmc();
 		e.stopPropagation();
 	});
 
