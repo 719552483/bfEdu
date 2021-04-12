@@ -72,7 +72,11 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	List<Edu101> findAllteachers();
 
 	// 根据id查询教师姓名
-	@Query(value = "select jzglx from Edu101 where EDU101_ID = (SELECT USER_KEY FROM EDU990 where BF990_ID = ?1)", nativeQuery = true)
+//	@Query(value = "select jzglx from Edu101 where EDU101_ID = (SELECT USER_KEY FROM EDU990 where BF990_ID = ?1)", nativeQuery = true)
+//	String queryTeacherByUserId(String userId);
+
+
+	@Query(value = "SELECT js FROM EDU990 where BF990_ID = ?1", nativeQuery = true)
 	String queryTeacherByUserId(String userId);
 
 	// 根据id查询教师id

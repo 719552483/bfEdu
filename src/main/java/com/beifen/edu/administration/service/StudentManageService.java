@@ -255,7 +255,7 @@ public class StudentManageService {
                 if (edu001.getXzbname() != null && !"".equals(edu001.getXzbname())) {
                     predicates.add(cb.like(root.<String> get("xzbname"), '%' + edu001.getXzbname() + '%'));
                 }
-                if(!"教辅人员".equals(jzglx)){
+                if(jzglx!=null && !"".equals(jzglx) && !jzglx.contains("教辅人员")){
                     Path<Object> path = root.get("szxb");//定义查询的字段
                     CriteriaBuilder.In<Object> in = cb.in(path);
                     for (int i = 0; i <departments.size() ; i++) {
