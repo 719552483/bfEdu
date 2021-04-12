@@ -1161,16 +1161,7 @@ function cancelGrade(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				var data=backjson.data;
-				for (var i = 0; i < data.length; i++) {
-					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
-						id: backjson.data[i].edu005_ID,
-						row: backjson.data[i]
-					});
-				}
-				toolTipUp(".myTooltip");
 				toastr.success(backjson.msg);
-				$.hideModal("#confirmGradeModal");
 			} else {
 				toastr.warning(backjson.msg);
 			}
