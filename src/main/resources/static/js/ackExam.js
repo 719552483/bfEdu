@@ -14,6 +14,7 @@ function deafultSearch(){
 	SearchObject.courseName="";
 	SearchObject.coursesNature="";
 	SearchObject.className="";
+	SearchObject.sfsqks="F";
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -35,7 +36,9 @@ function deafultSearch(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				stuffTaskInfoTable(backjson.data);
+				stuffTaskInfoTable(backjson.data,true);
+				$("#askForExamTable td:last-child").css('width','110px');
+				$("#askForExamTable td:last-child").css('min-width','110px');
 				toastr.info(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
@@ -52,7 +55,7 @@ function drawTaskEmptyTable() {
 
 var choosendCourse=new Array();
 //渲染可申请表
-function stuffTaskInfoTable(tableInfo) {
+function stuffTaskInfoTable(tableInfo,visibleControl) {
 	window.scheduleClassesEvents = {
 		'click #askForExam': function(e, value, row, index) {
 			askForExam(row,index);
@@ -103,7 +106,8 @@ function stuffTaskInfoTable(tableInfo) {
 		columns: [
 			{
 				field: 'check',
-				checkbox: true
+				checkbox: true,
+				visible: visibleControl
 			},
 			{
 				field: 'edu201_ID',
@@ -164,6 +168,7 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'center',
 				clickToSelect: false,
 				formatter: scheduleClassesFormatter,
+				visible: visibleControl,
 				events: scheduleClassesEvents,
 			}
 		]
@@ -420,5 +425,52 @@ function btnBind() {
 	$('#configExams').bind('click', function(e) {
 		askForExams();
 		e.stopPropagation();
+	});
+
+	//状态change
+	$('#coursesStatus').change(function() {
+		var SearchObject=new Object();
+		SearchObject.courseCode=$("#courseCode").val();
+		SearchObject.courseName=$("#courseName").val();
+		SearchObject.coursesNature=getNormalSelectValue("coursesNature");
+		SearchObject.className=$("#className").val();
+		SearchObject.sfsqks=getNormalSelectValue("coursesStatus");
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/searchTaskCanTest",
+			data: {
+				"searchCriteria":JSON.stringify(SearchObject),
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					if(SearchObject.sfsqks==="F"){
+						stuffTaskInfoTable(backjson.data,true);
+						$("#askForExamTable td:last-child").css('width','110px');
+						$("#askForExamTable td:last-child").css('min-width','110px');
+					}else{
+						stuffTaskInfoTable(backjson.data,false);
+						$("#askForExamTable td:last-child").css('width','auto');
+						$("#askForExamTable td:last-child").css('min-width','auto');
+					}
+					toastr.info(backjson.msg);
+				} else {
+					toastr.warning(backjson.msg);
+					drawTaskEmptyTable();
+				}
+			}
+		});
 	});
 }
