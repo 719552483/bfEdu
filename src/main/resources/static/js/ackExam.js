@@ -10,9 +10,9 @@ $(function() {
 //初始化检索
 function deafultSearch(){
 	var SearchObject=new Object();
-	SearchObject.courseCode="";
+	// SearchObject.courseCode="";
 	SearchObject.courseName="";
-	SearchObject.coursesNature="";
+	// SearchObject.coursesNature="";
 	SearchObject.className="";
 	SearchObject.sfsqks="F";
 	$.ajax({
@@ -355,7 +355,15 @@ function startSearch(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				stuffTaskInfoTable(backjson.data);
+				if(serachObject.sfsqks==="F"||serachObject.sfsqks===""){
+					stuffTaskInfoTable(backjson.data,true);
+					$("#askForExamTable td:last-child").css('width','110px');
+					$("#askForExamTable td:last-child").css('min-width','110px');
+				}else{
+					stuffTaskInfoTable(backjson.data,false);
+					$("#askForExamTable td:last-child").css('width','auto');
+					$("#askForExamTable td:last-child").css('min-width','auto');
+				}
 			} else {
 				toastr.warning(backjson.msg);
 				drawTaskEmptyTable();
@@ -366,14 +374,16 @@ function startSearch(){
 
 //获取检索对象
 function getSearchObject(){
-	var courseCode=$("#courseCode").val();
+	// var courseCode=$("#courseCode").val();
 	var courseName=$("#courseName").val();
-	var coursesNature=getNormalSelectValue("coursesNature");
+	// var coursesNature=getNormalSelectValue("coursesNature");
+	var sfsqks=getNormalSelectValue("coursesStatus");
 	var className=$("#className").val();
 	var SearchObject=new Object();
-	SearchObject.courseCode=courseCode;
+	// SearchObject.courseCode=courseCode;
 	SearchObject.courseName=courseName;
-	SearchObject.coursesNature=coursesNature;
+	// SearchObject.coursesNature=coursesNature;
+	SearchObject.sfsqks=sfsqks;
 	SearchObject.className=className;
 	return SearchObject;
 }
@@ -391,9 +401,9 @@ function getApprovalobect(){
 //重置检索
 function reSearch(){
 	var reObject = new Object();
-	reObject.InputIds = "#courseCode,#courseName,#className";
-	reObject.normalSelectIds = "#coursesNature";
+	reObject.InputIds = "#courseName,#className";
 	reReloadSearchsWithSelect(reObject);
+	stuffManiaSelectWithDeafult("#coursesStatus", "F");  //课程类型
 	deafultSearch();
 }
 
@@ -430,9 +440,9 @@ function btnBind() {
 	//状态change
 	$('#coursesStatus').change(function() {
 		var SearchObject=new Object();
-		SearchObject.courseCode=$("#courseCode").val();
+		// SearchObject.courseCode=$("#courseCode").val();
 		SearchObject.courseName=$("#courseName").val();
-		SearchObject.coursesNature=getNormalSelectValue("coursesNature");
+		// SearchObject.coursesNature=getNormalSelectValue("coursesNature");
 		SearchObject.className=$("#className").val();
 		SearchObject.sfsqks=getNormalSelectValue("coursesStatus");
 		$.ajax({
