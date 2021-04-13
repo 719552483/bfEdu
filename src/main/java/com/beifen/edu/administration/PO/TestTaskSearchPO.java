@@ -7,6 +7,7 @@ public class TestTaskSearchPO {
     private String courseName;//课程名称
     private String coursesNature;//课程性质
     private String className;//班级名称
+    private String sfsqks;//是否已结课
 
     public String getCourseCode() {
         return courseCode;
@@ -38,5 +39,13 @@ public class TestTaskSearchPO {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getSfsqks() {
+        return sfsqks;
+    }
+
+    public void setSfsqks(String sfsqks) {
+        this.sfsqks = sfsqks;
     }
 }

@@ -639,7 +639,13 @@ public class TeachingManageService {
                 }
                 predicates.add(cb.like(root.<String>get("ls"), "%"+userKey+"%"));
                 predicates.add(cb.isNotNull(root.<String>get("sfypk")));
-                predicates.add(cb.equal(root.<String>get("sfsqks"), "F"));
+
+                if (testTaskSearchPO.getSfsqks() != null && !"".equals(testTaskSearchPO.getSfsqks())) {
+                    predicates.add(cb.equal(root.<String>get("sfsqks"), testTaskSearchPO.getSfsqks()));
+                }else{
+                    predicates.add(cb.equal(root.<String>get("sfsqks"), "F"));
+                }
+
 
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
