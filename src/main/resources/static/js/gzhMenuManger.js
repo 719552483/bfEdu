@@ -144,7 +144,14 @@ function stuffTable(tableInfo) {
 
 	function anqxFormatter(value, row, index) {
 		var anqxString="";
-		var anqx=row.anqx.split(",");
+		var anqx='';
+		if(row.anqx!=null&&row.anqx!==''&&typeof row.anqx!=="undefined"){
+			anqx=row.anqx.split(",")
+		}else{
+			anqx.length=0;
+			anqxString="暂未设置按钮权限";
+		}
+
 		for (var i = 0; i < anqx.length; i++) {
 			if(anqx[i]==="insert"){
 				anqxString+='<span class="label label-success">可新增</span>';
@@ -156,6 +163,7 @@ function stuffTable(tableInfo) {
 				anqxString+='<span class="label label-info">可查询</span>';
 			}
 		}
+
 		return [
 			'<div class="anqxArea">'+anqxString+'</div>'
 		]
@@ -192,7 +200,10 @@ function wantModifyRole(row, index) {
 	shortcutsMouseAction();
 	choseCurrentAuthoritys(row, index);
 	authorityGroupChange();
-	multiSelectWithDefault("#anqx",row.anqx.split(",")); //按钮权限
+
+	if(row.anqx!=null&&row.anqx!==''&&typeof row.anqx!=="undefined"){
+		multiSelectWithDefault("#anqx",row.anqx.split(",")); //按钮权限
+	}
 
 	//确认修改权限
 	$('#modifyRole').unbind('click');
