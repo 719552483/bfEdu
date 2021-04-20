@@ -623,6 +623,7 @@ function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
 	$("#addStudentModal").find(".formtext").hide();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
+	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
 	$(".XhArea").show();
 	//清空模态框中元素原始值
 	emptyStudentBaseInfoArea();
@@ -735,6 +736,7 @@ function modifyStudent(row,index){
 	$.showModal("#addStudentModal",true);
 	$("#addStudentModal").find(".formtext").show();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
+	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
 	$(".XhArea").hide();
 	//清空模态框中元素原始值
 	emptyStudentBaseInfoArea();

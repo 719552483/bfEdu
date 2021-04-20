@@ -1037,7 +1037,7 @@ function onUncheckAllMajorTraining(row){
 // 查看培养计划详情
 function majorTrainingInfo(row) {
 	showAndStuffDetails(row,false);
-	$('.majorTrainingTableActionArea').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+	$('#majorTrainingModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn").hide();
 }
 
@@ -1052,7 +1052,7 @@ function modifyMajorTraining(row) {
 		return;
 	}
 	showAndStuffDetails(row,true);
-	$('.majorTrainingTableActionArea').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
+	$('#majorTrainingModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
 	$('#majorTrainingDetails_feedback').attr("disabled", true) // 反馈意见不可修改
 	$(".myabeNoneTipBtn").show();
 	// 确认修改按钮
@@ -2019,9 +2019,9 @@ function onUncheckAllCourse(row){
 
 //展示课程信息
 function showCourseInfo(row) {
-	// //填充tip中的值
+	//填充tip中的值
 	showAndStuffDetails(row);
-	$('.generatCourseDeatilsTip').find(".myInput").attr("disabled", true) // 将input元素设置为readonly
+	$('#majorTrainingModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
 	$(".myabeNoneTipBtn").hide();
 }
 
