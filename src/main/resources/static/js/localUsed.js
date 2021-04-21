@@ -298,13 +298,11 @@ function stuffPkInfoTable(tableInfo,row) {
         ]
     });
 
-
     drawPagination(".PkInfoTableArea", "排课详情");
     drawSearchInput(".PkInfoTableArea");
     changeTableNoRsTip();
     changeColumnsStyle(".PkInfoTableArea", "排课详情");
     toolTipUp(".myTooltip");
-    btnControl();
 }
 
 //开始检索教学点
