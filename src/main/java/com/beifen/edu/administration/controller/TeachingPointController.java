@@ -4,16 +4,23 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.domian.Edu0051;
 import com.beifen.edu.administration.domian.Edu500;
 import com.beifen.edu.administration.domian.Edu501;
 import com.beifen.edu.administration.domian.Edu502;
 import com.beifen.edu.administration.service.TeachingPointService;
+import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 //教学任务点控制层
@@ -23,6 +30,7 @@ public class TeachingPointController {
     @Autowired
     private TeachingPointService teachingPointService;
 
+    ReflectUtils utils = new ReflectUtils();
     /**
      * 新增教学点
      * @param newSiteInfo
@@ -181,4 +189,54 @@ public class TeachingPointController {
         ResultVO result = teachingPointService.saveAssets(edu502List);
         return result;
     }
+
+
+    /**
+     * 根据学年id和教学任务点id查询排课详情
+     * @return
+     */
+    @RequestMapping("/searchCourseDetailByXNAndPointid")
+    @ResponseBody
+    public ResultVO searchCourseDetailByXNAndPointid(@RequestParam("term") String term,@RequestParam("pointId")String pointId) {
+        ResultVO result =teachingPointService.searchCourseDetailByXNAndPointid(term,pointId);
+        return result;
+    }
+
+    /**
+     * 导出教学任务点
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    /*@RequestMapping("exportPointByCity")
+    @ResponseBody
+    public ResultVO exportPointByCity(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "city") String city) {
+        ResultVO result;
+
+
+        List<LocalUsedPO> list = teachingPointService.queryPointByCity(city);
+        if(list.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
+        }else{
+            boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+            String fileName;
+            if(isIE){
+                fileName="PointDetail";
+            }else{
+                fileName="教学任务点详情";
+            }
+            //创建Excel文件
+            XSSFWorkbook workbook = teachingPointService.exportPointByCity(list, list.size());
+            try {
+                utils.loadModal(response,fileName, workbook);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            result = ResultVO.setSuccess("下载成功");
+        }
+        return result;
+    }*/
 }

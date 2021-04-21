@@ -2,10 +2,17 @@ package com.beifen.edu.administration.service;
 
 
 import com.beifen.edu.administration.PO.LocalUsedPO;
+import com.beifen.edu.administration.PO.SchoolTimetablePO;
+import com.beifen.edu.administration.PO.YearSchedulePO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -15,7 +22,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +46,8 @@ public class TeachingPointService {
     Edu501Dao edu501Dao;
     @Autowired
     Edu502Dao edu502Dao;
+    @Autowired
+    YearScheduleViewDao yearScheduleViewDao;
 
 
     ReflectUtils utils = new ReflectUtils();
@@ -180,9 +191,10 @@ public class TeachingPointService {
 
         //查找学年总周数
         int weeks = Integer.parseInt(edu400Dao.getWeekByYear(localUsedPO.getAcademicYearId()));
-        Integer countUsed = weeks * 6;
+        //Integer countUsed = weeks * 6;
+        Integer countUsed = edu203Dao.findEdu203IdsByxnid(localUsedPO.getAcademicYearId());
         for (LocalUsedPO e : localUsedPOS) {
-            List<Edu203> edu203s = edu203Dao.findEdu203IdsByEdu501Id(e.getEdu501Id().toString());
+            List<Edu203> edu203s = edu203Dao.findEdu203IdsByEdu501Id(e.getEdu501Id().toString(),localUsedPO.getAcademicYearId());
             if(edu203s.size() != 0){
                 double v = edu203s.size() / Double.parseDouble(countUsed.toString());
                 NumberFormat nf = NumberFormat.getPercentInstance();
@@ -315,4 +327,264 @@ public class TeachingPointService {
         }
         return resultVO;
     }
+
+    //查询教学任务点
+    public List<LocalUsedPO> queryPointByCity(String city) {
+        List<LocalUsedPO> list;
+        if(city != null && !"".equals(city)){
+            list = edu501Dao.exportPointByCity(city);
+        }else{
+            list = edu501Dao.exportPointByCity2();
+        }
+
+        return list;
+    }
+
+
+
+    //导出教学任务点excel
+    /*public XSSFWorkbook exportPointByCity(List<LocalUsedPO> list, int size) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFCell cells[] = new XSSFCell[1];
+        // 所有标题数组
+        String[] titles = new String[]{"教学点名称", "地级市", "区/县", "详细地址", "任务点名称", "可容纳人数"};
+
+        // 循环设置标题
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = firstRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            utils.appendCell(sheet, i, "", edu0051List.get(i).getXn(), -1, 0, false);
+            utils.appendCell(sheet, i, "", edu0051List.get(i).getClassName(), -1, 1, false);
+            utils.appendCell(sheet, i, "", edu0051List.get(i).getCourseName(), -1, 2, false);
+            utils.appendCell(sheet, i, "", edu0051List.get(i).getStudentName(), -1, 3, false);
+            utils.appendCell(sheet, i, "", edu0051List.get(i).getStudentCode(), -1, 4, false);
+            utils.appendCell(sheet, i, "", edu0051List.get(i).getIsExamCrouse(), -1, 6, false);
+
+//			utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
+//			if(edu0051List.get(i).getExam_num() == 0){
+//				utils.appendCell(sheet,i,"","正考成绩",-1,7,false);
+//			}else{
+//				utils.appendCell(sheet,i,"","第"+edu0051List.get(i).getExam_num()+"次补考成绩",-1,7,false);
+//			}
+        }
+
+        sheet.setColumnWidth(0, 12 * 256);
+        sheet.setColumnWidth(1, 16 * 256);
+        sheet.setColumnWidth(2, 30 * 256);
+        sheet.setColumnWidth(3, 10 * 256);
+        sheet.setColumnWidth(4, 20 * 256);
+        sheet.setColumnHidden((short) 6, true);
+        return workbook;
+    }*/
+
+
+    //根据教学任务点查询固定资产
+    public ResultVO searchCourseDetailByXNAndPointid(String term,String pointId) {
+        ResultVO resultVO;
+
+        Specification<YearSchedulePO> specification = new Specification<YearSchedulePO>() {
+            public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (term != null && !"".equals(term)) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),  term));
+                }
+                if (pointId != null && !"".equals(pointId)) {
+                    predicates.add(cb.equal(root.<String>get("pointId"),  pointId));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+        List<YearSchedulePO> yearSchedules = yearScheduleViewDao.findAll(specification);
+        List<YearSchedulePO> yearSchedulePOS = replaceSchedule(yearSchedules);
+        if(yearSchedulePOS.size() == 0) {
+            resultVO = ResultVO.setFailed("当前学年找到您的课程");
+        } else {
+            for (YearSchedulePO o : yearSchedulePOS) {
+                SchoolTimetablePO s = new SchoolTimetablePO();
+                try {
+                    utils.copyParm(o,s);
+                    schoolTimetableList.add(s);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+//            resultVO = ResultVO.setSuccess("当前学年共找到"+yearSchedulePOS.size()+"个课程",timeTablePackage(schoolTimetableList));
+            resultVO = ResultVO.setSuccess("当前学年共找到"+yearSchedulePOS.size()+"个课程",yearSchedulePOS);
+        }
+
+        return resultVO;
+    }
+
+
+
+    /**
+     * 组装课程信息
+     * @param schoolTimetableList
+     * @return
+     */
+    private List<Map> timeTablePackage(List<SchoolTimetablePO> schoolTimetableList) {
+        List<Map> newInfo = new ArrayList<>();
+
+        Map map1 = new HashMap();
+        map1.put("id","id1");
+        map1.put("classPeriod", ClassPeriodConstant.SECTION_ONE);
+        Map map2 = new HashMap();
+        map2.put("id","id2");
+        map2.put("classPeriod",ClassPeriodConstant.SECTION_TWO);
+        Map map3 = new HashMap();
+        map3.put("id","id3");
+        map3.put("classPeriod",ClassPeriodConstant.SECTION_THREE);
+        Map map4 = new HashMap();
+        map4.put("id","id4");
+        map4.put("classPeriod",ClassPeriodConstant.SECTION_FOUR);
+        Map map5 = new HashMap();
+        map5.put("id","id5");
+        map5.put("classPeriod",ClassPeriodConstant.SECTION_FIVE);
+        Map map6 = new HashMap();
+        map6.put("id","id6");
+        map6.put("classPeriod",ClassPeriodConstant.SECTION_SIX);
+
+        for (SchoolTimetablePO s : schoolTimetableList) {
+            if(ClassPeriodConstant.SECTION_ONE.equals(s.getKjmc())) {
+                map1 = classPackage(map1,s);
+            }
+            if(ClassPeriodConstant.SECTION_TWO.equals(s.getKjmc())) {
+                map2 = classPackage(map2,s);
+            }
+            if(ClassPeriodConstant.SECTION_THREE.equals(s.getKjmc())) {
+                map3 = classPackage(map3,s);
+            }
+            if(ClassPeriodConstant.SECTION_FOUR.equals(s.getKjmc())) {
+                map4 = classPackage(map4,s);
+            }
+            if(ClassPeriodConstant.SECTION_FIVE.equals(s.getKjmc())) {
+                map5 = classPackage(map5,s);
+            }
+            if(ClassPeriodConstant.SECTION_SIX.equals(s.getKjmc())) {
+                map6 = classPackage(map6,s);
+            }
+        }
+
+        newInfo.add(map1);
+        newInfo.add(map2);
+        newInfo.add(map3);
+        newInfo.add(map4);
+        newInfo.add(map5);
+        newInfo.add(map6);
+
+        return newInfo;
+    }
+
+    //重新整理学年课表
+    private List<YearSchedulePO> replaceSchedule(List<YearSchedulePO> yearSchedules) {
+        List<YearSchedulePO> newList = new ArrayList<>();
+        int size = yearSchedules.size();
+        for (int i = 0; i < size ; i++) {
+            String kjid = yearSchedules.get(i).getKjid();
+            String xqid = yearSchedules.get(i).getXqid();
+            List<YearSchedulePO> orderList = new ArrayList<>();
+            for ( int j = i ;j < size; j++) {
+                YearSchedulePO info = yearSchedules.get(j);
+                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid())) {
+                    orderList.add(info);
+                }
+                if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()))) {
+                    break;
+                }
+            }
+            List<String> ssz = new ArrayList<>();
+            for (YearSchedulePO e : orderList) {
+                if (e.getKsz().equals(e.getJsz())) {
+                    ssz.add("第"+e.getKsz()+"周");
+                } else {
+                    ssz.add("第"+e.getKsz()+"-"+e.getJsz()+"周");
+                }
+            }
+            YearSchedulePO addInfo = orderList.get(0);
+            addInfo.setSzz(utils.listToString(ssz,','));
+            newList.add(addInfo);
+            i += orderList.size()-1;
+        }
+        return newList;
+    }
+
+    //按星期组装课程
+    private Map classPackage(Map map,SchoolTimetablePO s) {
+        List<SchoolTimetablePO> newList = new ArrayList<>();
+
+        String xq = s.getXqid();
+
+        switch (xq) {
+            case "01":
+                if(map.get("monday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("monday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("monday",newList);
+                }
+                break;
+            case "02":
+                if(map.get("tuesday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("tuesday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("tuesday",newList);
+                }
+                break;
+            case "03":
+                if(map.get("wednesday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("wednesday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("wednesday",newList);
+                }
+                break;
+            case "04":
+                if(map.get("thursday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("thursday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("thursday",newList);
+                }
+                break;
+            case "05":
+                if(map.get("friday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("friday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("friday",newList);
+                }
+                break;
+            case "06":
+                if(map.get("saturday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("saturday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("saturday",newList);
+                }
+                break;
+            case "07":
+                if(map.get("sunday") !=  null ){
+                    ((List<SchoolTimetablePO>)map.get("sunday")).add(s);
+                } else {
+                    newList.add(s);
+                    map.put("sunday",newList);
+                }
+                break;
+        }
+
+        return map;
+    }
+
 }

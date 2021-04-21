@@ -28,4 +28,12 @@ public interface Edu501Dao extends JpaRepository<Edu501, Long>, JpaSpecification
     @Query(value = "select new com.beifen.edu.administration.PO.LocalUsedPO(f.edu501Id,e.city,e.cityCode,e.localName,e.localAddress, f.capacity, f.pointName,f.remarks) " +
             "from Edu500 e, Edu501 f where e.edu500Id = f.edu500Id and f.edu501Id in ?1")
     List<LocalUsedPO> findLocalUsedPOBy501Ids(List<Long> edu501Ids);
+
+    @Query(value = "select new com.beifen.edu.administration.PO.LocalUsedPO(f.edu501Id,e.city,e.cityCode,e.localName,e.localAddress, f.capacity, f.pointName,f.remarks) " +
+            "from Edu500 e, Edu501 f where e.edu500Id = f.edu500Id and e.city = ?1")
+    List<LocalUsedPO> exportPointByCity(String city);
+
+    @Query(value = "select new com.beifen.edu.administration.PO.LocalUsedPO(f.edu501Id,e.city,e.cityCode,e.localName,e.localAddress, f.capacity, f.pointName,f.remarks) " +
+            "from Edu500 e, Edu501 f where e.edu500Id = f.edu500Id")
+    List<LocalUsedPO> exportPointByCity2();
 }
