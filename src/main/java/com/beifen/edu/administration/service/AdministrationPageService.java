@@ -1248,6 +1248,11 @@ public class AdministrationPageService {
 		return isSuccess;
 	}
 
+	public String getedu201Idbyedu202Id(String edu202Id) {
+		Edu202 edu202 = edu202DAO.findOne(Long.parseLong(edu202Id));
+		return edu202.getEdu201_ID()+"";
+	}
+
 	//检查是否有排课冲突
 	public ResultVO checkSchedule(List<Edu203> edu203List,String edu201Id) {
 		ResultVO resultVO;

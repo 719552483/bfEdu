@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 //教学任务点控制层
@@ -203,31 +204,63 @@ public class TeachingPointController {
     }
 
     /**
+     * 导出教学任务点-校验
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("exportPointByCityCheck")
+    @ResponseBody
+    public ResultVO exportPointByCityCheck(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "sendObject") String sendObject) {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(sendObject);
+        String city = jsonObject.getString("city");
+        String item = jsonObject.getString("item");
+
+        List<Edu500> list = teachingPointService.queryPointByCity(city);
+        if(list.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的数据，请重新输入");
+        }else{
+            result = ResultVO.setSuccess("成功");
+        }
+        return result;
+    }
+
+    /**
      * 导出教学任务点
      *
      * @return returnMap
      * @throws ParseException
      * @throws Exception
      */
-    /*@RequestMapping("exportPointByCity")
+    @RequestMapping("exportPointByCity")
     @ResponseBody
-    public ResultVO exportPointByCity(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "city") String city) {
+    public ResultVO exportPointByCity(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "sendObject") String sendObject) {
         ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(sendObject);
+        String city = jsonObject.getString("city");
+        String item = jsonObject.getString("item");
 
-
-        List<LocalUsedPO> list = teachingPointService.queryPointByCity(city);
-        if(list.size() == 0) {
-            result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
-        }else{
+        List<Edu500> list = teachingPointService.queryPointByCity(city);
+        /*if(list.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的数据，请重新输入");
+        }else{*/
             boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
             String fileName;
             if(isIE){
                 fileName="PointDetail";
             }else{
-                fileName="教学任务点详情";
+                if(city != null && !"".equals(city)){
+                    fileName=list.get(0).getCity()+"教学点详情合并导出";
+                }else{
+                    fileName="教学点详情合并导出";
+                }
+
             }
             //创建Excel文件
-            XSSFWorkbook workbook = teachingPointService.exportPointByCity(list, list.size());
+            List<String> titleList = Arrays.asList(item.split(","));
+            XSSFWorkbook workbook = teachingPointService.exportPointByCity(list,titleList);
             try {
                 utils.loadModal(response,fileName, workbook);
             } catch (IOException e) {
@@ -236,7 +269,7 @@ public class TeachingPointController {
                 e.printStackTrace();
             }
             result = ResultVO.setSuccess("下载成功");
-        }
+//        }
         return result;
-    }*/
+    }
 }

@@ -2154,12 +2154,12 @@ public class AdministrationController {
 
 
 	/**
-	 * 确认排课前检验是否存在冲突
+	 * 第一次确认排课前检验是否存在冲突
 	 * @return
 	 */
 	@RequestMapping("/checkSchedule")
 	@ResponseBody
-	public ResultVO getTaskByCulturePlanByUser(@RequestParam("Edu201Id") String edu201Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass,@RequestParam("sfpw") String sfpw,@RequestParam("isRe") String isRe) {
+	public ResultVO getTaskByCulturePlanByUser(@RequestParam("id") String edu201Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass,@RequestParam("sfpw") String sfpw) {
 
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
@@ -2167,7 +2167,7 @@ public class AdministrationController {
 		ResultVO result = administrationPageService.checkSchedule(edu203List,edu201Id);
 		if(200==result.getCode()){
 			boolean isSuccess = administrationPageService.saveSchedule(edu201Id, edu203List, edu207List,sfpw);
-			if(isSuccess && "false".equals(isRe)){
+			if(isSuccess){
 				administrationPageService.taskPutSchedule(edu201Id);
 			}
 			result = ResultVO.setSuccess("排课成功");
@@ -2176,7 +2176,24 @@ public class AdministrationController {
 	}
 
 
+	/**
+	 * 再次排课前检验是否存在冲突
+	 * @return
+	 */
+	@RequestMapping("/checkReSchedule")
+	@ResponseBody
+	public ResultVO checkReSchedule(@RequestParam("userId") String userId,@RequestParam("userName") String userName,@RequestParam("id") String edu202Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass,@RequestParam("sfpw") String sfpw) {
 
+		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
+		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
+		String edu201Id = administrationPageService.getedu201Idbyedu202Id(edu202Id);
+		ResultVO result = administrationPageService.checkSchedule(edu203List,edu201Id);
+		if(200==result.getCode()){
+			boolean isSuccess = administrationPageService.reSaveSchedule(edu202Id, edu203List, edu207List,userId,userName,sfpw);
+			result = ResultVO.setSuccess("排课成功");
+		}
+		return result;
+	}
 
 	/**
 	 * 再次排课

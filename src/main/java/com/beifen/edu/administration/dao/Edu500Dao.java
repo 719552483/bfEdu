@@ -31,4 +31,8 @@ public interface Edu500Dao extends JpaRepository<Edu500, Long>, JpaSpecification
     //查询教学点数量
     @Query(value = "select count(0) from edu500 e", nativeQuery = true)
     Long findAllLocal();
+
+    //根据地区查询教学点
+    @Query(value = "SELECT * FROM EDU500 where city_code = ?1", nativeQuery = true)
+    List<Edu500> exportPointByCity(String city);
 }

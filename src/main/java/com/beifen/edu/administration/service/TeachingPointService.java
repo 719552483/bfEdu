@@ -329,12 +329,12 @@ public class TeachingPointService {
     }
 
     //查询教学任务点
-    public List<LocalUsedPO> queryPointByCity(String city) {
-        List<LocalUsedPO> list;
+    public List<Edu500> queryPointByCity(String city) {
+        List<Edu500> list;
         if(city != null && !"".equals(city)){
-            list = edu501Dao.exportPointByCity(city);
+            list = edu500Dao.exportPointByCity(city);
         }else{
-            list = edu501Dao.exportPointByCity2();
+            list = edu500Dao.findAll();
         }
 
         return list;
@@ -343,45 +343,114 @@ public class TeachingPointService {
 
 
     //导出教学任务点excel
-    /*public XSSFWorkbook exportPointByCity(List<LocalUsedPO> list, int size) {
+    public XSSFWorkbook exportPointByCity(List<Edu500> list,List<String> titleList) {
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+        XSSFSheet sheet = workbook.createSheet("教学点详情合并导出");
 
         XSSFRow firstRow = sheet.createRow(0);// 第一行
         XSSFCell cells[] = new XSSFCell[1];
         // 所有标题数组
-        String[] titles = new String[]{"教学点名称", "地级市", "区/县", "详细地址", "任务点名称", "可容纳人数"};
+//        String[] titles = new String[]{"教学点名称", "地级市", "区/县", "详细地址","任务点个数","教学点备注", "教学任务点名称", "可容纳人数","场地平均使用率","教学任务点备注","物资详情","排课信息"};
+
+        String[] titles = titleList.toArray(new String[titleList.size()]);
 
         // 循环设置标题
         for (int i = 0; i < titles.length; i++) {
             cells[0] = firstRow.createCell(i);
             cells[0].setCellValue(titles[i]);
         }
-
+        //控制行数
+        int j = 0;
         for (int i = 0; i < list.size(); i++) {
-            utils.appendCell(sheet, i, "", edu0051List.get(i).getXn(), -1, 0, false);
-            utils.appendCell(sheet, i, "", edu0051List.get(i).getClassName(), -1, 1, false);
-            utils.appendCell(sheet, i, "", edu0051List.get(i).getCourseName(), -1, 2, false);
-            utils.appendCell(sheet, i, "", edu0051List.get(i).getStudentName(), -1, 3, false);
-            utils.appendCell(sheet, i, "", edu0051List.get(i).getStudentCode(), -1, 4, false);
-            utils.appendCell(sheet, i, "", edu0051List.get(i).getIsExamCrouse(), -1, 6, false);
-
-//			utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
-//			if(edu0051List.get(i).getExam_num() == 0){
-//				utils.appendCell(sheet,i,"","正考成绩",-1,7,false);
-//			}else{
-//				utils.appendCell(sheet,i,"","第"+edu0051List.get(i).getExam_num()+"次补考成绩",-1,7,false);
-//			}
+            //控制列数
+            int k = 0;
+            Edu500 edu500 = list.get(i);
+            utils.appendCell(sheet, j, "", edu500.getLocalName(), -1, k, false);k++;
+            utils.appendCell(sheet, j, "", list.get(i).getCity(), -1, k, false);k++;
+            utils.appendCell(sheet, j, "", list.get(i).getCountry(), -1, k, false);k++;
+            if(titleList.contains("详细地址")){
+                utils.appendCell(sheet, j, "", list.get(i).getCountry(), -1, k, false);k++;
+            }
+            List<Edu501> edu501List = edu501Dao.findAllByEdu501Id(edu500.getEdu500Id()+"");
+            if(titleList.contains("任务点个数")){
+                utils.appendCell(sheet, j, "", edu501List.size()+"个", -1, k, false);k++;
+            }
+            if(titleList.contains("教学点备注")){
+                utils.appendCell(sheet, j, "", list.get(i).getRemarks(), -1, k, false);k++;
+            }
+            if(edu501List.size() == 0){
+                //直接换行
+                j++;
+            }
+            for (int ii = 0;ii<edu501List.size();ii++){
+                int kk = 0;
+                Edu501 edu501 = edu501List.get(ii);
+                utils.appendCell(sheet, j, "", (ii+1)+"."+edu501.getPointName(), -1, k+kk, false);kk++;
+                if(titleList.contains("可容纳人数")){
+                    utils.appendCell(sheet, j, "", edu501.getCapacity()+"人", -1, k+kk, false);kk++;
+                }
+                Integer countAll = edu203Dao.findEdu203Count();
+                Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(edu501.getEdu501Id()+"");
+                if(titleList.contains("场地平均使用率")){
+                    //计算平均使用率
+                    if(countUsed != 0){
+                        double v = Double.parseDouble(countUsed.toString()) / Double.parseDouble(countAll.toString());
+                        NumberFormat nf = NumberFormat.getPercentInstance();
+                        nf.setMinimumFractionDigits(2);//设置保留小数位
+                        String usedPercent = nf.format(v);
+                        utils.appendCell(sheet, j, "", usedPercent, -1, k+kk, false);kk++;
+                    } else {
+                        utils.appendCell(sheet, j, "", "0.00%", -1, k+kk, false);kk++;
+                    }
+                }
+                if(titleList.contains("教学任务点备注")){
+                    utils.appendCell(sheet, j, "", edu501.getRemarks(), -1, k+kk, false);kk++;
+                }
+                if(titleList.contains("物资详情")){
+                    List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501.getEdu501Id()+"");
+                    String detail = "";
+                    for (int iii = 0;iii<edu502List.size();iii++){
+                        detail.concat(edu502List.get(iii).getAssetsName()+":"+edu502List.get(iii).getAssetsNum()+"/n");
+                    }
+                    utils.appendCell(sheet, j, "", detail, -1, k+kk, false);kk++;
+                }
+                if(titleList.contains("排课信息")){
+                    utils.appendCell(sheet, j, "", "共排"+countUsed+"节课", -1, k+kk, false);kk++;
+                }
+                j++;
+            }
         }
-
-        sheet.setColumnWidth(0, 12 * 256);
-        sheet.setColumnWidth(1, 16 * 256);
-        sheet.setColumnWidth(2, 30 * 256);
-        sheet.setColumnWidth(3, 10 * 256);
-        sheet.setColumnWidth(4, 20 * 256);
-        sheet.setColumnHidden((short) 6, true);
+        int k = 0;
+        sheet.setColumnWidth(k, 20 * 256);k++;
+        sheet.setColumnWidth(k, 20 * 256);k++;
+        sheet.setColumnWidth(k, 20 * 256);k++;
+        if(titleList.contains("详细地址")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        if(titleList.contains("任务点个数")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        if(titleList.contains("教学点备注")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        sheet.setColumnWidth(k, 20 * 256);k++;
+        if(titleList.contains("可容纳人数")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        if(titleList.contains("场地平均使用率")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        if(titleList.contains("教学任务点备注")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        if(titleList.contains("物资详情")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
+        if(titleList.contains("排课信息")){
+            sheet.setColumnWidth(k, 20 * 256);k++;
+        }
         return workbook;
-    }*/
+    }
 
 
     //根据教学任务点查询固定资产
