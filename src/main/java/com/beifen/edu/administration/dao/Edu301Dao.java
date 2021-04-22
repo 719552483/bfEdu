@@ -33,6 +33,10 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	@Query(value = "select * from edu301 e where e.bhxzbid like %?1%", nativeQuery = true)
 	List<Edu301> queryTeachingClassByXzbCode(String xzbcode);
 
+	// 根据行政班查询教学班Id
+	@Query(value = "select edu301_ID from edu301 e where e.bhxzbid like %?1%", nativeQuery = true)
+	List<String> queryTeachingClassByXzbCode2(String xzbcode);
+
 	// 根据301ID查询教学班
 	@Query(value = "select * from edu301 where Edu301_ID =?1", nativeQuery = true)
 	Edu301 queryJXBByEdu301ID(String edu301id);

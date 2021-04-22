@@ -2133,13 +2133,43 @@ public class AdministrationController {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
+
+//		Map<String,String> isSuccess2 = administrationPageService.checkSchedule(edu203List,edu201Id);
+//		if("fail".equals(isSuccess2.get("status"))){
+//			returnMap.put("result", false);
+//			returnMap.put("msg", isSuccess2.get("msg"));
+//		}else{
+//			returnMap.put("result", true);
+//		}
 		boolean isSuccess = administrationPageService.saveSchedule(edu201Id, edu203List, edu207List,sfpw);
 		if(isSuccess){
 			administrationPageService.taskPutSchedule(edu201Id);
 		}
 		returnMap.put("result", isSuccess);
+
 		return returnMap;
 	}
+
+
+
+
+	/**
+	 * 确认排课前检验是否存在冲突
+	 * @return
+	 */
+	@RequestMapping("/checkSchedule")
+	@ResponseBody
+	public ResultVO getTaskByCulturePlanByUser(@RequestParam("Edu201Id") String edu201Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass,@RequestParam("sfpw") String sfpw) {
+
+		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
+		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
+
+		ResultVO result = administrationPageService.checkSchedule(edu203List,edu201Id);
+		return result;
+	}
+
+
+
 
 	/**
 	 * 再次排课

@@ -122,6 +122,8 @@ public class AdministrationPageService {
 	private CourseCheckOnDao courseCheckOnDao;
 	@Autowired
 	private RedisUtils redisUtils;
+	@Autowired
+	TeachingScheduleViewDao teachingScheduleViewDao;
 
 	// 查询所有层次
 	public List<Edu103> queryAllLevel() {
@@ -1245,6 +1247,66 @@ public class AdministrationPageService {
 
 		return isSuccess;
 	}
+
+	//检查是否有排课冲突
+	public ResultVO checkSchedule(List<Edu203> edu203List,String edu201Id) {
+		ResultVO resultVO;
+		Edu201 edu201 = edu201DAO.findOne(Long.parseLong(edu201Id));
+		String xnid = edu201.getXnid();
+		if(edu203List !=null && edu203List.size()>0){
+			for(int i = 0;i<edu203List.size();i++){
+				Edu203 edu203 = edu203List.get(i);
+				for(int j = Integer.parseInt(edu203.getKsz());j<=Integer.parseInt(edu203.getJsz());j++){
+					//检查该课节老师是否有别的课程安排
+					if(!"虚拟教学点".equals(edu203.getLocalName())){
+						int size = teachingScheduleViewDao.findCountByTeacher(edu203.getEdu101_id(),j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						if(size>0){
+							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+","+edu203.getTeacherName()+"教师有别的课程安排");
+							return resultVO;
+						}
+					}
+					//检查该教室是否被占用
+					if(!"虚拟教学点".equals(edu203.getLocalName())){
+						int size = teachingScheduleViewDao.findCountByPoint(edu203.getPointId(),j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						if(size>0){
+							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",该'"+edu203.getPointName()+"-"+edu203.getLocalName()+"'已被占用");
+							return resultVO;
+						}
+					}
+					//检查该时间段行政班是否有别的课程安排
+					if(SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())){
+						Long classId = edu201.getClassId();
+						List<String> edu301List = edu301DAO.queryTeachingClassByXzbCode2(classId+"");
+						edu301List.add(classId+"");
+						int size = teachingScheduleViewDao.findCountByClass(edu301List,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						if(size>0){
+							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu201.getClassName()+"'已有其他课程安排");
+							return resultVO;
+						}
+					}else{
+						Long classId = edu201.getClassId();
+						Edu301 edu301 = edu301DAO.findOne(classId);
+						String classIds = edu301.getBhxzbid();
+						List<String> classIdss = Arrays.asList(classIds.split(","));
+						for (int k = 0;k<classIdss.size();k++){
+							String zxbid = classIdss.get(k);
+							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(zxbid);
+							List<String> edu301List = edu301DAO.queryTeachingClassByXzbCode2(zxbid+"");
+							edu301List.add(zxbid+"");
+							int size = teachingScheduleViewDao.findCountByClass(edu301List,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+							if(size>0){
+								resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu300.getXzbmc()+"'已有其他课程安排");
+								return resultVO;
+							}
+						}
+					}
+				}
+			}
+		}
+		resultVO = 	ResultVO.setSuccess("校验成功");
+		return resultVO;
+	}
+
 
 	//确认排课
 	public boolean saveSchedule(String edu201Id, List<Edu203> edu203List, List<Edu207> edu207List,String sfpw) {
