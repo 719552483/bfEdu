@@ -2084,7 +2084,7 @@ function confirmPk2(rowInfo){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/checkSchedule",
+		url: "/checkReSchedule",
 		data:{
 			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
 			"userName":$(parent.frames["topFrame"].document).find(".userName")[0].innerText,
