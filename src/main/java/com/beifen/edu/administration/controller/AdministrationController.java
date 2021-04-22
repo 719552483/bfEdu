@@ -2170,6 +2170,7 @@ public class AdministrationController {
 			if(isSuccess && "false".equals(isRe)){
 				administrationPageService.taskPutSchedule(edu201Id);
 			}
+			result = ResultVO.setSuccess("排课成功");
 		}
 		return result;
 	}
