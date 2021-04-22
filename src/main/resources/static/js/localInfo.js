@@ -586,8 +586,38 @@ function stuffMultipleDefault(){
 function exportFile(){
     var sendObject=new Object();
     sendObject.city=getNormalSelectValue("cityForLoad");
-    sendObject.item=$("#exportThings").val();
+    sendObject.item=$("#exportThings").val().toString();
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/exportPointByCityCheck",
+        data: {
+            "sendObject":JSON.stringify(sendObject)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code == 200) {
+                $.hideModal();
+                startLoadFile(sendObject);
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
 
+//开始下载文件
+function startLoadFile(sendObject){
     var url = "/exportPointByCity";
     var form = $("<form></form>").attr("action", url).attr("method", "post");
     form.append($("<input></input>").attr("type", "hidden").attr("name", "sendObject").attr("value",JSON.stringify(sendObject)));
