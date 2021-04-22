@@ -5,54 +5,10 @@ $(function() {
     $('.isSowIndex').selectMania(); //初始化下拉框
     $("input[type='number']").inputSpinner();
     drawlocalInfoTableEmptyTable();
-    // getSearchAreaSelectInfo();
     binBind();
     stuffEJDElement(EJDMElementInfo);
     searchAllSiteBy(new Object);
 });
-
-//获得检索区域下拉框数据
-function getSearchAreaSelectInfo(){
-    $.ajax({
-        method : 'get',
-        cache : false,
-        url : "/getJwPublicCodes",
-        data: {
-            "userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-        },
-        dataType : 'json',
-        beforeSend: function(xhr) {
-            requestErrorbeforeSend();
-        },
-        error: function(textStatus) {
-            requestError();
-        },
-        complete: function(xhr, status) {
-            requestComplete();
-        },
-        success : function(backjson) {
-            hideloding();
-            if (backjson.result) {
-                var showstr="暂无选择";
-                var allDepartmentStr="";
-                if (backjson.allDepartment.length>0) {
-                    showstr="请选择";
-                    allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
-                    for (var i = 0; i < backjson.allDepartment.length; i++) {
-                        allDepartmentStr += '<option value="' + backjson.allDepartment[i].edu104_ID + '">' + backjson.allDepartment[i].xbmc
-                            + '</option>';
-                    }
-                }else{
-                    allDepartmentStr= '<option value="seleceConfigTip">'+showstr+'</option>';
-                }
-                stuffManiaSelect("#addManagementDepartment", allDepartmentStr);
-
-            } else {
-                toastr.warning('操作失败，请重试');
-            }
-        }
-    });
-}
 
 //填充空的教学点表
 function drawlocalInfoTableEmptyTable() {
@@ -586,6 +542,58 @@ function researchSites(){
     searchAllSiteBy(new Object);
 }
 
+//教学点详情合并导出
+function wantLoadDetails(){
+    $.showModal("#loadDetailsModal",true);
+    stuffMultipleDefault();
+
+    $('.confirmLoadDetails').unbind('click');
+    $('.confirmLoadDetails').bind('click', function(e) {
+        exportFile();
+        e.stopPropagation();
+    });
+}
+
+var haveToCheck=['教学点名称','地级市','区/县','教学任务点名称'];
+//渲染多选下拉默认选择隐藏
+function stuffMultipleDefault(){
+    $("#exportThings").multiSelect();
+    $(".exportThingsArea").find(".multi-select-container").find("span").html('教学点名称, 地级市, 区/县, 教学任务点名称');
+
+    var jsSelect=$(".exportThingsArea").find(".multi-select-menuitems").find("input");
+    for (var i = 0; i < jsSelect.length; i++) {
+        var currentJs=jsSelect[i].attributes[2].nodeValue;
+        for (var h = 0; h < haveToCheck.length; h++) {
+            if(haveToCheck.indexOf(currentJs)!=-1){
+                jsSelect[i].checked = "checked";
+                $(".exportThingsArea").find(".multi-select-menuitems").find("label:eq("+i+")").hide();
+            }else{
+                jsSelect[i].checked = "";
+                $(".exportThingsArea").find(".multi-select-menuitems").find("label:eq("+i+")").show();
+            }
+        }
+    }
+    $("#exportThings").val(haveToCheck);
+    $(".loadDetailsModalRsTxtCite").html(haveToCheck.toString());
+
+    //监控选择  渲染提示文字
+    $('#exportThings').change(function(e){
+        $(".loadDetailsModalRsTxtCite").html($("#exportThings").val().toString());
+    });
+}
+
+//开始导出文件
+function exportFile(){
+    var sendObject=new Object();
+    sendObject.city=getNormalSelectValue("cityForLoad");
+    sendObject.item=$("#exportThings").val();
+
+    var url = "/exportPointByCity";
+    var form = $("<form></form>").attr("action", url).attr("method", "post");
+    form.append($("<input></input>").attr("type", "hidden").attr("name", "sendObject").attr("value",JSON.stringify(sendObject)));
+    form.appendTo('body').submit().remove();
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
     //提示框取消按钮
@@ -616,6 +624,12 @@ function binBind() {
         e.stopPropagation();
     });
 
+    //教学点详情合并导出
+    $('#wantLoadDetails').unbind('click');
+    $('#wantLoadDetails').bind('click', function(e) {
+        wantLoadDetails();
+        e.stopPropagation();
+    });
 
     //重置检索
     $('#researchSites').unbind('click');
