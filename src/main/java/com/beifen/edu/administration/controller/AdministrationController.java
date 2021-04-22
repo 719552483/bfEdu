@@ -2159,12 +2159,18 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/checkSchedule")
 	@ResponseBody
-	public ResultVO getTaskByCulturePlanByUser(@RequestParam("Edu201Id") String edu201Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass,@RequestParam("sfpw") String sfpw) {
+	public ResultVO getTaskByCulturePlanByUser(@RequestParam("Edu201Id") String edu201Id,@RequestParam("scheduleDetail") String scheduleDetail,@RequestParam("scatteredClass") String scatteredClass,@RequestParam("sfpw") String sfpw,@RequestParam("isRe") String isRe) {
 
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
 
 		ResultVO result = administrationPageService.checkSchedule(edu203List,edu201Id);
+		if(200==result.getCode()){
+			boolean isSuccess = administrationPageService.saveSchedule(edu201Id, edu203List, edu207List,sfpw);
+			if(isSuccess && "false".equals(isRe)){
+				administrationPageService.taskPutSchedule(edu201Id);
+			}
+		}
 		return result;
 	}
 
