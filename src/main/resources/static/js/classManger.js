@@ -525,6 +525,7 @@ function wantAddAdministrationClass(){
 	$("#addAdministrationClass_selfNum").val("");
 	$.showModal("#addAdministrationClassModal",true);
 	$("#addAdministrationClassModal").find(".moadalTitle").html("新增行政班");
+	$('.addAdministrationClassTip').find(".myInput").attr("disabled", false) // 将input元素设置为readonly
 	//确认新增行政班
 	$('.confirmAddAdministrationClass').unbind('click');
 	$('.confirmAddAdministrationClass').bind('click', function(e) {

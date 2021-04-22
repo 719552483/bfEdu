@@ -978,17 +978,6 @@ function drawMap(id, allMapJson, currentTeachLocal) {
     myChart.setOption(option);
 }
 
-// table增加tooltip
-function paramsMatter(value, row, index) {
-    if(typeof value === 'undefined'||value==null||value===""){
-        return [ '<div class="myTooltip normalTxt" title="暂无">暂无</div>' ]
-            .join('');
-    }else{
-        return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]
-            .join('');
-    }
-}
-
 //初始化加载
 function loadConfig(){
     var a = $('.visualSssf_left a')
