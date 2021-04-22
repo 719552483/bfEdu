@@ -1115,12 +1115,13 @@ function confirmPk(){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/comfirmSchedule",
+		url: "/checkSchedule",
 		data:{
-			"Edu201Id":PKInfo.edu201_ID.toString(),
+			"id":PKInfo.edu201_ID.toString(),
 			"sfpw":sfpw,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
-			"scatteredClass":JSON.stringify(fsxsInfo)
+			"scatteredClass":JSON.stringify(fsxsInfo),
+			"isRe":false
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -1134,16 +1135,58 @@ function confirmPk(){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.data==200) {
 				var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
 				$("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
 				controlScheduleArea();
-				toastr.success('排课成功');
+				toastr.success(backjson.msg);
 			} else {
-				toastr.warning('排课课时不等于任务书总课时');
+				$.showModal("#pkErrorModal",true);
+				$(".errorTxt").html(backjson.msg);
+				//排课冲突后二次确认
+				$('.confirmPkError').unbind('click');
+				$('.confirmPkError').bind('click', function(e) {
+					finalConfirmPk(PKInfo.edu201_ID.toString(),sfpw,scheduleInfo,fsxsInfo);
+					e.stopPropagation();
+				});
 			}
 		}
 	});
+}
+
+//排课冲突后二次确认
+function finalConfirmPk(Edu201Id,sfpw,scheduleInfo,fsxsInfo){
+	$.ajax({
+			method: 'get',
+			cache: false,
+			url: "/comfirmSchedule",
+			data:{
+				"Edu201Id":Edu201Id,
+				"sfpw":sfpw,
+				"scheduleDetail":JSON.stringify(scheduleInfo),
+				"scatteredClass":JSON.stringify(fsxsInfo)
+			},
+			dataType: 'json',
+			beforeSend: function (xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function (textStatus) {
+				requestError();
+			},
+			complete: function (xhr, status) {
+				requestComplete();
+			},
+			success: function (backjson) {
+				hideloding();
+				if (backjson.result) {
+					var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
+					$("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
+					controlScheduleArea();
+					toastr.success('排课成功');
+					$.hideModal();
+				}
+			}
+		});
 }
 
 //验证集中排课结果
@@ -2042,14 +2085,13 @@ function confirmPk2(rowInfo){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/reComfirmSchedule",
+		url: "/checkSchedule",
 		data:{
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
-			"userName":$(parent.frames["topFrame"].document).find(".userName")[0].innerText,
+			"id":rowInfo.edu202_ID,
 			"sfpw":sfpw,
-			"Edu202Id":rowInfo.edu202_ID,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
-			"scatteredClass":JSON.stringify(fsxsInfo)
+			"scatteredClass":JSON.stringify(fsxsInfo),
+			"isRe":true
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -2063,18 +2105,64 @@ function confirmPk2(rowInfo){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.data==200) {
 				$("#puttedTable").bootstrapTable('updateByUniqueId', {
-					id: rowInfo.edu202_ID,
-					row: rowInfo
+						id: rowInfo.edu202_ID,
+						row: rowInfo
 				});
 				controlScheduleArea();
 				toastr.success('再排成功');
 			} else {
-				toastr.warning('排课课时不等于任务书总课时');
+				$.showModal("#pkErrorModal",true);
+				$(".errorTxt").html(backjson.msg);
+				//排课冲突后二次确认
+				$('.confirmPkError').unbind('click');
+				$('.confirmPkError').bind('click', function(e) {
+					finalConfirmPk2(rowInfo,sfpw,scheduleInfo,fsxsInfo);
+					e.stopPropagation();
+				});
 			}
 		}
 	});
+}
+
+//再排冲突后二次确认
+function finalConfirmPk2(rowInfo,sfpw,scheduleInfo,fsxsInfo){
+	$.ajax({
+			method: 'get',
+			cache: false,
+			url: "/reComfirmSchedule",
+			data:{
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+				"userName":$(parent.frames["topFrame"].document).find(".userName")[0].innerText,
+				"sfpw":sfpw,
+				"Edu202Id":rowInfo.edu202_ID,
+				"scheduleDetail":JSON.stringify(scheduleInfo),
+				"scatteredClass":JSON.stringify(fsxsInfo)
+			},
+			dataType: 'json',
+			beforeSend: function (xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function (textStatus) {
+				requestError();
+			},
+			complete: function (xhr, status) {
+				requestComplete();
+			},
+			success: function (backjson) {
+				hideloding();
+				if (backjson.result) {
+					$("#puttedTable").bootstrapTable('updateByUniqueId', {
+						id: rowInfo.edu202_ID,
+						row: rowInfo
+					});
+					controlScheduleArea();
+					toastr.success('再排成功');
+					$.hideModal();
+				}
+			}
+		});
 }
 
 //再排详情
