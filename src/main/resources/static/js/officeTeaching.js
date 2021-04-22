@@ -1120,8 +1120,7 @@ function confirmPk(){
 			"id":PKInfo.edu201_ID.toString(),
 			"sfpw":sfpw,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
-			"scatteredClass":JSON.stringify(fsxsInfo),
-			"isRe":false
+			"scatteredClass":JSON.stringify(fsxsInfo)
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -2087,11 +2086,12 @@ function confirmPk2(rowInfo){
 		cache: false,
 		url: "/checkSchedule",
 		data:{
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"userName":$(parent.frames["topFrame"].document).find(".userName")[0].innerText,
 			"id":rowInfo.edu202_ID,
 			"sfpw":sfpw,
 			"scheduleDetail":JSON.stringify(scheduleInfo),
-			"scatteredClass":JSON.stringify(fsxsInfo),
-			"isRe":true
+			"scatteredClass":JSON.stringify(fsxsInfo)
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
