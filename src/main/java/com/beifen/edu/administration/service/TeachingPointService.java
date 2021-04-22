@@ -9,10 +9,8 @@ import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.utility.ReflectUtils;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -408,11 +406,14 @@ public class TeachingPointService {
                 }
                 if(titleList.contains("物资详情")){
                     List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501.getEdu501Id()+"");
-                    String detail = "";
+                    ArrayList<String> arrayList = new ArrayList<String>();
                     for (int iii = 0;iii<edu502List.size();iii++){
-                        detail.concat(edu502List.get(iii).getAssetsName()+":"+edu502List.get(iii).getAssetsNum()+"/n");
+                        arrayList.add(edu502List.get(iii).getAssetsName()+":"+edu502List.get(iii).getAssetsNum());
                     }
-                    utils.appendCell(sheet, j, "", detail, -1, k+kk, false);kk++;
+                    CellStyle cs = workbook.createCellStyle();
+                    cs.setWrapText(true);
+                    String content = String.join("\n", arrayList);
+                    utils.appendCell(sheet, j, "", content, -1, k+kk, false,cs);kk++;
                 }
                 if(titleList.contains("排课信息")){
                     utils.appendCell(sheet, j, "", "共排"+countUsed+"节课", -1, k+kk, false);kk++;
@@ -441,7 +442,7 @@ public class TeachingPointService {
             sheet.setColumnWidth(k, 20 * 256);k++;
         }
         if(titleList.contains("教学任务点备注")){
-            sheet.setColumnWidth(k, 20 * 256);k++;
+            sheet.setColumnWidth(k, 30 * 256);k++;
         }
         if(titleList.contains("物资详情")){
             sheet.setColumnWidth(k, 20 * 256);k++;

@@ -2944,6 +2944,41 @@ public class ReflectUtils {
 		
 	}
 
+	/**
+	 * 向Excel 追加数据
+	 * @param sheet  当前sheet
+	 * @param index  当前行的索引
+	 * @param mc     名称列的值  （stuffTwoCell为false时为""）
+	 * @param value  真实值列的值
+	 * @param mcCellIndex  名称列的列索引（stuffTwoCell为false时为-1）
+	 * @param valueCellIndex  真实值列的列索引
+	 * @param stuffTwoCell  是否填充两列 （false只填充一列）
+	 * */
+	public void appendCell(XSSFSheet sheet, int index, String mc, String value, int mcCellIndex, int valueCellIndex, boolean stuffTwoCell,CellStyle cs) {
+		if(mc!=null){
+			mc=mc.toString();
+		}
+		if(value!=null){
+			value=value.toString();
+		}
+
+		XSSFRow row = sheet.getRow(index + 1); //从第二行开始追加
+		//如果总行数超过当前数据长度 新建行
+		if(row==null){
+			int rowNum = sheet.getLastRowNum();// 总行数
+			row=sheet.createRow(rowNum+1);//新建一行
+		}
+		if(stuffTwoCell){
+			row.createCell(mcCellIndex).setCellValue(mc);
+			row.createCell(valueCellIndex).setCellValue(value);
+		}else{
+			XSSFCell cell = row.createCell(valueCellIndex);
+			cell.setCellValue(value);
+			cell.setCellStyle(cs);
+		}
+
+	}
+
 	// 下载模板
 	public void loadModal(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
 		setEXCELstyle(workbook);
