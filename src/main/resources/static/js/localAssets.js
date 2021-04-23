@@ -129,7 +129,6 @@ function stufflocalInfoTable(tableInfo) {
 
 //跳转教学任务点
 function pointDetail(row){
-    // parent.rightFrame.location.href="localPointAssets.html?edu500Id="+row.edu500Id;
     edu500Id=row.edu500Id;
 
     var reObject = new Object();
