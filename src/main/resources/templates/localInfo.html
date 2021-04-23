@@ -256,6 +256,101 @@
     </div>
 </div>
 
+<!-- 教学任务点信息Modal -->
+<div class="modal fade bs-example-modal-lg" id="localPointInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="min-width: 640px">
+            <div class="modal-header">
+                <div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+            </div>
+            <div class="modal-body">
+                <div class="tools">
+                    <ul class="toolbar">
+                        <li class="click insertBtn" id="addPoint"><span><img src="images/t01.png" style="width: 24px;"/></span>新增任务点</li>
+                        <li class="click deleteBtn" id="removePoint"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除任务点</li>
+                        <li class="click" id="startSearchPoint"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+                    </ul>
+                    <ul class="toolbar1">
+                        <li class="click" id="researchPoint"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+                    </ul>
+                </div>
+
+                <div class="searchArea searchAreaWitheSelect">
+                    <div class="col2 giveBottom">
+                        <ul class="forminfo">
+                            <div class="">
+                                <label class="selectName" style="margin-top: 14px;">名称</label>
+                                <input name="" type="text" class="myInput searchInput" id="pointName" placeholder="请填写名称..."/>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pointInfoTableArea columnsStyle searchGivePaddingR">
+                    <table class="tablelist myTableStyle" id="pointInfoTable" data-unique-id="edu501Id"></table>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer tipbtn">
+                <input name="" type="button" class="cancel" value="返回"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增教学任务点Modal -->
+<div class="modal fade bs-example-modal-lg" id="addPointModal" tabindex="-1" role="dialog" aria-labelledby="addSiteModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="tiptop"><span class="moadalTitle">新增教学任务点</span><a class="specialCanle" shape="rect"></a></div>
+            </div>
+
+            <div class="modal-body">
+                <div class="manyInfoShow">
+                    <div class="searchArea moreInfoSelectStyle">
+                        <div class="col4 giveBottom">
+                            <ul class="forminfo">
+                                <div class="">
+                                    <label class="selectName" style="margin-top: 14px;">教学任务点名称<b>*</b></label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addPointName" placeholder="请填写名称..."/>
+                                </div>
+                            </ul>
+                        </div>
+
+                        <div class="col4 giveBottom">
+                            <ul class="forminfo">
+                                <div class="MyspinnerStyle">
+                                    <label class="selectName">容纳人数<b>*</b></label> <input
+                                        type="number" value="0" min="0" step="1" data-decimals="0"
+                                        id="addCapacity" />
+                                </div>
+                            </ul>
+                        </div>
+
+                        <div class="clear"></div>
+                        <div class="col4 giveBottom">
+                            <ul class="forminfo">
+                                <div class="">
+                                    <label class="selectName" style="margin-top: 14px;">备注</label>
+                                    <input name="" type="text" class="myInput manyInfoInput" id="addPointRemarks" placeholder="请填写备注..."/>
+                                </div>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="modal-footer tipbtn">
+                <input name="" type="button" class="sure confirmaddPointBtn" value="确定"/>&nbsp;
+                <input name="" type="button" class="specialCanle" value="取消"/>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ajax请求masking -->
 <div class="modal-backdrop fade loadingMasking noneStart">
     <div class="spinner-box">

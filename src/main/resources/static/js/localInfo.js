@@ -1,3 +1,7 @@
+/*
+* 教学点page
+*
+* */
 var EJDMElementInfo;
 
 $(function() {
@@ -206,9 +210,14 @@ function onUncheckAll(row){
     }
 }
 
-//跳转教学任务点
+//获取教学任务点信息
 function pointDetail(row){
-    parent.rightFrame.location.href="localPointInfo.html?edu500Id="+row.edu500Id;
+    choosendPoint=new Array();
+    edu500Id=row.edu500Id;
+
+    reBackPonitInfoSearch();
+    pointBtnBind();
+    getPointBy(new Object(),row.localName);
 }
 
 //单个删除教学点
@@ -226,7 +235,6 @@ function removeSite(row){
         e.stopPropagation();
     });
 }
-
 
 //批量删除教学点
 function removeSites(){
@@ -276,7 +284,7 @@ function sendRemoveInfo(removeArray){
                 for (var i = 0; i < removeArray.length; i++) {
                     $('#localInfoTable').bootstrapTable('removeByUniqueId', removeArray[i]);
                 }
-                $(".myTooltip").tooltipify();
+               toolTipUp(".myTooltip");
                 toastr.success(backjson.msg);
                 $.hideModal("#remindModal");
             } else {
@@ -285,7 +293,6 @@ function sendRemoveInfo(removeArray){
         }
     });
 }
-
 
 //展示教学点详情
 function localInfoDetails(row,index){
@@ -376,7 +383,7 @@ function sendModifySite(row,modifylocalInfo){
                     id: modifylocalInfo.edu500Id,
                     row: modifylocalInfo
                 });
-                $(".myTooltip").tooltipify();
+               toolTipUp(".myTooltip");
                 toastr.success(backjson.msg);
                 $.hideModal("#remindModal");
             } else {
@@ -459,7 +466,7 @@ function sendNewSiteInfo(newSiteInfo){
             if (backjson.code === 200) {
                 newSiteInfo.edu500Id=backjson.data;
                 $('#localInfoTable').bootstrapTable("prepend", newSiteInfo);
-                $(".myTooltip").tooltipify();
+               toolTipUp(".myTooltip");
                 toastr.success(backjson.msg);
                 $.hideModal("#addSiteModal");
             } else {
@@ -481,8 +488,6 @@ function getSearchValue(){
     var country= $("#country").val();
     var city = getNormalSelectText("city");
     var cityCode = getNormalSelectValue("city");
-
-
 
     var returnObject = new Object();
     if(localName!==""){
@@ -623,7 +628,588 @@ function startLoadFile(sendObject){
     form.append($("<input></input>").attr("type", "hidden").attr("name", "sendObject").attr("value",JSON.stringify(sendObject)));
     form.appendTo('body').submit().remove();
 }
+/*
+* 教学点page end
+*
+* */
 
+/*
+* 教学任务点page
+* */
+var edu500Id;
+//获取教学任务点
+function getPointBy(searchObject,localName){
+    searchObject.edu500Id = edu500Id;
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchPointInfo",
+        data: {
+            "SearchCriteria":JSON.stringify(searchObject),
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code === 200) {
+                stuffPointInfoTable(backjson.data);
+                $.showModal("#localPointInfoModal",true);
+                $("#localPointInfoModal").find(".moadalTitle").html(localName+"-教学任务点信息");
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//填充空的教学任务点表
+function drawPointInfoTableEmptyTable() {
+    stuffPointInfoTable({});
+}
+
+var choosendPoint=new Array();
+//渲染教学任务点表
+function stuffPointInfoTable(tableInfo) {
+    window.releaseNewsEvents = {
+        'click #pointDetails': function(e, value, row, index) {
+            pointDetails(row,index);
+        },
+        'click #modifyPoint': function(e, value, row, index) {
+            modifyPoint(row,index);
+        },
+        'click #removePoint': function(e, value, row, index) {
+            removePoint(row);
+        }
+    };
+
+    $('#pointInfoTable').bootstrapTable('destroy').bootstrapTable({
+        data: tableInfo,
+        pagination: true,
+        pageNumber: 1,
+        pageSize : 5,
+        pageList : [ 5 ],
+        showToggle: false,
+        showFooter: false,
+        clickToSelect: true,
+        search: true,
+        editable: false,
+        exportDataType: "all",
+        showExport: true,      //是否显示导出
+        exportOptions:{
+            fileName: '教学任务点导出'  //文件名称
+        },
+        striped: true,
+        sidePagination: "client",
+        toolbar: '#toolbar',
+        showColumns: true,
+        onCheck : function(row) {
+            onCheckPoint(row);
+        },
+        onUncheck : function(row) {
+            onUncheckPoint(row);
+        },
+        onCheckAll : function(rows) {
+            onCheckAllPoint(rows);
+        },
+        onUncheckAll : function(rows,rows2) {
+            onUncheckAllPoint(rows2);
+        },
+        onPageChange: function() {
+            drawPagination(".pointInfoTableArea", "教学任务点信息");
+            for (var i = 0; i < choosendPoint.length; i++) {
+                $("#pointInfoTable").bootstrapTable("checkBy", {field:"edu501Id", values:[choosendPoint[i].edu501Id]})
+            }
+        },
+        onPostBody: function() {
+            toolTipUp(".myTooltip");
+        },
+        columns: [
+            {
+                field: 'check',
+                checkbox: true,
+            },{
+                field: 'edu501Id',
+                title: '唯一标识',
+                align: 'center',
+                sortable: true,
+                visible: false
+            },{
+                field: 'pointName',
+                title: '教学任务点名称',
+                align: 'left',
+                sortable: true,
+                formatter: paramsMatter
+            }, {
+                field: 'capacity',
+                title: '可容纳人数',
+                align: 'left',
+                sortable: true,
+                formatter: paramsMatter
+            },{
+                field: 'remarks',
+                title: '备注',
+                align: 'left',
+                sortable: true,
+                formatter: paramsMatter,
+                visible: false
+            }, {
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                clickToSelect: false,
+                formatter: releaseNewsFormatter,
+                events: releaseNewsEvents,
+            }
+        ]
+    });
+
+    function releaseNewsFormatter(value, row, index) {
+        return [
+            '<ul class="toolbar tabletoolbar">' +
+            '<li id="pointDetails" class="queryBtn"><span><img src="img/info.png" style="width:24px"></span>详情</li>' +
+            '<li id="modifyPoint" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+            '<li id="removePoint" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
+            '</ul>'
+        ]
+            .join('');
+    }
+
+    drawPagination(".pointInfoTableArea", "教学任务点信息");
+    drawSearchInput(".pointInfoTableArea");
+    changeTableNoRsTip();
+    changeColumnsStyle(".pointInfoTableArea", "教学任务点信息");
+    toolTipUp(".myTooltip");
+    btnControl();
+}
+
+//展示教学点详情
+function pointDetails(row,index){
+    $.hideModal("#localPointInfoModal",false);
+    $.showModal("#addPointModal",true);
+
+    $("#addPointModal").find(".moadalTitle").html(row.pointName+"-详细信息");
+    $('#addPointModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
+    //清空模态框中元素原始值
+    stuffPointDetails(row);
+}
+
+//预备修改任务点
+function modifyPoint(row,index){
+    $.hideModal("#localPointInfoModal",false);
+    $.showModal("#addPointModal",true);
+
+    $("#addPointModal").find(".moadalTitle").html("修改教学点-"+row.pointName);
+    $('#addPointModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
+    //清空模态框中元素原始值
+    stuffPointDetails(row);
+    //确认按钮绑定事件
+    $('.confirmaddPointBtn').unbind('click');
+    $('.confirmaddPointBtn').bind('click', function(e) {
+        confirmmodifyPoint(row,index);
+        e.stopPropagation();
+    });
+}
+
+//确认修改任务点
+function confirmmodifyPoint(row,index){
+    var modifylocalInfo=getnewPointInfo();
+    if(typeof modifylocalInfo ==='undefined'){
+        return;
+    }
+    $.hideModal("#addPointModal",false);
+    $.showModal("#remindModal",true);
+    $(".remindType").html(row.pointName);
+    $(".remindActionType").html("修改");
+
+    //确认按钮绑定事件
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        sendModifyPoint(row,modifylocalInfo);
+        e.stopPropagation();
+    });
+}
+
+//发送修改任务点请求
+function sendModifyPoint(row,modifylocalInfo){
+    modifylocalInfo.edu501Id=row.edu501Id;
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/addLocalPointInfo",
+        data: {
+            "newSiteInfo":JSON.stringify(modifylocalInfo)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code === 200) {
+                $("#pointInfoTable").bootstrapTable('updateByUniqueId', {
+                    id: modifylocalInfo.edu501Id,
+                    row: modifylocalInfo
+                });
+               toolTipUp(".myTooltip");
+                toastr.success(backjson.msg);
+                $.hideModal("#remindModal",false);
+                $.showModal("#localPointInfoModal",true);
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//填充教学点信息
+function stuffPointDetails(row){
+    $("#addPointName").val(row.pointName);
+    $("#addCapacity").val(row.capacity);
+    $("#addPointRemarks").val(row.remarks);
+}
+
+//单个删除任务点
+function removePoint(row){
+    $.showModal("#remindModal",true);
+    $.hideModal("#localPointInfoModal",false);
+    $(".remindType").html('教学任务点- '+row.pointName+' ');
+    $(".remindActionType").html("删除");
+
+    //确认删除教学点
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeArray = new Array;
+        removeArray.push(row.edu501Id);
+        sendRemovePointInfo(removeArray);
+        e.stopPropagation();
+    });
+}
+
+//批量删除教学点
+function removePoints(){
+    var chosenSites =$('#pointInfoTable').bootstrapTable('getAllSelections');;
+    if (chosenSites.length === 0) {
+        toastr.warning('暂未选择任何数据');
+    } else {
+        $.showModal("#remindModal",true);
+        $.hideModal("#localPointInfoModal",false);
+        $(".remindType").html("所选教学点");
+        $(".remindActionType").html("删除");
+
+        //确认删除教学点
+        $('.confirmRemind').unbind('click');
+        $('.confirmRemind').bind('click', function(e) {
+            var removeArray = new Array;
+            for (var i = 0; i < chosenSites.length; i++) {
+                removeArray.push(chosenSites[i].edu501Id);
+            }
+            sendRemovePointInfo(removeArray);
+            e.stopPropagation();
+        });
+    }
+}
+
+//发送删除请求
+function sendRemovePointInfo(removeArray){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/removePoint",
+        data: {
+            "removeIDs":JSON.stringify(removeArray)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code === 200) {
+                for (var i = 0; i < removeArray.length; i++) {
+                    $('#pointInfoTable').bootstrapTable('removeByUniqueId', removeArray[i]);
+                }
+                toastr.success(backjson.msg);
+                $.showModal("#localPointInfoModal",true);
+                $.hideModal("#remindModal",false);
+                toolTipUp(".myTooltip");
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//单选教学任务点
+function onCheckPoint(row){
+    if(choosendPoint.length<=0){
+        choosendPoint.push(row);
+    }else{
+        var add=true;
+        for (var i = 0; i < choosendPoint.length; i++) {
+            if(choosendPoint[i].edu501Id===row.edu501Id){
+                add=false;
+                break;
+            }
+        }
+        if(add){
+            choosendPoint.push(row);
+        }
+    }
+}
+
+//单反选教学任务点
+function onUncheckPoint(row){
+    if(choosendPoint.length<=1){
+        choosendPoint.length=0;
+    }else{
+        for (var i = 0; i < choosendPoint.length; i++) {
+            if(choosendPoint[i].edu501Id===row.edu501Id){
+                choosendPoint.splice(i,1);
+            }
+        }
+    }
+}
+
+//全选教学任务点
+function onCheckAllPoint(row){
+    for (var i = 0; i < row.length; i++) {
+        choosendPoint.push(row[i]);
+    }
+}
+
+//全反选教学任务点
+function onUncheckAllPoint(row){
+    var a=new Array();
+    for (var i = 0; i < row.length; i++) {
+        a.push(row[i].edu501Id);
+    }
+
+
+    for (var i = 0; i < choosendPoint.length; i++) {
+        if(a.indexOf(choosendPoint[i].edu501Id)!==-1){
+            choosendPoint.splice(i,1);
+            i--;
+        }
+    }
+}
+
+//预备添加任务点
+function wantAddPoint(){
+    rebackPointInfo();
+    $("#addPointModal").find(".moadalTitle").html("新增教学任务点");
+    $('#addPointModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
+    $.hideModal("#localPointInfoModal",false);
+    $.showModal("#addPointModal",true);
+    //确认按钮绑定事件
+    $('.confirmaddPointBtn').unbind('click');
+    $('.confirmaddPointBtn').bind('click', function(e) {
+        confirmaddPoint();
+        e.stopPropagation();
+    });
+}
+
+//确认添加任务点
+function confirmaddPoint(){
+    var newSiteInfo=getnewPointInfo();
+    if(typeof newSiteInfo ==='undefined'){
+        toastr.warning('请检查必填项');
+        return;
+    }
+    sendNewPointInfo(newSiteInfo);
+}
+
+//发送添加教学点请求
+function sendNewPointInfo(newSiteInfo){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/addLocalPointInfo",
+        data: {
+            "newSiteInfo":JSON.stringify(newSiteInfo)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code === 200) {
+                newSiteInfo.edu501Id=backjson.data;
+                $('#pointInfoTable').bootstrapTable("prepend", newSiteInfo);
+                toolTipUp(".myTooltip");
+                toastr.success(backjson.msg);
+                $.hideModal("#addPointModal",false);
+                $.showModal("#localPointInfoModal",true);
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//获得新增任务点的信息
+function getnewPointInfo(){
+    var pointName= $("#addPointName").val();
+    var capacity= $("#addCapacity").val();
+    var remarks = $("#addPointRemarks").val();
+
+    var returnObject = new Object();
+    if(pointName == "" || capacity == 0) {
+        return undefined;
+    }
+
+
+    returnObject.edu500Id=edu500Id;
+    returnObject.pointName=pointName;
+    returnObject.capacity=capacity;
+    returnObject.remarks=remarks;
+
+    return returnObject;
+}
+
+//重置新增任务点信息模态框
+function rebackPointInfo(){
+    var reObject = new Object();
+    reObject.InputIds = "#addPointName,#addCapacity,#addPointRemarks";
+    $("#addCapacity").val(0);
+    reReloadSearchsWithSelect(reObject);
+}
+
+//开始检索任务点
+function startSearchPoint(){
+    var searchObject = getPointSearchValue();
+    if(searchObject.pointName===""||typeof searchObject.pointName==="undefined"){
+        toastr.warning('名称不能为空');
+        return;
+    }
+
+    searchPointBy(searchObject);
+}
+
+//获得任务点检索区域的值
+function getPointSearchValue(){
+    var pointName= $("#pointName").val();
+
+    var returnObject = new Object();
+    if(pointName!==""){
+        returnObject.pointName = pointName;
+    }
+
+    returnObject.edu500Id = edu500Id;
+    return returnObject;
+}
+
+//按条件检索教学任务点
+function searchPointBy(searchObject){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/searchPointInfo",
+        data: {
+            "SearchCriteria":JSON.stringify(searchObject),
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code === 200) {
+                stuffPointInfoTable(backjson.data);
+            } else {
+                drawPointInfoTableEmptyTable();
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
+//重置教学点信息模态框
+function reBackPonitInfoSearch(){
+    var reObject = new Object();
+    reObject.InputIds = "#pointName";
+    reReloadSearchsWithSelect(reObject);
+    var returnObject = new Object();
+    returnObject.pointName = '';
+    returnObject.edu500Id = edu500Id;
+    searchPointBy(returnObject);
+}
+
+//教学任务点模态框绑定事件
+function pointBtnBind(){
+    //提示框取消按钮
+    $('.specialCanle').unbind('click');
+    $('.specialCanle').bind('click', function(e) {
+        $.hideModal("#addPointModal",false);
+        $.showModal("#localPointInfoModal",true);
+        e.stopPropagation();
+    });
+
+    //开始检索
+    $('#startSearchPoint').unbind('click');
+    $('#startSearchPoint').bind('click', function(e) {
+        startSearchPoint();
+        e.stopPropagation();
+    });
+
+    //新增教学点
+    $('#addPoint').unbind('click');
+    $('#addPoint').bind('click', function(e) {
+        wantAddPoint();
+        e.stopPropagation();
+    });
+
+    //重置教学点任务点
+    $('#researchPoint').unbind('click');
+    $('#researchPoint').bind('click', function(e) {
+        reBackPonitInfoSearch();
+        e.stopPropagation();
+    });
+
+    //批量删除教学点
+    $('#removePoint').unbind('click');
+    $('#removePoint').bind('click', function(e) {
+        removePoints();
+        e.stopPropagation();
+    });
+
+}
+
+/*
+* 教学任务点page end
+* */
 //初始化页面按钮绑定事件
 function binBind() {
     //提示框取消按钮

@@ -191,10 +191,10 @@ public class PageRelatedController {
 		return "ackExam";
 	}
 
-	@RequestMapping("localPointInfo")
-	public String localPointInfoPage() {
-		return "localPointInfo";
-	}
+//	@RequestMapping("localPointInfo")
+//	public String localPointInfoPage() {
+//		return "localPointInfo";
+//	}
 
 	@RequestMapping("gradeEntry")
 	public String gradeEntryPage() {
