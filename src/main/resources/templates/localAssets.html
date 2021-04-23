@@ -126,6 +126,87 @@
     </div>
 </div>
 
+<!-- 教学任务点信息Modal -->
+<div class="modal fade bs-example-modal-lg" id="localPointInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="min-width: 640px">
+            <div class="modal-header">
+                <div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+            </div>
+            <div class="modal-body">
+                <div class="tools">
+                    <ul class="toolbar">
+                        <li class="click" id="startSearchPoint"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+                    </ul>
+                    <ul class="toolbar1">
+                        <li class="click" id="researchPoint"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+                    </ul>
+                </div>
+
+                <div class="searchArea searchAreaWitheSelect">
+                    <div class="col2 giveBottom">
+                        <ul class="forminfo">
+                            <div class="">
+                                <label class="selectName" style="margin-top: 14px;">教室名称</label>
+                                <input name="" type="text" class="myInput searchInput" id="pointName" placeholder="请填写名称..."/>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pointInfoTableArea columnsStyle searchGivePaddingR">
+                    <table class="tablelist myTableStyle" id="pointInfoTable" data-unique-id="edu501Id"></table>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer tipbtn">
+                <input name="" type="button" class="cancel" value="返回"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 任务点物资详情Modal -->
+<div class="modal fade bs-example-modal-lg" id="pointAssetsDetailsModal" style="min-width: 700px;" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="tiptop"><span class="moadalTitle"></span><a class="specialCanle specialCanle1" shape="rect"></a></div>
+            </div>
+            <div class="modal-body">
+                <div class="pointAssetsDetailsArea">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer tipbtn">
+                <input name="" type="button" class="sure" value="确定"/>&nbsp;
+                <input name="" type="button" class="specialCanle specialCanle1" value="取消"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改任务点物资Modal -->
+<div class="modal fade bs-example-modal-lg" id="changeAssetsModal" tabindex="-1" role="dialog" aria-labelledby="addSiteModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <div class="tiptop"><span class="moadalTitle">更新物资数量</span><a class="specialCanle specialCanle2" shape="rect"></a></div>
+            </div>
+            <div class="modal-body">
+                <div class="manyInfoShow">
+                    <div class="searchArea moreInfoSelectStyle" id="changeAssetsArea"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="modal-footer tipbtn">
+                <input name="" type="button" class="sure confirmChangeAssetsBtn" value="确定"/>&nbsp;
+                <input name="" type="button" class="specialCanle specialCanle2" value="取消"/>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ajax请求masking -->
 <div class="modal-backdrop fade loadingMasking noneStart">
     <div class="spinner-box">
