@@ -264,7 +264,7 @@ function researchSites(){
 * */
 
 /*
-* localPoint Page end
+* localPoint Page
 * */
 var edu500Id;
 //按条件检索教学点
@@ -459,6 +459,7 @@ function modifyPointAssets(row,index){
         },
         complete: function(xhr, status) {
             requestComplete();
+            stuffoldAssestInfo(row.edu501Id);
         },
         success : function(backjson) {
             hideloding();
@@ -473,6 +474,42 @@ function modifyPointAssets(row,index){
                 saveAssets(assetsDetails);
                 e.stopPropagation();
             });
+        }
+    });
+}
+
+function stuffoldAssestInfo(edu501Id){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/getLocalPoingAssets",
+        data: {
+            "edu501Id":edu501Id
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if(backjson.code === 200) {
+                var allAssetsInput=$('.assetsClass').find('[type="number"]');
+                for (let i = 0; i <allAssetsInput.length; i++) {
+                    for (let d = 0; d <backjson.data.length; d++) {
+                        if(allAssetsInput[i].id===backjson.data[d].assetsType&&backjson.data[d].assetsType!=null){
+                            $("#"+allAssetsInput[i].id).val(backjson.data[d].assetsNum);
+                        }
+                    }
+                }
+            } else {
+                toastr.warning(backjson.msg)
+            }
         }
     });
 }
@@ -512,7 +549,7 @@ function saveAssets(assetsDetails){
 //获取修改信息
 function getPointAssetsDetails(row) {
     var allAssetsLabel=$('.assetsClass').find('label');
-    var allAssetsInput=$('.assetsClass').find('input');
+    var allAssetsInput=$('.assetsClass').find('[type="number"]');
 
     var assetsList = new Array();
 
@@ -548,10 +585,6 @@ function stuffChangeAssets(info){
     $("#changeAssetsArea").append(midStr);
     $("input[type='number']").inputSpinner();
 }
-
-
-
-
 
 //开始检索任务点
 function startSearchPoint(){
