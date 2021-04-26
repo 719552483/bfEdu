@@ -792,7 +792,7 @@ function stuffPointInfoTable(tableInfo) {
 //展示教学点详情
 function pointDetails(row,index){
     $.hideModal("#localPointInfoModal",false);
-    $.showModal("#addPointModal",true);
+    $.showModal("#addPointModal",false);
 
     $("#addPointModal").find(".moadalTitle").html(row.pointName+"-详细信息");
     $('#addPointModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
