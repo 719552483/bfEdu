@@ -659,12 +659,11 @@ function getPointBy(searchObject,localName){
         },
         success : function(backjson) {
             hideloding();
-            if (backjson.code === 200) {
-                stuffPointInfoTable(backjson.data);
-                $.showModal("#localPointInfoModal",true);
-                $("#localPointInfoModal").find(".moadalTitle").html(localName+"-教学任务点信息");
-            } else {
-                toastr.warning(backjson.msg);
+            stuffPointInfoTable(backjson.data);
+            $.showModal("#localPointInfoModal",true);
+            $("#localPointInfoModal").find(".moadalTitle").html(localName+" -教学任务点信息");
+            if(backjson.data.length==0){
+                toastr.warning(localName+' -暂无教学任务点');
             }
         }
     });
@@ -1161,10 +1160,6 @@ function reBackPonitInfoSearch(){
     var reObject = new Object();
     reObject.InputIds = "#pointName";
     reReloadSearchsWithSelect(reObject);
-    var returnObject = new Object();
-    returnObject.pointName = '';
-    returnObject.edu500Id = edu500Id;
-    searchPointBy(returnObject);
 }
 
 //教学任务点模态框绑定事件
@@ -1195,6 +1190,10 @@ function pointBtnBind(){
     $('#researchPoint').unbind('click');
     $('#researchPoint').bind('click', function(e) {
         reBackPonitInfoSearch();
+        var returnObject = new Object();
+        returnObject.pointName = '';
+        returnObject.edu500Id = edu500Id;
+        searchPointBy(returnObject);
         e.stopPropagation();
     });
 
