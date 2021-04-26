@@ -3073,13 +3073,13 @@ public class AdministrationPageService {
 			cells[0].setCellValue(titles[i]);
 		}
 
-		for (int i = 1; i < edu005List.size()/size+1; i++) {
-			utils.appendCell(sheet,i-1,"",edu005List.get(i*size-1).getStudentName(),-1,0,false);
-			for(int j = 1;j<size+1;j++){
-				if(edu005List.get(i*j-1).getGrade() != null && !"".equals(edu005List.get(i*j-1).getGrade())){
-					utils.appendCell(sheet,i-1,"",edu005List.get(i*j-1).getGrade(),-1,j,false);
+		for (int i = 0; i < edu005List.size()/size; i++) {
+			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentName(),-1,0,false);
+			for(int j = 0;j<size;j++){
+				if(edu005List.get(i*size+j).getGrade() != null && !"".equals(edu005List.get(i*size+j).getGrade())){
+					utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+1,false);
 				}else{
-					utils.appendCell(sheet,i-1,"","暂无成绩",-1,j,false);
+					utils.appendCell(sheet,i,"","暂无成绩",-1,j+1,false);
 				}
 			}
 		}
