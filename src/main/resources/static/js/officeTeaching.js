@@ -2105,7 +2105,7 @@ function confirmPk2(rowInfo){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.data==200) {
+			if (backjson.code==200) {
 				$("#puttedTable").bootstrapTable('updateByUniqueId', {
 						id: rowInfo.edu202_ID,
 						row: rowInfo
