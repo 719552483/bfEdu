@@ -1134,7 +1134,7 @@ function confirmPk(){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.data==200) {
+			if (backjson.code==200) {
 				var taskId = $("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID;
 				$("#WaitTaskTable").bootstrapTable('removeByUniqueId',taskId);
 				controlScheduleArea();
