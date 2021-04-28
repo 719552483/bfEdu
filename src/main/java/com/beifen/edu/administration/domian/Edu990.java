@@ -18,7 +18,15 @@ public class Edu990 {
 	private String yxkjfs; //已选快捷方式
 	private String personName;//系统内人员名称
 	private String userKey;//系统内人员主键
+	private String openId;
 
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")

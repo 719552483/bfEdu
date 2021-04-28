@@ -20,13 +20,13 @@ public interface TeachingScheduleViewDao extends JpaRepository<SchoolTimetablePO
     @Query(value = "select e.* from TEACHING_SCHEDULE_VIEW e where e.edu201_id in ?1 and e.week = ?2 and e.xnid = ?3",nativeQuery = true)
     List<SchoolTimetablePO> findAllByEdu101IdNew(List<String> edu101id, String weekTime, String semester);
 
-    @Query(value = "select count(*) from TEACHING_SCHEDULE_VIEW where EDU101_ID = ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
-    int findCountByTeacher(String EDU101_ID,String week,String xqid,String kjid,String xnid);
+    @Query(value = "select * from TEACHING_SCHEDULE_VIEW where EDU101_ID = ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
+    List<SchoolTimetablePO> findCountByTeacher(String EDU101_ID,String week,String xqid,String kjid,String xnid);
 
-    @Query(value = "select count(*) from TEACHING_SCHEDULE_VIEW where point_id = ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
-    int findCountByPoint(String pointId,String week,String xqid,String kjid,String xnid);
+    @Query(value = "select * from TEACHING_SCHEDULE_VIEW where point_id = ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
+    List<SchoolTimetablePO> findCountByPoint(String pointId,String week,String xqid,String kjid,String xnid);
 
-    @Query(value = "select count(*) from TEACHING_SCHEDULE_VIEW where CLASS_ID in ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
-    int findCountByClass(List<String> findCountByClass,String week,String xqid,String kjid,String xnid);
+    @Query(value = "select * from TEACHING_SCHEDULE_VIEW where CLASS_ID in ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
+    List<SchoolTimetablePO> findCountByClass(List<String> findCountByClass,String week,String xqid,String kjid,String xnid);
 }
 

@@ -1264,17 +1264,17 @@ public class AdministrationPageService {
 				for(int j = Integer.parseInt(edu203.getKsz());j<=Integer.parseInt(edu203.getJsz());j++){
 					//检查该课节老师是否有别的课程安排
 					if(!"虚拟教学点".equals(edu203.getLocalName())){
-						int size = teachingScheduleViewDao.findCountByTeacher(edu203.getEdu101_id(),j+"",edu203.getXqid(),edu203.getKjid(),xnid);
-						if(size>0){
-							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+","+edu203.getTeacherName()+"教师有别的课程安排");
+						List<SchoolTimetablePO> list = teachingScheduleViewDao.findCountByTeacher(edu203.getEdu101_id(),j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						if(list.size()>0){
+							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+","+edu203.getTeacherName()+"教师有别的课程安排("+list.get(0).getTeacherName()+"-"+list.get(0).getClassName()+"-"+list.get(0).getCourseName()+")");
 							return resultVO;
 						}
 					}
 					//检查该教室是否被占用
 					if(!"虚拟教学点".equals(edu203.getLocalName())){
-						int size = teachingScheduleViewDao.findCountByPoint(edu203.getPointId(),j+"",edu203.getXqid(),edu203.getKjid(),xnid);
-						if(size>0){
-							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",该'"+edu203.getPointName()+"-"+edu203.getLocalName()+"'已被占用");
+						List<SchoolTimetablePO> list = teachingScheduleViewDao.findCountByPoint(edu203.getPointId(),j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						if(list.size()>0){
+							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",该'"+edu203.getPointName()+"-"+edu203.getLocalName()+"'已被占用("+list.get(0).getTeacherName()+"-"+list.get(0).getClassName()+"-"+list.get(0).getCourseName()+")");
 							return resultVO;
 						}
 					}
@@ -1287,9 +1287,9 @@ public class AdministrationPageService {
 							list.add(edu301List.get(ii).getEdu301_ID()+"");
 						}
 						list.add(classId+"");
-						int size = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
-						if(size>0){
-							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu201.getClassName()+"'已有其他课程安排");
+						List<SchoolTimetablePO> list2 = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						if(list2.size()>0){
+							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu201.getClassName()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
 							return resultVO;
 						}
 					}else{
@@ -1306,9 +1306,9 @@ public class AdministrationPageService {
 								list.add(edu301List.get(ii).getEdu301_ID()+"");
 							}
 							list.add(zxbid+"");
-							int size = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
-							if(size>0){
-								resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu300.getXzbmc()+"'已有其他课程安排");
+							List<SchoolTimetablePO> list2  = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+							if(list2.size()>0){
+								resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu300.getXzbmc()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
 								return resultVO;
 							}
 						}
