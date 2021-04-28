@@ -1172,13 +1172,14 @@ public class TeachingManageService {
         for (int i = 0; i < size ; i++) {
             String kjid = yearSchedules.get(i).getKjid();
             String xqid = yearSchedules.get(i).getXqid();
+            String classid = yearSchedules.get(i).getClassId();
             List<SchoolTimetablePO> orderList = new ArrayList<>();
             for ( int j = i ;j < size; j++) {
                 SchoolTimetablePO info = yearSchedules.get(j);
-                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid())) {
+                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId())) {
                     orderList.add(info);
                 }
-                if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()))) {
+                if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId()))) {
                     break;
                 }
             }
