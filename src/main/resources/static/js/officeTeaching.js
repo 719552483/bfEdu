@@ -812,30 +812,18 @@ function addCoursePlan(){
 		}
 
 		//判断开始结束周一致或包含
-		var startEndSame=false;
 		for (let j = 0; j <added.length; j++) {
 			var thisStartWeek=parseInt(added[j].attributes[5].nodeValue);
 			var thisEndWeek=parseInt(added[j].attributes[6].nodeValue);
 			var currentStartWeek=parseInt(startWeek);
-			if(currentStartWeek>=thisStartWeek&&currentStartWeek<=thisEndWeek){
-				startEndSame=true;
-				break;
-			}
-		}
 
-		//判断星期课节一致或包含
-		var xqkjSame=false;
-		for (let j = 0; j <added.length; j++) {
 			var thisXq=added[j].attributes[3].nodeValue;
 			var thisKj=added[j].attributes[4].nodeValue;
-			if(thisXq===currentXq&&thisKj===currentKj){
-				xqkjSame=true;
-				break;
+
+			if((currentStartWeek>=thisStartWeek&&currentStartWeek<=thisEndWeek)&&(thisXq===currentXq&&thisKj===currentKj)){
+				toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'  已安排');
+				return;
 			}
-		}
-		if(startEndSame&&xqkjSame){
-			toastr.warning(startWeekmc+' - '+endWeekmc+' '+currentXqmc+currentKjmc+'  已安排');
-			return;
 		}
 
 		appendStr+='<div class="choosendCycleInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'"  id="choosendCycleInfo'+(currentXq+currentKj+startWeek+endWeek)+'"  teacherID="'+teacherID+'" teacherName="'+teacherName+'" location="'+location+'" point="'+point+'" locationName="'+locationName+'" pointName="'+pointName+'">' +
