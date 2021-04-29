@@ -1108,7 +1108,8 @@ function sendRemoveRecord(removeArray){
 					$().bootstrapTable('removeByUniqueId', removeArray[i]);
 				}
 				toolTipUp(".myTooltip");
-				tableRemoveAction('#recordsTable', removeArray, ".teacherBaseInfoTableArea", "教职工信息")
+				tableRemoveAction('#recordsTable', removeArray, ".teacherBaseInfoTableArea", "教职工信息");
+				$.hideModal();
 			} else {
 				toastr.warning(backjson.msg);
 			}
