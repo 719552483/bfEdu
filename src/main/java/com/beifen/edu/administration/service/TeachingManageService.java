@@ -234,8 +234,10 @@ public class TeachingManageService {
             //删除出差申请主表
             edu112Dao.delete(Long.parseLong(s));
             Edu600 e = edu600Dao.countoneByBUSINESSKEY(s);
-            e.setIsDelete("T");
-            edu600Dao.save(e);
+            if(e != null){
+                e.setIsDelete("T");
+                edu600Dao.save(e);
+            }
             count++;
         }
 
