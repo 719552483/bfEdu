@@ -1043,8 +1043,8 @@ function removeRecord(row){
 	$(".remindType").html(row.startTime+'至'+row.endTime+' '+row.destination+'出差任务');
 	$(".remindActionType").html("删除");
 
-	$('#confirmRemind').unbind('click');
-	$('#confirmRemind').bind('click', function(e) {
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		sendRemoveRecord(idArray);
 		e.stopPropagation();
 	});
@@ -1074,8 +1074,8 @@ function removeRecords(){
 	$(".remindType").html('已选出差任务');
 	$(".remindActionType").html("删除");
 
-	$('#confirmRemind').unbind('click');
-	$('#confirmRemind').bind('click', function(e) {
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
 		sendRemoveRecord(idArray);
 		e.stopPropagation();
 	});
