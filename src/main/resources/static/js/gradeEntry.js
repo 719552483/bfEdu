@@ -2178,10 +2178,6 @@ function confirmChooseCrouseForConfirmGrade(){
 	$.showModal("#confirmGradeModal",true);
 }
 
-
-
-
-
 //取消成绩确认班级focus
 function cancelGradeForXzbmc(){
 	var serachObject=new Object();
@@ -2329,6 +2325,11 @@ function confirmChooseCrouseForCancelGrade(){
 
 //预备批量免修
 function wantGradeFrees(){
+	var reObject = new Object();
+	reObject.InputIds = "#gradeFreesForKcmc";
+	reObject.normalSelectIds = "#gradeFreesForXn,#gradeFreesForSylx";
+	reReloadSearchsWithSelect(reObject);
+
 	var sylx=queryEJDMElementInfo().sylx;
 	if(typeof sylx==="undefined"||sylx==null){
 		toastr.warning("暂无生源类型");
@@ -2436,43 +2437,61 @@ function sendconfirmGradeFrees(){
 		return;
 	}
 
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/updateMXStatusByCourse",
-		data: {
-			"term":xn,
-			"courserName":kc,
-			"sylxbm":sylx,
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code === 200) {
-				var mxStudentds=backjson.data;
-				for (var i = 0; i < mxStudentds.length; i++) {
-					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
-						id: mxStudentds[i].edu005_ID,
-						row: mxStudentds[i]
-					});
-				}
+	$.hideModal("#gradeFreesModal",false);
+	$.showModal("#remindModal",true);
+	$(".remindType").html(getNormalSelectText('gradeFreesForSylx')+' / '+getNormalSelectText('gradeFreesForXn')+'的'+' / ('+kc+')课程');
+	$(".remindActionType").html(" -免修");
 
-				toastr.success(backjson.msg);
-				$.hideModal();
-			} else {
-				toastr.warning(backjson.msg);
+	//确认
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/updateMXStatusByCourse",
+			data: {
+				"term":xn,
+				"courserName":kc,
+				"sylxbm":sylx,
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code === 200) {
+					var mxStudentds=backjson.data;
+					for (var i = 0; i < mxStudentds.length; i++) {
+						$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+							id: mxStudentds[i].edu005_ID,
+							row: mxStudentds[i]
+						});
+					}
+
+					toastr.success(backjson.msg);
+					$.hideModal();
+				} else {
+					toastr.warning(backjson.msg);
+				}
 			}
-		}
+		});
+		e.stopPropagation();
+	});
+
+	//提示框取消按钮
+	$('.specialCanleTip').unbind('click');
+	$('.specialCanleTip').bind('click', function(e) {
+		$.hideModal("#remindModal",false);
+		$.showModal("#gradeFreesModal",true);
+		e.stopPropagation();
 	});
 }
 
