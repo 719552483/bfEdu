@@ -397,8 +397,13 @@ public class StudentManageController {
     public ResultVO updateMXStatusByCourse(@RequestParam("courserName") String courserName,@RequestParam("sylxbm") String sylxbm,@RequestParam("term") String term,@RequestParam("userId") String userId) {
         List<String> list = Arrays.asList(courserName.split(","));
         String result =studentManageService.updateMXStatusByCourse(list,sylxbm,term);
-        ResultVO vo = staffManageService.queryGrades(userId,new Edu001(),new Edu005());
-        ResultVO voresult = ResultVO.setSuccess(result,vo.getData());
+        List<Edu005> edu005List = staffManageService.queryGrades2(userId);
+        ResultVO voresult;
+        if(edu005List.size()>0){
+            voresult = ResultVO.setSuccess(result,edu005List);
+        }else{
+            voresult = ResultVO.setFailed(result+",暂无可以录入成绩的课程");
+        }
         return voresult;
     }
 

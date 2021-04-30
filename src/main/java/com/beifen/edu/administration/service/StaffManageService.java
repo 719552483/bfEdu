@@ -167,6 +167,68 @@ public class StaffManageService {
     }
 
 
+
+    //查询需要录入成绩学生
+    public List<Edu005> queryGrades2(String userId) {
+        String userKey = edu990Dao.findOne(Long.parseLong(userId)).getUserKey();
+
+        //查询教师任务书ID列表
+        List<String> edu201IdList = edu205Dao.findEdu201IdByTeacher(userKey);
+        if(edu201IdList.size() == 0) {
+            return null;
+        }
+
+        //根据条件筛选培养计划
+        Specification<Edu107> specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu107> edu107List = edu107Dao.findAll(specification);
+        if (edu107List.size() == 0) {
+            return null;
+        }
+        List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).distinct().collect(Collectors.toList());
+        List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
+        if (edu108IdList.size() == 0) {
+            return null;
+        }
+        List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+        //两个201id集合去交集
+        edu201IdList.retainAll(edu201Ids);
+        if(edu201IdList.size() == 0) {
+            return null;
+        }
+
+        List edu201ids = utils.heavyListMethod(edu201IdList);
+
+        //根据条件筛选成绩表
+        Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
+                CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
+                for (int i = 0; i < edu201ids.size(); i++) {
+                    inEdu201.value(edu201ids.get(i));//存入值
+                }
+                predicates.add(cb.and(inEdu201));
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+        if (edu005List.size() == 0) {
+            return null;
+        }
+        return edu005List;
+    }
+
+
+
     //查询需要录入成绩学生
     public ResultVO queryGrades(String userId, Edu001 edu001, Edu005 edu005) {
         ResultVO resultVO;

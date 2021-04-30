@@ -588,12 +588,14 @@ public class StudentManageService {
     // 批量修改免修状态
     public String updateMXStatusByCourse(List<String> courserName,String sylxbm,String term) {
         String resultVO;
-        List<Edu005> edu005List = edu005Dao.updateMXStatusByCourse(courserName,sylxbm,term);
-        for(int i = 0;i<edu005List.size();i++){
-            Edu005 edu005 = edu005List.get(i);
-            edu005Dao.updateMXStatus(edu005.getEdu005_ID()+"","01");
-        }
-        resultVO = "免修了"+edu005List.size()+"个学生";
+//        List<Edu005> edu005List = edu005Dao.updateMXStatusByCourse(courserName,sylxbm,term);
+//        for(int i = 0;i<edu005List.size();i++){
+//            Edu005 edu005 = edu005List.get(i);
+//            edu005Dao.updateMXStatus(edu005.getEdu005_ID()+"","01");
+//        }
+        int i = edu005Dao.selectMXStatusByCourse(courserName,sylxbm,term);
+        edu005Dao.updateMXStatusByCourse(courserName,sylxbm,term);
+        resultVO = "免修了"+i+"个学生";
         return resultVO;
     }
 
