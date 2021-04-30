@@ -1,4 +1,3 @@
-var EJDMElementInfo;
 $(function() {
 	deafultSearch();
 	getMajorTrainingSelectInfo();
@@ -38,6 +37,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#confirmGradeForXn", str);
 	stuffManiaSelect("#cancelGradeForXn", str);
 	stuffManiaSelect("#loadNotPassForXn", str);
+	stuffManiaSelect("#gradeFreesForXn", str);
 }
 
 //初始化检索
@@ -2327,6 +2327,155 @@ function confirmChooseCrouseForCancelGrade(){
 	$.showModal("#cancelGradeModal",true);
 }
 
+//预备批量免修
+function wantGradeFrees(){
+	var sylx=queryEJDMElementInfo().sylx;
+	if(typeof sylx==="undefined"||sylx==null){
+		toastr.warning("暂无生源类型");
+		return;
+	}
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < sylx.length; i++) {
+		str += '<option value="' + sylx[i].ejdm + '">' + sylx[i].ejdmz
+			+ '</option>';
+	}
+	stuffManiaSelect("#gradeFreesForSylx", str);
+	$.showModal("#gradeFreesModal",true);
+}
+
+//预备批量免修modal课程focus
+function gradeFreesForKcmc(){
+	var xn=getNormalSelectValue("gradeFreesForXn");
+	if(xn===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseByXNAndID",
+		data: {
+			"term":xn,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$("#chooseCruoseModal").find(".moadalTitle").html("可选课程库");
+				$.hideModal("#gradeFreesModal",false);
+				$.showModal("#chooseCruoseModal",true);
+				stuffCrouseClassTable(backjson.data,true);
+
+				//提示框取消按钮
+				$('.specialCanle2').unbind('click');
+				$('.specialCanle2').bind('click', function(e) {
+					$.hideModal("#chooseCruoseModal",false);
+					$.showModal("#gradeFreesModal",true);
+					e.stopPropagation();
+				});
+
+				//确认选择课程
+				$('#confirmChooseCrouse').unbind('click');
+				$('#confirmChooseCrouse').bind('click', function(e) {
+					confirmGradeFreesForKcmc();
+					e.stopPropagation();
+				});
+			} else {
+				stuffCrouseClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//批量免修确认选择课程
+function confirmGradeFreesForKcmc(){
+	if(choosendCrouse.length==0){
+		toastr.warning('请选择课程');
+		return;
+	}
+	var kcmcs=new Array();
+	for (var i = 0; i < choosendCrouse.length; i++){
+		kcmcs.push(choosendCrouse[i].kcmc);
+	}
+
+	$("#gradeFreesForKcmc").val(kcmcs);
+	$.hideModal("#chooseCruoseModal",false);
+	$.showModal("#gradeFreesModal",true);
+}
+
+//批量免修确认
+function sendconfirmGradeFrees(){
+	var xn=getNormalSelectValue('gradeFreesForXn');
+	var sylx=getNormalSelectValue('gradeFreesForSylx');
+	var kc=$("#gradeFreesForKcmc").val();
+
+	if(xn===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+	if(kc===""){
+		toastr.warning('请选择课程');
+		return;
+	}
+
+	if(sylx===""){
+		toastr.warning('请选择生源类型');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/updateMXStatusByCourse",
+		data: {
+			"term":xn,
+			"courserName":kc,
+			"sylxbm":sylx,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var mxStudentds=backjson.data;
+				for (var i = 0; i < mxStudentds.length; i++) {
+					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+						id: mxStudentds[i].edu005_ID,
+						row: mxStudentds[i]
+					});
+				}
+
+				toastr.success(backjson.msg);
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -2437,6 +2586,26 @@ function binBind() {
 	$('#wantConfirmNotPassGrade').unbind('click');
 	$('#wantConfirmNotPassGrade').bind('click', function(e) {
 		wantImportGradesforNotPass();
+		e.stopPropagation();
+	});
+
+	//预备批量免修
+	$('#wantGradeFrees').unbind('click');
+	$('#wantGradeFrees').bind('click', function(e) {
+		wantGradeFrees();
+		e.stopPropagation();
+	});
+
+	//预备批量免修modal课程focus
+	$('#gradeFreesForKcmc').focus(function(e){
+		gradeFreesForKcmc();
+		e.stopPropagation();
+	});
+
+	//确认免修
+	$('#confirmGradeFrees').unbind('click');
+	$('#confirmGradeFrees').bind('click', function(e) {
+		sendconfirmGradeFrees(1);
 		e.stopPropagation();
 	});
 }
