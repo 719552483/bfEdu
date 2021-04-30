@@ -5,6 +5,7 @@ import com.beifen.edu.administration.PO.StudentBreakPO;
 import com.beifen.edu.administration.PO.StudentSearchPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.service.StaffManageService;
 import com.beifen.edu.administration.service.StudentManageService;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
@@ -37,6 +38,8 @@ public class StudentManageController {
     ReflectUtils utils = new ReflectUtils();
     @Autowired
     private StudentManageService studentManageService;
+    @Autowired
+    private StaffManageService staffManageService;
 
     /**
      * 新增学生
@@ -391,10 +394,12 @@ public class StudentManageController {
      * */
     @RequestMapping("/updateMXStatusByCourse")
     @ResponseBody
-    public ResultVO updateMXStatusByCourse(@RequestParam("courserName") String courserName,@RequestParam("sylxbm") String sylxbm) {
+    public ResultVO updateMXStatusByCourse(@RequestParam("courserName") String courserName,@RequestParam("sylxbm") String sylxbm,@RequestParam("term") String term,@RequestParam("userId") String userId) {
         List<String> list = Arrays.asList(courserName.split(","));
-        ResultVO result =studentManageService.updateMXStatusByCourse(list,sylxbm);
-        return result;
+        String result =studentManageService.updateMXStatusByCourse(list,sylxbm,term);
+        ResultVO vo = staffManageService.queryGrades(userId,new Edu001(),new Edu005());
+        ResultVO voresult = ResultVO.setSuccess(result,vo.getData());
+        return voresult;
     }
 
     /**
