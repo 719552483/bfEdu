@@ -78,11 +78,15 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     List<Edu005> getExportGrade(String classes,String trem,List<String> list);
 
 
-    //导出成绩excel
+    //修改免修类型
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE edu005 set IS_MX = ?2 WHERE Edu005_ID =?1", nativeQuery = true)
     void updateMXStatus(String edu005_ID,String mxStatus);
+
+    //根据课程名称和生源类型查询成绩
+    @Query(value = "select e.* from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME = ?1", nativeQuery = true)
+    List<Edu005> updateMXStatusByCourse(String courserName,String sylxbm);
 
     //查询溯源数据
     @Transactional

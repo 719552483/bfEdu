@@ -585,6 +585,17 @@ public class StudentManageService {
         return resultVO;
     }
 
+    // 批量修改免修状态
+    public ResultVO updateMXStatusByCourse(String courserName,String sylxbm) {
+        ResultVO resultVO;
+        List<Edu005> edu005List = edu005Dao.updateMXStatusByCourse(courserName,sylxbm);
+        for(int i = 0;i<edu005List.size();i++){
+            Edu005 edu005 = edu005List.get(i);
+            edu005Dao.updateMXStatus(edu005.getEdu005_ID()+"","01");
+        }
+        resultVO = ResultVO.setSuccess("免修了"+edu005List.size()+"个学生");
+        return resultVO;
+    }
 
     //学生查询相关学年
     public ResultVO studentGetSchoolYear(String userKey) {

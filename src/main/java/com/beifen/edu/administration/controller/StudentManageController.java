@@ -386,6 +386,16 @@ public class StudentManageController {
     }
 
     /**
+     * 批量修改免修状态
+     * */
+    @RequestMapping("/updateMXStatusByCourse")
+    @ResponseBody
+    public ResultVO updateMXStatusByCourse(@RequestParam("courserName") String courserName,@RequestParam("sylxbm") String sylxbm) {
+        ResultVO result =studentManageService.updateMXStatusByCourse(courserName,sylxbm);
+        return result;
+    }
+
+    /**
      * 学生查询相关学年
      * @param userKey
      * @return
