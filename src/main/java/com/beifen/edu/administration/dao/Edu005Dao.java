@@ -85,8 +85,8 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     void updateMXStatus(String edu005_ID,String mxStatus);
 
     //根据课程名称和生源类型查询成绩
-    @Query(value = "select e.* from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME = ?1", nativeQuery = true)
-    List<Edu005> updateMXStatusByCourse(String courserName,String sylxbm);
+    @Query(value = "select e.* from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME in ?1", nativeQuery = true)
+    List<Edu005> updateMXStatusByCourse(List<String> courserName,String sylxbm);
 
     //查询溯源数据
     @Transactional

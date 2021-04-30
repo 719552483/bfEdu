@@ -586,7 +586,7 @@ public class StudentManageService {
     }
 
     // 批量修改免修状态
-    public ResultVO updateMXStatusByCourse(String courserName,String sylxbm) {
+    public ResultVO updateMXStatusByCourse(List<String> courserName,String sylxbm) {
         ResultVO resultVO;
         List<Edu005> edu005List = edu005Dao.updateMXStatusByCourse(courserName,sylxbm);
         for(int i = 0;i<edu005List.size();i++){

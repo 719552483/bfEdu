@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -391,7 +392,8 @@ public class StudentManageController {
     @RequestMapping("/updateMXStatusByCourse")
     @ResponseBody
     public ResultVO updateMXStatusByCourse(@RequestParam("courserName") String courserName,@RequestParam("sylxbm") String sylxbm) {
-        ResultVO result =studentManageService.updateMXStatusByCourse(courserName,sylxbm);
+        List<String> list = Arrays.asList(courserName.split(","));
+        ResultVO result =studentManageService.updateMXStatusByCourse(list,sylxbm);
         return result;
     }
 
