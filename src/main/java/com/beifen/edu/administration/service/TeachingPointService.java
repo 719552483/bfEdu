@@ -4,10 +4,12 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.LocalUsedPO;
 import com.beifen.edu.administration.PO.SchoolTimetablePO;
 import com.beifen.edu.administration.PO.YearSchedulePO;
+import com.beifen.edu.administration.PO.YearSchedulePO2;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
@@ -457,7 +459,7 @@ public class TeachingPointService {
     //根据教学任务点查询固定资产
     public ResultVO searchCourseDetailByXNAndPointid(String term,String pointId) {
         ResultVO resultVO;
-
+        Edu400 edu400 = edu400Dao.findOne(Long.parseLong(term));
         Specification<YearSchedulePO> specification = new Specification<YearSchedulePO>() {
             public Predicate toPredicate(Root<YearSchedulePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -472,23 +474,23 @@ public class TeachingPointService {
         };
         List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
         List<YearSchedulePO> yearSchedules = yearScheduleViewDao.findAll(specification);
-        List<YearSchedulePO> yearSchedulePOS = replaceSchedule(yearSchedules);
+        List<YearSchedulePO2> yearSchedulePOS = replaceSchedule(yearSchedules,edu400.getKssj());
         if(yearSchedulePOS.size() == 0) {
             resultVO = ResultVO.setFailed("当前学年找到您的课程");
         } else {
-            for (YearSchedulePO o : yearSchedulePOS) {
-                SchoolTimetablePO s = new SchoolTimetablePO();
-                try {
-                    utils.copyParm(o,s);
-                    schoolTimetableList.add(s);
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
+//            for (YearSchedulePO o : yearSchedulePOS) {
+//                SchoolTimetablePO s = new SchoolTimetablePO();
+//                try {
+//                    utils.copyParm(o,s);
+//                    schoolTimetableList.add(s);
+//                } catch (NoSuchMethodException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                } catch (InvocationTargetException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 //            resultVO = ResultVO.setSuccess("当前学年共找到"+yearSchedulePOS.size()+"个课程",timeTablePackage(schoolTimetableList));
             resultVO = ResultVO.setSuccess("当前学年共找到"+yearSchedulePOS.size()+"个课程",yearSchedulePOS);
         }
@@ -557,34 +559,60 @@ public class TeachingPointService {
     }
 
     //重新整理学年课表
-    private List<YearSchedulePO> replaceSchedule(List<YearSchedulePO> yearSchedules) {
-        List<YearSchedulePO> newList = new ArrayList<>();
-        int size = yearSchedules.size();
-        for (int i = 0; i < size ; i++) {
-            String kjid = yearSchedules.get(i).getKjid();
-            String xqid = yearSchedules.get(i).getXqid();
-            List<YearSchedulePO> orderList = new ArrayList<>();
-            for ( int j = i ;j < size; j++) {
-                YearSchedulePO info = yearSchedules.get(j);
-                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid())) {
-                    orderList.add(info);
-                }
-                if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()))) {
-                    break;
-                }
+    private List<YearSchedulePO2> replaceSchedule(List<YearSchedulePO> yearSchedules,String date) {
+        List<YearSchedulePO2> newList = new ArrayList<>();
+
+        try {
+            int weekOfDate = DateUtils.getWeekOfDate(date);
+            String endDate;
+            if(weekOfDate == 0) {
+                endDate = date;
+            } else {
+                endDate = DateUtils.getCalculateDateToString(date, 7-weekOfDate);
             }
-            List<String> ssz = new ArrayList<>();
-            for (YearSchedulePO e : orderList) {
-                if (e.getKsz().equals(e.getJsz())) {
-                    ssz.add("第"+e.getKsz()+"周");
-                } else {
-                    ssz.add("第"+e.getKsz()+"-"+e.getJsz()+"周");
+            String countDate = DateUtils.getCalculateDateToString(endDate, 1);
+            int size = yearSchedules.size();
+            for (int i = 0; i < size ; i++) {
+                String kjid = yearSchedules.get(i).getKjid();
+                String xqid = yearSchedules.get(i).getXqid();
+                List<YearSchedulePO> orderList = new ArrayList<>();
+                for ( int j = i ;j < size; j++) {
+                    YearSchedulePO info = yearSchedules.get(j);
+                    if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid())) {
+                        orderList.add(info);
+                    }
+                    if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()))) {
+                        break;
+                    }
                 }
+                List<String> ssz = new ArrayList<>();
+                List<String> dateList = new ArrayList<>();
+                for (YearSchedulePO e : orderList) {
+                    if (e.getKsz().equals(e.getJsz())) {
+                        ssz.add("第"+e.getKsz()+"周");
+                        int xq = Integer.parseInt(e.getXqid());
+                        int ksz = Integer.parseInt(e.getKsz());
+                        String dateOne = DateUtils.getCalculateDateToString(countDate, 7*(ksz-2)+xq-1);
+                        dateList.add(dateOne);
+                    } else {
+                        ssz.add("第"+e.getKsz()+"-"+e.getJsz()+"周");
+                        for(int z = Integer.parseInt(e.getKsz());z<=Integer.parseInt(e.getJsz());z++){
+                            int xq = Integer.parseInt(e.getXqid());
+                            String dateOne = DateUtils.getCalculateDateToString(countDate, 7*(z-2)+xq-1);
+                            dateList.add(dateOne);
+                        }
+                    }
+                }
+                YearSchedulePO addInfo = orderList.get(0);
+                addInfo.setSzz(utils.listToString(ssz,','));
+                YearSchedulePO2 s = new YearSchedulePO2();
+                utils.copyParm(addInfo,s);
+                s.setDate(utils.listToString(dateList,','));
+                newList.add(s);
+                i += orderList.size()-1;
             }
-            YearSchedulePO addInfo = orderList.get(0);
-            addInfo.setSzz(utils.listToString(ssz,','));
-            newList.add(addInfo);
-            i += orderList.size()-1;
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return newList;
     }
