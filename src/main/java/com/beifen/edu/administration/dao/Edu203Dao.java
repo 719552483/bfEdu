@@ -125,4 +125,18 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Modifying
     @Query(value = "select * from EDU203 where EDU202_ID = ?1 and ksz <= ?2 and jsz >= ?2 and kjid = ?3 and xqid = ?4 and week <?2", nativeQuery = true)
     List<Edu203> lessClasses(String edu202_id,String week,String kjid,String xqid);
+
+
+    //更新教学任务点名称
+    @Transactional
+    @Modifying
+    @Query(value = "update edu203 t set t.POINT_NAME = ?2 where t.POINT_ID =?1", nativeQuery = true)
+    void updatePointName(Long edu501_id, String POINT_NAME);
+
+
+    //更新教学点名称
+    @Transactional
+    @Modifying
+    @Query(value = "update edu203 t set t.LOCAL_NAME = ?2 where t.LOCAL_ID =?1", nativeQuery = true)
+    void updateLocalName(Long edu500_id, String local_NAME);
 }

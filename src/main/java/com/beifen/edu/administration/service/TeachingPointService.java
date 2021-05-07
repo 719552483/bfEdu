@@ -79,6 +79,13 @@ public class TeachingPointService {
         ResultVO resultVO;
 //        // 判断同校区是否存在重复教学点
 //        List<Edu500> edu500List = checkRepeatPoint(newSite);
+        Long id  = newSite.getEdu500Id();
+        if (id != null){
+            Edu500 edu500Old = edu500Dao.findOne(id);
+            if(!edu500Old.getLocalName().equals(newSite.getLocalName())){
+                edu203Dao.updateLocalName(id,newSite.getLocalName());
+            }
+        }
         edu500Dao.save(newSite);
         resultVO = ResultVO.setSuccess("操作成功",newSite.getEdu500Id());
         return resultVO;
@@ -215,6 +222,13 @@ public class TeachingPointService {
     //新增教学任务点
     public ResultVO addLocalPointInfo(Edu501 edu501) {
         ResultVO resultVO;
+        Long id  = edu501.getEdu501Id();
+        if (id != null){
+            Edu501 edu501Old = edu501Dao.findOne(id);
+            if(!edu501Old.getPointName().equals(edu501.getPointName())){
+                edu203Dao.updatePointName(id,edu501.getPointName());
+            }
+        }
         edu501Dao.save(edu501);
         resultVO = ResultVO.setSuccess("操作成功",edu501.getEdu501Id());
         return resultVO;
