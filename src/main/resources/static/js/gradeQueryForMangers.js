@@ -1253,6 +1253,13 @@ function exportNoPassGrade(){
 	reReloadSearchsWithSelect(reObject);
 
 	$.showModal("#exportNoPassGradeModal",true);
+
+	//返回
+	$('.specialCanle_exportNoPass').unbind('click');
+	$('.specialCanle_exportNoPass').bind('click', function(e) {
+		jugementRetrun();
+		e.stopPropagation();
+	});
 	$("#exportNoPassGradeModal").find('.moadalTitle').html("不及格成绩导出");
 }
 
@@ -1315,7 +1322,7 @@ function exportNoPassGradeLook(){
 	}
 
 	if(crouseName===""){
-		toastr.warning("课程名称不能为空");
+		toastr.warning("课程不能为空");
 		return;
 	}
 
@@ -1342,23 +1349,29 @@ function exportNoPassGradeLook(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code == 200) {
+				$("#exportNoPassGradeModal").find('.moadalTitle').html(getNormalSelectText("exportNoPassGrade_grade")+' '+crouseName+' -不及格成绩导出预览');
+				$("#exportNoPassGradeLook").hide();
 				$("#exportNoPassGradeModal").find(".searchArea").hide();
 				$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").show();
-				$("#exportNoPassGradeModal").find('.moadalTitle').html(getNormalSelectText("exportNoPassGrade_grade")+' '+crouseName+' -不及格成绩导出预览')
-				//返回
-				$('#exportNoPassGradeRetuen').unbind('click');
-				$('#exportNoPassGradeRetuen').bind('click', function(e) {
-					$("#exportNoPassGradeModal").find('.moadalTitle').html("不及格成绩导出");
-					$("#exportNoPassGradeModal").find(".searchArea").show();
-					$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").hide();
-					e.stopPropagation();
-				});
 				stuffExportNoPassGradeLookTable(backjson.data,crouseName);
 			} else {
 				toastr.warning(backjson.msg);
 			}
 		}
 	});
+}
+
+//不及格成绩导出返回按钮事件
+function jugementRetrun(){
+	var exportNoPassGradeDis=$(".exportNoPassGradeArea");
+	if(exportNoPassGradeDis[0].style.display==="block"||exportNoPassGradeDis[0].style.display==="inline-block"){
+		$("#exportNoPassGradeModal").find('.moadalTitle').html("不及格成绩导出");
+		$("#exportNoPassGradeLook").show();
+		$("#exportNoPassGradeModal").find(".searchArea").show();
+		$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").hide();
+	}else{
+		$.hideModal();
+	}
 }
 
 //渲染不及格成绩导出预览表
