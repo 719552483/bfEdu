@@ -294,6 +294,12 @@ function stuffPkInfoTable(tableInfo,row) {
                 align: 'left',
                 sortable: true,
                 formatter: paramsMatter,
+            },{
+                field: 'date',
+                title: '日期',
+                align: 'left',
+                sortable: true,
+                formatter: paramsMatter,
             }
         ]
     });
