@@ -35,6 +35,15 @@ public class YearSchedulePO {
     private String baseTeacherName;
     private String baseTeacherId;
     private String teacherType;
+    private String localAddress;
+
+    public String getLocalAddress() {
+        return localAddress;
+    }
+
+    public void setLocalAddress(String localAddress) {
+        this.localAddress = localAddress;
+    }
 
     @Id
     public String getID() {

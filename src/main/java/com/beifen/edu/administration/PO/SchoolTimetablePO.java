@@ -39,6 +39,15 @@ public class SchoolTimetablePO {
     private String point;
     private String pointId;
     private String szz;
+    private String localAddress;
+
+    public String getLocalAddress() {
+        return localAddress;
+    }
+
+    public void setLocalAddress(String localAddress) {
+        this.localAddress = localAddress;
+    }
 
     @Id
     public String getID() {

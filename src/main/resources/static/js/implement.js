@@ -1303,6 +1303,7 @@ function scheduleFormatter(value, row, index) {
 				    + '<span class="scheduleClassName">任课教师：'+ teacherNamestr+'</span>'
 					+ '<span class="scheduleClassName">助教：'+ baseTeacherName+'</span>'
 				    + '<span class="lastscheduleClassName">'+ value[i].classRoom+' - '+value[i].point+'</span>'
+					+ '<span class="lastscheduleClassName">地址：'+ value[i].localAddress+'</span>'
 					+  '</div>'
 		}
 	} else {

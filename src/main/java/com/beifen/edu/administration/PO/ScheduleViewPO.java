@@ -40,6 +40,15 @@ public class ScheduleViewPO {
     private String pointId;
     private String szz;
     private String teacherType;
+    private String localAddress;
+
+    public String getLocalAddress() {
+        return localAddress;
+    }
+
+    public void setLocalAddress(String localAddress) {
+        this.localAddress = localAddress;
+    }
 
     @Id
     public String getID() {
