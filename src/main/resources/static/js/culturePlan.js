@@ -2122,7 +2122,7 @@ function generatCoursePalnReturnCulturePlan() {
 // 生成开课计划检索
 function generatCoursePalnSearch() {
 	var suditStatus = getNormalSelectValue("generatCourse_suditStatus");
-	var coursesName = $("#coursesName").val();
+	var coursesName = $("#generatCourse_className").val();
 	var serachObject=new Object();
 	serachObject.edu107_ID=$(".edu107Id")[0].innerText
 	suditStatus===""?serachObject.suditStatus="":serachObject.suditStatus=suditStatus;
