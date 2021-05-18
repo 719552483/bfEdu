@@ -1009,7 +1009,11 @@ public class AdministrationController {
 		edu108.setKcxzCode(searchObject.getString("coursesNature"));
 		edu108.setKcmc(searchObject.getString("coursesName"));
 		edu108.setKsfsCode(searchObject.getString("testWay"));
-		ResultVO result = administrationPageService.culturePlanSeacchCrouse(edu108);
+		String zt = "";
+		if(searchCriteria.contains("suditStatus")){
+			zt = searchObject.getString("suditStatus");
+		}
+		ResultVO result = administrationPageService.culturePlanSeacchCrouse(edu108,zt);
 		return result;
 	}
 

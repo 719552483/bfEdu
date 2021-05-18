@@ -1651,7 +1651,7 @@ public class AdministrationPageService {
 	}
 
 	// 搜索培养计划下的专业课程
-	public ResultVO culturePlanSeacchCrouse(Edu108 edu108) {
+	public ResultVO culturePlanSeacchCrouse(Edu108 edu108,String zt) {
 		ResultVO resultVO;
 		Specification<Edu108> specification = new Specification<Edu108>() {
 			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -1676,6 +1676,10 @@ public class AdministrationPageService {
 		};
 
 		List<Edu108> crouseEntities = edu108DAO.findAll(specification);
+		if(zt!=null && !"".equals(zt)){
+			List<Long> edu108Ids = crouseEntities.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
+			crouseEntities = edu108DAO.findByCourseZt(edu108Ids,zt);
+		}
 
 		if(crouseEntities.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无专业课程信息");
