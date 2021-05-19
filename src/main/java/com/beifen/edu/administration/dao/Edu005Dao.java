@@ -118,5 +118,9 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Modifying(clearAutomatically = true)
     @Query(value = "select * from edu005 where edu101_id is null", nativeQuery = true)
     List<Edu005> addEdu101Id();
+
+    //确认成绩时检查是否有遗漏
+    @Query(value = "select * from edu005 where EDU005_ID in ?1 and  (is_mx is null or is_mx = '0') and grade is null", nativeQuery = true)
+    List<Edu005> findConfirmGrade(List<Long> confirmIdList);
 }
 

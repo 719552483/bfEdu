@@ -647,8 +647,15 @@ public class StaffManageService {
             return resultVO;
         }
 
-
         List<Long> confirmIdList = edu005List.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+
+        List<Edu005> edu005ss = edu005Dao.findConfirmGrade(confirmIdList);
+        if(edu005ss.size()>0){
+            Edu005 e = edu005ss.get(0);
+            resultVO = ResultVO.setFailed("【"+e.getCourseName()+"】课程，该学生【"+e.getStudentName()+"】成绩未录入！");
+            return resultVO;
+        }
+
 
         edu005Dao.updateConfirmGrade(confirmIdList);
 

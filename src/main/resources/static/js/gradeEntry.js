@@ -994,7 +994,7 @@ function confirmImportGrade(){
 			$(".fileLoadingArea").hide();
 			if(backjosn.code===200){
 				stuffStudentBaseInfoTable(backjosn.data);
-				toastr.success('成功导入'+backjosn.data.length+'条成绩');
+				toastr.success('成功导入'+backjosn.data.length+'条成绩，请【成绩确认】！');
 				var reObject = new Object();
 				reObject.fristSelectId = "#level";
 				reObject.actionSelectIds = "#department,#grade,#major";
