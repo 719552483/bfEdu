@@ -5,6 +5,8 @@ $(function() {
 		$(this).addClass("selected");
 		$(parent.frames["leftFrame"].document).find(".leftmenu").find("li").removeClass("active");
 	})
+	var week=JSON.parse($.session.get('week'));
+	$(parent.frames["topFrame"].document).find("#currentTrueWeek").html(week);
 	$('.changeRCurrentRole').unbind('click');
 	$('.changeRCurrentRole').bind('click', function(e) {
 		changeRCurrentRole(e);
