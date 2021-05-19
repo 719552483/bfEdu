@@ -26,4 +26,7 @@ public interface Edu400Dao extends  JpaRepository<Edu400, Long>,JpaSpecification
 
     @Query(value = "select * from edu400 e order by e.xnmc",nativeQuery = true)
     List<Edu400> findAllXn();
+
+    @Query(value = "SELECT kssj FROM EDU400 where kssj <= ?1 and jssj >= ?1",nativeQuery = true)
+    String findKssjByNow(String date);
 }

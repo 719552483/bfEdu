@@ -348,6 +348,33 @@ public class DateUtils {
         }
         return date;
     }
+    /**
+     * date2比date1多的周数
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public static int calcWeekOffset(Date startTime, Date endTime) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startTime);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        dayOfWeek = dayOfWeek - 1;
+        if (dayOfWeek == 0) dayOfWeek = 7;
+
+        int dayOffset = getDaysGapOfDates(startTime, endTime);
+
+        int weekOffset = dayOffset / 7;
+        int a;
+        if (dayOffset > 0) {
+            a = (dayOffset % 7 + dayOfWeek > 7) ? 1 : 0;
+        } else {
+            a = (dayOfWeek + dayOffset % 7 < 1) ? -1 : 0;
+        }
+        weekOffset = weekOffset + a;
+        return weekOffset;
+    }
+
+
 
     /**
      * 计算两个日期之间的年份差距

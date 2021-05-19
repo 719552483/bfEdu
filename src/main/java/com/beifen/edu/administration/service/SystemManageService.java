@@ -6,8 +6,10 @@ import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,6 +65,8 @@ public class SystemManageService {
     RedisUtils redisUtils;
     @Autowired
     Edu994Dao edu994Dao;
+    @Autowired
+    Edu400Dao edu400Dao;
 
 
     // 检查有没有系统用户
@@ -185,8 +190,19 @@ public class SystemManageService {
                 return resultVO;
             }
 
-
-
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date date=new java.util.Date();
+            String str=sdf.format(date);
+            String startDate = edu400Dao.findKssjByNow(str);
+            if(startDate != null){
+                try {
+                    java.util.Date beginDate=sdf.parse(startDate);
+                    int i = DateUtils.calcWeekOffset(beginDate,date)+1;
+                    returnMap.put("week", i);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
             returnMap.put("UserInfo", JSON.toJSONString(edu990));
             returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
             // 更新用户上次登陆时间
