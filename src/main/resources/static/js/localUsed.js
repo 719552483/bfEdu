@@ -249,7 +249,7 @@ function stuffPkInfoTable(tableInfo,row) {
                 title: '详细地址',
                 align: 'left',
                 sortable: true,
-                visible: true,
+                visible: false,
                 formatter: paramsMatter
             }, {
                 field: 'point',
