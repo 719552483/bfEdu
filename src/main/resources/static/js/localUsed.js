@@ -244,6 +244,13 @@ function stuffPkInfoTable(tableInfo,row) {
                 sortable: true,
                 visible: false,
                 formatter: paramsMatter
+            },{
+                field: 'localAddress',
+                title: '详细地址',
+                align: 'left',
+                sortable: true,
+                visible: true,
+                formatter: paramsMatter
             }, {
                 field: 'point',
                 title: '教学任务点',
