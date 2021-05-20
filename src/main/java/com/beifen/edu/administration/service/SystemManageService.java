@@ -202,6 +202,8 @@ public class SystemManageService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+            }else{
+                returnMap.put("week", 0);
             }
             returnMap.put("UserInfo", JSON.toJSONString(edu990));
             returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
