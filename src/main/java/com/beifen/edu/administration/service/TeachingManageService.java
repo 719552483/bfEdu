@@ -85,6 +85,8 @@ public class TeachingManageService {
     YearScheduleViewDao yearScheduleViewDao;
     @Autowired
     CourseCheckOnDao courseCheckOnDao;
+    @Autowired
+    CourseGradeViewDao courseGradeViewDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -668,6 +670,38 @@ public class TeachingManageService {
         return resultVO;
     }
 
+
+    public ResultVO searchCourseGetGrade(CourseGetGradePO courseGetGradePO) {
+        ResultVO resultVO ;
+
+        Specification<CourseGradeViewPO> specification = new Specification<CourseGradeViewPO>() {
+            public Predicate toPredicate(Root<CourseGradeViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (courseGetGradePO.getSfsqks() != null && !"".equals(courseGetGradePO.getSfsqks())) {
+                    predicates.add(cb.equal(root.<String>get("sfsqks"), courseGetGradePO.getSfsqks()));
+                }
+                if (courseGetGradePO.getConfirm() != null && !"".equals(courseGetGradePO.getConfirm())) {
+                    if ("T".equals(courseGetGradePO.getConfirm())){
+                        predicates.add(cb.equal(root.<String>get("isConfirm"), courseGetGradePO.getConfirm()));
+                    }else{
+                        predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
+                    }
+                }
+                predicates.add(cb.equal(root.<String>get("xnid"), courseGetGradePO.getTerm()));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<CourseGradeViewPO> courseGradeViewPOList = courseGradeViewDao.findAll(specification);
+
+        if(courseGradeViewPOList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无课程");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+courseGradeViewPOList.size()+"门课程",courseGradeViewPOList);
+        }
+
+        return resultVO;
+    }
 
     //申请考试
     public ResultVO askForExam(List<String> edu201IdList, Edu600 edu600) {

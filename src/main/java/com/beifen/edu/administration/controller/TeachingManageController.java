@@ -190,6 +190,20 @@ public class TeachingManageController {
         return result;
     }
 
+    /**
+     * 查询学科是否录入成绩
+     * @param searchCriteria
+     * @return
+     */
+    @RequestMapping("/searchCourseGetGrade")
+    @ResponseBody
+    public ResultVO searchCourseGetGrade(@RequestParam("searchCriteria") String searchCriteria) {
+        JSONObject jsonObject = JSON.parseObject(searchCriteria);
+        CourseGetGradePO courseGetGradePO = JSON.toJavaObject(jsonObject, CourseGetGradePO.class);
+        ResultVO result = teachingManageService.searchCourseGetGrade(courseGetGradePO);
+        return result;
+    }
+
 
     /**
      * 申请结课
