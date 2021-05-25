@@ -687,7 +687,7 @@ public class TeachingManageService {
                         predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
                     }
                 }
-                predicates.add(cb.equal(root.<String>get("xnid"), courseGetGradePO.getTerm()));
+                predicates.add(cb.equal(root.<String>get("xnid"), courseGetGradePO.getTrem()));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
