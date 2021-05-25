@@ -684,7 +684,7 @@ public class TeachingManageService {
                     if ("T".equals(courseGetGradePO.getConfirm())){
                         predicates.add(cb.equal(root.<String>get("isConfirm"), courseGetGradePO.getConfirm()));
                     }else{
-                        predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
+                        predicates.add(cb.isNull(root.<String>get("isConfirm")));
                     }
                 }
                 predicates.add(cb.equal(root.<String>get("xnid"), courseGetGradePO.getTrem()));

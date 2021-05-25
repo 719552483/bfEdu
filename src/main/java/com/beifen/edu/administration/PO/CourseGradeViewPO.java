@@ -22,6 +22,23 @@ public class CourseGradeViewPO {
     private String sfsqks;//是否已结课
     private String ls;//老师
     private String lsmc;//老师姓名
+    private String EDU201_ID;
+
+    public String getEDU201_ID() {
+        return EDU201_ID;
+    }
+
+    public void setEDU201_ID(String EDU201_ID) {
+        this.EDU201_ID = EDU201_ID;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
     public String getLs() {
         return ls;
@@ -62,14 +79,6 @@ public class CourseGradeViewPO {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
     }
 
     public String getIsExamCrouse() {
