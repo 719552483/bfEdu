@@ -56,6 +56,7 @@
 						<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						<li class="click" id="exportGrade"><span><img src="images/i01.png" style="width: 24px;"/></span>班级成绩导出</li>
 						<li class="click" id="exportNoPassGrade"><span><img src="images/d06.png" style="width: 24px;"/></span>不及格成绩导出</li>
+						<li class="click" id="gradeSituation"><span><img src="images/ico02.png" style="width: 20px;"/></span>成绩录入情况</li>
 					</ul>
 					<ul class="toolbar1 manytools">
 						<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
@@ -93,6 +94,62 @@
 
 				<div class="studentGradeTableArea columnsStyle searchGivePaddingR">
 					<table class="tablelist myTableStyle" id="studentGradeTable" data-unique-id="edu005_ID" style="margin-top: 10px;"></table>
+				</div>
+			</div>
+
+			<div class="gradeSituationArea noneStart">
+				<div class="isFrist noneStart">T</div>
+				<div class="tools">
+					<ul class="toolbar">
+						<li class="click" id="returnMain"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+						<li class="click" id="startSearch_gradeSituation"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+					</ul>
+					<ul class="toolbar1 manytools">
+						<li class="click" id="research_gradeSituation"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+					</ul>
+				</div>
+
+				<div class="searchArea searchAreaWitheSelect">
+					<div class="col4 giveBottom">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+								<select class="isSowIndex" id="gradeSituationGrade">
+									<option value="seleceConfigTip">请选择</option>
+								</select>
+							</div>
+						</ul>
+					</div>
+
+					<div class="col4 giveBottom">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">是否结课</label>
+								<select class="isSowIndex" id="gradeSituatioIsEnd">
+									<option value="seleceConfigTip">全部</option>
+									<option value="T">已结课</option>
+									<option value="F">未结课</option>
+								</select>
+							</div>
+						</ul>
+					</div>
+
+					<div class="col4 giveBottom">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">是否确认成绩</label>
+								<select class="isSowIndex" id="gradeSituationIsComfrim">
+									<option value="seleceConfigTip">全部</option>
+									<option value="T">已确认</option>
+									<option value="F">未确认</option>
+								</select>
+							</div>
+						</ul>
+					</div>
+				</div>
+
+				<div class="gradeSituationTableArea columnsStyle searchGivePaddingR">
+					<table class="tablelist myTableStyle" id="gradeSituationTable" data-unique-id="" style="margin-top: 10px;"></table>
 				</div>
 			</div>
        </div>

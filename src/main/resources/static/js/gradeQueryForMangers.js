@@ -36,6 +36,7 @@ function stuffNj(){
 			stuffManiaSelect("#grade", str);
 			stuffManiaSelect("#export_grade", str);
 			stuffManiaSelect("#exportNoPassGrade_grade", str);
+			stuffManiaSelect("#gradeSituationGrade", str);
 		}
 	});
 }
@@ -1478,6 +1479,180 @@ function stuffExportNoPassGradeLookTable(tableInfo,crouseName){
 	toolTipUp(".myTooltip");
 }
 
+//页面主题内容显示隐藏控制
+function mainAreaControl(){
+	$(".scheduleClassesMainArea,.gradeSituationArea").toggle();
+	if($('.isFrist')[0].innerText==="T"){
+		gradeSituationBtnBind();
+		stuffSituationTable({});
+	}
+	$('.isFrist').html("F");
+}
+
+//成绩录入情况按钮事件绑定
+function gradeSituationBtnBind(){
+	//返回
+	$('#returnMain').unbind('click');
+	$('#returnMain').bind('click', function(e) {
+		mainAreaControl();
+		e.stopPropagation();
+	});
+
+	//成绩录入情况开始检索
+	$('#startSearch_gradeSituation').unbind('click');
+	$('#startSearch_gradeSituation').bind('click', function(e) {
+		startSearchGradeSituation();
+		e.stopPropagation();
+	});
+
+	//成绩录入情况重置检索
+	$('#research_gradeSituation').unbind('click');
+	$('#research_gradeSituation').bind('click', function(e) {
+		mainAreaControl();
+		e.stopPropagation();
+	});
+}
+
+//渲染成绩录入情况表
+function stuffSituationTable(tableInfo){
+	$('#gradeSituationTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".gradeSituationTableArea", "录入记录");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field: 'edu001_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			},{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			},{
+				field: 'className',
+				title: '行政班名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'studentName',
+				title: '学生姓名',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'courseName',
+				title: '课程名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'studentCode',
+				title: '学号',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			}, {
+				field: 'entryDate',
+				title: '录入时间',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			},{
+				field: 'grade',
+				title: '成绩',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}
+		]
+	});
+
+	drawPagination(".gradeSituationTableArea", "录入记录");
+	changeColumnsStyle(".gradeSituationTableArea", "录入记录");
+	changeTableNoRsTip();
+	drawSearchInput(".gradeSituationTableArea");
+	toolTipUp(".myTooltip");
+}
+
+//成绩录入情况开始检索
+function startSearchGradeSituation(){
+	var trem=getNormalSelectValue("gradeSituationGrade");
+	var sfsqks=getNormalSelectValue("gradeSituatioIsEnd");
+	var confirm=getNormalSelectValue("gradeSituationIsComfrim");
+
+	if(trem===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+	var sendObject=new Object();
+	sendObject.trem=trem;
+	sendObject.sfsqks=sfsqks;
+	sendObject.confirm=confirm;
+	searchCourseGetGrade(sendObject);
+}
+
+//检索成绩录入情况
+function searchCourseGetGrade(sendObject){
+	if(typeof sendObject==="undefined"){
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseGetGrade",
+		data: {
+			"searchCriteria":JSON.stringify(sendObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffSituationTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+				stuffSituationTable();
+			}
+		}
+	});
+}
+
+
 //初始化页面按钮绑定事件
 function btnBind(){
 	//重置检索
@@ -1564,6 +1739,13 @@ function btnBind(){
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
 		startSearch();
+		e.stopPropagation();
+	});
+
+	//查看成绩录入情况
+	$('#gradeSituation').unbind('click');
+	$('#gradeSituation').bind('click', function(e) {
+		mainAreaControl();
 		e.stopPropagation();
 	});
 }
