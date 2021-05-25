@@ -20,6 +20,24 @@ public class CourseGradeViewPO {
     private String xnid;//学年id
     private String isConfirm; //是否确认
     private String sfsqks;//是否已结课
+    private String ls;//老师
+    private String lsmc;//老师姓名
+
+    public String getLs() {
+        return ls;
+    }
+
+    public void setLs(String ls) {
+        this.ls = ls;
+    }
+
+    public String getLsmc() {
+        return lsmc;
+    }
+
+    public void setLsmc(String lsmc) {
+        this.lsmc = lsmc;
+    }
 
     public void setId(String id) {
         this.id = id;
