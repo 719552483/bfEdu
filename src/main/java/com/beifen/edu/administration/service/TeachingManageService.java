@@ -687,9 +687,9 @@ public class TeachingManageService {
 
 
         if(makeUpGradePOList.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无课程");
+            resultVO = ResultVO.setFailed("暂无数据");
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+makeUpGradePOList.size()+"门课程",makeUpGradePOList);
+            resultVO = ResultVO.setSuccess("共找到"+makeUpGradePOList.size()+"条数据",makeUpGradePOList);
         }
         return resultVO;
     }
@@ -718,9 +718,9 @@ public class TeachingManageService {
         List<CourseGradeViewPO> courseGradeViewPOList = courseGradeViewDao.findAll(specification);
 
         if(courseGradeViewPOList.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无课程");
+            resultVO = ResultVO.setFailed("暂无数据");
         } else {
-            resultVO = ResultVO.setSuccess("共找到"+courseGradeViewPOList.size()+"门课程",courseGradeViewPOList);
+            resultVO = ResultVO.setSuccess("共找到"+courseGradeViewPOList.size()+"条数据",courseGradeViewPOList);
         }
 
         return resultVO;
