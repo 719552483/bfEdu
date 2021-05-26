@@ -1647,6 +1647,8 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.gradeSituationForNotPassTableArea .bootstrap4 .search,
+.gradeSituationTableArea .bootstrap4 .search,
 .allQuestionTableArea .bootstrap4 .search,
 .chooseClassTableArea .bootstrap4 .search,
 .gzhRoleTableArea .bootstrap4 .search,

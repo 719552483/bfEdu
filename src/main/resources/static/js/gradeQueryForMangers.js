@@ -37,6 +37,7 @@ function stuffNj(){
 			stuffManiaSelect("#export_grade", str);
 			stuffManiaSelect("#exportNoPassGrade_grade", str);
 			stuffManiaSelect("#gradeSituationGrade", str);
+			stuffManiaSelect("#gradeSituationGradeForNotPass", str);
 		}
 	});
 }
@@ -1479,6 +1480,11 @@ function stuffExportNoPassGradeLookTable(tableInfo,crouseName){
 	toolTipUp(".myTooltip");
 }
 
+
+/*
+*成绩录入情况
+* */
+
 //页面主题内容显示隐藏控制
 function mainAreaControl(){
 	$(".scheduleClassesMainArea,.gradeSituationArea").toggle();
@@ -1492,9 +1498,10 @@ function mainAreaControl(){
 //成绩录入情况按钮事件绑定
 function gradeSituationBtnBind(){
 	//返回
-	$('#returnMain').unbind('click');
-	$('#returnMain').bind('click', function(e) {
+	$('.returnMain').unbind('click');
+	$('.returnMain').bind('click', function(e) {
 		mainAreaControl();
+		$(".placeul").find("li:last-child").remove();
 		e.stopPropagation();
 	});
 
@@ -1508,7 +1515,7 @@ function gradeSituationBtnBind(){
 	//成绩录入情况重置检索
 	$('#research_gradeSituation').unbind('click');
 	$('#research_gradeSituation').bind('click', function(e) {
-		mainAreaControl();
+		researchGradeSituation();
 		e.stopPropagation();
 	});
 }
@@ -1519,14 +1526,19 @@ function stuffSituationTable(tableInfo){
 		data: tableInfo,
 		pagination: true,
 		pageNumber: 1,
-		pageSize : 5,
-		pageList : [ 5 ],
+		pageSize : 10,
+		pageList : [ 10 ],
 		showToggle: false,
 		showFooter: false,
 		clickToSelect: true,
 		search: true,
 		editable: false,
 		striped: true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: getNormalSelectValue("gradeSituationGrade")+'成绩录入情况'  //文件名称
+		},
 		sidePagination: "client",
 		toolbar: '#toolbar',
 		showColumns: true,
@@ -1538,59 +1550,75 @@ function stuffSituationTable(tableInfo){
 		},
 		columns: [
 			{
-				field: 'edu001_ID',
-				title: '唯一标识',
-				align: 'center',
-				sortable: true,
-				visible: false
-			},{
-				field: 'xn',
-				title: '学年',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			},{
-				field: 'className',
-				title: '行政班名称',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			},{
-				field: 'studentName',
-				title: '学生姓名',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter
-			},{
 				field: 'courseName',
 				title: '课程名称',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
 			},{
-				field: 'studentCode',
-				title: '学号',
+				field: 'className',
+				title: '行政班',
 				align: 'left',
 				sortable: true,
-				formatter: paramsMatter,
+				formatter: paramsMatter
+			},{
+				field: 'sfsqks',
+				title: '是否已结课',
+				align: 'left',
+				sortable: true,
+				formatter: sfsqksMatter
+			},{
+				field: 'isConfirm',
+				title: '是否确认成绩',
+				align: 'left',
+				sortable: true,
+				formatter: isConfirmMatter
+			},{
+				field: 'isExamCrouse',
+				title: '是否为考试课程',
+				align: 'left',
+				sortable: true,
+				formatter: isExamMatter,
 				visible: false
 			}, {
-				field: 'entryDate',
-				title: '录入时间',
-				align: 'left',
-				sortable: true,
-				formatter: paramsMatter,
-				visible: false
-			},{
-				field: 'grade',
-				title: '成绩',
+				field: 'lsmc',
+				title: '负责教师',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
 			}
 		]
 	});
+
+	function sfsqksMatter(value, row, index) {
+		if(value==="T"){
+			return [ '<div class="myTooltip greenTxt" title="已结课">已结课</div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip redTxt" title="未结课">未结课</div>' ]
+				.join('');
+		}
+	}
+
+	function isConfirmMatter(value, row, index) {
+		if(value==="T"&&value!=null){
+			return [ '<div class="myTooltip greenTxt" title="已确认">已确认</div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip redTxt" title="未确认">未确认</div>' ]
+				.join('');
+		}
+	}
+
+	function isExamMatter(value, row, index) {
+		if(value==="T"&&value!=null){
+			return [ '<div class="myTooltip" title="考试课">考试课</div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip" title="非考试课">非考试课</div>' ]
+				.join('');
+		}
+	}
 
 	drawPagination(".gradeSituationTableArea", "录入记录");
 	changeColumnsStyle(".gradeSituationTableArea", "录入记录");
@@ -1615,6 +1643,14 @@ function startSearchGradeSituation(){
 	sendObject.sfsqks=sfsqks;
 	sendObject.confirm=confirm;
 	searchCourseGetGrade(sendObject);
+}
+
+//成绩录入情况重置检索
+function researchGradeSituation(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#gradeSituationGrade,#gradeSituatioIsEnd,#gradeSituationIsComfrim";
+	reReloadSearchsWithSelect(reObject);
+	stuffSituationTable({});
 }
 
 //检索成绩录入情况
@@ -1652,6 +1688,143 @@ function searchCourseGetGrade(sendObject){
 	});
 }
 
+//更改tab1 首次加载
+function changTbleIsFirst(){
+	if($('.tab2IsFrist')[0].innerText==="T"){
+		tab2Btnbind();
+		stuffSituationNotPassTable({});
+	}
+	$('.tab2IsFrist').html("F");
+}
+
+//不及格录入情况按钮时间绑定
+function tab2Btnbind(){
+	//change事件
+	$("#gradeSituationGradeForNotPass").change(function() {
+		if(getNormalSelectValue("gradeSituationGradeForNotPass")!==""){
+			searchMakeUpCount(getNormalSelectValue("gradeSituationGradeForNotPass"));
+		}else{
+			stuffSituationNotPassTable({});
+		}
+		}
+	);
+}
+
+//根据学年获取不及格情况数据
+function  searchMakeUpCount(term){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchMakeUpCount",
+		data: {
+			"trem":term
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffSituationNotPassTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+				stuffSituationNotPassTable();
+			}
+		}
+	});
+}
+
+//渲染不及格成绩录入情况表
+function stuffSituationNotPassTable(tableInfo){
+	$('#gradeSituationForNotPassTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: getNormalSelectValue("gradeSituationGradeForNotPass")+'不及格成绩录入情况'  //文件名称
+		},
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".gradeSituationForNotPassTableArea", "录入记录");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field: 'courseName',
+				title: '课程名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'className',
+				title: '行政班',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'lsmc',
+				title: '负责教师',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'sum',
+				title: '正考不及格人数',
+				align: 'left',
+				sortable: true,
+				formatter: sumMatter
+			},{
+				field: 'pass',
+				title: '仍不及格人数',
+				align: 'left',
+				sortable: true,
+				formatter: passMatter
+			}
+		]
+	});
+
+	function sumMatter(value, row, index) {
+		return [ '<div class="myTooltip" title="'+value+'人">'+value+'人</div>' ]
+			.join('');
+	}
+
+	function passMatter(value, row, index) {
+		var showValue=row.sum-value;
+		return [ '<div class="myTooltip" title="'+showValue+'人">'+showValue+'人</div>' ]
+			.join('');
+	}
+
+	drawPagination(".gradeSituationForNotPassTableArea", "录入记录");
+	changeColumnsStyle(".gradeSituationForNotPassTableArea", "录入记录");
+	changeTableNoRsTip();
+	drawSearchInput(".gradeSituationForNotPassTableArea");
+	toolTipUp(".myTooltip");
+}
+
+/*
+*成绩录入情况 end
+* */
 
 //初始化页面按钮绑定事件
 function btnBind(){
@@ -1746,6 +1919,7 @@ function btnBind(){
 	$('#gradeSituation').unbind('click');
 	$('#gradeSituation').bind('click', function(e) {
 		mainAreaControl();
+		$(".placeul").append('<li><a>成绩录入情况</a></li>');
 		e.stopPropagation();
 	});
 }
