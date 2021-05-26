@@ -20,7 +20,7 @@ public class Edu400 {
 	private String relaseTime;//开始排课时间
 	private String batch;// 批次代码
 	private String batchName; //批次名称
-	private String lrsj;//·
+	private String lrsj;//最晚录入成绩时间
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
