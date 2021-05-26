@@ -23,6 +23,7 @@ import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,6 +46,8 @@ public class StaffManageService {
     Edu205Dao edu205Dao;
     @Autowired
     Edu005Dao edu005Dao;
+    @Autowired
+    Edu400Dao edu400Dao;
     @Autowired
     Edu0051Dao edu0051Dao;
     @Autowired
@@ -614,6 +617,28 @@ public class StaffManageService {
     //确认成绩并生成补考标识
     public ResultVO confirmGrade(Edu005 edu005, String userKey) {
         ResultVO resultVO;
+
+
+        if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+            Edu400 edu400 = edu400Dao.getTermInfoById(edu005.getXnid());
+            if(edu400 != null){
+                String lrsj = edu400.getLrsj();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+                try {
+                    Date lrsjDate = simpleDateFormat.parse(lrsj);
+                    Date now = new Date();
+                    int compareTo = lrsjDate.compareTo(now);
+                    if(compareTo != 1){
+                        resultVO =  ResultVO.setDateFailed("录入时间超过截至日期");
+                        return resultVO;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
         //根据条件筛选成绩表
         Specification<Edu005> edu005Specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -631,6 +656,7 @@ public class StaffManageService {
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
+
 
         List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
 

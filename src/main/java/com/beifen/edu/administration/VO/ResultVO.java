@@ -64,6 +64,10 @@ public class ResultVO<T> {
         return new ResultVO(500, msg);
     }
 
+    public static <T> ResultVO setDateFailed(String msg) {
+        return new ResultVO(204, msg);
+    }
+
     /**
      * 请求失败  状态 500
      *
