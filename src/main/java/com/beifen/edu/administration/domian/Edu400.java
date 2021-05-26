@@ -20,6 +20,7 @@ public class Edu400 {
 	private String relaseTime;//开始排课时间
 	private String batch;// 批次代码
 	private String batchName; //批次名称
+	private String lrsj;//·
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -76,5 +77,13 @@ public class Edu400 {
 
 	public void setBatchName(String batchName) {
 		this.batchName = batchName;
+	}
+
+	public String getLrsj() {
+		return lrsj;
+	}
+
+	public void setLrsj(String lrsj) {
+		this.lrsj = lrsj;
 	}
 }
