@@ -61,6 +61,25 @@ public class TeachingManageController {
     }
 
     /**
+     * 教师确认成绩申请
+     * @param businessInfo
+     * @param approvalInfo
+     * @return
+     */
+    @RequestMapping("addTeacherGetGrade")
+    @ResponseBody
+    public ResultVO addTeacherGetGrade(@RequestParam("businessInfo") String businessInfo, @RequestParam("approvalInfo") String approvalInfo) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject edu115Json = JSONObject.parseObject(businessInfo);
+        Edu115 edu115 = JSONObject.toJavaObject(edu115Json, Edu115.class);
+        JSONObject edu600Json = JSONObject.parseObject(approvalInfo);
+        Edu600 edu600 = JSONObject.toJavaObject(edu600Json, Edu600.class);
+        result = teachingManageService.addTeacherGetGrade(edu115, edu600);
+        return result;
+    }
+
+    /**
      * 删除出差申请
      * @param removeKeys
      * @return

@@ -40,6 +40,8 @@ public class TeachingManageService {
     @Autowired
     Edu112Dao edu112Dao;
     @Autowired
+    Edu115Dao edu115Dao;
+    @Autowired
     Edu113Dao edu113Dao;
     @Autowired
     Edu990Dao edu990Dao;
@@ -184,6 +186,41 @@ public class TeachingManageService {
         }
         return resultVO;
     }
+
+
+    /**
+     * 教师确认成绩申请
+     * @param edu115
+     * @param edu600
+     * @return
+     */
+    public ResultVO addTeacherGetGrade(Edu115 edu115, Edu600 edu600) {
+        ResultVO resultVO;
+
+        //找到发起人姓名，若不是在校人员，使用用户姓名
+        String userName = edu992Dao.getTeacherNameByEdu990Id(edu115.getEdu990_ID().toString());
+        if("".equals(userName) || userName == null) {
+            userName = edu990Dao.queryUserById(edu115.getEdu990_ID().toString()).getYhm();
+        }
+        edu115.setUserName(userName);
+        edu115.setBusinessState("nopass");
+        edu115Dao.save(edu115);
+        if(edu115.getEdu115_ID() == null) {
+            resultVO = ResultVO.setFailed("出差申请失败，请检查申请信息");
+            return resultVO;
+        }
+        edu600.setBusinessKey(edu115.getEdu115_ID());
+        boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+        if (!isSuccess) {
+            resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+        } else {
+            resultVO = ResultVO.setSuccess("出差申请成功");
+        }
+        return resultVO;
+    }
+
+
+
 
     /**
      * 出差申请查询

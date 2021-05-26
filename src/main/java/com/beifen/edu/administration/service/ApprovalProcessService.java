@@ -52,6 +52,8 @@ public class ApprovalProcessService {
     @Autowired
     private Edu112Dao edu112Dao;
     @Autowired
+    private Edu115Dao edu115Dao;
+    @Autowired
     private Edu008Dao edu008Dao;
     @Autowired
     private StaffManageService staffManageService;
@@ -360,6 +362,9 @@ public class ApprovalProcessService {
                     break;
                 case"08":
                     staffManageService.cancelGradeInfo(businessKey);
+                    break;
+                case"09":
+                    edu115Dao.updateState(businessKey, "pass");
                     break;
                 default:
                     isSuccess = false;
