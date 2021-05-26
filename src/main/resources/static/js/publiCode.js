@@ -1874,6 +1874,12 @@ function stuffAllXnTable(allRelationInfo){
 					sortable: true,
 					formatter: relaseTimeMatter
 				},{
+					field: 'lrsj',
+					title: '成绩录入截止时间',
+					align: 'left',
+					sortable: true,
+					formatter: lrsjTimeMatter
+				},{
 					field: 'action',
 					title: '操作',
 					align: 'center',
@@ -1917,7 +1923,7 @@ function stuffAllXnTable(allRelationInfo){
 		}
 
 		function relaseTimeMatter(value, row, index) {
-			if (typeof(value) === "undefined"||value==null) {
+			if (typeof(value) === "undefined"||value==null||value==="") {
 				return [
 					'<div class="myTooltip normalTxt fbsjTxt'+index+'" title="暂未安排">暂未安排</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifyXn_relaseTime'+index+'" spellcheck="false">'
 				]
@@ -1929,6 +1935,13 @@ function stuffAllXnTable(allRelationInfo){
 					.join('');
 			}
 
+		}
+
+		function lrsjTimeMatter(value, row, index) {
+			return [
+				'<div class="myTooltip lrsjTxt'+index+'" title="'+row.lrsj+'">'+row.lrsj+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifyXn_lrsjTime'+index+'" spellcheck="false">'
+			]
+				.join('');
 		}
 
 		function zzsMatter(value, row, index) {
@@ -1951,10 +1964,12 @@ function modifyXn(row,index){
 	if(typeof(row.relaseTime) !== "undefined"){
 		$("#modifyXn_relaseTime"+index).val(row.relaseTime);
 	}
+	$("#modifyXn_lrsjTime"+index).val(row.lrsj);
 	$("#modifyXn_startTime"+index).show();
 	$("#modifyXn_endTime"+index).show();
 	$("#modifyXn_name"+index).show();
 	$("#modifyXn_relaseTime"+index).show();
+	$("#modifyXn_lrsjTime"+index).show();
 	$(".confrim"+index).show();
 	$(".cancel"+index).show();
 	$(".modifyXn"+index).hide();
@@ -1962,9 +1977,11 @@ function modifyXn(row,index){
 	$(".jssjTxt"+index).hide();
 	$(".xnmcTxt"+index).hide();
 	$(".fbsjTxt"+index).hide();
+	$(".lrsjTxt"+index).hide();
 	selfDrawCalenr("#modifyXn_startTime"+index);
 	selfDrawCalenr("#modifyXn_endTime"+index);
 	selfDrawCalenr("#modifyXn_relaseTime"+index);
+	drawCalenr("#modifyXn_lrsjTime"+index,true);
 	$("#xnTable td:last-child").addClass("actionChangeLastTD");
 }
 
@@ -1974,6 +1991,7 @@ function cancelModifyXn(row,index){
 	$("#modifyXn_endTime"+index).hide();
 	$("#modifyXn_name"+index).hide();
 	$("#modifyXn_relaseTime"+index).hide();
+	$("#modifyXn_lrsjTime"+index).hide();
 	$(".confrim"+index).hide();
 	$(".cancel"+index).hide();
 	$(".modifyXn"+index).show();
@@ -1981,6 +1999,7 @@ function cancelModifyXn(row,index){
 	$(".jssjTxt"+index).show();
 	$(".xnmcTxt"+index).show();
 	$(".fbsjTxt"+index).show();
+	$(".lrsjTxt"+index).show();
 	$("#xnTable td:last-child").removeClass("actionChangeLastTD");
 }
 
@@ -1990,6 +2009,7 @@ function confrimModifyXn(row,index){
 	var modifyXn_startTime=$("#modifyXn_startTime"+index).val();
 	var modifyXn_endTime=$("#modifyXn_endTime"+index).val();
 	var modifyXn_relaseTime=$("#modifyXn_relaseTime"+index).val();
+	var modifyXn_lrsjTime=$("#modifyXn_lrsjTime"+index).val();
 	if(modifyXn_name===row.xnmc&&modifyXn_startTime===row.kssj&&modifyXn_endTime===row.jssj&&modifyXn_relaseTime==row.relaseTime){
 		cancelModifyXn(row,index);
 	}else{
@@ -2030,6 +2050,11 @@ function confrimModifyXn(row,index){
 			}
 		}
 
+		if(modifyXn_lrsjTime===""){
+			toastr.warning('请选择学年成绩录入截止时间');
+			return;
+		}
+
 		var xnObject=new Object();
 		xnObject.edu400_ID=row.edu400_ID;
 		xnObject.xnmc=modifyXn_name;
@@ -2037,6 +2062,7 @@ function confrimModifyXn(row,index){
 		xnObject.jssj=modifyXn_endTime;
 		xnObject.zzs=WeeksBetw(modifyXn_startTime,modifyXn_endTime);
 		xnObject.relaseTime=modifyXn_relaseTime;
+		xnObject.lrsj=modifyXn_lrsjTime;
 		
 		$("#remindModal").find(".remindType").html("学年");
 		$("#remindModal").find(".remindActionType").html("修改");
@@ -2097,12 +2123,14 @@ function sendModifyXnInfo(xnObject){
 
 //预备新增学年
 function addXn(){
-	$('#addXnName,#addXn_startTime,#addXn_endTime,#relaseTime').val("");
+	$('#addXnName,#addXn_startTime,#addXn_endTime,#relaseTime,#gradeStop').val("");
 	$("#addXnModal").find(".moadalTitle").html("新增学年");
 	$.showModal("#addXnModal",true);
 	selfDrawCalenr("#addXn_startTime");
 	selfDrawCalenr("#addXn_endTime");
 	selfDrawCalenr("#relaseTime");
+	selfDrawCalenr();
+	drawCalenr("#gradeStop",true);
 
 	//新增学年
 	$('.addXn_confimBtn').unbind('click');
@@ -2134,6 +2162,7 @@ function confimAddXn(){
 	var startTime=$("#addXn_startTime").val();
 	var endTime=$("#addXn_endTime").val();
 	var relaseTime=$("#relaseTime").val();
+	var gradeStop=$("#gradeStop").val();
 	if(xnmc===""){
 		toastr.warning('学年名称不能为空');
 		return;
@@ -2170,13 +2199,19 @@ function confimAddXn(){
 			return;
 		}
 	}
-	
+
+	if(gradeStop===""){
+		toastr.warning('成绩录入截止时间不能为空');
+		return;
+	}
+
 	var xnObject=new Object();
 	xnObject.xnmc=xnmc;
 	xnObject.kssj=startTime;
 	xnObject.jssj=endTime;
 	xnObject.zzs=WeeksBetw(startTime,endTime);
 	xnObject.relaseTime=relaseTime;
+	xnObject.lrsj=gradeStop;
 	sendNewXnInfo(xnObject);
 }
 
