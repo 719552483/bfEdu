@@ -1570,6 +1570,7 @@ background: rgba(36, 138, 187, 0.77);
  padding: 17px 0px 0px 17px;
 }
 
+.timeOutCanle,
 .specialCanle {
 	background: url(../images/btnbg2.png) repeat-x;
 	color: rgba(0, 0, 0, 0.7490196078431373);

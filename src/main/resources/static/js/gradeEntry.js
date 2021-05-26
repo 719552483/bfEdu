@@ -1086,11 +1086,76 @@ function confirmGrade(){
 				toolTipUp(".myTooltip");
 				toastr.success(backjson.msg);
 				$.hideModal("#confirmGradeModal");
+			} else if(backjson.code===204){
+				$.hideModal("#confirmGradeModal",false);
+				$.showModal("#timeOutModal",true);
+				//返回
+				$('.timeOutCanle').unbind('click');
+				$('.timeOutCanle').bind('click', function(e) {
+					$.hideModal("#timeOutModal",false);
+					$.showModal("#confirmGradeModal",true);
+					e.stopPropagation();
+				});
+
+				//发起特殊申请
+				$('.confirmTimeOut').unbind('click');
+				$('.confirmTimeOut').bind('click', function(e) {
+					confirmTimeOut();
+					e.stopPropagation();
+				});
+			}else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//发起特殊申请
+function confirmTimeOut(){
+	var businessInfo=new Object();
+	businessInfo.Edu990_ID=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	businessInfo.userName=$(parent.frames["topFrame"].document).find(".userName")[0].innerText;
+	businessInfo.xnid=getNormalSelectValue("confirmGradeForXn");
+	businessInfo.courseName=$("#confirmGradeForKcmc").val();
+	businessInfo.className=$("#confirmGradeForXzbmc").val();
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addTeacherGetGrade",
+		data: {
+			"businessInfo":JSON.stringify(businessInfo),
+			"approvalInfo":JSON.stringify(getApprovalobect2()),
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			if (backjson.code===200) {
+				$.hideModal();
+				toastr.success("申请发起成功，请等待审批通过");
 			} else {
 				toastr.warning(backjson.msg);
 			}
 		}
 	});
+}
+
+//审批流对象
+function getApprovalobect2(){
+	var approvalObject=new Object();
+	approvalObject.businessType="09";
+	approvalObject.proposerType=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
 }
 
 //重置确认成绩条件
