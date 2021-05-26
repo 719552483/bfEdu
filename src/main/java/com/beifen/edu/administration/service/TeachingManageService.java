@@ -87,6 +87,8 @@ public class TeachingManageService {
     CourseCheckOnDao courseCheckOnDao;
     @Autowired
     CourseGradeViewDao courseGradeViewDao;
+    @Autowired
+    CourseMakeUpViewDao courseMakeUpViewDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -671,8 +673,29 @@ public class TeachingManageService {
     }
 
 
+    public ResultVO searchMakeUpCount(String trem){
+        ResultVO resultVO;
+        Specification<MakeUpGradePO> specification = new Specification<MakeUpGradePO>() {
+            public Predicate toPredicate(Root<MakeUpGradePO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+
+                predicates.add(cb.equal(root.<String>get("xnid"), trem));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<MakeUpGradePO> makeUpGradePOList = courseMakeUpViewDao.findAll(specification);
+
+
+        if(makeUpGradePOList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无课程");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+makeUpGradePOList.size()+"门课程",makeUpGradePOList);
+        }
+        return resultVO;
+    }
+
     public ResultVO searchCourseGetGrade(CourseGetGradePO courseGetGradePO) {
-        ResultVO resultVO ;
+        ResultVO resultVO;
 
         Specification<CourseGradeViewPO> specification = new Specification<CourseGradeViewPO>() {
             public Predicate toPredicate(Root<CourseGradeViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

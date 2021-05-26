@@ -206,6 +206,17 @@ public class TeachingManageController {
 
 
     /**
+     * 查询学科不及格人数和通过人数
+     * @return
+     */
+    @RequestMapping("/searchMakeUpCount")
+    @ResponseBody
+    public ResultVO searchMakeUpCount(@RequestParam("trem") String trem) {
+        ResultVO result = teachingManageService.searchMakeUpCount(trem);
+        return result;
+    }
+
+    /**
      * 申请结课
      * @param tasks
      * @param approvalInfo
