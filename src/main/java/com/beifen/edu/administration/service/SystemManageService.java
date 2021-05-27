@@ -553,7 +553,7 @@ public class SystemManageService {
         if ("01".equals(userType)) {
             edu700List = edu700Dao.getNoticesForStudent(departments);
         } else {
-            edu700List = edu700Dao.getNoticesForTeacher(departments,userId);
+            edu700List = edu700Dao.getNoticesForTeacher(/*departments,*/userId);
         }
 
         if (edu700List.size() == 0) {

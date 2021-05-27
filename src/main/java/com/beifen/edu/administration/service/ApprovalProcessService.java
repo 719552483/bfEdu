@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,8 @@ public class ApprovalProcessService {
     private Edu112Dao edu112Dao;
     @Autowired
     private Edu115Dao edu115Dao;
+    @Autowired
+    private Edu700Dao edu700Dao;
     @Autowired
     private Edu008Dao edu008Dao;
     @Autowired
@@ -375,6 +378,15 @@ public class ApprovalProcessService {
                     break;
                 case"09":
                     edu115Dao.updateState(businessKey, "pass");
+                    Edu115 e = edu115Dao.findOne(Long.parseLong(businessKey));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Edu700 edu700 = new Edu700();
+                    edu700.setEdu101_ID(e.getEdu990_ID());
+                    edu700.setSendDate(simpleDateFormat.format(new Date()));
+                    edu700.setShowInIndex("T");
+                    edu700.setTitle("延迟确认成绩审核成功");
+                    edu700.setNoticeContent("【"+e.getClassName()+"】班级，【"+e.getCourseName()+"】课程审批通过！");
+                    edu700Dao.save(edu700);
                     break;
                 default:
                     isSuccess = false;
@@ -405,6 +417,18 @@ public class ApprovalProcessService {
                     edu101Dao.updateState(businessKey, "nopass");
                     break;
                 case"08":
+                    break;
+                case"09":
+                    Edu115 e = edu115Dao.findOne(Long.parseLong(businessKey));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Edu700 edu700 = new Edu700();
+                    edu700.setEdu101_ID(e.getEdu990_ID());
+                    edu700.setSendDate(simpleDateFormat.format(new Date()));
+                    edu700.setShowInIndex("T");
+                    edu700.setTitle("延迟确认成绩审核失败");
+                    edu700.setNoticeContent("【"+e.getClassName()+"】班级，【"+e.getCourseName()+"】课程审批未通过！");
+                    edu700Dao.save(edu700);
+                    edu115Dao.delete(Long.parseLong(businessKey));
                     break;
                 default:
                     isSuccess = false;

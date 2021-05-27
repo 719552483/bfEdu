@@ -25,8 +25,8 @@ public interface Edu700Dao extends JpaRepository<Edu700, Long>, JpaSpecification
     List<Edu700> getNoticesForStudent(List<String> departments);
 
     //查询老师通知
-    @Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.Edu104_ID in ?1 or e.Edu101_ID = ?2",nativeQuery = true)
-    List<Edu700> getNoticesForTeacher(List<String> departments,String userId);
+    @Query(value = "select e.* from Edu700 e where e.Edu101_ID = ?1 ORDER BY SEND_DATE desc",nativeQuery = true)
+    List<Edu700> getNoticesForTeacher(String userId);
 
     //获取用户发布的通知
     @Query(value = "select e.* from Edu700 e where e.edu101_ID = ?1",nativeQuery = true)
@@ -40,7 +40,7 @@ public interface Edu700Dao extends JpaRepository<Edu700, Long>, JpaSpecification
     //@Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.show_in_index = 'T' and e.Edu104_ID in ?1 or e.Edu101_ID = ?2",nativeQuery = true)
 
     //List<Edu700> getNoticesForTeacherIndex(List<String> departments,String userId);
-    @Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.show_in_index = 'T'  or e.Edu101_ID = ?1",nativeQuery = true)
+    @Query(value = "select e.* from Edu700 e where e.notice_type in ('01','02') and e.show_in_index = 'T'  or e.Edu101_ID = ?1 ORDER BY SEND_DATE desc ",nativeQuery = true)
     List<Edu700> getNoticesForTeacherIndex(String userId);
 
     // 改变通知是否首页展示
