@@ -145,6 +145,12 @@ public class ApprovalProcessService {
                 Edu008 edu008 = edu008Dao.findOne(businessKey);
                 department = edu008.getDepartmentCode();
                 break;
+            case"09":
+                Edu115 edu115 = edu115Dao.findOne(businessKey);
+                Edu990 edu9901 = edu990Dao.findOne(edu115.getEdu990_ID());
+                Edu101 one1 = edu101Dao.findOne(Long.parseLong(edu9901.getUserKey()));
+                department = one1.getSzxb();
+                break;
             default:
                 department = "0000";
                 break;
@@ -185,6 +191,10 @@ public class ApprovalProcessService {
             case"08":
                 Edu008 edu008 = edu008Dao.findOne(businessKey);
                 keyWord = edu008.getClassName()+edu008.getCourseName();
+                break;
+            case"09":
+                Edu115 edu115 = edu115Dao.findOne(businessKey);
+                keyWord = edu115.getClassName()+edu115.getCourseName();
                 break;
             default:
                 keyWord = "未知类型";

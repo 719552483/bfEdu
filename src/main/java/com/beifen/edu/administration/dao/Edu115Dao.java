@@ -16,7 +16,9 @@ public interface Edu115Dao extends JpaRepository<Edu115, Long>, JpaSpecification
     @Query(value = "UPDATE edu115 e set e.BUSINESS_STATE =?2 WHERE Edu115_ID =?1", nativeQuery = true)
     void updateState(String businessKey, String state);
 
-
+    //根据ID查找出差申请信息
+    @Query(value = "SELECT * FROM EDU115 where CLASS_NAME = ?1 and COURSE_NAME = ?2 and xnid = ?3",nativeQuery = true)
+    Edu115 queryBySearch(String className,String courseName,String xnid);
 }
 
 

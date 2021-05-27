@@ -68,6 +68,8 @@ public class StaffManageService {
     CourseCheckOnDao courseCheckOnDao;
     @Autowired
     RedisUtils redisUtils;
+    @Autowired
+    Edu115Dao edu115Dao;
 
 
     ReflectUtils utils = new ReflectUtils();
@@ -623,17 +625,26 @@ public class StaffManageService {
             Edu400 edu400 = edu400Dao.getTermInfoById(edu005.getXnid());
             if(edu400 != null){
                 String lrsj = edu400.getLrsj();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
-                try {
-                    Date lrsjDate = simpleDateFormat.parse(lrsj);
-                    Date now = new Date();
-                    int compareTo = lrsjDate.compareTo(now);
-                    if(compareTo != 1){
-                        resultVO =  ResultVO.setDateFailed("录入时间超过截至日期");
-                        return resultVO;
+                if(lrsj != null && "".equals(lrsj)){
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+                    try {
+                        Date lrsjDate = simpleDateFormat.parse(lrsj);
+                        Date now = new Date();
+                        int compareTo = lrsjDate.compareTo(now);
+                        if(compareTo != 1){
+                            Edu115 edu115 = edu115Dao.queryBySearch(edu005.getClassName(),edu005.getCourseName(),edu005.getXnid());
+                            if(edu115 == null){
+                                resultVO =  ResultVO.setDateFailed("录入时间超过截至日期");
+                                return resultVO;
+                            }else if("nopass".equals(edu115.getBusinessState())){
+                                resultVO =  ResultVO.setFailed("已提交延迟确认成绩申请，请等待上级审批！");
+                                return resultVO;
+                            }
+
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
             }
         }
