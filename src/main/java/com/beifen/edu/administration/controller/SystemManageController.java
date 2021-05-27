@@ -344,7 +344,7 @@ public class SystemManageController {
     @RequestMapping("/updateNotes")
     @ResponseBody
     public ResultVO updateNotes(@RequestParam("notesId") String notesId) {
-        List<String> notesIds = Arrays.asList(notesId.split(","));
+        List<String> notesIds = JSON.parseArray(notesId, String.class);
         ResultVO result = systemManageService.updateNotes(notesIds);
         return result;
     }
