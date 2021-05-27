@@ -3,6 +3,7 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.Edu600BO;
 import com.beifen.edu.administration.PO.Edu601PO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.constant.NoteConstant;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
@@ -55,7 +56,7 @@ public class ApprovalProcessService {
     @Autowired
     private Edu115Dao edu115Dao;
     @Autowired
-    private Edu700Dao edu700Dao;
+    private Edu993Dao edu993Dao;
     @Autowired
     private Edu008Dao edu008Dao;
     @Autowired
@@ -379,14 +380,21 @@ public class ApprovalProcessService {
                 case"09":
                     edu115Dao.updateState(businessKey, "pass");
                     Edu115 e = edu115Dao.findOne(Long.parseLong(businessKey));
+                    Edu990 edu990 = edu990Dao.queryUserById(e.getEdu990_ID().toString());
+                    String userKey = edu990.getUserKey();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Edu700 edu700 = new Edu700();
-                    edu700.setEdu101_ID(e.getEdu990_ID());
-                    edu700.setSendDate(simpleDateFormat.format(new Date()));
-                    edu700.setShowInIndex("T");
-                    edu700.setTitle("延迟确认成绩审核成功");
-                    edu700.setNoticeContent("【"+e.getClassName()+"】班级，【"+e.getCourseName()+"】课程审批通过！");
-                    edu700Dao.save(edu700);
+                    Edu993 edu993 = new Edu993();
+//                    edu993.setDepartmentCode(edu107.getEdu104());
+                    edu993.setRoleId(NoteConstant.TEACHER_ROLE);
+                    edu993.setUserId(userKey);
+                    String noticeText = "【"+e.getClassName()+"】班级，【"+e.getCourseName()+"】课程，录入成绩审批通过！";
+                    edu993.setNoticeText(noticeText);
+                    edu993.setNoticeType("05");
+                    edu993.setBusinessType(NoteConstant.APPROVAL_RESULT_NOT);
+                    edu993.setBusinessId(e.getEdu115_ID().toString());
+                    edu993.setIsHandle("F");
+                    edu993.setCreateDate(simpleDateFormat.format(new Date()));
+                    edu993Dao.save(edu993);
                     break;
                 default:
                     isSuccess = false;
@@ -420,14 +428,20 @@ public class ApprovalProcessService {
                     break;
                 case"09":
                     Edu115 e = edu115Dao.findOne(Long.parseLong(businessKey));
+                    Edu990 edu990 = edu990Dao.queryUserById(e.getEdu990_ID().toString());
+                    String userKey = edu990.getUserKey();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Edu700 edu700 = new Edu700();
-                    edu700.setEdu101_ID(e.getEdu990_ID());
-                    edu700.setSendDate(simpleDateFormat.format(new Date()));
-                    edu700.setShowInIndex("T");
-                    edu700.setTitle("延迟确认成绩审核失败");
-                    edu700.setNoticeContent("【"+e.getClassName()+"】班级，【"+e.getCourseName()+"】课程审批未通过！");
-                    edu700Dao.save(edu700);
+                    Edu993 edu993 = new Edu993();
+                    edu993.setRoleId(NoteConstant.TEACHER_ROLE);
+                    edu993.setUserId(userKey);
+                    String noticeText = "【"+e.getClassName()+"】班级，【"+e.getCourseName()+"】课程，录入成绩审批未通过！";
+                    edu993.setNoticeText(noticeText);
+                    edu993.setNoticeType("05");
+                    edu993.setBusinessType(NoteConstant.APPROVAL_RESULT_NOT);
+                    edu993.setBusinessId(e.getEdu115_ID().toString());
+                    edu993.setIsHandle("F");
+                    edu993.setCreateDate(simpleDateFormat.format(new Date()));
+                    edu993Dao.save(edu993);
                     edu115Dao.delete(Long.parseLong(businessKey));
                     break;
                 default:

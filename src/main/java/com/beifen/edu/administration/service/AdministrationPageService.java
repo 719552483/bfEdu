@@ -1470,7 +1470,7 @@ public class AdministrationPageService {
 			edu993.setNoticeType(NoteConstant.TASK_NOTE);
 			edu993.setBusinessType("98");
 			edu993.setBusinessId(edu201Id);
-			edu993.setIsHandle("T");
+			edu993.setIsHandle("F");
 			edu993.setCreateDate(dateString);
 			edu993Dao.save(edu993);
 		}

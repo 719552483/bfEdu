@@ -19,7 +19,7 @@ public interface Edu993Dao extends JpaRepository<Edu993, Long>, JpaSpecification
 	public List<Edu993> getNoticesByRole(String roleId);
 
 	// 根据关联人获取通知
-	@Query(value = "select * from edu993 e where e.user_id=?1 and e.role_id = ?2", nativeQuery = true)
+	@Query(value = "select * from edu993 e where e.user_id=?1 and e.role_id = ?2 order by is_handle,create_date desc", nativeQuery = true)
 	public List<Edu993> getNoticesByUser(String userId,String roleId);
 
 	// 根据202id删除

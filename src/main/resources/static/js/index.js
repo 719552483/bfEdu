@@ -628,7 +628,7 @@ function showMoreReminds(reminds){
 	});
 
 	function isHandleMatter(value, row, index) {
-		if(typeof value === 'T'){
+		if(value == 'F'){
 			return [ '<div class="myTooltip redTxt" title="未处理">未处理</div>' ]
 				.join('');
 
