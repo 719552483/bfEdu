@@ -1138,6 +1138,7 @@ function confirmTimeOut(){
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.code===200) {
 				$.hideModal();
 				toastr.success("申请发起成功，请等待审批通过");

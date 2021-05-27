@@ -506,7 +506,7 @@ function drawReminds(reminds){
 	for (var i = 0; i < reminds.length; i++) {
 		if(reminds[i].isHandle==="F"&&stffNum<=3){
 			stffNum++;
-			str+='<a class="showMoreReminds"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
+			str+='<a class="showMoreReminds" id="showMoreReminds'+reminds[i].edu993_ID+'"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
 		}
 	}
 
@@ -537,13 +537,91 @@ function drawReminds(reminds){
 	$('.remindReturnBtn').unbind('click');
 	$('.remindReturnBtn').bind('click', function(e) {
 		$('.allRemindArea').hide();
-		$('.mainindex').show().css("padding","20px");;
+		$('.mainindex').show().css("padding","20px");
+		e.stopPropagation();
+	});
+
+	// 返回
+	$('.readed').unbind('click');
+	$('.readed').bind('click', function(e) {
+		readedRemind();
 		e.stopPropagation();
 	});
 }
 
+//已读提醒
+function readedRemind(){
+	if(choosendReminds.length==0){
+		toastr.warning('暂未选择消息');
+		return;
+	}
+
+	var sendArray=new Array();
+	for (let i = 0; i < choosendReminds.length; i++) {
+		if(choosendReminds[i].isHandle==="T"){
+			toastr.warning('请不要选择已读的提醒');
+			return;
+		}
+		sendArray.push(choosendReminds[i].edu993_ID);
+	}
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html("已选提醒事项");
+	$(".remindActionType").html("已读");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendReadedRemind(sendArray);
+		e.stopPropagation();
+	});
+}
+
+//发送已读提醒
+function sendReadedRemind(sendArray){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/updateNotes",
+		data: {
+			"notesId":JSON.stringify(sendArray)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				for (var i = 0; i <choosendReminds.length ; i++) {
+					for (var j = 0; j < sendArray.length; j++) {
+						if(choosendReminds[i].edu993_ID==sendArray[j]){
+							choosendReminds[i].isHandle="T";
+							$("#moreNoticeTable").bootstrapTable('updateByUniqueId', {
+								id: choosendReminds[i].edu993_ID,
+								row: choosendReminds[i]
+							});
+							$("#showMoreReminds"+choosendReminds[i].edu993_ID).remove();
+						}
+					}
+				}
+				toastr.success(backjson.msg);
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+var choosendReminds=new Array();
 //展示更多提醒
 function showMoreReminds(reminds){
+	choosendReminds=new Array();
 	var department=getFromRedis("department");
 	var roleInfo=getFromRedis("roleInfo");
 	for (var i = 0; i < reminds.length; i++) {
@@ -580,6 +658,22 @@ function showMoreReminds(reminds){
 		showColumns: true,
 		onPageChange: function() {
 			drawPagination(".moreNoticeTableArea", "个人消息");
+			//勾选已选数据
+			for (var i = 0; i < choosendReminds.length; i++) {
+				$("#moreNoticeTable").bootstrapTable("checkBy", {field:"edu993_ID", values:[choosendReminds[i].edu993_ID]})
+			}
+		},
+		onCheck : function(row) {
+			onCheck(row);
+		},
+		onUncheck : function(row) {
+			onUncheck(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAll(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAll(rows2);
 		},
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
@@ -590,6 +684,9 @@ function showMoreReminds(reminds){
 			align: 'center',
 			sortable: true,
 			visible: false
+		},{
+			field: 'check',
+			checkbox: true
 		}, {
 			field: 'noticeText',
 			title: '提醒内容',
@@ -619,7 +716,7 @@ function showMoreReminds(reminds){
 			sortable: true
 		},{
 			field: 'isHandle',
-			title: '处理状态',
+			title: '提醒状态',
 			align: 'left',
 			formatter: isHandleMatter,
 			width:"180px",
@@ -628,12 +725,12 @@ function showMoreReminds(reminds){
 	});
 
 	function isHandleMatter(value, row, index) {
-		if(value == 'F'){
-			return [ '<div class="myTooltip redTxt" title="未处理">未处理</div>' ]
+		if(value === 'F'){
+			return [ '<div class="myTooltip redTxt" title="未读">未读</div>' ]
 				.join('');
 
 		}else{
-			return [ '<div class="myTooltip greenTxt" title="已处理">已处理</div>' ]
+			return [ '<div class="myTooltip greenTxt" title="已读">已读</div>' ]
 				.join('');
 		}
 	}
@@ -642,7 +739,60 @@ function showMoreReminds(reminds){
 	drawPagination(".moreNoticeTableArea", "个人消息");
 	changeColumnsStyle(".moreNoticeTableArea", "个人消息");
 	toolTipUp(".myTooltip");
-	btnControl();
+}
+
+//单选
+function onCheck(row){
+	if(choosendReminds.length<=0){
+		choosendReminds.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendReminds.length; i++) {
+			if(choosendReminds[i].edu993_ID===row.edu993_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendReminds.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheck(row){
+	if(choosendReminds.length<=1){
+		choosendReminds.length=0;
+	}else{
+		for (var i = 0; i < choosendReminds.length; i++) {
+			if(choosendReminds[i].edu993_ID===row.edu993_ID){
+				choosendReminds.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAll(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendReminds.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAll(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu993_ID);
+	}
+
+
+	for (var i = 0; i < choosendReminds.length; i++) {
+		if(a.indexOf(choosendReminds[i].edu993_ID)!==-1){
+			choosendReminds.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //填充chart
