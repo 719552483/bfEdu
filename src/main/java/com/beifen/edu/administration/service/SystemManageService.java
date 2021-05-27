@@ -751,6 +751,16 @@ public class SystemManageService {
         return resultVO;
     }
 
+    //查询提醒事项
+    public ResultVO updateNotes(String notesId) {
+        ResultVO resultVO;
+        Edu993 edu993 = edu993Dao.findOne(Long.parseLong(notesId));
+        edu993.setIsHandle("T");
+        edu993Dao.save(edu993);
+        resultVO = ResultVO.setSuccess("更新成功！",edu993);
+        return resultVO;
+    }
+
     //修改密码
     public ResultVO changePassWord(Edu990 edu990) {
         ResultVO resultVO;

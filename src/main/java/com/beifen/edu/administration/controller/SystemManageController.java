@@ -337,6 +337,17 @@ public class SystemManageController {
     }
 
     /**
+     * 修改提醒事项已读状态
+     * @return
+     */
+    @RequestMapping("/updateNotes")
+    @ResponseBody
+    public ResultVO updateNotes(@RequestParam("notesId") String notesId) {
+        ResultVO result = systemManageService.updateNotes(notesId);
+        return result;
+    }
+
+    /**
      * 修改密码
      * @param userInfo
      * @return
