@@ -719,6 +719,9 @@ public class ApprovalProcessService {
             case"08":
                 object = edu008Dao.findOne(Long.parseLong(businessKey));
                 break;
+            case"09":
+                object = edu115Dao.findOne(Long.parseLong(businessKey));
+                break;
             default:
                 break;
         }
