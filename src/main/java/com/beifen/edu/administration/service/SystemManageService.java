@@ -752,12 +752,10 @@ public class SystemManageService {
     }
 
     //查询提醒事项
-    public ResultVO updateNotes(String notesId) {
+    public ResultVO updateNotes(List<String> notesId) {
         ResultVO resultVO;
-        Edu993 edu993 = edu993Dao.findOne(Long.parseLong(notesId));
-        edu993.setIsHandle("T");
-        edu993Dao.save(edu993);
-        resultVO = ResultVO.setSuccess("更新成功！",edu993);
+        edu993Dao.updateNotes(notesId);
+        resultVO = ResultVO.setSuccess("更新成功！");
         return resultVO;
     }
 

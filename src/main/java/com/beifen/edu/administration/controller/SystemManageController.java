@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -343,7 +344,8 @@ public class SystemManageController {
     @RequestMapping("/updateNotes")
     @ResponseBody
     public ResultVO updateNotes(@RequestParam("notesId") String notesId) {
-        ResultVO result = systemManageService.updateNotes(notesId);
+        List<String> notesIds = Arrays.asList(notesId.split(","));
+        ResultVO result = systemManageService.updateNotes(notesIds);
         return result;
     }
 
