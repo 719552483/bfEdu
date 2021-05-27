@@ -625,7 +625,7 @@ public class StaffManageService {
             Edu400 edu400 = edu400Dao.getTermInfoById(edu005.getXnid());
             if(edu400 != null){
                 String lrsj = edu400.getLrsj();
-                if(lrsj != null && "".equals(lrsj)){
+                if(lrsj != null && !"".equals(lrsj)){
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
                     try {
                         Date lrsjDate = simpleDateFormat.parse(lrsj);
