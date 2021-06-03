@@ -2944,6 +2944,33 @@ public class ReflectUtils {
 		
 	}
 
+	public void appendCell2(XSSFSheet sheet, int index, String mc, String value, int mcCellIndex, int valueCellIndex, boolean stuffTwoCell,CellStyle cs) {
+		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+		if(mc!=null){
+			mc=mc.toString();
+		}
+		if(value!=null){
+			value=value.toString();
+		}
+
+		XSSFRow row = sheet.getRow(index + 1); //从第二行开始追加
+		//如果总行数超过当前数据长度 新建行
+		if(row==null){
+			int rowNum = sheet.getLastRowNum();// 总行数
+			row=sheet.createRow(rowNum+1);//新建一行
+		}
+		if(stuffTwoCell){
+			row.createCell(mcCellIndex).setCellValue(mc);
+			row.createCell(valueCellIndex).setCellValue(value);
+		}else{
+			XSSFCell cell = row.createCell(valueCellIndex);
+			cell.setCellValue(value);
+			cell.setCellStyle(cs);
+		}
+	}
+
 	/**
 	 * 向Excel 追加数据
 	 * @param sheet  当前sheet

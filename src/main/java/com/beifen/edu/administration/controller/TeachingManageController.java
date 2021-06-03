@@ -6,6 +6,8 @@ import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.TeachingManageService;
+import com.beifen.edu.administration.utility.ReflectUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +30,7 @@ public class TeachingManageController {
     @Autowired
     private TeachingManageService teachingManageService;
 
-
+    ReflectUtils utils = new ReflectUtils();
 
     /**
      * 搜索在职教师
@@ -473,6 +480,47 @@ public class TeachingManageController {
         // 将收到的jsonObject转为javabean 关系管理实体类
         TimeTablePO timeTablePO = JSON.parseObject(searchObject, TimeTablePO.class);
         result = teachingManageService.JwGetYearScheduleInfoByClass(timeTablePO);
+        return result;
+    }
+
+    /**
+     * 导出教务查询班级学年课程表
+     * @return
+     */
+    @RequestMapping("/ExportJwGetYearScheduleInfoByClass")
+    @ResponseBody
+    public ResultVO ExportJwGetYearScheduleInfoByClass(HttpServletRequest request, HttpServletResponse response, @RequestParam("xnid") String xnid, @RequestParam("xbbm") String xbbm) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        String xbmc = teachingManageService.selectXbmc(xbbm);
+        List<String> classIds = teachingManageService.selectClass(xbbm);
+        List<TimeTablePO> list = new ArrayList<TimeTablePO>();
+        for(int i = 0;i<classIds.size();i++){
+            String classId = classIds.get(i);
+            TimeTablePO timeTable = teachingManageService.ExportJwGetYearScheduleInfoByClass(xnid,classId);
+            if(timeTable.getNewInfo() != null){
+                list.add(timeTable);
+            }
+        }
+
+            boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+            String fileName;
+            if(isIE){
+                fileName="PointDetail";
+            }else{
+                fileName=xbmc+"集中学时导出";
+            }
+            //创建Excel文件
+
+            XSSFWorkbook workbook = teachingManageService.exportJwGetYearScheduleInfoByClass(list);
+            try {
+                utils.loadModal(response,fileName, workbook);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        result = ResultVO.setSuccess("下载成功");
         return result;
     }
 
