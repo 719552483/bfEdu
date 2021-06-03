@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.beifen.edu.administration.PO.LocalUsedPO;
+import com.beifen.edu.administration.PO.SchoolTimetablePO2;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.Edu0051;
 import com.beifen.edu.administration.domian.Edu500;
@@ -272,4 +273,37 @@ public class TeachingPointController {
 //        }
         return result;
     }
+
+    /**
+     * 导出分散学时课表
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("exportScattered")
+    @ResponseBody
+    public ResultVO exportScattered(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "xnid") String xnid) {
+        ResultVO result;
+        List<SchoolTimetablePO2> list = teachingPointService.exportScattered(xnid);
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName=list.get(0).getXn()+"分散学时导出";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = teachingPointService.exportScatteredExcle(list);
+        try {
+            utils.loadModal(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
 }

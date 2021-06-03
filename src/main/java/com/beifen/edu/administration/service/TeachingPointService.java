@@ -1,10 +1,7 @@
 package com.beifen.edu.administration.service;
 
 
-import com.beifen.edu.administration.PO.LocalUsedPO;
-import com.beifen.edu.administration.PO.SchoolTimetablePO;
-import com.beifen.edu.administration.PO.YearSchedulePO;
-import com.beifen.edu.administration.PO.YearSchedulePO2;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.ClassPeriodConstant;
 import com.beifen.edu.administration.dao.*;
@@ -48,6 +45,8 @@ public class TeachingPointService {
     Edu502Dao edu502Dao;
     @Autowired
     YearScheduleViewDao yearScheduleViewDao;
+    @Autowired
+    TeachingScheduleViewDao2 teachingScheduleViewDao2;
 
 
     ReflectUtils utils = new ReflectUtils();
@@ -354,6 +353,12 @@ public class TeachingPointService {
         return list;
     }
 
+    public List<SchoolTimetablePO2> exportScattered(String xnid) {
+        List<SchoolTimetablePO2> list;
+        list = teachingScheduleViewDao2.findAllByXnAndEdu104Id(xnid);
+        return list;
+    }
+
 
 
     //导出教学任务点excel
@@ -469,6 +474,45 @@ public class TeachingPointService {
         return workbook;
     }
 
+
+    //导出分散学时
+    public XSSFWorkbook exportScatteredExcle(List<SchoolTimetablePO2> schoolTimetablePO2List) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFCell cells[] = new XSSFCell[1];
+        // 所有标题数组
+        String[] titles = new String[] {"学院名称","课程名称","周数","学时","班级","教师","课程内容","授课平台"};
+
+        // 循环设置标题
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = firstRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
+
+        for (int i = 0; i < schoolTimetablePO2List.size(); i++) {
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getXbmc(),-1,0,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getCourse_name(),-1,1,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getWeek(),-1,2,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getClass_hours(),-1,3,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getCLASS_NAME(),-1,4,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getLSMC(),-1,5,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getCOURSE_CONTENT(),-1,6,false);
+            utils.appendCell(sheet,i,"",schoolTimetablePO2List.get(i).getTEACHING_PLATFORM(),-1,7,false);
+
+        }
+
+        sheet.setColumnWidth(0, 15*256);
+        sheet.setColumnWidth(1, 45*256);
+        sheet.setColumnWidth(2, 8*256);
+        sheet.setColumnWidth(3, 8*256);
+        sheet.setColumnWidth(4, 20*256);
+        sheet.setColumnWidth(5, 35*256);
+        sheet.setColumnWidth(6, 40*256);
+        sheet.setColumnWidth(7, 20*256);
+        return workbook;
+    }
 
     //根据教学任务点查询固定资产
     public ResultVO searchCourseDetailByXNAndPointid(String term,String pointId) {
