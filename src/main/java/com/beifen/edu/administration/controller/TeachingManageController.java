@@ -489,8 +489,11 @@ public class TeachingManageController {
      */
     @RequestMapping("/ExportJwGetYearScheduleInfoByClass")
     @ResponseBody
-    public ResultVO ExportJwGetYearScheduleInfoByClass(HttpServletRequest request, HttpServletResponse response, @RequestParam("xnid") String xnid, @RequestParam("xbbm") String xbbm) {
+    public ResultVO ExportJwGetYearScheduleInfoByClass(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) {
         ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xnid = jsonObject.getString("xnid");
+        String xbbm = jsonObject.getString("xbbm");
         // 将收到的jsonObject转为javabean 关系管理实体类
         String xbmc = teachingManageService.selectXbmc(xbbm);
         List<String> classIds = teachingManageService.selectClass(xbbm);
@@ -547,7 +550,7 @@ public class TeachingManageController {
             }
         }
         if(list.size()<=0){
-            result = ResultVO.setSuccess("学院暂无课表");
+            result = ResultVO.setFailed("学院暂无课表");
             return result;
         }
         result = ResultVO.setSuccess("成功");
