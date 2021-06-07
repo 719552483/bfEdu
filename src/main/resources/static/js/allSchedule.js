@@ -476,6 +476,136 @@ function yearBtnBind(){
 		yearReSearch();
 		e.stopPropagation();
 	});
+
+	//课表导出
+	$('#exportSchedule').unbind('click');
+	$('#exportSchedule').bind('click', function(e) {
+		exportSchedule();
+		e.stopPropagation();
+	});
+}
+
+//课表导出
+function exportSchedule(){
+	var type=getNormalSelectValue("yearCrouseType");
+	if(type==="type1"){ //集中课表导出
+		exprtJz();
+	}else if(type==="type2"){//分散课表导出
+		exprtFs();
+	}else{
+		toastr.warning('请选择授课类型');
+	}
+}
+
+//集中课表导出
+function  exprtJz() {
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getJwPublicCodes",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.result) {
+				var str='';
+				//系部
+				var allDepartment=backjson.allDepartment;
+				for (var i = 0; i < allDepartment.length; i++) {
+					str += '<option value="' + allDepartment[i].edu104_ID + '">' + allDepartment[i].xbmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#exprtJz_department", str);
+
+				var reObject = new Object();
+				reObject.normalSelectIds = "#exprtJz_department,#exprtJz_xn";
+				reReloadSearchsWithSelect(reObject);
+
+				//确认导出
+				$('.confirmExprtJz').unbind('click');
+				$('.confirmExprtJz').bind('click', function(e) {
+					confirmExprtJz();
+					e.stopPropagation();
+				});
+				$.showModal("#exprtJzModal",true);
+			} else {
+				toastr.warning('暂无可选系部');
+			}
+		}
+	});
+}
+
+//集中课表确认导出
+function confirmExprtJz(){
+	var  xnid=getNormalSelectValue("exprtJz_xn");
+	var  xbbm=getNormalSelectValue("exprtJz_department");
+
+	if(xnid===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+	if(xbbm===""){
+		toastr.warning('请选择二级学院');
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/ExportJwGetYearScheduleInfoByClassCheck",
+		data: {
+			"xnid":xnid,
+			"xbbm":xbbm
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var SearchCriteria=new Object();
+				SearchCriteria.xnid=xnid;
+				SearchCriteria.xbbm=xbbm;
+				var url = "/ExportJwGetYearScheduleInfoByClass";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(SearchCriteria)));
+				form.appendTo('body').submit().remove();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//分散课表导出
+function  exprtFs() {
+	var xn=getNormalSelectValue("yearSemester");
+	if(xn===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+	var url = "/exportScattered";
+	var form = $("<form></form>").attr("action", url).attr("method", "post");
+	form.append($("<input></input>").attr("type", "hidden").attr("name", "xnid").attr("value",xn));
+	form.appendTo('body').submit().remove();
 }
 /*tab1 end*/
 
@@ -608,6 +738,7 @@ function getSemesterInfo() {
 				}
 				stuffManiaSelect("#semester", str);
 				stuffManiaSelect("#yearSemester", str);
+				stuffManiaSelect("#exprtJz_xn", str);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
