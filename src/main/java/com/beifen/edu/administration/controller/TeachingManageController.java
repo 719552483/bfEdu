@@ -502,7 +502,10 @@ public class TeachingManageController {
                 list.add(timeTable);
             }
         }
-
+        if(list.size()<=0){
+            result = ResultVO.setSuccess("学院暂无课表");
+            return result;
+        }
             boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
             String fileName;
             if(isIE){
@@ -521,6 +524,33 @@ public class TeachingManageController {
                 e.printStackTrace();
             }
         result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
+     * 导出教务查询班级学年课程表
+     * @return
+     */
+    @RequestMapping("/ExportJwGetYearScheduleInfoByClassCheck")
+    @ResponseBody
+    public ResultVO ExportJwGetYearScheduleInfoByClassCheck(@RequestParam("xnid") String xnid, @RequestParam("xbbm") String xbbm) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        String xbmc = teachingManageService.selectXbmc(xbbm);
+        List<String> classIds = teachingManageService.selectClass(xbbm);
+        List<TimeTablePO> list = new ArrayList<TimeTablePO>();
+        for(int i = 0;i<classIds.size();i++){
+            String classId = classIds.get(i);
+            TimeTablePO timeTable = teachingManageService.ExportJwGetYearScheduleInfoByClass(xnid,classId);
+            if(timeTable.getNewInfo() != null){
+                list.add(timeTable);
+            }
+        }
+        if(list.size()<=0){
+            result = ResultVO.setSuccess("学院暂无课表");
+            return result;
+        }
+        result = ResultVO.setSuccess("成功");
         return result;
     }
 
