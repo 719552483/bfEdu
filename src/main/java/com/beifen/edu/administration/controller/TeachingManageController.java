@@ -489,7 +489,7 @@ public class TeachingManageController {
      */
     @RequestMapping("/ExportJwGetYearScheduleInfoByClass")
     @ResponseBody
-    public ResultVO ExportJwGetYearScheduleInfoByClass(HttpServletRequest request, HttpServletResponse response, @RequestParam String SearchCriteria) {
+    public ResultVO ExportJwGetYearScheduleInfoByClass(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) {
         ResultVO result;
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
         String xnid = jsonObject.getString("xnid");

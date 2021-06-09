@@ -290,8 +290,10 @@ public class TeachingPointController {
         String fileName;
         if(isIE){
             fileName="PointDetail";
-        }else{
+        }else if(list.size() != 0){
             fileName=list.get(0).getXn()+"分散学时导出";
+        }else{
+            fileName="分散学时导出";
         }
         //创建Excel文件
         XSSFWorkbook workbook = teachingPointService.exportScatteredExcle(list);
