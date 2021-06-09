@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	btnBind();
 	var role=JSON.parse($.session.get('userInfo')).js.split(",");
 	getAllQuestion(role);

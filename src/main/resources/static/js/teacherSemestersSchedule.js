@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
 	btnBind();

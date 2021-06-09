@@ -1705,6 +1705,7 @@ function reStuffData(data){
 }
 
 $(function () {
+    judgementPWDisModifyFromImplements();
     loadConfig();
     loadChart();
     ListeneChart();

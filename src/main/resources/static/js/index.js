@@ -1007,18 +1007,8 @@ function chartListener(){
 	});
 }
 
-//判断用户是否修改过初始密码
-function judgementPWDisModify(){
-	var isModify=false;
-	var userInfo = JSON.parse($.session.get('userInfo'));
-	userInfo.mm==='123456'?isModify=false:isModify=true;
-	if(!isModify){
-		$.showModal("#PWDisModifyModal",true);
-	}
-}
-
 $(function() {
-	judgementPWDisModify();
+	judgementPWDisModifyFromImplements();
 	loadUserScdlsj();
 	ShortcutsButtonBind();
 	drawAuthorityGroup();

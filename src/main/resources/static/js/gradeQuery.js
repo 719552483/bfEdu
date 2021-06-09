@@ -1,5 +1,6 @@
 var EJDMElementInfo;
 $(function() {
+	judgementPWDisModifyFromImplements();
 	stuffNj();
 	drawStudentGradeEmptyTable();
 	binBind();

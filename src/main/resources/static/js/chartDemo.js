@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	pageGPS("#publicCodeModel");
 	pageGPS("#publicCodeModel_cahrt");
 	$('.isSowIndex').selectMania(); // 初始化下拉框

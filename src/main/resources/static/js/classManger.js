@@ -1,6 +1,7 @@
 var EJDMElementInfo;
 var allLocation;
 $(function() {
+	judgementPWDisModifyFromImplements();
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	EJDMElementInfo=queryEJDMElementInfo();
 	allLocation=queryAllLocationInfo();

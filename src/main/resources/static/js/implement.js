@@ -1750,3 +1750,13 @@ function changeMenu(){
 
 	loadChoosendShortcuts();
 }
+
+//判断用户是否修改过初始密码
+function judgementPWDisModifyFromImplements(){
+	var isModify=false;
+	var userInfo = JSON.parse($.session.get('userInfo'));
+	userInfo.mm==='123456'?isModify=false:isModify=true;
+	if(!isModify){
+		window.location.href = "accountSetup.html";
+	}
+}
