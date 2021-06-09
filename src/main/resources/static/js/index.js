@@ -1008,6 +1008,7 @@ function chartListener(){
 }
 
 $(function() {
+	judgementPWDisModifyFromImplements();
 	loadUserScdlsj();
 	ShortcutsButtonBind();
 	drawAuthorityGroup();

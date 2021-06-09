@@ -1,8 +1,19 @@
 $(function() {
+	judgementPWDisModify();
 	$(".currentUserName").html($(parent.frames["topFrame"].document).find(".userName")[0].innerText);
 	btnBind();
 	stuffTimeStamp();
 });
+
+//判断用户是否修改过初始密码
+function judgementPWDisModify(){
+	var isModify=false;
+	var userInfo = JSON.parse($.session.get('userInfo'));
+	userInfo.mm==='123456'?isModify=false:isModify=true;
+	if(isModify){
+		$.showModal("#PWDisModifyModal",true);
+	}
+}
 
 //填充登录时间和用户名
 function stuffTimeStamp(){
@@ -84,13 +95,20 @@ function verifyNewAccountSetup(username,pwd,confirmPwd){
 	
 	//新旧密码对比
 	if(pwd!==confirmPwd){
-		toastr.warning('确认密码不正确');
+		toastr.warning('确认密码和密码不相同');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
 		return;
 	}
 	
-	//规则检查   todo
+	//规则检查
+	var reg=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+	if(!reg.exec(confirmPwd)){
+		toastr.warning('密码规则校验未通过');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
 	
 	//保存新用户设置
 	$.showModal("#remindModal",true);
@@ -134,7 +152,7 @@ function saveNewAccountSetUp(username,pwd,confirmPwd){
 				return;
 			}
 			var userInfo = JSON.parse($.session.get('userInfo'));
-			userInfo.yhm=username;
+			userInfo.mm=confirmPwd;
 			$.session.remove('userInfo');
 			$.session.set('userInfo', JSON.stringify(userInfo));
 			toastr.success('用户设置已更新');

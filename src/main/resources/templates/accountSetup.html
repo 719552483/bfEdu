@@ -30,7 +30,7 @@
 			<div class="formtext" style="padding-left: 22px;">用户&nbsp;<cite class="currentUserName"></cite>，您上一次登录时间&nbsp;<b class="loginTimeStamp"></b>！</div>
 			<ul class="forminfo">
 				<li><label>用户名</label><input id="setup_username" type="text" class="dfinput" readonly="readonly"/><i>用户名不允许修改</i></li>
-				<li><label>密码</label><input id="setup_pwd" type="password" class="dfinput" autocpmplete="false"/><i>密码为不包含特殊字符&nbsp;长度不超过10的字符</i></li>
+				<li><label>密码</label><input id="setup_pwd" type="password" class="dfinput" autocpmplete="false"/><i>至少8个字符，至少1个大写字母，1个小写字母和1个数字,不能包含特殊字符（非数字字母）</i></li>
 				<li><label>确认新密码</label><input id="setup_confirmPwd" type="password" class="dfinput" /><i>确认新密码</i></li>
 				<li><label>&nbsp;</label><input type="button" class="btn saveNewAccountSetUp" value="保存新设置"/></li>
 			</ul>
@@ -64,6 +64,31 @@
 			</div>
 		</div>
 	</div>
+
+
+	<!-- 是否使用初始密码Modal -->
+	<div class="modal fade bs-example-modal-lg" id="PWDisModifyModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">系统提示</span></div>
+					</div>
+					<div class="modal-body">
+						<div class="tipinfo">
+							<span><img src="images/ticon.png" /></span>
+							<div class="tipright">
+								<p>系统检测到您正在使用初始密码，请及时更改</p>
+								<cite>建议您立刻更改，以避免造成不必要的损失。</cite>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure changePwdRightNow" value="我知道了" onclick="$.hideModal()"/>
+					</div>
+				</div>
+			</div>
+		</div>
 	<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 		<div class="spinner-box">

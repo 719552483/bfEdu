@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	deafultSearch();
 	getMajorTrainingSelectInfo();
 	drawStudentBaseInfoEmptyTable();

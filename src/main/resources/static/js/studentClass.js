@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
 	$('.isSowIndex').selectMania(); //初始化下拉框

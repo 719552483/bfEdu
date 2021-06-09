@@ -1,5 +1,6 @@
 var EJDMElementInfo;
 $(function() {
+    judgementPWDisModifyFromImplements();
     EJDMElementInfo=queryEJDMElementInfo();
     $('.isSowIndex').selectMania(); //初始化下拉框
     $("input[type='number']").inputSpinner();

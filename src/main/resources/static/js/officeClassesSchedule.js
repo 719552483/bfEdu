@@ -1,5 +1,6 @@
 var roleOptionObject=new Object();//全局变量接收当前所有部门
 $(function() {
+	judgementPWDisModifyFromImplements();
 	drawTaskEmptyTable();
 	binBind();
 	getBmInfo();

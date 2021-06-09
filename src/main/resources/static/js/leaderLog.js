@@ -1,6 +1,7 @@
 var EJDMElementInfo;
 var choosendTeacherLog=new Array();
 $(function() {
+    judgementPWDisModifyFromImplements();
     $('.isSowIndex').selectMania(); //初始化下拉框
     EJDMElementInfo=queryEJDMElementInfo();
     stuffEJDElement(EJDMElementInfo);

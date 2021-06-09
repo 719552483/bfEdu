@@ -1,5 +1,6 @@
 var rediesValue;
 $(function() {
+	judgementPWDisModifyFromImplements();
 	getSemesterInfo();
 	drawScheduleClassesEmptyTable();
 	btnBind();

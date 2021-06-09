@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	$("input[type='number']").inputSpinner();
 	getDataPredtictionInfo("","");

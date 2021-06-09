@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	drawStudentGradeEmptyTable();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	stuffNj();

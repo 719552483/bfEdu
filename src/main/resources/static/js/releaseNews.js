@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	drawEditor();
 	btnBind();
 	getUsefulDepartment();

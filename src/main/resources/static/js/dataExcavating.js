@@ -1,4 +1,5 @@
 $(function() {
+	judgementPWDisModifyFromImplements();
 	btnBind();
 	getCadetInfo();
 	getTecherCadetInfo();

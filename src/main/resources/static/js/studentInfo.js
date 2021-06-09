@@ -1,6 +1,7 @@
 var EJDMElementInfo;
 var choosendStudent=new Array();
 $(function() {
+	judgementPWDisModifyFromImplements();
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
@@ -287,14 +288,16 @@ function stuffStudentBaseInfoTable() {
 					sortable: true,
 					formatter: paramsMatter,
 					visible: false
-				}, {
-					field: 'sfzh',
-					title: '身份证号',
-					align: 'left',
-					sortable: true,
-					formatter: paramsMatter,
-					visible: false
-				}, {
+				},
+				// {
+				// 	field: 'sfzh',
+				// 	title: '身份证号',
+				// 	align: 'left',
+				// 	sortable: true,
+				// 	formatter: paramsMatter,
+				// 	visible: false
+				// },
+				{
 					field: 'xjh',
 					title: '学籍号',
 					align: 'left',
@@ -621,6 +624,7 @@ function exportStudent(){
 //展示学生详情
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
+	$(".StudentIDNumInput").hide();
 	$("#addStudentModal").find(".formtext").hide();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
@@ -734,6 +738,7 @@ function modifyStudent(row,index){
 		return;
 	}
 	$.showModal("#addStudentModal",true);
+	$(".StudentIDNumInput").show();
 	$("#addStudentModal").find(".formtext").show();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
@@ -947,6 +952,7 @@ function wantAddStudent() {
 	//显示模态框
 	$.showModal("#addStudentModal",true);
 	$("#addStudentModal").find(".formtext").hide();
+	$(".StudentIDNumInput").show();
 	$("#addStudentModal").find(".moadalTitle").html("新增学生");
 	$(".XhArea").hide();
 	//清空模态框中元素原始值
