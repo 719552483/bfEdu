@@ -514,6 +514,7 @@ function drawReminds(reminds){
 		str='<li class="NoNotice">暂无未处理的提醒事项...</li>';
 	}
 
+
 	if(stffNum<=3){
 		$(parent.frames["topFrame"].document).find(".user").find("i").hide();
 		$(parent.frames["topFrame"].document).find(".user").find("b").hide();

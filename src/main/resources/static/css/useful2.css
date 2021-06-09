@@ -2473,7 +2473,12 @@ input:focus{
 	margin-bottom: 10px;
 }
 
+.user i{
+	display: none;
+}
+
 .user b{
+	display: none;
 	width: fit-content;
 	margin-left: -7px;
 	background: none;
