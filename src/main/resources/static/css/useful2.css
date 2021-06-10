@@ -297,8 +297,7 @@ padding:1.6em 0em 0.6em 31px !important
 #studentBaseInfoTable td:last-child,
 #majorTrainingTable td:last-child,
 #allRoleTable td:last-child,
-#releaseNewsTable td:last-child,
-#allUserTable td:last-child{
+#releaseNewsTable td:last-child{
 	width: 263px;
 	min-width: 263px;
 }
@@ -321,6 +320,11 @@ padding:1.6em 0em 0.6em 31px !important
 #allRoleTable td:last-child{
 	width: 175px;
 	min-width: 175px;
+}
+
+#allUserTable td:last-child{
+    width: 310px;
+    min-width: 310px;
 }
 
 #pointInfoTable td:last-child{
@@ -2738,6 +2742,15 @@ input:focus{
 	text-align: initial;
 	padding-left: 15px;
 	color: rgb(46 120 162 / 91%);
+}
+
+.noCopyText{
+	-moz-user-select:none; /* Firefox私有属性 */
+	-webkit-user-select:none; /* WebKit内核私有属性 */
+	-ms-user-select:none; /* IE私有属性(IE10及以后) */
+	-khtml-user-select:none; /* KHTML内核私有属性 */
+	-o-user-select:none; /* Opera私有属性 */
+	user-select:none; /* CSS3属性 */
 }
 
 @keyframes serachAnimation {
