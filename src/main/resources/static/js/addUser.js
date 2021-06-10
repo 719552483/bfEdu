@@ -394,7 +394,7 @@ function stuffTable() {
 	function allUserFormatter(value, row, index) {
 		return [
 			'<ul class="toolbar tabletoolbar">' +
-			'<li id="queryPwd" class="blockStart blockStart' + row.bf990_ID +'"><span><img src="images/t02.png" style="width:24px"></span>密码查询</li>' +
+			'<li id="queryPwd" class="blockStart blockStart' + row.bf990_ID +'"><span><img src="images/ico06.png" style="width:24px"></span>密码查询</li>' +
 			'<li id="modifiRole" class="blockStart blockStart' + row.bf990_ID +'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
 			'<li id="removeUser" class="blockStart blockStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>删除用户</li>' +
 			'<li id="tableOk" class="noneStart noneStart' + row.bf990_ID +'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
