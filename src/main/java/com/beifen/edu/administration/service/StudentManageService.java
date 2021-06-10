@@ -510,6 +510,7 @@ public class StudentManageService {
                 if (studentCode != null && !"".equals(studentCode)) {
                     predicates.add(cb.equal(root.<String>get("studentCode"), studentCode));
                 }
+                predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
