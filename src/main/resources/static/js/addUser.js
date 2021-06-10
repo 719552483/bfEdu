@@ -265,6 +265,9 @@ function stuffTable() {
 		},
 		'click #tableOk': function(e, value, row, index) {
 			okModify(row, index);
+		},
+		'click #queryPwd': function(e, value, row, index) {
+			queryPwd(row);
 		}
 	};
 	var oTableInit = new Object();
@@ -391,11 +394,10 @@ function stuffTable() {
 	function allUserFormatter(value, row, index) {
 		return [
 			'<ul class="toolbar tabletoolbar">' +
-			'<li id="modifiRole" class="blockStart blockStart' + row.bf990_ID +
-			'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
+			'<li id="queryPwd" class="blockStart blockStart' + row.bf990_ID +'"><span><img src="images/t02.png" style="width:24px"></span>密码查询</li>' +
+			'<li id="modifiRole" class="blockStart blockStart' + row.bf990_ID +'"><span><img src="images/t02.png" style="width:24px"></span>角色修改</li>' +
 			'<li id="removeUser" class="blockStart blockStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>删除用户</li>' +
-			'<li id="tableOk" class="noneStart noneStart' + row.bf990_ID +
-			'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+			'<li id="tableOk" class="noneStart noneStart' + row.bf990_ID +'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
 			'<li id="tableCanle" class="noneStart noneStart' + row.bf990_ID + '"><span><img src="images/t03.png"></span>取消</li>' +
 			'</ul>'
 		]
@@ -493,6 +495,38 @@ function onUncheckAllRelation(row){
 			i--;
 		}
 	}
+}
+
+//查询用户密码
+function queryPwd(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryUserById",
+		data: {
+			"userId":row.bf990_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$.showModal("#queryPwdModal",true);
+				$("#queryPwdModal").find(".queryUserName").html(row.personName);
+				$("#queryPwdModal").find(".queryUserPwd").html(backjson.data.mm);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //修改用户
