@@ -1755,7 +1755,7 @@ function changeMenu(){
 function judgementPWDisModifyFromImplements(){
 	var isModify=false;
 	var userInfo = JSON.parse($.session.get('userInfo'));
-	userInfo.mm==='123456'?isModify=false:isModify=true;
+	userInfo.mm==='123456'||userInfo.mm==='eduApp123456'?isModify=false:isModify=true;
 	if(!isModify){
 		window.location.href = "accountSetup.html";
 	}
