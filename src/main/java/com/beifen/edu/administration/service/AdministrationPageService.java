@@ -83,6 +83,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu402Dao edu402DAO;
 	@Autowired
+	private Edu403Dao edu403DAO;
+	@Autowired
 	private Edu401Dao edu401DAO;
 	@Autowired
 	private Edu203Dao edu203Dao;
@@ -2371,8 +2373,10 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu400> allXn = edu400DAO.findAllXn();
 		List<Edu402> allJs = edu402DAO.findAll();
+		List<Edu403> allKssx = edu403DAO.findAll();
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
+		returnMap.put("allKssx", allKssx);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
