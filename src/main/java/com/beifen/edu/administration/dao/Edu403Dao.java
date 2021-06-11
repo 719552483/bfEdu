@@ -12,6 +12,6 @@ import java.util.List;
 @Configuration
 public interface Edu403Dao extends JpaRepository<Edu403, Long>, JpaSpecificationExecutor<Edu403> {
 
-    @Query(value = "SELECT * FROM EDU403 ORDER BY xnid,ksz",nativeQuery = true)
-    List<Edu403> selectAll();
+    @Query(value = "SELECT * FROM EDU403 where xnid = ?1 ORDER BY ksz",nativeQuery = true)
+    List<Edu403> selectAll(String id);
 }

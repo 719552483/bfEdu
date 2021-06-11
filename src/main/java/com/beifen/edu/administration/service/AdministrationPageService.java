@@ -2373,10 +2373,20 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu400> allXn = edu400DAO.findAllXn();
 		List<Edu402> allJs = edu402DAO.findAll();
-		List<Edu403> allKssx = edu403DAO.selectAll();
+		List<Edu403PO> edu403POList = new ArrayList<>();
+		for (int i = 0;i < allXn.size();i++){
+			List<Edu403> allKssx = edu403DAO.selectAll(allXn.get(i).getEdu400_ID().toString());
+			if(allKssx.size()>0){
+				Edu403PO edu403PO = new Edu403PO();
+				edu403PO.setXn(allKssx.get(0).getXn());
+				edu403PO.setXnid(allKssx.get(0).getXnid());
+				edu403PO.setPkjsxz(allKssx);
+				edu403POList.add(edu403PO);
+			}
+		}
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
-		returnMap.put("allKssx", allKssx);
+		returnMap.put("`allKssx`", edu403POList);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
