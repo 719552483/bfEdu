@@ -9,7 +9,7 @@ $(function() {
 function judgementPWDisModify(){
 	var isModify=false;
 	var userInfo = JSON.parse($.session.get('userInfo'));
-	userInfo.mm==='123456'?isModify=false:isModify=true;
+	userInfo.mm==='123456'||userInfo.mm==='eduApp123456'?isModify=false:isModify=true;
 	if(!isModify){
 		$.showModal("#PWDisModifyModal",true);
 	}
