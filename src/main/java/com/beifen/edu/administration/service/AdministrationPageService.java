@@ -2373,7 +2373,7 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap();
 		List<Edu400> allXn = edu400DAO.findAllXn();
 		List<Edu402> allJs = edu402DAO.findAll();
-		List<Edu403> allKssx = edu403DAO.findAll();
+		List<Edu403> allKssx = edu403DAO.selectAll();
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
 		returnMap.put("allKssx", allKssx);
