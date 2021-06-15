@@ -2425,7 +2425,7 @@ public class AdministrationPageService {
 		}
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
-		returnMap.put("`allKssx`", edu403POList);
+		returnMap.put("allKssx", edu403POList);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
