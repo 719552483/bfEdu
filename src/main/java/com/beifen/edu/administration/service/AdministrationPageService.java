@@ -1050,7 +1050,19 @@ public class AdministrationPageService {
 	public ResultVO addNewKssx(Edu403 edu403) {
 		ResultVO resultVO;
 		edu403DAO.save(edu403);
-		resultVO = ResultVO.setSuccess("操作成功",edu403.getEdu403_ID());
+		List<Edu400> allXn = edu400DAO.findAllXn();
+		List<Edu403PO> edu403POList = new ArrayList<>();
+		for (int i = 0;i < allXn.size();i++){
+			List<Edu403> allKssx = edu403DAO.selectAll(allXn.get(i).getEdu400_ID().toString());
+			if(allKssx.size()>0){
+				Edu403PO edu403PO = new Edu403PO();
+				edu403PO.setXn(allKssx.get(0).getXn());
+				edu403PO.setXnid(allKssx.get(0).getXnid());
+				edu403PO.setPkjsxz(allKssx);
+				edu403POList.add(edu403PO);
+			}
+		}
+		resultVO = ResultVO.setSuccess("操作成功",edu403POList);
 		return resultVO;
 	}
 	// 根据学年id删除课时上限
@@ -2413,7 +2425,7 @@ public class AdministrationPageService {
 		}
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
-		returnMap.put("`allKssx`", edu403POList);
+		returnMap.put("allKssx", edu403POList);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
