@@ -1310,7 +1310,7 @@ h2 {
 
 .comtitle h2 {
 	font-size: 14px;
-	display: block;
+	/*display: block;*/
 	float: left;
 	color: #2a3e93;
 	background: #fff;
@@ -1321,7 +1321,7 @@ h2 {
 .rline {
 	border-bottom: solid 1px #e5ecf0;
 	height: 10px;
-	margin-left: 50px;
+	margin-left: 20px;
 }
 
 .disklist {

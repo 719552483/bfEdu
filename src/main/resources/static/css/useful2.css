@@ -673,6 +673,7 @@ float: left;
 .allMajorTable .search,
 .allGradeTable .search,
 .allLevlTableArea .search,
+.kjLimitTableArea .search,
 .allDepartmentTable .search{
 	margin-top:-40px !important;
     margin-bottom: 0px;
@@ -2751,6 +2752,36 @@ input:focus{
 	-khtml-user-select:none; /* KHTML内核私有属性 */
 	-o-user-select:none; /* Opera私有属性 */
 	user-select:none; /* CSS3属性 */
+}
+
+.comtitleOpen{
+	transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+}
+
+#addkjLimitModal .comtitle{
+	padding: 10px 20px 20px 20px;
+	margin-top: -3%;
+}
+
+#addkjLimitModal .comtitle h2{
+	color: gray;
+	font-size: 10px;
+	padding-left: 12px;
+}
+
+.addedSingleLimit{
+	text-align: center;
+	padding-left: 21px;
+	padding-bottom: 10px;
+	color: rgb(50 107 134 / 95%);
+}
+
+.addedSingleLimit:first-child{
+	margin-top: 20px;
 }
 
 @keyframes serachAnimation {

@@ -149,6 +149,7 @@
 						<option value="all">全部</option>
 						<option value="termManger">学年管理</option>
 						<option value="changeCrouseRole">调课角色指定</option>
+						<option value="kjLimit">排课节数限制</option>
 <!--						<option value="classTimePartManger">课节管理</option>-->
 <!--						<option value="otherTimePartManger">额外课节管理</option>-->
 <!--						<option value="setUpDepartment">开课部门</option>-->
@@ -195,6 +196,22 @@
 					</div>
 					<div class="changeCrouseRoleTableArea searchGivePaddingR">
 						<table class="tablelist myTableStyle" id="changeCrouseRoleTable" data-unique-id="edu402_ID" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+			</div>
+
+			<div id="kjLimit" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>排课节数限制</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addkjLimit"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+					<div class="kjLimitTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="kjLimitTable" data-unique-id="xnid" style="margin-top: 10px;"></table>
 					</div>
 				</div>
 			</div>
@@ -851,6 +868,85 @@
 			</div>
 		</div>
 	</div>
+
+    <!-- 课节限制Modal -->
+    <div class="modal fade bs-example-modal-lg" id="addkjLimitModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content bodyOnlyOneRow">
+                <div class="modal-header">
+                    <div class="tiptop"><span class="moadalTitle">新增排课节数限制</span><a class="cancel" shape="rect"></a></div>
+                </div>
+                <div class="modal-body">
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addThiskjLimit"><span><img src="images/t01.png" style="width: 24px;" /></span>添加限制</li>
+						</ul>
+					</div>
+
+					<div class="comtitle">
+						<span><img src="images/list.gif" class="displayAddedLimitArea"/></span>
+						<h2>暂未选择任何节数限制</h2>
+						<h2 class="noneStart">已选择<cite></cite>条限制，点击小箭头展示/关闭</h2>
+						<div class="rline"></div>
+					</div>
+
+					<div class="addedLimitArea"/>
+
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+                        <div class="col1 giveBottom">
+                            <ul class="forminfo">
+                                <div class="">
+                                    <label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+                                    <select class="isSowIndex"
+                                            id="addkjLimit_xn">
+                                        <option value="seleceConfigTip">暂无学年</option>
+                                    </select>
+                                </div>
+                            </ul>
+                        </div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">开始周<b>*</b></label>
+									<select class="isSowIndex"
+											id="addkjLimit_satrtWeek">
+										<option value="seleceConfigTip">暂无选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">结束周<b>*</b></label>
+									<select class="isSowIndex"
+											id="addkjLimit_endWeek">
+										<option value="seleceConfigTip">暂无选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="MyspinnerStyle">
+									<label class="selectName" style="width: 32%;margin-top: 14px;margin-right: 5%;">最大课节数限制<b>*</b></label>
+									<input value="0" type="number" min="0" step="1" id="addkjLimit_num" />
+								</div>
+							</ul>
+						</div>
+                    </div>
+                </div>
+                <div class="modal-footer tipbtn">
+                    <input name="" type="button" class="sure addkjLimit_confimBtn" value="确定"/>&nbsp;
+                    <input name="" type="button" class="cancel" value="取消"/>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">

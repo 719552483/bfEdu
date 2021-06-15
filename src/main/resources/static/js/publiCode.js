@@ -6,7 +6,8 @@ $(function() {
 	EJDMElementInfo=queryEJDMElementInfo();
 	pageGPS("#publicCodeModel");
 	pageGPS("#publicCodeModel_jw");
-	stuffYearSearchElement("input[type='number']");
+	$("input[type='number']").InputSpinner();
+	// stuffYearSearchElement("input[type='number']");
 	getJiaoWuInfo();
 	btnbind();
 	stuffEJDElement(EJDMElementInfo);
@@ -1793,7 +1794,7 @@ function getAllStuffTab2Info(){
 				}
 				stuffAllXnTable(backjson.data.allXn);
 				stuffChangeCrouseRoleTable(backjson.data.allJs);
-				// stuffAllKjTable(backjson.allkj);
+				stuffAllkjLimitTable(backjson.data.allKssx);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -2471,7 +2472,317 @@ function sendChangeRoleInfo(roleInfo,isModify,oldRoleInfo){
 	});
 }
 
+//填充课节限制表
+function stuffAllkjLimitTable(allKssxInfo){
+	window.releaseNewsEvents = {
+		// 'click #modifyLevel': function(e, value, row, index) {
+		// 	modifyLevel(row);
+		// },
+		// 'click #removeLevle': function(e, value, row, index) {
+		// 	removeLevle(row.edu103_ID);
+		// }
+	};
 
+	$('#kjLimitTable').bootstrapTable('destroy').bootstrapTable({
+		data: allKssxInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 5,
+		pageList: [5],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".kjLimitTableArea", "排课节数限制");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [{
+				field: '学年id',
+				title: 'xnid',
+				align: 'center',
+				sortable: true,
+				visible: false
+			},
+			{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
+				field: 'pkjsxz',
+				title: '排课节数限制',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'action',
+				title: '操作',
+				align: 'center',
+				clickToSelect: false,
+				formatter: releaseNewsFormatter,
+				events: releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [
+			'<ul class="toolbar tabletoolbar">' +
+			'<li class="modifyBtn" id="modifyLimit"><span><img src="images/t02.png" style="width:24px"></span>编辑</li>' +
+			'<li class="deleteBtn" id="removeLimit"><span><img src="images/t03.png"></span>删除</li>' +
+			'</ul>'
+		]
+			.join('');
+	}
+
+	drawSearchInput(".kjLimitTableArea");
+	drawPagination(".kjLimitTableArea", "排课节数限制");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//预备新增课节限制
+function addkjLimit(){
+	var currentAllXn=$("#xnTable").bootstrapTable("getData");
+	if(currentAllXn.length==0){
+		toastr.warning('请先添加学年');
+		return;
+	}
+
+	reStuffAddedLimitArea();
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < currentAllXn.length; i++) {
+		str += '<option value="' + currentAllXn[i].edu400_ID + '">' + currentAllXn[i].xnmc + '</option>';
+	}
+	stuffManiaSelect("#addkjLimit_xn", str);
+	//绑定继续添加事件
+	$('#addThiskjLimit').unbind('click');
+	$('#addThiskjLimit').bind('click', function(e) {
+		addThiskjLimit();
+		e.stopPropagation();
+	});
+
+	//学年change事件
+	$("#addkjLimit_xn").change(function() {
+		stuffWeeksByXn();
+	});
+
+	//小箭头事件绑定
+	$('.displayAddedLimitArea').unbind('click');
+	$('.displayAddedLimitArea').bind('click', function(e) {
+		displayAddedLimitArea();
+		e.stopPropagation();
+	});
+
+	//小箭头事件绑定
+	$('.addkjLimit_confimBtn').unbind('click');
+	$('.addkjLimit_confimBtn').bind('click', function(e) {
+		confimAddkjLimit();
+		e.stopPropagation();
+	});
+
+	$.showModal("#addkjLimitModal",true);
+}
+
+//根据学年填充开始结束周
+function stuffWeeksByXn(){
+	var currentXn=getNormalSelectValue("addkjLimit_xn");
+	var str ='';
+	if(currentXn!==''){
+		var weekNum=$("#xnTable").bootstrapTable("getRowByUniqueId", currentXn).zzs;
+		str = '<option value="seleceConfigTip">请选择</option>';
+		for (var i = 0; i < weekNum; i++) {
+			str += '<option value="' + (i+1) + '">第' + (i+1) + '周</option>';
+		}
+	}else{
+		str = '<option value="seleceConfigTip">暂无选择</option>';
+	}
+
+	stuffManiaSelect("#addkjLimit_satrtWeek", str);
+	stuffManiaSelect("#addkjLimit_endWeek", str);
+}
+
+//继续添加
+function addThiskjLimit(){
+	var thisXn=getNormalSelectValue("addkjLimit_xn");
+	var thisStartWeek=getNormalSelectValue("addkjLimit_satrtWeek");
+	var thisEndWeek=getNormalSelectValue("addkjLimit_endWeek");
+	var thisNum=parseInt($("#addkjLimit_num").val());
+	if(checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum)){
+		stuffThiskjLimit(getNormalSelectText("addkjLimit_xn"),thisXn,thisStartWeek,thisEndWeek,thisNum);
+	}
+}
+
+//验证当前添加的限制是否能通过验证
+function checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum){
+	var rs=true;
+	if(thisXn===''){
+		toastr.warning('请选择学年');
+		rs= false;
+		return rs;
+	}
+
+	if(thisStartWeek===''){
+		toastr.warning('请选择开始周');
+		rs= false;
+		return rs;
+	}
+
+	if(thisEndWeek===''){
+		toastr.warning('请选择结束周');
+		rs= false;
+		return rs;
+	}
+
+	if(thisNum==0){
+		toastr.warning('请设置最大课节数限制');
+		rs= false;
+		return rs;
+	}
+
+	if(parseInt(thisEndWeek)<parseInt(thisStartWeek)){
+		toastr.warning('结束周不能小于开始周');
+		rs= false;
+		return rs;
+	}
+	var chosendLimit=$(".addedSingleLimit");
+	var xnIsSame;
+	var weekIsOver;
+	parseInt(thisEndWeek)==parseInt(thisStartWeek)?weekIsOver=true:weekIsOver=false;
+	for (var i = 0; i < chosendLimit.length; i++) {
+		if(thisXn===chosendLimit[i].attributes[2].nodeValue){
+			xnIsSame=true;
+			break;
+		}else{
+			xnIsSame=false;
+		}
+	}
+
+	if(xnIsSame){
+
+
+		for (var i = 0; i < chosendLimit.length; i++) {
+			var banNum_year=chosendLimit[i].attributes[2].nodeValue;
+			var banNum_satrt=parseInt(chosendLimit[i].attributes[3].nodeValue);
+			var banNum_end=parseInt(chosendLimit[i].attributes[4].nodeValue);
+
+			//限制相同
+			if(banNum_year===thisXn&&banNum_satrt==parseInt(thisStartWeek)&&banNum_end==parseInt(thisEndWeek)){
+				toastr.warning('限制周期已添加');
+				rs= false;
+				return rs;
+			}
+
+			var countNum=banNum_end-banNum_satrt;
+			var banArray=new Array();
+			banArray.push(banNum_satrt);
+			banArray.push(banNum_end);
+
+			for (var j = 0; j < countNum-1; j++) {
+				banNum_satrt+=1;
+				banArray.push(banNum_satrt);
+			}
+
+			//开始结束不跨周是否被包含验证
+			if(!weekIsOver){
+				for (var k = 0; k < banArray.length; k++) {
+					if(banArray.indexOf(parseInt(thisStartWeek))){
+						toastr.warning('限制周期已被选择');
+						rs= false;
+						return rs;
+					}
+				}
+			}
+
+			//开始结束跨周是否被包含验证
+			if(!weekIsOver){
+				for (var k = 0; k < banArray.length; k++) {
+					if(parseInt(thisStartWeek)<=banArray[k]||parseInt(thisEndWeek)<=banArray[k]){
+						toastr.warning('限制周期已被选择');
+						rs= false;
+						return rs;
+					}
+				}
+			}
+		}
+	}
+
+	return rs;
+}
+
+//填充当前添加的限制
+function stuffThiskjLimit(thisXnName,thisXn,thisStartWeek,thisEndWeek,thisNum){
+	var str='<div class="addedSingleLimit" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'">' +
+			'学年:'+thisXnName+' 第'+thisStartWeek+'周-第'+thisEndWeek+'周 最大排课节数限制：'+thisNum+'节' +
+			'<img class="choosendKjImg" removeid="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'" src="images/close1.png"/>' +
+		'</div>';
+	$(".addedLimitArea").append(str);
+	$("#addkjLimitModal").find('.comtitle').find("img").addClass('comtitleOpen');
+	$("#addkjLimitModal").find('.comtitle').find("h2:eq(0)").hide();
+	$("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").show().find("cite").html($(".addedSingleLimit").length);
+	//小箭头事件绑定
+	$('.addedSingleLimit').find('.choosendKjImg').unbind('click');
+	$('.addedSingleLimit').find('.choosendKjImg').bind('click', function(e) {
+		removeSingleLimit(e.currentTarget.attributes[1].nodeValue);
+		e.stopPropagation();
+	});
+}
+
+//删除当前添加的限制
+function removeSingleLimit(id){
+	var currentStuffNum=parseInt($("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").find("cite")[0].innerText);
+	$("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").show().find("cite").html(currentStuffNum-1);
+	$('#'+id).remove();
+	if($(".addedSingleLimit").length<=0){
+		$("#addkjLimitModal").find('.comtitle').find("h2:eq(0)").show();
+		$("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").hide();
+	}
+}
+
+//小箭头事件
+function displayAddedLimitArea(){
+	if($(".addedSingleLimit").length<=0){
+		return;
+	}
+
+	if($("#addkjLimitModal").find('.comtitle').find("img")[0].classList.length>1){
+		$("#addkjLimitModal").find('.comtitle').find("img").removeClass('comtitleOpen');
+	}else{
+		$("#addkjLimitModal").find('.comtitle').find("img").addClass('comtitleOpen');
+	}
+
+	$(".addedLimitArea").toggle();
+}
+
+//重置已选区域
+function reStuffAddedLimitArea(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#addkjLimit_xn,#addkjLimit_satrtWeek,#addkjLimit_endWeek";
+	reReloadSearchsWithSelect(reObject);
+	$("#addkjLimit_num").val(0);
+
+	$("#addkjLimitModal").find('.comtitle').find("h2:eq(0)").show();
+	$("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").hide();
+	$(".addedLimitArea").empty();
+}
+
+//确认添加限制
+function confimAddkjLimit(){
+	var addedinfo=$(".addedSingleLimit");
+	if(addedinfo.length===0){
+		toastr.warning('暂未添加任何限制');
+		return;
+	}
+}
 // //填充课节表
 // function stuffAllKjTable(allkj){
 // 	allkj=sortKjInfo(allkj);
@@ -2838,17 +3149,17 @@ function tab2BtnBind(){
 		e.stopPropagation();
 	});
 	
-	// //新增课节
-	// $('#addClassTimePart').unbind('click');
-	// $('#addClassTimePart').bind('click', function(e) {
-	// 	addClassTimePart();
-	// 	e.stopPropagation();
-	// });
-
 	//新增调课角色
 	$('#addChangeCrouseRole').unbind('click');
 	$('#addChangeCrouseRole').bind('click', function(e) {
 		wantAddChangeCrouseRole();
+		e.stopPropagation();
+	});
+
+	//新增排课节数限制
+	$('#addkjLimit').unbind('click');
+	$('#addkjLimit').bind('click', function(e) {
+		addkjLimit();
 		e.stopPropagation();
 	});
 }
@@ -3429,11 +3740,11 @@ function tab2BtnBind(){
 //  * */
 
 
-//填充年份选择器
-function stuffYearSearchElement(eve){
-	$(eve).attr("value",45);
-	$(eve).InputSpinner();
-}
+// //填充年份选择器
+// function stuffYearSearchElement(eve){
+// 	$(eve).attr("value",45);
+// 	$(eve).InputSpinner();
+// }
 
 //页面初始化时按钮事件绑定
 function btnbind(){
