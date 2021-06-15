@@ -3121,10 +3121,11 @@ public class AdministrationPageService {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[size+1]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+		String[] titles = new String[size+2]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
 		titles[0] = "学生姓名";
+		titles[1] = "学生学号";
 		for(int j = 0;j<size;j++){
-			titles[j+1] = edu005List.get(j).getCourseName();
+			titles[j+2] = edu005List.get(j).getCourseName();
 		}
 
 		// 循环设置标题
@@ -3135,20 +3136,22 @@ public class AdministrationPageService {
 
 		for (int i = 0; i < edu005List.size()/size; i++) {
 			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentName(),-1,0,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentCode(),-1,1,false);
 			for(int j = 0;j<size;j++){
 				if(edu005List.get(i*size+j).getGrade() != null && !"".equals(edu005List.get(i*size+j).getGrade())){
-					utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+1,false);
+					utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
 				}else{
-					utils.appendCell(sheet,i,"","暂无成绩",-1,j+1,false);
+					utils.appendCell(sheet,i,"","暂无成绩",-1,j+2,false);
 				}
 			}
 		}
 
 		sheet.setColumnWidth(0, 12*256);
-		sheet.setColumnWidth(1, 16*256);
-		sheet.setColumnWidth(2, 30*256);
-		sheet.setColumnWidth(3, 10*256);
+		sheet.setColumnWidth(1, 20*256);
+		sheet.setColumnWidth(2, 20*256);
+		sheet.setColumnWidth(3, 20*256);
 		sheet.setColumnWidth(4, 20*256);
+		sheet.setColumnWidth(5, 20*256);
 
 		return workbook;
 	}
