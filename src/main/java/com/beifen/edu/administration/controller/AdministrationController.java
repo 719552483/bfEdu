@@ -235,9 +235,8 @@ public class AdministrationController {
 	@ResponseBody
 	public ResultVO addNewKssx(@RequestParam String kssxinfo) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(kssxinfo);
-		Edu403 edu403 = (Edu403) JSONObject.toBean(jsonObject, Edu403.class);
-		ResultVO result = administrationPageService.addNewKssx(edu403);
+		List<Edu403> edu403s = JSON.parseArray(kssxinfo, Edu403.class);
+		ResultVO result = administrationPageService.addNewKssx(edu403s);
 		return result;
 	}
 

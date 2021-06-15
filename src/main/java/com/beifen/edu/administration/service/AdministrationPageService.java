@@ -1047,9 +1047,12 @@ public class AdministrationPageService {
 	}
 
 	// 新增排课课时上限
-	public ResultVO addNewKssx(Edu403 edu403) {
+	public ResultVO addNewKssx(List<Edu403> edu403s) {
 		ResultVO resultVO;
-		edu403DAO.save(edu403);
+		for(int i = 0;i < edu403s.size();i++){
+			Edu403 edu403 = edu403s.get(i);
+			edu403DAO.save(edu403);
+		}
 		List<Edu400> allXn = edu400DAO.findAllXn();
 		List<Edu403PO> edu403POList = new ArrayList<>();
 		for (int i = 0;i < allXn.size();i++){
