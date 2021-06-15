@@ -229,6 +229,41 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 新增修改排课课时上限
+	 */
+	@RequestMapping("/addNewKssx")
+	@ResponseBody
+	public ResultVO addNewKssx(@RequestParam String kssxinfo) {
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(kssxinfo);
+		Edu403 edu403 = (Edu403) JSONObject.toBean(jsonObject, Edu403.class);
+		ResultVO result = administrationPageService.addNewKssx(edu403);
+		return result;
+	}
+
+	/**
+	 * 根据学年id删除课时上限
+	 */
+	@RequestMapping("/deleteKssxByXn")
+	@ResponseBody
+	public ResultVO deleteKssxByXn(@RequestParam String deleteIds) {
+		List<String> removeIdList = JSON.parseArray(deleteIds, String.class);
+		ResultVO result = administrationPageService.deleteKssxByXn(removeIdList);
+		return result;
+	}
+
+	/**
+	 * 根据Edu430id删除课时上限
+	 */
+	@RequestMapping("/deleteKssxById")
+	@ResponseBody
+	public ResultVO deleteKssxById(@RequestParam String deleteIds) {
+		List<String> removeIdList = JSON.parseArray(deleteIds, String.class);
+		ResultVO result = administrationPageService.deleteKssxById(removeIdList);
+		return result;
+	}
+
+	/**
 	 * 新增修改学年
 	 */
 	@RequestMapping("/addNewXn")

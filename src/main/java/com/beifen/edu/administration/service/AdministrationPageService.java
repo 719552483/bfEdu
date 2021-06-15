@@ -1046,6 +1046,33 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	// 新增排课课时上限
+	public ResultVO addNewKssx(Edu403 edu403) {
+		ResultVO resultVO;
+		edu403DAO.save(edu403);
+		resultVO = ResultVO.setSuccess("操作成功",edu403.getEdu403_ID());
+		return resultVO;
+	}
+	// 根据学年id删除课时上限
+	public ResultVO deleteKssxByXn(List<String> removeIdList) {
+		ResultVO resultVO;
+		for (String s : removeIdList) {
+			edu403DAO.removeKssxByXn(s);
+		}
+		resultVO = ResultVO.setSuccess("删除成功");
+		return resultVO;
+	}
+
+	// 根据Edu430id删除课时上限
+	public ResultVO deleteKssxById(List<String> removeIdList) {
+		ResultVO resultVO;
+		for (String s : removeIdList) {
+			edu403DAO.deleteKssxById(s);
+		}
+		resultVO = ResultVO.setSuccess("删除成功");
+		return resultVO;
+	}
+
 	// 新增角色
 	public ResultVO addNewJs(Edu402 edu402) {
 		ResultVO resultVO;
