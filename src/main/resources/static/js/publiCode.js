@@ -2564,6 +2564,7 @@ function addkjLimit(){
 	}
 
 	$("#addkjLimitModal").find(".moreInfoSelectStyle,.tools,.comtitle").show();
+	$("#addkjLimitModal").find('.comtitle').find("img").removeClass('comtitleOpen');
 	$("#addkjLimitModal").find(".moadalTitle").html("新增排课节数限制");
 	reStuffAddedLimitArea();
 	var str = '<option value="seleceConfigTip">请选择</option>';
