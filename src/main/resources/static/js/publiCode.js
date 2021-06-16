@@ -2519,10 +2519,10 @@ function stuffAllkjLimitTable(allKssxInfo){
 			},
 			{
 				field: 'pkjsxz',
-				title: '排课节数限制',
+				title: '排课节数限制概览',
 				align: 'left',
 				sortable: true,
-				formatter: paramsMatter
+				formatter: pkjsxzMatter
 			},{
 				field: 'action',
 				title: '操作',
@@ -2537,10 +2537,15 @@ function stuffAllkjLimitTable(allKssxInfo){
 	function releaseNewsFormatter(value, row, index) {
 		return [
 			'<ul class="toolbar tabletoolbar">' +
-			'<li class="modifyBtn" id="modifyLimit"><span><img src="images/t02.png" style="width:24px"></span>编辑</li>' +
+			'<li class="modifyBtn" id="modifyLimit"><span><img src="images/t02.png" style="width:24px"></span>编辑/查看</li>' +
 			'<li class="deleteBtn" id="removeLimit"><span><img src="images/t03.png"></span>删除</li>' +
 			'</ul>'
 		]
+			.join('');
+	}
+
+	function pkjsxzMatter(value, row, index) {
+		return [ '<div class="myTooltip normalTxt" title="共计:'+value.length+'条排课节数限制">共计:'+value.length+'条排课节数限制</div>' ]
 			.join('');
 	}
 
@@ -2567,12 +2572,13 @@ function addkjLimit(){
 	//绑定继续添加事件
 	$('#addThiskjLimit').unbind('click');
 	$('#addThiskjLimit').bind('click', function(e) {
-		addThiskjLimit();
+		addThiskjLimit(true);
 		e.stopPropagation();
 	});
 
 	//学年change事件
 	$("#addkjLimit_xn").change(function() {
+		$(".addedLimitArea").empty();
 		stuffWeeksByXn();
 	});
 
@@ -2598,11 +2604,24 @@ function stuffWeeksByXn(){
 	var currentXn=getNormalSelectValue("addkjLimit_xn");
 	var str ='';
 	if(currentXn!==''){
+		//填充学年对应的开始结束周
 		var weekNum=$("#xnTable").bootstrapTable("getRowByUniqueId", currentXn).zzs;
 		str = '<option value="seleceConfigTip">请选择</option>';
 		for (var i = 0; i < weekNum; i++) {
 			str += '<option value="' + (i+1) + '">第' + (i+1) + '周</option>';
 		}
+
+		//填充已存在的限制至业面
+		var thisYearLimit=$("#kjLimitTable").bootstrapTable("getData");
+		for (var i = 0; i < thisYearLimit.length; i++) {
+			if(currentXn===thisYearLimit[i].xnid){
+				var pkjsxz=thisYearLimit[i].pkjsxz;
+				for (var j = 0; j < pkjsxz.length; j++) {
+					stuffThiskjLimit(pkjsxz[j].xn,pkjsxz[j].xnid,pkjsxz[j].ksz,pkjsxz[j].jsz,pkjsxz[j].kssx,false);
+				}
+			}
+		}
+		$("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").show().find("cite").html($(".addedSingleLimit").length);
 	}else{
 		str = '<option value="seleceConfigTip">暂无选择</option>';
 	}
@@ -2612,13 +2631,23 @@ function stuffWeeksByXn(){
 }
 
 //继续添加
-function addThiskjLimit(){
+function addThiskjLimit(needEmptySelect){
 	var thisXn=getNormalSelectValue("addkjLimit_xn");
 	var thisStartWeek=getNormalSelectValue("addkjLimit_satrtWeek");
 	var thisEndWeek=getNormalSelectValue("addkjLimit_endWeek");
 	var thisNum=parseInt($("#addkjLimit_num").val());
-	if(checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum)){
-		stuffThiskjLimit(getNormalSelectText("addkjLimit_xn"),thisXn,thisStartWeek,thisEndWeek,thisNum);
+
+	var rs=checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum);
+	if(!rs){
+		return false;
+	}
+
+	if(needEmptySelect){
+		stuffThiskjLimit(getNormalSelectText("addkjLimit_xn"),thisXn,thisStartWeek,thisEndWeek,thisNum,true);
+		var reObject = new Object();
+		reObject.normalSelectIds = "#addkjLimit_satrtWeek,#addkjLimit_endWeek";
+		reReloadSearchsWithSelect(reObject);
+		$("#addkjLimit_num").val(0);
 	}
 }
 
@@ -2656,21 +2685,14 @@ function checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum){
 	}
 	var chosendLimit=$(".addedSingleLimit");
 	var xnIsSame;
-	var weekIsOver;
-	parseInt(thisEndWeek)==parseInt(thisStartWeek)?weekIsOver=true:weekIsOver=false;
 	for (var i = 0; i < chosendLimit.length; i++) {
-		if(thisXn===chosendLimit[i].attributes[2].nodeValue){
-			xnIsSame=true;
-			break;
-		}else{
-			xnIsSame=false;
-		}
-	}
+			if(thisXn===chosendLimit[i].attributes[2].nodeValue){
+				xnIsSame=true;
+			}else{
+				xnIsSame=false;
+				break;
+			}
 
-	if(xnIsSame){
-
-
-		for (var i = 0; i < chosendLimit.length; i++) {
 			var banNum_year=chosendLimit[i].attributes[2].nodeValue;
 			var banNum_satrt=parseInt(chosendLimit[i].attributes[3].nodeValue);
 			var banNum_end=parseInt(chosendLimit[i].attributes[4].nodeValue);
@@ -2682,50 +2704,35 @@ function checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum){
 				return rs;
 			}
 
-			var countNum=banNum_end-banNum_satrt;
-			var banArray=new Array();
-			banArray.push(banNum_satrt);
-			banArray.push(banNum_end);
-
-			for (var j = 0; j < countNum-1; j++) {
-				banNum_satrt+=1;
-				banArray.push(banNum_satrt);
+			//是否被包含
+			if(!(banNum_end<thisStartWeek || banNum_satrt>thisEndWeek)){
+				toastr.warning('限制周期已包含');
+				rs= false;
+				return rs;
 			}
-
-			//开始结束不跨周是否被包含验证
-			if(!weekIsOver){
-				for (var k = 0; k < banArray.length; k++) {
-					if(banArray.indexOf(parseInt(thisStartWeek))){
-						toastr.warning('限制周期已被选择');
-						rs= false;
-						return rs;
-					}
-				}
-			}
-
-			//开始结束跨周是否被包含验证
-			if(!weekIsOver){
-				for (var k = 0; k < banArray.length; k++) {
-					if(parseInt(thisStartWeek)<=banArray[k]||parseInt(thisEndWeek)<=banArray[k]){
-						toastr.warning('限制周期已被选择');
-						rs= false;
-						return rs;
-					}
-				}
-			}
-		}
 	}
 
 	return rs;
 }
 
 //填充当前添加的限制
-function stuffThiskjLimit(thisXnName,thisXn,thisStartWeek,thisEndWeek,thisNum){
-	var str='<div class="addedSingleLimit" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'">' +
-			'学年:'+thisXnName+' 第'+thisStartWeek+'周-第'+thisEndWeek+'周 最大排课节数限制：'+thisNum+'节' +
+function stuffThiskjLimit(thisXnName,thisXn,thisStartWeek,thisEndWeek,thisNum,isNewAdded){
+	var classNAME;
+	var str
+	isNewAdded?classNAME='isNew':classNAME='isOld';
+	if(isNewAdded){
+		str='<div class="addedSingleLimit '+classNAME+'" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'" xnName="'+thisXnName+'">' +
+			'新增加限制 学年:'+thisXnName+' 第'+thisStartWeek+'周-第'+thisEndWeek+'周 最大排课节数限制：'+thisNum+'节' +
 			'<img class="choosendKjImg" removeid="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'" src="images/close1.png"/>' +
-		'</div>';
+			'</div>';
+	}else{
+		str='<div class="addedSingleLimit '+classNAME+'" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'" xnName="'+thisXnName+'">' +
+			'已存在限制 学年:'+thisXnName+' 第'+thisStartWeek+'周-第'+thisEndWeek+'周 最大排课节数限制：'+thisNum+'节' +
+			'</div>'
+	}
+
 	$(".addedLimitArea").append(str);
+
 	$("#addkjLimitModal").find('.comtitle').find("img").addClass('comtitleOpen');
 	$("#addkjLimitModal").find('.comtitle').find("h2:eq(0)").hide();
 	$("#addkjLimitModal").find('.comtitle').find("h2:eq(1)").show().find("cite").html($(".addedSingleLimit").length);
@@ -2777,11 +2784,50 @@ function reStuffAddedLimitArea(){
 
 //确认添加限制
 function confimAddkjLimit(){
-	var addedinfo=$(".addedSingleLimit");
+	var addedinfo=$(".isNew");
 	if(addedinfo.length===0){
 		toastr.warning('暂未添加任何限制');
 		return;
 	}
+
+	var newInfo=new Array();
+	for (var i = 0; i <addedinfo.length ; i++) {
+		var newInfoObject=new Object();
+		newInfoObject.xnid=addedinfo[i].attributes[2].nodeValue;
+		newInfoObject.ksz=addedinfo[i].attributes[3].nodeValue;
+		newInfoObject.jsz=addedinfo[i].attributes[4].nodeValue;
+		newInfoObject.kssx=addedinfo[i].attributes[5].nodeValue;
+		newInfoObject.xn=addedinfo[i].attributes[6].nodeValue;
+		newInfo.push(newInfoObject);
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addNewKssx",
+		data: {
+			"kssxinfo":JSON.stringify(newInfo),
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffAllkjLimitTable(backjson.data);
+				toastr.success(backjson.msg);
+				$.hideModal("#addkjLimitModal");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 // //填充课节表
 // function stuffAllKjTable(allkj){
