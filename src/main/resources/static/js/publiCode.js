@@ -2475,12 +2475,12 @@ function sendChangeRoleInfo(roleInfo,isModify,oldRoleInfo){
 //填充课节限制表
 function stuffAllkjLimitTable(allKssxInfo){
 	window.releaseNewsEvents = {
-		// 'click #modifyLevel': function(e, value, row, index) {
-		// 	modifyLevel(row);
-		// },
-		// 'click #removeLevle': function(e, value, row, index) {
-		// 	removeLevle(row.edu103_ID);
-		// }
+		'click #modifyLimit': function(e, value, row, index) {
+			modifyLimit(row);
+		},
+		'click #removeAllLimit': function(e, value, row, index) {
+			removeAllLimit(row);
+		}
 	};
 
 	$('#kjLimitTable').bootstrapTable('destroy').bootstrapTable({
@@ -2538,7 +2538,7 @@ function stuffAllkjLimitTable(allKssxInfo){
 		return [
 			'<ul class="toolbar tabletoolbar">' +
 			'<li class="modifyBtn" id="modifyLimit"><span><img src="images/t02.png" style="width:24px"></span>编辑/查看</li>' +
-			'<li class="deleteBtn" id="removeLimit"><span><img src="images/t03.png"></span>删除</li>' +
+			'<li class="deleteBtn" id="removeAllLimit"><span><img src="images/t03.png"></span>删除</li>' +
 			'</ul>'
 		]
 			.join('');
@@ -2563,6 +2563,8 @@ function addkjLimit(){
 		return;
 	}
 
+	$("#addkjLimitModal").find(".moreInfoSelectStyle,.tools,.comtitle").show();
+	$("#addkjLimitModal").find(".moadalTitle").html("新增排课节数限制");
 	reStuffAddedLimitArea();
 	var str = '<option value="seleceConfigTip">请选择</option>';
 	for (var i = 0; i < currentAllXn.length; i++) {
@@ -2617,7 +2619,7 @@ function stuffWeeksByXn(){
 			if(currentXn===thisYearLimit[i].xnid){
 				var pkjsxz=thisYearLimit[i].pkjsxz;
 				for (var j = 0; j < pkjsxz.length; j++) {
-					stuffThiskjLimit(pkjsxz[j].xn,pkjsxz[j].xnid,pkjsxz[j].ksz,pkjsxz[j].jsz,pkjsxz[j].kssx,false);
+					stuffThiskjLimit(pkjsxz[j].xn,pkjsxz[j].xnid,pkjsxz[j].ksz,pkjsxz[j].jsz,pkjsxz[j].kssx,false,pkjsxz[j].edu403_ID);
 				}
 			}
 		}
@@ -2643,7 +2645,7 @@ function addThiskjLimit(needEmptySelect){
 	}
 
 	if(needEmptySelect){
-		stuffThiskjLimit(getNormalSelectText("addkjLimit_xn"),thisXn,thisStartWeek,thisEndWeek,thisNum,true);
+		stuffThiskjLimit(getNormalSelectText("addkjLimit_xn"),thisXn,thisStartWeek,thisEndWeek,thisNum,true,null);
 		var reObject = new Object();
 		reObject.normalSelectIds = "#addkjLimit_satrtWeek,#addkjLimit_endWeek";
 		reReloadSearchsWithSelect(reObject);
@@ -2716,17 +2718,17 @@ function checkThiskjLimit(thisXn,thisStartWeek,thisEndWeek,thisNum){
 }
 
 //填充当前添加的限制
-function stuffThiskjLimit(thisXnName,thisXn,thisStartWeek,thisEndWeek,thisNum,isNewAdded){
+function stuffThiskjLimit(thisXnName,thisXn,thisStartWeek,thisEndWeek,thisNum,isNewAdded,edu403_ID){
 	var classNAME;
 	var str
 	isNewAdded?classNAME='isNew':classNAME='isOld';
 	if(isNewAdded){
-		str='<div class="addedSingleLimit '+classNAME+'" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'" xnName="'+thisXnName+'">' +
+		str='<div class="addedSingleLimit '+classNAME+'" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'" xnName="'+thisXnName+'" edu403_ID="'+edu403_ID+'">' +
 			'新增加限制 学年:'+thisXnName+' 第'+thisStartWeek+'周-第'+thisEndWeek+'周 最大排课节数限制：'+thisNum+'节' +
 			'<img class="choosendKjImg" removeid="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'" src="images/close1.png"/>' +
 			'</div>';
 	}else{
-		str='<div class="addedSingleLimit '+classNAME+'" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'" xnName="'+thisXnName+'">' +
+		str='<div class="addedSingleLimit '+classNAME+'" id="xn'+thisXn+'s'+thisStartWeek+'e'+thisEndWeek+'"  xn="'+thisXn+'" s_week="'+thisStartWeek+'" e_week="'+thisEndWeek+'" num="'+thisNum+'" xnName="'+thisXnName+'" edu403_ID="'+edu403_ID+'">' +
 			'已存在限制 学年:'+thisXnName+' 第'+thisStartWeek+'周-第'+thisEndWeek+'周 最大排课节数限制：'+thisNum+'节' +
 			'</div>'
 	}
@@ -2829,6 +2831,157 @@ function confimAddkjLimit(){
 		}
 	});
 }
+
+//删除整个学年限制
+function removeAllLimit(row){
+	$.showModal("#remindModal",true);
+	$(".remindType").html('已选学年的所有排课节数限制');
+	$(".remindActionType").html("删除");
+	var deleteIds=new Array();
+	deleteIds.push(row.xnid);
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendRemoveAllLimit(deleteIds);
+		e.stopPropagation();
+	});
+}
+
+//发送删除整个学年限制的请求
+function sendRemoveAllLimit(deleteIds){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/deleteKssxByXn",
+		data: {
+			"deleteIds":JSON.stringify(deleteIds),
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				for (var i = 0; i < deleteIds.length; i++) {
+					$("#kjLimitTable").bootstrapTable('removeByUniqueId',deleteIds[i]);
+				}
+				toastr.success(backjson.msg);
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//逐条编辑限制
+function modifyLimit(row){
+	$(".addedLimitArea").empty();
+	$("#addkjLimitModal").find(".moreInfoSelectStyle,.tools,.comtitle").hide();
+	$("#addkjLimitModal").find(".moadalTitle").html("编辑/查看排课节数限制");
+
+	//填充已存在的限制至业面
+	var thisYearLimit=$("#kjLimitTable").bootstrapTable("getData");
+	for (var i = 0; i < thisYearLimit.length; i++) {
+		if(row.xnid===thisYearLimit[i].xnid){
+			var pkjsxz=thisYearLimit[i].pkjsxz;
+			for (var j = 0; j < pkjsxz.length; j++) {
+				stuffThiskjLimit(pkjsxz[j].xn,pkjsxz[j].xnid,pkjsxz[j].ksz,pkjsxz[j].jsz,pkjsxz[j].kssx,true,pkjsxz[j].edu403_ID);
+			}
+		}
+	}
+
+	//单挑删除限制
+	$('.addedSingleLimit').find('.choosendKjImg').unbind('click');
+	$('.addedSingleLimit').find('.choosendKjImg').bind('click', function(e) {
+		wantRemoveSingleLimit(e);
+		e.stopPropagation();
+	});
+	$.showModal("#addkjLimitModal",false);
+}
+
+//逐条删除限制
+function wantRemoveSingleLimit(eve){
+	if($(".addedSingleLimit").length<2){
+		toastr.warning('单个删除至少保留一条限制');
+		return;
+	}
+
+	$.hideModal('#addkjLimitModal',false);
+	$.showModal("#remindModal",true);
+	$(".remindType").html('该排课节数限制');
+	$(".remindActionType").html("删除");
+
+
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendRemoveSingleLimit(eve);
+		e.stopPropagation();
+	});
+}
+
+//发送单个删除限制的请求
+function sendRemoveSingleLimit(eve){
+	var deleteIds=new Array();
+	deleteIds.push(eve.currentTarget.parentElement.attributes[7].nodeValue);
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/deleteKssxById",
+		data: {
+			"deleteIds":JSON.stringify(deleteIds),
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$('#'+eve.currentTarget.parentElement.attributes[1].nodeValue).remove();
+				toastr.success(backjson.msg);
+				$.hideModal('#remindModal',false);
+				$.showModal("#addkjLimitModal",false);
+				updateLimitTable(eve);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//刷新限制表
+function updateLimitTable(eve){
+	var all= $("#kjLimitTable").bootstrapTable("getData");
+	var thisXn=eve.currentTarget.parentElement.attributes[2].nodeValue;
+	for (var i = 0; i < all.length; i++) {
+		if(thisXn===all[i].xnid){
+			var pkjsxz=all[i].pkjsxz;
+			for (var j = 0; j < pkjsxz.length; j++) {
+				if(eve.currentTarget.parentElement.attributes[7].nodeValue===pkjsxz[j].edu403_ID.toString()){
+					pkjsxz.splice(i,1);
+				}
+			}
+			$("#kjLimitTable").bootstrapTable('updateByUniqueId', {
+				xnid: thisXn,
+				row: all[i]
+			});
+		}
+	}
+}
+
 // //填充课节表
 // function stuffAllKjTable(allkj){
 // 	allkj=sortKjInfo(allkj);
