@@ -1392,13 +1392,13 @@ public class ReflectUtils {
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}
-			if(isNull(edu001.getSfzh())){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-身份证号不能为空";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}
+//			if(isNull(edu001.getSfzh())){
+//				chaeckPass=false;
+//				checkTxt="第"+(i+1)+"行-身份证号不能为空";
+//				returnMap.put("chaeckPass", chaeckPass);
+//				returnMap.put("checkTxt", checkTxt);
+//				break;
+//			}
 			if(isNull(edu001.getMz())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-民族不能为空";
@@ -1449,13 +1449,13 @@ public class ReflectUtils {
 			
 			
 			//身份证号格式
-			if(edu001.getSfzh()!=null&&!isIDCard(edu001.getSfzh())){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-身份证号格式不正确";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}
+//			if(edu001.getSfzh()!=null&&!isIDCard(edu001.getSfzh())){
+//				chaeckPass=false;
+//				checkTxt="第"+(i+1)+"行-身份证号格式不正确";
+//				returnMap.put("chaeckPass", chaeckPass);
+//				returnMap.put("checkTxt", checkTxt);
+//				break;
+//			}
 			
 			//手机号码
 			if(edu001.getSjhm()!=null&&!isPhone(edu001.getSjhm())){
@@ -1774,24 +1774,24 @@ public class ReflectUtils {
 						}
 					}
 					
-					for (int d = 0;d < databaseAllStudent.size(); d++) {
-						if(databaseAllStudent.get(d).getSfzh().equals(edu001.getSfzh())){
-							chaeckPass=false;
-							checkTxt="第"+(i+1)+"行- 身份证号已存在";
-							returnMap.put("chaeckPass", chaeckPass);
-							returnMap.put("checkTxt", checkTxt);
-							break;
-						}
-					}
+//					for (int d = 0;d < databaseAllStudent.size(); d++) {
+//						if(databaseAllStudent.get(d).getSfzh().equals(edu001.getSfzh())){
+//							chaeckPass=false;
+//							checkTxt="第"+(i+1)+"行- 身份证号已存在";
+//							returnMap.put("chaeckPass", chaeckPass);
+//							returnMap.put("checkTxt", checkTxt);
+//							break;
+//						}
+//					}
 				}else{
-					boolean IDcardIshave = reflectUtils.studentManageService.IDcardIshave(importStudent.get(i).getSfzh());
-					if(IDcardIshave){
-						chaeckPass=false;
-						checkTxt="第"+(i+1)+"行- 身份证号已存在";
-						returnMap.put("chaeckPass", chaeckPass);
-						returnMap.put("checkTxt", checkTxt);
-						break;
-					}
+//					boolean IDcardIshave = reflectUtils.studentManageService.IDcardIshave(importStudent.get(i).getSfzh());
+//					if(IDcardIshave){
+//						chaeckPass=false;
+//						checkTxt="第"+(i+1)+"行- 身份证号已存在";
+//						returnMap.put("chaeckPass", chaeckPass);
+//						returnMap.put("checkTxt", checkTxt);
+//						break;
+//					}
 				}
 			}
 			
@@ -2624,7 +2624,7 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
 		String[] titles = new String[] {"*生源类型","*培养层次", "*所在系部", "*年级", "*专业", "*行政班", "*学生ID", "*学生姓名",
-				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
+				"曾用名", "*性别", "*状态", "*出生日期", "身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 
@@ -2653,7 +2653,8 @@ public class ReflectUtils {
 			}
 			appendCell(sheet,i,"",chosedStudents.get(i).getZt(),-1,10,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getCsrq(),-1,11,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
+//			appendCell(sheet,i,"",chosedStudents.get(i).getSfzh(),-1,12,false);
+			appendCell(sheet,i,"","",-1,12,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getMz(),-1,13,false);
 			if(chosedStudents.get(i).getSfyxj()!=null){
 				if(chosedStudents.get(i).getSfyxj().equals("T")){

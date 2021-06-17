@@ -115,11 +115,11 @@ public class StudentManageService {
                 return resultVO;
             }
             // 判断身份证是否存在
-            boolean IDcardIshave = IDcardIshave(edu001.getSfzh());
-            if (IDcardIshave) {
-                resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
-                return resultVO;
-            }
+//            boolean IDcardIshave = IDcardIshave(edu001.getSfzh());
+//            if (IDcardIshave) {
+//                resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
+//                return resultVO;
+//            }
 
         String newXh = getNewStudentXh(edu001); //新生的学号
         String yxbz = "1";
@@ -297,11 +297,11 @@ public class StudentManageService {
         ResultVO resultVO;
         Edu001 oldEdu001 = queryStudentBy001ID(edu001.getEdu001_ID().toString());
         // 判断身份证是否存在
-        List<Edu001> cardList = edu001Dao.checkIdCard(edu001.getSfzh(),edu001.getEdu001_ID());
-        if(cardList.size() != 0) {
-            resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
-            return resultVO;
-        }
+//        List<Edu001> cardList = edu001Dao.checkIdCard(edu001.getSfzh(),edu001.getEdu001_ID());
+//        if(cardList.size() != 0) {
+//            resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
+//            return resultVO;
+//        }
 
         //如果修改操作为修改学生状态为休学 发送审批流对象
         if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){

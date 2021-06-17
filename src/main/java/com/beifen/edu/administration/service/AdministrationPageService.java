@@ -1299,17 +1299,28 @@ public class AdministrationPageService {
 	//确认排课-检验
 	public ResultVO comfirmScheduleCheck(String edu201Id,List<Edu203> edu203List) {
 		ResultVO resultVO;
+		Edu201 ee = edu201DAO.findOne(Long.parseLong(edu201Id));
 		List<String> classIds = edu204Dao.searchEdu300IdByEdu201Id(edu201Id);
 		for(int i = 0;i<classIds.size();i++){
 			String classId = classIds.get(i);
 		}
-		Map<String,String> map = new HashMap();
+		Map<Integer,Integer> map = new HashMap();
 		for (int i = 0;i<edu203List.size();i++){
 			Edu203 e = edu203List.get(i);
 			int start = Integer.parseInt(e.getKsz());
 			int end = Integer.parseInt(e.getJsz());
 			for(int j = start;j<=end;j++){
-				map.put(j+"","1");
+				if(map.containsKey(j)){
+					map.put(j,map.get(j)+1);
+				}else{
+					map.put(j,1);
+				}
+			}
+		}
+		for(Integer key:map.keySet()){
+//			edu403DAO.queryXZCount();
+			for(int i = 0;i<classIds.size();i++){
+				String classId = classIds.get(i);
 			}
 		}
 
