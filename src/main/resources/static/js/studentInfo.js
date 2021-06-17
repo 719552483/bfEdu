@@ -624,7 +624,7 @@ function exportStudent(){
 //展示学生详情
 function studentDetails(row,index){
 	$.showModal("#addStudentModal",false);
-	$(".StudentIDNumInput").hide();
+	// $(".StudentIDNumInput").hide();
 	$("#addStudentModal").find(".formtext").hide();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", true) // 将input元素设置为readonly
@@ -646,7 +646,7 @@ function stuffStudentDetails(row){
 	stuffManiaSelectWithDeafult("#addStudentStatus", row.ztCode);
 	$("#dateOfBrith").val(row.csrq);
 	stuffManiaSelectWithDeafult("#addStudentxzb", row.edu300_ID,row.xzbname);
-	$("#addStudentIDNum").val(row.sfzh);
+	// $("#addStudentIDNum").val(row.sfzh);
 	stuffManiaSelectWithDeafult("#addStudentNation", row.mzbm);
 	stuffManiaSelectWithDeafult("#addStudentIsHaveStatus", row.sfyxj);
 	$("#addStudentStatusNum").val(row.xjh);
@@ -738,7 +738,7 @@ function modifyStudent(row,index){
 		return;
 	}
 	$.showModal("#addStudentModal",true);
-	$(".StudentIDNumInput").show();
+	// $(".StudentIDNumInput").show();
 	$("#addStudentModal").find(".formtext").show();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
@@ -952,7 +952,7 @@ function wantAddStudent() {
 	//显示模态框
 	$.showModal("#addStudentModal",true);
 	$("#addStudentModal").find(".formtext").hide();
-	$(".StudentIDNumInput").show();
+	// $(".StudentIDNumInput").show();
 	$("#addStudentModal").find(".moadalTitle").html("新增学生");
 	$(".XhArea").hide();
 	//清空模态框中元素原始值
@@ -1074,7 +1074,7 @@ function getAddStudentInfo(){
 	var xylx= getNormalSelectText("addStudentType");
 	var Edu300_ID= getNormalSelectValue("addStudentxzb");
 	var xzbname= getNormalSelectText("addStudentxzb");
-	var sfzh=$("#addStudentIDNum").val();
+	// var sfzh=$("#addStudentIDNum").val();
 	var mzbm= getNormalSelectValue("addStudentNation");
 	var mz= getNormalSelectText("addStudentNation");
 	var sfyxj= getNormalSelectValue("addStudentIsHaveStatus");
@@ -1158,10 +1158,10 @@ function getAddStudentInfo(){
 		return;
 	}
 	
-	if(sfzh===""){
-		toastr.warning('身份证号不能为空');
-		return;
-	}
+	// if(sfzh===""){
+	// 	toastr.warning('身份证号不能为空');
+	// 	return;
+	// }
 	
 	if(mzbm===""){
 		toastr.warning('民族不能为空');
@@ -1178,10 +1178,10 @@ function getAddStudentInfo(){
 //		return;
 //	}
 	
-	if(!isCardNo(sfzh)&&sfzh!==""){
-		toastr.warning('身份证号格式不正确');
-		return;
-	}
+	// if(!isCardNo(sfzh)&&sfzh!==""){
+	// 	toastr.warning('身份证号格式不正确');
+	// 	return;
+	// }
 	
 	if(!phoneRex(sjhm)&&sjhm!==""){
 		toastr.warning('手机号码格式不正确');
@@ -1232,7 +1232,7 @@ function getAddStudentInfo(){
 	returnObject.zymc=zymc;
 	returnObject.edu300_ID=Edu300_ID;
 	returnObject.xzbname=xzbname;
-	returnObject.sfzh=sfzh;
+	// returnObject.sfzh=sfzh;
 	returnObject.mzbm=mzbm;
 	returnObject.mz=mz;
 	returnObject.xjh=xjh;
@@ -1608,7 +1608,7 @@ function emptyStudentBaseInfoArea() {
 	var reObject = new Object();
 	reObject.fristSelectId ="#addStudentpycc";
 	reObject.actionSelectIds ="#addStudentxb,#addStudentnj,#addStudentzy,#addStudentxzb";
-	reObject.InputIds = "#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentIDNum,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
+	reObject.InputIds = "#addStudentName,#addStudentUsedName,#dateOfBrith,#addStudentStatusNum,#addStudentStatusNum,#addStudentksh,#addStudentrxzf,#enterSchoolDate,#addStudentbyzh,#addStudentzkzh,#addStudentphoneNum,#addStudentemail,#addStudentjk,#addStudentzhiye,#addStudentsg,#addStudenttz,#addStudentjtzz,#addStudentzjxy,#addStudentbz";
 	reObject.normalSelectIds = "#addStudentSex,#addStudentStatus,#addStudentNation,#addStudentIsHaveStatus,#addStudentzzmm,#addStudentwhcd,#addStudentIsMarried,#addStudentType,#addStudentzsfs,#addStudentIsDxpy,#addStudentIsPoorFamily";
 	reReloadSearchsWithSelect(reObject);
 }
