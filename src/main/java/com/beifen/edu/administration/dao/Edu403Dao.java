@@ -28,4 +28,8 @@ public interface Edu403Dao extends JpaRepository<Edu403, Long>, JpaSpecification
     @Modifying
     @Query(value = "delete from EDU403 where EDU403_ID =?1", nativeQuery = true)
     void deleteKssxById(String id);
+
+    //查询某一周限制的
+    @Query(value = "SELECT kssx FROM EDU403 where xnid = ?1 and ksz <= ?2 and jsz >= ?2",nativeQuery = true)
+    String queryXZCount(String xnid,String szz);
 }

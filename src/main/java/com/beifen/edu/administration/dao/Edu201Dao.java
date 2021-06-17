@@ -123,6 +123,11 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "UPDATE edu201 SET sfsqks = ?2 WHERE Edu201_ID =?1", nativeQuery = true)
 	void changeTestStatus(String s, String testFlag);
 
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE edu201 SET jksj = ?2 WHERE Edu201_ID =?1", nativeQuery = true)
+	void changeTestStatusTime(String s, String testFlagTime);
+
 	//根据108ID集合查询任务书
 	@Query(value = "select distinct e.Edu201_ID from edu201 e where e.Edu108_ID in ?1 and e.sszt='pass' and e.sfsqks = 'T'", nativeQuery = true)
 	List<String> getTaskByEdu108Ids(List<Long> edu108ids);

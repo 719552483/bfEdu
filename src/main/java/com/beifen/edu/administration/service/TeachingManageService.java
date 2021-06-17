@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -697,10 +698,7 @@ public class TeachingManageService {
                 }
                 predicates.add(cb.like(root.<String>get("ls"), "%"+userKey+"%"));
                 predicates.add(cb.isNotNull(root.<String>get("sfypk")));
-
-
-
-
+                query.orderBy(cb.desc(root.get("jksj")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -775,6 +773,9 @@ public class TeachingManageService {
         ResultVO resultVO;
         for (String businessKey : edu201IdList) {
             edu201Dao.changeTestStatus(businessKey,"T");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+            String time = df.format(new Date());
+            edu201Dao.changeTestStatusTime(businessKey,time);
         }
         resultVO = ResultVO.setSuccess("结课成功");
         return resultVO;

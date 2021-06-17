@@ -2188,7 +2188,21 @@ public class AdministrationController {
 		return returnMap;
 	}
 
-
+	/**
+	 * 确认排课-检验
+	 * @param edu201Id
+	 * @param scheduleDetail
+	 * @return
+	 */
+	@RequestMapping("/comfirmScheduleCheck")
+	@ResponseBody
+	public ResultVO comfirmScheduleCheck(@RequestParam("Edu201Id") String edu201Id,@RequestParam("scheduleDetail") String scheduleDetail) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
+		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		return result;
+	}
 
 
 	/**

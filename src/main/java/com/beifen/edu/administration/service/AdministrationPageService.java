@@ -1296,7 +1296,26 @@ public class AdministrationPageService {
 		Edu202 edu202 = edu202DAO.findOne(Long.parseLong(edu202Id));
 		return edu202.getEdu201_ID()+"";
 	}
+	//确认排课-检验
+	public ResultVO comfirmScheduleCheck(String edu201Id,List<Edu203> edu203List) {
+		ResultVO resultVO;
+		List<String> classIds = edu204Dao.searchEdu300IdByEdu201Id(edu201Id);
+		for(int i = 0;i<classIds.size();i++){
+			String classId = classIds.get(i);
+		}
+		Map<String,String> map = new HashMap();
+		for (int i = 0;i<edu203List.size();i++){
+			Edu203 e = edu203List.get(i);
+			int start = Integer.parseInt(e.getKsz());
+			int end = Integer.parseInt(e.getJsz());
+			for(int j = start;j<=end;j++){
+				map.put(j+"","1");
+			}
+		}
 
+		resultVO = ResultVO.setSuccess("cg");
+		return resultVO;
+	}
 	//检查是否有排课冲突
 	public ResultVO checkSchedule(List<Edu203> edu203List,String edu201Id) {
 		ResultVO resultVO;

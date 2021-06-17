@@ -45,6 +45,7 @@ public class Edu201 {
 	private Double xf;//学分
 	private String fbsj; //发布时间
 	private String pksj; //排课时间
+	private String jksj; //结课时间
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -279,5 +280,13 @@ public class Edu201 {
 
 	public void setPksj(String pksj) {
 		this.pksj = pksj;
+	}
+
+	public String getJksj() {
+		return jksj;
+	}
+
+	public void setJksj(String jksj) {
+		this.jksj = jksj;
 	}
 }
