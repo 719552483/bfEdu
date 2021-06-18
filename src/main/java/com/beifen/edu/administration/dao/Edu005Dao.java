@@ -122,5 +122,25 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //确认成绩时检查是否有遗漏
     @Query(value = "select * from edu005 where EDU005_ID in ?1 and  (is_mx is null or is_mx = '0') and grade is null", nativeQuery = true)
     List<Edu005> findConfirmGrade(List<Long> confirmIdList);
+
+
+    //根据edu001Id检索学年list
+    @Query(value = "select xnid from edu005  where EDU001_ID = ?1 GROUP BY xnid ORDER BY xnid",nativeQuery = true)
+    List<String> findXNListByEdu001ID(String edu001Id);
+
+    //根据edu001Id和学年检索学年list
+    @Query(value = "select * from edu005  where EDU001_ID = ?1 and xnid = ?2",nativeQuery = true)
+    List<Edu005> findXNListByEdu001IDAndXNID(String edu001Id,String xnid);
+
+    //根据edu001Id和学年检索学年list
+    @Query(value = "select sum(GET_CREDIT) from edu005  where EDU001_ID = ?1 and xnid = ?2",nativeQuery = true)
+    String findGradeListByEdu001IDAndXNID(String edu001Id,String xnid);
+
+
+    @Query(value = "select zxs from edu201 where EDU201_ID = ?1",nativeQuery = true)
+    String findzxs(String edu201_id);
+
+    @Query(value = "select kclx_code from Edu108 where Edu108_ID = (select Edu108_ID from edu201 where EDU201_ID = ?1)",nativeQuery = true)
+    String findkclx(String edu201_id);
 }
 

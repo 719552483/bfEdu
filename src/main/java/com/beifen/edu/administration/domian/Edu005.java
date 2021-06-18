@@ -28,7 +28,8 @@ public class Edu005 {
     private String isConfirm; //是否确认
     private String isMx;//是否免修
     private Integer exam_num;//补考次数
-
+    private String xs;//学时（导出时使用）
+    private String lx;//类型（导出时使用）
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SEQUENCENAME")
     @SequenceGenerator(name = "SEQ_SEQUENCENAME", sequenceName = "SEQ_SEQUENCENAME")
@@ -209,5 +210,21 @@ public class Edu005 {
 
     public void setExam_num(Integer exam_num) {
         this.exam_num = exam_num;
+    }
+
+    public String getXs() {
+        return xs;
+    }
+
+    public void setXs(String xs) {
+        this.xs = xs;
+    }
+
+    public String getLx() {
+        return lx;
+    }
+
+    public void setLx(String lx) {
+        this.lx = lx;
     }
 }

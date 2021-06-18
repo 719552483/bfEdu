@@ -61,6 +61,8 @@ public class StudentManageService {
     @Autowired
     private Edu007Dao edu007Dao;
     @Autowired
+    private Edu000Dao edu000Dao;
+    @Autowired
     private RedisUtils redisUtils;
 
 
@@ -586,15 +588,58 @@ public class StudentManageService {
         return resultVO;
     }
 
-    // 下载打印学生总表
-    public ResultVO printStudentGrade(String edu001_ID) {
+    // 下载打印学生总表-校验
+    public ResultVO printStudentGradeCheck(List<String> edu001_ID,String userId) {
         ResultVO resultVO;
-        Map map = new HashMap();
-        Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu001_ID));
-        map.put("studentInfo",edu001);
+        //根据用户ID查询二级学院权限信息
+        List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+        for(int i = 0;i<edu001_ID.size();i++){
+            Edu001 e = edu001Dao.findOne(Long.parseLong(edu001_ID.get(i)));
+            if(!departments.contains(e.getSzxb())){
+                resultVO = ResultVO.setFailed("您没有导出学生（"+e.getSzxbmc()+"）【"+e.getXm()+"】成绩的权限");
+                return resultVO;
+            }
+        }
+        resultVO = ResultVO.setSuccess("成功");
+        return resultVO;
+    }
 
-
-        resultVO = ResultVO.setSuccess("修改成功");
+    // 下载打印学生总表
+    public ResultVO printStudentGrade(List<String> edu001IDs) {
+        ResultVO resultVO;
+        List ll = new ArrayList();
+        for(int j = 0;j<edu001IDs.size();j++){
+            Map map = new HashMap();
+            String edu001_ID = edu001IDs.get(j);
+            Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu001_ID));
+            map.put("studentInfo",edu001);
+            List<Edu000> edu000List = edu000Dao.queryejdm("cklx");
+            map.put("kclx",edu000List);
+            List<String> xnList = edu005Dao.findXNListByEdu001ID(edu001_ID);
+//        if(xnList.size() == 0){
+//            resultVO = ResultVO.setFailed("暂无成绩列表");
+//        }
+            List gradeList = new ArrayList();
+            for(int i = 0;i<xnList.size();i++){
+                Map mm = new HashMap();
+                String xnid = xnList.get(i);
+                List<Edu005> edu005List = edu005Dao.findXNListByEdu001IDAndXNID(edu001_ID,xnid);
+                for(Edu005 e: edu005List){
+                    String xs = edu005Dao.findzxs(e.getEdu201_ID()+"");
+                    String lx = edu005Dao.findkclx(e.getEdu201_ID()+"");
+                    e.setXs(xs);
+                    e.setLx(lx);
+                }
+                String grade = edu005Dao.findGradeListByEdu001IDAndXNID(edu001_ID,xnid);
+                mm.put("xn",edu005List.get(0).getXn());
+                mm.put("getCredit",grade);
+                mm.put("gradeList",edu005List);
+                gradeList.add(mm);
+            }
+            map.put("detail",gradeList);
+            ll.add(map);
+        }
+        resultVO = ResultVO.setSuccess("成功",ll);
         return resultVO;
     }
 
