@@ -586,6 +586,19 @@ public class StudentManageService {
         return resultVO;
     }
 
+    // 下载打印学生总表
+    public ResultVO printStudentGrade(String edu001_ID) {
+        ResultVO resultVO;
+        Map map = new HashMap();
+        Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu001_ID));
+        map.put("studentInfo",edu001);
+
+
+        resultVO = ResultVO.setSuccess("修改成功");
+        return resultVO;
+    }
+
+
     // 批量修改免修状态
     public String updateMXStatusByCourse(List<String> courserName,String sylxbm,String term) {
         String resultVO;

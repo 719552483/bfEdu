@@ -87,11 +87,11 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据课程名称和生源类型更新免修状态
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE (select e.* from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME in ?1 and e.xnid = ?3 and is_mx != '01') a set a.is_mx = '01'", nativeQuery = true)
+    @Query(value = "UPDATE (select e.* from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME in ?1 and e.xnid = ?3 and (is_mx != '01' or is_mx is null)) a set a.is_mx = '01'", nativeQuery = true)
     void updateMXStatusByCourse(List<String> courserName,String sylxbm,String trem);
 
     //根据课程名称和生源类型查询成绩
-    @Query(value = "select count(*) from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME in ?1 and e.xnid = ?3 and is_mx != '01'", nativeQuery = true)
+    @Query(value = "select count(*) from edu005 e LEFT JOIN edu001 ee on e.EDU001_ID = ee.EDU001_ID where ee.sylxbm = ?2 and COURSE_NAME in ?1 and e.xnid = ?3 and (is_mx != '01' or is_mx is null)", nativeQuery = true)
     Integer selectMXStatusByCourse(List<String> courserName,String sylxbm,String trem);
 
     //查询溯源数据

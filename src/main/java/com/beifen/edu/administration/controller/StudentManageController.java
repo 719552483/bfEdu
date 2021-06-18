@@ -378,7 +378,15 @@ public class StudentManageController {
         return result;
     }
 
-
+    /**
+    * 下载打印学生总表
+    * */
+    @RequestMapping("/printStudentGrade")
+    @ResponseBody
+    public ResultVO printStudentGrade(@RequestParam("edu001_ID") String edu001_ID) {
+        ResultVO result =studentManageService.printStudentGrade(edu001_ID);
+        return result;
+    }
     /**
     * 修改免修状态
     * */
@@ -397,13 +405,7 @@ public class StudentManageController {
     public ResultVO updateMXStatusByCourse(@RequestParam("courserName") String courserName,@RequestParam("sylxbm") String sylxbm,@RequestParam("term") String term,@RequestParam("userId") String userId) {
         List<String> list = Arrays.asList(courserName.split(","));
         String result =studentManageService.updateMXStatusByCourse(list,sylxbm,term);
-        List<Edu005> edu005List = staffManageService.queryGrades2(userId);
-        ResultVO voresult;
-        if(edu005List.size()>0){
-            voresult = ResultVO.setSuccess(result,edu005List);
-        }else{
-            voresult = ResultVO.setFailed(result+",暂无可以录入成绩的课程");
-        }
+        ResultVO voresult = ResultVO.setSuccess(result);
         return voresult;
     }
 

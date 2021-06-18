@@ -2530,22 +2530,22 @@ function sendconfirmGradeFrees(){
 				requestError();
 			},
 			complete: function(xhr, status) {
+				startSearch();
 				requestComplete();
 			},
 			success : function(backjson) {
-				hideloding();
 				if (backjson.code === 200) {
-					var mxStudentds=backjson.data;
-					for (var i = 0; i < mxStudentds.length; i++) {
-						$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
-							id: mxStudentds[i].edu005_ID,
-							row: mxStudentds[i]
-						});
-					}
-
+					// var mxStudentds=backjson.data;
+					// for (var i = 0; i < mxStudentds.length; i++) {
+					// 	$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+					// 		id: mxStudentds[i].edu005_ID,
+					// 		row: mxStudentds[i]
+					// 	});
+					// }
 					toastr.success(backjson.msg);
-					$.hideModal();
+					$.hideModal("#remindModal",false);
 				} else {
+					hideloding();
 					toastr.warning(backjson.msg);
 				}
 			}
