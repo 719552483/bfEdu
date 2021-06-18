@@ -376,14 +376,6 @@ function research(){
 	drawStudentGradeEmptyTable();
 }
 
-// //预备总体成绩导出
-// function exportAllGrade(){
-// 	var currentJsmc=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
-// 	if(){
-//
-// 	}
-// }
-
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -406,13 +398,5 @@ function binBind() {
 		research();
 		e.stopPropagation();
 	});
-
-	//总体成绩导出
-	$('#exportAllGrade').unbind('click');
-	$('#exportAllGrade').bind('click', function(e) {
-		exportAllGrade();
-		e.stopPropagation();
-	});
-
 }
 
