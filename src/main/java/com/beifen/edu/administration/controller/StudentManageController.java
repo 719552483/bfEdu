@@ -379,12 +379,24 @@ public class StudentManageController {
     }
 
     /**
+     * 下载打印学生总表-校验
+     * */
+    @RequestMapping("/printStudentGradeCheck")
+    @ResponseBody
+    public ResultVO printStudentGradeCheck(@RequestParam("ids") String ids,@RequestParam("userId") String userId) {
+        List<String> studentIds = JSON.parseArray(ids, String.class);
+        ResultVO result =studentManageService.printStudentGradeCheck(studentIds,userId);
+        return result;
+    }
+
+    /**
     * 下载打印学生总表
     * */
     @RequestMapping("/printStudentGrade")
     @ResponseBody
-    public ResultVO printStudentGrade(@RequestParam("edu001_ID") String edu001_ID) {
-        ResultVO result =studentManageService.printStudentGrade(edu001_ID);
+    public ResultVO printStudentGrade(@RequestParam("ids") String ids) {
+        List<String> studentIds = JSON.parseArray(ids, String.class);
+        ResultVO result =studentManageService.printStudentGrade(studentIds);
         return result;
     }
     /**
