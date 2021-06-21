@@ -296,4 +296,8 @@ public class PageRelatedController {
 		return "questionnaire";
 	}
 
+	@RequestMapping("exportAllGrade")
+	public String exportAllGradePage() {
+		return "exportAllGrade";
+	}
 }

@@ -1,0 +1,30 @@
+#noneStart{
+    display: none;
+}
+
+.demo h3{
+   text-align: center;
+}
+
+.demo cite{
+    width: 50%;
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+.demo cite p{
+    width: 50%;
+    float: left;
+}
+
+.demo{
+    width: 50%;
+}
+
+img{
+    page-break-after:always;
+}
+

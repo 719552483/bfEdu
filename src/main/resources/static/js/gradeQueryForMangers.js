@@ -331,7 +331,7 @@ function wantChooseStudent(){
 	reReloadSearchsWithSelect(reObject);
 
 	//初始化表格
-	var oTable = new stuffStudentTable();
+	var oTable = new stuffStudentTable('radio');
 	oTable.Init();
 
 	//学生开始检索
@@ -356,8 +356,23 @@ function wantChooseStudent(){
 	});
 }
 
+var choosendStudent=new Array();
 //渲染学生表
-function stuffStudentTable(){
+function stuffStudentTable(cheeckType){
+	choosendStudent=new Array();
+	var cheeckObject=new Object();
+	if(cheeckType==='radio'){
+		cheeckObject={
+				field : 'radio',
+				radio : true
+		};
+	}else{
+		cheeckObject={
+				field : 'check',
+				checkbox : true
+		};
+	}
+
 	var oTableInit = new Object();
 	oTableInit.Init = function () {
 		$('#chooseStudentTable').bootstrapTable('destroy').bootstrapTable({
@@ -381,21 +396,37 @@ function stuffStudentTable(){
 			striped: true,
 			toolbar: '#toolbar',
 			showColumns: false,
+			onCheck : function(row) {
+				onCheckStudent(row);
+			},
+			onUncheck : function(row) {
+				onUncheckStudent(row);
+			},
+			onCheckAll : function(rows) {
+				onCheckAllStudent(rows);
+			},
+			onUncheckAll : function(rows,rows2) {
+				onUncheckAllStudent(rows2);
+			},
 			onPostBody: function() {
 				drawPagination(".chooseStudentTableArea", "学生信息");
 				drawSearchInput(".chooseStudentTableArea");
 				changeTableNoRsTip();
 				changeColumnsStyle(".chooseStudentTableArea", "学生信息");
 				toolTipUp(".myTooltip");
+				if(cheeckType!=='radio'){
+					//勾选已选数据
+					for (var i = 0; i < choosendStudent.length; i++) {
+						$("#chooseStudentTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendStudent[i].edu001_ID]})
+					}
+				}
 			},
 			onPageChange: function() {
 				drawPagination(".chooseStudentTableArea", "学生信息");
 			},
 			columns: [
+				cheeckObject,
 				{
-					field : 'radio',
-					radio : true
-				},{
 					field: 'edu001_ID',
 					title: '唯一标识',
 					align: 'center',
@@ -470,6 +501,60 @@ function stuffStudentTable(){
 	}
 
 	return oTableInit;
+}
+
+//单选学生
+function onCheckStudent(row){
+	if(choosendStudent.length<=0){
+		choosendStudent.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendStudent.length; i++) {
+			if(choosendStudent[i].edu001_ID===row.edu001_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendStudent.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckStudent(row){
+	if(choosendStudent.length<=1){
+		choosendStudent.length=0;
+	}else{
+		for (var i = 0; i < choosendStudent.length; i++) {
+			if(choosendStudent[i].edu001_ID===row.edu001_ID){
+				choosendStudent.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllStudent(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendStudent.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllStudent(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu001_ID);
+	}
+
+
+	for (var i = 0; i < choosendStudent.length; i++) {
+		if(a.indexOf(choosendStudent[i].edu001_ID)!==-1){
+			choosendStudent.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //得到学生检索对象
@@ -1827,12 +1912,104 @@ function stuffSituationNotPassTable(tableInfo){
 *成绩录入情况 end
 * */
 
+//预备学生个人总体成绩导出
+function exportAllGrade(){
+	var reObject = new Object();
+	reObject.InputIds = "#chooseStudent_className,#chooseStudent_StudentName,#chooseStudent_number";
+	reReloadSearchsWithSelect(reObject);
+
+	//初始化表格
+	var oTable = new stuffStudentTable('check');
+	oTable.Init();
+
+	//学生开始检索
+	$('#allStudent_StartSearch').unbind('click');
+	$('#allStudent_StartSearch').bind('click', function(e) {
+		allStudentStartSearch();
+		e.stopPropagation();
+	});
+
+	//学生重置检索
+	$('#allStudent_ReSearch').unbind('click');
+	$('#allStudent_ReSearch').bind('click', function(e) {
+		allStudentReSearch();
+		e.stopPropagation();
+	});
+
+	//确认选择学生 总体成绩导出
+	$('#confirmChoosedStudent').unbind('click');
+	$('#confirmChoosedStudent').bind('click', function(e) {
+		exportAllGradeConfirm();
+		e.stopPropagation();
+	});
+
+	$.showModal("#chooseStudentModal",true);
+}
+
+//确认选择导出学生
+function exportAllGradeConfirm(){
+	if(choosendStudent.length==0){
+		toastr.warning('请选择学生');
+		return;
+	}
+	window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
+
+	// var choosendStudentArray=new Array();
+	// for (var i = 0; i < choosendStudent.length; i++) {
+	// 	choosendStudentArray.push(choosendStudent[i].edu001_ID);
+	//
+	// }
+
+	// $.ajax({
+	// 	method : 'get',
+	// 	cache : false,
+	// 	url : "/printStudentGradeCheck",
+	// 	data: {
+	// 		"ids":JSON.stringify(choosendStudentArray),
+	// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+	// 	},
+	// 	dataType : 'json',
+	// 	beforeSend: function(xhr) {
+	// 		requestErrorbeforeSend();
+	// 	},
+	// 	error: function(textStatus) {
+	// 		requestError();
+	// 	},
+	// 	complete: function(xhr, status) {
+	// 		requestComplete();
+	// 	},
+	// 	success : function(backjson) {
+	// 		hideloding();
+	// 		if (backjson.code==200) {
+	// 			var exportAllGradeInfos = $.session.get('exportAllGradeInfos');
+	// 			if(exportAllGradeInfos==="undefined"||exportAllGradeInfos===undefined){
+	// 				$.session.set('exportAllGradeInfos', choosendStudentArray);
+	// 			}else{
+	// 				$.session.remove('exportAllGradeInfos');
+	// 				$.session.set('exportAllGradeInfos', choosendStudentArray);
+	// 			}
+	//
+	// 			window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
+	// 		} else {
+	// 			toastr.warning(backjson.msg);
+	// 		}
+	// 	}
+	// });
+}
+
 //初始化页面按钮绑定事件
 function btnBind(){
 	//重置检索
 	$('#research').unbind('click');
 	$('#research').bind('click', function(e) {
 		research();
+		e.stopPropagation();
+	});
+
+	//预备学生个人总体成绩导出
+	$('#exportAllGrade').unbind('click');
+	$('#exportAllGrade').bind('click', function(e) {
+		exportAllGrade();
 		e.stopPropagation();
 	});
 
