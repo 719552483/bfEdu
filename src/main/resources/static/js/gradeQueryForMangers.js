@@ -1952,49 +1952,49 @@ function exportAllGradeConfirm(){
 		toastr.warning('请选择学生');
 		return;
 	}
-	window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
+	// window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
 
-	// var choosendStudentArray=new Array();
-	// for (var i = 0; i < choosendStudent.length; i++) {
-	// 	choosendStudentArray.push(choosendStudent[i].edu001_ID);
-	//
-	// }
+	var choosendStudentArray=new Array();
+	for (var i = 0; i < choosendStudent.length; i++) {
+		choosendStudentArray.push(choosendStudent[i].edu001_ID);
 
-	// $.ajax({
-	// 	method : 'get',
-	// 	cache : false,
-	// 	url : "/printStudentGradeCheck",
-	// 	data: {
-	// 		"ids":JSON.stringify(choosendStudentArray),
-	// 		"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-	// 	},
-	// 	dataType : 'json',
-	// 	beforeSend: function(xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function(textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function(xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success : function(backjson) {
-	// 		hideloding();
-	// 		if (backjson.code==200) {
-	// 			var exportAllGradeInfos = $.session.get('exportAllGradeInfos');
-	// 			if(exportAllGradeInfos==="undefined"||exportAllGradeInfos===undefined){
-	// 				$.session.set('exportAllGradeInfos', choosendStudentArray);
-	// 			}else{
-	// 				$.session.remove('exportAllGradeInfos');
-	// 				$.session.set('exportAllGradeInfos', choosendStudentArray);
-	// 			}
-	//
-	// 			window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
-	// 		} else {
-	// 			toastr.warning(backjson.msg);
-	// 		}
-	// 	}
-	// });
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/printStudentGradeCheck",
+		data: {
+			"ids":JSON.stringify(choosendStudentArray),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code==200) {
+				var exportAllGradeInfos = $.session.get('exportAllGradeInfos');
+				if(exportAllGradeInfos==="undefined"||exportAllGradeInfos===undefined){
+					$.session.set('exportAllGradeInfos', choosendStudentArray);
+				}else{
+					$.session.remove('exportAllGradeInfos');
+					$.session.set('exportAllGradeInfos', choosendStudentArray);
+				}
+
+				window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //初始化页面按钮绑定事件

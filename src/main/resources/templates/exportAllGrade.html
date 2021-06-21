@@ -7,14 +7,15 @@
 	<script type="text/javascript" src="sripts/jQuery.print.js"></script>
 	<script type="text/javascript" src="sripts/html2canvas.js"></script>
 	<script type="text/javascript" src="js/exportAllGrade.js"></script>
+	<script type="text/javascript" src="sripts/jquerySession.js"></script>
 	<link href="css/exportAllGrade.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-    <button id="export">导出</button>
-	<button id="export2">导出</button>
-
-
+	<div class="buttonArea">
+		<button id="export">打印预览</button>
+		<button id="export2" class="noneStart">导出</button>
+	</div>
 
 	<div id="imgDiv">
 	</div>
@@ -27,17 +28,57 @@
 
 	</div>
 
-	<div class="demo" id="noneStart">
+	<div class="demo noneStart">
 		<h3>辽宁职业学院学生成绩总表</h3>
-		<cite><p>系/院：</p><p class="xy"></p></cite>
-		<cite><p>专业：</p><p></p></cite>
-		<cite><p>年级：</p><p></p></cite>
-		<cite><p>班级：</p><p></p></cite>
-		<br/>
-		<cite><p>学号：</p><p></p></cite>
-		<cite><p>姓名：</p><p></p></cite>
-		<cite><p>层次：</p><p></p></cite>
+		<img class="shuiyin" src="img/shuiyin.png"/>
+		<cite><p>姓名：</p><p class="xm"></p></cite>
+		<cite><p>层次：</p><p class="pyccmc"></p></cite>
+		<cite><p>系/院：</p><p class="szxbmc"></p></cite>
+		<cite><p>专业：</p><p class="zymc"></p></cite>
+		<cite><p>年级：</p><p class="njmc"></p></cite>
+		<cite><p>班级：</p><p class="xzbname"></p></cite>
+		<cite><p>学号：</p><p class="xh"></p></cite>
 		<div class="clear"></div>
+
+		<div class="tableArea"/>
+		<div class="clear"></div>
+
+		<div>(<span>课程类型代码:</span>&nbsp;<span class="kclxTxt"></span>)</div>
+
+		<div class="stampArea">
+			<div class="col2">
+				<div>毕业资格审查:</div>
+				<div class="rightTxt">二级学院(盖章)</div>
+				<div class="rightTxt"><span>年</span><span>月</span><span>日</span></div>
+			</div>
+			<div class="col2">
+				<div>毕业资格审查:</div>
+				<div class="rightTxt">教务处(盖章)</div>
+				<div class="rightTxt"><span>年</span><span>月</span><span>日</span></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+
+		<div>
+			印制日期：<span class="thisDate"></span>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<div class="tableDemo noneStart">
+		<table cellspacing="0">
+			<tr>
+				<th><div><span class="currentXn"></span></div></th>
+				<th><div>已获学分:<span class="getXf"></span></div></th>
+			</tr>
+			<tr>
+				<th style="width: 50%"><div><span></span>课程名称</div></th>
+				<th style="width: 15%"><div><span></span>类型</div></th>
+				<th style="width: 10%"><div><span></span>学时</div></th>
+				<th style="width: 10%"><div><span></span>取得学分</div></th>
+				<th style="width: 15%"><div><span></span>成绩</div></th>
+			</tr>
+		</table>
 	</div>
 </body>
 <!--		&lt;!&ndash; ajax请求masking &ndash;&gt;-->
