@@ -405,8 +405,8 @@ public class StudentManageController {
      * */
     @RequestMapping("/printStudentGradeOne")
     @ResponseBody
-    public ResultVO printStudentGradeOne(@RequestParam("studentId") String studentId,@RequestParam("xnid") String xnid) {
-//        List<String> studentIds = JSON.parseArray(ids, String.class);
+    public ResultVO printStudentGradeOne(@RequestParam("studentId") String ids,@RequestParam("xnid") String xnid) {
+        List<String> studentId = JSON.parseArray(ids, String.class);
         ResultVO result =studentManageService.printStudentGradeOne(studentId,xnid);
         return result;
     }

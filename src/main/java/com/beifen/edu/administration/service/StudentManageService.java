@@ -644,11 +644,11 @@ public class StudentManageService {
     }
 
     // 下载打印学生总表
-    public ResultVO printStudentGradeOne(String studentId,String xnid) {
+    public ResultVO printStudentGradeOne(List<String> studentIds,String xnid) {
         ResultVO resultVO;
             Map map = new HashMap();
             List ll = new ArrayList();
-            String edu001_ID = studentId;
+            String edu001_ID = studentIds.get(0);
             Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu001_ID));
             map.put("studentInfo",edu001);
             List<Edu000> edu000List = edu000Dao.queryejdm("cklx");
