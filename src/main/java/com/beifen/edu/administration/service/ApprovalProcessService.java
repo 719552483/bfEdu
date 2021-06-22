@@ -586,30 +586,58 @@ public class ApprovalProcessService {
 
     /**
      * 审批操作
-     * @param edu600BO
+     * @param edu600BOs
      * @return
      */
-    public boolean approvalOperation(Edu600BO edu600BO) {
-        boolean isSuccess = true;
-        Edu600 edu600 = new Edu600();
-        String approvalFlag = edu600BO.getApprovalFlag();
+//    public boolean approvalOperation(Edu600BO edu600BO) {
+//        boolean isSuccess = true;
+//        Edu600 edu600 = new Edu600();
+//        String approvalFlag = edu600BO.getApprovalFlag();
+//
+//        try {
+//            BeanUtils.copyProperties(edu600,edu600BO);
+//            //流转前保存审批记录
+//            edu600.setApprovalState(approvalFlag);
+//            Edu601 edu601 = saveApprovalHistory(edu600, approvalFlag);
+//            //进入流转将当前节点变为上一节点
+//            edu600.setLastRole(edu600BO.getCurrentRole());
+//            edu600.setLastExaminerKey(edu600BO.getExaminerkey());
+//            isSuccess = processFlow(edu600, approvalFlag);
+//            if(!isSuccess) {
+//                edu601Dao.delete(edu601.getEdu601Id());
+//            }
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//        return isSuccess;
+//    }
 
-        try {
-            BeanUtils.copyProperties(edu600,edu600BO);
-            //流转前保存审批记录
-            edu600.setApprovalState(approvalFlag);
-            Edu601 edu601 = saveApprovalHistory(edu600, approvalFlag);
-            //进入流转将当前节点变为上一节点
-            edu600.setLastRole(edu600BO.getCurrentRole());
-            edu600.setLastExaminerKey(edu600BO.getExaminerkey());
-            isSuccess = processFlow(edu600, approvalFlag);
-            if(!isSuccess) {
-                edu601Dao.delete(edu601.getEdu601Id());
+    public boolean approvalOperation(List<Edu600BO> edu600BOs) {
+        boolean isSuccess = true;
+        for(int i = 0;i<edu600BOs.size();i++){
+            Edu600BO edu600BO = edu600BOs.get(i);
+            Edu600 edu600 = new Edu600();
+            String approvalFlag = edu600BO.getApprovalFlag();
+
+            try {
+                BeanUtils.copyProperties(edu600,edu600BO);
+                //流转前保存审批记录
+                edu600.setApprovalState(approvalFlag);
+                Edu601 edu601 = saveApprovalHistory(edu600, approvalFlag);
+                //进入流转将当前节点变为上一节点
+                edu600.setLastRole(edu600BO.getCurrentRole());
+                edu600.setLastExaminerKey(edu600BO.getExaminerkey());
+                isSuccess = processFlow(edu600, approvalFlag);
+                if(!isSuccess) {
+                    edu601Dao.delete(edu601.getEdu601Id());
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
         }
         return isSuccess;
     }

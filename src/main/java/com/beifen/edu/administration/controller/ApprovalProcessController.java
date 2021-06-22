@@ -8,6 +8,7 @@ import com.beifen.edu.administration.domian.Edu601;
 import com.beifen.edu.administration.domian.Edu990;
 import com.beifen.edu.administration.service.ApprovalProcessService;
 import com.beifen.edu.administration.utility.ReflectUtils;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -100,13 +101,23 @@ public class ApprovalProcessController {
      * @return
      *
      */
+//    @RequestMapping(value = "approvalOperation",method = RequestMethod.GET)
+//    @ResponseBody
+//    public Object approvalOperation(@RequestParam("approvalText") String approvalText) {
+//        Map<String, Object> returnMap = new HashMap();
+//        JSONObject jsonObject = JSONObject.fromObject(approvalText);
+//        Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
+//        boolean result = approvalProcessService.approvalOperation(edu600BO);
+//        returnMap.put("result", result);
+//        return returnMap;
+//    }
+
     @RequestMapping(value = "approvalOperation",method = RequestMethod.GET)
     @ResponseBody
     public Object approvalOperation(@RequestParam("approvalText") String approvalText) {
         Map<String, Object> returnMap = new HashMap();
-        JSONObject jsonObject = JSONObject.fromObject(approvalText);
-        Edu600BO edu600BO = (Edu600BO) JSONObject.toBean(jsonObject, Edu600BO.class);
-        boolean result = approvalProcessService.approvalOperation(edu600BO);
+        List<Edu600BO> edu600BOs =  com.alibaba.fastjson.JSONObject.parseArray(approvalText, Edu600BO.class);
+        boolean result = approvalProcessService.approvalOperation(edu600BOs);
         returnMap.put("result", result);
         return returnMap;
     }

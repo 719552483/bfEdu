@@ -214,7 +214,7 @@ public class TeachingManageService {
         edu115.setBusinessState("nopass");
         edu115Dao.save(edu115);
         if(edu115.getEdu115_ID() == null) {
-            resultVO = ResultVO.setFailed("出差申请失败，请检查申请信息");
+            resultVO = ResultVO.setFailed("申请失败");
             return resultVO;
         }
         edu600.setBusinessKey(edu115.getEdu115_ID());
@@ -222,7 +222,7 @@ public class TeachingManageService {
         if (!isSuccess) {
             resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
         } else {
-            resultVO = ResultVO.setSuccess("出差申请成功");
+            resultVO = ResultVO.setSuccess("申请成功");
         }
         return resultVO;
     }
