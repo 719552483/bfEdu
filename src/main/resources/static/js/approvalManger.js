@@ -817,8 +817,11 @@ function reReloadSearchsTab2(){
 
 //审核的操作
 function approvaAction(row,approvalText,tableID){
-	row.approvalFlag=approvalText;
-	row.examinerkey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	for (var i = 0; i < row.length; i++) {
+		row[i].approvalFlag=approvalText;
+		row[i].examinerkey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	}
+
 	$.ajax({
 		method: 'get',
 		cache: false,

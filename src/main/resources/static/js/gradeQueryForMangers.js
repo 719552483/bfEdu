@@ -39,6 +39,7 @@ function stuffNj(){
 			stuffManiaSelect("#exportNoPassGrade_grade", str);
 			stuffManiaSelect("#gradeSituationGrade", str);
 			stuffManiaSelect("#gradeSituationGradeForNotPass", str);
+			stuffManiaSelect("#chooseStudent_xn", str);
 		}
 	});
 }
@@ -333,6 +334,7 @@ function wantChooseStudent(){
 	//初始化表格
 	var oTable = new stuffStudentTable('radio');
 	oTable.Init();
+	$(".chooseStudent_gradeType,.chooseStudent_xn").hide();
 
 	//学生开始检索
 	$('#allStudent_StartSearch').unbind('click');
@@ -588,6 +590,7 @@ function allStudentStartSearch(){
 function allStudentReSearch(){
 	var reObject = new Object();
 	reObject.InputIds = "#chooseStudent_className,#chooseStudent_StudentName,#chooseStudent_number";
+	reObject.normalSelectIds = "#chooseStudent_gradeType,#chooseStudent_xn";
 	reReloadSearchsWithSelect(reObject);
 	var oTable = new stuffStudentTable();
 	oTable.Init();
@@ -1916,11 +1919,24 @@ function stuffSituationNotPassTable(tableInfo){
 function exportAllGrade(){
 	var reObject = new Object();
 	reObject.InputIds = "#chooseStudent_className,#chooseStudent_StudentName,#chooseStudent_number";
+	reObject.normalSelectIds = "#chooseStudent_gradeType,#chooseStudent_xn";
 	reReloadSearchsWithSelect(reObject);
 
 	//初始化表格
 	var oTable = new stuffStudentTable('check');
 	oTable.Init();
+	$(".chooseStudent_gradeType,.chooseStudent_xn").show();
+
+	$("#chooseStudent_gradeType").change(function() {
+		if(getNormalSelectValue('chooseStudent_gradeType')==='all'){
+			$(".chooseStudent_xn").hide();
+			var reObject = new Object();
+			reObject.normalSelectIds = "#chooseStudent_xn";
+			reReloadSearchsWithSelect(reObject);
+		}else{
+			$(".chooseStudent_xn").show();
+		}
+	});
 
 	//学生开始检索
 	$('#allStudent_StartSearch').unbind('click');
@@ -1952,13 +1968,25 @@ function exportAllGradeConfirm(){
 		toastr.warning('请选择学生');
 		return;
 	}
-	// window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);
+
+	if(getNormalSelectValue('chooseStudent_gradeType')==='byXn'&&getNormalSelectValue('chooseStudent_xn')===''){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+	if(getNormalSelectValue('chooseStudent_xn')!==''&&choosendStudent.length>1){
+		toastr.warning('学年成绩导出只支持单个学生');
+		return;
+	}
 
 	var choosendStudentArray=new Array();
 	for (var i = 0; i < choosendStudent.length; i++) {
 		choosendStudentArray.push(choosendStudent[i].edu001_ID);
-
 	}
+
+	var typeObject=new Object();
+	typeObject.type=getNormalSelectValue('chooseStudent_gradeType');
+	typeObject.xn=getNormalSelectValue('chooseStudent_xn');
 
 	$.ajax({
 		method : 'get',
@@ -1987,6 +2015,14 @@ function exportAllGradeConfirm(){
 				}else{
 					$.session.remove('exportAllGradeInfos');
 					$.session.set('exportAllGradeInfos', choosendStudentArray);
+				}
+
+				var exportGradeType = $.session.get('exportGradeType');
+				if(exportGradeType==="undefined"||exportGradeType===undefined){
+					$.session.set('exportGradeType',JSON.stringify(typeObject));
+				}else{
+					$.session.remove('exportGradeType');
+					$.session.set('exportGradeType', JSON.stringify(typeObject));
 				}
 
 				window.open ("exportAllGrade.html?userId="+$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue);

@@ -1,34 +1,61 @@
 $(function() {
 	var ids=$.session.get('exportAllGradeInfos').split(',');
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/printStudentGrade",
-		data: {
-			"ids":JSON.stringify(ids)
-		},
-		dataType : 'json',
-		success : function(backjson) {
-			if (backjson.code==200) {
-				stuffTableInfo(backjson.data);
-
-				$('#export').unbind('click');
-				$('#export').bind('click', function(e) {
-					exportHtml();
-					e.stopPropagation();
-				});
-
-				$('#export2').unbind('click');
-				$('#export2').bind('click', function(e) {
-					aa();
-					e.stopPropagation();
-				});
-			} else {
-				alert(backjson.msg);
+	var exportGradeType=JSON.parse($.session.get('exportGradeType'));
+	if(exportGradeType.type==='all'){
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/printStudentGrade",
+			data: {
+				"ids":JSON.stringify(ids)
+			},
+			dataType : 'json',
+			success : function(backjson) {
+				if (backjson.code==200) {
+					stuffTableInfo(backjson.data);
+					btnbind();
+				} else {
+					alert(backjson.msg);
+				}
 			}
-		}
-	});
+		});
+	}else{
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/printStudentGradeOne",
+			data: {
+				"studentId":JSON.stringify(ids),
+				'xnid':exportGradeType.xn
+			},
+			dataType : 'json',
+			success : function(backjson) {
+				if (backjson.code==200) {
+					stuffTableInfo(backjson.data);
+					btnbind();
+				} else {
+					alert(backjson.msg);
+				}
+			}
+		});
+	}
+
 });
+
+//按钮事件绑定
+function btnbind(){
+	$('#export').unbind('click');
+	$('#export').bind('click', function(e) {
+		exportHtml();
+		e.stopPropagation();
+	});
+
+	$('#export2').unbind('click');
+	$('#export2').bind('click', function(e) {
+		aa();
+		e.stopPropagation();
+	});
+}
 
 //填充成绩信息
 function stuffTableInfo(testInfo){
