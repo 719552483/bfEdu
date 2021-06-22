@@ -647,6 +647,7 @@ public class StudentManageService {
     public ResultVO printStudentGradeOne(String studentId,String xnid) {
         ResultVO resultVO;
             Map map = new HashMap();
+            List ll = new ArrayList();
             String edu001_ID = studentId;
             Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu001_ID));
             map.put("studentInfo",edu001);
@@ -656,7 +657,7 @@ public class StudentManageService {
 //        if(xnList.size() == 0){
 //            resultVO = ResultVO.setFailed("暂无成绩列表");
 //        }
-//            List gradeList = new ArrayList();
+            List gradeList = new ArrayList();
 //            for(int i = 0;i<xnList.size();i++){
                 Map mm = new HashMap();
 //                String xnid = xnList.get(i);
@@ -671,10 +672,11 @@ public class StudentManageService {
                 mm.put("xn",edu005List.get(0).getXn());
                 mm.put("getCredit",grade);
                 mm.put("gradeList",edu005List);
-//                gradeList.add(mm);
+                gradeList.add(mm);
 //            }
-            map.put("detail",mm);
-        resultVO = ResultVO.setSuccess("成功",map);
+            map.put("detail",gradeList);
+            ll.add(map);
+        resultVO = ResultVO.setSuccess("成功",ll);
         return resultVO;
     }
 

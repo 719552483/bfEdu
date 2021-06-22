@@ -23,6 +23,8 @@ public class CourseGradeViewPO {
     private String ls;//老师
     private String lsmc;//老师姓名
     private String EDU201_ID;
+    private String xbmc;//学院名称
+    private String xbbm;//学院编码
 
     public String getEDU201_ID() {
         return EDU201_ID;
@@ -119,5 +121,21 @@ public class CourseGradeViewPO {
 
     public void setSfsqks(String sfsqks) {
         this.sfsqks = sfsqks;
+    }
+
+    public String getXbmc() {
+        return xbmc;
+    }
+
+    public void setXbmc(String xbmc) {
+        this.xbmc = xbmc;
+    }
+
+    public String getXbbm() {
+        return xbbm;
+    }
+
+    public void setXbbm(String xbbm) {
+        this.xbbm = xbbm;
     }
 }
