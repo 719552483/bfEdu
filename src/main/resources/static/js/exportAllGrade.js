@@ -1,7 +1,7 @@
 $(function() {
 	var ids=$.session.get('exportAllGradeInfos').split(',');
 	var exportGradeType=JSON.parse($.session.get('exportGradeType'));
-	if(exportGradeType.type==='all'){
+	if(exportGradeType.type==='all'||exportGradeType.type===''||typeof exportGradeType==='undefined'||exportGradeType==null){
 		$.ajax({
 			method : 'get',
 			cache : false,
@@ -111,6 +111,13 @@ function stuffTableInfo(testInfo){
 	}
 	$(".kclxTxt").html(kclxTxt);
 	$(".thisDate").html(timeStamp2String(thisDate));
+
+	var exportGradeType=JSON.parse($.session.get('exportGradeType'));
+	if(exportGradeType.type==='all'||exportGradeType.type===''||typeof exportGradeType==='undefined'||exportGradeType==null){
+		$(".stampArea").show();
+	}else{
+		$(".stampArea").hide();
+	}
 }
 
 
