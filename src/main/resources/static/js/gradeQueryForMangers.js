@@ -1639,6 +1639,13 @@ function stuffSituationTable(tableInfo){
 		},
 		columns: [
 			{
+				field: 'xbmc',
+				title: '学院名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
 				field: 'courseName',
 				title: '课程名称',
 				align: 'left',
