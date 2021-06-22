@@ -842,7 +842,9 @@ function approvaAction(row,approvalText,tableID){
 		success: function (backjson) {
 			hideloding();
 			if (backjson.result) {
-				$(tableID).bootstrapTable('removeByUniqueId',row.edu600Id);
+				for (var i = 0; i <row.length ; i++) {
+					$(tableID).bootstrapTable('removeByUniqueId',row[i].edu600Id);
+				}
 				drawPagination(".approvalMangerTableArea", "审批信息");
 				drawSearchInput(".approvalMangerTableArea");
 				toastr.success('审批流转成功');
