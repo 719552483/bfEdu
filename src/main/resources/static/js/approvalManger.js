@@ -89,17 +89,19 @@ function drawApprovalMangerEmptyTable(){
 	stuffApprovalMangerTable({});
 }
 
+var choosendApprovalManger=new Array();
 //渲染审批管理表
 function stuffApprovalMangerTable(tableInfo){
+	choosendApprovalManger=new Array();
 	window.releaseNewsEvents = {
 		'click #approvalInfo' : function(e, value, row, index) {
 			approvalInfo(row);
 		},
 		'click #agree' : function(e, value, row, index) {
-			agree(row);
+			agree(choosendApprovalManger);
 		},
 		'click #disagree' : function(e, value, row, index) {
-			disagree(row);
+			disagree(choosendApprovalManger);
 		},
 		'click #confirmOption' : function(e, value, row, index) {
 			confirmOption(row,index);
@@ -128,11 +130,26 @@ function stuffApprovalMangerTable(tableInfo){
 		striped : true,
 		toolbar : '#toolbar',
 		showColumns : true,
+		onCheck : function(row) {
+			onCheckApprovalManger(row);
+		},
+		onUncheck : function(row) {
+			onUncheckApprovalManger(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllApprovalManger(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllApprovalManger(rows2);
+		},
 		onDblClickRow : function(row, $element, field) {
 			changeOpinions(row, $element, field);
 		},
 		onPageChange : function() {
 			drawPagination(".approvalMangerTableArea", "审批信息");
+			for (var i = 0; i < choosendApprovalManger.length; i++) {
+				$("#approvalMangerTable").bootstrapTable("checkBy", {field:"edu600Id", values:[choosendApprovalManger[i].edu600Id]})
+			}
 		},
 		onPostBody: function() {
 			toolTipUp(".myTooltip");
@@ -143,6 +160,9 @@ function stuffApprovalMangerTable(tableInfo){
 			align : 'center',
 			sortable: true,
 			visible : false
+		},{
+			field: 'check',
+			checkbox: true
 		}, {
 			field : 'businessName',
 			title : '审批业务类型',
@@ -225,6 +245,59 @@ function stuffApprovalMangerTable(tableInfo){
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".approvalMangerTableArea", "审批信息");
+}
+
+//单选学生
+function onCheckApprovalManger(row){
+	if(choosendApprovalManger.length<=0){
+		choosendApprovalManger.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendApprovalManger.length; i++) {
+			if(choosendApprovalManger[i].edu600Id===row.edu600Id){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendApprovalManger.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckApprovalManger(row){
+	if(choosendApprovalManger.length<=1){
+		choosendApprovalManger.length=0;
+	}else{
+		for (var i = 0; i < choosendApprovalManger.length; i++) {
+			if(choosendApprovalManger[i].edu600Id===row.edu600Id){
+				choosendApprovalManger.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllApprovalManger(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendApprovalManger.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllApprovalManger(row){
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu600Id);
+	}
+
+
+	for (var i = 0; i < choosendApprovalManger.length; i++) {
+		if(a.indexOf(choosendApprovalManger[i].edu600Id)!==-1){
+			choosendApprovalManger.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //双击事件  改变审批意见
@@ -474,8 +547,13 @@ function stuffGradeEnteryArea(businessInfo){
 
 //审批通过
 function agree(row){
+	if(row.length==0){
+		toastr.warning("暂未勾选审批");
+		return;
+	}
+
 	$.showModal("#remindModal",true);
-	$(".remindType").html("该条审批记录");
+	$(".remindType").html("所选审批记录");
 	$(".remindActionType").html("审核通过");
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -486,8 +564,13 @@ function agree(row){
 
 //审批不通过
 function disagree(row){
+	if(row.length==0){
+		toastr.warning("暂未勾选审批");
+		return;
+	}
+
 	$.showModal("#remindModal",true);
-	$(".remindType").html("该条审批记录");
+	$(".remindType").html("所选审批记录");
 	$(".remindActionType").html("审核不通过");
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
