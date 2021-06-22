@@ -643,6 +643,41 @@ public class StudentManageService {
         return resultVO;
     }
 
+    // 下载打印学生总表
+    public ResultVO printStudentGradeOne(String studentId,String xnid) {
+        ResultVO resultVO;
+            Map map = new HashMap();
+            String edu001_ID = studentId;
+            Edu001 edu001 = edu001Dao.findOne(Long.parseLong(edu001_ID));
+            map.put("studentInfo",edu001);
+            List<Edu000> edu000List = edu000Dao.queryejdm("cklx");
+            map.put("kclx",edu000List);
+//            List<String> xnList = edu005Dao.findXNListByEdu001ID(edu001_ID);
+//        if(xnList.size() == 0){
+//            resultVO = ResultVO.setFailed("暂无成绩列表");
+//        }
+//            List gradeList = new ArrayList();
+//            for(int i = 0;i<xnList.size();i++){
+                Map mm = new HashMap();
+//                String xnid = xnList.get(i);
+                List<Edu005> edu005List = edu005Dao.findXNListByEdu001IDAndXNID(edu001_ID,xnid);
+                for(Edu005 e: edu005List){
+                    String xs = edu005Dao.findzxs(e.getEdu201_ID()+"");
+                    String lx = edu005Dao.findkclx(e.getEdu201_ID()+"");
+                    e.setXs(xs);
+                    e.setLx(lx);
+                }
+                String grade = edu005Dao.findGradeListByEdu001IDAndXNID(edu001_ID,xnid);
+                mm.put("xn",edu005List.get(0).getXn());
+                mm.put("getCredit",grade);
+                mm.put("gradeList",edu005List);
+//                gradeList.add(mm);
+//            }
+            map.put("detail",mm);
+        resultVO = ResultVO.setSuccess("成功",map);
+        return resultVO;
+    }
+
 
     // 批量修改免修状态
     public String updateMXStatusByCourse(List<String> courserName,String sylxbm,String term) {

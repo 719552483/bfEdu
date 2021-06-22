@@ -399,6 +399,17 @@ public class StudentManageController {
         ResultVO result =studentManageService.printStudentGrade(studentIds);
         return result;
     }
+
+    /**
+     * 下载打印学生单个学期成绩
+     * */
+    @RequestMapping("/printStudentGradeOne")
+    @ResponseBody
+    public ResultVO printStudentGradeOne(@RequestParam("studentId") String studentId,@RequestParam("xnid") String xnid) {
+//        List<String> studentIds = JSON.parseArray(ids, String.class);
+        ResultVO result =studentManageService.printStudentGradeOne(studentId,xnid);
+        return result;
+    }
     /**
     * 修改免修状态
     * */
