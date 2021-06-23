@@ -3168,10 +3168,14 @@ public class AdministrationPageService {
 			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentName(),-1,0,false);
 			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentCode(),-1,1,false);
 			for(int j = 0;j<size;j++){
-				if(edu005List.get(i*size+j).getGrade() != null && !"".equals(edu005List.get(i*size+j).getGrade())){
-					utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
+				if("01".equals(edu005List.get(i*size+j).getIsMx())){
+					utils.appendCell(sheet,i,"","免修",-1,j+2,false);
 				}else{
-					utils.appendCell(sheet,i,"","暂无成绩",-1,j+2,false);
+					if(edu005List.get(i*size+j).getGrade() != null && !"".equals(edu005List.get(i*size+j).getGrade())){
+						utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
+					}else{
+						utils.appendCell(sheet,i,"","暂无成绩",-1,j+2,false);
+					}
 				}
 			}
 		}

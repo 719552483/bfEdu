@@ -151,7 +151,8 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	// 根据班级查询学科
 	@org.springframework.transaction.annotation.Transactional
 	@Modifying(clearAutomatically = true)
-	@Query(value = "select * from Edu201 where class_id like %?1% and xnid = ?2 and sfypk='T' and sfsqks = 'T'", nativeQuery = true)
+//	@Query(value = "select * from Edu201 where class_id = ?1 and xnid = ?2 and sfypk='T' and sfsqks = 'T'", nativeQuery = true)
+	@Query(value = "select * from edu201 where edu201_id in (select edu201_id from edu204 where edu300_id = ?1) and xnid = ?2 and sfypk='T' and sfsqks = 'T'", nativeQuery = true)
 	List<Edu201> searchCourseByClass(String edu300_ID, String trem);
 
 	// 根据班级查询学科
