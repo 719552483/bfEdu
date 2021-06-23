@@ -118,6 +118,12 @@ function stuffStudentGradeTable(tableInfo) {
 				sortable: true,
 				formatter: gradeMatter
 			}, {
+				field: 'isMx',
+				title: '免修状态',
+				align: 'left',
+				sortable: true,
+				formatter: isMxMatter
+			}, {
 				field: 'isResit',
 				title: '是否补考',
 				align: 'center',
@@ -180,6 +186,39 @@ function stuffStudentGradeTable(tableInfo) {
 		}
 	}
 
+	function isMxMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined"||value==='0') {
+			return [
+				'<div class="myTooltip normalTxt" title="正常">正常</div>'
+			]
+				.join('');
+		} else if(value==='01'){
+			return [
+				'<div class="myTooltip normalTxt" title="免修">免修</div>'
+			]
+				.join('');
+		}else if(value==='02'){
+			return [
+				'<div class="myTooltip normalTxt" title="缓考">缓考</div>'
+			]
+				.join('');
+		}else if(value==='03'){
+			return [
+				'<div class="myTooltip normalTxt" title="休学">休学</div>'
+			]
+				.join('');
+		}else if(value==='04'){
+			return [
+				'<div class="myTooltip normalTxt" title="退学">退学</div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip normalTxt" title="缺考">缺考</div>'
+			]
+				.join('');
+		}
+	}
 
 	function gradeMatter(value, row, index) {
 		if (value==="T"||value==="F") {
