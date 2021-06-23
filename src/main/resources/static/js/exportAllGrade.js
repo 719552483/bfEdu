@@ -14,6 +14,7 @@ $(function() {
 				if (backjson.code==200) {
 					stuffTableInfo(backjson.data);
 					btnbind();
+					$('.title').html('辽宁职业学院学生成绩总表');
 				} else {
 					alert(backjson.msg);
 				}
@@ -33,6 +34,7 @@ $(function() {
 				if (backjson.code==200) {
 					stuffTableInfo(backjson.data);
 					btnbind();
+					$('.title').html('辽宁职业学院学生学年成绩表');
 				} else {
 					alert(backjson.msg);
 				}
@@ -88,13 +90,23 @@ function stuffTableInfo(testInfo){
 			var str='';
 			for (var a = 0; a < allGrades.length; a++) {
 				var gradeTxt;
-				allGrades[a].grade==null?gradeTxt='暂无':gradeTxt=allGrades[a].grade;
+				var isMx=allGrades[a].isMx;
+				if(isMx==null||isMx===''||typeof isMx==='undefined'){
+					allGrades[a].grade==null?gradeTxt='暂无':gradeTxt=allGrades[a].grade;
+				}else if(isMx==='01'){
+					 if(parseInt(allGrades[a].grade) >= 85){
+							gradeTxt=allGrades[a].grade;
+					 }else{
+						 gradeTxt='免修';
+					 }
+				}
+
 				var getCreditTxt;
 				allGrades[a].getCredit==null?getCreditTxt='0':getCreditTxt=allGrades[a].getCredit;
 				str='<tr>' +
 					'<th style="width: 50%"><div><span></span>'+allGrades[a].courseName+'</div></th>' +
 					'<th style="width: 15%"><div><span></span>'+allGrades[a].lx+'</div></th>' +
-					'<th style="width: 10%"><div><span></span>'+allGrades[a].xs+'</div></th>' +
+					'<th style="width: 10%"><div><span></span>'+allGrades[a].xs.split('.')[0]+'</div></th>' +
 					'<th style="width: 10%"><div><span></span>'+getCreditTxt+'</div></th>' +
 					'<th style="width: 15%"><div><span></span>'+gradeTxt+'</div></th>' +
 					'</tr>';+
