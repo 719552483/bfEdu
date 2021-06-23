@@ -691,6 +691,7 @@ public class StudentManageService {
 //        }
         int i = edu005Dao.selectMXStatusByCourse(courserName,sylxbm,term);
         edu005Dao.updateMXStatusByCourse(courserName,sylxbm,term);
+        edu005Dao.updateGetCreditByMXStatus();
         resultVO = "免修了"+i+"个学生";
         return resultVO;
     }
