@@ -2018,12 +2018,24 @@ public class AdministrationController {
 		String pyjhmc = searchObject.getString("pyjhmc");
 		String kcmc = searchObject.getString("kcmc");
 		String sszt = searchObject.getString("sszt");
-		String departmentCode = searchObject.getString("departmentCode");
+//		String departmentCode = searchObject.getString("departmentCode");
+
+		String levelCode = searchObject.getString("level");
+		String departmentCode = searchObject.getString("department");
+		String gradeCode = searchObject.getString("grade");
+		String majorCode = searchObject.getString("major");
+
+		Edu107 edu107 = new Edu107();
+		edu107.setEdu103(levelCode);
+		edu107.setEdu104(departmentCode);
+		edu107.setEdu105(gradeCode);
+		edu107.setEdu106(majorCode);
+
 		Edu201 edu201=new Edu201();
 		edu201.setPyjhmc(pyjhmc);
 		edu201.setKcmc(kcmc);
 		edu201.setSszt(sszt);
-		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu201,departmentCode,userId);
+		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu107,edu201,userId);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
 		return returnMap;

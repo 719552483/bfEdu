@@ -837,6 +837,10 @@ public class StaffManageService {
     //取消成绩确认标识和补考标识
     public void cancelGradeInfo(String edu008Id) {
         Edu008 edu008 = edu008Dao.findOne(Long.parseLong(edu008Id));
+        List<String> Edu005Ids = edu005Dao.cancelGradeInfoQuery(edu008.getXnid(),edu008.getCourseName(),edu008.getClassName());
+        //删除补考成绩表
+        edu0051Dao.deleteEdu0051sByEdu005Id(Edu005Ids);
+        //修改正考数据 （已得学分（getCredit），是否补考，是否确认，补考次数（exam_num））
         edu005Dao.cancelGradeInfo(edu008.getXnid(),edu008.getCourseName(),edu008.getClassName());
     }
 

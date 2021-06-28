@@ -27,4 +27,9 @@ public interface Edu0051Dao extends JpaRepository<Edu0051, Long>, JpaSpecificati
     @Query(value = "select * from EDU0051 where xnid = ?1 and course_name = ?2 ORDER BY CLASS_NAME,STUDENT_NAME,exam_num", nativeQuery = true)
     List<Edu0051> exportMakeUpGrade(String trem,String crouses);
 
+    //取消成绩确认删除
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from edu0051 where Edu005_id in ?1", nativeQuery = true)
+    void deleteEdu0051sByEdu005Id(List<String> ids);
 }

@@ -1996,19 +1996,66 @@ public class AdministrationPageService {
 
 
 	// 检索已发布的教学任务书
-	public List<Edu201> searchPutOutTasks(Edu201 edu201,String departmentCode,String userId) {
+	public List<Edu201> searchPutOutTasks(Edu107 edu107,Edu201 edu201,String userId) {
 		List<Edu201> entities = new ArrayList<>();
-		List<String> departments = new ArrayList<>();
+//		List<String> departments = new ArrayList<>();
 
-		//判断是否指定了二级学院
-		if(!"".equals(departmentCode)) {
-			departments.add(departmentCode);
-		} else {
-			//从redis中查询二级学院管理权限
-			departments.addAll((List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId));
+		List<String> departments = (List<String>) redisUtils.get(RedisDataConstant.DEPATRMENT_CODE + userId);
+
+		Specification<Edu107> Edu107Specification = new Specification<Edu107>() {
+			public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu107.getEdu103() != null && !"".equals(edu107.getEdu103())) {
+					predicates.add(cb.equal(root.<String>get("edu103"), edu107.getEdu103()));
+				}
+				if (edu107.getEdu104() != null && !"".equals(edu107.getEdu104())) {
+					predicates.add(cb.equal(root.<String>get("edu104"), edu107.getEdu104()));
+				}
+				if (edu107.getEdu105() != null && !"".equals(edu107.getEdu105())) {
+					predicates.add(cb.equal(root.<String>get("edu105"), edu107.getEdu105()));
+				}
+				if (edu107.getEdu106() != null && !"".equals(edu107.getEdu106())) {
+					predicates.add(cb.equal(root.<String>get("edu106"),  edu107.getEdu106()));
+				}
+				Path<Object> path = root.get("edu104");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <departments.size() ; i++) {
+					in.value(departments.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu107> relationEntities = edu107DAO.findAll(Edu107Specification);
+
+		if (relationEntities.size() == 0) {
+			return entities;
+		}
+		List<Long> edu107Ids = relationEntities.stream().map(Edu107::getEdu107_ID).collect(Collectors.toList());
+
+		Specification<Edu108> edu108specification = new Specification<Edu108>() {
+			public Predicate toPredicate(Root<Edu108> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				Path<Object> path = root.get("edu107_ID");//定义查询的字段
+				CriteriaBuilder.In<Object> in = cb.in(path);
+				for (int i = 0; i <edu107Ids.size() ; i++) {
+					in.value(edu107Ids.get(i));//存入值
+				}
+				predicates.add(cb.and(in));
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<Edu108> edu108List = edu108DAO.findAll(edu108specification);
+
+		if(edu108List.size() == 0) {
+			return entities;
 		}
 
-		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
+		List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
+
+//		List<Long> edu108Ids = edu108DAO.findAllBydepartments(departments);
 
 		if(edu108Ids.size() == 0) {
 			return entities;

@@ -62,8 +62,12 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //取消成绩确认和补考标识
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update edu005 t set t.is_resit = null , t.is_confirm = null where t.xnid = ?1 and t.course_name = ?2 and t.class_name = ?3", nativeQuery = true)
+    @Query(value = "update edu005 t set t.is_resit = null,t.is_confirm = null,t.GET_CREDIT= null,t.exam_num= null where t.xnid = ?1 and t.course_name = ?2 and t.class_name = ?3", nativeQuery = true)
     void cancelGradeInfo(String xnid, String courseName, String className);
+
+    //取消成绩确认和补考标识（查询）
+    @Query(value = "SELECT Edu005_id FROM EDU005 t where t.xnid = ?1 and t.course_name = ?2 and t.class_name = ?3", nativeQuery = true)
+    List<String> cancelGradeInfoQuery(String xnid, String courseName, String className);
 
     //根据班级、学科查询成绩
     @Transactional
