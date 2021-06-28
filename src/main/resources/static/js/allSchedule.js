@@ -1628,12 +1628,72 @@ function confirmChoosedTeacher(){
 	$.hideModal("#allClassMangersModal");
 }
 
+//预备周课表导出
+function exportScheduleForWeek(){
+	var xnid=getNormalSelectValue('semester');
+	var week=getNormalSelectValue('weekTime');
+	var xbbm=getNormalSelectValue('department');
+
+	if(xnid===""){
+		toastr.warning('请选择学年');
+		return;
+	}
+
+	if(week===""){
+		toastr.warning('请选择周数');
+		return;
+	}
+
+	var SearchCriteria=new Object();
+	SearchCriteria.xnid=xnid;
+	SearchCriteria.xbbm=xbbm;
+	SearchCriteria.week=week;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/ExportJwGetYearScheduleInfoByWeeksCheck",
+		data: {
+			"SearchCriteria":JSON.stringify(SearchCriteria)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/ExportJwGetYearScheduleInfoByWeeks";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(SearchCriteria)));
+				form.appendTo('body').submit().remove();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+
+}
+
 //初始化页面按钮绑定事件
 function btnBind() {
 	//开始检索
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
 		startSearch();
+		e.stopPropagation();
+	});
+
+	//周课表导出
+	$('#exportScheduleForWeek').unbind('click');
+	$('#exportScheduleForWeek').bind('click', function(e) {
+		exportScheduleForWeek();
 		e.stopPropagation();
 	});
 
