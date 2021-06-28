@@ -3219,7 +3219,11 @@ public class AdministrationPageService {
 					utils.appendCell(sheet,i,"","免修",-1,j+2,false);
 				}else{
 					if(edu005List.get(i*size+j).getGrade() != null && !"".equals(edu005List.get(i*size+j).getGrade())){
-						utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
+						if(edu005List.get(i*size+j).getExam_num() == null || edu005List.get(i*size+j).getExam_num() == 0){
+							utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
+						}else{
+							utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade()+"(补考)",-1,j+2,false);
+						}
 					}else{
 						utils.appendCell(sheet,i,"","暂无成绩",-1,j+2,false);
 					}
