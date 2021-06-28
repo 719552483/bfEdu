@@ -2066,8 +2066,8 @@ function startSearchPutOutTasks(){
 function mainAreaControl(){
 	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
 	var reObject = new Object();
-	reObject.InputIds = "#xzbmc,#kcmc";
-	reObject.normalSelectIds = "#department";
+	reObject.InputIds = "#putOutTaskKcmc";
+	reObject.normalSelectIds = "#putOutTaskLevel,#putOutTaskDepartment,#putOutTaskGrade,#putOutTaskMajor,#putOutTaskYear";
 	reReloadSearchsWithSelect(reObject);
 }
 
