@@ -1046,12 +1046,27 @@ function stuffCrouseClassTable(tableInfo,type){
 		chekType={
 			field: 'check',
 			checkbox: true
-		}
+		};
+		$("#chooseCruoseModal").find('.tools').show();
+		//全选
+		$('#allChoose').unbind('click');
+		$('#allChoose').bind('click', function(e) {
+			allChoose();
+			e.stopPropagation();
+		});
+
+		//全不选
+		$('#allNotChoose').unbind('click');
+		$('#allNotChoose').bind('click', function(e) {
+			allNotChoose();
+			e.stopPropagation();
+		});
 	}else{
 		chekType={
 			field : 'radio',
 			radio : true
-		}
+		};
+		$("#chooseCruoseModal").find('.tools').hide();
 	}
 	$('#chooseCrouseTable').bootstrapTable('destroy').bootstrapTable({
 		data : tableInfo,
@@ -1192,6 +1207,24 @@ function onUncheckAll(row,type){
 				i--;
 			}
 		}
+	}
+}
+
+//全选按钮
+function allChoose(){
+	var all = $("#chooseCrouseTable").bootstrapTable("getData");
+	for (var i = 0; i < all.length; i++) {
+		choosendCrouses.push(all[i]);
+		$("#chooseCrouseTable").bootstrapTable("checkBy", {field:"edu108_ID", values:[all[i].edu108_ID]});
+	}
+}
+
+//全不选按钮
+function allNotChoose(){
+	var all = $("#chooseCrouseTable").bootstrapTable("getData");
+	for (var i = 0; i < all.length; i++) {
+		choosendCrouses.length=0;
+		$("#chooseCrouseTable").bootstrapTable("uncheckBy", {field:"edu108_ID", values:[all[i].edu108_ID]});
 	}
 }
 
