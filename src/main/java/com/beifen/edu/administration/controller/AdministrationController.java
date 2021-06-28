@@ -2015,7 +2015,7 @@ public class AdministrationController {
 	public Object searchPutOutTasks(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("userId") String userId) {
 		Map<String, Object> returnMap = new HashMap();
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
-		String pyjhmc = searchObject.getString("pyjhmc");
+//		String pyjhmc = searchObject.getString("pyjhmc");
 		String kcmc = searchObject.getString("kcmc");
 		String sszt = searchObject.getString("sszt");
 //		String departmentCode = searchObject.getString("departmentCode");
@@ -2032,7 +2032,7 @@ public class AdministrationController {
 		edu107.setEdu106(majorCode);
 
 		Edu201 edu201=new Edu201();
-		edu201.setPyjhmc(pyjhmc);
+//		edu201.setPyjhmc(pyjhmc);
 		edu201.setKcmc(kcmc);
 		edu201.setSszt(sszt);
 		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu107,edu201,userId);

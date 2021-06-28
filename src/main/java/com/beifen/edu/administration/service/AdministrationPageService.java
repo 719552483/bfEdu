@@ -2065,9 +2065,9 @@ public class AdministrationPageService {
 		Specification<Edu201> specification = new Specification<Edu201>() {
 			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu201.getPyjhmc() != null && !"".equals(edu201.getPyjhmc())) {
-					predicates.add(cb.like(root.<String>get("pyjhmc"), '%' + edu201.getPyjhmc() + '%'));
-				}
+//				if (edu201.getPyjhmc() != null && !"".equals(edu201.getPyjhmc())) {
+//					predicates.add(cb.like(root.<String>get("pyjhmc"), '%' + edu201.getPyjhmc() + '%'));
+//				}
 
 				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
 					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu201.getKcmc() + '%'));
