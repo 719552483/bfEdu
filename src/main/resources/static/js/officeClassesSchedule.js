@@ -2013,16 +2013,24 @@ function comfirmModifyTask(row,index){
 
 //检索已发布任务书
 function startSearchPutOutTasks(){
-	var pyjhmc=$("#pyjhmc").val();
-	var kcmc=$("#kcmc").val();
-	var departmentCode=getNormalSelectValue("department");
-	if(pyjhmc===""&&kcmc===""&&departmentCode==""){
+	var kcmc=$("#putOutTaskKcmc").val();
+	var putOutTaskLevel=getNormalSelectValue("putOutTaskLevel");
+	var putOutTaskDepartment=getNormalSelectValue("putOutTaskDepartment");
+	var putOutTaskGrade=getNormalSelectValue("putOutTaskGrade");
+	var putOutTaskMajor=getNormalSelectValue("putOutTaskMajor");
+	var putOutTaskYear=getNormalSelectValue("putOutTaskYear");
+
+	if(kcmc===""&&putOutTaskLevel==""&&putOutTaskDepartment==""&&putOutTaskGrade==""
+		&&putOutTaskMajor===""&&putOutTaskYear===""
+	){
 		toastr.warning('检索条件为空');
 		return;
 	}
 	var serachObject=new Object();
-	serachObject.departmentCode=departmentCode;
-	pyjhmc===""?serachObject.pyjhmc="":serachObject.pyjhmc=pyjhmc;
+	serachObject.level=putOutTaskLevel;
+	serachObject.department=putOutTaskDepartment;
+	serachObject.grade=putOutTaskGrade;
+	serachObject.major=putOutTaskMajor;
 	kcmc===""?serachObject.kcmc="":serachObject.kcmc=kcmc;
 	serachObject.sszt="";
 	$.ajax({
@@ -2110,8 +2118,8 @@ function putOutTaskAreabtnBind() {
 	$('#research2').unbind('click');
 	$('#research2').bind('click', function(e) {
 		var reObject = new Object();
-		reObject.InputIds = "#pyjhmc,#kcmc";
-		reObject.normalSelectIds = "#department";
+		reObject.InputIds = "#kcmc";
+		reObject.normalSelectIds = "#putOutTaskLevel,#putOutTaskDepartment,#putOutTaskGrade,#putOutTaskMajor,#putOutTaskYear";
 		reReloadSearchsWithSelect(reObject);
 		showputedTask(false);
 		e.stopPropagation();
@@ -2121,6 +2129,42 @@ function putOutTaskAreabtnBind() {
 	$('#removePutOutTasks').bind('click', function(e) {
 		removePutOutTasks();
 		e.stopPropagation();
+	});
+}
+
+//获取学期信息
+function getSemesterInfo() {
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getAllXn",
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.result) {
+				if(backjson.termInfo.length===0){
+					toastr.warning('暂无学年信息');
+					return;
+				}
+				//初始化下拉框
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < backjson.termInfo.length; i++) {
+					str += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc + '</option>';
+				}
+				stuffManiaSelect("#putOutTaskYear", str);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
 	});
 }
 
@@ -2150,8 +2194,12 @@ function binBind() {
 	//查看已发布任务书
 	$('#showputedTask').unbind('click');
 	$('#showputedTask').bind('click', function(e) {
+		getSemesterInfo();
+		LinkageSelectPublic("#putOutTaskLevel","#putOutTaskDepartment","#putOutTaskGrade","#putOutTaskMajor");
 		showputedTask();
 		putOutTaskAreabtnBind();
+		$(".scheduleClassesSearchArea").hide();
+		$(".putOutTaskSearchArea").show();
 		e.stopPropagation();
 	});
 	
@@ -2170,6 +2218,8 @@ function binBind() {
 	$('#reback').unbind('click');
 	$('#reback').bind('click', function(e) {
 		mainAreaControl();
+		$(".scheduleClassesSearchArea").show();
+		$(".putOutTaskSearchArea").hide();
 		$("#putOutTasks").show();
 		e.stopPropagation();
 	});
