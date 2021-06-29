@@ -329,6 +329,18 @@ public class TeachingManageController {
     }
 
     /**
+     * 教师调课-分散学时（检验）
+     * @param
+     * @return
+     */
+    @RequestMapping("/changeScheduleScatteredCheck")
+    @ResponseBody
+    public ResultVO changeScheduleScatteredCheck(@RequestParam("edu207Id") String edu207Id,@RequestParam("week") String week) {
+        ResultVO result = teachingManageService.changeScheduleScatteredCheck(edu207Id,week);
+        return result;
+    }
+
+    /**
      * 老师检索分散学时课表
      * @param searchObject
      * @return
@@ -527,6 +539,72 @@ public class TeachingManageController {
                 e.printStackTrace();
             }
         result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
+     * 导出教务查询学院周课表
+     * @return
+     */
+    @RequestMapping("/ExportJwGetYearScheduleInfoByWeeks")
+    @ResponseBody
+    public ResultVO ExportJwGetYearScheduleInfoByWeeks(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xnid = jsonObject.getString("xnid");
+        String xbbm = jsonObject.getString("xbbm");
+        String week = jsonObject.getString("week");
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        String xbmc = "";
+        if (xbbm == null || "".equals(xbbm)){
+            xbmc = "全部学院";
+        }else{
+            xbmc = teachingManageService.selectXbmc(xbbm);
+        }
+
+
+        TimeTablePO timeTable = teachingManageService.ExportJwGetYearScheduleInfoByWeeks(xnid,xbbm,week);
+
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName=xbmc+"第"+week+"周集中学时导出";
+        }
+        //创建Excel文件
+
+        XSSFWorkbook workbook = teachingManageService.exportJwGetYearScheduleInfoByWeeks(timeTable,xbmc,week);
+        try {
+            utils.loadModal(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+    /**
+     * 导出教务查询学院周课表
+     * @return
+     */
+    @RequestMapping("/ExportJwGetYearScheduleInfoByWeeksCheck")
+    @ResponseBody
+    public ResultVO ExportJwGetYearScheduleInfoByWeeksCheck(@RequestParam String SearchCriteria) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xnid = jsonObject.getString("xnid");
+        String xbbm = jsonObject.getString("xbbm");
+        String week = jsonObject.getString("week");
+        TimeTablePO timeTable = teachingManageService.ExportJwGetYearScheduleInfoByWeeks(xnid,xbbm,week);
+        if (timeTable == null || timeTable.getNewInfo() == null){
+            result =  ResultVO.setFailed("学院本周暂无课表");
+        }else{
+            result = ResultVO.setSuccess("成功");
+        }
+
         return result;
     }
 

@@ -21,15 +21,19 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
     void deleteByscheduleId(String edu201Id);
 
     //根据edu201ID查询分散学识安排
-    @Query(value = "select e.* from Edu207 e where e.edu201_ID = ?1", nativeQuery = true)
+    @Query(value = "select e.* from Edu207 e where e.edu201_ID = ?1 order by to_number(week)", nativeQuery = true)
     List<Edu207> findAllByEdu201Id(String edu201Id);
 
     //根据edu201ID集合查询分散学识安排
-    @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1 and e.week = ?2", nativeQuery = true)
+    @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1 and e.week = ?2 order by to_number(week)", nativeQuery = true)
     List<Edu207> findAllByEdu201Ids(List<String> edu201Ids,String week);
 
+    //根据edu201ID和周数查询分散学识安排
+    @Query(value = "select e.* from Edu207 e where e.edu201_ID = ?1 and e.week = ?2 order by to_number(week)", nativeQuery = true)
+    List<Edu207> findAllByEdu201IdAndWeek(String edu201Id,String week);
+
     //根据edu201ID集合查询学年分散学识安排
-    @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1", nativeQuery = true)
+    @Query(value = "select e.* from Edu207 e where e.edu201_ID in ?1 order by to_number(week)", nativeQuery = true)
     List<Edu207> findAllByEdu201IdsWithoutWeek(List<String> edu201Ids);
 
     //根据edu201ID集合查询学年分散学识安排

@@ -985,6 +985,19 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    //教师调课-分散学时（检验）
+    public ResultVO changeScheduleScatteredCheck(String edu207Id,String week) {
+        ResultVO resultVO;
+        Edu207 edu207 = edu207Dao.findOne(Long.parseLong(edu207Id));
+        List<Edu207> edu207List =  edu207Dao.findAllByEdu201IdAndWeek(edu207.getEdu201_ID(),week);
+        if(edu207List.size() == 0){
+            resultVO = ResultVO.setSuccess("可以调课");
+        }else{
+            resultVO = ResultVO.setFailed("目标周数已有分散学时安排");
+        }
+        return resultVO;
+    }
+
     //老师检索分散学时课表
     public ResultVO searchScatteredClassByTeacher(TimeTablePO timeTablePO) {
         ResultVO resultVO;
@@ -1605,8 +1618,295 @@ public class TeachingManageService {
     }
 
 
+    //导出教务查询学院周课表
+    public TimeTablePO ExportJwGetYearScheduleInfoByWeeks(String xnid,String xbmc,String week) {
+        TimeTablePO timeTable = new TimeTablePO();
+        List<Edu107> edu107List = new ArrayList<>();
+        if(xbmc == null || "".equals(xbmc)){
+            edu107List = edu107Dao.findAll();
+        }else{
+            edu107List = edu107Dao.departmentMatchGrade(xbmc);
+        }
+        if (edu107List.size() == 0) {
+            return timeTable;
+        }
+        List<Long> edu107Ids = edu107List.stream().map(Edu107::getEdu107_ID).collect(Collectors.toList());
+        List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107Ids);
+        if(edu108IdList.size() == 0) {
+            return timeTable;
+        }
+        List edu108Ids = utils.heavyListMethod(edu108IdList);
+        Specification<ScheduleViewPO> scheduleViewPOSpecification = new Specification<ScheduleViewPO>() {
+            public Predicate toPredicate(Root<ScheduleViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(cb.equal(root.<String>get("xnid"),  xnid));
+                predicates.add(cb.equal(root.<String>get("week"),  week));
+                Path<Object> path = root.get("courseId");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i <edu108Ids.size() ; i++) {
+                    in.value(edu108Ids.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
 
-    //导出分散学时
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<ScheduleViewPO> scheduleViewPOList = scheduleViewDao.findAll(scheduleViewPOSpecification);
+        if(scheduleViewPOList.size() == 0) {
+            return timeTable;
+        } else {
+            List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
+            for (ScheduleViewPO o : scheduleViewPOList) {
+                SchoolTimetablePO s = new SchoolTimetablePO();
+                try {
+                    utils.copyParm(o,s);
+                    schoolTimetableList.add(s);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            List<SchoolTimetablePO> schoolTimetableLists = replaceScheduleweek(schoolTimetableList);
+            timeTable.setNewInfo(timeTablePackage(schoolTimetableLists));
+        }
+        return timeTable;
+    }
+
+    //导出教务查询学院周课表
+    public XSSFWorkbook exportJwGetYearScheduleInfoByWeeks(TimeTablePO timeTable,String xbmc,String week) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet(xbmc+"第"+week+"周集中课时详情");
+            XSSFRow firstRow = sheet.createRow(0);// 第一行
+            XSSFCell cells[] = new XSSFCell[1];
+            // 所有标题数组
+            String[] titles = new String[]{"", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+
+            // 循环设置标题
+            for (int i = 0; i < titles.length; i++) {
+                cells[0] = firstRow.createCell(i);
+                cells[0].setCellValue(titles[i]);
+            }
+            List<Map> newInfo = timeTable.getNewInfo();
+            int j = 1;
+            int k = 0;
+            for (int i = 0; i < newInfo.size(); i++) {
+                j = 1;
+                utils.appendCell(sheet, k, "", "第" + (i + 1) + "节", -1, 0, false);
+
+                //星期日
+                List<SchoolTimetablePO> sunday = (List<SchoolTimetablePO>) newInfo.get(i).get("sunday");
+                if (sunday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < sunday.size(); y++) {
+                        SchoolTimetablePO p = sunday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 7, false, cs);
+                        kk++;
+                    }
+                    if (sunday.size() > j) {
+                        j = sunday.size();
+                    }
+                }
+                //星期一
+                List<SchoolTimetablePO> monday = (List<SchoolTimetablePO>) newInfo.get(i).get("monday");
+                if (monday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < monday.size(); y++) {
+                        SchoolTimetablePO p = monday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 1, false, cs);
+                        kk++;
+                    }
+                    if (monday.size() > j) {
+                        j = monday.size();
+                    }
+                }
+                //星期二
+                List<SchoolTimetablePO> tuesday = (List<SchoolTimetablePO>) newInfo.get(i).get("tuesday");
+                if (tuesday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < tuesday.size(); y++) {
+                        SchoolTimetablePO p = tuesday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 2, false, cs);
+                        kk++;
+                    }
+                    if (tuesday.size() > j) {
+                        j = tuesday.size();
+                    }
+                }
+                //星期三
+                List<SchoolTimetablePO> wednesday = (List<SchoolTimetablePO>) newInfo.get(i).get("wednesday");
+                if (wednesday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < wednesday.size(); y++) {
+                        SchoolTimetablePO p = wednesday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 3, false, cs);
+                        kk++;
+                    }
+                    if (wednesday.size() > j) {
+                        j = wednesday.size();
+                    }
+                }
+                //星期四
+                List<SchoolTimetablePO> thursday = (List<SchoolTimetablePO>) newInfo.get(i).get("thursday");
+                if (thursday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < thursday.size(); y++) {
+                        SchoolTimetablePO p = thursday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 4, false, cs);
+                        kk++;
+                    }
+                    if (thursday.size() > j) {
+                        j = thursday.size();
+                    }
+                }
+                //星期五
+                List<SchoolTimetablePO> friday = (List<SchoolTimetablePO>) newInfo.get(i).get("friday");
+                if (friday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < friday.size(); y++) {
+                        SchoolTimetablePO p = friday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 5, false, cs);
+                        kk++;
+                    }
+                    if (friday.size() > j) {
+                        j = friday.size();
+                    }
+                }
+                //星期六
+                List<SchoolTimetablePO> saturday = (List<SchoolTimetablePO>) newInfo.get(i).get("saturday");
+                if (saturday != null) {
+                    int kk = 0;
+                    for (int y = 0; y < saturday.size(); y++) {
+                        SchoolTimetablePO p = saturday.get(y);
+                        ArrayList<String> arrayList = new ArrayList<String>();
+                        arrayList.add(p.getClassName());
+                        arrayList.add(p.getCourseName());
+                        arrayList.add(p.getSzz());
+                        arrayList.add("任课教师：" + p.getTeacherName());
+                        String name = p.getBaseTeacherName();
+                        if (name == null) {
+                            name = "";
+                        }
+                        arrayList.add("助教：" + name);
+                        arrayList.add(p.getClassRoom() + "-" + p.getPoint());
+                        arrayList.add("地址：" + p.getLocalAddress());
+                        CellStyle cs = workbook.createCellStyle();
+                        cs.setWrapText(true);
+                        String content = String.join("\n", arrayList);
+                        utils.appendCell(sheet, k + kk, "", content, -1, 6, false, cs);
+                        kk++;
+                    }
+                    if (saturday.size() > j) {
+                        j = saturday.size();
+                    }
+                }
+                k = k + j;
+            }
+
+            sheet.setColumnWidth(0, 15 * 256);
+            sheet.setColumnWidth(1, 30 * 256);
+            sheet.setColumnWidth(2, 30 * 256);
+            sheet.setColumnWidth(3, 30 * 256);
+            sheet.setColumnWidth(4, 30 * 256);
+            sheet.setColumnWidth(5, 30 * 256);
+            sheet.setColumnWidth(6, 30 * 256);
+            sheet.setColumnWidth(7, 30 * 256);
+        return workbook;
+    }
+
+    //导出集中学时课表
     public XSSFWorkbook exportJwGetYearScheduleInfoByClass(List<TimeTablePO> timeTables) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         for(int ii = 0;ii<timeTables.size();ii++) {
