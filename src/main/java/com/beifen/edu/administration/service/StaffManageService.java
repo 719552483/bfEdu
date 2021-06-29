@@ -314,7 +314,7 @@ public class StaffManageService {
                     inEdu201.value(edu201ids.get(i));//存入值
                 }
                 predicates.add(cb.and(inEdu201));
-
+                query.orderBy(cb.desc(root.get("className")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };

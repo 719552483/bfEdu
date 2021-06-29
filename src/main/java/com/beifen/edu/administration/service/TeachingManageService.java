@@ -998,6 +998,44 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    //教师调课-分散学时
+    public ResultVO changeScheduleScattered(String edu207Id,String week,String count) {
+        ResultVO resultVO;
+        Edu207 edu207 = edu207Dao.findOne(Long.parseLong(edu207Id));
+        if(edu207 == null){
+            resultVO = ResultVO.setFailed("选择分散课时暂无，请刷新后重试！");
+            return resultVO;
+        }
+        //全部调整
+        if(edu207.getClassHours() == Integer.parseInt(count)){
+            edu207.setWeek(week);
+            edu207Dao.save(edu207);
+            resultVO = ResultVO.setSuccess("调课成功");
+        }else{
+            //原数据课时减少
+            edu207.setClassHours(edu207.getClassHours()-Integer.parseInt(count));
+            edu207Dao.save(edu207);
+            //目标周新增数据
+            Edu207 edu207new = new Edu207();
+            edu207new.setClassHours(Integer.parseInt(count));
+            edu207new.setCourseContent(edu207.getCourseContent());
+            edu207new.setCourseName(edu207.getCourseName());
+            edu207new.setEdu201_ID(edu207.getEdu201_ID());
+            edu207new.setTeachingPlatform(edu207.getTeachingPlatform());
+            edu207new.setWeek(week);
+            edu207new.setClassId(edu207.getClassId());
+            edu207new.setClassName(edu207.getClassName());
+            edu207new.setCourseType(edu207.getCourseType());
+            edu207new.setEdu108_ID(edu207.getEdu108_ID());
+            edu207Dao.save(edu207new);
+            resultVO = ResultVO.setSuccess("调课成功");
+        }
+//        edu207.setWeek(week);
+//        edu207Dao.save(edu207);
+
+        return resultVO;
+    }
+
     //老师检索分散学时课表
     public ResultVO searchScatteredClassByTeacher(TimeTablePO timeTablePO) {
         ResultVO resultVO;
