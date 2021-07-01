@@ -97,6 +97,11 @@ function stuffWaitTaskTable(tableInfo){
 		    sidePagination: "client",
 			toolbar: '#toolbar',
 			showColumns: true,
+			exportDataType: "all",
+			showExport: true,      //是否显示导出
+			exportOptions:{
+				fileName: '未排课信息导出'  //文件名称
+			},
 			onPageChange: function() {
 				drawPagination(".WaitTaskTableArea", "教学任务书");
 			},
@@ -117,6 +122,12 @@ function stuffWaitTaskTable(tableInfo){
 				{
 					field: 'pyjhmc',
 					title: '培养计划名称',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				},{
+					field: 'edu104_mc',
+					title: '所属系部',
 					align: 'left',
 					sortable: true,
 					formatter: paramsMatter
