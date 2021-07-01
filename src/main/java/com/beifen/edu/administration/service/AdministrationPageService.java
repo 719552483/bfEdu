@@ -872,6 +872,12 @@ public class AdministrationPageService {
 			Integer jxbrs = 0;
 			edu201.setSszt("passing");
 			edu201.setSffbjxrws("T");
+			//添加学院信息
+			Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
+			Edu107 edu107 = edu107DAO.findOne(edu108.getEdu107_ID());
+			edu201.setEdu104_ID(edu107.getEdu104());
+			edu201.setEdu104_mc(edu107.getEdu104mc());
+
 			if (SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())) {
 				Edu300 one = edu300DAO.findOne(edu201.getClassId());
 				jxbrs += one.getZxrs();
@@ -1577,7 +1583,7 @@ public class AdministrationPageService {
 			edu005.setXnid(edu201.getXnid());
 			edu005.setIsExamCrouse(edu201.getSfxylcj());
 			edu005.setCredit(edu201.getXf());
-			edu005.setEdu101_ID(Long.parseLong(edu201.getLs()));
+//			edu005.setEdu101_ID(Long.parseLong(edu201.getLs()));
 			edu005Dao.save(edu005);
 		}
 	}
@@ -1832,13 +1838,14 @@ public class AdministrationPageService {
 	public ResultVO addEdu101Id() {
 		ResultVO resultVO;
 
-		List<Edu005> list = edu005Dao.addEdu101Id();
+		List<Edu201> list = edu201DAO.findAll();
 		for (int i = 0;i<list.size();i++){
-			Edu005 edu005 = list.get(i);
-			Long edu201 = edu005.getEdu201_ID();
-			Edu201 e = edu201DAO.findOne(edu201);
-			edu005.setEdu101_ID(Long.parseLong(e.getLs()));
-			edu005Dao.save(edu005);
+			Edu201 edu201 = list.get(i);
+			Edu108 edu108 = edu108DAO.findOne(edu201.getEdu108_ID());
+			Edu107 edu107 = edu107DAO.findOne(edu108.getEdu107_ID());
+			edu201.setEdu104_ID(edu107.getEdu104());
+			edu201.setEdu104_mc(edu107.getEdu104mc());
+			edu201DAO.save(edu201);
 		}
 
 		resultVO = ResultVO.setSuccess("更新成功");

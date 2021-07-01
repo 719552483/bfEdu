@@ -1359,13 +1359,13 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 为005表里的数据修改edu101的值
+	 * 为201表里的数据追加学院信息
 	 *
 	 * @return returnMap
 	 */
-	@RequestMapping("addEdu101Id")
+	@RequestMapping("addEdu201Id")
 	@ResponseBody
-	public ResultVO addEdu101Id() {
+	public ResultVO addEdu201Id() {
 		ResultVO result = administrationPageService.addEdu101Id();
 		return result;
 	}

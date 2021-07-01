@@ -46,6 +46,8 @@ public class Edu201 {
 	private String fbsj; //发布时间
 	private String pksj; //排课时间
 	private String jksj; //结课时间
+	private String Edu104_ID;//学院id
+	private String Edu104_mc;//学院名称
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -288,5 +290,21 @@ public class Edu201 {
 
 	public void setJksj(String jksj) {
 		this.jksj = jksj;
+	}
+
+	public String getEdu104_ID() {
+		return Edu104_ID;
+	}
+
+	public void setEdu104_ID(String edu104_ID) {
+		Edu104_ID = edu104_ID;
+	}
+
+	public String getEdu104_mc() {
+		return Edu104_mc;
+	}
+
+	public void setEdu104_mc(String edu104_mc) {
+		Edu104_mc = edu104_mc;
 	}
 }
