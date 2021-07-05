@@ -2287,7 +2287,8 @@ function confirmRmovePutted(removeArray){
 		cache : false,
 		url : "/removeTeachingSchedule",
 		data: {
-			"scheduleId":JSON.stringify(removeArray)
+			"scheduleId":JSON.stringify(removeArray),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
