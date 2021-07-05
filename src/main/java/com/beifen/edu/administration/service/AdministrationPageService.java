@@ -57,6 +57,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu201Dao edu201DAO;
 	@Autowired
+	private Edu999Dao edu999DAO;
+	@Autowired
 	private Edu2011Dao edu2011DAO;
 	@Autowired
 	private Edu202Dao edu202DAO;
@@ -2138,15 +2140,28 @@ public class AdministrationPageService {
 	}
 
 	//根据Id删除排课计划
-	public void removeTeachingSchedule(String scheduleId) {
+	public void removeTeachingSchedule(String scheduleId,String user_ID) {
 		Edu202 edu202 = edu202DAO.findEdu202ById(scheduleId);
 		edu201DAO.taskPutScheduleFalse(edu202.getEdu201_ID().toString());
+		addLog(user_ID,"removeTeachingSchedule","edu201Id:"+edu202.getEdu201_ID());
+
 		edu203Dao.deleteByscheduleId(scheduleId);
 		edu005Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 		edu202DAO.delete(Long.parseLong(scheduleId));
 		edu207Dao.deleteByscheduleId(edu202.getEdu201_ID().toString());
 
 		edu993Dao.deleteByBusiness(edu202.getEdu201_ID().toString(),NoteConstant.TASK_NOTE);
+	}
+
+	//记录操作日志
+	public void addLog(String user_ID,String interface_name,String param_value){
+		Edu999 edu999 = new Edu999();
+		edu999.setInterface_name(interface_name);
+		edu999.setParam_value(param_value);
+		edu999.setUser_ID(user_ID);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		edu999.setTime(df.format(new Date()));
+		edu999DAO.save(edu999);
 	}
 
 	//根据条件检索已排课信息
@@ -3508,6 +3523,9 @@ public class AdministrationPageService {
 					edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
 					if (edu005 != null) {
 						if(gradeCell != null){
+							if("01".equals(edu005.getIsMx()) || Double.parseDouble(edu005.getGrade()) >= 60.00){
+								continue;
+							}
 							if("通过".equals(gradeCell.toString())){
 								edu005.setGrade("T");
 							}else if("不通过".equals(gradeCell.toString())){
