@@ -2252,6 +2252,7 @@ function removePutted(row){
 	$.showModal("#remindModal",true);
 	$(".remindType").html("已排课表");
 	$(".remindActionType").html("删除");
+	$('.removeTeachingScheduleTips').show();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray=new Array();
@@ -2270,6 +2271,7 @@ function removePutteds(){
 	$.showModal("#remindModal",true);
 	$(".remindType").html("选择的已排课表");
 	$(".remindActionType").html("删除");
+	$('.removeTeachingScheduleTips').show();
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		var removeArray=new Array();
