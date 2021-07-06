@@ -410,7 +410,8 @@ function confirmChoose(info) {
 		data:{
 			"changInfo":JSON.stringify(info.changInfo),
 			"oldchangInfo":JSON.stringify(info.oldchangInfo),
-			"type":info.type
+			"type":info.type,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -992,7 +993,8 @@ function sendChangeFsInfo(row,newInfo){
 		data:{
 			"edu207Id":row.edu207_ID,
 			"week":newInfo.weekTime.toString(),
-			"count":newInfo.xs.toString()
+			"count":newInfo.xs.toString(),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
