@@ -63,6 +63,8 @@ public class StaffManageService {
     @Autowired
     Edu008Dao edu008Dao;
     @Autowired
+    Edu999Dao edu999DAO;
+    @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
     CourseCheckOnDao courseCheckOnDao;
@@ -615,6 +617,17 @@ public class StaffManageService {
         return resultVO;
     }
 
+    //记录操作日志
+    public void addLog(String user_ID,String interface_name,String param_value){
+        Edu999 edu999 = new Edu999();
+        edu999.setInterface_name(interface_name);
+        edu999.setParam_value(param_value);
+        edu999.setUser_ID(user_ID);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        edu999.setTime(df.format(new Date()));
+        edu999DAO.save(edu999);
+    }
+
 
     //确认成绩并生成补考标识
     public ResultVO confirmGrade(Edu005 edu005, String userKey) {
@@ -695,6 +708,9 @@ public class StaffManageService {
 
 
         edu005Dao.updateConfirmGrade(confirmIdList);
+
+        String param = "courseName:"+edu005.getCourseName()+",xnid:"+edu005.getXnid()+",className:"+edu005.getClassName();
+        addLog(userKey,"confirmGrade",param);
 
         Specification<Edu005> newSpecification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

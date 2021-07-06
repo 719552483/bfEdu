@@ -72,6 +72,8 @@ public class TeachingManageService {
     @Autowired
     Edu207Dao edu207Dao;
     @Autowired
+    Edu999Dao edu999DAO;
+    @Autowired
     Edu400Dao edu400Dao;
     @Autowired
     Edu402Dao edu402Dao;
@@ -838,8 +840,12 @@ public class TeachingManageService {
     }
 
     //教师调课
-    public ResultVO changeSchedule(Edu203 edu203,Edu203 edu203old,String type) {
+    public ResultVO changeSchedule(Edu203 edu203,Edu203 edu203old,String type,String user_id) {
         ResultVO resultVO;
+        String param = "type:"+type+",edu101_id:"+edu203old.getEdu101_id()+",newEdu101_id:"+edu203.getEdu101_id()+",edu202_ID:"+edu203old.getEdu202_ID()+",week:"
+                +edu203old.getWeek()+",xqid:"+edu203old.getXqid()+",kjid:"+edu203old.getKjid()+",newWeek:"
+                +edu203.getWeek()+",newXqid:"+edu203.getXqid()+",newKjid:"+edu203.getKjid();
+        addLog(user_id,"changeScheduleNew",param);
         if("1".equals(type)){
             Specification<Edu203> specification = new Specification<Edu203>() {
                 public Predicate toPredicate(Root<Edu203> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -998,8 +1004,18 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    public void addLog(String user_ID,String interface_name,String param_value){
+        Edu999 edu999 = new Edu999();
+        edu999.setInterface_name(interface_name);
+        edu999.setParam_value(param_value);
+        edu999.setUser_ID(user_ID);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        edu999.setTime(df.format(new Date()));
+        edu999DAO.save(edu999);
+    }
+
     //教师调课-分散学时
-    public ResultVO changeScheduleScattered(String edu207Id,String week,String count) {
+    public ResultVO changeScheduleScattered(String edu207Id,String week,String count,String user_id) {
         ResultVO resultVO;
         Edu207 edu207 = edu207Dao.findOne(Long.parseLong(edu207Id));
         if(edu207 == null){
@@ -1007,12 +1023,15 @@ public class TeachingManageService {
             return resultVO;
         }
         //全部调整
+        String param = "";
         if(edu207.getClassHours() == Integer.parseInt(count)){
+            param = "edu207Id:"+edu207.getEdu207_ID()+",oldWeek:"+edu207.getWeek()+",newWeek:"+week+",ALL";
             edu207.setWeek(week);
             edu207Dao.save(edu207);
             resultVO = ResultVO.setSuccess("调课成功");
         }else{
             //原数据课时减少
+
             edu207.setClassHours(edu207.getClassHours()-Integer.parseInt(count));
             edu207Dao.save(edu207);
             //目标周新增数据
@@ -1028,11 +1047,13 @@ public class TeachingManageService {
             edu207new.setCourseType(edu207.getCourseType());
             edu207new.setEdu108_ID(edu207.getEdu108_ID());
             edu207Dao.save(edu207new);
+            param = "oldEdu207Id:"+edu207.getEdu207_ID()+",newEdu207Id:"+edu207new.getEdu207_ID();
             resultVO = ResultVO.setSuccess("调课成功");
         }
 //        edu207.setWeek(week);
 //        edu207Dao.save(edu207);
 
+        addLog(user_id,"changeScheduleScattered",param);
         return resultVO;
     }
 

@@ -28,6 +28,7 @@ public class Edu301 {
 	private String bhxzbmc;  //包含的行政班名称
 	private Integer jxbrs;  //教学班人数
 	private String yxbz;//有效标志
+	private String time;//教学班合成时间
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -162,5 +163,13 @@ public class Edu301 {
 
 	public void setYxbz(String yxbz) {
 		this.yxbz = yxbz;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 }

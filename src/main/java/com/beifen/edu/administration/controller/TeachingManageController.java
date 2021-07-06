@@ -303,13 +303,13 @@ public class TeachingManageController {
      * @param changInfo
      * @return
      */
-    @RequestMapping("/changeSchedule")
-    @ResponseBody
-    public ResultVO changeSchedule(@RequestParam("changInfo") String changInfo) {
-        Edu203 edu203 = JSON.parseObject(changInfo, Edu203.class);
-        ResultVO result = teachingManageService.changeScheduleOne(edu203);
-        return result;
-    }
+//    @RequestMapping("/changeSchedule")
+//    @ResponseBody
+//    public ResultVO changeSchedule(@RequestParam("changInfo") String changInfo) {
+//        Edu203 edu203 = JSON.parseObject(changInfo, Edu203.class);
+//        ResultVO result = teachingManageService.changeScheduleOne(edu203);
+//        return result;
+//    }
 
     /**
      * 教师调课
@@ -320,11 +320,12 @@ public class TeachingManageController {
     @ResponseBody
     public ResultVO changeScheduleNew (@RequestParam("changInfo") String changInfo,//修改后对象信息
                                    @RequestParam("oldchangInfo") String oldchangInfo,//原对象信息 需要有Edu202_id和Edu101_id
-                                   @RequestParam("type") String type//操作类型：（1.调一周的课程，2.调一天的课程，3.调某一节课程）
+                                   @RequestParam("type") String type,//操作类型：（1.调一周的课程，2.调一天的课程，3.调某一节课程）
+                                   @RequestParam("userId") String user_id
     ) {
         Edu203 edu203 = JSON.parseObject(changInfo, Edu203.class);
         Edu203 edu203old = JSON.parseObject(oldchangInfo, Edu203.class);
-        ResultVO result = teachingManageService.changeSchedule(edu203,edu203old,type);
+        ResultVO result = teachingManageService.changeSchedule(edu203,edu203old,type,user_id);
         return result;
     }
 
@@ -347,8 +348,8 @@ public class TeachingManageController {
      */
     @RequestMapping("/changeScheduleScattered")
     @ResponseBody
-    public ResultVO changeScheduleScattered(@RequestParam("edu207Id") String edu207Id,@RequestParam("week") String week,@RequestParam("count") String count) {
-        ResultVO result = teachingManageService.changeScheduleScattered(edu207Id,week,count);
+    public ResultVO changeScheduleScattered(@RequestParam("edu207Id") String edu207Id,@RequestParam("week") String week,@RequestParam("count") String count,@RequestParam("userId") String user_id) {
+        ResultVO result = teachingManageService.changeScheduleScattered(edu207Id,week,count,user_id);
         return result;
     }
 

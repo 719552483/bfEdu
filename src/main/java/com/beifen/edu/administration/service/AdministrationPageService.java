@@ -636,6 +636,8 @@ public class AdministrationPageService {
 			edu301.setZymc(utils.listToString(utils.heavyListMethod(zymcList),','));
 			edu301.setYxbz("1");
 			edu301.setJxbrs(count);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+			edu301.setTime(df.format(new Date()));
 			edu301DAO.save(edu301);
 
 			edu301s.add(edu301);
