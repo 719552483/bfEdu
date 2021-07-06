@@ -1082,6 +1082,12 @@ function stuffTeachingClassTable(tableInfo) {
 			align : 'left',
 			sortable: true,
 			formatter : paramsMatter
+		},{
+			field : 'time',
+			title : '创建时间',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
 		}, {
 			field : 'action',
 			title : '操作',
