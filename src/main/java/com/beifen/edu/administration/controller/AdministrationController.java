@@ -2107,11 +2107,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("removeTeachingSchedule")
 	@ResponseBody
-	public Object removeTeachingSchedule(@RequestParam("scheduleId") String scheduleId) {
+	public Object removeTeachingSchedule(@RequestParam("scheduleId") String scheduleId,@RequestParam("userId" +
+			"") String user_id) {
 		Map<String, Object> returnMap = new HashMap();
 		List<String> scheduleIds  = com.alibaba.fastjson.JSONObject.parseArray(scheduleId, String.class);
 		for (String s : scheduleIds) {
-			administrationPageService.removeTeachingSchedule(s);
+			administrationPageService.removeTeachingSchedule(s,user_id);
 		}
 		returnMap.put("result", true);
 		return returnMap;
@@ -2145,17 +2146,17 @@ public class AdministrationController {
 
 	/**
 	 * 课程表查询
-	 * @param searchCondition
+	 * @param searchCondition`
 	 * @return
 	 */
-	@RequestMapping("searchSchoolTimetable")
-	@ResponseBody
-	public Object searchSchoolTimetable(@RequestParam("searchCondition") String searchCondition) {
-		Map<String, Object> returnMap = new HashMap();
-		administrationPageService.removeTeachingSchedule(searchCondition);
-		returnMap.put("result", true);
-		return returnMap;
-	}
+//	@RequestMapping("searchSchoolTimetable")
+//	@ResponseBody
+//	public Object searchSchoolTimetable(@RequestParam("searchCondition") String searchCondition) {
+//		Map<String, Object> returnMap = new HashMap();
+//		administrationPageService.removeTeachingSchedule(searchCondition);
+//		returnMap.put("result", true);
+//		return returnMap;
+//	}
 
 	/**
 	 * 根据关联字段查询二级代码

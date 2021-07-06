@@ -30,11 +30,11 @@ public class Edu005 {
     private Integer exam_num;//补考次数
     private String xs;//学时（导出时使用）
     private String lx;//类型（导出时使用）
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SEQUENCENAME")
-    @SequenceGenerator(name = "SEQ_SEQUENCENAME", sequenceName = "SEQ_SEQUENCENAME")
-    @Column(name = "Edu005_ID")
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
+    @SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
+    @Column(name = "Edu005_ID")
 
     public Long getEdu005_ID() {
         return Edu005_ID;
