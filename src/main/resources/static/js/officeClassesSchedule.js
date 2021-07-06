@@ -1476,10 +1476,11 @@ function showputedTask(IsmainAreaControl){
 			requestError();
 		},
 		complete: function(xhr, status) {
+			getSemesterInfo();
+			LinkageSelectPublic("#putOutTaskLevel","#putOutTaskDepartment","#putOutTaskGrade","#putOutTaskMajor");
 			requestComplete();
 		},
 		success : function(backjson) {
-			hideloding();
 			if (backjson.code === 200) {
 				$("#putOutTasks").hide();
 				stuffPutOutTaskTable(backjson.data);
@@ -1491,6 +1492,7 @@ function showputedTask(IsmainAreaControl){
 					mainAreaControl();
 				}
 			} else {
+				hideloding();
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -2194,8 +2196,6 @@ function binBind() {
 	//查看已发布任务书
 	$('#showputedTask').unbind('click');
 	$('#showputedTask').bind('click', function(e) {
-		getSemesterInfo();
-		LinkageSelectPublic("#putOutTaskLevel","#putOutTaskDepartment","#putOutTaskGrade","#putOutTaskMajor");
 		showputedTask();
 		putOutTaskAreabtnBind();
 		$(".scheduleClassesSearchArea").hide();
