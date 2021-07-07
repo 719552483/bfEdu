@@ -63,12 +63,14 @@ function comfirmLogin(username,password) {
 			if(backjson.code===200) {
 				var userInfo = $.session.get('userInfo');
 				if(userInfo==="undefined"||userInfo===undefined){
+					$.session.set('courseCount', backjson.data.courseCount);
 					$.session.set('week', backjson.data.week);
 					$.session.set('userInfo', backjson.data.UserInfo);
 					$.session.set('allAuthority', backjson.data.authoritysInfo);
 					var auArray=JSON.parse(backjson.data.authoritysInfo);
 					$.session.set('authoritysInfo',JSON.stringify(auArray[0]));
 				}else{
+					$.session.set('courseCount', backjson.data.courseCount);
 					$.session.set('week', backjson.data.week);
 					$.session.set('userInfo', backjson.data.UserInfo);
 					$.session.set('allAuthority', backjson.data.authoritysInfo);

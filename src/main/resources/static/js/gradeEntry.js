@@ -2562,6 +2562,118 @@ function sendconfirmGradeFrees(){
 	});
 }
 
+//成绩未确认查询
+function notComfrimQuery(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseGetGradeByTeacher",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffnotComfrimQueryTable(backjson.data);
+				$.showModal('#notComfrimQueryModal',true);
+			}else{
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充课程表
+function stuffnotComfrimQueryTable(tableInfo){
+	$('#notComfrimQueryTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		showExport: false,      //是否显示导出
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".notComfrimQueryTableTableArea", "未确认课程信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field : 'id',
+				title: '唯一标识',
+				align : 'center',
+				sortable: true,
+				visible : false
+			},{
+				field : 'className',
+				title : '班级名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'courseName',
+				title : '课程名称',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			},{
+				field : 'xn',
+				title : '学年',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'xbmc',
+				title : '二级学院',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'isExamCrouse',
+				title : '是否为考试课',
+				visible : false,
+				align : 'left',
+				sortable: true,
+				formatter : isExamCrouseMatter
+			}]
+	});
+
+	function isExamCrouseMatter(value, row, index) {
+		if(typeof value === 'undefined'||value==null||value===""){
+			return [ '<div class="myTooltip normalTxt" title="否">否</div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip" title="是">是</div>' ]
+				.join('');
+		}
+	}
+
+	drawPagination(".notComfrimQueryTableTableArea", "未确认课程信息");
+	drawSearchInput(".notComfrimQueryTableTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".notComfrimQueryTableTableArea", "未确认课程信息");
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -2692,6 +2804,13 @@ function binBind() {
 	$('#confirmGradeFrees').unbind('click');
 	$('#confirmGradeFrees').bind('click', function(e) {
 		sendconfirmGradeFrees(1);
+		e.stopPropagation();
+	});
+
+	//成绩未确认查询
+	$('#notComfrimQuery').unbind('click');
+	$('#notComfrimQuery').bind('click', function(e) {
+		notComfrimQuery();
 		e.stopPropagation();
 	});
 }

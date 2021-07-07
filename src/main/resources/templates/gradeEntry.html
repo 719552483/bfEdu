@@ -61,6 +61,7 @@
 							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>成绩确认</li>
 							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>取消成绩确认</li>
 							<li class="click" id="wantGradeFrees"><span><img src="images/d07.png" style="width: 24px;"/></span>批量免修</li>
+							<li class="click" id="notComfrimQuery"><span><img src="images/icon01.png" style="width: 24px;"/></span>成绩未确认查询</li>
 							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
 						<ul class="toolbar1 manytools">
@@ -605,6 +606,25 @@
 					<div class="modal-footer tipbtn">
 						<input name="" type="button" class="sure confirmTimeOut" value="确定"/>&nbsp;
 						<input name="" type="button" class="timeOutCanle" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- 成绩未确认查询Modal -->
+	<div class="modal fade bs-example-modal-lg" id="notComfrimQueryModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">成绩未确认班级查询</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="notComfrimQueryTableTableArea">
+							<table class="tablelist myTableStyle" id="notComfrimQueryTable" data-unique-id="id" style="margin-top: 10px;"></table>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="cancel" value="返回"/>
 					</div>
 				</div>
 			</div>

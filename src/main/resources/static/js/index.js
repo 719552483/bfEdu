@@ -1008,6 +1008,16 @@ function chartListener(){
 	});
 }
 
+//填充下周课节数量
+function stuffCourseCount(){
+	var courseCount =$.session.get('courseCount');
+	if(courseCount==='F'){
+		return;
+	}
+	$('.courseCountArea').show();
+	$('.courseCount').html(courseCount);
+}
+
 $(function() {
 	judgementPWDisModifyFromImplements();
 	loadUserScdlsj();
@@ -1018,6 +1028,7 @@ $(function() {
 	loadChoosendShortcuts();
 	getChartInfo();
 	chartListener();
+	stuffCourseCount();
 
 	//返回首页事件绑定
 	$('.backIndex').unbind('click');
