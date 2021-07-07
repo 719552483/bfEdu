@@ -203,7 +203,7 @@ public class SystemManageService {
                     java.util.Date beginDate=sdf.parse(startDate);
                     int i = DateUtils.calcWeekOffset(beginDate,date)+1;
                     returnMap.put("week", i);
-                    if(xnid != null){
+                    if(xnid != null && !"学生".equals(edu990.getJs())){
                         String userKey = edu990.getUserKey();
                         int ii = teachingScheduleViewDao.findCourseCountByXnAndEdu101IdAndWeek(userKey,xnid,(i+1)+"");
                         returnMap.put("courseCount", ii);
