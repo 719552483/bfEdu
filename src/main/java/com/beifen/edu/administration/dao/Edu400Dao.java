@@ -29,4 +29,7 @@ public interface Edu400Dao extends  JpaRepository<Edu400, Long>,JpaSpecification
 
     @Query(value = "SELECT kssj FROM EDU400 where kssj <= ?1 and jssj >= ?1",nativeQuery = true)
     String findKssjByNow(String date);
+
+    @Query(value = "SELECT edu400_id FROM EDU400 where kssj <= ?1 and jssj >= ?1",nativeQuery = true)
+    String findXnidByNow(String date);
 }

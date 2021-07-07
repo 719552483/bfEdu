@@ -67,6 +67,9 @@ public class SystemManageService {
     Edu994Dao edu994Dao;
     @Autowired
     Edu400Dao edu400Dao;
+    @Autowired
+    TeachingScheduleViewDao teachingScheduleViewDao;
+
 
 
     // 检查有没有系统用户
@@ -194,17 +197,27 @@ public class SystemManageService {
             java.util.Date date=new java.util.Date();
             String str=sdf.format(date);
             String startDate = edu400Dao.findKssjByNow(str);
+            String xnid = edu400Dao.findXnidByNow(str);
             if(startDate != null){
                 try {
                     java.util.Date beginDate=sdf.parse(startDate);
                     int i = DateUtils.calcWeekOffset(beginDate,date)+1;
                     returnMap.put("week", i);
+                    if(xnid != null){
+                        String userKey = edu990.getUserKey();
+                        int ii = teachingScheduleViewDao.findCourseCountByXnAndEdu101IdAndWeek(userKey,xnid,(i+1)+"");
+                        returnMap.put("courseCount", ii);
+                    }else{
+                        returnMap.put("courseCount", "F");
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }else{
                 returnMap.put("week", 0);
+                returnMap.put("courseCount", "F");
             }
+
             returnMap.put("UserInfo", JSON.toJSONString(edu990));
             returnMap.put("authoritysInfo", JSON.toJSONString(authoritys));
             // 更新用户上次登陆时间

@@ -518,6 +518,19 @@ public class StaffManageController {
     }
 
     /**
+     * 查询未确认成绩班级名单
+     * @param userId
+     * @return
+     */
+    @RequestMapping("searchCourseGetGradeByTeacher")
+    @ResponseBody
+    public ResultVO searchCourseGetGradeByTeacher(@RequestParam("userId") String userId) {
+
+        ResultVO result = staffManageService.searchCourseGetGradeByTeacher(userId);
+        return result;
+    }
+
+    /**
      * 录入或修改成绩
      *
      * @return returnMap

@@ -3,6 +3,7 @@ package com.beifen.edu.administration.service;
 import com.beifen.edu.administration.PO.BigDataTeacherTypePO;
 import com.beifen.edu.administration.PO.CheckOnDetailPO;
 import com.beifen.edu.administration.PO.CourseCheckOnPO;
+import com.beifen.edu.administration.PO.CourseGradeViewPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
@@ -72,6 +73,8 @@ public class StaffManageService {
     RedisUtils redisUtils;
     @Autowired
     Edu115Dao edu115Dao;
+    @Autowired
+    CourseGradeViewDao courseGradeViewDao;
 
 
     ReflectUtils utils = new ReflectUtils();
@@ -234,7 +237,17 @@ public class StaffManageService {
         return edu005List;
     }
 
-
+    public ResultVO searchCourseGetGradeByTeacher(String userId){
+        ResultVO resultVO;
+        String userKey = edu990Dao.findOne(Long.parseLong(userId)).getUserKey();
+        List<CourseGradeViewPO> courseGradeViewPOList = courseGradeViewDao.searchCourseGetGradeByTeacher(userKey);
+        if(courseGradeViewPOList.size() == 0){
+            resultVO = ResultVO.setFailed("暂无需要成绩确认的班级");
+        }else{
+            resultVO = ResultVO.setSuccess("共"+courseGradeViewPOList.size()+"个需要成绩确认的班级",courseGradeViewPOList);
+        }
+        return resultVO;
+    }
 
     //查询需要录入成绩学生
     public ResultVO queryGrades(String userId, Edu001 edu001, Edu005 edu005) {

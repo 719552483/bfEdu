@@ -28,5 +28,8 @@ public interface TeachingScheduleViewDao extends JpaRepository<SchoolTimetablePO
 
     @Query(value = "select * from TEACHING_SCHEDULE_VIEW where CLASS_ID in ?1 and kjid = ?4 and xqid = ?3 and week = ?2 and xnid = ?5",nativeQuery = true)
     List<SchoolTimetablePO> findCountByClass(List<String> findCountByClass,String week,String xqid,String kjid,String xnid);
+
+    @Query(value = "select count(*) from TEACHING_SCHEDULE_VIEW where EDU101_ID = ?1 and XNID = ?2 and week = ?3",nativeQuery = true)
+    int findCourseCountByXnAndEdu101IdAndWeek(String edu101_id,String xnid,String week);
 }
 
