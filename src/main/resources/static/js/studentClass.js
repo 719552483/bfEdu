@@ -616,8 +616,7 @@ function stuffScheduleClassesTable2(tableInfo) {
 			}
 		]
 	});
-	changeColumnsStyle(".fsScheduleAreaTableArea2", "已排集中授课课表");
-	drawSearchInput(".fsScheduleAreaTableArea2");
+	drawSearchInput(".scheduleClassesTableArea2");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 
