@@ -305,6 +305,7 @@ public class SystemManageService {
             resultVO = ResultVO.setFailed("角色名重复，请重新输入");
         } else {
             edu991Dao.save(edu991);
+            edu995Dao.deleteByEdu991Id(edu991.getBF991_ID()+"");
             Edu995 edu995 = new Edu995();
             edu995.setBF991_ID(edu991.getBF991_ID());
             edu995.setJs(edu991.getJs());
