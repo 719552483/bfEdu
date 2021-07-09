@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
 
 import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
@@ -1310,10 +1311,9 @@ public class AdministrationPageService {
 	public ResultVO comfirmScheduleCheck(String edu201Id,List<Edu203> edu203List) {
 		ResultVO resultVO;
 		Edu201 ee = edu201DAO.findOne(Long.parseLong(edu201Id));
+		//班级ids
 		List<String> classIds = edu204Dao.searchEdu300IdByEdu201Id(edu201Id);
-		for(int i = 0;i<classIds.size();i++){
-			String classId = classIds.get(i);
-		}
+		//获取每周的数量
 		Map<Integer,Integer> map = new HashMap();
 		for (int i = 0;i<edu203List.size();i++){
 			Edu203 e = edu203List.get(i);
@@ -1328,13 +1328,32 @@ public class AdministrationPageService {
 			}
 		}
 		for(Integer key:map.keySet()){
-//			edu403DAO.queryXZCount();
-			for(int i = 0;i<classIds.size();i++){
-				String classId = classIds.get(i);
+			String kssx = edu403DAO.queryXZCount(ee.getXnid(),key+"");
+			//有课时限制时，进行课时判断
+			if(kssx != null){
+				//如果排课直接超过限制，则直接返回
+				if(map.get(key).toString().equals(kssx)){
+					resultVO = ResultVO.setFailed("第"+key+"周排课课时超过排课限制（限制为："+kssx+"节）");
+					return resultVO;
+				}else{
+					//班级ids
+					for(int i = 0;i<classIds.size();i++){
+						String classId = classIds.get(i);
+						//获取已经排课的课时数量
+						int count = teachingScheduleViewDao.comfirmScheduleCheck(classId,ee.getXnid(),key+"");
+						//相加判断是否大于限制数量
+						if((count+map.get(key))>Integer.parseInt(kssx)){
+							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(classId);
+							resultVO = ResultVO.setFailed("【"+edu300.getXzbmc()+"】第"+key+"周排课课时超过排课限制（限制为："+kssx+"节）");
+							return resultVO;
+						}
+					}
+
+				}
 			}
 		}
 
-		resultVO = ResultVO.setSuccess("cg");
+		resultVO = ResultVO.setSuccess("验证成功");
 		return resultVO;
 	}
 	//检查是否有排课冲突
