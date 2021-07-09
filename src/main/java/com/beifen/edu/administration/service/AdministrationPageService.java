@@ -1312,7 +1312,7 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		Edu201 ee = edu201DAO.findOne(Long.parseLong(edu201Id));
 		//班级ids
-		List<String> classIds = edu204Dao.searchEdu300IdByEdu201Id(edu201Id);
+		List<Long> classIds = edu204Dao.searchEdu300IdByEdu201Id2(edu201Id);
 		//获取每周的数量
 		Map<Integer,Integer> map = new HashMap();
 		for (int i = 0;i<edu203List.size();i++){
@@ -1332,13 +1332,13 @@ public class AdministrationPageService {
 			//有课时限制时，进行课时判断
 			if(kssx != null){
 				//如果排课直接超过限制，则直接返回
-				if(map.get(key).toString().equals(kssx)){
+				if(map.get(key)>Integer.parseInt(kssx)){
 					resultVO = ResultVO.setFailed("第"+key+"周排课课时超过排课限制（限制为："+kssx+"节）");
 					return resultVO;
 				}else{
 					//班级ids
 					for(int i = 0;i<classIds.size();i++){
-						String classId = classIds.get(i);
+						String classId = String.valueOf(classIds.get(i));
 						//获取已经排课的课时数量
 						int count = teachingScheduleViewDao.comfirmScheduleCheck(classId,ee.getXnid(),key+"");
 						//相加判断是否大于限制数量

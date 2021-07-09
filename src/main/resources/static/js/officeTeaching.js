@@ -613,7 +613,34 @@ function configedJz(isRe){
 				return;
 			}
 		}
-		$(".itab").find("li:eq(1)").find("a").trigger('click');
+
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/comfirmScheduleCheck",
+			data: {
+				'Edu201Id':$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID,
+				"scheduleDetail":JSON.stringify(scheduleInfo)
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code === 200) {
+					$(".itab").find("li:eq(1)").find("a").trigger('click');
+				} else {
+					toastr.warning(backjson.msg);
+				}
+			}
+		});
 	}else{
 		$(".itab").find("li:eq(2)").find("a").trigger('click');
 	}
@@ -1183,6 +1210,8 @@ function finalConfirmPk(Edu201Id,sfpw,scheduleInfo,fsxsInfo){
 					controlScheduleArea();
 					toastr.success('排课成功');
 					$.hideModal();
+				}else{
+					toastr.warning(backjson.msg);
 				}
 			}
 		});

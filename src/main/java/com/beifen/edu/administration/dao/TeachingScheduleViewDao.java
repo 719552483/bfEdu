@@ -33,7 +33,7 @@ public interface TeachingScheduleViewDao extends JpaRepository<SchoolTimetablePO
     int findCourseCountByXnAndEdu101IdAndWeek(String edu101_id,String xnid,String week);
 
     //排课限制查询
-    @Query(value = "seselect count(*) from TEACHING_SCHEDULE_VIEW where Edu201_ID in (select e.Edu201_ID from edu204 e where e.Edu300_ID =?1) and xnid = ?2 and week = ?3",nativeQuery = true)
+    @Query(value = "select count(*) from TEACHING_SCHEDULE_VIEW where Edu201_ID in (select e.Edu201_ID from edu204 e where e.Edu300_ID =?1) and xnid = ?2 and week = ?3",nativeQuery = true)
     int comfirmScheduleCheck(String classId,String xnid,String week);
 }
 

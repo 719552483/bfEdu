@@ -2192,6 +2192,16 @@ public class AdministrationController {
 //		}else{
 //			returnMap.put("result", true);
 //		}
+		//验证最大课节数
+		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		if(result.getCode() != 200){
+			returnMap.put("code", 204);
+			returnMap.put("result", false);
+			returnMap.put("msg", result.getMsg());
+			return returnMap;
+		}
+
+		//保存排课信息
 		boolean isSuccess = administrationPageService.saveSchedule(edu201Id, edu203List, edu207List,sfpw);
 		if(isSuccess){
 			administrationPageService.taskPutSchedule(edu201Id);
@@ -2228,8 +2238,12 @@ public class AdministrationController {
 
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
-
-		ResultVO result = administrationPageService.checkSchedule(edu203List,edu201Id);
+		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		if(result.getCode() != 200){
+			result.setCode(204);
+			return result;
+		}
+		result = administrationPageService.checkSchedule(edu203List,edu201Id);
 		if(200==result.getCode()){
 			boolean isSuccess = administrationPageService.saveSchedule(edu201Id, edu203List, edu207List,sfpw);
 			if(isSuccess){

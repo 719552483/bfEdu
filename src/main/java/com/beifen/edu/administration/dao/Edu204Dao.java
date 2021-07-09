@@ -22,6 +22,10 @@ public interface Edu204Dao extends JpaRepository<Edu204, Long>, JpaSpecification
     @Query(value = "select e.Edu300_ID from edu204 e where e.Edu201_ID =?1", nativeQuery = true)
     List<String> searchEdu300IdByEdu201Id(String edu201ID);
 
+    //根据任务书查询行政班
+    @Query(value = "select e.Edu300_ID from edu204 e where e.Edu201_ID =?1", nativeQuery = true)
+    List<Long> searchEdu300IdByEdu201Id2(String edu201ID);
+
     //根据行政班查询任务书
     @Query(value = "select e.Edu201_ID from edu204 e where e.Edu300_ID =?1", nativeQuery = true)
     List<String> searchEdu201IdByEdu300Id(String edu301ID);
