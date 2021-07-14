@@ -855,21 +855,6 @@ function comfirmModifyReExamInfo(currentHistory,row){
 		return;
 	}
 
-
-	if(row.exam_num>=5){
-		if(currentHistory[currentHistory.length-1].grade==='T'||currentHistory[currentHistory.length-1].grade==="F"){
-			if(currentHistory[currentHistory.length-1].grade!==getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID)){
-				toastr.warning('不能修改第五次补考成绩');
-				return;
-			}
-		}else{
-			if(currentHistory[currentHistory.length-1].grade!==$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val()){
-				toastr.warning('不能修改第五次补考成绩');
-				return;
-			}
-		}
-	}
-
 	$.ajax({
 		method : 'get',
 		cache : false,
