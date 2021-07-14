@@ -789,7 +789,7 @@ function reExamInfo(row,index){
 				//确认修改补考成绩
 				$('#comfirmModifyReExamInfo').unbind('click');
 				$('#comfirmModifyReExamInfo').bind('click', function(e) {
-					comfirmModifyReExamInfo(backjson.data);
+					comfirmModifyReExamInfo(backjson.data,row);
 					e.stopPropagation();
 				});
 			} else {
@@ -826,7 +826,7 @@ function cancelModifyReExamInfo(){
 }
 
 //确认修改补考成绩
-function comfirmModifyReExamInfo(currentHistory){
+function comfirmModifyReExamInfo(currentHistory,row){
 	var modifyInfo=new Array();
 	for (let i = 0; i < currentHistory.length; i++) {
 		var modifyObject=new Object();
@@ -853,6 +853,21 @@ function comfirmModifyReExamInfo(currentHistory){
 	if(modifyInfo.length==0){
 		toastr.warning('未做任何修改');
 		return;
+	}
+
+
+	if(row.exam_num>=5){
+		if(currentHistory[currentHistory.length-1].grade==='T'||currentHistory[currentHistory.length-1].grade==="F"){
+			if(currentHistory[currentHistory.length-1].grade!==getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID)){
+				toastr.warning('不能修改第五次补考成绩');
+				return;
+			}
+		}else{
+			if(currentHistory[currentHistory.length-1].grade!==$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val()){
+				toastr.warning('不能修改第五次补考成绩');
+				return;
+			}
+		}
 	}
 
 	$.ajax({
