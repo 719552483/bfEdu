@@ -545,6 +545,20 @@ public class StaffManageController {
     }
 
     /**
+     * 修改补考成绩
+     *
+     * @return returnMap
+     */
+    @RequestMapping("updateMakeUpGrade")
+    @ResponseBody
+    public ResultVO updateMakeUpGrade(@RequestParam("gradeObjectList") String gradeObject,@RequestParam("userId")String userId) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(gradeObject);
+        List<Edu0051> edu0051s = JSON.parseArray(gradeObject, Edu0051.class);
+        ResultVO result = staffManageService.updateMakeUpGrade(edu0051s,userId);
+        return result;
+    }
+
+    /**
      * 确认成绩并生成补考标识
      *
      * @return returnMap
