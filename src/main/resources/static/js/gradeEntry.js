@@ -729,13 +729,23 @@ function reExamInfo(row,index){
 				$("#reExamInfoModal").find(".moadalTitle").html(row.studentName+"-"+row.courseName+"补考记录");
 				$(".historyInfo").empty();
 				var historyTxt="";
+				var str='<option value="T">通过</option><option value="F">不通过</option>';
 				for (var i = 0; i < backjson.data.length; i++) {
 					var currentHistory= backjson.data[i];
+					var gradeInputTxt='';
+					if(currentHistory.grade==='T'||currentHistory.grade==="F"){
+						gradeInputTxt='<select value="'+currentHistory.grade+'" class="isSowIndex historyGradeSelect" id="historyGradeSelect' +currentHistory.edu0051_ID + '">'
+							+ str +
+							'</select>';
+					}else{
+						gradeInputTxt='<input class="myInput manyInfoInput noneStart historyGradeInput" value="'+currentHistory.grade+'" id="gradeInput'+currentHistory.edu0051_ID+'" spellcheck="false">';
+					}
+
 					var reExamText="";
 					i<=0?reExamText="正常考试":reExamText="第"+i+"次补考";
-					historyTxt+='<div class="historyArea"><p class="Historystep">'+reExamText+'</p><div>' +
+					historyTxt+='<div class="historyArea" edu0051_ID="'+currentHistory.edu0051_ID+'" grade="'+currentHistory.grade+'"><p class="Historystep">'+reExamText+'</p><div>' +
 						'<span><cite>课程名称：</cite><b>'+nullMatter(currentHistory.courseName)+'</b></span>'+
-						'<span><cite>补考成绩：</cite><b>'+nullMatter(currentHistory.grade)+'</b></span>'+
+						'<span><cite>补考成绩：</cite><b class="historyGradeB">'+gradeMatter(currentHistory.grade)+'</b>'+gradeInputTxt+'</span>'+
 						'<span><cite>补考时间：</cite><b>'+nullMatter(currentHistory.entryDate)+'</b></span>'+
 						'<span><cite>操作人：</cite><b>'+nullMatter(currentHistory.gradeEnter)+'</b></span>'+
 						'</div></div>' ;
@@ -744,11 +754,147 @@ function reExamInfo(row,index){
 					}
 				}
 				$(".historyInfo").append(historyTxt);
+				$('#wantModifyReExamInfo').show();
+				$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput,#reExamInfoModal .select-mania,.historyGradeSelect').hide();
+
+				//预备修改补考成绩
+				$('#wantModifyReExamInfo').unbind('click');
+				$('#wantModifyReExamInfo').bind('click', function(e) {
+					wantModifyReExamInfo();
+					e.stopPropagation();
+				});
+
+				//取消修改补考成绩
+				$('#cancelModifyReExamInfo').unbind('click');
+				$('#cancelModifyReExamInfo').bind('click', function(e) {
+					cancelModifyReExamInfo();
+					e.stopPropagation();
+				});
+
+				//确认修改补考成绩
+				$('#comfirmModifyReExamInfo').unbind('click');
+				$('#comfirmModifyReExamInfo').bind('click', function(e) {
+					comfirmModifyReExamInfo(backjson.data);
+					e.stopPropagation();
+				});
 			} else {
 				toastr.warning(backjson.msg);
 			}
 		}
 	});
+}
+
+function gradeMatter(str){
+	if(str==='T'||str==="F"){
+		if(str==='T'){
+			return '通过'
+		}else{
+			return '不通过'
+		}
+	}else{
+		str==null||str===""?str="暂无":str=str;
+	}
+	return str;
+}
+
+//预备修改补考成绩
+function wantModifyReExamInfo(){
+	$('.isSowIndex').selectMania(); //初始化下拉框
+	$('#wantModifyReExamInfo,.historyGradeB').hide();
+	$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput,#reExamInfoModal .select-mania').show();
+}
+
+//取消修改补考成绩
+function cancelModifyReExamInfo(){
+	$('#wantModifyReExamInfo,.historyGradeB').show();
+	$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput,#reExamInfoModal .select-mania').hide();
+}
+
+//确认修改补考成绩
+function comfirmModifyReExamInfo(currentHistory){
+	var modifyInfo=new Array();
+	for (let i = 0; i < currentHistory.length; i++) {
+		var modifyObject=new Object();
+		if(currentHistory[i].grade==='T'||currentHistory[i].grade==="F"){
+			if(isModifyed(getNormalSelectValue('historyGradeSelect'+currentHistory[i].edu0051_ID),currentHistory[i].grade)){
+				modifyObject.edu0051_ID=currentHistory[i].edu0051_ID;
+				modifyObject.grade=getNormalSelectValue('historyGradeSelect'+currentHistory[i].edu0051_ID);
+				modifyInfo.push(modifyObject);
+			}
+		}else{
+			if(!checkIsNumber($('#gradeInput'+currentHistory[i].edu0051_ID).val())){
+				toastr.warning('输入框只接受数字类型');
+				return;
+			}
+
+			if(isModifyed($('#gradeInput'+currentHistory[i].edu0051_ID).val(),currentHistory[i].grade)){
+				modifyObject.edu0051_ID=currentHistory[i].edu0051_ID;
+				modifyObject.grade=$('#gradeInput'+currentHistory[i].edu0051_ID).val();
+				modifyInfo.push(modifyObject);
+			}
+		}
+	}
+
+	if(modifyInfo.length==0){
+		toastr.warning('未做任何修改');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/updateMakeUpGrade",
+		data: {
+			"gradeObjectList ":JSON.stringify(modifyInfo),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				if(currentHistory[currentHistory.length-1].grade==='T'||currentHistory[currentHistory.length-1].grade==="F"){
+					if(currentHistory[currentHistory.length-1].grade!==getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID)){
+						var updateTableInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId', currentHistory[currentHistory.length-1].edu005_ID);
+						updateTableInfo.grade=getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID);
+						$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+							id: currentHistory[currentHistory.length-1].edu005_ID,
+							row: updateTableInfo
+						});
+					}
+				}else{
+					if(currentHistory[currentHistory.length-1].grade!==$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val()){
+						var updateTableInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId', currentHistory[currentHistory.length-1].edu005_ID);
+						updateTableInfo.grade=$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val();
+						$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+							id: currentHistory[currentHistory.length-1].edu005_ID,
+							row: updateTableInfo
+						});
+					}
+				}
+
+				$.hideModal('#reExamInfoModal');
+				toastr.success(backjson.msg);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//判断是否修改
+function isModifyed(newGrade,oldGrade){
+	var isModifyed=false;
+	newGrade===oldGrade?isModifyed=false:isModifyed=true;
+	return isModifyed;
 }
 
 //获取检索对象
