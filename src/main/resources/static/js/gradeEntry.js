@@ -536,6 +536,12 @@ function stuffStudentBaseInfoTable(tableInfo) {
 
 //预备录入成绩
 function wantGradeEntry(row,index){
+	var thisInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId',row.edu005_ID);
+	if(thisInfo.grade==='T'||parseFloat(thisInfo.grade)>=60){
+		toastr.warning("暂无操作");
+		return;
+	}
+
 	if(row.exam_num!=null&&row.exam_num>=5){
 		toastr.warning("最多补考五次");
 		return;
