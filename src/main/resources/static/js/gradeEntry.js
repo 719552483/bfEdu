@@ -229,7 +229,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				title: '补考次数',
 				align: 'left',
 				sortable: true,
-				visible: false,
+				visible: true,
 				formatter: examNnumMatter
 			} ,
 			{
