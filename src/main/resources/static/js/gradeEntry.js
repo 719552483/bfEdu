@@ -845,7 +845,7 @@ function comfirmModifyReExamInfo(currentHistory){
 		cache : false,
 		url : "/updateMakeUpGrade",
 		data: {
-			"gradeObjectList ":JSON.stringify(modifyInfo),
+			"gradeObjectList":JSON.stringify(modifyInfo),
 			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		dataType : 'json',

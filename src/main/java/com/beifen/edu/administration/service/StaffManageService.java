@@ -352,7 +352,7 @@ public class StaffManageService {
             Edu0051 edu0051 = edu0051s.get(ii);
             Edu0051 edu0051old = edu0051Dao.findOne(edu0051.getEdu0051_ID());
             edu0051old.setGrade(edu0051.getGrade());
-            Edu005 edu005 = edu005Dao.findOne(edu0051.getEdu005_ID());
+            Edu005 edu005 = edu005Dao.findOne(edu0051old.getEdu005_ID());
             if (edu0051old.getExam_num() == edu005.getExam_num()) {
                 if (edu005.getGrade().equals("T")) {
                     edu005.setGetCredit(edu005.getCredit());
@@ -370,6 +370,7 @@ public class StaffManageService {
                         edu005.setIsPassed("T");
                     }
                 }
+                edu005.setGrade(edu0051.getGrade());
                 edu005Dao.save(edu005);
             }
             edu0051Dao.save(edu0051old);
