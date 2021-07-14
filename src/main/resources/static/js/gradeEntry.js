@@ -292,16 +292,28 @@ function stuffStudentBaseInfoTable(tableInfo) {
 					}
 				}else{
 					if(row.exam_num!=null&&row.exam_num>0){
-						return [
-							'<ul class="toolbar tabletoolbar">' +
-							'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
-							'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
-							'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
-							'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
-							'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
-							'</ul>'
-						]
-							.join('');
+						if(row.exam_num<5){
+							return [
+								'<ul class="toolbar tabletoolbar">' +
+								'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+								'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+								'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+								'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+								'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+								'</ul>'
+							]
+								.join('');
+						}else{
+							return [
+								'<ul class="toolbar tabletoolbar">' +
+								'<li id="wantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+								'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+								'<li id="comfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+								'<li id="cancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+								'</ul>'
+							]
+								.join('');
+						}
 					}else{
 						return [
 							'<ul class="toolbar tabletoolbar">' +
