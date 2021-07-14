@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.beifen.edu.administration.constant.RedisDataConstant;
+import com.beifen.edu.administration.dao.Edu990Dao;
+import com.beifen.edu.administration.dao.Edu996Dao;
+import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.StudentManageService;
 import com.beifen.edu.administration.service.StaffManageService;
 import org.apache.commons.lang.StringUtils;
@@ -49,16 +52,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
-import com.beifen.edu.administration.domian.Edu000;
-import com.beifen.edu.administration.domian.Edu001;
-import com.beifen.edu.administration.domian.Edu101;
-import com.beifen.edu.administration.domian.Edu103;
-import com.beifen.edu.administration.domian.Edu104;
-import com.beifen.edu.administration.domian.Edu105;
-import com.beifen.edu.administration.domian.Edu106;
-import com.beifen.edu.administration.domian.Edu107;
-import com.beifen.edu.administration.domian.Edu200;
-import com.beifen.edu.administration.domian.Edu300;
 import com.beifen.edu.administration.service.AdministrationPageService;
 
 import net.sf.json.JSONObject;
@@ -76,6 +69,10 @@ public class ReflectUtils {
 	private StaffManageService staffManageService;
 	@Autowired
 	private RedisUtils redisUtils;
+	@Autowired
+	private Edu990Dao edu990Dao;
+	@Autowired
+	private Edu996Dao edu996Dao;
 	
 	private static ReflectUtils reflectUtils;
 	 @PostConstruct
@@ -4040,8 +4037,75 @@ public class ReflectUtils {
 		}
 		return false;
 	}
-	
-	
+
+	//新增日志
+	public void addLog(String user_ID,int actionKey,int bussinsneType,String bussinsneinfo){
+		Edu996 edu996 = new Edu996();
+		//用户id
+		edu996.setUser_ID(user_ID);
+		Edu990 edu990 = edu990Dao.findOne(Long.parseLong(user_ID));
+		//用户姓名
+		edu996.setUser_name(edu990.getPersonName());
+		//操作参数
+		edu996.setActionKey(actionKey);
+		String actionValue = getActionValue(actionKey);
+		//操作名称
+		edu996.setActionValue(actionValue);
+		//业务类型
+		edu996.setBussinsneType(bussinsneType);
+		String bussinsneValue = getBussinsneValue(bussinsneType);
+		//业务类型
+		edu996.setBussinsneValue(bussinsneValue);
+		//业务信息
+		edu996.setBussinsneinfo(bussinsneinfo);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		//访问时间
+		edu996.setTime(df.format(new Date()));
+		edu996Dao.save(edu996);
+	}
+
+	public String getBussinsneValue(int bussinsneType){
+		String bussinsneValue = "";
+		switch(bussinsneType) {
+			case 0:
+				bussinsneValue = "新增";
+				break;
+			case 1:
+				bussinsneValue = "修改";
+				break;
+			case 2:
+				bussinsneValue = "删除";
+				break;
+
+		}
+		return bussinsneValue;
+	}
+
+	public String getActionValue(int actionKey){
+		String actionValue = "";
+		switch(actionKey) {
+			case 0:
+				actionValue = "新增课程";
+				break;
+			case 1:
+				actionValue = "修改课程";
+				break;
+			case 2:
+				actionValue = "停用课程";
+				break;
+			case 3:
+				actionValue = "删除课程";
+				break;
+			case 4:
+				actionValue = "新增学年";
+				break;
+			case 5:
+				actionValue = "修改学年";
+				break;
+		}
+		return actionValue;
+	}
+
 	//判断变量是否能转为数字
 	public boolean isNumeric(String str){
 		boolean canChangeNumber;

@@ -62,12 +62,12 @@ public class AdministrationController {
 	 */
 	@RequestMapping("addNewClass")
 	@ResponseBody
-	public ResultVO addNewClass(@RequestParam("newClassInfo") String addinfo, @RequestParam("approvalobect") String approvalobect,@RequestParam("userKey") String userKey) {
+	public ResultVO addNewClass(@RequestParam("newClassInfo") String addinfo, @RequestParam("approvalobect") String approvalobect,@RequestParam("userId") String userId) {
 		JSONObject jsonObject = JSONObject.fromObject(addinfo);
 		JSONObject jsonObject2 = JSONObject.fromObject(approvalobect);
 		Edu200 addClassInfo = (Edu200) JSONObject.toBean(jsonObject, Edu200.class);
 		Edu600 edu600 = (Edu600) JSONObject.toBean(jsonObject2, Edu600.class);
-		ResultVO result = administrationPageService.addNewClass(edu600,addClassInfo,userKey);
+		ResultVO result = administrationPageService.addNewClass(edu600,addClassInfo,userId);
 		return result;
 	}
 
@@ -78,10 +78,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("stopClass")
 	@ResponseBody
-	public ResultVO stopClass(@RequestParam("choosedCrouse") String choosedCrouse,@RequestParam("approvalobect") String approvalobect) {
+	public ResultVO stopClass(@RequestParam("choosedCrouse") String choosedCrouse,@RequestParam("approvalobect") String approvalobect,@RequestParam("userId")String user_id) {
 		List<String> stopList = JSON.parseArray(choosedCrouse, String.class);
 		Edu600 edu600 = JSON.parseObject(approvalobect, Edu600.class);
-		ResultVO resultVO = administrationPageService.stopClass(stopList,edu600);
+		ResultVO resultVO = administrationPageService.stopClass(stopList,edu600,user_id);
 		return resultVO;
 	}
 
@@ -131,9 +131,9 @@ public class AdministrationController {
 	 */
 	@RequestMapping("libraryReomveClassByID")
 	@ResponseBody
-	public ResultVO libraryReomveClassByID(@RequestParam String deleteIds) {
+	public ResultVO libraryReomveClassByID(@RequestParam String deleteIds,@RequestParam("userId") String userId) {
 		List<String> removeIdList = JSON.parseArray(deleteIds, String.class);
-		ResultVO resultVO = administrationPageService.libraryReomveClassByID(removeIdList);
+		ResultVO resultVO = administrationPageService.libraryReomveClassByID(removeIdList,userId);
 		return resultVO;
 	}
 
@@ -267,11 +267,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/addNewXn")
 	@ResponseBody
-	public ResultVO addNewXn(@RequestParam String xninfo) {
+	public ResultVO addNewXn(@RequestParam String xninfo,@RequestParam("userId") String userId) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		JSONObject jsonObject = JSONObject.fromObject(xninfo);
 		Edu400 edu400 = (Edu400) JSONObject.toBean(jsonObject, Edu400.class);
-		ResultVO result = administrationPageService.addNewXn(edu400);
+		ResultVO result = administrationPageService.addNewXn(edu400,userId);
 		return result;
 	}
 

@@ -778,7 +778,7 @@ public class AdministrationPageService {
 	}
 
 	// 根据id删除课程
-	public ResultVO libraryReomveClassByID(List<String> removeIdList) {
+	public ResultVO libraryReomveClassByID(List<String> removeIdList,String user_id) {
 		ResultVO resultVO;
 		for (String s : removeIdList) {
 			List<Edu108> planByEdu200Id = edu108DAO.findPlanByEdu200Id(s);
@@ -790,6 +790,7 @@ public class AdministrationPageService {
 
 		for (String s : removeIdList) {
 			edu200DAO.removeLibraryClassById(s);
+			utils.addLog(user_id,3,2,s);
 		}
 
 		resultVO = ResultVO.setSuccess("共计删除了" + removeIdList.size() + "门课程");
@@ -1045,13 +1046,20 @@ public class AdministrationPageService {
 	}
 
 	// 新增学年
-	public ResultVO addNewXn(Edu400 edu400) {
+	public ResultVO addNewXn(Edu400 edu400,String userId) {
 		ResultVO resultVO;
 		List<Edu400> edu400List = checkXnName(edu400);
 		if(edu400List.size() != 0) {
 			resultVO = ResultVO.setFailed("学年名称重复，请重新输入");
 		}else {
+			int actionKey = 5;
+			int bussinsneType = 1;
+			if(edu400.getEdu400_ID() == null){
+				actionKey = 4;
+				bussinsneType = 0;
+			}
 			edu400DAO.save(edu400);
+			utils.addLog(userId,actionKey,bussinsneType,edu400.getEdu400_ID()+"");
 			resultVO = ResultVO.setSuccess("操作成功",edu400.getEdu400_ID());
 		}
 		return resultVO;
@@ -2123,10 +2131,11 @@ public class AdministrationPageService {
 	}
 
 	//停用课程
-	public ResultVO stopClass(List<String> stopList,Edu600 edu600) {
+	public ResultVO stopClass(List<String> stopList,Edu600 edu600,String user_id) {
 		ResultVO resultVO;
 		for (String s : stopList) {
 			edu200DAO.updateState(s, "passing");
+			utils.addLog(user_id,2,1,s);
 			edu600.setBusinessKey(Long.parseLong(s));
 			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 			if (!isSuccess) {
@@ -2274,16 +2283,18 @@ public class AdministrationPageService {
 	 * @param edu200
 	 * @return
 	 */
-	public ResultVO addNewClass(Edu600 edu600, Edu200 edu200,String userKey) {
+	public ResultVO addNewClass(Edu600 edu600, Edu200 edu200,String user_id) {
 		ResultVO resultVO;
 		Boolean isAdd = false;
 
 		//声明原始数据变量
 		Edu200 oldEdu200 = new Edu200();
-
+		int actionKey = 1;
+		int bussinsneType = 1;
 		if(edu200.getBF200_ID() == null) {
 			List<Edu200> edu200s = edu200DAO.queryAllByName(edu200.getKcmc());
-
+			actionKey = 0;
+			bussinsneType = 0;
 			if (edu200s.size() != 0) {
 				resultVO = ResultVO.setFailed("课程名称重复，无法添加");
 				return resultVO;
@@ -2330,7 +2341,9 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员处理");
 			return resultVO;
 		}
-
+		//增加日志
+		String bussinsneinfo = edu200.getBF200_ID()+"";
+		utils.addLog(user_id,actionKey,bussinsneType,bussinsneinfo);
 		resultVO = ResultVO.setSuccess("操作成功", edu200);
 		return resultVO;
 	}
@@ -2390,6 +2403,7 @@ public class AdministrationPageService {
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc = jsonObject.getString("lrr");
+		String userId = jsonObject.getString("userId");
 		String userKey = jsonObject.getString("userykey");
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
@@ -2425,7 +2439,7 @@ public class AdministrationPageService {
 				Edu200 edu200 = importClasses.get(i);
 				edu200.setLrr(lrrmc);
 				edu200.setLrrID(Long.parseLong(userKey));
-				ResultVO result = addNewClass(edu600, edu200,userKey);
+				ResultVO result = addNewClass(edu600, edu200,userId);
 				if (result.getCode() == 500) {
 					resultVO = ResultVO.setFailed("数据导入失败");
 					if (saveIds.size() != 0) {
@@ -2462,6 +2476,7 @@ public class AdministrationPageService {
 		//格式化录入人信息
 		JSONObject jsonObject = JSONObject.fromObject(lrrInfo);
 		String lrrmc = jsonObject.getString("lrr");
+		String userId = jsonObject.getString("userId");
 		String userKey = jsonObject.getString("userykey");
 		//格式化审批流信息
 		JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
@@ -2502,7 +2517,7 @@ public class AdministrationPageService {
 				edu200.setLrrID(Long.parseLong(userKey));
 				edu200.setShr(null);
 				edu200.setShrID(null);
-				ResultVO result = addNewClass(edu600, edu200,userKey);
+				ResultVO result = addNewClass(edu600, edu200,userId);
 				if (result.getCode() == 500) {
 					resultVO = ResultVO.setFailed("数据导入失败");
 					if (saveList.size() != 0) {

@@ -345,6 +345,41 @@ public class StaffManageService {
         return resultVO;
     }
 
+    //修改补考成绩
+    public ResultVO updateMakeUpGrade(List<Edu0051> edu0051s,String userId) {
+        ResultVO resultVO;
+        for (int ii =0;ii<edu0051s.size();ii++) {
+            Edu0051 edu0051 = edu0051s.get(ii);
+            Edu0051 edu0051old = edu0051Dao.findOne(edu0051.getEdu0051_ID());
+            edu0051old.setGrade(edu0051.getGrade());
+            Edu005 edu005 = edu005Dao.findOne(edu0051.getEdu005_ID());
+            if (edu0051old.getExam_num() == edu005.getExam_num()) {
+                if (edu005.getGrade().equals("T")) {
+                    edu005.setGetCredit(edu005.getCredit());
+                    edu005.setIsPassed("T");
+                } else if (edu005.getGrade().equals("F")) {
+                    edu005.setGetCredit(0.00);
+                    edu005.setIsPassed("F");
+                } else {
+                    double i = Double.parseDouble(edu005.getGrade());
+                    if (i < 60.00) {
+                        edu005.setGetCredit(0.00);
+                        edu005.setIsPassed("F");
+                    } else {
+                        edu005.setGetCredit(edu005.getCredit());
+                        edu005.setIsPassed("T");
+                    }
+                }
+                edu005Dao.save(edu005);
+            }
+            edu0051Dao.save(edu0051old);
+        }
+        resultVO = ResultVO.setSuccess("成绩修改成功");
+        return resultVO;
+    }
+
+
+
     //录入或修改成绩
     public ResultVO giveGrade(Edu005 edu005) {
         ResultVO resultVO;
@@ -406,6 +441,7 @@ public class StaffManageService {
         resultVO = ResultVO.setSuccess("成绩录入成功",edu005);
         return resultVO;
     }
+
 
 
     //查询所有老师

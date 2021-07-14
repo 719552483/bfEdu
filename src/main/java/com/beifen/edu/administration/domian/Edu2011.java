@@ -2,7 +2,7 @@ package com.beifen.edu.administration.domian;
 
 import javax.persistence.*;
 
-//教学任务书表
+//再排记录表
 @Entity
 @Table(name = "Edu2011")
 public class Edu2011 {
