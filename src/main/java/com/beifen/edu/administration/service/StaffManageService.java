@@ -68,6 +68,8 @@ public class StaffManageService {
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
+    AdministrationPageService administrationPageService;
+    @Autowired
     CourseCheckOnDao courseCheckOnDao;
     @Autowired
     RedisUtils redisUtils;
@@ -373,6 +375,7 @@ public class StaffManageService {
                 edu005.setGrade(edu0051.getGrade());
                 edu005Dao.save(edu005);
             }
+            administrationPageService.addLog(userId,6,1,edu0051old.getEdu0051_ID()+"");
             edu0051Dao.save(edu0051old);
         }
         resultVO = ResultVO.setSuccess("成绩修改成功");

@@ -69,11 +69,11 @@ public class ReflectUtils {
 	private StaffManageService staffManageService;
 	@Autowired
 	private RedisUtils redisUtils;
-	@Autowired
-	private Edu990Dao edu990Dao;
-	@Autowired
-	private Edu996Dao edu996Dao;
-	
+//	@Autowired
+//	private Edu990Dao edu990Dao;
+//	@Autowired
+//	private Edu996Dao edu996Dao;
+//
 	private static ReflectUtils reflectUtils;
 	 @PostConstruct
 	    public void init() {
@@ -4039,30 +4039,9 @@ public class ReflectUtils {
 	}
 
 	//新增日志
-	public void addLog(String user_ID,int actionKey,int bussinsneType,String bussinsneinfo){
-		Edu996 edu996 = new Edu996();
-		//用户id
-		edu996.setUser_ID(user_ID);
-		Edu990 edu990 = edu990Dao.findOne(Long.parseLong(user_ID));
-		//用户姓名
-		edu996.setUser_name(edu990.getPersonName());
-		//操作参数
-		edu996.setActionKey(actionKey);
-		String actionValue = getActionValue(actionKey);
-		//操作名称
-		edu996.setActionValue(actionValue);
-		//业务类型
-		edu996.setBussinsneType(bussinsneType);
-		String bussinsneValue = getBussinsneValue(bussinsneType);
-		//业务类型
-		edu996.setBussinsneValue(bussinsneValue);
-		//业务信息
-		edu996.setBussinsneinfo(bussinsneinfo);
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-		//访问时间
-		edu996.setTime(df.format(new Date()));
-		edu996Dao.save(edu996);
-	}
+//	public void addLog(String user_ID,int actionKey,int bussinsneType,String bussinsneinfo){
+//		administrationPageService.addLog(user_ID,actionKey,bussinsneType,bussinsneinfo);
+//	}
 
 	public String getBussinsneValue(int bussinsneType){
 		String bussinsneValue = "";
@@ -4101,6 +4080,9 @@ public class ReflectUtils {
 				break;
 			case 5:
 				actionValue = "修改学年";
+				break;
+			case 6:
+				actionValue = "修改补考成绩";
 				break;
 		}
 		return actionValue;
