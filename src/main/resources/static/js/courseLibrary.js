@@ -935,7 +935,8 @@ function confirmRemoveClasses(idArray){
 		cache : false,
 		url : "/libraryReomveClassByID",
 		data: {
-          "deleteIds":JSON.stringify(idArray)
+          "deleteIds":JSON.stringify(idArray),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -1504,6 +1505,7 @@ function confirmStopClass(choosedCrouseArray,choosedCrouse){
 		url : "/stopClass",
 		data: {
 			"choosedCrouse":JSON.stringify(choosedCrouseArray),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
 			"approvalobect":JSON.stringify(getApprovalobect("02"))
 		},
 		dataType : 'json',
