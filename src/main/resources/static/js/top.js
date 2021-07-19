@@ -56,9 +56,15 @@ function changeRCurrentRole(eve){
 	if(display !== 'none'){
 		$(".canChooseRoleArea,.arrow-right").hide();
 		$(".user").removeClass("choseingClass");
+		$(parent.frames["topFrame"].document).find(".changeRCurrentRole").css('margin','0px');
+		$(parent.frames["topFrame"].document).find(".nav:eq(0)").show();
+		$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find('a').show();
 		return;
 	}else{
 		$(".user").addClass("choseingClass");
+		$(parent.frames["topFrame"].document).find(".changeRCurrentRole").css('margin','0px -83px 0px -83px');
+		$(parent.frames["topFrame"].document).find(".nav:eq(0)").hide();
+		$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find('a').hide();
 	}
 	$(".canChooseRoleArea,.arrow-right").show();
 	$(".canChooseRoles").find("cite").remove();
@@ -72,6 +78,9 @@ function changeRCurrentRole(eve){
 	$('.canChooseRoles').find("cite").unbind('click');
 	$('.canChooseRoles').find("cite").bind('click', function(e) {
 		confirmChangeRole(e);
+		$(parent.frames["topFrame"].document).find(".changeRCurrentRole").css('margin','0px');
+		$(parent.frames["topFrame"].document).find(".nav:eq(0)").show();
+		$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find('a').show();
 		e.stopPropagation();
 	});
 }
