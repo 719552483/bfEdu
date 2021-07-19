@@ -116,6 +116,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu995Dao edu995Dao;
 	@Autowired
+	private Edu996Dao edu996Dao;
+	@Autowired
 	private ScheduleCompletedViewDao scheduleCompletedViewDao;
 	@Autowired
 	private StudentManageService studentManageService;
@@ -790,7 +792,7 @@ public class AdministrationPageService {
 
 		for (String s : removeIdList) {
 			edu200DAO.removeLibraryClassById(s);
-			utils.addLog(user_id,3,2,s);
+			addLog(user_id,3,2,s);
 		}
 
 		resultVO = ResultVO.setSuccess("共计删除了" + removeIdList.size() + "门课程");
@@ -1059,7 +1061,7 @@ public class AdministrationPageService {
 				bussinsneType = 0;
 			}
 			edu400DAO.save(edu400);
-			utils.addLog(userId,actionKey,bussinsneType,edu400.getEdu400_ID()+"");
+			addLog(userId,actionKey,bussinsneType,edu400.getEdu400_ID()+"");
 			resultVO = ResultVO.setSuccess("操作成功",edu400.getEdu400_ID());
 		}
 		return resultVO;
@@ -2135,7 +2137,7 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		for (String s : stopList) {
 			edu200DAO.updateState(s, "passing");
-			utils.addLog(user_id,2,1,s);
+			addLog(user_id,2,1,s);
 			edu600.setBusinessKey(Long.parseLong(s));
 			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 			if (!isSuccess) {
@@ -2343,7 +2345,7 @@ public class AdministrationPageService {
 		}
 		//增加日志
 		String bussinsneinfo = edu200.getBF200_ID()+"";
-		utils.addLog(user_id,actionKey,bussinsneType,bussinsneinfo);
+		addLog(user_id,actionKey,bussinsneType,bussinsneinfo);
 		resultVO = ResultVO.setSuccess("操作成功", edu200);
 		return resultVO;
 	}
@@ -3830,4 +3832,31 @@ public class AdministrationPageService {
 		resultVO = ResultVO.setSuccess("修改成功");
 		return resultVO;
 	}
+
+	//新增日志
+	public void addLog(String user_ID,int actionKey,int bussinsneType,String bussinsneinfo){
+		Edu996 edu996 = new Edu996();
+		//用户id
+		edu996.setUser_ID(user_ID);
+		Edu990 edu990 = edu990Dao.findOne(Long.parseLong(user_ID));
+		//用户姓名
+		edu996.setUser_name(edu990.getPersonName());
+		//操作参数
+		edu996.setActionKey(actionKey);
+		String actionValue = utils.getActionValue(actionKey);
+		//操作名称
+		edu996.setActionValue(actionValue);
+		//业务类型
+		edu996.setBussinsneType(bussinsneType);
+		String bussinsneValue = utils.getBussinsneValue(bussinsneType);
+		//业务类型
+		edu996.setBussinsneValue(bussinsneValue);
+		//业务信息
+		edu996.setBussinsneinfo(bussinsneinfo);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		//访问时间
+		edu996.setTime(df.format(new Date()));
+		edu996Dao.save(edu996);
+	}
+
 }
