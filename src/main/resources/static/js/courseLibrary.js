@@ -485,7 +485,7 @@ function comfirmmodifyCourseInfo(row){
 		url : "/addNewClass",
 		data: {
 			"newClassInfo":JSON.stringify(newClassObject),
-			"userKey":JSON.parse($.session.get('userInfo')).userKey,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
 			"approvalobect":JSON.stringify(getApprovalobect("01"))
         },
 		dataType : 'json',
@@ -597,7 +597,7 @@ function comfirmAddNewClass(){
 		url : "/addNewClass",
 		data: {
              "newClassInfo":JSON.stringify(newClassObject),
-			 "userKey":userKey,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
 			 "approvalobect":JSON.stringify(getApprovalobect("01"))
 		},
 		dataType : 'json',
