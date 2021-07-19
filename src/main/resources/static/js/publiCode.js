@@ -2065,6 +2065,7 @@ function confrimModifyXn(row,index){
 		xnObject.zzs=WeeksBetw(modifyXn_startTime,modifyXn_endTime);
 		xnObject.relaseTime=modifyXn_relaseTime;
 		xnObject.lrsj=modifyXn_lrsjTime;
+		xnObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 		
 		$("#remindModal").find(".remindType").html("学年");
 		$("#remindModal").find(".remindActionType").html("修改");
@@ -2214,6 +2215,7 @@ function confimAddXn(){
 	xnObject.zzs=WeeksBetw(startTime,endTime);
 	xnObject.relaseTime=relaseTime;
 	xnObject.lrsj=gradeStop;
+	xnObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	sendNewXnInfo(xnObject);
 }
 

@@ -1173,6 +1173,7 @@ function confirmImportNewClass(){
 	
     var lrrInfo=new Object();
     lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
     lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
 
     var formData = new FormData();
@@ -1403,6 +1404,7 @@ function confirmModifyClasses(){
 
 	var lrrInfo=new Object();
 	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
 	
     var formData = new FormData();
