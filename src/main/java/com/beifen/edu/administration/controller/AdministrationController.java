@@ -293,11 +293,24 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/endNewMUTime")
 	@ResponseBody
-	public ResultVO endNewMUTime(@RequestParam String muTimeinfo,@RequestParam("userId") String userId) {
+	public ResultVO endNewMUTime(@RequestParam String edu404Id,@RequestParam("userId") String userId) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
-		JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
-		Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
-		ResultVO result = administrationPageService.endNewMUTime(edu404,userId);
+//		JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
+//		Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
+		ResultVO result = administrationPageService.endNewMUTime(edu404Id,userId);
+		return result;
+	}
+
+	/**
+	 * 开始下次补考录入时间限制
+	 */
+	@RequestMapping("/startNewMUTime")
+	@ResponseBody
+	public ResultVO startNewMUTime(@RequestParam String edu404Id,@RequestParam("userId") String userId) {
+		// 将收到的jsonObject转为javabean 关系管理实体类
+//		JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
+//		Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
+		ResultVO result = administrationPageService.startNewMUTime(edu404Id,userId);
 		return result;
 	}
 

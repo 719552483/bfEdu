@@ -1089,16 +1089,42 @@ public class AdministrationPageService {
 		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
-	public ResultVO endNewMUTime(Edu404 edu404,String userId) {
+	//结束补考录入时间限制
+	public ResultVO endNewMUTime(String edu404Id,String userId) {
 		ResultVO resultVO;
 		int actionKey = 9;
 		int bussinsneType = 1;
+		Edu404 edu404 = edu404Dao.findOne(Long.parseLong(edu404Id));
 		edu404.setStatus("1");
 		edu404Dao.save(edu404);
 		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
-		resultVO = ResultVO.setSuccess("操作成功",edu404.getEdu404_ID());
+		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
+
+	//开始下次补考录入时间限制
+	public ResultVO startNewMUTime(String edu404Id,String userId) {
+		ResultVO resultVO;
+		int actionKey = 9;
+		int bussinsneType = 1;
+		Edu404 edu404 = edu404Dao.findOne(Long.parseLong(edu404Id));
+		if("0".equals(edu404.getStatus())){
+			resultVO = ResultVO.setFailed("请先结束上一次补考限制");
+			return resultVO;
+		}
+		int count = Integer.parseInt(edu404.getCount())+1;
+		if(count>5){
+			resultVO = ResultVO.setFailed("已完成所有五次补考的录入，不可再次开启！");
+			return resultVO;
+		}
+		edu404.setCount(count+"");
+		edu404.setStatus("1");
+		edu404Dao.save(edu404);
+		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
+		resultVO = ResultVO.setSuccess("操作成功",edu404);
+		return resultVO;
+	}
+
 
 	// 新增排课课时上限
 	public ResultVO addNewKssx(List<Edu403> edu403s) {
