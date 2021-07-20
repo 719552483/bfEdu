@@ -62,6 +62,8 @@ public class StaffManageService {
     @Autowired
     Edu203Dao edu203Dao;
     @Autowired
+    Edu404Dao edu404Dao;
+    @Autowired
     Edu008Dao edu008Dao;
     @Autowired
     Edu999Dao edu999DAO;
@@ -387,6 +389,15 @@ public class StaffManageService {
     //录入或修改成绩
     public ResultVO giveGrade(Edu005 edu005) {
         ResultVO resultVO;
+        Edu404 edu404 = new Edu404();
+        if("T".equals(edu005.getIsResit()) && "T".equals(edu005.getIsConfirm())){
+            edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
+            if (edu404 == null || "1".equals(edu404.getStatus())){
+                resultVO = ResultVO.setFailed("补考录入时间已截止!");
+                return resultVO;
+            }
+        }
+
         Date currentTime = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(currentTime);
@@ -415,16 +426,20 @@ public class StaffManageService {
                     edu005.setIsPassed("T");
                 }
             } if("T".equals(edu005.getIsResit())){
-                if(edu005.getExam_num() == null){
-                    edu005.setExam_num(1);
-                }else{
-                    edu005.setExam_num(edu005.getExam_num()+1);
-                }
+//                if(edu005.getExam_num() == null){
+//                    edu005.setExam_num(1);
+//                }else{
+//                    edu005.setExam_num(edu005.getExam_num()+1);
+//                }
+                edu005.setExam_num(Integer.parseInt(edu404.getCount()));
             }
         }
         edu005Dao.save(edu005);
         if("T".equals(edu005.getIsResit()) && "T".equals(edu005.getIsConfirm())){
-            Edu0051 edu0051 = new Edu0051();
+            Edu0051 edu0051 = edu0051Dao.getGradeByNum(edu005.getEdu005_ID()+"",edu005.getExam_num()+"");
+            if(edu0051 == null){
+                edu0051 = new Edu0051();
+            }
             edu0051.setEdu005_ID(edu005.getEdu005_ID());
             edu0051.setEdu001_ID(edu005.getEdu001_ID());
             edu0051.setEdu201_ID(edu005.getEdu201_ID());

@@ -32,4 +32,7 @@ public interface Edu0051Dao extends JpaRepository<Edu0051, Long>, JpaSpecificati
     @Modifying(clearAutomatically = true)
     @Query(value = "delete from edu0051 where Edu005_id in ?1", nativeQuery = true)
     void deleteEdu0051sByEdu005Id(List<String> ids);
+
+    @Query(value = "select * from EDU0051 where edu005_id = ?1 and exam_num = ?2", nativeQuery = true)
+    Edu0051 getGradeByNum(String Edu005_Id,String num);
 }

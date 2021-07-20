@@ -276,6 +276,32 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 新增修改补考录入时间限制
+	 */
+	@RequestMapping("/addNewMUTime")
+	@ResponseBody
+	public ResultVO addNewMUTime(@RequestParam String muTimeinfo,@RequestParam("userId") String userId) {
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
+		Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
+		ResultVO result = administrationPageService.addNewMUTime(edu404,userId);
+		return result;
+	}
+
+	/**
+	 * 结束补考录入时间限制
+	 */
+	@RequestMapping("/endNewMUTime")
+	@ResponseBody
+	public ResultVO endNewMUTime(@RequestParam String muTimeinfo,@RequestParam("userId") String userId) {
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
+		Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
+		ResultVO result = administrationPageService.endNewMUTime(edu404,userId);
+		return result;
+	}
+
+	/**
 	 * 新增修改调课角色
 	 */
 	@RequestMapping("/addChangeCrouseRole")

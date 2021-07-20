@@ -4084,6 +4084,15 @@ public class ReflectUtils {
 			case 6:
 				actionValue = "修改补考成绩";
 				break;
+			case 7:
+				actionValue = "新增补考录入时间限制";
+				break;
+			case 8:
+				actionValue = "修改补考录入时间限制";
+				break;
+			case 9:
+				actionValue = "结束补考录入时间限制";
+				break;
 		}
 		return actionValue;
 	}

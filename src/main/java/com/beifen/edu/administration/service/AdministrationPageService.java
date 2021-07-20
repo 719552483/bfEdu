@@ -84,6 +84,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu400Dao edu400DAO;
 	@Autowired
+	private Edu404Dao edu404Dao;
+	@Autowired
 	private Edu402Dao edu402DAO;
 	@Autowired
 	private Edu403Dao edu403DAO;
@@ -1064,6 +1066,37 @@ public class AdministrationPageService {
 			addLog(userId,actionKey,bussinsneType,edu400.getEdu400_ID()+"");
 			resultVO = ResultVO.setSuccess("操作成功",edu400.getEdu400_ID());
 		}
+		return resultVO;
+	}
+
+	// 新增补考录入时间限制
+	public ResultVO addNewMUTime(Edu404 edu404,String userId) {
+
+		ResultVO resultVO;
+		int actionKey = 8;
+		int bussinsneType = 1;
+		if(edu404.getEdu404_ID() == null){
+			List<Edu404> edu404List = edu404Dao.findbyxnid(edu404.getXnid());
+			if(edu404List.size()>0){
+				resultVO = ResultVO.setFailed("该学年已设置补考录入时间");
+				return resultVO;
+			}
+			actionKey = 7;
+			bussinsneType = 0;
+		}
+		edu404Dao.save(edu404);
+		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
+		resultVO = ResultVO.setSuccess("操作成功",edu404.getEdu404_ID());
+		return resultVO;
+	}
+	public ResultVO endNewMUTime(Edu404 edu404,String userId) {
+		ResultVO resultVO;
+		int actionKey = 9;
+		int bussinsneType = 1;
+		edu404.setStatus("1");
+		edu404Dao.save(edu404);
+		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
+		resultVO = ResultVO.setSuccess("操作成功",edu404.getEdu404_ID());
 		return resultVO;
 	}
 
@@ -2563,9 +2596,11 @@ public class AdministrationPageService {
 				edu403POList.add(edu403PO);
 			}
 		}
+		List<Edu404> addMUxz = edu404Dao.findAll();
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
 		returnMap.put("allKssx", edu403POList);
+		returnMap.put("addMUxz", addMUxz);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
@@ -3505,6 +3540,12 @@ public class AdministrationPageService {
 					if(edu005 == null){
 						resultVO = ResultVO.setFailed("第"+rowIndex+"行您不是该课程的任课教课");
 						return resultVO;
+					}else{
+						Edu404 edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
+						if (edu404 == null || "1".equals(edu404.getStatus())){
+							resultVO = ResultVO.setFailed("补考录入时间已截止!");
+							return resultVO;
+						}
 					}
 				}
 				XSSFCell cell6 = contentRow.getCell(6);
