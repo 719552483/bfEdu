@@ -403,7 +403,6 @@ function onUncheckAllDepartment(row){
 	}
 }
 
-
 var choosendGrade=new Array();
 //填充年级表
 function stuffAllGradeTable(allGrade){
@@ -560,7 +559,6 @@ function onUncheckAllGrade(row){
 		}
 	}
 }
-
 
 var choosendMajor=new Array();
 //填充专业表
@@ -1745,7 +1743,6 @@ function sendMajorRemoveInfo(removeArray){
 		}
 	});
 }
-
 /**
  * tab1 end
  * */
@@ -1791,10 +1788,12 @@ function getAllStuffTab2Info(){
 						str += '<option value="' + backjson.data.allXn[i].edu400_ID + '">' + backjson.data.allXn[i].xnmc + '</option>';
 					}
 					stuffManiaSelect(".xnForSelect", str);
+					stuffManiaSelect("#bksjLimit_Xn", str);
 				}
 				stuffAllXnTable(backjson.data.allXn);
 				stuffChangeCrouseRoleTable(backjson.data.allJs);
 				stuffAllkjLimitTable(backjson.data.allKssx);
+				stuffAllbksjLimitTable(backjson.data.allMUxz);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -2985,362 +2984,298 @@ function updateLimitTable(eve){
 	}
 }
 
-// //填充课节表
-// function stuffAllKjTable(allkj){
-// 	allkj=sortKjInfo(allkj);
-// 	window.releaseNewsEvents = {
-// 			'click #modifyKj': function(e, value, row, index) {
-// 				modifyKj(row,index);
-// 			},
-// 			'click #removeKj': function(e, value, row, index) {
-// 				removeKj(row,index);
-// 			},
-// 			'click #confrimModifyKj': function(e, value, row, index) {
-// 				confrimModifyKj(row,index);
-// 			},
-// 			'click #cancelModifyKj': function(e, value, row, index) {
-// 				cancelModifyKj(row,index);
-// 			}
-// 		};
-//
-// 		$('#kjTable').bootstrapTable('destroy').bootstrapTable({
-// 			data: allkj,
-// 			pagination: true,
-// 			pageNumber: 1,
-// 			pageSize: 5,
-// 			pageList: [5],
-// 			showToggle: false,
-// 			showFooter: false,
-// 			clickToSelect: true,
-// 			search: true,
-// 			editable: false,
-// 			striped: true,
-// 			toolbar: '#toolbar',
-// 			showColumns: false,
-// 			onPageChange: function() {
-// 				drawPagination(".kjTableArea", "课节");
-// 			},
-// 			columns: [{
-// 					field: 'edu401_ID',
-// 					title: 'edu401_ID',
-// 					align: 'center',
-// 					visible: false
-// 				},
-// 				{
-// 					field: 'kjsx',
-// 					title: '课节顺序',
-// 					align: 'left',
-// 					formatter: paramsMatter
-// 				},
-// 				{
-// 					field: 'kjmc',
-// 					title: '课节名称',
-// 					align: 'left',
-// 					formatter: kjmcMatter
-// 				},
-// 				{
-// 					field: 'sjd',
-// 					title: '上下午(晚)',
-// 					align: 'left',
-// 					formatter: sjdMatter
-// 				},{
-// 					field: 'kjsc',
-// 					title: '课节时长(分钟)',
-// 					align: 'left',
-// 					formatter: paramsMatter
-// 				},{
-// 					field: 'action',
-// 					title: '操作',
-// 					align: 'center',
-// 					clickToSelect: false,
-// 					formatter: releaseNewsFormatter,
-// 					events: releaseNewsEvents,
-// 				}
-// 			]
-// 		});
-//
-// 		function releaseNewsFormatter(value, row, index) {
-// 			return [
-// 					'<ul class="toolbar tabletoolbar">' +
-// 					'<li id="modifyKj" class="modifyBtn modifyKj'+index+'"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-// 					'<li id="removeKj" class="modifyBtn removeKj'+index+'"><span><img src="images/t03.png" style="width:24px"></span>删除</li>' +
-// 					'<li id="confrimModifyKj" class="noneStart confrimKj'+index+'"><span><img src="img/right.png" style="width:24px"></span>确定</li>' +
-// 					'<li id="cancelModifyKj" class="noneStart cancelKj'+index+'"><span><img src="images/t03.png" style="width:24px"></span>取消</li>' +
-// 					'</ul>'
-// 				]
-// 				.join('');
-// 		}
-//
-// 		function kjmcMatter(value, row, index) {
-// 			return [
-// 					'<div class="myTooltip kjmcTxt'+index+'" title="'+row.kjmc+'">'+row.kjmc+'</div><input name="" type="text" class="dfinput Mydfinput noneStart" id="modifykjmc'+index+'" spellcheck="false">'
-// 				]
-// 				.join('');
-// 		}
-//
-//
-// 		function sjdMatter(value, row, index) {
-// 			var str="";
-// 			if(row.sjd==="forenoon"){
-// 				str="上午";
-// 			}else if(row.sjd==="afternoon"){
-// 				str="下午";
-// 			}else{
-// 				str="晚上";
-// 			}
-//
-// 			return [
-// 					'<div class="myTooltip" title="'+str+'">'+str+'</div>'
-// 				]
-// 				.join('');
-// 		}
-//
-// 		drawSearchInput(".kjTableArea");
-// 		drawPagination(".kjTableArea", "课节");
-// 		toolTipUp(".myTooltip");
-// 		btnControl();
-// }
-//
-// //课节排序
-// function sortKjInfo(kjinfo){
-// 	var returnArray=new Array();
-// 	var forenoonArray=new Array();
-// 	var afternoonArray=new Array();
-// 	var eveingArray=new Array();
-// 	for (var i = 0; i < kjinfo.length; i++) {
-// 		if(kjinfo[i].sjd==="forenoon"){
-// 			forenoonArray.push(kjinfo[i]);
-// 		}else if(kjinfo[i].sjd==="afternoon"){
-// 			afternoonArray.push(kjinfo[i]);
-// 		}else{
-// 			eveingArray.push(kjinfo[i]);
-// 		}
-// 	}
-// 	forenoonArray.sort(function (a,b){return a.kjsx-b.kjsx;});
-// 	afternoonArray.sort(function (a,b){return a.kjsx-b.kjsx;});
-// 	eveingArray.sort(function (a,b){return a.kjsx-b.kjsx;});
-// 	for (var i = 0; i < forenoonArray.length; i++) {
-// 		returnArray.push(forenoonArray[i]);
-// 	}
-// 	for (var i = 0; i < afternoonArray.length; i++) {
-// 		returnArray.push(afternoonArray[i]);
-// 	}
-// 	for (var i = 0; i < eveingArray.length; i++) {
-// 		returnArray.push(eveingArray[i]);
-// 	}
-// 	return returnArray;
-// }
-//
-// //预备修改课节
-// function modifyKj(row,index){
-// 	$(".modifyKj"+index).hide();
-// 	$(".removeKj"+index).hide();
-// 	$(".kjmcTxt"+index).hide();
-// 	$("#modifykjmc"+index).show();
-// 	$(".confrimKj"+index).show();
-// 	$(".cancelKj"+index).show();
-// 	$("#modifykjmc"+index).val(row.kjmc);
-// }
-//
-// //预备删除课节
-// function removeKj(row,index){
-// 	$.showModal("#remindModal",true);
-// 	$(".remindType").html("课节");
-// 	$(".remindActionType").html("删除");
-// 	//确认新增关系按钮
-// 	$('.confirmRemind').unbind('click');
-// 	$('.confirmRemind').bind('click', function(e) {
-// 		sendRemoveKjInfo(row);
-// 		e.stopPropagation();
-// 	});
-// }
-//
-// //确认删除课节
-// function sendRemoveKjInfo(row){
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/rmoveKj",
-// 		data: {
-//              "deleteId":JSON.stringify(row.edu401_ID)
-//         },
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			hideloding();
-// 			if (backjson.result) {
-// 				if (backjson.canRemove) {
-// 					var removeArray=new Array();
-// 					removeArray.push(row.edu401_ID);
-// 					tableRemoveAction("#kjTable", removeArray, ".kjTableArea", "课节");
-// 					restuffAllKjTable(row);
-// 					$.hideModal("#remindModal");
-// 					$(".myTooltip").tooltipify();
-// 				}else{
-// 					toastr.warning('不能删除正在使用的课节');
-// 				}
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //删除课节后将现有课节的课节顺序减一 并重新渲染表格
-// function restuffAllKjTable(row){
-// 	var kjTable = $("#kjTable").bootstrapTable("getData");
-// 	for (var i = 0; i < kjTable.length; i++) {
-// 		if(parseInt(kjTable[i].kjsx)>parseInt(row.kjsx)){
-// 			kjTable[i].kjsx=JSON.stringify(parseInt(kjTable[i].kjsx)-1);
-// 		}
-// 	}
-// 	stuffAllKjTable(kjTable);
-// }
-//
-// //确认修改课节
-// function confrimModifyKj(row,index){
-// 	var newKjMC=$("#modifykjmc"+index).val();
-// 	if(newKjMC===row.kjmc){
-// 		cancelModifyKj(row,index);
-// 	}else{
-// 		sendModifyKjMc(row,index);
-// 	}
-// }
-//
-// //取消修改课节
-// function cancelModifyKj(row,index){
-// 	$(".modifyKj"+index).show();
-// 	$(".removeKj"+index).show();
-// 	$(".kjmcTxt"+index).show();
-// 	$("#modifykjmc"+index).hide();
-// 	$(".confrimKj"+index).hide();
-// 	$(".cancelKj"+index).hide();
-// }
-//
-// //预备新增课节
-// function addClassTimePart(){
-// 	$("#classTimePartModal").find(".moadalTitle").html("新增课节");
-// 	$.showModal("#classTimePartModal",true);
-// 	//新增学年
-// 	$('.classTimePart_confimBtn').unbind('click');
-// 	$('.classTimePart_confimBtn').bind('click', function(e) {
-// 		confimAddClassTimePart();
-// 		e.stopPropagation();
-// 	});
-// }
-//
-// //确认新增课节
-// function confimAddClassTimePart(){
-// 	var classTimePart_forXN = getNormalSelectValue("classTimePart_forXN");
-// 	var addKjsjd = getNormalSelectValue("addKjsjd");
-// 	var kjmc = $("#addKjName").val();
-// 	if(addKjsjd===""){
-// 		toastr.warning('请选择课节时间段');
-// 		return;
-// 	}
-//
-// 	if(kjmc===""){
-// 		toastr.warning('课节名称不能为空');
-// 		return;
-// 	}
-//
-// 	var kjObject=new Object();
-// 	classTimePart_forXN===""?kjObject.xnid=null:kjObject.xnid=classTimePart_forXN;
-// 	kjObject.kjmc=kjmc;
-// 	kjObject.sjd=addKjsjd;
-// 	kjObject.kjsc=$("#classTimePart_kjsc").val();
-// 	kjObject.sfwewkj="F";
-// 	sendNewKjInfo(kjObject);
-// }
-//
-// //发送新课节信息
-// function sendNewKjInfo(kjObject){
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/addNewKj",
-// 		dataType : 'json',
-// 		data: {
-//             "kjinfo":JSON.stringify(kjObject)
-//         },
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			hideloding();
-// 			if (backjson.result) {
-// 				if (backjson.nameHave) {
-// 					toastr.warning('课节名称已存在');
-// 					return;
-// 				}
-//
-// 				kjObject.edu401_ID=backjson.id;
-// 				kjObject.kjsx=backjson.kjsx;
-// 				$('#kjTable').bootstrapTable("prepend", kjObject);
-// 				var all = $("#kjTable").bootstrapTable("getData");
-// 				stuffAllKjTable(all);
-// 				$.hideModal("#classTimePartModal");
-// 				toolTipUp(".myTooltip");
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //发送修改课节名称的请求
-// function sendModifyKjMc(row,index){
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/modifyKjMc",
-// 		dataType : 'json',
-// 		data: {
-//             "newKjMc":$("#modifykjmc"+index).val(),
-//             "kjId":JSON.stringify(row.edu401_ID)
-//         },
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			hideloding();
-// 			if (backjson.result) {
-// 				if (backjson.nameHave) {
-// 					toastr.warning('课节名称已存在');
-// 					return;
-// 				}
-// 				$("#kjTable").bootstrapTable('updateCell', {
-// 					index: index,
-// 					field: 'kjmc',
-// 					value: $("#modifykjmc"+index).val()
-// 				});
-// 				toolTipUp(".myTooltip");
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
+//渲染全部补考限制表
+function stuffAllbksjLimitTable(allMUxz){
+	window.releaseNewsEvents = {
+		'click #closeLimit': function(e, value, row, index) {
+			closeLimit(row);
+		},
+		'click #startNextLimit': function(e, value, row, index) {
+			startNextLimit(row);
+		}
+	};
+
+	$('#bksjLimitTable').bootstrapTable('destroy').bootstrapTable({
+		data: allMUxz,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 5,
+		pageList: [5],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".bksjLimitTableArea", "补考成绩录入时间限制");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+			field: 'edu404_ID',
+			title: '唯一ID',
+			align: 'center',
+			sortable: true,
+			visible: false
+			},
+			{
+				field: 'xnmc',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
+				field: 'count',
+				title: '补考次数',
+				align: 'left',
+				sortable: true,
+				formatter: countMatter
+			},{
+				field: 'status',
+				title: '状态',
+				align: 'left',
+				sortable: true,
+				formatter: statusMatter
+			},{
+				field: 'action',
+				title: '操作',
+				align: 'center',
+				clickToSelect: false,
+				formatter: releaseNewsFormatter,
+				events: releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [
+			'<ul class="toolbar tabletoolbar">' +
+			'<li class="modifyBtn" id="closeLimit"><span><img src="images/t03.png" style="width:24px"></span>关闭限制</li>' +
+			'<li class="deleteBtn" id="startNextLimit"><span><img src="img/right.png" style="width:24px"></span>开启下一次限制</li>' +
+			'</ul>'
+		]
+			.join('');
+	}
+
+	function countMatter(value, row, index) {
+		return [ '<div class="myTooltip" title="第'+value+'次补考">第'+value+'次补考</div>' ]
+			.join('');
+	}
+
+	function statusMatter(value, row, index) {
+		var str='';
+		if(value==0||value==='0'){
+			str='开启';
+			return [ '<div class="myTooltip greenTxt" title="'+str+'">'+str+'</div>' ]
+				.join('');
+		}else{
+			str='关闭';
+			return [ '<div class="myTooltip redTxt" title="'+str+'">'+str+'</div>' ]
+				.join('');
+		}
+	}
+
+	drawSearchInput(".bksjLimitTableArea");
+	drawPagination(".bksjLimitTableArea", "补考成绩录入时间限制");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//新增补考限制
+function addBksjLimit(){
+	var reObject = new Object();
+	// reObject.normalSelectIds = "#bksjLimit_Xn,#bksjLimit_timeCount";
+	reObject.normalSelectIds = "#bksjLimit_Xn";
+	reReloadSearchsWithSelect(reObject);
+	$.showModal('#bksjLimitModal',true);
+
+	//确认新增补考限制
+	$('.confirmAddBksjLimit').unbind('click');
+	$('.confirmAddBksjLimit').bind('click', function(e) {
+		confirmAddBksjLimit();
+		e.stopPropagation();
+	});
+}
+
+//确认新增补考限制
+function confirmAddBksjLimit(){
+	var currentBksjLimit= $('#bksjLimitTable').bootstrapTable("getData");
+	var xn=getNormalSelectValue('bksjLimit_Xn');
+	// var timeCount=getNormalSelectValue('bksjLimit_timeCount');
+	if(xn===''){
+		toastr.warning('学年不能为空');
+		return;
+	}
+
+	for (let i = 0; i < currentBksjLimit.length; i++) {
+		if(currentBksjLimit[i].xnid===xn){
+			toastr.warning(currentBksjLimit[i].xnmc+'已存在补考限制');
+			return;
+		}
+	}
+
+	// if(timeCount===''){
+	// 	toastr.warning('补考次数不能为空');
+	// 	return;
+	// }
+	var sendObject=new Object();
+	sendObject.xnid=xn;
+	sendObject.xnmc=getNormalSelectText('bksjLimit_Xn');
+	sendObject.count=1;
+	sendObject.status=0;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/addNewMUTime",
+		dataType : 'json',
+		data: {
+			"muTimeinfo":JSON.stringify(sendObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$('#bksjLimitTable').bootstrapTable("prepend", backjson.data);
+				toastr.success('操作成功');
+				$.hideModal("#bksjLimitModal");
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//关闭补考限制
+function closeLimit(row){
+	if((row.status==1||row.status==='1')&&(row.count==5||row.count==='5')){
+		toastr.warning('第'+row.count+'次补考录入时间限制已关闭');
+		return;
+	}
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.xnmc+"的补考成绩录入时间限制");
+	$(".remindActionType").html("关闭");
+	//确认新增关系按钮
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendCloseLimitInfo(row);
+		e.stopPropagation();
+	});
+}
+
+//发送补考限制信息
+function sendCloseLimitInfo(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/endNewMUTime",
+		dataType : 'json',
+		data: {
+			"edu404Id":row.edu404_ID,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				row.status=1;
+				$('#bksjLimitTable').bootstrapTable('updateByUniqueId', {
+					id: row.edu404_ID,
+					row: row
+				});
+				toastr.success('操作成功');
+				$.hideModal();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//开启下一次限制
+function startNextLimit(row){
+	if(row.status==0||row.status==='0'){
+		toastr.warning('请先关闭上一次补考成绩录入时间限制');
+		return;
+	}
+
+	if(row.count==5||row.count==='5'){
+		toastr.warning('一个学年最多操作5次补考成绩录入时间限制');
+		return;
+	}
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.xnmc+"的下一次补考成绩录入时间限制");
+	$(".remindActionType").html("开启");
+	//确认新增关系按钮
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendStartNextLimitInfo(row);
+		e.stopPropagation();
+	});
+}
+
+//发送开启下一次限制信息
+function sendStartNextLimitInfo(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/startNewMUTime",
+		dataType : 'json',
+		data: {
+			"edu404Id":row.edu404_ID,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				row.status=0;
+				row.count=parseInt(row.count)+1;
+				$('#bksjLimitTable').bootstrapTable('updateByUniqueId', {
+					id: row.edu404_ID,
+					row: row
+				});
+				toastr.success('操作成功');
+				$.hideModal();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
 // tab2按钮事件绑定
 function tab2BtnBind(){
@@ -3364,6 +3299,13 @@ function tab2BtnBind(){
 		addkjLimit();
 		e.stopPropagation();
 	});
+
+	//新增补考限制
+	$('#addBksjLimit').unbind('click');
+	$('#addBksjLimit').bind('click', function(e) {
+		addBksjLimit();
+		e.stopPropagation();
+	});
 }
 /**
  * tab2 end
@@ -3372,581 +3314,6 @@ function tab2BtnBind(){
 
 
 
-
-
-// /**
-//  * tab3
-//  * */
-// //判断是否首次点击层级关系管理
-// function judgmentIsFristTimeLoadTab3(){
-// 	var isFirstShowTab3 = $(".isFirstShowTab3")[0].innerText;
-// 	stuffRelationTipSelect();
-// 	if (isFirstShowTab3 === "T") {
-// 		$(".isFirstShowTab3").html("F");
-// 		getAllRelationInfo();
-// 		tab3BtnBind();
-// 	}
-// }
-//
-// //层次关系管理页面按钮事件绑定
-// function tab3BtnBind(){
-// 	//批量删除关系
-// 	$('#removeRelations').unbind('click');
-// 	$('#removeRelations').bind('click', function(e) {
-// 		removeRelations();
-// 		e.stopPropagation();
-// 	});
-//
-// 	//预备新增关系
-// 	$('#addRelation').unbind('click');
-// 	$('#addRelation').bind('click', function(e) {
-// 		wantAddRelation();
-// 		e.stopPropagation();
-// 	});
-//
-// 	//开始检索层次关系
-// 	$('#startSearch_relation').unbind('click');
-// 	$('#startSearch_relation').bind('click', function(e) {
-// 		relationStartSearch();
-// 		e.stopPropagation();
-// 	});
-//
-// 	//层次关系重置检索
-// 	$('#reReloadSearchs_relation').unbind('click');
-// 	$('#reReloadSearchs_relation').bind('click', function(e) {
-// 		relationReloadSearchs();
-// 		e.stopPropagation();
-// 	});
-//
-// }
-//
-// //获取所有层次关系
-// function getAllRelationInfo(){
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/getAllRelationInfo",
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			if (backjson.result) {
-// 				stuffAllRelationInfoTable(backjson.allRelationInfo);
-// 				hideloding();
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //填充层次关系管理表
-// function stuffAllRelationInfoTable(allRelationInfo){
-// 	window.releaseNewsEvents = {
-// 			'click #modifyRelation': function(e, value, row, index) {
-// 				modifyRelation(row);
-// 			},
-// 			'click #removeRelation': function(e, value, row, index) {
-// 				removeRelation(row.edu107_ID);
-// 			}
-// 		};
-//
-// 		$('#relationTable').bootstrapTable('destroy').bootstrapTable({
-// 			data: allRelationInfo,
-// 			pagination: true,
-// 			pageNumber: 1,
-// 			pageSize: 10,
-// 			pageList: [10],
-// 			showToggle: false,
-// 			showFooter: false,
-// 			clickToSelect: true,
-// 			search: true,
-// 			editable: false,
-// 			striped: true,
-// 			toolbar: '#toolbar',
-// 			showColumns: false,
-// 			onPageChange: function() {
-// 				drawPagination(".relationTableArea", "培养计划信息");
-// 			},
-// 			columns: [{
-// 					field: 'edu107_ID',
-// 					title: 'edu107_ID',
-// 					align: 'center',
-// 					visible: false
-// 				}, {
-// 					field: 'yxbz',
-// 					title: '有效标志',
-// 					align: 'left',
-// 					visible: false
-// 				},
-// 				{
-// 					field: 'check',
-// 					checkbox: true
-// 				},
-// 				{
-// 					field: 'pyjhmc',
-// 					title: '培养计划名称',
-// 					align: 'left',
-// 					formatter: paramsMatter
-//
-// 				},
-// 				{
-// 					field: 'edu103mc',
-// 					title: '培养层次名称',
-// 					align: 'left',
-// 					formatter: paramsMatter
-//
-// 				},
-// 				{
-// 					field: 'edu103',
-// 					title: '培养层次代码',
-// 					align: 'left',
-// 					visible: false
-// 				},
-// 				{
-// 					field: 'edu104mc',
-// 					title: '二级学院名称',
-// 					align: 'left',
-// 					formatter: paramsMatter
-//
-// 				},{
-// 					field: 'edu104',
-// 					title: '二级学院编码',
-// 					align: 'left',
-// 					visible: false
-// 				},{
-// 					field: 'edu105mc',
-// 					title: '年级名称',
-// 					align: 'left',
-// 					formatter: paramsMatter
-//
-// 				},{
-// 					field: 'edu105',
-// 					title: '年级编码',
-// 					align: 'left',
-// 					visible: false
-// 				},{
-// 					field: 'edu106mc',
-// 					title: '专业名称',
-// 					align: 'left',
-// 					formatter: paramsMatter
-//
-// 				},{
-// 					field: 'edu106',
-// 					title: '专业编码',
-// 					align: 'left',
-// 					visible: false
-// 				},{
-// 					field: 'action',
-// 					title: '操作',
-// 					align: 'center',
-// 					clickToSelect: false,
-// 					formatter: releaseNewsFormatter,
-// 					events: releaseNewsEvents,
-// 				}
-// 			]
-// 		});
-//
-// 		function releaseNewsFormatter(value, row, index) {
-// 			return [
-// 					'<ul class="toolbar tabletoolbar">' +
-// 					'<li id="modifyRelation" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
-// 					'<li id="removeRelation" class="deleteBtn"><span><img src="images/t03.png"></span>删除</li>' +
-// 					'</ul>'
-// 				]
-// 				.join('');
-// 		}
-// 		drawSearchInput(".relationTableArea");
-// 		drawPagination(".relationTableArea", "培养计划信息");
-// 		toolTipUp(".myTooltip");
-// 		btnControl();
-// }
-//
-// //预备修改关系
-// function modifyRelation(row){
-// 	stufDeadultRelation(row);
-// 	$.showModal("#addNewRelationModal",true);
-// 	$("#addNewRelationModal").find(".moadalTitle").html("修改培养计划");
-// 	//确认新增关系按钮
-// 	$('.addNewRelationTip_confimBtn').unbind('click');
-// 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
-// 		confimModifyRelation(row);
-// 		e.stopPropagation();
-// 	});
-// }
-//
-// //修改时填充该行信息到层次关系选择区
-// function stufDeadultRelation(row){
-// 	stuffManiaSelectWithDeafult("#addNewRelation_level",row.pyccbm);  //填充默认培养层次
-// 	stuffManiaSelectWithDeafult("#addNewRelation_department",row.xbbm);  //填充默认二级学院
-// 	stuffManiaSelectWithDeafult("#addNewRelation_garde",row.njbm);  //填充默认年级
-// 	stuffManiaSelectWithDeafult("#addNewRelation_major",row.zybm);  //填充默认专业
-// 	$("#addNewRelation_RelationName").val(row.pyjhmc);//填充默认培养计划名称
-// }
-//
-// //确认修改关系
-// function confimModifyRelation(row){
-// 	var newRelationObject=getRelationSelectInfo();
-//
-// 	if(typeof newRelationObject ==='undefined'){
-// 		return;
-// 	}
-// 	newRelationObject.yxbz=row.yxbz;
-// 	newRelationObject.edu107_ID=row.edu107_ID;
-//
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/updateRelation",
-// 		data: {
-//              "updateinfo":JSON.stringify(newRelationObject)
-//         },
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			if (backjson.result) {
-// 				hideloding();
-// 				if(backjson.have){
-// 					toastr.warning('层次关系已存在');
-// 					return;
-// 				}
-// 				if(backjson.relationNameHave){
-// 					toastr.warning('培养计划名称已存在');
-// 					return;
-// 				}
-// 				$("#relationTable").bootstrapTable('updateByUniqueId', {
-// 					id: row.edu107_ID,
-// 					row: newRelationObject
-// 				});
-// 				toastr.success('修改培养计划成功');
-// 				$.hideModal("#addNewRelationModal");
-// 				$(".myTooltip").tooltipify();
-// 				drawPagination(".relationTableArea", "培养计划信息");
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //预备新增关系
-// function wantAddRelation(){
-// 	$.showModal("#addNewRelationModal",true);
-// 	$("#addNewRelationModal").find(".moadalTitle").html("新增培养计划");
-// 	emptyRelationChooseArea();
-// 	//确认新增关系按钮
-// 	$('.addNewRelationTip_confimBtn').unbind('click');
-// 	$('.addNewRelationTip_confimBtn').bind('click', function(e) {
-// 		confimAddNewRelation();
-// 		e.stopPropagation();
-// 	});
-// }
-//
-// //确认新增关系
-// function confimAddNewRelation(){
-// 	var newRelationObject=getRelationSelectInfo();
-// 	if(typeof newRelationObject ==='undefined'){
-// 		return;
-// 	}
-//
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/addNewRelation",
-// 		data: {
-//              "newRelationInfo":JSON.stringify(newRelationObject)
-//         },
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			if (backjson.result) {
-// 				hideloding();
-// 				if(backjson.have){
-// 					toastr.warning('层次关系已存在');
-// 					return;
-// 				}
-// 				if(backjson.relationNameHave){
-// 					toastr.warning('培养计划名称已存在');
-// 					return;
-// 				}
-// 				newRelationObject.edu107_ID=backjson.id;
-// 				newRelationObject.yxbz=backjson.yxbz;
-// 				$('#relationTable').bootstrapTable('prepend', newRelationObject);
-// 				toastr.success('新增培养计划成功');
-// 				$.hideModal("#addNewRelationModal");
-// 				$(".myTooltip").tooltipify();
-// 				drawPagination(".relationTableArea", "培养计划信息");
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //获得关系模态框中select 的值
-// function getRelationSelectInfo(){
-// 	var relationlLevelValue = getNormalSelectValue("addNewRelation_level");
-// 	var relationlLevelText = getNormalSelectText("addNewRelation_level");
-// 	var relationDepartmentValue = getNormalSelectValue("addNewRelation_department");
-// 	var relationDepartmentText = getNormalSelectText("addNewRelation_department");
-// 	var relationGardeValue = getNormalSelectValue("addNewRelation_garde");
-// 	var relationGardeText = getNormalSelectText("addNewRelation_garde");
-// 	var relationMmajorValue = getNormalSelectValue("addNewRelation_major");
-// 	var relationMmajorText = getNormalSelectText("addNewRelation_major");
-// 	var relationName =$("#addNewRelation_RelationName").val();
-//
-// 	if(relationName===""){
-// 		toastr.warning('培养计划名称不能为空');
-// 		return;
-// 	}
-//
-// 	if(relationlLevelValue===""){
-// 		toastr.warning('请选择培养层次');
-// 		return;
-// 	}
-//
-// 	if(relationDepartmentValue===""){
-// 		toastr.warning('请选择二级学院');
-// 		return;
-// 	}
-//
-// 	if(relationGardeValue===""){
-// 		toastr.warning('请选择年级');
-// 		return;
-// 	}
-// 	if(relationMmajorValue===""){
-// 		toastr.warning('请选择专业');
-// 		return;
-// 	}
-//
-// 	var newRelationObject=new Object();
-// 	newRelationObject.edu103mc=relationlLevelText;
-// 	newRelationObject.edu104mc=relationDepartmentText;
-// 	newRelationObject.edu105mc=relationGardeText;
-// 	newRelationObject.edu106mc=relationMmajorText;
-// 	newRelationObject.edu103=relationlLevelValue;
-// 	newRelationObject.edu104=relationDepartmentValue;
-// 	newRelationObject.edu105=relationGardeValue;
-// 	newRelationObject.edu106=relationMmajorValue;
-// 	newRelationObject.pyjhmc=relationName;
-// 	return newRelationObject;
-// }
-//
-// //清空关系模态框中select的值
-// function emptyRelationChooseArea(){
-// 	var reObject = new Object();
-// 	reObject.normalSelectIds = "#addNewRelation_level,#addNewRelation_department,#addNewRelation_garde,#addNewRelation_major";
-// 	reObject.InputIds = "#addNewRelation_RelationName";
-// 	reReloadSearchsWithSelect(reObject);
-// }
-//
-// //填充新增关系模态框中的下拉框选项
-// function stuffRelationTipSelect(){
-// 	$('.isSowIndex').selectMania(); //初始化下拉框
-// 	var allLevls = $("#allLevlTable").bootstrapTable("getData");
-// 	var allDepartments = $("#allDepartmentTable").bootstrapTable("getData");
-// 	var allGrades = $("#allGradeTable").bootstrapTable("getData");
-// 	var allMajors = $("#allMajorTable").bootstrapTable("getData");
-//
-// 	//层次下拉框
-// 	if(allLevls.length!==0){
-// 		var str = '<option value="seleceConfigTip">请选择</option>';
-// 		for (var i = 0; i < allLevls.length; i++) {
-// 			str += '<option value="' + allLevls[i].edu103_ID + '">' + allLevls[i].pyccmc + '</option>';
-// 		}
-// 		stuffManiaSelect("#addNewRelation_level", str);
-// 	}
-//
-// 	//二级学院下拉框
-// 	if(allDepartments.length!==0){
-// 		var str = '<option value="seleceConfigTip">请选择</option>';
-// 		for (var i = 0; i < allDepartments.length; i++) {
-// 			str += '<option value="' + allDepartments[i].edu104_ID + '">' + allDepartments[i].xbmc + '</option>';
-// 		}
-// 		stuffManiaSelect("#addNewRelation_department", str);
-// 	}
-//
-// 	//年级下拉框
-// 	if(allGrades.length!==0){
-// 		var str = '<option value="seleceConfigTip">请选择</option>';
-// 		for (var i = 0; i < allGrades.length; i++) {
-// 			str += '<option value="' + allGrades[i].edu105_ID + '">' + allGrades[i].njmc + '</option>';
-// 		}
-// 		stuffManiaSelect("#addNewRelation_garde", str);
-// 	}
-//
-// 	//专业下拉框
-// 	if(allMajors.length!==0){
-// 		var str = '<option value="seleceConfigTip">请选择</option>';
-// 		for (var i = 0; i < allMajors.length; i++) {
-// 			str += '<option value="' + allMajors[i].edu106_ID + '">' + allMajors[i].zymc + '</option>';
-// 		}
-// 		stuffManiaSelect("#addNewRelation_major", str);
-// 	}
-// }
-//
-// //单个删除关系
-// function removeRelation(removeID){
-// 	$.showModal("#remindModal",true);
-// 	$(".remindType").html("培养计划");
-// 	$(".remindActionType").html("删除");
-// 	//确认新增关系按钮
-// 	$('.confirmRemind').unbind('click');
-// 	$('.confirmRemind').bind('click', function(e) {
-// 		var removeArray = new Array;
-// 		removeArray.push(removeID);
-// 		sendRelationRemoveInfo(removeArray);
-// 		e.stopPropagation();
-// 	});
-// }
-//
-// //批量删除关系
-// function removeRelations() {
-// 	var chosenRelations = $('#relationTable').bootstrapTable('getAllSelections');
-// 	if (chosenRelations.length === 0) {
-// 		toastr.warning('暂未选择任何数据');
-// 		return;
-// 	}
-//
-// 	$.showModal("#remindModal",true);
-// 	$(".remindType").html("培养计划");
-// 	$(".remindActionType").html("删除");
-// 	$('.confirmRemind').unbind('click');
-// 	$('.confirmRemind').bind('click', function(e) {
-// 		var removeArray = new Array;
-// 		for (var i = 0; i < chosenRelations.length; i++) {
-// 			removeArray.push(chosenRelations[i].edu107_ID);
-// 		}
-// 		sendRelationRemoveInfo(removeArray);
-// 		e.stopPropagation();
-// 	});
-// }
-//
-// //发送删除关系请求
-// function sendRelationRemoveInfo(removeArray){
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/removeRelation",
-// 		data: {
-//              "deleteIds":JSON.stringify(removeArray)
-//         },
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			hideloding();
-// 			if (backjson.result) {
-// 				if (backjson.canRemove) {
-// 					tableRemoveAction("#relationTable", removeArray, ".relationTableArea", "培养计划信息");
-// 					$.hideModal("#remindModal");
-// 					$(".myTooltip").tooltipify();
-// 				}else{
-// 					toastr.warning('不能删除正在使用的培养计划');
-// 				}
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //开始检索层次关系
-// function relationStartSearch(){
-// 	var lvelName=$("#relation_seaechLvel").val();
-// 	var deaparmentName=$("#relation_seaechDeaparment").val();
-// 	var gradeName=$("#relation_seaechGrade").val();
-// 	var majorName=$("#relation_seaechMajor").val();
-// 	if(lvelName===""&&deaparmentName===""&&gradeName===""&&majorName===""){
-// 		toastr.warning('请输入检索条件');
-// 		return;
-// 	}
-//
-// 	var serachObject=new Object();
-// 	lvelName===""?serachObject.lvelName="":serachObject.lvelName=lvelName;
-// 	deaparmentName===""?serachObject.deaparmentName="":serachObject.deaparmentName=deaparmentName;
-// 	gradeName===""?serachObject.gradeName="":serachObject.gradeName=gradeName;
-// 	majorName===""?serachObject.majorName="":serachObject.majorName=majorName;
-//
-// 	// 发送查询所有用户请求
-// 	$.ajax({
-// 		method : 'get',
-// 		cache : false,
-// 		url : "/seacchRelation",
-// 		data: {
-//              "SearchCriteria":JSON.stringify(serachObject)
-//         },
-// 		dataType : 'json',
-// 		beforeSend: function(xhr) {
-// 			requestErrorbeforeSend();
-// 		},
-// 		error: function(textStatus) {
-// 			requestError();
-// 		},
-// 		complete: function(xhr, status) {
-// 			requestComplete();
-// 		},
-// 		success : function(backjson) {
-// 			if (backjson.result) {
-// 				hideloding();
-// 				if(backjson.relationList.length===0){
-// 					toastr.warning('暂无数据');
-// 				}
-// 				stuffAllRelationInfoTable(backjson.relationList);
-// 			} else {
-// 				toastr.warning('操作失败，请重试');
-// 			}
-// 		}
-// 	});
-// }
-//
-// //层次关系重置检索
-// function relationReloadSearchs(){
-// 	var reObject = new Object();
-// 	reObject.InputIds = "#relation_seaechRelationName,#relation_seaechLvel,#relation_seaechDeaparment,#relation_seaechGrade,#relation_seaechMajor";
-// 	reReloadSearchsWithSelect(reObject);
-// 	getAllRelationInfo();
-// }
-// /**
-//  * tab3 end
-//  * */
-
-
-// //填充年份选择器
-// function stuffYearSearchElement(eve){
-// 	$(eve).attr("value",45);
-// 	$(eve).InputSpinner();
-// }
 
 //页面初始化时按钮事件绑定
 function btnbind(){
