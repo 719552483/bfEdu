@@ -1086,7 +1086,7 @@ public class AdministrationPageService {
 		}
 		edu404Dao.save(edu404);
 		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
-		resultVO = ResultVO.setSuccess("操作成功",edu404.getEdu404_ID());
+		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
 	public ResultVO endNewMUTime(Edu404 edu404,String userId) {
