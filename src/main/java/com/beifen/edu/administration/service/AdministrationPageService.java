@@ -2596,11 +2596,11 @@ public class AdministrationPageService {
 				edu403POList.add(edu403PO);
 			}
 		}
-		List<Edu404> addMUxz = edu404Dao.findAll();
+		List<Edu404> allMUxz = edu404Dao.findAll();
 		returnMap.put("allXn", allXn);
 		returnMap.put("allJs", allJs);
 		returnMap.put("allKssx", edu403POList);
-		returnMap.put("addMUxz", addMUxz);
+		returnMap.put("allMUxz", allMUxz);
 		resultVO = ResultVO.setSuccess("查询成功", returnMap);
 		return resultVO;
 	}
