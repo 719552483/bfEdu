@@ -2818,10 +2818,6 @@ input:focus{
 	margin-top: 5px;
 }
 
-.drawCalenrRangeCol{
-	min-width: 474px;
-}
-
 /*拆班表的多选select end*/
 .drawCalenrRangeArea .dfinput::-webkit-input-placeholder{
 	/* placeholder颜色  */
