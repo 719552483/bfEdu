@@ -812,11 +812,11 @@ public class AdministrationPageService {
 		Specification<Edu996> specification = new Specification<Edu996>() {
 			public Predicate toPredicate(Root<Edu996> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu996.getActionValue() != null && !"".equals(edu996.getActionValue())) {
-					predicates.add(cb.like(root.<String>get("actionValue"), '%' + edu996.getActionValue() + '%'));
+				if (edu996.getActionKey() != null && !"".equals(edu996.getActionKey())) {
+					predicates.add(cb.equal(root.<String>get("actionKey"), edu996.getActionKey()));
 				}
-				if (edu996.getBussinsneValue() != null && !"".equals(edu996.getBussinsneValue())) {
-					predicates.add(cb.like(root.<String>get("bussinsneValue"), '%' + edu996.getBussinsneValue() + '%'));
+				if (edu996.getBussinsneType() != null && !"".equals(edu996.getBussinsneType())) {
+					predicates.add(cb.equal(root.<String>get("bussinsneType"),edu996.getBussinsneType()));
 				}
 				if(startTime != null && !"".equals(startTime) && endTime != null && !"".equals(endTime)){
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM

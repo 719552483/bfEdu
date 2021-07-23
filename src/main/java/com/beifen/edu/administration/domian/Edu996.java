@@ -9,9 +9,9 @@ public class Edu996 {
 	private Long Edu996_ID; //日志ID
 	private String user_ID;//用户ID
 	private String user_name;//用户姓名
-	private int actionKey;//操作参数
+	private Integer actionKey;//操作参数
 	private String actionValue;//操作名称
-	private int bussinsneType;//业务类型
+	private Integer bussinsneType;//业务类型
 	private String bussinsneValue;//业务类型
 	private String bussinsneinfo;//业务信息
 	private String time;//访问时间
@@ -45,11 +45,11 @@ public class Edu996 {
 		this.user_name = user_name;
 	}
 
-	public int getActionKey() {
+	public Integer getActionKey() {
 		return actionKey;
 	}
 
-	public void setActionKey(int actionKey) {
+	public void setActionKey(Integer actionKey) {
 		this.actionKey = actionKey;
 	}
 
@@ -61,11 +61,11 @@ public class Edu996 {
 		this.actionValue = actionValue;
 	}
 
-	public int getBussinsneType() {
+	public Integer getBussinsneType() {
 		return bussinsneType;
 	}
 
-	public void setBussinsneType(int bussinsneType) {
+	public void setBussinsneType(Integer bussinsneType) {
 		this.bussinsneType = bussinsneType;
 	}
 
