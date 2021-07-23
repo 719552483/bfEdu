@@ -874,7 +874,7 @@ public class AdministrationPageService {
 		Map<String, Object> returnMap = new HashMap<>();
 		returnMap.put("rows",edu996s);
 		returnMap.put("total",count);
-		resultVO = ResultVO.setSuccess("共找到"+count+"条数据",returnMap);
+		resultVO = ResultVO.setSuccess("共找到"+count+"条数据",edu996s);
 		return resultVO;
 	}
 
