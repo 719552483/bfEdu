@@ -36,10 +36,11 @@ function stuffLogInfoTable() {
             clickToSelect: true,
             striped: true,
             toolbar: '#toolbar',
-            showColumns: false,
+            showColumns: true,
             onPostBody: function() {
                 drawPagination(".actionLogTableArea", "操作记录","serverPage",1);
                 drawSearchInput(".actionLogTableArea");
+                changeColumnsStyle( ".actionLogTableArea", "操作记录","serverPage");
                 changeTableNoRsTip();
                 toolTipUp(".myTooltip");
             },
@@ -57,23 +58,28 @@ function stuffLogInfoTable() {
                     field: 'actionValue',
                     title: '业务类型',
                     align: 'left',
-                    sortable: true,
-                    visible: true
+                    sortable: true
                 },
                 {
                     field: 'bussinsneValue',
                     title: '操作类型',
                     align: 'left',
                     sortable: true,
+                    formatter: paramsMatter,
+                    visible: false
+                }, {
+                    field: 'operationalInfo',
+                    title: '操作关键字',
+                    align: 'left',
+                    sortable: true,
                     formatter: paramsMatter
-
                 }, {
                     field: 'user_name',
                     title: '操作人',
                     align: 'left',
                     sortable: true,
                     formatter: paramsMatter
-                }, {
+                },{
                     field: 'time',
                     title: '操作时间',
                     align: 'left',
