@@ -846,7 +846,7 @@ public class AdministrationPageService {
 					}
 				}
 				query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
-				query.orderBy(cb.desc(root.get("time").as(Date.class)));
+				query.orderBy(cb.desc(root.get("time")));
 				return query.getRestriction();
 			}
 		};
