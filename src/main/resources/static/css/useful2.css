@@ -2809,6 +2809,7 @@ input:focus{
 .drawCalenrRangeArea .selectName{
 	width: 7%;
 	margin-top: 12px!important;
+	margin-right: 34px;
 }
 
 .drawCalenrRangeArea .dfinput{
@@ -2829,7 +2830,7 @@ input:focus{
 	font-size: 12px;
 	/* placeholder位置  */
 	text-align: left;
-	text-indent: 10px;
+	text-indent: 50px;
 }
 
 .datetimepicker .clear{
