@@ -822,6 +822,9 @@ public class AdministrationPageService {
 				if (edu996.getBussinsneType() != null && !"".equals(edu996.getBussinsneType())) {
 					predicates.add(cb.equal(root.<String>get("bussinsneType"),edu996.getBussinsneType()));
 				}
+				if (edu996.getUser_name() != null && !"".equals(edu996.getUser_name())) {
+					predicates.add(cb.like(root.<String> get("user_name()"),"%"+edu996.getUser_name()+"%"));
+				}
 				if(startTime != null && !"".equals(startTime) && endTime != null && !"".equals(endTime)){
 //					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
 //					try {
