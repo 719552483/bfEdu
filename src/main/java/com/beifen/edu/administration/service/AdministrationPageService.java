@@ -797,8 +797,9 @@ public class AdministrationPageService {
 		}
 
 		for (String s : removeIdList) {
+			String name = edu200DAO.findOne(Long.parseLong(s)).getKcmc();
 			edu200DAO.removeLibraryClassById(s);
-			addLog(user_id,3,2,s);
+			addLog(user_id,3,2,s,name);
 		}
 
 		resultVO = ResultVO.setSuccess("共计删除了" + removeIdList.size() + "门课程");
@@ -1155,7 +1156,7 @@ public class AdministrationPageService {
 				bussinsneType = 0;
 			}
 			edu400DAO.save(edu400);
-			addLog(userId,actionKey,bussinsneType,edu400.getEdu400_ID()+"");
+			addLog(userId,actionKey,bussinsneType,edu400.getEdu400_ID()+"",edu400.getXnmc());
 			resultVO = ResultVO.setSuccess("操作成功",edu400.getEdu400_ID());
 		}
 		return resultVO;
@@ -1177,7 +1178,7 @@ public class AdministrationPageService {
 			bussinsneType = 0;
 		}
 		edu404Dao.save(edu404);
-		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
+		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"",edu404.getXnmc());
 		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
@@ -1189,7 +1190,7 @@ public class AdministrationPageService {
 		Edu404 edu404 = edu404Dao.findOne(Long.parseLong(edu404Id));
 		edu404.setStatus("1");
 		edu404Dao.save(edu404);
-		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
+		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"",edu404.getXnmc());
 		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
@@ -1229,7 +1230,7 @@ public class AdministrationPageService {
 		edu404.setCount(count+"");
 		edu404.setStatus("1");
 		edu404Dao.save(edu404);
-		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"");
+		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"",edu404.getXnmc());
 		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
@@ -2305,7 +2306,8 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 		for (String s : stopList) {
 			edu200DAO.updateState(s, "passing");
-			addLog(user_id,2,1,s);
+			String kcmc = edu200DAO.findOne(Long.parseLong(s)).getKcmc();
+			addLog(user_id,2,1,s,kcmc);
 			edu600.setBusinessKey(Long.parseLong(s));
 			boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 			if (!isSuccess) {
@@ -2513,7 +2515,7 @@ public class AdministrationPageService {
 		}
 		//增加日志
 		String bussinsneinfo = edu200.getBF200_ID()+"";
-		addLog(user_id,actionKey,bussinsneType,bussinsneinfo);
+		addLog(user_id,actionKey,bussinsneType,bussinsneinfo,edu200.getKcmc());
 		resultVO = ResultVO.setSuccess("操作成功", edu200);
 		return resultVO;
 	}
@@ -4083,7 +4085,7 @@ public class AdministrationPageService {
 	}
 
 	//新增日志
-	public void addLog(String user_ID,int actionKey,int bussinsneType,String bussinsneinfo){
+	public void addLog(String user_ID,int actionKey,int bussinsneType,String bussinsneinfo,String operationalInfo){
 		Edu996 edu996 = new Edu996();
 		//用户id
 		edu996.setUser_ID(user_ID);
@@ -4105,6 +4107,7 @@ public class AdministrationPageService {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 		//访问时间
 		edu996.setTime(df.format(new Date()));
+		edu996.setOperationalInfo(operationalInfo);
 		edu996Dao.save(edu996);
 	}
 

@@ -15,6 +15,7 @@ public class Edu996 {
 	private String bussinsneValue;//业务类型
 	private String bussinsneinfo;//业务信息
 	private String time;//访问时间
+	private String operationalInfo;//操作信息
 
 
 	@Id
@@ -91,5 +92,13 @@ public class Edu996 {
 
 	public void setBussinsneValue(String bussinsneValue) {
 		this.bussinsneValue = bussinsneValue;
+	}
+
+	public String getOperationalInfo() {
+		return operationalInfo;
+	}
+
+	public void setOperationalInfo(String operationalInfo) {
+		this.operationalInfo = operationalInfo;
 	}
 }

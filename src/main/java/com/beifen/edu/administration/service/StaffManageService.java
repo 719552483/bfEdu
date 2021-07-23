@@ -377,7 +377,7 @@ public class StaffManageService {
                 edu005.setGrade(edu0051.getGrade());
                 edu005Dao.save(edu005);
             }
-            administrationPageService.addLog(userId,6,1,edu0051old.getEdu0051_ID()+"");
+            administrationPageService.addLog(userId,6,1,edu0051old.getEdu0051_ID()+"",edu0051.getStudentName()+":"+edu0051.getCourseName());
             edu0051Dao.save(edu0051old);
         }
         resultVO = ResultVO.setSuccess("成绩修改成功");
