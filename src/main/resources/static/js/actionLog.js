@@ -124,8 +124,9 @@ function getSearchLogObject(isSearch){
     var czStartDate=$('#cz_StartDate').val();
     var czEndDate=$('#cz_EndDate').val();
     var userName=$("#userName").val();
+    var operationalInfo=$('#operationalInfo').val();
 
-    if(ywType===''&&czType===''&&czStartDate===''&&czEndDate===''&&userName===''&&isSearch){
+    if(ywType===''&&czType===''&&czStartDate===''&&czEndDate===''&&userName===''&&operationalInfo===''&&isSearch){
         toastr.warning('检索条件不能为空');
         return null;
     }
@@ -142,6 +143,7 @@ function getSearchLogObject(isSearch){
     Edu996.actionKey=ywType;
     Edu996.bussinsneType=czType;
     Edu996.user_name=userName;
+    Edu996.operationalInfo=operationalInfo;
 
     var returnObject=new Object();
     returnObject.SearchCriteria=JSON.stringify(Edu996);
