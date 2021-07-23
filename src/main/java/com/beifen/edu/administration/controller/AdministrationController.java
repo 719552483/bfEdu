@@ -138,6 +138,18 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 查询操作日志
+	 * @param 
+	 * @return
+	 */
+	@RequestMapping("selectAllLog")
+	@ResponseBody
+	public ResultVO selectAllLog(@RequestParam("userId") String userId) {
+		ResultVO resultVO = administrationPageService.selectAllLog(userId);
+		return resultVO;
+	}
+
+	/**
 	 * 导入课程
 	 * @param request
 	 * @return

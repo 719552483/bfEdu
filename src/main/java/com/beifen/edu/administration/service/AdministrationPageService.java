@@ -801,6 +801,18 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	// 查询操作日志
+	public ResultVO selectAllLog(String user_id) {
+		ResultVO resultVO;
+		List<Edu996> edu996List = edu996Dao.selectAllLog();
+		if(edu996List.size() == 0){
+			resultVO = ResultVO.setFailed("暂无数据");
+			return resultVO;
+		}
+		resultVO = ResultVO.setSuccess("查询成功",edu996List);
+		return resultVO;
+	}
+
 
 	//获取可供发布的教学任务书
 	public ResultVO getTaskInfo(Edu206 edu206,String departmentCode,String userId) {
