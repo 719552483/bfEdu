@@ -302,6 +302,16 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 重置数据
+	 */
+	@RequestMapping("/updateMUData")
+	@ResponseBody
+	public ResultVO updateMUData() {
+		ResultVO result = administrationPageService.updateMUData();
+		return result;
+	}
+
+	/**
 	 * 开始下次补考录入时间限制
 	 */
 	@RequestMapping("/startNewMUTime")

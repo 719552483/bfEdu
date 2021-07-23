@@ -392,7 +392,11 @@ public class StaffManageService {
         Edu404 edu404 = new Edu404();
         if("T".equals(edu005.getIsResit()) && "T".equals(edu005.getIsConfirm())){
             edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
-            if (edu404 == null || "1".equals(edu404.getStatus())){
+            if (edu404 == null){
+                resultVO = ResultVO.setFailed("补考录入时间未开启!");
+                return resultVO;
+            }
+            if ("1".equals(edu404.getStatus())){
                 resultVO = ResultVO.setFailed("补考录入时间已截止!");
                 return resultVO;
             }

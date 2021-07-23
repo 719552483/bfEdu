@@ -56,6 +56,8 @@ public class TeachingManageService {
     @Autowired
     Edu300Dao edu300Dao;
     @Autowired
+    Edu301Dao edu301Dao;
+    @Autowired
     Edu108Dao edu108Dao;
     @Autowired
     Edu107Dao edu107Dao;
@@ -1716,6 +1718,10 @@ public class TeachingManageService {
         } else {
             List<SchoolTimetablePO> schoolTimetableList = new ArrayList<>();
             for (ScheduleViewPO o : scheduleViewPOList) {
+                if("02".equals(o.getCourseType())){
+                    Edu301 edu301 = edu301Dao.findOne(Long.parseLong(o.getClassId()));
+                    o.setClassName(edu301.getBhxzbmc());
+                }
                 SchoolTimetablePO s = new SchoolTimetablePO();
                 try {
                     utils.copyParm(o,s);
@@ -1753,7 +1759,7 @@ public class TeachingManageService {
             int k = 0;
             for (int i = 0; i < newInfo.size(); i++) {
                 j = 1;
-                utils.appendCell(sheet, k, "", "第" + (i + 1) + "节", -1, 0, false);
+                utils.appendCell(sheet, k, "", "第"+(i*2+1)+"-"+(i*2+2)+"节", -1, 0, false);
 
                 //星期日
                 List<SchoolTimetablePO> sunday = (List<SchoolTimetablePO>) newInfo.get(i).get("sunday");
@@ -1986,7 +1992,7 @@ public class TeachingManageService {
             int k = 0;
             for (int i = 0; i < newInfo.size(); i++) {
                 j = 1;
-                utils.appendCell(sheet, k, "", "第" + (i + 1) + "节", -1, 0, false);
+                utils.appendCell(sheet, k, "", "第"+(i*2+1)+"-"+(i*2+2)+"节", -1, 0, false);
 
                 //星期日
                 List<SchoolTimetablePO> sunday = (List<SchoolTimetablePO>) newInfo.get(i).get("sunday");

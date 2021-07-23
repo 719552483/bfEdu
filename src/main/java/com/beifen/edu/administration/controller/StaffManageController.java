@@ -700,6 +700,48 @@ public class StaffManageController {
         return result;
     }
 
+
+    /**
+     * 导出成绩excel(明细)
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("exportGradeAll")
+    @ResponseBody
+    public ResultVO exportGradeAll(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "queryInfo") String queryInfo) {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(queryInfo);
+        String classes = jsonObject.getString("classes");
+        String crouses = jsonObject.getString("crouses");
+        String trem = jsonObject.getString("trem");
+        List<String> list = Arrays.asList(crouses.split(","));
+        List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        if(edu005List.size() == 0) {
+            result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
+        }else{
+            boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+            String fileName;
+            if(isIE){
+                fileName="modifyGrade";
+            }else{
+                fileName=edu005List.get(0).getClassName()+"成绩单";
+            }
+            //创建Excel文件
+            XSSFWorkbook workbook = administrationPageService.exportGradeAll(edu005List,list.size());
+            try {
+                utils.loadModal(response,fileName, workbook);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            result = ResultVO.setSuccess("下载成功");
+        }
+        return result;
+    }
+
     /**
      * 导出成绩excel-查询
      *

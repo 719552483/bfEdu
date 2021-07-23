@@ -152,5 +152,11 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
 
     @Query(value = "select kclx_code from Edu108 where Edu108_ID = (select Edu108_ID from edu201 where EDU201_ID = ?1)",nativeQuery = true)
     String findkclx(String edu201_id);
+
+    @Query(value = "select * from edu005 where IS_RESIT = 'T' and Is_Confirm = 'T' and EXAM_NUM != '1'",nativeQuery = true)
+    List<Edu005> updateMUData();
+
+    @Query(value = "UPDATE edu005 SET EXAM_NUM = '1' WHERE IS_RESIT = 'T' and Is_Confirm = 'T' and EXAM_NUM != '1'",nativeQuery = true)
+    List<Edu005> updateMUData2();
 }
 

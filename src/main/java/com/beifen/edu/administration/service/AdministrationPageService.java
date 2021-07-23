@@ -1102,6 +1102,23 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	//重置数据
+	public ResultVO updateMUData() {
+		ResultVO resultVO;
+		List<Edu005> edu005List = edu005Dao.updateMUData();
+		for(int i = 0;i<edu005List.size();i++){
+			Edu005 edu005 = edu005List.get(i);
+			List<Edu0051> edu0051List = edu0051Dao.updateMUData(edu005.getEdu005_ID()+"");
+			Edu0051 edu0051 = edu0051List.get(0);
+			edu0051.setGrade(edu0051List.get(edu0051List.size()-1).getGrade());
+			edu0051Dao.save(edu0051);
+		}
+//		edu0051Dao.deleteupdateMUData();
+//		edu005Dao.updateMUData2();
+		resultVO = ResultVO.setSuccess("操作成功");
+		return resultVO;
+	}
+
 	//开始下次补考录入时间限制
 	public ResultVO startNewMUTime(String edu404Id,String userId) {
 		ResultVO resultVO;
@@ -3362,6 +3379,75 @@ public class AdministrationPageService {
 		return workbook;
 	}
 
+	//导出成绩excel
+	public XSSFWorkbook exportGradeAll(List<Edu005> edu005List,int size) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("已选成绩详情");
+
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[size+2]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+		titles[0] = "学生姓名";
+		titles[1] = "学生学号";
+		for(int j = 0;j<size;j++){
+			titles[j+2] = edu005List.get(j).getCourseName();
+		}
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		for (int i = 0; i < edu005List.size()/size; i++) {
+			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentName(),-1,0,false);
+			utils.appendCell(sheet,i,"",edu005List.get(i*size).getStudentCode(),-1,1,false);
+			for(int j = 0;j<size;j++){
+				if("01".equals(edu005List.get(i*size+j).getIsMx())){
+					utils.appendCell(sheet,i,"","免修",-1,j+2,false);
+				}else{
+					if(edu005List.get(i*size+j).getGrade() != null && !"".equals(edu005List.get(i*size+j).getGrade())){
+						if(edu005List.get(i*size+j).getExam_num() == null || edu005List.get(i*size+j).getExam_num() == 0){
+							utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
+						}else{
+							String muGrade = "(";
+							List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(edu005List.get(i*size+j).getEdu005_ID()+"");
+							for (int ii = 0;ii<edu0051List.size();ii++){
+								if(ii == 0){
+									if(ii == edu0051List.size()-1){
+										muGrade = muGrade+"正考成绩："+edu0051List.get(ii).getGrade()+"分";
+									}else{
+										muGrade = muGrade+"正考成绩："+edu0051List.get(ii).getGrade()+"分,";
+									}
+								}else{
+									if(ii == edu0051List.size()-1){
+										muGrade = muGrade+"第"+edu0051List.get(ii).getExam_num()+"次补考成级："+edu0051List.get(ii).getGrade()+"分";
+									}else{
+										muGrade = muGrade+"第"+edu0051List.get(ii).getExam_num()+"次补考成级："+edu0051List.get(ii).getGrade()+"分,";
+									}
+								}
+							}
+							muGrade = muGrade+")";
+							utils.appendCell(sheet,i,"",muGrade,-1,j+2,false);
+						}
+					}else{
+						utils.appendCell(sheet,i,"","暂无成绩",-1,j+2,false);
+					}
+				}
+			}
+		}
+
+		sheet.setColumnWidth(0, 12*256);
+		sheet.setColumnWidth(1, 20*256);
+		sheet.setColumnWidth(2, 20*256);
+		sheet.setColumnWidth(3, 20*256);
+		sheet.setColumnWidth(4, 20*256);
+		sheet.setColumnWidth(5, 20*256);
+
+		return workbook;
+	}
+
 	//导出不及格成绩excel
 	public XSSFWorkbook exportMUGrade(List<Edu0051> edu0051List) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -3568,7 +3654,11 @@ public class AdministrationPageService {
 						return resultVO;
 					}else{
 						Edu404 edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
-						if (edu404 == null || "1".equals(edu404.getStatus())){
+						if (edu404 == null){
+							resultVO = ResultVO.setFailed("补考录入时间未开启!");
+							return resultVO;
+						}
+						if ("1".equals(edu404.getStatus())){
 							resultVO = ResultVO.setFailed("补考录入时间已截止!");
 							return resultVO;
 						}
