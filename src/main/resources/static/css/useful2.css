@@ -2807,14 +2807,14 @@ input:focus{
 }
 
 .drawCalenrRangeArea .selectName{
-	width: 7%;
+	/*width: 7%;*/
 	margin-top: 12px!important;
-	margin-right: 34px;
+	margin-right: 12px;
 }
 
 .drawCalenrRangeArea .dfinput{
-	width: 160px;
-	text-indent: 40px;
+	width: 130px;
+	text-indent: 30px;
 	margin-top: 5px;
 }
 
@@ -2826,7 +2826,7 @@ input:focus{
 	font-size: 12px;
 	/* placeholder位置  */
 	text-align: left;
-	text-indent: 50px;
+	text-indent:35px;
 }
 
 .datetimepicker .clear{
