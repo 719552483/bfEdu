@@ -819,31 +819,35 @@ public class AdministrationPageService {
 					predicates.add(cb.equal(root.<String>get("bussinsneType"),edu996.getBussinsneType()));
 				}
 				if(startTime != null && !"".equals(startTime) && endTime != null && !"".equals(endTime)){
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
-					try {
-						Date startTimeDate = simpleDateFormat.parse(startTime);
-						Date endTimeDate = simpleDateFormat.parse(endTime);
-						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("time"), getStartOfDay(startTimeDate)));
-						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("time"),getEndOfDay(endTimeDate)));
-					}catch (Exception e){
-						e.printStackTrace();
-					}
+//					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+//					try {
+//						Date startTimeDate = simpleDateFormat.parse(startTime);
+//						Date endTimeDate = simpleDateFormat.parse(endTime);
+//						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("time"), getStartOfDay(startTimeDate)));
+//						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("time"),getEndOfDay(endTimeDate)));
+//					}catch (Exception e){
+//						e.printStackTrace();
+//					}
+					predicates.add(cb.greaterThanOrEqualTo(root.<String>get("time"), startTime));
+					predicates.add(cb.lessThanOrEqualTo(root.<String>get("time"),endTime));
 				}else if(startTime != null && !"".equals(startTime)){
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
-					try {
-						Date startTimeDate = simpleDateFormat.parse(startTime);
-						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("time"), getStartOfDay(startTimeDate)));
-					}catch (Exception e){
-						e.printStackTrace();
-					}
+//					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+//					try {
+//						Date startTimeDate = simpleDateFormat.parse(startTime);
+//						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("time"), getStartOfDay(startTimeDate)));
+//					}catch (Exception e){
+//						e.printStackTrace();
+//					}
+					predicates.add(cb.greaterThanOrEqualTo(root.<String>get("time"), startTime));
 				}else if(endTime != null && !"".equals(endTime)){
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
-					try {
-						Date endTimeDate = simpleDateFormat.parse(endTime);
-						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("time"),getEndOfDay(endTimeDate)));
-					}catch (Exception e){
-						e.printStackTrace();
-					}
+//					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+//					try {
+//						Date endTimeDate = simpleDateFormat.parse(endTime);
+//						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("time"),getEndOfDay(endTimeDate)));
+//					}catch (Exception e){
+//						e.printStackTrace();
+//					}
+					predicates.add(cb.lessThanOrEqualTo(root.<String>get("time"),endTime));
 				}
 				query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
 				query.orderBy(cb.desc(root.get("time")));

@@ -2806,6 +2806,40 @@ input:focus{
 	width: 30%!important;
 }
 
+.drawCalenrRangeArea .selectName{
+	width: 7%;
+	margin-top: 12px!important;
+}
+
+.drawCalenrRangeArea .dfinput{
+	width: 160px;
+	text-indent: 40px;
+	margin-top: 5px;
+}
+
+.drawCalenrRangeCol{
+	min-width: 474px;
+}
+
+/*拆班表的多选select end*/
+.drawCalenrRangeArea .dfinput::-webkit-input-placeholder{
+	/* placeholder颜色  */
+	color: #aab2bd;
+	/* placeholder字体大小  */
+	font-size: 12px;
+	/* placeholder位置  */
+	text-align: left;
+	text-indent: 10px;
+}
+
+.datetimepicker .clear{
+	background: #eee;
+}
+
+.datetimepicker .clear:hover{
+	background: rgba(105, 185, 204, 0.788235294117647);
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

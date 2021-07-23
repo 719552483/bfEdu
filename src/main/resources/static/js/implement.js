@@ -1506,6 +1506,52 @@ function drawCalenr(id,isSplitToday) {
 	}
 }
 
+// 日期选择初始化
+function drawCalenrRange(beginSelector,endSelector){
+	$(beginSelector).datetimepicker(
+		{
+			format : 'yyyy-mm-dd',
+			language:'zh-CN',
+			initialDate:new Date(),
+			weekStart: 1,
+			autoclose :true,
+			minView :2,
+			todayHighlight:true,
+			startView:2,
+			endDate:new Date(),
+			todayBtn: "linked",
+			clearBtn:true
+		}).on('changeDate', function(ev){
+		if(ev.date){
+			$(endSelector).datetimepicker('setStartDate', new Date(ev.date.valueOf()))
+		}else{
+			$(endSelector).datetimepicker('setStartDate',null);
+		}
+	})
+
+	$(endSelector).datetimepicker(
+		{
+			format : 'yyyy-mm-dd',
+			language:'zh-CN',
+			initialDate:new Date(),
+			weekStart: 1,
+			autoclose :true,
+			minView :2,
+			todayHighlight:true,
+			startView:2,
+			endDate:new Date(),
+			todayBtn: "linked",
+			clearBtn:true
+		}).on('changeDate', function(ev){
+		if(ev.date){
+			$(beginSelector).datetimepicker('setEndDate', new Date(ev.date.valueOf()))
+		}else{
+			$(beginSelector).datetimepicker('setEndDate',new Date());
+		}
+
+	})
+}
+
 //去掉字符中的双引号
 function charSpiltMatter(value, row, index) {
 	if(value!=null){
@@ -1745,6 +1791,20 @@ function changeMenu(){
 		//隐藏子节点都被隐藏的父节点
 		for (var m = 0; m< removeArray.length; ++m) {
 			$(parent.frames["leftFrame"].document).find("."+removeArray[m]).hide();
+		}
+
+		// 用户是学生则隐藏大数据
+		if(js==="学生"){
+			$(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").hide();
+		}else{
+			$(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").show();
+		}
+
+		// 用户是管理员显示操作日志
+		if(js==="sys"||js==="系统管理员"){
+			$(parent.frames["topFrame"].document).find(".nav").find("li:eq(3)").show();
+		}else{
+			$(parent.frames["topFrame"].document).find(".nav").find("li:eq(3)").hide();
 		}
 	}
 

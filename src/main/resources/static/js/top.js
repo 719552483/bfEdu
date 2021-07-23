@@ -40,13 +40,6 @@ function stuffCurrenRoleName(){
 	$(".changeRCurrentRole").find('a:eq(0)').html(js);
 	$(".changeRCurrentRole").find('a:eq(0)').attr("id",jsid);
 
-	// 用户不是管理员则隐藏发布通知
-	if(js==="学生"){
-		$(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").hide();
-	}else{
-		$(parent.frames["topFrame"].document).find(".nav").find("li:eq(1)").show();
-	}
-
 	changeMenu();
 }
 

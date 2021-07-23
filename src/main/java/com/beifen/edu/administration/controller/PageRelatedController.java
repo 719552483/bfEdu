@@ -300,4 +300,9 @@ public class PageRelatedController {
 	public String exportAllGradePage() {
 		return "exportAllGrade";
 	}
+
+	@RequestMapping("actionLog")
+	public String actionLogPage() {
+		return "actionLog";
+	}
 }
