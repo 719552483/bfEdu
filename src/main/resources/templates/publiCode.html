@@ -150,6 +150,7 @@
 						<option value="termManger">学年管理</option>
 						<option value="changeCrouseRole">调课角色指定</option>
 						<option value="kjLimit">排课节数限制</option>
+						<option value="bksjLimit">补考成绩录入时间限制</option>
 <!--						<option value="classTimePartManger">课节管理</option>-->
 <!--						<option value="otherTimePartManger">额外课节管理</option>-->
 <!--						<option value="setUpDepartment">开课部门</option>-->
@@ -215,269 +216,22 @@
 					</div>
 				</div>
 			</div>
-<!--			<div id="classTimePartManger" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>课节管理</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id="addClassTimePart"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--					<div class="kjTableArea searchGivePaddingR">-->
-<!--							<table class="tablelist myTableStyle" id="kjTable" data-unique-id="edu401_ID" style="margin-top: 10px;"></table>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
 
-<!--			<div id="otherTimePartManger" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>额外课节管理</span>-->
-<!--					</div>-->
-<!--					<div class="formtext myformtext myformtextTipArea" style="margin-top: -23px;">-->
-<!--						<b>提示：不选择学年则为默认额外课节设置，选择学年则为当前学年额外课节设置</b>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--							<li class="MyspinnerStyle spinnerInTools"><label style="margin-top: -14px;" class="selectName">课节时长(分钟)</label><input id="otherTimePart_kjsc" type="number" min="1" step="1" /></li>-->
-<!--						</ul>-->
-<!--						<div class="searchArea searchAreaWitheSelect">-->
-<!--							<div class="col4 giveBottom">-->
-<!--								<ul class="forminfo">-->
-<!--									<div style="margin-top: -8px;">-->
-<!--										<label class="selectName" style="margin-top: 14px;">学年</label>-->
-<!--										<select id="otherTimePart_forXN" class="isSowIndex xnForSelect">-->
-<!--											<option value="seleceConfigTip">请选择</option>-->
-<!--										</select>-->
-<!--									</div>-->
-<!--								</ul>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="setUpDepartment" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>开课部门</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="scheduleClassesDepartment" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>排课部门</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="tecchTaskIn" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>教学任务书输入</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="tecchScheduleIn" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>教学排课输入</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="parcelClassroom" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>分配部门排课课室</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="teacherScheduleClassesLimit" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>教师排课限制条件</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="schoolTeacher_cannotScheduleClasses"-->
-<!--				class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>校内老师禁止排课星期和课节</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="cannotScheduleClasses_week" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>禁止排课星期</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="cannotUseClassroom" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>禁止使用排课教室</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="class_yjkjsxz" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>一节课节数限制</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div id="calssScheduleReleaseTime" class="publicCodeCHildren">-->
-<!--				<div class="formbody">-->
-<!--					<div class="formtitle">-->
-<!--						<span>学年学期课表发布时间</span>-->
-<!--					</div>-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id=""><span><img-->
-<!--									src="images/t01.png" style="width: 24px;" /></span>新增</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-		</div>
-
-<!--        <div id="tab3" class="tabson myTabson">-->
-<!--        <span class="isFirstShowTab3 noneStart">T</span>-->
-<!--	        <div class="tools">-->
-<!--					<ul class="toolbar">-->
-<!--						 <li class="click insertBtn" id="addRelation"><span><img src="images/t01.png" style="width: 24px;"/></span>新增培养计划</li>-->
-<!--						 <li class="click deleteBtn" id="removeRelations"><span><img src="images/t03.png" style="width: 24px;"/></span>批量删除</li>-->
-<!--						 <li class="click" id="startSearch_relation"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>-->
-<!--					-->
-<!--					</ul>-->
-<!--					-->
-<!--					<ul class="toolbar1">-->
-<!--						<li class="click" id="reReloadSearchs_relation"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>-->
-<!--					</ul>-->
-<!--			</div>-->
-<!--			-->
-<!--			<div class="searchArea searchAreaWitheSelect">-->
-<!--			-->
-<!--			-->
-<!--                <div class="col4 giveBottom">-->
-<!--					<ul class="forminfo">-->
-<!--						<div class="">-->
-<!--							<label class="selectName" style="margin-top: 14px;">培养层次名称</label>-->
-<!--								<input name="" type="text" class="myInput searchInput" id="relation_seaechLvel" placeholder="请输入培养层次名称..."/>-->
-<!--						</div>-->
-<!--					</ul>-->
-<!--				</div>-->
-<!--				-->
-<!--				 <div class="col4 giveBottom">-->
-<!--					<ul class="forminfo">-->
-<!--						<div class="">-->
-<!--							<label class="selectName" style="margin-top: 14px;">二级学院名称</label>-->
-<!--								<input name="" type="text" class="myInput searchInput" id="relation_seaechDeaparment" placeholder="请输入二级学院名称..."/>-->
-<!--						</div>-->
-<!--					</ul>-->
-<!--				</div>-->
-<!--				-->
-<!--			    <div class="col4 giveBottom">-->
-<!--					<ul class="forminfo">-->
-<!--						<div class="">-->
-<!--							<label class="selectName" style="margin-top: 14px;">年级名称</label>-->
-<!--								<input name="" type="text" class="myInput searchInput" id="relation_seaechGrade" placeholder="请输入年级名称..."/>-->
-<!--						</div>-->
-<!--					</ul>-->
-<!--				</div>-->
-<!--				-->
-<!--			   <div class="col4 giveBottom">-->
-<!--					<ul class="forminfo">-->
-<!--						<div class="">-->
-<!--							<label class="selectName" style="margin-top: 14px;">专业名称</label>-->
-<!--								<input name="" type="text" class="myInput searchInput" id="relation_seaechMajor" placeholder="请输入专业名称..."/>-->
-<!--						</div>-->
-<!--					</ul>-->
-<!--				</div>-->
-<!--            </div>-->
-<!--            -->
-<!--           <div class="relationTableArea searchGivePaddingR">-->
-<!--				<table class="tablelist myTableStyle" id="relationTable" data-unique-id="edu107_ID" style="margin-top: 10px;"></table>-->
-<!--		  </div>-->
-<!--        -->
-<!--        </div>-->
-
+			<div id="bksjLimit" class="publicCodeCHildren">
+				<div class="formbody">
+					<div class="formtitle">
+						<span>补考成绩录入时间限制</span>
+					</div>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="addBksjLimit"><span><img src="images/t01.png" style="width: 24px;" /></span>新增</li>
+						</ul>
+					</div>
+					<div class="bksjLimitTableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="bksjLimitTable" data-unique-id="edu404_ID" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+			</div>
 	</div>
 
 	<script type="text/javascript">
@@ -729,79 +483,8 @@
 			</div>
 		</div>
 	</div>
-<!--	 &lt;!&ndash; 培养计划Modal &ndash;&gt;-->
-<!--	<div class="modal fade bs-example-modal-lg" id="addNewRelationModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">-->
-<!--		<div class="modal-dialog modal-lg" role="document">-->
-<!--			<div class="modal-content bodyOnlyOneRow">-->
-<!--				<div class="modal-header">-->
-<!--						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>-->
-<!--				</div>-->
-<!--				<div class="modal-body">-->
-<!--					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">-->
-<!--						<div class="col1 giveBottom">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">培养计划名称</label>-->
-<!--									<input name="" type="text" class="myInput colInput"-->
-<!--										id="addNewRelation_RelationName" placeholder="请输入培养计划名称..." />-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
 
-<!--						<div class="col1 giveBottom">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">培养层次</label>-->
-<!--									<select class="isSowIndex" id="addNewRelation_level">-->
-<!--										<option value="seleceConfigTip">请选择</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col1 giveBottom">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">二级学院</label>-->
-<!--									<select class="isSowIndex" id="addNewRelation_department">-->
-<!--										<option value="seleceConfigTip">请选择</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col1 giveBottom">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">年级</label>-->
-<!--									<select class="isSowIndex" id="addNewRelation_garde">-->
-<!--										<option value="seleceConfigTip">请选择</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col1 giveBottom">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">专业</label>-->
-<!--									<select class="isSowIndex" id="addNewRelation_major">-->
-<!--										<option value="seleceConfigTip">请选择</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--				<div class="modal-footer tipbtn">-->
-<!--					<input name="" type="button" class="sure addNewRelationTip_confimBtn" value="确定"/>&nbsp;-->
-<!--					<input name="" type="button" class="cancel" value="取消"/>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--	</div>-->
-
-	 <!-- 学年Modal -->
+	<!-- 学年Modal -->
 	<div class="modal fade bs-example-modal-lg" id="addXnModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content bodyOnlyOneRow">
@@ -948,12 +631,58 @@
         </div>
     </div>
 
-    <!-- 提示Modal -->
+    <!-- 补考限制Modal -->
+	<div class="modal fade bs-example-modal-lg" id="bksjLimitModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">新增补考成绩录入时间限制</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+									<select class="isSowIndex" id="bksjLimit_Xn">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+<!--						<div class="col1 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">补考次数<b>*</b></label>-->
+<!--									<select class="isSowIndex" id="bksjLimit_timeCount">-->
+<!--										<option value="seleceConfigTip">请选择</option>-->
+<!--										<option value="1">第一次</option>-->
+<!--										<option value="2">第二次</option>-->
+<!--										<option value="3">第三次</option>-->
+<!--										<option value="4">第四次</option>-->
+<!--										<option value="5">第五次</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmAddBksjLimit" value="确定"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 提示Modal -->
 	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
+					<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
 				</div>
 				<div class="modal-body">
 					<div class="tipinfo">
@@ -986,7 +715,7 @@
 					<div class="loadingtxt">数据加载中，请稍后...</div>
 				</div>
 	</div>
-
+</div>
 </body>
 </html>
 
