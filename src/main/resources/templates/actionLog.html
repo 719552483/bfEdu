@@ -35,7 +35,6 @@
 	</head>
 
 	<body>
-
 		<div class="place">
 			<span>位置：</span>
 			<ul class="placeul myPlaceul">
@@ -73,13 +72,23 @@
 							<select class="isSowIndex" id="cz_type">
 								<option value="seleceConfigTip">暂无选择</option>
 								<option value="0">新增</option>
-								<option value="1">删除</option>
-								<option value="2">修改</option>
+								<option value="1">修改</option>
+								<option value="2">删除</option>
 							</select>
 						</div>
 					</ul>
 				</div>
 
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">操作人</label>
+							<input name="" type="text" class="myInput searchInput" id="userName" placeholder="请输入操作人姓名..."/>
+						</div>
+					</ul>
+				</div>
+
+				<div class="clear"></div>
 				<div class="col2 giveBottom drawCalenrRangeCol">
 					<ul class="forminfo">
 						<div class="drawCalenrRangeArea">
@@ -91,8 +100,8 @@
 				</div>
 			</div>
 
-			<div class="actionLogTableArea columnsStyle searchGivePaddingR">
-				<table class="tablelist myTableStyle" id="actionLogTable" data-unique-id="edu004_ID" style="margin-top: 10px;"></table>
+			<div class="actionLogTableArea mainStudentBaseInfoTableArea columnsStyle searchGivePaddingR">
+				<table class="tablelist myTableStyle" id="actionLogTable" style="margin-top: 10px;"></table>
 			</div>
 		</div>
 		<!-- ajax请求masking -->
