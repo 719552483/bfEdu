@@ -45,51 +45,51 @@
 		</div>
 
 		<div class="formbody">
-						<div class="tools">
-							<ul class="toolbar">
-								<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
-							</ul>
-							<ul class="toolbar1">
-								<li class="click" id="reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
-							</ul>
+			<div class="tools">
+				<ul class="toolbar">
+					<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+				</ul>
+				<ul class="toolbar1">
+					<li class="click" id="reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+				</ul>
+			</div>
+
+			<div class="searchArea searchAreaWitheSelect">
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">业务类型</label>
+							<select class="isSowIndex" id="yw_type">
+								<option value="seleceConfigTip">暂不可选</option>
+							</select>
 						</div>
+					</ul>
+				</div>
 
-						<div class="searchArea searchAreaWitheSelect">
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">业务类型</label>
-										<select class="isSowIndex" id="yw_type">
-											<option value="seleceConfigTip">暂不可选</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">操作类型</label>
-										<select class="isSowIndex" id="cz_type">
-											<option value="seleceConfigTip">暂无选择</option>
-											<option value="0">新增</option>
-											<option value="1">删除</option>
-											<option value="2">修改</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col2 giveBottom drawCalenrRangeCol">
-								<ul class="forminfo">
-									<div class="drawCalenrRangeArea">
-										<label class="selectName" style="margin-top: 14px;">时间范围</label>
-										<input name="" type="text" class="dfinput" id="cz_StartDate" spellcheck="false" placeholder="开始时间"/> --
-										<input name="" type="text" class="dfinput" id="cz_EndDate" spellcheck="false" placeholder="结束时间"/>
-									</div>
-								</ul>
-							</div>
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">操作类型</label>
+							<select class="isSowIndex" id="cz_type">
+								<option value="seleceConfigTip">暂无选择</option>
+								<option value="0">新增</option>
+								<option value="1">删除</option>
+								<option value="2">修改</option>
+							</select>
 						</div>
+					</ul>
+				</div>
+
+				<div class="col2 giveBottom drawCalenrRangeCol">
+					<ul class="forminfo">
+						<div class="drawCalenrRangeArea">
+							<label class="selectName" style="margin-top: 14px;">时间范围</label>
+							<input name="" type="text" class="dfinput" id="cz_StartDate" spellcheck="false" placeholder="开始时间"/> --
+							<input name="" type="text" class="dfinput" id="cz_EndDate" spellcheck="false" placeholder="结束时间"/>
+						</div>
+					</ul>
+				</div>
+			</div>
 
 			<div class="actionLogTableArea columnsStyle searchGivePaddingR">
 				<table class="tablelist myTableStyle" id="actionLogTable" data-unique-id="edu004_ID" style="margin-top: 10px;"></table>
