@@ -144,10 +144,10 @@ public class AdministrationController {
 	 */
 	@RequestMapping("selectAllLog")
 	@ResponseBody
-	public ResultVO selectAllLog(@RequestParam("SearchCriteria") String SearchCriteria,String startTime,String endTime) {
+	public ResultVO selectAllLog(@RequestParam("SearchCriteria") String SearchCriteria,String startTime,String endTime,Integer pageNum,Integer pageSize) {
 		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
 		Edu996 edu996 = JSON.toJavaObject(jsonObject, Edu996.class);
-		ResultVO resultVO = administrationPageService.selectAllLog(edu996,startTime,endTime);
+		ResultVO resultVO = administrationPageService.selectAllLog(edu996,startTime,endTime,pageNum,pageSize);
 		return resultVO;
 	}
 

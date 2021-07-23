@@ -35,6 +35,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -807,7 +810,7 @@ public class AdministrationPageService {
 	}
 
 	// 查询操作日志
-	public ResultVO selectAllLog(Edu996 edu996,String startTime,String endTime) {
+	public ResultVO selectAllLog(Edu996 edu996,String startTime,String endTime,Integer pageNum,Integer pageSize) {
 		ResultVO resultVO;
 
 		Specification<Edu996> specification = new Specification<Edu996>() {
@@ -855,12 +858,17 @@ public class AdministrationPageService {
 				return query.getRestriction();
 			}
 		};
-		List<Edu996> edu996List = edu996Dao.findAll(specification);
-		if(edu996List.size() == 0){
+		pageNum = pageNum < 0 ? 0 : pageNum;
+		pageSize = pageSize < 0 ? 10 : pageSize;
+		PageRequest page = new PageRequest(pageNum-1, pageSize);
+		Page<Edu996> edu996List = edu996Dao.findAll(specification,page);
+		List<Edu996> edu996s = edu996List.getContent();
+		long count = edu996Dao.count(specification);
+		if(count == 0){
 			resultVO = ResultVO.setFailed("暂无数据");
 			return resultVO;
 		}
-		resultVO = ResultVO.setSuccess("查询成功",edu996List);
+		resultVO = ResultVO.setSuccess("查询成功",edu996s);
 		return resultVO;
 	}
 
