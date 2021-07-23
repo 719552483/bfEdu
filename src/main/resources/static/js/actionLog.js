@@ -177,7 +177,7 @@ function getALLYwType(){
 //重置检索
 function reReloadSearchs(){
     var reObject = new Object();
-    reObject.InputIds = "#cz_StartDate,#cz_EndDate,#userName，#operationalInfo";
+    reObject.InputIds = "#cz_StartDate,#cz_EndDate,#userName,#operationalInfo";
     reObject.normalSelectIds = "#cz_type,#yw_type";
     reReloadSearchsWithSelect(reObject);
 
