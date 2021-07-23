@@ -144,8 +144,22 @@ public class AdministrationController {
 	 */
 	@RequestMapping("selectAllLog")
 	@ResponseBody
-	public ResultVO selectAllLog(@RequestParam("userId") String userId) {
-		ResultVO resultVO = administrationPageService.selectAllLog(userId);
+	public ResultVO selectAllLog(@RequestParam("SearchCriteria") String SearchCriteria,String startTime,String endTime) {
+		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+		Edu996 edu996 = JSON.toJavaObject(jsonObject, Edu996.class);
+		ResultVO resultVO = administrationPageService.selectAllLog(edu996,startTime,endTime);
+		return resultVO;
+	}
+
+	/**
+	 * 获取操作日志操作类型
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("selectAllLogActionValue")
+	@ResponseBody
+	public ResultVO selectAllLogActionValue() {
+		ResultVO resultVO = administrationPageService.selectAllLogActionValue();
 		return resultVO;
 	}
 

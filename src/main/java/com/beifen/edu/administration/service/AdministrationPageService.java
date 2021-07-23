@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -802,14 +806,86 @@ public class AdministrationPageService {
 	}
 
 	// 查询操作日志
-	public ResultVO selectAllLog(String user_id) {
+	public ResultVO selectAllLog(Edu996 edu996,String startTime,String endTime) {
 		ResultVO resultVO;
-		List<Edu996> edu996List = edu996Dao.selectAllLog();
+
+		Specification<Edu996> specification = new Specification<Edu996>() {
+			public Predicate toPredicate(Root<Edu996> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (edu996.getActionValue() != null && !"".equals(edu996.getActionValue())) {
+					predicates.add(cb.like(root.<String>get("actionValue"), '%' + edu996.getActionValue() + '%'));
+				}
+				if (edu996.getBussinsneValue() != null && !"".equals(edu996.getBussinsneValue())) {
+					predicates.add(cb.like(root.<String>get("bussinsneValue"), '%' + edu996.getBussinsneValue() + '%'));
+				}
+				if(startTime != null && !"".equals(startTime) && endTime != null && !"".equals(endTime)){
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+					try {
+						Date startTimeDate = simpleDateFormat.parse(startTime);
+						Date endTimeDate = simpleDateFormat.parse(endTime);
+						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("time"), getStartOfDay(startTimeDate)));
+						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("time"),getEndOfDay(endTimeDate)));
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}else if(startTime != null && !"".equals(startTime)){
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+					try {
+						Date startTimeDate = simpleDateFormat.parse(startTime);
+						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("time"), getStartOfDay(startTimeDate)));
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}else if(endTime != null && !"".equals(endTime)){
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+					try {
+						Date endTimeDate = simpleDateFormat.parse(endTime);
+						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("time"),getEndOfDay(endTimeDate)));
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+				query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+				query.orderBy(cb.desc(root.get("time").as(Date.class)));
+				return query.getRestriction();
+			}
+		};
+		List<Edu996> edu996List = edu996Dao.findAll(specification);
 		if(edu996List.size() == 0){
 			resultVO = ResultVO.setFailed("暂无数据");
 			return resultVO;
 		}
 		resultVO = ResultVO.setSuccess("查询成功",edu996List);
+		return resultVO;
+	}
+
+	//获得当天最大时间
+	public static Date getEndOfDay(Date date) {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+
+		LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+
+		return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+
+	}
+
+	public static Date getStartOfDay(Date date) {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+
+		LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+
+		return Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+
+	}
+
+	// 获取操作日志操作类型
+	public ResultVO selectAllLogActionValue() {
+		ResultVO resultVO;
+		List<String> actionValues = new ArrayList<>();
+		for(int i = 0; i<= 9;i++){
+			actionValues.add(utils.getActionValue(i));
+		}
+		resultVO = ResultVO.setSuccess("查询成功",actionValues);
 		return resultVO;
 	}
 
