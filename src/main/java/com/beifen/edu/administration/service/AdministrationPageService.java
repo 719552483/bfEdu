@@ -864,11 +864,14 @@ public class AdministrationPageService {
 		Page<Edu996> edu996List = edu996Dao.findAll(specification,page);
 		List<Edu996> edu996s = edu996List.getContent();
 		long count = edu996Dao.count(specification);
-		if(count == 0){
+		if(edu996s.size() == 0){
 			resultVO = ResultVO.setFailed("暂无数据");
 			return resultVO;
 		}
-		resultVO = ResultVO.setSuccess("查询成功",edu996s);
+		Map<String, Object> returnMap = new HashMap<>();
+		returnMap.put("rows",edu996s);
+		returnMap.put("total",count);
+		resultVO = ResultVO.setSuccess("共找到"+count+"条数据",edu996s);
 		return resultVO;
 	}
 
