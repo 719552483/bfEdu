@@ -11,6 +11,8 @@ public class Edu404 {
 	private String xnid;//学年id
 	private String count;//补考次数
 	private String status;//状态（0：开启/1：结束）
+	private String startDateRange;//开始时间
+	private String endDateRange;//结束时间
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -54,5 +56,21 @@ public class Edu404 {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getStartDateRange() {
+		return startDateRange;
+	}
+
+	public void setStartDateRange(String startDateRange) {
+		this.startDateRange = startDateRange;
+	}
+
+	public String getEndDateRange() {
+		return endDateRange;
+	}
+
+	public void setEndDateRange(String endDateRange) {
+		this.endDateRange = endDateRange;
 	}
 }

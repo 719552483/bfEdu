@@ -350,11 +350,11 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/startNewMUTime")
 	@ResponseBody
-	public ResultVO startNewMUTime(@RequestParam String edu404Id,@RequestParam("userId") String userId) {
+	public ResultVO startNewMUTime(@RequestParam String muTimeinfo,@RequestParam("userId") String userId) {
 		// 将收到的jsonObject转为javabean 关系管理实体类
-//		JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
-//		Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
-		ResultVO result = administrationPageService.startNewMUTime(edu404Id,userId);
+        JSONObject jsonObject = JSONObject.fromObject(muTimeinfo);
+        Edu404 edu404 = (Edu404) JSONObject.toBean(jsonObject, Edu404.class);
+		ResultVO result = administrationPageService.startNewMUTime(edu404,userId);
 		return result;
 	}
 
