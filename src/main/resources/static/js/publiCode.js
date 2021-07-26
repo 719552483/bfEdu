@@ -3037,6 +3037,18 @@ function stuffAllbksjLimitTable(allMUxz){
 				sortable: true,
 				formatter: countMatter
 			},{
+				field: 'startDateRange',
+				title: '开始时间',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'endDateRange',
+				title: '结束时间',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
 				field: 'status',
 				title: '状态',
 				align: 'left',
@@ -3092,9 +3104,11 @@ function addBksjLimit(){
 	var reObject = new Object();
 	// reObject.normalSelectIds = "#bksjLimit_Xn,#bksjLimit_timeCount";
 	reObject.normalSelectIds = "#bksjLimit_Xn";
+	reObject.InputIds = "#bksjLimit_StartDate,#bksjLimit_EndDate";
 	reReloadSearchsWithSelect(reObject);
+	$("#bksjLimitModal").find('.searchArea').find('.col1:eq(0)').show();
 	$.showModal('#bksjLimitModal',true);
-
+	drawCalenrRange("#bksjLimit_StartDate","#bksjLimit_EndDate");
 	//确认新增补考限制
 	$('.confirmAddBksjLimit').unbind('click');
 	$('.confirmAddBksjLimit').bind('click', function(e) {
@@ -3107,9 +3121,21 @@ function addBksjLimit(){
 function confirmAddBksjLimit(){
 	var currentBksjLimit= $('#bksjLimitTable').bootstrapTable("getData");
 	var xn=getNormalSelectValue('bksjLimit_Xn');
+	var bksjLimitStartDate=$('#bksjLimit_StartDate').val();
+	var bksjLimitEndDate=$('#bksjLimit_EndDate').val();
 	// var timeCount=getNormalSelectValue('bksjLimit_timeCount');
 	if(xn===''){
 		toastr.warning('学年不能为空');
+		return;
+	}
+
+	if(bksjLimitStartDate===''){
+		toastr.warning('开始时间不能为空');
+		return;
+	}
+
+	if(bksjLimitEndDate===''){
+		toastr.warning('结束时间不能为空');
 		return;
 	}
 
@@ -3129,6 +3155,8 @@ function confirmAddBksjLimit(){
 	sendObject.xnmc=getNormalSelectText('bksjLimit_Xn');
 	sendObject.count=1;
 	sendObject.status=0;
+	sendObject.startDateRange=bksjLimitStartDate;
+	sendObject.endDateRange=bksjLimitEndDate;
 
 	$.ajax({
 		method : 'get',
@@ -3229,7 +3257,7 @@ function startNextLimit(row){
 	}
 
 	$.showModal("#remindModal",true);
-	$(".remindType").html(row.xnmc+"的下一次补考成绩录入时间限制");
+	$(".remindType").html(row.xnmc+"的第"+(parseInt(row.count)+1)+"次补考成绩录入时间限制");
 	$(".remindActionType").html("开启");
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
@@ -3239,15 +3267,49 @@ function startNextLimit(row){
 	});
 }
 
-//发送开启下一次限制信息
+//预备发送开启下一次限制信息
 function sendStartNextLimitInfo(row){
+	var reObject = new Object();
+	// reObject.normalSelectIds = "#bksjLimit_Xn,#bksjLimit_timeCount";
+	reObject.normalSelectIds = "#bksjLimit_Xn";
+	reObject.InputIds = "#bksjLimit_StartDate,#bksjLimit_EndDate";
+	reReloadSearchsWithSelect(reObject);
+	$("#bksjLimitModal").find('.searchArea').find('.col1:eq(0)').hide();
+	$.showModal('#bksjLimitModal',true);
+	$.hideModal('#remindModal',false);
+	drawCalenrRange("#bksjLimit_StartDate","#bksjLimit_EndDate");
+	//确认新增补考限制
+	$('.confirmAddBksjLimit').unbind('click');
+	$('.confirmAddBksjLimit').bind('click', function(e) {
+		confirmAddNextBksjLimit(row);
+		e.stopPropagation();
+	});
+}
+
+//确认发送开启下一次限制信息
+function confirmAddNextBksjLimit(row){
+	var bksjLimitStartDate=$('#bksjLimit_StartDate').val();
+	var bksjLimitEndDate=$('#bksjLimit_EndDate').val();
+
+	if(bksjLimitStartDate===''){
+		toastr.warning('开始时间不能为空');
+		return;
+	}
+
+	if(bksjLimitEndDate===''){
+		toastr.warning('结束时间不能为空');
+		return;
+	}
+	row.startDateRange=bksjLimitStartDate;
+	row.endDateRange=bksjLimitEndDate;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/startNewMUTime",
 		dataType : 'json',
 		data: {
-			"edu404Id":row.edu404_ID,
+			"muTimeinfo":JSON.stringify(row),
 			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
 		},
 		beforeSend: function(xhr) {
