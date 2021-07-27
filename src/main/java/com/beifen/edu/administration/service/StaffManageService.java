@@ -416,7 +416,16 @@ public class StaffManageService {
                 if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
                     predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
                 }
-
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getIsConfirm() != null && !"".equals(edu005.getIsConfirm())) {
+                    if("T".equals(edu005.getIsConfirm())){
+                        predicates.add(cb.equal(root.<String>get("isConfirm"),edu005.getIsConfirm()));
+                    }else{
+                        predicates.add(cb.isNull(root.<String>get("isConfirm")));
+                    }
+                }
                 Path<Object> Edu201Path = root.get("edu201_id");//定义查询的字段
                 CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
                 for (int i = 0; i < edu201ids.size(); i++) {

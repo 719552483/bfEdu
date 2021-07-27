@@ -19,6 +19,7 @@ public class TeacherGradeClassPO {
     private String edu300_id;
     private String edu201_id;
     private String isConfirm;//是否确认
+    private String business_state;//延时确认成绩审核状态
 
     @Id
     public String getId() {
@@ -74,5 +75,21 @@ public class TeacherGradeClassPO {
 
     public void setEdu201_id(String edu201_id) {
         this.edu201_id = edu201_id;
+    }
+
+    public String getIsConfirm() {
+        return isConfirm;
+    }
+
+    public void setIsConfirm(String isConfirm) {
+        this.isConfirm = isConfirm;
+    }
+
+    public String getBusiness_state() {
+        return business_state;
+    }
+
+    public void setBusiness_state(String business_state) {
+        this.business_state = business_state;
     }
 }
