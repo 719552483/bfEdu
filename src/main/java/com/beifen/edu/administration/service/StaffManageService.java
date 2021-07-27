@@ -349,6 +349,99 @@ public class StaffManageService {
         return resultVO;
     }
 
+
+    //查询需要录入成绩的班级
+    public ResultVO queryGradesClass(String userId, Edu001 edu001, Edu005 edu005) {
+        ResultVO resultVO;
+        String userKey = edu990Dao.findOne(Long.parseLong(userId)).getUserKey();
+
+        //查询教师任务书ID列表
+        List<String> edu201IdList = edu205Dao.findEdu201IdByTeacher(userKey);
+        if(edu201IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
+
+        //根据条件筛选培养计划
+        Specification<Edu107> specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), edu001.getPycc()));
+                }
+                if (edu001.getSzxb() != null && !"".equals(edu001.getSzxb())) {
+                    predicates.add(cb.equal(root.<String>get("edu104"), edu001.getSzxb()));
+                }
+                if (edu001.getNj() != null && !"".equals(edu001.getNj())) {
+                    predicates.add(cb.like(root.<String>get("edu105"), '%' + edu001.getNj() + '%'));
+                }
+                if (edu001.getZybm() != null && !"".equals(edu001.getZybm())) {
+                    predicates.add(cb.equal(root.<String>get("edu106"), edu001.getZybm()));
+                }
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu107> edu107List = edu107Dao.findAll(specification);
+        if (edu107List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
+        List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).distinct().collect(Collectors.toList());
+        List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
+        if (edu108IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
+        List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+        //两个201id集合去交集
+        edu201IdList.retainAll(edu201Ids);
+        if(edu201IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
+            return resultVO;
+        }
+
+        List edu201ids = utils.heavyListMethod(edu201IdList);
+
+
+
+
+//        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到符合要求的学生");
+//        } else {
+//            resultVO = ResultVO.setSuccess("查找成功",edu005List);
+//        }
+
+        return resultVO;
+    }
+
+    //根据xnid查询学年信息
+    public ResultVO queryNowXN(String xnid) {
+        ResultVO resultVO;
+        if(xnid != null && !"".equals(xnid)){
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+            if (edu400 == null){
+                resultVO = ResultVO.setFailed("暂无学年信息!");
+            }else{
+                resultVO = ResultVO.setSuccess("查询成功!",edu400);
+            }
+        }else{
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date date=new java.util.Date();
+            String str=sdf.format(date);
+            xnid = edu400Dao.findXnidByNow(str);
+            if(xnid == null){
+                resultVO = ResultVO.setFailed("暂无学年信息!");
+            }else{
+                Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                resultVO = ResultVO.setSuccess("查询成功!",edu400);
+            }
+        }
+        return resultVO;
+    }
+
+
     //修改补考成绩
     public ResultVO updateMakeUpGrade(List<Edu0051> edu0051s,String userId) {
         ResultVO resultVO;

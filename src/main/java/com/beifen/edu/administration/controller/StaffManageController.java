@@ -518,6 +518,42 @@ public class StaffManageController {
     }
 
     /**
+     * 查询需要录入成绩的班级名单
+     * @param userId
+     * @param SearchCriteria
+     * @return
+     */
+    @RequestMapping("queryGradesClass")
+    @ResponseBody
+    public ResultVO queryGradesClass(@RequestParam("userId") String userId,@RequestParam("SearchCriteria") String SearchCriteria) {
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        Edu001 edu001 = new Edu001();
+        edu001.setPycc(jsonObject.getString("level"));
+        edu001.setSzxb(jsonObject.getString("department"));
+        edu001.setNj(jsonObject.getString("grade"));
+        edu001.setZybm(jsonObject.getString("major"));
+//        edu001.setXm(jsonObject.getString("studentName"));
+//        edu001.setXh(jsonObject.getString("studentNumber"));
+        edu001.setXzbname(jsonObject.getString("className"));
+        Edu005 edu005 = new Edu005();
+        edu005.setCourseName(jsonObject.getString("courseName"));
+        edu005.setXnid(jsonObject.getString("xnid"));
+        ResultVO result = staffManageService.queryGradesClass(userId,edu001,edu005);
+        return result;
+    }
+
+    /**
+     * 根据xnid查询学年信息
+     * @return
+     */
+    @RequestMapping("queryNowXN")
+    @ResponseBody
+    public ResultVO queryNowXN(@RequestParam("xnid") String xnid) {
+        ResultVO result = staffManageService.queryNowXN(xnid);
+        return result;
+    }
+
+    /**
      * 查询未确认成绩班级名单
      * @param userId
      * @return
