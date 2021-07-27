@@ -977,6 +977,267 @@ public class StaffManageService {
         return resultVO;
     }
 
+    //确认成绩并生成补考标识(验证)
+    public ResultVO confirmGradeCheck(Edu005 edu005, String userKey) {
+        ResultVO resultVO;
+        if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+            Edu400 edu400 = edu400Dao.getTermInfoById(edu005.getXnid());
+            if(edu400 != null){
+                String lrsj = edu400.getLrsj();
+                if(lrsj != null && !"".equals(lrsj)){
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+                    try {
+                        Date lrsjDate = simpleDateFormat.parse(lrsj);
+                        Date now = new Date();
+                        int compareTo = lrsjDate.compareTo(now);
+                        if(compareTo != 1){
+                            Edu115 edu115 = edu115Dao.queryBySearch(edu005.getClassName(),edu005.getCourseName(),edu005.getXnid());
+                            if(edu115 == null){
+                                resultVO =  ResultVO.setDateFailed("录入时间超过截至日期");
+                                return resultVO;
+                            }else if("nopass".equals(edu115.getBusinessState())){
+                                resultVO =  ResultVO.setFailed("已提交延迟确认成绩申请，请等待上级审批！");
+                                return resultVO;
+                            }
+
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+
+        //根据条件筛选成绩表
+        Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                predicates.add(cb.isNull(root.<String>get("isConfirm")));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+
+        List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+
+        if (edu005List.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到可确认的课程或该课程已经进行过确认操作");
+            return resultVO;
+        }
+
+        Long edu201_id = edu005List.get(0).getEdu201_ID();
+        Edu205 edu205 = edu205Dao.findExist(userKey,edu201_id);
+
+        if (edu205 == null) {
+            resultVO = ResultVO.setFailed("您不是该课程的老师无法确认成绩");
+            return resultVO;
+        }
+
+        List<Long> confirmIdList = edu005List.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+
+        List<Edu005> edu005ss = edu005Dao.findConfirmGrade(confirmIdList);
+        if(edu005ss.size()>0){
+            Edu005 e = edu005ss.get(0);
+            resultVO = ResultVO.setFailed("【"+e.getCourseName()+"】课程，该学生【"+e.getStudentName()+"】成绩未录入！");
+            return resultVO;
+        }
+
+
+//        edu005Dao.updateConfirmGrade(confirmIdList);
+//
+//        String param = "courseName:"+edu005.getCourseName()+",xnid:"+edu005.getXnid()+",className:"+edu005.getClassName();
+//        addLog(userKey,"confirmGrade",param);
+//
+//        Specification<Edu005> newSpecification = new Specification<Edu005>() {
+//            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//                List<Predicate> predicates = new ArrayList<Predicate>();
+//                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+//                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+//                }
+//                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+//                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+//                }
+//                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+//                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+//                }
+//                predicates.add(cb.isNotNull(root.<String>get("isPassed")));
+//                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+//            }
+//        };
+//
+//        List<Edu005> edu005s = edu005Dao.findAll(newSpecification);
+//
+//        Map<String, List<Edu005>> passMap = edu005s.stream().collect(Collectors.groupingBy(Edu005::getIsPassed, Collectors.toList()));
+//
+//        passMap.forEach((key,value) -> {
+//            if("F".equals(key)) {
+//                List<Long> noPassIdList = value.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+//                edu005Dao.updateResitFlag(noPassIdList,"T");
+//            } else if ("T".equals(key)) {
+//                List<Long> passIdList = value.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+//                edu005Dao.updateResitFlag(passIdList,"F");
+//            }
+//        });
+//
+//        //根据条件筛选成绩表
+//        Specification<Edu005> specification = new Specification<Edu005>() {
+//            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//                List<Predicate> predicates = new ArrayList<Predicate>();
+//                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+//                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+//                }
+//                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+//                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+//                }
+//                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+//                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+//                }
+//                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+//            }
+//        };
+//
+//        List<Edu005> newEdu005List = edu005Dao.findAll(specification);
+//
+//        for(int i = 0;i < newEdu005List.size();i++){
+//            Edu005 e005 = newEdu005List.get(i);
+//            if("T".equals(e005.getIsResit()) && "T".equals(e005.getIsConfirm()) && e005.getGrade()!=null){
+//                Edu0051 edu0051 = new Edu0051();
+//                edu0051.setEdu005_ID(e005.getEdu005_ID());
+//                edu0051.setEdu001_ID(e005.getEdu001_ID());
+//                edu0051.setEdu201_ID(e005.getEdu201_ID());
+//                edu0051.setEdu300_ID(e005.getEdu300_ID());
+//                edu0051.setEdu101_ID(e005.getEdu101_ID());
+//                edu0051.setCourseName(e005.getCourseName());
+//                edu0051.setClassName(e005.getClassName());
+//                edu0051.setStudentName(e005.getStudentName());
+//                edu0051.setStudentCode(e005.getStudentCode());
+//                edu0051.setGradeEnter(e005.getGradeEnter());
+//                edu0051.setEntryDate(e005.getEntryDate());
+//                edu0051.setGrade(e005.getGrade());
+//                edu0051.setXnid(edu005.getXnid());
+//                edu0051.setXn(edu005.getXn());
+//                edu0051.setExam_num(0);
+//                edu0051Dao.save(edu0051);
+//            }
+//        }
+
+        resultVO = ResultVO.setSuccess("验证成功");
+
+        return resultVO;
+    }
+
+    //验证无误后,确认成绩
+    public void confirmGradeAll(Edu005 edu005, String userKey) {
+
+        Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                predicates.add(cb.isNull(root.<String>get("isConfirm")));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005List = edu005Dao.findAll(edu005Specification);
+        List<Long> confirmIdList = edu005List.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+
+        edu005Dao.updateConfirmGrade(confirmIdList);
+
+        String param = "courseName:"+edu005.getCourseName()+",xnid:"+edu005.getXnid()+",className:"+edu005.getClassName();
+        addLog(userKey,"confirmGrade",param);
+
+        Specification<Edu005> newSpecification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                predicates.add(cb.isNotNull(root.<String>get("isPassed")));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> edu005s = edu005Dao.findAll(newSpecification);
+
+        Map<String, List<Edu005>> passMap = edu005s.stream().collect(Collectors.groupingBy(Edu005::getIsPassed, Collectors.toList()));
+
+        passMap.forEach((key,value) -> {
+            if("F".equals(key)) {
+                List<Long> noPassIdList = value.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+                edu005Dao.updateResitFlag(noPassIdList,"T");
+            } else if ("T".equals(key)) {
+                List<Long> passIdList = value.stream().map(Edu005::getEdu005_ID).collect(Collectors.toList());
+                edu005Dao.updateResitFlag(passIdList,"F");
+            }
+        });
+
+        //根据条件筛选成绩表
+        Specification<Edu005> specification = new Specification<Edu005>() {
+            public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
+                if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                    predicates.add(cb.equal(root.<String>get("className"),edu005.getClassName()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu005> newEdu005List = edu005Dao.findAll(specification);
+
+        for(int i = 0;i < newEdu005List.size();i++){
+            Edu005 e005 = newEdu005List.get(i);
+            if("T".equals(e005.getIsResit()) && "T".equals(e005.getIsConfirm()) && e005.getGrade()!=null){
+                Edu0051 edu0051 = new Edu0051();
+                edu0051.setEdu005_ID(e005.getEdu005_ID());
+                edu0051.setEdu001_ID(e005.getEdu001_ID());
+                edu0051.setEdu201_ID(e005.getEdu201_ID());
+                edu0051.setEdu300_ID(e005.getEdu300_ID());
+                edu0051.setEdu101_ID(e005.getEdu101_ID());
+                edu0051.setCourseName(e005.getCourseName());
+                edu0051.setClassName(e005.getClassName());
+                edu0051.setStudentName(e005.getStudentName());
+                edu0051.setStudentCode(e005.getStudentCode());
+                edu0051.setGradeEnter(e005.getGradeEnter());
+                edu0051.setEntryDate(e005.getEntryDate());
+                edu0051.setGrade(e005.getGrade());
+                edu0051.setXnid(edu005.getXnid());
+                edu0051.setXn(edu005.getXn());
+                edu0051.setExam_num(0);
+                edu0051Dao.save(edu0051);
+            }
+        }
+    }
+
 
     //成绩取消确认
     public ResultVO cancelGrade(Edu005 edu005, Edu600 edu600) {

@@ -2,6 +2,7 @@ package com.beifen.edu.administration.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.CourseCheckOnPO;
+import com.beifen.edu.administration.PO.TeacherGradeClassPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.dao.Edu101Dao;
 import com.beifen.edu.administration.domian.*;
@@ -602,6 +603,41 @@ public class StaffManageController {
     public ResultVO confirmGrade(@RequestParam("gradeInfo") String gradeInfo,@RequestParam("userKey") String userKey) {
         Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
         ResultVO result = staffManageService.confirmGrade(edu005,userKey);
+        return result;
+    }
+
+    /**
+     * 验证确认成绩并生成补考标识
+     *
+     * @return returnMap
+     */
+    @RequestMapping("confirmGradeCheck")
+    @ResponseBody
+    public ResultVO confirmGradeCheck(@RequestParam("gradeInfo") String gradeInfo,@RequestParam("userKey") String userKey) {
+//        Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
+        ResultVO result = new ResultVO();
+        List<TeacherGradeClassPO> teacherGradeClassPOS = JSON.parseArray(gradeInfo, TeacherGradeClassPO.class);
+        for(int i = 0;i<teacherGradeClassPOS.size();i++){
+            TeacherGradeClassPO teacherGradeClassPO = teacherGradeClassPOS.get(i);
+            Edu005 edu005 = new Edu005();
+            edu005.setXnid(teacherGradeClassPO.getXnid());
+            edu005.setClassName(teacherGradeClassPO.getClassName());
+            edu005.setCourseName(teacherGradeClassPO.getCourseName());
+            result = staffManageService.confirmGradeCheck(edu005,userKey);
+            if(result.getCode() != 200){
+                return  result;
+            }
+        }
+        for(int i = 0;i<teacherGradeClassPOS.size();i++){
+            TeacherGradeClassPO teacherGradeClassPO = teacherGradeClassPOS.get(i);
+            Edu005 edu005 = new Edu005();
+            edu005.setXnid(teacherGradeClassPO.getXnid());
+            edu005.setClassName(teacherGradeClassPO.getClassName());
+            edu005.setCourseName(teacherGradeClassPO.getCourseName());
+            staffManageService.confirmGradeAll(edu005,userKey);
+            result = ResultVO.setSuccess("操作成功！");
+
+        }
         return result;
     }
 
