@@ -1057,7 +1057,7 @@ public class StaffManageService {
         List<Edu005> edu005ss = edu005Dao.findConfirmGrade(confirmIdList);
         if(edu005ss.size()>0){
             Edu005 e = edu005ss.get(0);
-            resultVO = ResultVO.setFailed("【"+e.getCourseName()+"】课程，该学生【"+e.getStudentName()+"】成绩未录入！");
+            resultVO = ResultVO.setFailed("【"+e.getCourseName()+"】课程，【"+e.getClassName()+"】班级，该学生【"+e.getStudentName()+"】成绩未录入！");
             return resultVO;
         }
 
