@@ -322,6 +322,11 @@ padding:1.6em 0em 0.6em 31px !important
 	min-width: 175px;
 }
 
+#gradeOverviewTable td:last-child{
+	width: 385px;
+	min-width:385px;
+}
+
 #bksjLimitTable td:last-child{
 	width: 260px;
 	min-width: 260px;
@@ -1663,6 +1668,7 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.gradeOverviewTableArea .bootstrap4 .search,
 .notComfrimQueryTableTableArea .bootstrap4 .search,
 .gradeSituationForNotPassTableArea .bootstrap4 .search,
 .gradeSituationTableArea .bootstrap4 .search,

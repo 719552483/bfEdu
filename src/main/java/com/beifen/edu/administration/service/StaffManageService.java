@@ -451,7 +451,8 @@ public class StaffManageService {
         ResultVO resultVO;
         List<Edu005> edu005List = new ArrayList<>();
         for(int i = 0;i<ids.size();i++){
-            TeacherGradeClassPO teacherGradeClassPOList = teacherGradeClassViewDao.findOne(Long.parseLong(ids.get(i)));
+            String id = ids.get(i);
+            TeacherGradeClassPO teacherGradeClassPOList = teacherGradeClassViewDao.findbyid(id);
             edu005List.addAll(edu005Dao.studentGetGradesByClassCourseXn(teacherGradeClassPOList.getClassName(),teacherGradeClassPOList.getCourseName(),teacherGradeClassPOList.getXnid()));
         }
         resultVO = ResultVO.setSuccess("共查询到"+edu005List.size()+"条数据",edu005List);

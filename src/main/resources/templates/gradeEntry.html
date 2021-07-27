@@ -49,7 +49,151 @@
 		</div>
 
 		<div class="formbody">
-			<div class="page1">
+			<div id="usual1" class="usual">
+				<div class="itab">
+					<ul>
+						<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">正考成绩录入</a></li>
+						<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">补考成绩录入</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div id="tab1" class="tabson myTabson">
+				<div class="gradeOverview">
+					<div class="formtext myformtext myformtextTipArea">
+						<b>提示：<cite class="gradeOverviewCurrentXn"></cite>正考成绩录入截止时间为 <cite class="gradeOverviewCurrentLimit"></cite>,超时录入需要发起申请，请合理安排录入时间</b>
+					</div>
+
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>批量成绩确认</li>
+							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>批量取消成绩确认</li>
+							<li class="click" id="gradeOverview_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						</ul>
+						<ul class="toolbar1 manytools">
+							<li class="click" id="gradeOverview_research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
+									<select id="gradeOverview_level" class="isSowIndex">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院</label>
+									<select id="gradeOverview_department" class="isSowIndex">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+									<select id="gradeOverview_grade" class="isSowIndex">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+									<select id="gradeOverview_major" class="isSowIndex">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<select id="gradeOverview_xn" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
+									<input name="" type="text" class="myInput searchInput" id="gradeOverview_className" placeholder="请填写班级名称..."/>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课程名称</label>
+									<input name="" type="text" class="myInput searchInput" id="gradeOverview_courseName" placeholder="请填写课程名称..."/>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">录入情况</label>
+									<select id="gradeOverview_station" class="isSowIndex">
+										<option value="seleceConfigTip">全部</option>
+										<option value="T">已确认</option>
+										<option value="F">未确认</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+
+					<div class="gradeOverviewTableArea columnsStyle searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="gradeOverviewTable" data-unique-id="id" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+
+				<div class="gradeDetails noneStart">
+					<div class="formtext myformtext myformtextTipArea">
+						<b>提示：双击成绩栏或点击操作栏中的"录入"按钮 开始为学生录入成绩</b>
+					</div>
+
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="gradeDetails_return"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+						</ul>
+					</div>
+
+					<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="gradeEntryTable" data-unique-id="edu005_ID" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+			</div>
+
+			<div id="tab2" class="tabson myTabson">
+
+			</div>
+
+
+
+
+			<div class="old noneStart">
 				<div class="formtext myformtext myformtextTipArea">
 					<b>提示：双击成绩栏或点击操作栏中的"录入"按钮 开始为学生录入成绩</b>
 				</div>
@@ -58,8 +202,8 @@
 						<ul class="toolbar">
 							<li class="click" id="wantLoadGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载导入成绩模板</li>
 							<li class="click" id="wantImportGrades"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入成绩</li>
-							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>成绩确认</li>
-							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>取消成绩确认</li>
+<!--							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>成绩确认</li>-->
+<!--							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>取消成绩确认</li>-->
 							<li class="click" id="wantGradeFrees"><span><img src="images/d07.png" style="width: 24px;"/></span>批量免修</li>
 							<li class="click" id="notComfrimQuery"><span><img src="images/icon01.png" style="width: 24px;"/></span>成绩未确认查询</li>
 							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
@@ -168,12 +312,70 @@
 						</div>
 					</div>
 
-					<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">
-						<table class="tablelist myTableStyle" id="gradeEntryTable" data-unique-id="edu005_ID" style="margin-top: 10px;"></table>
+<!--					<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">-->
+<!--						<table class="tablelist myTableStyle" id="gradeEntryTable" data-unique-id="edu005_ID" style="margin-top: 10px;"></table>-->
+<!--					</div>-->
+				</div>
+			</div>
+
+       </div>
+
+		<script type="text/javascript">
+			$("#usual1 ul").idTabs();
+		</script>
+
+		<!-- 提示Modal -->
+		<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tipinfo">
+							<span><img src="images/ticon.png" /></span>
+							<div class="tipright">
+								<p>
+									是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
+								</p>
+								<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
 					</div>
 				</div>
 			</div>
-       </div>
+		</div>
+
+		<!-- 正考成绩录入时间超过Modal -->
+		<div class="modal fade bs-example-modal-lg" id="timeOutModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">提示消息</span><a class="timeOutCanle" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tipinfo">
+							<span><img src="images/ticon.png" /></span>
+							<div class="tipright">
+								<p class="remindType"></p>
+								<p>已超过当前学年最晚录入成绩日期<cite style="font-size: 14px;font-weight: bold;line-height: 35px;color: #333;">，是否发起特殊成绩录入申请？</cite></p>
+								<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure confirmTimeOut" value="确定"/>&nbsp;
+						<input name="" type="button" class="timeOutCanle" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 
@@ -479,33 +681,6 @@
 			</div>
 		</div>
 
-	<!-- 提示Modal -->
-	<div class="modal fade bs-example-modal-lg" id="remindModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">提示信息</span><a class="specialCanle specialCanleTip" shape="rect"></a></div>
-				</div>
-				<div class="modal-body">
-					<div class="tipinfo">
-						<span><img src="images/ticon.png" /></span>
-						<div class="tipright">
-							<p>
-								是否确认对<a class="remindType"></a>的<a class="remindActionType"></a>？
-							</p>
-							<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="modal-footer tipbtn">
-					<input name="" type="button" class="sure confirmRemind" value="确定"/>&nbsp;
-					<input name="" type="button" class="specialCanle specialCanleTip" value="取消"/>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<!-- 选择班级Modal -->
 	<div class="modal fade bs-example-modal-lg" id="chooseCalssModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg" role="document">
@@ -589,31 +764,6 @@
 					<div class="modal-footer tipbtn">
 						<input name="" type="button" class="sure" id="ComfirmLoadNotPassGradeModel" value="下载模板"/>&nbsp;
 						<input name="" type="button" class="cancel" value="取消"/>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	<!-- 成绩录入时间超过Modal -->
-	<div class="modal fade bs-example-modal-lg" id="timeOutModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">提示消息</span><a class="timeOutCanle" shape="rect"></a></div>
-					</div>
-					<div class="modal-body">
-						<div class="tipinfo">
-							<span><img src="images/ticon.png" /></span>
-							<div class="tipright">
-								<p>已超过当前学年最晚录入成绩日期，是否发起特殊成绩录入申请？</p>
-								<cite>如果是请点击确定按钮 ，否则请点取消。</cite>
-							</div>
-						</div>
-						<div class="clear"></div>
-					</div>
-					<div class="modal-footer tipbtn">
-						<input name="" type="button" class="sure confirmTimeOut" value="确定"/>&nbsp;
-						<input name="" type="button" class="timeOutCanle" value="取消"/>
 					</div>
 				</div>
 			</div>
