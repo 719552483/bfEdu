@@ -447,6 +447,17 @@ public class StaffManageService {
         return resultVO;
     }
 
+    public ResultVO queryGradesByTGCId(List<String> ids){
+        ResultVO resultVO;
+        List<Edu005> edu005List = new ArrayList<>();
+        for(int i = 0;i<ids.size();i++){
+            TeacherGradeClassPO teacherGradeClassPOList = teacherGradeClassViewDao.findOne(Long.parseLong(ids.get(i)));
+            edu005List.addAll(edu005Dao.studentGetGradesByClassCourseXn(teacherGradeClassPOList.getClassName(),teacherGradeClassPOList.getCourseName(),teacherGradeClassPOList.getXnid()));
+        }
+        resultVO = ResultVO.setSuccess("共查询到"+edu005List.size()+"条数据",edu005List);
+        return resultVO;
+    }
+
     //根据xnid查询学年信息
     public ResultVO queryNowXN(String xnid) {
         ResultVO resultVO;

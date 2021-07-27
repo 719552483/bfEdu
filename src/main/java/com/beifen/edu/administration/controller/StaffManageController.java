@@ -543,6 +543,18 @@ public class StaffManageController {
     }
 
     /**
+         * 根据TGC的id查询需要录入成绩的学生名单
+         * @return
+         */
+        @RequestMapping("queryGradesByTGCId")
+        @ResponseBody
+        public ResultVO queryGradesByTGCId(@RequestParam("ids") String ids) {
+            List<String> tGCID = JSON.parseArray(ids, String.class);
+            ResultVO result = staffManageService.queryGradesByTGCId(tGCID);
+            return result;
+        }
+
+    /**
      * 根据xnid查询学年信息
      * @return
      */
