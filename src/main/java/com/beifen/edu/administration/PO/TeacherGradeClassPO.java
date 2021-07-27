@@ -1,7 +1,7 @@
 package com.beifen.edu.administration.PO;
 
 
-//教务查询课表实体类
+//需要录入成绩的班级
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,6 +18,7 @@ public class TeacherGradeClassPO {
     private String xnid;
     private String edu300_id;
     private String edu201_id;
+    private String isConfirm;//是否确认
 
     @Id
     public String getId() {

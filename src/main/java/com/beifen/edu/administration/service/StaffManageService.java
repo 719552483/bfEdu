@@ -1,9 +1,6 @@
 package com.beifen.edu.administration.service;
 
-import com.beifen.edu.administration.PO.BigDataTeacherTypePO;
-import com.beifen.edu.administration.PO.CheckOnDetailPO;
-import com.beifen.edu.administration.PO.CourseCheckOnPO;
-import com.beifen.edu.administration.PO.CourseGradeViewPO;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
@@ -67,6 +64,8 @@ public class StaffManageService {
     Edu008Dao edu008Dao;
     @Autowired
     Edu999Dao edu999DAO;
+    @Autowired
+    TeacherGradeClassViewDao teacherGradeClassViewDao;
     @Autowired
     ApprovalProcessService approvalProcessService;
     @Autowired
@@ -404,14 +403,37 @@ public class StaffManageService {
 
         List edu201ids = utils.heavyListMethod(edu201IdList);
 
+        //根据条件筛选成绩表
+        Specification<TeacherGradeClassPO> teacherGradeClassPOSpecification = new Specification<TeacherGradeClassPO>() {
+            public Predicate toPredicate(Root<TeacherGradeClassPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.like(root.<String>get("courseName"), "%" + edu005.getCourseName() + "%"));
+                }
+                if (edu001.getXzbname() != null && !"".equals(edu001.getXzbname())) {
+                    predicates.add(cb.like(root.<String>get("className"),"%"+edu001.getXzbname()+"%"));
+                }
+                if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                    predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                }
 
+                Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
+                CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
+                for (int i = 0; i < edu201ids.size(); i++) {
+                    inEdu201.value(edu201ids.get(i));//存入值
+                }
+                predicates.add(cb.and(inEdu201));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
 
+        List<TeacherGradeClassPO> teacherGradeClassPOList = teacherGradeClassViewDao.findAll(teacherGradeClassPOSpecification);
 
-//        if (edu005List.size() == 0) {
-            resultVO = ResultVO.setFailed("未找到符合要求的学生");
-//        } else {
-//            resultVO = ResultVO.setSuccess("查找成功",edu005List);
-//        }
+        if (teacherGradeClassPOList.size() == 0) {
+            resultVO = ResultVO.setFailed("未找到符合要求的班级");
+        } else {
+            resultVO = ResultVO.setSuccess("查找成功",teacherGradeClassPOList);
+        }
 
         return resultVO;
     }

@@ -528,16 +528,15 @@ public class StaffManageController {
     public ResultVO queryGradesClass(@RequestParam("userId") String userId,@RequestParam("SearchCriteria") String SearchCriteria) {
         JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
         Edu001 edu001 = new Edu001();
-        edu001.setPycc(jsonObject.getString("level"));
-        edu001.setSzxb(jsonObject.getString("department"));
-        edu001.setNj(jsonObject.getString("grade"));
-        edu001.setZybm(jsonObject.getString("major"));
-//        edu001.setXm(jsonObject.getString("studentName"));
-//        edu001.setXh(jsonObject.getString("studentNumber"));
-        edu001.setXzbname(jsonObject.getString("className"));
+        edu001.setPycc(jsonObject.getString("level"));//培养层次
+        edu001.setSzxb(jsonObject.getString("department"));//所在系部（学院）
+        edu001.setNj(jsonObject.getString("grade"));//年级
+        edu001.setZybm(jsonObject.getString("major"));//专业
+        edu001.setXzbname(jsonObject.getString("className"));//班级名称
         Edu005 edu005 = new Edu005();
-        edu005.setCourseName(jsonObject.getString("courseName"));
-        edu005.setXnid(jsonObject.getString("xnid"));
+        edu005.setCourseName(jsonObject.getString("courseName"));//课程名称
+        edu005.setXnid(jsonObject.getString("xnid"));//学年
+        edu005.setIsConfirm(jsonObject.getString("isConfirm"));//是否确认（T：确认/F：未确认）
         ResultVO result = staffManageService.queryGradesClass(userId,edu001,edu005);
         return result;
     }
