@@ -417,7 +417,7 @@ public class StaffManageService {
                     predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
                 }
 
-                Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
+                Path<Object> Edu201Path = root.get("edu201_id");//定义查询的字段
                 CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
                 for (int i = 0; i < edu201ids.size(); i++) {
                     inEdu201.value(edu201ids.get(i));//存入值
