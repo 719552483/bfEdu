@@ -625,6 +625,7 @@ public class StaffManageController {
             edu005.setCourseName(teacherGradeClassPO.getCourseName());
             result = staffManageService.confirmGradeCheck(edu005,userKey);
             if(result.getCode() != 200){
+                result.setData(teacherGradeClassPO);
                 return  result;
             }
         }
