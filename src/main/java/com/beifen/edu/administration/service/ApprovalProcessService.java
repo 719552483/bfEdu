@@ -425,6 +425,7 @@ public class ApprovalProcessService {
                     edu101Dao.updateState(businessKey, "nopass");
                     break;
                 case"08":
+                    edu008Dao.updateState(businessKey, "nopass");
                     break;
                 case"09":
                     Edu115 e = edu115Dao.findOne(Long.parseLong(businessKey));

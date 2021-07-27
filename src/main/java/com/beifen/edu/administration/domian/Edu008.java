@@ -12,6 +12,7 @@ public class Edu008 {
     private String courseName;//课程名称
     private String className;//行政班名称
     private String departmentCode;//二级学院代码
+    private String status;//审批状态(passing/passed)
 
 
     @Id
@@ -64,5 +65,13 @@ public class Edu008 {
 
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

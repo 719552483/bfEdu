@@ -1301,6 +1301,7 @@ public class StaffManageService {
         edu008.setCourseName(edu005.getCourseName());
         edu008.setXnid(edu005.getXnid());
         edu008.setDepartmentCode(departmentCode);
+        edu008.setStatus("passing");
         edu008Dao.save(edu008);
 
         //设置业务主键并发起审批
@@ -1321,11 +1322,14 @@ public class StaffManageService {
     //取消成绩确认标识和补考标识
     public void cancelGradeInfo(String edu008Id) {
         Edu008 edu008 = edu008Dao.findOne(Long.parseLong(edu008Id));
+        edu008.setStatus("passed");
+        edu008Dao.save(edu008);
         List<String> Edu005Ids = edu005Dao.cancelGradeInfoQuery(edu008.getXnid(),edu008.getCourseName(),edu008.getClassName());
         //删除补考成绩表
         edu0051Dao.deleteEdu0051sByEdu005Id(Edu005Ids);
         //修改正考数据 （已得学分（getCredit），是否补考，是否确认，补考次数（exam_num））
         edu005Dao.cancelGradeInfo(edu008.getXnid(),edu008.getCourseName(),edu008.getClassName());
+
     }
 
     //更新教师信息

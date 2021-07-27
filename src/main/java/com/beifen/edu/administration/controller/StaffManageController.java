@@ -1248,7 +1248,6 @@ public class StaffManageController {
                 return result;
             }
         }
-
         return ResultVO.setSuccess("审批发起成功");
     }
 
