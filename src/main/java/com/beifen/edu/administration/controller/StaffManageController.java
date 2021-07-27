@@ -1229,5 +1229,27 @@ public class StaffManageController {
         return result;
     }
 
+    /**
+     * 批量取消成绩确认
+     * @return
+     */
+    @RequestMapping("cancelGradeAll")
+    @ResponseBody
+    public ResultVO cancelGradeAll(@RequestParam(value = "SearchCriteria") String SearchCriteria){
+//        Edu005 edu005 = JSON.parseObject(gradeInfo, Edu005.class);
+//        Edu600 edu600 = JSON.parseObject(approvalInfo, Edu600.class);
+        List<JSONObject> objectList = JSON.parseArray(SearchCriteria, JSONObject.class);
+        for(int i = 0;i<objectList.size();i++){
+            Edu600 edu600 = JSON.parseObject(objectList.get(i).getString("approvalInfo"), Edu600.class);
+            String id = JSON.parseObject(objectList.get(i).getString("id"), String.class);
+            Edu005 edu005 = staffManageService.getEdu005ByTGCId(id);
+            ResultVO result = staffManageService.cancelGrade(edu005,edu600);
+            if(result.getCode()!=200){
+                return result;
+            }
+        }
+
+        return ResultVO.setSuccess("审批发起成功");
+    }
 
 }
