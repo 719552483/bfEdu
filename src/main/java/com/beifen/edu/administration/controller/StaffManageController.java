@@ -548,9 +548,17 @@ public class StaffManageController {
          */
         @RequestMapping("queryGradesByTGCId")
         @ResponseBody
-        public ResultVO queryGradesByTGCId(@RequestParam("ids") String ids) {
+        public ResultVO queryGradesByTGCId(@RequestParam("ids") String ids,@RequestParam("SearchCriteria") String SearchCriteria) {
             List<String> tGCID = JSON.parseArray(ids, String.class);
-            ResultVO result = staffManageService.queryGradesByTGCId(tGCID);
+            JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+            Edu005 edu005 = new Edu005();
+            edu005.setCourseName(jsonObject.getString("courseName"));//课程名称
+            edu005.setXnid(jsonObject.getString("xnid"));//学年
+            edu005.setClassName(jsonObject.getString("className"));////班级名称
+            edu005.setStudentName(jsonObject.getString("studentName"));
+            edu005.setStudentCode(jsonObject.getString("studentNumber"));
+
+            ResultVO result = staffManageService.queryGradesByTGCId(tGCID,edu005);
             return result;
         }
 

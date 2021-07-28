@@ -447,15 +447,54 @@ public class StaffManageService {
         return resultVO;
     }
 
-    public ResultVO queryGradesByTGCId(List<String> ids){
+    public ResultVO queryGradesByTGCId(List<String> ids,Edu005 edu005){
         ResultVO resultVO;
         List<Edu005> edu005List = new ArrayList<>();
         for(int i = 0;i<ids.size();i++){
             String id = ids.get(i);
             TeacherGradeClassPO teacherGradeClassPOList = teacherGradeClassViewDao.findbyid(id);
-            edu005List.addAll(edu005Dao.studentGetGradesByClassCourseXn(teacherGradeClassPOList.getClassName(),teacherGradeClassPOList.getCourseName(),teacherGradeClassPOList.getXnid()));
+            List<Edu005> edu005s = edu005Dao.studentGetGradesByClassCourseXn(teacherGradeClassPOList.getClassName(),teacherGradeClassPOList.getCourseName(),teacherGradeClassPOList.getXnid());
+            List<Long> edu005IdList = edu005s.stream().map(e -> e.getEdu005_ID()).distinct().collect(Collectors.toList());
+            //根据条件筛选成绩表
+            Specification<Edu005> edu005Specification = new Specification<Edu005>() {
+                public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                        predicates.add(cb.like(root.<String>get("courseName"), "%" + edu005.getCourseName() + "%"));
+                    }
+                    if (edu005.getStudentName() != null && !"".equals(edu005.getStudentName())) {
+                        predicates.add(cb.like(root.<String>get("studentName"),"%"+edu005.getStudentName()+"%"));
+                    }
+                    if (edu005.getStudentCode() != null && !"".equals(edu005.getStudentCode())) {
+                        predicates.add(cb.like(root.<String>get("studentCode"),"%"+edu005.getStudentCode() +"%"));
+                    }
+                    if (edu005.getClassName() != null && !"".equals(edu005.getClassName())) {
+                        predicates.add(cb.like(root.<String>get("className"),"%"+edu005.getClassName()+"%"));
+                    }
+                    if (edu005.getXnid() != null && !"".equals(edu005.getXnid())) {
+                        predicates.add(cb.equal(root.<String>get("xnid"),edu005.getXnid()));
+                    }
+
+                    Path<Object> Edu005Path = root.get("edu005_ID");//定义查询的字段
+                    CriteriaBuilder.In<Object> inEdu005 = cb.in(Edu005Path);
+                    for (int i = 0; i < edu005IdList.size(); i++) {
+                        inEdu005.value(edu005IdList.get(i));//存入值
+                    }
+                    predicates.add(cb.and(inEdu005));
+                    query.orderBy(cb.desc(root.get("className")));
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                }
+            };
+            List<Edu005> edu005Lists = edu005Dao.findAll(edu005Specification);
+            if(edu005Lists.size()>0){
+                edu005List.addAll(edu005Lists);
+            }
         }
-        resultVO = ResultVO.setSuccess("共查询到"+edu005List.size()+"条数据",edu005List);
+        if(edu005List.size() == 0){
+            resultVO = ResultVO.setFailed("暂无数据");
+        }else{
+            resultVO = ResultVO.setSuccess("共查询到"+edu005List.size()+"条数据",edu005List);
+        }
         return resultVO;
     }
 
