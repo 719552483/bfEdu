@@ -340,7 +340,7 @@ function gradeComfirm(row){
 	}
 
 	if(row.business_state==='nopass'){
-		toastr.warning('该课程已发起审批');
+		toastr.warning('该课程已发起二次确认成绩的审批');
 		return;
 	}
 
@@ -371,7 +371,7 @@ function gradeComfirms(){
 		}
 
 		if(choosendGradeOverview[i].business_state==='nopass'){
-			toastr.warning('包含已发起审批课程');
+			toastr.warning('包含已发起二次确认成绩审批的课程');
 			return;
 		}
 	}
@@ -515,8 +515,8 @@ function gradeCancel(row){
 		return;
 	}
 
-	if(row.business_state==='passing'){
-		toastr.warning('该课程已发起审批');
+	if(row.status==='passing'){
+		toastr.warning('该课程已发起取消成绩确认审批');
 		return;
 	}
 
@@ -545,8 +545,8 @@ function gradeCancels(){
 			return;
 		}
 
-		if(choosendGradeOverview[i].business_state==='passing'){
-			toastr.warning('包含超时录入审批中课程');
+		if(choosendGradeOverview[i].status==='passing'){
+			toastr.warning('包含已发起取消成绩确认审批的课程');
 			return;
 		}
 	}
@@ -592,7 +592,8 @@ function sendGradeCancel(infos){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-
+				$.hideModal();
+				toastr.success(backjson.msg);
 			}  else {
 				toastr.warning(backjson.msg);
 			}
