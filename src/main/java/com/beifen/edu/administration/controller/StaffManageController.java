@@ -543,6 +543,29 @@ public class StaffManageController {
     }
 
     /**
+     * 查询需要录入补考成绩的班级名单
+     * @param userId
+     * @param SearchCriteria
+     * @return
+     */
+    @RequestMapping("queryMUGradesClass")
+    @ResponseBody
+    public ResultVO queryMUGradesClass(@RequestParam("userId") String userId,@RequestParam("SearchCriteria") String SearchCriteria) {
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        Edu001 edu001 = new Edu001();
+        edu001.setPycc(jsonObject.getString("level"));//培养层次
+        edu001.setSzxb(jsonObject.getString("department"));//所在系部（学院）
+        edu001.setNj(jsonObject.getString("grade"));//年级
+        edu001.setZybm(jsonObject.getString("major"));//专业
+        edu001.setXzbname(jsonObject.getString("className"));//班级名称
+        Edu005 edu005 = new Edu005();
+        edu005.setCourseName(jsonObject.getString("courseName"));//课程名称
+        edu005.setXnid(jsonObject.getString("xnid"));//学年
+        ResultVO result = staffManageService.queryMUGradesClass(userId,edu001,edu005);
+        return result;
+    }
+
+    /**
          * 根据TGC的id查询需要录入成绩的学生名单
          * @return
          */
@@ -570,6 +593,17 @@ public class StaffManageController {
     @ResponseBody
     public ResultVO queryNowXN(@RequestParam("xnid") String xnid) {
         ResultVO result = staffManageService.queryNowXN(xnid);
+        return result;
+    }
+
+    /**
+     * 根据xnid查询补考录入信息
+     * @return
+     */
+    @RequestMapping("queryMUinfo")
+    @ResponseBody
+    public ResultVO queryMUinfo(@RequestParam("xnid") String xnid) {
+        ResultVO result = staffManageService.queryMUinfo(xnid);
         return result;
     }
 
