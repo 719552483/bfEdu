@@ -615,9 +615,14 @@ public class StaffManageService {
     public ResultVO queryMUinfo(String xnid) {
         ResultVO resultVO;
         if(xnid != null && !"".equals(xnid)){
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+            if(edu400 == null){
+                resultVO = ResultVO.setFailed("暂无当前学年信息!");
+                return resultVO;
+            }
             Edu404 edu404 = edu404Dao.findbyxnid2(xnid);
             if (edu404 == null){
-                resultVO = ResultVO.setFailed("暂未开启补考录入");
+                resultVO = ResultVO.setFailed("暂未开启补考录入",edu400.getXnmc());
             }else{
                 resultVO = ResultVO.setSuccess("查询成功!",edu404);
             }
@@ -629,9 +634,10 @@ public class StaffManageService {
             if(xnid == null){
                 resultVO = ResultVO.setFailed("暂无当前学年信息!");
             }else{
+                Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
                 Edu404 edu404 = edu404Dao.findbyxnid2(xnid);
                 if (edu404 == null){
-                    resultVO = ResultVO.setFailed("暂未开启补考录入");
+                    resultVO = ResultVO.setFailed("暂未开启补考录入",edu400.getXnmc());
                 }else{
                     resultVO = ResultVO.setSuccess("查询成功!",edu404);
                 }
