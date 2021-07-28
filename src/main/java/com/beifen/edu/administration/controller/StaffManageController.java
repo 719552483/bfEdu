@@ -580,10 +580,28 @@ public class StaffManageController {
             edu005.setClassName(jsonObject.getString("className"));////班级名称
             edu005.setStudentName(jsonObject.getString("studentName"));
             edu005.setStudentCode(jsonObject.getString("studentNumber"));
-
             ResultVO result = staffManageService.queryGradesByTGCId(tGCID,edu005);
             return result;
         }
+
+    /**
+     * 根据TMUGC的id查询需要录入补考成绩的学生名单
+     * @return
+     */
+    @RequestMapping("queryGradesByTMUGCId")
+    @ResponseBody
+    public ResultVO queryGradesByTMUGCId(@RequestParam("ids") String ids,@RequestParam("SearchCriteria") String SearchCriteria) {
+        List<String> TMUGCId = JSON.parseArray(ids, String.class);
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        Edu005 edu005 = new Edu005();
+        edu005.setCourseName(jsonObject.getString("courseName"));//课程名称
+        edu005.setXnid(jsonObject.getString("xnid"));//学年
+        edu005.setClassName(jsonObject.getString("className"));////班级名称
+        edu005.setStudentName(jsonObject.getString("studentName"));
+        edu005.setStudentCode(jsonObject.getString("studentNumber"));
+        ResultVO result = staffManageService.queryGradesByTMUGCId(TMUGCId,edu005);
+        return result;
+    }
 
     /**
      * 根据xnid查询学年信息
