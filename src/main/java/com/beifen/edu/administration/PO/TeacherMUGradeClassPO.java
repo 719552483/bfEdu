@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TEACHER_GRADE_CLASS")
-public class TeacherGradeClassPO {
+@Table(name = "TEACHER_MU_GRADE_CLASS")
+public class TeacherMUGradeClassPO {
 
     private String id;
     private String courseName;//课程名称
@@ -18,9 +18,6 @@ public class TeacherGradeClassPO {
     private String xnid;
     private String edu300_id;
     private String edu201_id;
-    private String isConfirm;//是否确认
-    private String business_state;//延时确认成绩审核状态
-    private String status;//取消成绩确认状态
 
     @Id
     public String getId() {
@@ -78,27 +75,4 @@ public class TeacherGradeClassPO {
         this.edu201_id = edu201_id;
     }
 
-    public String getIsConfirm() {
-        return isConfirm;
-    }
-
-    public void setIsConfirm(String isConfirm) {
-        this.isConfirm = isConfirm;
-    }
-
-    public String getBusiness_state() {
-        return business_state;
-    }
-
-    public void setBusiness_state(String business_state) {
-        this.business_state = business_state;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

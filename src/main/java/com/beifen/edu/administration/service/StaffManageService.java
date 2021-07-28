@@ -1406,6 +1406,7 @@ public class StaffManageService {
         TeacherGradeClassPO teacherGradeClassPO = teacherGradeClassViewDao.findbyid(id);
         edu005.setClassName(teacherGradeClassPO.getClassName());//班级名称
         edu005.setCourseName(teacherGradeClassPO.getCourseName());//课程名称
+        edu005.setXn(teacherGradeClassPO.getXn());
         edu005.setXnid(teacherGradeClassPO.getXnid());//学年
         return edu005;
     }

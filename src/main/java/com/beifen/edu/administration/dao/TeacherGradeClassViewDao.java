@@ -1,12 +1,10 @@
 package com.beifen.edu.administration.dao;
 
 import com.beifen.edu.administration.PO.TeacherGradeClassPO;
-import com.beifen.edu.administration.domian.Edu404;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 
 
 public interface TeacherGradeClassViewDao extends JpaRepository<TeacherGradeClassPO, Long>, JpaSpecificationExecutor<TeacherGradeClassPO> {
