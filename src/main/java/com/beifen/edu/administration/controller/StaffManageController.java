@@ -1249,7 +1249,7 @@ public class StaffManageController {
         List<JSONObject> objectList = JSON.parseArray(SearchCriteria, JSONObject.class);
         for(int i = 0;i<objectList.size();i++){
             Edu600 edu600 = JSON.parseObject(objectList.get(i).getString("approvalInfo"), Edu600.class);
-            String id = JSON.parseObject(objectList.get(i).getString("id"), String.class);
+            String id = objectList.get(i).getString("id");
             Edu005 edu005 = staffManageService.getEdu005ByTGCId(id);
             ResultVO result = staffManageService.cancelGrade(edu005,edu600);
             if(result.getCode()!=200){

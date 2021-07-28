@@ -1403,7 +1403,7 @@ public class StaffManageService {
 
     public Edu005 getEdu005ByTGCId(String id){
         Edu005 edu005 = new Edu005();
-        TeacherGradeClassPO teacherGradeClassPO = teacherGradeClassViewDao.findOne(Long.parseLong(id));
+        TeacherGradeClassPO teacherGradeClassPO = teacherGradeClassViewDao.findbyid(id);
         edu005.setClassName(teacherGradeClassPO.getClassName());//班级名称
         edu005.setCourseName(teacherGradeClassPO.getCourseName());//课程名称
         edu005.setXnid(teacherGradeClassPO.getXnid());//学年

@@ -366,12 +366,12 @@ function gradeComfirms(){
 	}
 	for (var i = 0; i < choosendGradeOverview.length; i++) {
 		if(choosendGradeOverview[i].isConfirm==='T'){
-			toastr.warning('该课程已确认成绩');
+			toastr.warning('包含已确认成绩课程');
 			return;
 		}
 
 		if(choosendGradeOverview[i].business_state==='nopass'){
-			toastr.warning('该课程已发起审批');
+			toastr.warning('包含已发起审批课程');
 			return;
 		}
 	}
@@ -562,12 +562,12 @@ function gradeCancels(){
 	});
 }
 
-//发送成绩确认请求
+//发送取消成绩确认请求
 function sendGradeCancel(infos){
 	var SearchCriteria=new Array();
 	for (var i = 0; i < infos.length; i++) {
 		var single=new Object();
-		single.id=JSON.stringify(infos[i].id);
+		single.id=infos[i].id;
 		single.approvalInfo =JSON.stringify(getApprovalobect());
 		SearchCriteria.push(single);
 	}
@@ -598,6 +598,16 @@ function sendGradeCancel(infos){
 			}
 		}
 	});
+}
+
+//取消成绩确认审批流对象
+function getApprovalobect(){
+	var approvalObject=new Object();
+	approvalObject.businessType="08";
+	approvalObject.proposerType=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id;
+	approvalObject.proposerKey=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;;
+	approvalObject.approvalStyl="1";
+	return approvalObject;
 }
 
 //获得正考总览检索对象
@@ -2165,7 +2175,10 @@ function tab1BtnBind() {
 * tab2
 * */
 function judgmentIsFristTimeLoadTab2(){
-
+	var isFirstShowTab2 = $("#isFirstLoadTab2")[0].innerText;
+	if (isFirstShowTab2 === "T") {
+		$("#isFirstLoadTab2").html("F");
+	}
 }
 
 /*
