@@ -66,8 +66,11 @@
 
 					<div class="tools">
 						<ul class="toolbar">
+							<li class="click" id="wantLoadGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载导入成绩模板</li>
+							<li class="click" id="wantImportGrades"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入成绩</li>
 							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>批量成绩确认</li>
 							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>批量取消成绩确认</li>
+							<li class="click" id="wantGradeFrees"><span><img src="images/d07.png" style="width: 24px;"/></span>批量免修</li>
 							<li class="click" id="gradeOverview_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
 						<ul class="toolbar1 manytools">
@@ -177,7 +180,67 @@
 					<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="gradeDetails_return"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+							<li class="click" id="gradeDetails_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
+						<ul class="toolbar1 manytools">
+							<li class="click" id="gradeDetails_research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">行政班</label>
+									<select id="gradeDetails_class" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<select id="gradeDetails_xn" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课&#12288;&#8197;程</label>
+									<select id="gradeDetails_course" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">姓&#12288;&#8197;名</label>
+									<input name="" type="text" class="myInput searchInput" id="gradeDetails_studentName" placeholder="请填写姓名..."/>
+								</div>
+							</ul>
+						</div>
+
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;号</label>
+									<input name="" type="text" class="myInput searchInput" id="gradeDetails_studentNumber" placeholder="请填写学号..."/>
+								</div>
+							</ul>
+						</div>
 					</div>
 
 					<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">
@@ -200,117 +263,117 @@
 				<div class="scheduleClassesMainArea">
 					<div class="tools">
 						<ul class="toolbar">
-							<li class="click" id="wantLoadGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载导入成绩模板</li>
-							<li class="click" id="wantImportGrades"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入成绩</li>
+<!--							<li class="click" id="wantLoadGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载导入成绩模板</li>-->
+<!--							<li class="click" id="wantImportGrades"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量导入成绩</li>-->
 <!--							<li class="click" id="wantConfirmGrade"><span><img src="img/right.png" style="width: 24px;"/></span>成绩确认</li>-->
 <!--							<li class="click" id="wantCancelGrade"><span><img src="images/close.png" style="width: 24px;"/></span>取消成绩确认</li>-->
-							<li class="click" id="wantGradeFrees"><span><img src="images/d07.png" style="width: 24px;"/></span>批量免修</li>
+<!--							<li class="click" id="wantGradeFrees"><span><img src="images/d07.png" style="width: 24px;"/></span>批量免修</li>-->
 							<li class="click" id="notComfrimQuery"><span><img src="images/icon01.png" style="width: 24px;"/></span>成绩未确认查询</li>
-							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+<!--							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>-->
 						</ul>
 						<ul class="toolbar1 manytools">
-							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+<!--							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>-->
 							<li class="click" id="wantLoadNoPassGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载不及格成绩模板</li>
 							<li class="click" id="wantConfirmNotPassGrade"><span><img src="images/ico04.png" style="width: 24px;"/></span>批量二次导入(不及格)成绩</li>
 						</ul>
 					</div>
 					<div class="clear"></div>
 
-					<div class="searchArea searchAreaWitheSelect">
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
-									<select id="level" class="isSowIndex">
-										<option value="seleceConfigTip">请选择</option>
-									</select>
-								</div>
-							</ul>
-						</div>
+<!--					<div class="searchArea searchAreaWitheSelect">-->
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>-->
+<!--									<select id="level" class="isSowIndex">-->
+<!--										<option value="seleceConfigTip">请选择</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">二级学院</label>
-									<select id="department" class="isSowIndex">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">二级学院</label>-->
+<!--									<select id="department" class="isSowIndex">-->
+<!--										<option value="seleceConfigTip">暂不可选</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
-									<select id="grade" class="isSowIndex">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>-->
+<!--									<select id="grade" class="isSowIndex">-->
+<!--										<option value="seleceConfigTip">暂不可选</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
-									<select id="major" class="isSowIndex">
-										<option value="seleceConfigTip">暂不可选</option>
-									</select>
-								</div>
-							</ul>
-						</div>
-						<div class="clear"></div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>-->
+<!--									<select id="major" class="isSowIndex">-->
+<!--										<option value="seleceConfigTip">暂不可选</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div class="clear"></div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
-									<select id="xn" class="isSowIndex">
-										<option value="seleceConfigTip">暂无学年</option>
-									</select>
-								</div>
-							</ul>
-						</div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>-->
+<!--									<select id="xn" class="isSowIndex">-->
+<!--										<option value="seleceConfigTip">暂无学年</option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
-									<input name="" type="text" class="myInput searchInput" id="className" placeholder="请填写班级名称..."/>
-								</div>
-							</ul>
-						</div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">行政班名称</label>-->
+<!--									<input name="" type="text" class="myInput searchInput" id="className" placeholder="请填写班级名称..."/>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">课程名称</label>
-									<input name="" type="text" class="myInput searchInput" id="courseName" placeholder="请填写课程名称..."/>
-								</div>
-							</ul>
-						</div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">课程名称</label>-->
+<!--									<input name="" type="text" class="myInput searchInput" id="courseName" placeholder="请填写课程名称..."/>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
 
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;号</label>
-									<input name="" type="text" class="myInput searchInput" id="studentNumber" placeholder="请填写学号..."/>
-								</div>
-							</ul>
-						</div>
-						<div class="clear"></div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;号</label>-->
+<!--									<input name="" type="text" class="myInput searchInput" id="studentNumber" placeholder="请填写学号..."/>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div class="clear"></div>-->
 
-						<div class="col4 giveBottom">
-							<ul class="forminfo">
-								<div class="">
-									<label class="selectName" style="margin-top: 14px;">姓&#12288;&#8197;名</label>
-									<input name="" type="text" class="myInput searchInput" id="studentName" placeholder="请填写姓名..."/>
-								</div>
-							</ul>
-						</div>
-					</div>
+<!--						<div class="col4 giveBottom">-->
+<!--							<ul class="forminfo">-->
+<!--								<div class="">-->
+<!--									<label class="selectName" style="margin-top: 14px;">姓&#12288;&#8197;名</label>-->
+<!--									<input name="" type="text" class="myInput searchInput" id="studentName" placeholder="请填写姓名..."/>-->
+<!--								</div>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--					</div>-->
 
 <!--					<div class="studentBaseInfoTableArea columnsStyle searchGivePaddingR">-->
 <!--						<table class="tablelist myTableStyle" id="gradeEntryTable" data-unique-id="edu005_ID" style="margin-top: 10px;"></table>-->

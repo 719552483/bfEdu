@@ -3666,7 +3666,7 @@ public class AdministrationPageService {
 		String fileName = file.getOriginalFilename();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
 		if (!"xlsx".equals(suffix) && !"xls".equals(suffix)) {
-			resultVO = ResultVO.setFailed("文件格式错误");
+			resultVO = ResultVO.setFailed("文件类型错误");
 			return resultVO;
 		}
 		try {
@@ -3731,8 +3731,9 @@ public class AdministrationPageService {
 				}
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			resultVO = ResultVO.setFailed("文件格式错误");
+			return resultVO;
 		}
 
 		resultVO = ResultVO.setSuccess("格式校验成功");
