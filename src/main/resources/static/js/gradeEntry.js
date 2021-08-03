@@ -3506,12 +3506,12 @@ function confirmImportGradeforNotPass(){
 		success: function(backjosn){
 			$(".fileLoadingArea").hide();
 			if(backjosn.code===200){
-				var currentMainTable=$("#gradeEntryTable").bootstrapTable("getData");
+				var currentMainTable=$("#makeUpgGradeEntryTable").bootstrapTable("getData");
 
 				for (var i = 0; i < currentMainTable.length; i++) {
 					for (var b = 0; b < backjosn.data.length; b++) {
 						if(currentMainTable[i].edu005_ID==backjosn.data[b].edu005_ID){
-							$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+							$("#makeUpgGradeEntryTable").bootstrapTable('updateByUniqueId', {
 								id: backjosn.data[b].edu005_ID,
 								row: backjosn.data[b]
 							});
@@ -3520,12 +3520,12 @@ function confirmImportGradeforNotPass(){
 				}
 
 				toastr.success('成功导入'+backjosn.data.length+'条成绩');
-				var reObject = new Object();
-				reObject.fristSelectId = "#level";
-				reObject.actionSelectIds = "#department,#grade,#major";
-				reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
-				reObject.normalSelectIds = "#xn";
-				reReloadSearchsWithSelect(reObject);
+				// var reObject = new Object();
+				// reObject.fristSelectId = "#level";
+				// reObject.actionSelectIds = "#department,#grade,#major";
+				// reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
+				// reObject.normalSelectIds = "#xn";
+				// reReloadSearchsWithSelect(reObject);
 				$.hideModal("#importGradeModal")
 			}else{
 				showImportErrorInfo("#importGradeModal",backjosn.msg);
