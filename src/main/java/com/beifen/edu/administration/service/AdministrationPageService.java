@@ -3761,6 +3761,8 @@ public class AdministrationPageService {
 
 
 			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
+			//请求数量
+			int count = 0;
 			// 遍历集合数据，产生数据行
 			for (int i = 0; i < totalRows; i++) {
 				int rowIndex = i + 1;
@@ -3770,6 +3772,10 @@ public class AdministrationPageService {
 				XSSFCell cell2 = contentRow.getCell(2);
 				XSSFCell cell3 = contentRow.getCell(3);
 				XSSFCell cell4 = contentRow.getCell(4);
+				XSSFCell gradeCell = contentRow.getCell(5);
+				if (gradeCell != null) {
+					count++;
+				}
 				if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null) {
 					resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
 					return resultVO;
@@ -3791,6 +3797,12 @@ public class AdministrationPageService {
 						if ("1".equals(edu404.getStatus())){
 							resultVO = ResultVO.setFailed("补考录入时间已截止!");
 							return resultVO;
+						}
+						if(!"01".equals(edu005.getIsMx()) && Double.parseDouble(edu005.getGrade()) < 60.00){
+							if(edu005.getExam_num() != null && Integer.parseInt(edu404.getCount())==edu005.getExam_num()){
+								resultVO = ResultVO.setFailed("第"+rowIndex+"行【"+edu005.getStudentName()+"】已录入补考成绩!");
+								return resultVO;
+							}
 						}
 					}
 				}
@@ -3814,10 +3826,14 @@ public class AdministrationPageService {
 					}
 				}
 			}
-
+			if(count == 0){
+				resultVO = ResultVO.setFailed("未录入数据");
+				return resultVO;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 
 		resultVO = ResultVO.setSuccess("格式校验成功");
 		return resultVO;
@@ -3827,11 +3843,15 @@ public class AdministrationPageService {
 	public ResultVO importGradeFileMakeUp(MultipartFile file, String lrrmc, String userKey) {
 		ResultVO resultVO;
 		List<Edu005> edu005List = new ArrayList<>();
+		List<Edu005> edu005List2 = new ArrayList<>();
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			XSSFSheet sheet = workbook.getSheet("已选成绩详情");
 			int totalRows = sheet.getPhysicalNumberOfRows() - 1;
-
+			String xnid = "";
+			Date currentTime = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String dateString = formatter.format(currentTime);
 			// 遍历集合数据，产生数据行
 			for (int i = 0; i < totalRows; i++) {
 				int rowIndex = i + 1;
@@ -3841,12 +3861,12 @@ public class AdministrationPageService {
 				String courseName = contentRow.getCell(2).toString();
 				String studentCode = contentRow.getCell(4).toString();
 				XSSFCell gradeCell = contentRow.getCell(5);
-//				XSSFCell mxzt = contentRow.getCell(6);
-//				String mx = edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX");
+				xnid = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode).getXnid();
 				if (gradeCell != null) {
 					Edu005 edu005;
 					edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
 					if (edu005 != null) {
+						xnid = edu005.getXnid();
 						if(gradeCell != null){
 							if("01".equals(edu005.getIsMx()) || Double.parseDouble(edu005.getGrade()) >= 60.00){
 								continue;
@@ -3856,9 +3876,34 @@ public class AdministrationPageService {
 							}else if("不通过".equals(gradeCell.toString())){
 								edu005.setGrade("F");
 							}else{
+								double grade = Double.parseDouble(gradeCell.toString());
+								if (grade < 60.00) {
+									edu005.setIsPassed("F");
+								} else {
+									edu005.setIsPassed("T");
+								}
 								edu005.setGrade(gradeCell.toString());
 							}
-//							staffManageService.giveGrade(edu005);
+							Edu404 edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
+							edu005.setExam_num(Integer.parseInt(edu404.getCount()));
+							edu005Dao.save(edu005);
+							Edu0051 edu0051 = new Edu0051();
+							edu0051.setEdu005_ID(edu005.getEdu005_ID());
+							edu0051.setEdu001_ID(edu005.getEdu001_ID());
+							edu0051.setEdu201_ID(edu005.getEdu201_ID());
+							edu0051.setEdu300_ID(edu005.getEdu300_ID());
+							edu0051.setEdu101_ID(edu005.getEdu101_ID());
+							edu0051.setCourseName(edu005.getCourseName());
+							edu0051.setClassName(edu005.getClassName());
+							edu0051.setStudentName(edu005.getStudentName());
+							edu0051.setStudentCode(edu005.getStudentCode());
+							edu0051.setGradeEnter(edu005.getGradeEnter());
+							edu0051.setEntryDate(dateString);
+							edu0051.setGrade(edu005.getGrade());
+							edu0051.setXnid(edu005.getXnid());
+							edu0051.setXn(edu005.getXn());
+							edu0051.setExam_num(edu005.getExam_num());
+							edu0051Dao.save(edu0051);
 							edu005List.add(edu005);
 						}
 					}else{
@@ -3867,8 +3912,37 @@ public class AdministrationPageService {
 					}
 				}
 			}
-			for(int i = 0;i<edu005List.size();i++){
-				staffManageService.giveGrade(edu005List.get(i));
+
+			//填充数据
+			int rowIndex = 1;
+			XSSFRow contentRow = sheet.getRow(rowIndex);
+			String className = contentRow.getCell(1).toString();
+			String courseName = contentRow.getCell(2).toString();
+			Edu404 edu404 = edu404Dao.findbyxnid2(xnid);
+			List<Edu005> edu005Lists = edu005Dao.entryMUGrades(className,courseName,edu404.getCount());
+			if(edu005Lists.size()>0){
+				for (Edu005 edu005:edu005Lists){
+					edu005.setExam_num(Integer.parseInt(edu404.getCount()));
+					edu005Dao.save(edu005);
+					edu005List.add(edu005);
+					Edu0051 edu0051 = new Edu0051();
+					edu0051.setEdu005_ID(edu005.getEdu005_ID());
+					edu0051.setEdu001_ID(edu005.getEdu001_ID());
+					edu0051.setEdu201_ID(edu005.getEdu201_ID());
+					edu0051.setEdu300_ID(edu005.getEdu300_ID());
+					edu0051.setEdu101_ID(edu005.getEdu101_ID());
+					edu0051.setCourseName(edu005.getCourseName());
+					edu0051.setClassName(edu005.getClassName());
+					edu0051.setStudentName(edu005.getStudentName());
+					edu0051.setStudentCode(edu005.getStudentCode());
+					edu0051.setGradeEnter(edu005.getGradeEnter());
+					edu0051.setEntryDate(dateString);
+					edu0051.setGrade(edu005.getGrade());
+					edu0051.setXnid(edu005.getXnid());
+					edu0051.setXn(edu005.getXn());
+					edu0051.setExam_num(edu005.getExam_num());
+					edu0051Dao.save(edu0051);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

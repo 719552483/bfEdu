@@ -1056,9 +1056,9 @@ public class StaffManageController {
                 fileName="makeupGrade";
             }else{
                 if("F".equals(edu005List.get(0).getIsExamCrouse())){
-                    fileName="补考成绩录入单";
+                    fileName=edu005List.get(0).getXn()+edu005List.get(0).getClassName()+crouse+"补考成绩录入单";
                 }else{
-                    fileName="补考成绩录入名单";
+                    fileName=edu005List.get(0).getXn()+edu005List.get(0).getClassName()+crouse+"补考成绩录入名单";
                 }
             }
             //创建Excel文件

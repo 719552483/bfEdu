@@ -481,6 +481,10 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("补考录入时间已截止!");
             return resultVO;
         }
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(currentTime);
+
         for (int i = 0;i<edu005s.size();i++){
             Edu005 edu005New = edu005s.get(i);
             Edu005 edu005 = edu005Dao.findOne(edu005New.getEdu005_ID());
@@ -506,7 +510,7 @@ public class StaffManageService {
             edu0051.setStudentName(edu005.getStudentName());
             edu0051.setStudentCode(edu005.getStudentCode());
             edu0051.setGradeEnter(edu005.getGradeEnter());
-            edu0051.setEntryDate(edu005.getEntryDate());
+            edu0051.setEntryDate(dateString);
             edu0051.setGrade(edu005.getGrade());
             edu0051.setXnid(edu005.getXnid());
             edu0051.setXn(edu005.getXn());
@@ -531,7 +535,7 @@ public class StaffManageService {
                     edu0051.setStudentName(edu005.getStudentName());
                     edu0051.setStudentCode(edu005.getStudentCode());
                     edu0051.setGradeEnter(edu005.getGradeEnter());
-                    edu0051.setEntryDate(edu005.getEntryDate());
+                    edu0051.setEntryDate(dateString);
                     edu0051.setGrade(edu005.getGrade());
                     edu0051.setXnid(edu005.getXnid());
                     edu0051.setXn(edu005.getXn());
