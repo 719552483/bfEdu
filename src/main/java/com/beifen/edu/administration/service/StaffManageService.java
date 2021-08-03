@@ -459,7 +459,8 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("补考录入时间已截止!");
             return resultVO;
         }
-        if(edu404.getCount().equals(edu005.getExam_num())){
+
+        if(edu005.getExam_num() != null && Integer.parseInt(edu404.getCount())==edu005.getExam_num()){
             resultVO = ResultVO.setFailed("已录入补考成绩!");
             return resultVO;
         }

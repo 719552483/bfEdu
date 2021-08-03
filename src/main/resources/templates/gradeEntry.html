@@ -61,7 +61,7 @@
 			<div id="tab1" class="tabson myTabson">
 				<div class="gradeOverview">
 					<div class="formtext myformtext myformtextTipArea">
-						<b>提示：<cite class="gradeOverviewCurrentXn"></cite>正考成绩录入截止时间为 <cite class="gradeOverviewCurrentLimit"></cite>,超时录入需要发起申请，请合理安排录入时间</b>
+						<b>提示：<cite class="gradeOverviewCurrentXn"></cite>正考成绩录入截止时间为 <cite class="gradeOverviewCurrentLimit"></cite>,超时录入需要发起超时录入申请，请合理安排录入时间</b>
 					</div>
 
 					<div class="tools">
@@ -251,7 +251,183 @@
 
 			<div id="tab2" class="tabson myTabson">
 				<span class="noneStart" id="isFirstLoadTab2">T</span>
+				<div class="makeUpGradeOverview">
+					<div class="formtext myformtext myformtextTipArea">
+						<b>提示：<cite class="xnmc"></cite>补考成绩录入已开启,当前补考成绩录入次数为第<cite class="count"></cite>次，截止时间为<cite class="endDateRange"></cite>，如需修改之前的补考成绩请点击修改按钮</b>
+						<b>提示：<cite class="makeUpClose"></cite>暂未开启补考</b>
+					</div>
 
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="makeUpGradeOverview_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						</ul>
+						<ul class="toolbar1 manytools">
+							<li class="click" id="makeUpGradeOverview_research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
+									<select id="makeUpGradeOverview_level" class="isSowIndex">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院</label>
+									<select id="makeUpGradeOverview_department" class="isSowIndex">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+									<select id="makeUpGradeOverview_grade" class="isSowIndex">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+									<select id="makeUpGradeOverview_major" class="isSowIndex">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<select id="makeUpGradeOverview_xn" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
+									<input name="" type="text" class="myInput searchInput" id="makeUpGradeOverview_className" placeholder="请填写班级名称..."/>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课程名称</label>
+									<input name="" type="text" class="myInput searchInput" id="makeUpGradeOverview_courseName" placeholder="请填写课程名称..."/>
+								</div>
+							</ul>
+						</div>
+					</div>
+
+					<div class="makeUpGradeOverviewTableArea columnsStyle searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="makeUpGradeOverviewTable" data-unique-id="id" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+
+				<div class="makeUpGradeDetails noneStart">
+					<div class="formtext myformtext myformtextTipArea" style="margin-bottom: 35px;">
+						<b>提示：1.双击成绩栏或点击操作栏中的"录入"按钮 开始为单个学生录入补考成绩，点击"提交"按钮(没有点击"提交"按钮则不生效)</b><br/>
+						<b>* 2.每次提交补考成绩人数上限200人，否则建议使用批量导入功能</b><br/>
+						<b>* 3.每次补考只有一次提交机会，请仔细核对录入情况</b><br/>
+					</div>
+
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="makeUpGradeDetails_return"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
+							<li class="click" id="comfirmMakeUpGradeEntry"><span><img src="img/right.png" style="width: 24px;"/></span>提交</li>
+							<li class="click" id="wantLoadNoPassGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载不及格成绩模板</li>
+							<li class="click" id="wantConfirmNotPassGrade"><span><img src="images/ico04.png" style="width: 24px;"/></span>不及格成绩导入</li>
+							<li class="click" id="makeUpGradeDetails_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						</ul>
+						<ul class="toolbar1 manytools">
+							<li class="click" id="makeUpGradeDetails_research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">行政班</label>
+									<select id="makeUpGradeDetails_class" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<select id="makeUpGradeDetails_xn" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">课&#12288;&#8197;程</label>
+									<select id="makeUpGradeDetails_course" class="isSowIndex">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">姓&#12288;&#8197;名</label>
+									<input name="" type="text" class="myInput searchInput" id="makeUpGradeDetails_studentName" placeholder="请填写姓名..."/>
+								</div>
+							</ul>
+						</div>
+
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;号</label>
+									<input name="" type="text" class="myInput searchInput" id="makeUpGradeDetails_studentNumber" placeholder="请填写学号..."/>
+								</div>
+							</ul>
+						</div>
+					</div>
+
+					<div class="makeUpgGradeEntryTableArea columnsStyle searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="makeUpgGradeEntryTable" data-unique-id="edu005_ID" style="margin-top: 10px;"></table>
+					</div>
+
+				</div>
 			</div>
 
 
@@ -274,8 +450,8 @@
 						</ul>
 						<ul class="toolbar1 manytools">
 <!--							<li class="click" id="research"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>-->
-							<li class="click" id="wantLoadNoPassGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载不及格成绩模板</li>
-							<li class="click" id="wantConfirmNotPassGrade"><span><img src="images/ico04.png" style="width: 24px;"/></span>不及格成绩导入</li>
+<!--							<li class="click" id="wantLoadNoPassGradeModel"><span><img src="images/ico05.png" style="width: 24px;"/></span>下载不及格成绩模板</li>-->
+<!--							<li class="click" id="wantConfirmNotPassGrade"><span><img src="images/ico04.png" style="width: 24px;"/></span>不及格成绩导入</li>-->
 						</ul>
 					</div>
 					<div class="clear"></div>

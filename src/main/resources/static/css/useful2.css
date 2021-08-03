@@ -322,6 +322,17 @@ padding:1.6em 0em 0.6em 31px !important
 	min-width: 175px;
 }
 
+
+#makeUpgGradeEntryTable td:last-child{
+	width: 190px;
+	min-width:190px;
+}
+
+#makeUpGradeOverviewTable td:last-child{
+	width: 170px;
+	min-width:170px;
+}
+
 #gradeOverviewTable td:last-child{
 	width: 385px;
 	min-width:385px;
@@ -853,7 +864,7 @@ float: left;
 }
 
 .myformtextTipArea b:not(:first-child){
-	margin-left: 41px;
+	margin-left: 36px;
 }
 
 .col4 {
@@ -1668,6 +1679,8 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.makeUpgGradeEntryTableArea .bootstrap4 .search,
+.makeUpGradeOverviewTableArea .bootstrap4 .search,
 .gradeOverviewTableArea .bootstrap4 .search,
 .notComfrimQueryTableTableArea .bootstrap4 .search,
 .gradeSituationForNotPassTableArea .bootstrap4 .search,

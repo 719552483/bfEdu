@@ -65,6 +65,8 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#loadNotPassForXn", str);
 	stuffManiaSelect("#gradeFreesForXn", str);
 	stuffManiaSelect("#gradeOverview_xn", str);
+	stuffManiaSelect("#makeUpGradeOverview_xn", str);
+
 }
 
 //成绩总览获取所有成绩信息
@@ -643,6 +645,7 @@ function gradeOverviewResearch(){
 	reObject.normalSelectIds = "#gradeOverview_department,#gradeOverview_grade,#gradeOverview_major,#gradeOverview_xn,#gradeOverview_station";
 	reReloadSearchsWithSelect(reObject);
 	getGradeOverviewInfo();
+	getGradeOverviewDateLimit(getNormalSelectValue("gradeOverview_xn"));
 }
 
 //预备录入成绩
@@ -904,13 +907,16 @@ function stuffStudentBaseInfoTable(tableInfo) {
 					if(row.exam_num!=null&&row.exam_num>0){
 						return [
 							'<ul class="toolbar tabletoolbar">' +
+							'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
 							'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
 							'</ul>'
 						]
 							.join('');
 					}else{
 						return [
-							'<div class="myTooltip normalTxt" title="暂无操作">暂无操作</div>'
+							'<ul class="toolbar tabletoolbar">' +
+							'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
+							'</ul>'
 						]
 							.join('');
 					}
@@ -930,6 +936,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 						}else{
 							return [
 								'<ul class="toolbar tabletoolbar">' +
+								'<li id="wantGradeFree" class="insertBtn wantGradeFree'+index+'"><span><img src="images/d07.png" style="width:24px"></span>免修</li>' +
 								'<li id="reExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
 								'</ul>'
 							]
@@ -1185,7 +1192,7 @@ function wantGradeEntry(row,index){
 		return;
 	}
 
-	var showGradeInput=$(".gradeInput");
+	var showGradeInput=$('#tab1').find(".gradeInput");
 	var showNum=0;
 	for (var i = 0; i <showGradeInput.length ; i++) {
 		if(showGradeInput[i].style.display==="block"||showGradeInput[i].style.display==="inline-block"){
@@ -1197,18 +1204,18 @@ function wantGradeEntry(row,index){
 		return;
 	}
 
-	$(".wantGradeEntry"+index).hide();
-	$(".wantGradeFree"+index).hide();
-	$(".reExamInfo"+index).hide();
-	$(".grade"+index).hide();
-	$(".comfirmGradeEntry"+index).show();
-	$(".cancelGradeEntry"+index).show();
+	$('#tab1').find(".wantGradeEntry"+index).hide();
+	$('#tab1').find(".wantGradeFree"+index).hide();
+	$('#tab1').find(".reExamInfo"+index).hide();
+	$('#tab1').find(".grade"+index).hide();
+	$('#tab1').find(".comfirmGradeEntry"+index).show();
+	$('#tab1').find(".cancelGradeEntry"+index).show();
 	if(row.isExamCrouse==="T"){
-		$("#grade"+index).show();
-		row.grade!=null?$("#grade"+index).val(row.grade).focus():$("#grade"+index).val("").focus();
+		$('#tab1').find("#grade"+index).show();
+		row.grade!=null?$('#tab1').find("#grade"+index).val(row.grade).focus():$('#tab1').find("#grade"+index).val("").focus();
 	}else{
-		$(".gradeArea"+index).show();
-		$(".myTableSelect"+index).show();
+		$('#tab1').find(".gradeArea"+index).show();
+		$('#tab1').find(".myTableSelect"+index).show();
 	}
 }
 
@@ -1216,7 +1223,7 @@ function wantGradeEntry(row,index){
 function comfirmGradeEntry(row,index){
 	var currentGrade;
 	if(row.isExamCrouse==="T"){
-		currentGrade=$("#grade"+index).val();
+		currentGrade=$('#tab1').find("#grade"+index).val();
 		if(currentGrade===""){
 			toastr.warning('成绩不能为空');
 			return;
@@ -1227,24 +1234,24 @@ function comfirmGradeEntry(row,index){
 			return;
 		}
 	}else{
-		currentGrade=$("#grade"+index).val();
+		currentGrade=$('#tab1').find("#grade"+index).val();
 	}
 	sendGrade(currentGrade,row);
 }
 
 //取消录入成绩
 function cancelGradeEntry(row,index){
-	$(".wantGradeEntry"+index).show();
-	$(".wantGradeFree"+index).show();
-	$(".reExamInfo"+index).show();
-	$(".grade"+index).show();
-	$(".comfirmGradeEntry"+index).hide();
-	$(".cancelGradeEntry"+index).hide();
+	$('#tab1').find(".wantGradeEntry"+index).show();
+	$('#tab1').find(".wantGradeFree"+index).show();
+	$('#tab1').find(".reExamInfo"+index).show();
+	$('#tab1').find(".grade"+index).show();
+	$('#tab1').find(".comfirmGradeEntry"+index).hide();
+	$('#tab1').find(".cancelGradeEntry"+index).hide();
 	if(row.isExamCrouse==="T"){
-		$("#grade"+index).hide();
-		$("#grade"+index).val("");
+		$('#tab1').find("#grade"+index).hide();
+		$('#tab1').find("#grade"+index).val("");
 	}else{
-		$(".myTableSelect"+index).hide();
+		$('#tab1').find(".myTableSelect"+index).hide();
 	}
 }
 
@@ -1274,6 +1281,7 @@ function sendGrade(currentGrade,row) {
 			hideloding();
 			if (backjson.code===200) {
 				$("#gradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: backjson.data});
+				drawPagination(".studentBaseInfoTableArea", "成绩信息");
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -1459,6 +1467,7 @@ function gradeDetailsStartSearch(){
 				stuffStudentBaseInfoTable(backjson.data);
 				toastr.success(backjson.msg);
 			}  else {
+				stuffStudentBaseInfoTable({});
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -2045,7 +2054,7 @@ function getApprovalobect2(){
 	return approvalObject;
 }
 
-//正考录入页面按钮事件绑定
+//正考页面按钮事件绑定
 function tab1BtnBind() {
 	//提示框取消按钮
 	$('.cancelTipBtn,.cancel').unbind('click');
@@ -2054,7 +2063,7 @@ function tab1BtnBind() {
 		e.stopPropagation();
 	});
 
-	//年级change时间
+	//学年change事件
 	$("#gradeOverview_xn").change(function() {
 		if(getNormalSelectValue("gradeOverview_xn")===""){
 			return;
@@ -2179,20 +2188,1445 @@ function judgmentIsFristTimeLoadTab2(){
 	var isFirstShowTab2 = $("#isFirstLoadTab2")[0].innerText;
 	if (isFirstShowTab2 === "T") {
 		$("#isFirstLoadTab2").html("F");
+		SelectPublic('#makeUpGradeOverview_level',"#makeUpGradeOverview_department","#makeUpGradeOverview_grade","#makeUpGradeOverview_major");
+		getMakeUpGradeOverviewDateLimit('');
+		getMakeUpGradeOverviewInfo();
+		tab2BtnBind();
 	}
+}
+
+//获取当前学年补考成绩录入时间限制
+function getMakeUpGradeOverviewDateLimit(xnId){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryMUinfo",
+		data: {
+			"xnid": xnId
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			if (backjson.code == 200) {
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(0)').show();
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(1)').hide();
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.xnmc').html(backjson.data.xnmc);
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.count').html(backjson.data.count);
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.endDateRange').html(backjson.data.endDateRange);
+			} else {
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(0)').hide();
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(1)').show();
+				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.makeUpClose').html(backjson.data);
+			}
+		}
+	});
+}
+
+//补考成绩总览获取所有班级信息
+function getMakeUpGradeOverviewInfo(){
+	var SearchCriteria= getMakeUpGradeOverviewSearchInfo();
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryMUGradesClass",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(SearchCriteria),
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffMakeUpGradeOverviewTable(backjson.data);
+			} else {
+				stuffMakeUpGradeOverviewTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+var choosendMakeUpGradeOverview=new Array();
+//渲染补考总览表
+function stuffMakeUpGradeOverviewTable(Info){
+	choosendMakeUpGradeOverview=new Array();
+	window.releaseNewsEvents = {
+		'click #wantEntryMakeUpGrade': function(e, value, row, index) {
+			wantEntryMakeUpGrade(row);
+		}
+	};
+
+	$('#makeUpGradeOverviewTable').bootstrapTable('destroy').bootstrapTable({
+		data: Info,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 10,
+		pageList: [10],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: '补考总览表'  //文件名称
+		},
+		onCheck : function(row) {
+			onCheckGradeOverview(row);
+		},
+		onUncheck : function(row) {
+			onUncheckGradeOverview(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllGradeOverview(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllGradeOverview(rows2);
+		},
+		onPageChange: function() {
+			drawPagination(".makeUpGradeOverviewTableArea", "补考成绩录入数据");
+			for (var i = 0; i < choosendMakeUpGradeOverview.length; i++) {
+				$("#makeUpGradeOverviewTable").bootstrapTable("checkBy", {field:"id", values:[choosendMakeUpGradeOverview[i].id]})
+			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [{
+			field: 'id',
+			title: '唯一Id',
+			align: 'center',
+			sortable: true,
+			visible: false
+		}, {
+			field: 'check',
+			checkbox: true
+		},{
+			field: 'className',
+			title: '行政班名称',
+			align: 'left',
+			sortable: true,
+			formatter: paramsMatter
+		}, {
+			field: 'courseName',
+			title: '课程名称',
+			align: 'left',
+			sortable: true,
+			formatter: paramsMatter
+		},
+			{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
+				field: 'action',
+				title: '操作',
+				align: 'center',
+				clickToSelect: false,
+				formatter: releaseNewsFormatter,
+				events: releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [
+			'<ul class="toolbar tabletoolbar">' +
+			'<li id="wantEntryMakeUpGrade" class="modifyBtn"><span><img src="images/t02.png" style="width:24px"></span>开始录入/成绩查询</li>' +
+			'</ul>'
+		]
+			.join('');
+	}
+
+	drawSearchInput(".makeUpGradeOverviewTableArea");
+	drawPagination(".makeUpGradeOverviewTableArea", "补考成绩录入数据");
+	changeColumnsStyle(".makeUpGradeOverviewTableArea", "补考成绩录入数据");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//单选补考总览
+function onCheckGradeOverview(row){
+	if(choosendMakeUpGradeOverview.length<=0){
+		choosendMakeUpGradeOverview.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendMakeUpGradeOverview.length; i++) {
+			if(choosendMakeUpGradeOverview[i].id===row.id){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendMakeUpGradeOverview.push(row);
+		}
+	}
+}
+
+//单反选补考总览
+function onUncheckGradeOverview(row){
+	if(choosendMakeUpGradeOverview.length<=1){
+		choosendMakeUpGradeOverview.length=0;
+	}else{
+		for (var i = 0; i < choosendMakeUpGradeOverview.length; i++) {
+			if(choosendMakeUpGradeOverview[i].id===row.id){
+				choosendMakeUpGradeOverview.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选补考总览
+function onCheckAllGradeOverview(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendMakeUpGradeOverview.push(row[i]);
+	}
+}
+
+//全反选补考总览
+function onUncheckAllGradeOverview(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].id);
+	}
+
+
+	for (var i = 0; i < choosendMakeUpGradeOverview.length; i++) {
+		if(a.indexOf(choosendMakeUpGradeOverview[i].id)!==-1){
+			choosendMakeUpGradeOverview.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//预备录入成绩
+function wantEntryMakeUpGrade(row){
+	var choosend=new Array();
+	if(choosendMakeUpGradeOverview.length<=1){
+		$(".remindType").html(row.className+'-'+row.courseName);
+		$(".remindActionType").html("补考成绩开始录入/补考成绩查询");
+		choosend.push(row);
+	}else{
+		//判断选择的学年是个一致
+		var firstXn=choosendMakeUpGradeOverview[0].xnid;
+		for (var i = 0; i < choosendMakeUpGradeOverview.length; i++) {
+			if(choosendMakeUpGradeOverview[i].xnid!==firstXn){
+				toastr.warning('请选择相同学年的课程录入补考成绩');
+				return;
+			}
+		}
+
+		choosend=choosendMakeUpGradeOverview;
+		$(".remindType").html("已选"+choosend.length+"个班级课程");
+		$(".remindActionType").html("补考成绩开始录入/补考成绩查询");
+	}
+	$.showModal("#remindModal",true);
+
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		getMakeUpGradeDetails(choosend,true);
+		e.stopPropagation();
+	});
+
+	//预备补考提交按钮
+	$('#comfirmMakeUpGradeEntry').unbind('click');
+	$('#comfirmMakeUpGradeEntry').bind('click', function(e) {
+		comfirmMakeUpGradeEntry(choosend);
+		e.stopPropagation();
+	});
+}
+
+//获取补考成绩详情
+function getMakeUpGradeDetails(choosend,needHide){
+	var SearchCriteria=new Array();
+	for (let i = 0; i <choosend.length ; i++) {
+		SearchCriteria.push(choosend[i].id);
+	}
+	var searchObject=getMakeUpDetailsSearchObject(true);
+	searchObject.ids=SearchCriteria;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryGradesByTMUGCId",
+		data: {
+			"ids":JSON.stringify(searchObject.ids),
+			"SearchCriteria":JSON.stringify(searchObject.SearchCriteria)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffMakeStudentBaseInfoTable(backjson.data);
+				var reObject = new Object();
+				reObject.InputIds = "#makeUpGradeDetails_studentNumber,#makeUpGradeDetails_studentName";
+				reObject.normalSelectIds = "#makeUpGradeDetails_course,#makeUpGradeDetails_xn,#makeUpGradeDetails_class";
+				reReloadSearchsWithSelect(reObject);
+				if(needHide){
+				stuffMakeUpGradeDetailsSearch(choosend);
+				$('.makeUpGradeOverview').hide();
+				$('.makeUpGradeDetails').show();
+					$.hideModal();
+				}
+			}  else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//渲染补考成绩详情表
+function stuffMakeStudentBaseInfoTable(tableInfo) {
+	for (var i = 0; i < tableInfo.length; i++) {
+		tableInfo[i].actionRulue='T'; //判断时候第一次录入补考成绩(不是则不需要遵守前端录入规则)
+		tableInfo[i].isModify='F'; //判断是否修改过 用以统计当前已录入补考成绩的人数
+	}
+
+	window.releaseNewsEvents = {
+		'click #makeUpwantGradeEntry': function(e, value, row, index) {
+			makeUpwantGradeEntry(row,index);
+		},
+		'click #makeUpcomfirmGradeEntry': function(e, value, row, index) {
+			makeUpcomfirmGradeEntry(row,index);
+		},
+		'click #makeUpcancelGradeEntry': function(e, value, row, index) {
+			makeUpcancelGradeEntry(row,index);
+		},
+		'click #makeUpreExamInfo': function(e, value, row, index) {
+			reExamInfo(row,index);
+		}
+	};
+
+	$('#makeUpgGradeEntryTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: '补考学生成绩导出'  //文件名称
+		},
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".makeUpgGradeEntryTableArea", "补考成绩信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		onDblClickRow : function(row, $element, field) {
+			var index =parseInt($element[0].dataset.index);
+			makeUpwantGradeEntry(row,index);
+		},
+		columns: [
+			{
+				field: 'edu005_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			},
+			{
+				field: 'className',
+				title: '行政班',
+				align: 'left',
+				sortable: true,
+				formatter: xzbnameMatter
+			},{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'courseName',
+				title: '课程名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},  {
+				field: 'studentName',
+				title: '姓名',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'studentCode',
+				title: '学号',
+				align: 'left',
+				sortable: true,
+				visible: false,
+				formatter: paramsMatter
+			} ,{
+				field: 'grade',
+				title: '成绩',
+				align: 'left',
+				sortable: true,
+				formatter: gradeMatter
+			}, {
+				field: 'isMx',
+				title: '免修状态',
+				align: 'center',
+				width:'10',
+				sortable: true,
+				formatter: isMxMatter
+			},{
+				field: 'isResit',
+				title: '是否补考',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isResitMatter
+			},{
+				field: 'exam_num',
+				title: '补考次数',
+				align: 'left',
+				sortable: true,
+				visible: true,
+				formatter: examNnumMatter
+			} ,
+			{
+				field: 'isConfirm',
+				title: '成绩确认',
+				align: 'center',
+				sortable: true,
+				width:'10',
+				formatter: isConfirmMatter
+			},{
+				field: 'gradeEnter',
+				title: '录入人',
+				align: 'left',
+				sortable: true,
+				formatter: gradeEnterMatter
+			},{
+				field: 'entryDate',
+				title: '录入时间',
+				align: 'left',
+				sortable: true,
+				formatter: entryDateMatter
+			},  {
+				field: 'action',
+				title: '操作',
+				align: 'center',
+				clickToSelect: false,
+				formatter: releaseNewsFormatter,
+				events: releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		var isPass=true;//是否及格
+		row.grade==="T"||row.grade>=60?isPass=true:isPass=false;
+		if(isPass&&row.actionRulue==='T'){
+			return [
+				'<ul class="toolbar tabletoolbar">' +
+				'<li id="makeUpreExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+				'</ul>'
+			]
+				.join('');
+		}else{
+			if(row.exam_num==null){
+				return [
+					'<ul class="toolbar tabletoolbar">' +
+					'<li id="makeUpwantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+					'<li id="makeUpcomfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+					'<li id="makeUpcancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+					'</ul>'
+				]
+					.join('');
+			}else{
+				if(row.exam_num<5){
+					return [
+						'<ul class="toolbar tabletoolbar">' +
+						'<li id="makeUpwantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
+						'<li id="makeUpreExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+						'<li id="makeUpcomfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+						'<li id="makeUpcancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
+						'</ul>'
+					]
+						.join('');
+				}else{
+					return [
+						'<ul class="toolbar tabletoolbar">' +
+						'<li id="makeUpreExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+						'</ul>'
+					]
+						.join('');
+				}
+
+			}
+		}
+	}
+
+	function xzbnameMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip redTxt" title="暂无行政班">暂无行政班</div>'
+			]
+				.join('');
+		} else {
+			return [
+				'<div class="myTooltip" title="'+value+'">'+value+'</div>'
+			]
+				.join('');
+		}
+	}
+
+	function examNnumMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="暂未补考">暂未补考</div>'
+			]
+				.join('');
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="'+value+'次">'+value+'次</div>'
+			]
+				.join('');
+		}
+	}
+
+	function isMxMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined"||value==='0') {
+			return [
+				'<div class="myTooltip normalTxt" title="正常">正常</div>'
+			]
+				.join('');
+		} else if(value==='01'){
+			return [
+				'<div class="myTooltip normalTxt" title="免修">免修</div>'
+			]
+				.join('');
+		}else if(value==='02'){
+			return [
+				'<div class="myTooltip normalTxt" title="缓考">缓考</div>'
+			]
+				.join('');
+		}else if(value==='03'){
+			return [
+				'<div class="myTooltip normalTxt" title="休学">休学</div>'
+			]
+				.join('');
+		}else if(value==='04'){
+			return [
+				'<div class="myTooltip normalTxt" title="退学">退学</div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip normalTxt" title="缺考">缺考</div>'
+			]
+				.join('');
+		}
+	}
+
+	function gradeMatter(value, row, index) {
+		var className='';
+		if((row.isMx!=='0'&&row.isMx!==""&&row.isMx!=null&&typeof row.isMx!=="undefined") && (row.isMx!=='05')){
+			if(row.isMx==='01'){
+				return [
+					'<div class="myTooltip normalTxt" title="免修">免修</div>'
+				]
+					.join('');
+			}else if(row.isMx==='02'){
+				return [
+					'<div class="myTooltip normalTxt" title="缓考">缓考</div>'
+				]
+					.join('');
+			}else if(row.isMx==='03'){
+				return [
+					'<div class="myTooltip normalTxt" title="休学">休学</div>'
+				]
+					.join('');
+			}else{
+				return [
+					'<div class="myTooltip normalTxt" title="退学">退学</div>'
+				]
+					.join('');
+			}
+		}else{
+			if(row.isExamCrouse==="T"){
+				if (typeof value==="undefined"||value==null||value==="") {
+					return [ '<div>' +
+					'<span class="grade grade'+index+'">暂无成绩</span>' +
+					'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
+					'</div>' ].join('');
+				} else {
+					parseFloat(value)>=60?className='greenTxt':className="redTxt";
+					return [ '<div class="myTooltip" title="'+value+'">' +
+					'<span class="'+className+' grade grade'+index+'">'+value+'</span>' +
+					'<input type="text" class="gradeInput tableInput noneStart" id="grade'+index+'">' +
+					'</div>' ].join('');
+				}
+			}else{
+				var title="";
+				if(row.grade==null){
+					title="暂无成绩";
+				}else{
+					row.grade==="T"?title="通过":title="不通过";
+					title==="通过"?className='greenTxt':className="redTxt";
+				}
+				var str='<option value="T">通过</option><option value="F">不通过</option>';
+				if(typeof value==="undefined"||value==null||value==="null"){
+					return [
+						'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
+						'<span class="grade grade'+index+'">暂无成绩</span>' +
+						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
+						+ str +
+						'</select>'+
+						'</div>'
+					]
+						.join('');
+				}else{
+					return [
+						'<div class="myTooltip gradeArea'+index+'" title="'+title+'">' +
+						'<span class="'+className+' grade grade'+index+'">'+title+'</span>' +
+						'<select class="isSowIndex myTableSelect myTableSelect' +index + '" id="grade'+index+'">'
+						+ str +
+						'</select>'+
+						'</div>'
+					]
+						.join('');
+				}
+			}
+		}
+
+		$('.isSowIndex').selectMania(); // 初始化下拉框
+	}
+
+	function gradeEnterMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				''
+			]
+				.join('');
+		} else {
+			return [
+				'<div class="myTooltip" title="'+value+'">'+value+'</div>'
+			]
+				.join('');
+		}
+	}
+
+	function entryDateMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				''
+			]
+				.join('');
+		} else {
+			return [
+				'<div class="myTooltip" title="'+value+'">'+value+'</div>'
+			]
+				.join('');
+		}
+	}
+
+	function isResitMatter(value, row, index) {
+		if (value===""||value==null||typeof value==="undefined") {
+			return [
+				'<div class="myTooltip normalTxt" title="未录入">未录入</div>'
+			]
+				.join('');
+		} else if(value==="T"){
+			return [
+				'<div class="myTooltip" title="是"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+		}else{
+			return [
+				'<div class="myTooltip" title="否"><i class="iconfont icon-chacha redTxt"></i></div>'
+			]
+				.join('');
+		}
+	}
+
+	function isConfirmMatter(value, row, index) {
+		if (value==="T") {
+			return [
+				'<div class="myTooltip" title="已确认"><i class="iconfont icon-yixuanze greenTxt"></i></div>'
+			]
+				.join('');
+
+		} else {
+			return [
+				'<div class="myTooltip normalTxt" title="未确认">未确认</div>'
+			]
+				.join('');
+		}
+	}
+
+	drawPagination(".makeUpgGradeEntryTableArea", "补考成绩信息");
+	drawSearchInput(".makeUpgGradeEntryTableArea");
+	changeTableNoRsTip();
+	changeColumnsStyle( ".makeUpgGradeEntryTableArea", "补考成绩信息");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//预备录入补考成绩
+function makeUpwantGradeEntry(row,index){
+	var thisInfo=$("#makeUpgGradeEntryTable").bootstrapTable('getRowByUniqueId',row.edu005_ID);
+	if((thisInfo.grade==='T'||parseFloat(thisInfo.grade)>=60)&&row.actionRulue==='T'){
+		toastr.warning("成绩已及格");
+		return;
+	}
+
+	if(!(thisInfo.isMx==='0'||thisInfo.isMx===''||typeof thisInfo.isMx==='undefined'||thisInfo.isMx==null)){
+		toastr.warning("请先修改该学生免修状态");
+		return;
+	}
+
+	if(row.exam_num!=null&&row.exam_num>=5&&row.actionRulue==='T'){
+		toastr.warning("最多补考五次");
+		return;
+	}
+
+	var showGradeInput=$('#tab2').find(".gradeInput");
+	var showNum=0;
+	for (var i = 0; i <showGradeInput.length ; i++) {
+		if(showGradeInput[i].style.display==="block"||showGradeInput[i].style.display==="inline-block"){
+			showNum++;
+		}
+	}
+	if(showNum>=1){
+		toastr.warning("请先录完上一个补考成绩");
+		return;
+	}
+
+	$('#tab2').find(".wantGradeEntry"+index).hide();
+	$('#tab2').find(".wantGradeFree"+index).hide();
+	$('#tab2').find(".reExamInfo"+index).hide();
+	$('#tab2').find(".grade"+index).hide();
+	$('#tab2').find(".comfirmGradeEntry"+index).show();
+	$('#tab2').find(".cancelGradeEntry"+index).show();
+	if(row.isExamCrouse==="T"){
+		$('#tab2').find("#grade"+index).show();
+		row.grade!=null?$('#tab2').find("#grade"+index).val(row.grade).focus():$('#tab2').find("#grade"+index).val("").focus();
+	}else{
+		$('#tab2').find(".gradeArea"+index).show();
+		$('#tab2').find(".myTableSelect"+index).show();
+	}
+}
+
+//取消录入补考成绩
+function makeUpcancelGradeEntry(row,index){
+	$('#tab2').find(".wantGradeEntry"+index).show();
+	$('#tab2').find(".wantGradeFree"+index).show();
+	$('#tab2').find(".reExamInfo"+index).show();
+	$('#tab2').find(".grade"+index).show();
+	$('#tab2').find(".comfirmGradeEntry"+index).hide();
+	$('#tab2').find(".cancelGradeEntry"+index).hide();
+	if(row.isExamCrouse==="T"){
+		$('#tab2').find("#grade"+index).hide();
+		$('#tab2').find("#grade"+index).val("");
+	}else{
+		$('#tab2').find(".myTableSelect"+index).hide();
+	}
+}
+
+//确认录入补考成绩
+function makeUpcomfirmGradeEntry(row,index){
+	var currentGrade;
+	var isModify=0;
+	if(row.isExamCrouse==="T"){
+		currentGrade=$('#tab2').find("#grade"+index).val();
+		if(currentGrade===""){
+			toastr.warning('成绩不能为空');
+			return;
+		}
+
+		if(!checkIsNumber(currentGrade) && currentGrade!==""){
+			toastr.warning('成绩必须是数字');
+			return;
+		}
+	}else{
+		currentGrade=$('#tab2').find("#grade"+index).val();
+	}
+
+	var all=$("#makeUpgGradeEntryTable").bootstrapTable("getData");
+
+	for (let i = 0; i < all.length; i++) {
+		if(all[i].isModify==='T'){
+			isModify++;
+		}
+	}
+
+	if(isModify>=200&&currentGrade!==row.grade){
+		toastr.warning('当前录入人数超过上限200人/次 建议使用批量导入功能');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/entryMUGradesCheck",
+		data: {
+			"edu005Id":row.edu005_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				row.grade=currentGrade;
+				row.actionRulue='F';
+				row.isModify='T';
+
+				$("#makeUpgGradeEntryTable").bootstrapTable("updateByUniqueId", {id: row.edu005_ID, row: row});
+				drawPagination(".makeUpgGradeEntryTableArea", "补考成绩信息");
+			}  else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//渲染学生补考成绩详情检索项
+function stuffMakeUpGradeDetailsSearch(choosend){
+	var str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < choosend.length; i++) {
+		str += '<option value="' + i + '">' + choosend[i].className
+			+ '</option>';
+	}
+	stuffManiaSelect("#makeUpGradeDetails_class", str);
+
+	var str='';
+	str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < choosend.length; i++) {
+		str += '<option value="' + choosend[i].xnid + '">' + choosend[i].xn
+			+ '</option>';
+	}
+	stuffManiaSelect("#makeUpGradeDetails_xn", str);
+
+	var str='';
+	str = '<option value="seleceConfigTip">请选择</option>';
+	for (var i = 0; i < choosend.length; i++) {
+		str += '<option value="' + i + '">' + choosend[i].courseName
+			+ '</option>';
+	}
+	stuffManiaSelect("#makeUpGradeDetails_course", str);
+}
+
+//获得补考成绩详情检索对象
+function getMakeUpDetailsSearchObject(canEmpty){
+	var returnObject = new Object();
+	var SearchCriteria=new Array();
+	var choosend=$("#makeUpGradeOverviewTable").bootstrapTable("getSelections");
+	for (let i = 0; i <choosend.length ; i++) {
+		SearchCriteria.push(choosend[i].id);
+	}
+
+	var xnid =getNormalSelectValue("makeUpGradeDetails_xn");
+	var className=getNormalSelectText("makeUpGradeDetails_class");
+	var courseName=getNormalSelectText("makeUpGradeDetails_course");
+	var studentNumber=$("#makeUpGradeDetails_studentNumber").val();
+	var studentName=$("#makeUpGradeDetails_studentName").val();
+
+	if(xnid===''&&className===''&&courseName===''&&studentNumber===''&&studentName===''&&!canEmpty){
+		toastr.warning('检索条件不能为空');
+		return returnObject;
+	}
+
+	returnObject.ids = SearchCriteria;
+	var searchObject=new Object();
+	searchObject.xnid = xnid;
+	searchObject.className = className;
+	searchObject.courseName = courseName;
+	searchObject.studentNumber = studentNumber;
+	searchObject.studentName = studentName;
+	returnObject.SearchCriteria=searchObject;
+	return returnObject;
+}
+
+//获得补考总览检索对象
+function getMakeUpGradeOverviewSearchInfo(){
+	var level=getNormalSelectValue('makeUpGradeOverview_level');
+	var department=getNormalSelectValue('makeUpGradeOverview_department');
+	var grade=getNormalSelectValue('makeUpGradeOverview_grade');
+	var major=getNormalSelectValue('makeUpGradeOverview_major');
+	var xnid=getNormalSelectValue('makeUpGradeOverview_xn');
+	var className=$('#makeUpGradeOverview_className').val();
+	var courseName=$('#makeUpGradeOverview_courseName').val();
+
+	var returnObject=new Object();
+	returnObject.level=level;
+	returnObject.department=department;
+	returnObject.grade=grade;
+	returnObject.major=major;
+	returnObject.xnid=xnid;
+	returnObject.className=className;
+	returnObject.courseName=courseName;
+
+	return returnObject;
+}
+
+//补考总览重置检索
+function makeUpGradeOverviewResearch(){
+	var reObject = new Object();
+	reObject.InputIds = "#makeUpGradeOverview_className,#makeUpGradeOverview_courseName";
+	reObject.fristSelectId = "#makeUpGradeOverview_level";
+	reObject.normalSelectIds = "#makeUpGradeOverview_department,#makeUpGradeOverview_grade,#makeUpGradeOverview_major,#makeUpGradeOverview_xn";
+	reReloadSearchsWithSelect(reObject);
+	getMakeUpGradeOverviewInfo();
+	getMakeUpGradeOverviewDateLimit(getNormalSelectValue("makeUpGradeOverview_xn"));
+}
+
+//补考详情开始检索
+function makeUpGradeDetailsStartSearch(){
+	var searchObject=getMakeUpDetailsSearchObject(false);
+	if(typeof searchObject.SearchCriteria==='undefined'){
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryGradesByTMUGCId",
+		data: {
+			"ids":JSON.stringify(searchObject.ids),
+			"SearchCriteria":JSON.stringify(searchObject.SearchCriteria)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffMakeUpGradeDetailsSearch(backjson.data);
+				toastr.success(backjson.msg);
+			}  else {
+				stuffMakeStudentBaseInfoTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//预备补考提交
+function comfirmMakeUpGradeEntry(lastTableChoosend){
+	var thisTableChoosend=new Array();
+	var all=$("#makeUpgGradeEntryTable").bootstrapTable("getData");
+	var isModify=0;
+	for (let i = 0; i < all.length; i++) {
+		if(all[i].isModify==='T'){
+			isModify++;
+			thisTableChoosend.push(all[i]);
+		}
+	}
+	if(isModify<=0){
+		toastr.warning('暂无录入任何补考成绩');
+		return;
+	}
+	$.showModal("#remindModal",true);
+	$(".remindType").html("本次"+isModify+"人的补考成绩");
+	$(".remindActionType").html("录入提交(仅一次提交机会!)");
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendMakeUpGradeEntry(lastTableChoosend,thisTableChoosend);
+	});
+}
+
+//提交补考成绩
+function sendMakeUpGradeEntry(lastTableChoosend,thisTableChoosend){
+	var SearchCriteria=new Object();
+	var gradeList=new Array();
+	var muClassIDs=new Array();
+	for (var i = 0; i < thisTableChoosend.length; i++) {
+		var current=new Object();
+		current.edu005_ID=thisTableChoosend[i].edu005_ID;
+		current.grade=thisTableChoosend[i].grade;
+		gradeList.push(current);
+	}
+
+	for (var i = 0; i < lastTableChoosend.length; i++) {
+		muClassIDs.push(lastTableChoosend[i].id);
+	}
+
+	SearchCriteria.gradeList=gradeList;
+	SearchCriteria.muClassIDs=muClassIDs;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/entryMUGrades",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(SearchCriteria)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$.hideModal();
+				for (var i = 0; i < thisTableChoosend.length; i++) {
+					if(thisTableChoosend[i].exam_num==null||thisTableChoosend[i].exam_num===''||typeof thisTableChoosend[i].exam_num==='undefined'){
+						thisTableChoosend[i].exam_num=1;
+					}else{
+						thisTableChoosend[i].exam_num=thisTableChoosend[i].exam_num+1;
+					}
+					$("#makeUpgGradeEntryTable").bootstrapTable("updateByUniqueId", {id: thisTableChoosend[i].edu005_ID, row: thisTableChoosend[i]});
+				}
+			}  else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//预备下载不及格成绩模板
+function wantLoadNoPassGradeModel() {
+	reStuffWantLoadNotPassGradeModel();
+	$.showModal("#wantEnteryNotPassModal",true);
+
+	//预备下载成绩模板
+	$('#ComfirmLoadNotPassGradeModel').unbind('click');
+	$('#ComfirmLoadNotPassGradeModel').bind('click', function(e) {
+		ComfirmLoadGradeModelForNotPass();
+		e.stopPropagation();
+	});
+}
+
+//重置下载不及格模态框
+function reStuffWantLoadNotPassGradeModel(){
+	var reObject = new Object();
+	reObject.InputIds = "#loadNotPassForKcmc,#loadNotPassForXzbmc";
+	reObject.normalSelectIds = "#loadNotPassForXn";
+	reReloadSearchsWithSelect(reObject);
+	$("#loadNotPassForXzbmc").attr("choosendClassId",'');
+}
+
+//不及格确认选择课程
+function confirmChooseCrouseForNotPass(){
+	if(choosendCrouse.length==0){
+		toastr.warning('请选择课程');
+		return;
+	}
+	var kcmcs=new Array();
+	for (var i = 0; i < choosendCrouse.length; i++){
+		kcmcs.push(choosendCrouse[i].kcmc);
+	}
+
+	$("#loadNotPassForKcmc").val(kcmcs);
+	$.hideModal("#chooseCruoseModal",false);
+	$.showModal("#wantEnteryNotPassModal",true);
+}
+
+//不及格获取班级
+function getclassforNotPass(){
+	var choosendTerm=getNormalSelectValue("loadNotPassForXn");
+	var chosendCrouse=$("#loadNotPassForKcmc").val();
+	if(choosendTerm===""){
+		toastr.warning('请先选择学年');
+		return;
+	}
+	if(chosendCrouse===""){
+		toastr.warning('请先选择课程');
+		return;
+	}
+	searchAdministrationClassGradeModelMakeUp(chosendCrouse,choosendTerm);
+}
+
+//不及格根据班级学年和课程获取行政班
+function searchAdministrationClassGradeModelMakeUp(chosendCrouse,choosendTerm){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAdministrationClassGradeModelMakeUp",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"term":choosendTerm,
+			"couserName":chosendCrouse,
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$.hideModal("#wantEnteryNotPassModal",false);
+				$.showModal("#chooseCalssModal",true);
+				stuffAdministrationClassTable(backjson.data,true);
+				//提示框取消按钮
+				$('.specialCanle1').unbind('click');
+				$('.specialCanle1').bind('click', function(e) {
+					$.hideModal("#chooseCalssModal",false);
+					$.showModal("#wantEnteryNotPassModal",true);
+					e.stopPropagation();
+				});
+
+				//确认选择行政班
+				$('#confirmChoosedClalss').unbind('click');
+				$('#confirmChoosedClalss').bind('click', function(e) {
+					confirmChoosedClassforNotPass();
+					e.stopPropagation();
+				});
+			} else {
+				stuffCrouseClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//不及格确认选择行政班
+function confirmChoosedClassforNotPass(){
+	if(choosendClass.length==0){
+		toastr.warning('请选择班级');
+		return;
+	}
+
+	var classNames=new Array();
+	var classIds=new Array();
+	for (var i = 0; i < choosendClass.length; i++){
+		classNames.push(choosendClass[i].xzbmc);
+		classIds.push(choosendClass[i].edu300_ID);
+	}
+
+	$("#loadNotPassForXzbmc").attr("choosendClassId",classIds);
+	$("#loadNotPassForXzbmc").val(classNames);
+	$.hideModal("#chooseCalssModal",false);
+	$.showModal("#wantEnteryNotPassModal",true);
+}
+
+//不及格确认下载成绩模板
+function ComfirmLoadGradeModelForNotPass(){
+	var xnid=getNormalSelectValue("loadNotPassForXn");
+	var courseName=$("#loadNotPassForKcmc").val();
+
+	if(xnid===""){
+		toastr.warning("请选择学年");
+		return;
+	}
+
+	if(courseName===""){
+		toastr.warning("请选择课程");
+		return;
+	}
+
+	var queryInfo=new Object();
+	queryInfo.trem=xnid;
+	queryInfo.crouse=courseName;
+	queryInfo.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	queryInfo.classes=$("#loadNotPassForXzbmc").attr("choosendClassId");
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/exportMakeUpGradeCheckModel",
+		data: {
+			"queryInfo":JSON.stringify(queryInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/exportMakeUpGradeModel";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "queryInfo").attr("value",JSON.stringify(queryInfo)));
+				form.appendTo('body').submit().remove();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//不及格预备导入成绩
+function wantImportGradesforNotPass(){
+	$("#importGradeModal").find(".moadalTitle").html("批量二次导入(不及格)成绩");
+	$.showModal("#importGradeModal",true);
+	$("#gradeInfoFile,#showFileName").val("");
+	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
+	$("#gradeInfoFile").on("change", function(obj) {
+		//判断图片格式
+		var fileName = $("#gradeInfoFile").val();
+		var suffixIndex = fileName.lastIndexOf(".");
+		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
+		if (suffix != "xls" && suffix !== "xlsx") {
+			toastr.warning('请上传Excel类型的文件');
+			$("#studentInfoFile").val("");
+			return
+		}
+		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
+	});
+	//不及格检验导入文件
+	$('#checkGradeFile').unbind('click');
+	$('#checkGradeFile').bind('click', function(e) {
+		checkGradeFileforNotPass();
+		e.stopPropagation();
+	});
+
+	//不及格确认导入文件
+	$('.confirmImportGrade').unbind('click');
+	$('.confirmImportGrade').bind('click', function(e) {
+		confirmImportGradeforNotPass();
+		e.stopPropagation();
+	});
+}
+
+//不及格检验导入文件
+function checkGradeFileforNotPass(){
+	if ($("#gradeInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+
+	var lrrInfo=new Object();
+	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
+
+	var formData = new FormData();
+	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+	formData.append("lrrInfo",JSON.stringify(lrrInfo));
+
+	$.ajax({
+		url:'/checkGradeFileMakeUp',
+		dataType:'json',
+		type:'POST',
+		async: true,
+		data: formData,
+		processData : false, // 使数据不做处理
+		contentType : false, // 不要设置Content-Type请求头
+		success: function(backjosn){
+			$(".fileLoadingArea").hide();
+			if(backjosn.code===200){
+				showImportSuccessInfo("#importGradeModal",backjosn.msg);
+			}else{
+				showImportErrorInfo("#importGradeModal",backjosn.msg);
+			}
+		},beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+	});
+}
+
+//不及格确认导入文件
+function confirmImportGradeforNotPass(){
+	if ($("#gradeInfoFile").val() === "") {
+		toastr.warning('请选择文件');
+		return;
+	}
+	var lrrInfo=new Object();
+	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
+	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
+
+	var formData = new FormData();
+	formData.append("file",$('#gradeInfoFile')[0].files[0]);
+	formData.append("lrrInfo",JSON.stringify(lrrInfo));
+
+	$.ajax({
+		url:'/importGradeFileMakeUp',
+		dataType:'json',
+		type:'POST',
+		async: true,
+		data: formData,
+		processData : false, // 使数据不做处理
+		contentType : false, // 不要设置Content-Type请求头
+		success: function(backjosn){
+			$(".fileLoadingArea").hide();
+			if(backjosn.code===200){
+				var currentMainTable=$("#gradeEntryTable").bootstrapTable("getData");
+
+				for (var i = 0; i < currentMainTable.length; i++) {
+					for (var b = 0; b < backjosn.data.length; b++) {
+						if(currentMainTable[i].edu005_ID==backjosn.data[b].edu005_ID){
+							$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+								id: backjosn.data[b].edu005_ID,
+								row: backjosn.data[b]
+							});
+						}
+					}
+				}
+
+				toastr.success('成功导入'+backjosn.data.length+'条成绩');
+				var reObject = new Object();
+				reObject.fristSelectId = "#level";
+				reObject.actionSelectIds = "#department,#grade,#major";
+				reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
+				reObject.normalSelectIds = "#xn";
+				reReloadSearchsWithSelect(reObject);
+				$.hideModal("#importGradeModal")
+			}else{
+				showImportErrorInfo("#importGradeModal",backjosn.msg);
+			}
+		},beforeSend: function(xhr) {
+			$(".fileLoadingArea").show();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+	});
+}
+
+//补考页面按钮事件绑定
+function tab2BtnBind(){
+	//学年change事件
+	$("#makeUpGradeOverview_xn").change(function() {
+		if(getNormalSelectValue("makeUpGradeOverview_xn")===""){
+			return;
+		}
+		getMakeUpGradeOverviewDateLimit(getNormalSelectValue("makeUpGradeOverview_xn"));
+	});
+
+	//补考总览开始检索
+	$('#makeUpGradeOverview_startSearch').unbind('click');
+	$('#makeUpGradeOverview_startSearch').bind('click', function(e) {
+		getMakeUpGradeOverviewInfo();
+		e.stopPropagation();
+	});
+
+	//补考总览重置检索
+	$('#makeUpGradeOverview_research').unbind('click');
+	$('#makeUpGradeOverview_research').bind('click', function(e) {
+		makeUpGradeOverviewResearch();
+		e.stopPropagation();
+	});
+
+	//返回成绩总览
+	$('#makeUpGradeDetails_return').unbind('click');
+	$('#makeUpGradeDetails_return').bind('click', function(e) {
+		$('.makeUpGradeOverview').show();
+		$('.makeUpGradeDetails').hide();
+		e.stopPropagation();
+	});
+
+	//补考成绩详情开始检索
+	$('#makeUpGradeDetails_startSearch').unbind('click');
+	$('#makeUpGradeDetails_startSearch').bind('click', function(e) {
+		makeUpGradeDetailsStartSearch();
+		e.stopPropagation();
+	});
+
+	//成绩详情重置检索
+	$('#makeUpGradeDetails_research').unbind('click');
+	$('#makeUpGradeDetails_research').bind('click', function(e) {
+		var reObject = new Object();
+		reObject.InputIds = "#makeUpGradeDetails_studentNumber,#makeUpGradeDetails_studentName";
+		reObject.normalSelectIds = "#makeUpGradeDetails_course,#makeUpGradeDetails_xn,#makeUpGradeDetails_class";
+		reReloadSearchsWithSelect(reObject);
+		var SearchCriteria=new Array();
+		var choosend=$("#makeUpGradeOverviewTable").bootstrapTable("getSelections");
+		for (let i = 0; i <choosend.length ; i++) {
+			SearchCriteria.push(choosend[i].id);
+		}
+		getMakeUpGradeDetails(choosend,false);
+		e.stopPropagation();
+	});
+
+	//预备下载不及格成绩模板
+	$('#wantLoadNoPassGradeModel').unbind('click');
+	$('#wantLoadNoPassGradeModel').bind('click', function(e) {
+		wantLoadNoPassGradeModel();
+		e.stopPropagation();
+	});
+
+	//下载不及格模板modal课程focus
+	$('#loadNotPassForKcmc').focus(function(e){
+		getCourseByXNAndUserID();
+		e.stopPropagation();
+	});
+
+	//下载不及格模板modal班级focus
+	$('#loadNotPassForXzbmc').focus(function(e){
+		getclassforNotPass();
+		e.stopPropagation();
+	});
+
+	//不及格预备导入成绩
+	$('#wantConfirmNotPassGrade').unbind('click');
+	$('#wantConfirmNotPassGrade').bind('click', function(e) {
+		wantImportGradesforNotPass();
+		e.stopPropagation();
+	});
 }
 
 /*
 * tab2 end
 * */
-
-
-
-
-
-
-
-
 
 
 //预备修改补考成绩
@@ -2363,13 +3797,6 @@ function research(){
 	reReloadSearchsWithSelect(reObject);
 	deafultSearch();
 }
-
-
-
-
-
-
-
 
 
 //获取所有行政班
@@ -2697,19 +4124,6 @@ function confirmChooseCrouse(){
 	$.showModal("#wantLoadGradeModal",true);
 }
 
-//预备下载不及格成绩模板
-function wantLoadNoPassGradeModel() {
-	reStuffWantLoadNotPassGradeModel();
-	$.showModal("#wantEnteryNotPassModal",true);
-
-	//预备下载成绩模板
-	$('#ComfirmLoadNotPassGradeModel').unbind('click');
-	$('#ComfirmLoadNotPassGradeModel').bind('click', function(e) {
-		ComfirmLoadGradeModelForNotPass();
-		e.stopPropagation();
-	});
-}
-
 //根据学年和用户获取课程
 function getCourseByXNAndUserID(){
 	var xn=getNormalSelectValue('loadNotPassForXn');
@@ -2766,338 +4180,7 @@ function getCourseByXNAndUserID(){
 	});
 }
 
-//重置下载不及格模态框
-function reStuffWantLoadNotPassGradeModel(){
-	var reObject = new Object();
-	reObject.InputIds = "#loadNotPassForKcmc,#loadNotPassForXzbmc";
-	reObject.normalSelectIds = "#loadNotPassForXn";
-	reReloadSearchsWithSelect(reObject);
-	$("#loadNotPassForXzbmc").attr("choosendClassId",'');
-}
 
-//不及格确认选择课程
-function confirmChooseCrouseForNotPass(){
-	if(choosendCrouse.length==0){
-		toastr.warning('请选择课程');
-		return;
-	}
-	var kcmcs=new Array();
-	for (var i = 0; i < choosendCrouse.length; i++){
-		kcmcs.push(choosendCrouse[i].kcmc);
-	}
-
-	$("#loadNotPassForKcmc").val(kcmcs);
-	$.hideModal("#chooseCruoseModal",false);
-	$.showModal("#wantEnteryNotPassModal",true);
-}
-
-//不及格获取班级
-function getclassforNotPass(){
-	var choosendTerm=getNormalSelectValue("loadNotPassForXn");
-	var chosendCrouse=$("#loadNotPassForKcmc").val();
-	if(choosendTerm===""){
-		toastr.warning('请先选择学年');
-		return;
-	}
-	if(chosendCrouse===""){
-		toastr.warning('请先选择课程');
-		return;
-	}
-	searchAdministrationClassGradeModelMakeUp(chosendCrouse,choosendTerm);
-}
-
-//不及格根据班级学年和课程获取行政班
-function searchAdministrationClassGradeModelMakeUp(chosendCrouse,choosendTerm){
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/searchAdministrationClassGradeModelMakeUp",
-		data: {
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
-			"term":choosendTerm,
-			"couserName":chosendCrouse,
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code === 200) {
-				$.hideModal("#wantEnteryNotPassModal",false);
-				$.showModal("#chooseCalssModal",true);
-				stuffAdministrationClassTable(backjson.data,true);
-				//提示框取消按钮
-				$('.specialCanle1').unbind('click');
-				$('.specialCanle1').bind('click', function(e) {
-					$.hideModal("#chooseCalssModal",false);
-					$.showModal("#wantEnteryNotPassModal",true);
-					e.stopPropagation();
-				});
-
-				//确认选择行政班
-				$('#confirmChoosedClalss').unbind('click');
-				$('#confirmChoosedClalss').bind('click', function(e) {
-					confirmChoosedClassforNotPass();
-					e.stopPropagation();
-				});
-			} else {
-				stuffCrouseClassTable({});
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
-}
-
-//不及格确认选择行政班
-function confirmChoosedClassforNotPass(){
-	if(choosendClass.length==0){
-		toastr.warning('请选择班级');
-		return;
-	}
-
-	var classNames=new Array();
-	var classIds=new Array();
-	for (var i = 0; i < choosendClass.length; i++){
-		classNames.push(choosendClass[i].xzbmc);
-		classIds.push(choosendClass[i].edu300_ID);
-	}
-
-	$("#loadNotPassForXzbmc").attr("choosendClassId",classIds);
-	$("#loadNotPassForXzbmc").val(classNames);
-	$.hideModal("#chooseCalssModal",false);
-	$.showModal("#wantEnteryNotPassModal",true);
-}
-
-//不及格确认下载成绩模板
-function ComfirmLoadGradeModelForNotPass(){
-	var xnid=getNormalSelectValue("loadNotPassForXn");
-	var courseName=$("#loadNotPassForKcmc").val();
-
-	if(xnid===""){
-		toastr.warning("请选择学年");
-		return;
-	}
-
-	if(courseName===""){
-		toastr.warning("请选择课程");
-		return;
-	}
-
-	var queryInfo=new Object();
-	queryInfo.trem=xnid;
-	queryInfo.crouse=courseName;
-	queryInfo.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
-	queryInfo.classes=$("#loadNotPassForXzbmc").attr("choosendClassId");
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/exportMakeUpGradeCheckModel",
-		data: {
-			"queryInfo":JSON.stringify(queryInfo)
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code===200) {
-				var url = "/exportMakeUpGradeModel";
-				var form = $("<form></form>").attr("action", url).attr("method", "post");
-				form.append($("<input></input>").attr("type", "hidden").attr("name", "queryInfo").attr("value",JSON.stringify(queryInfo)));
-				form.appendTo('body').submit().remove();
-			} else {
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
-}
-
-//不及格预备导入成绩
-function wantImportGradesforNotPass(){
-	$("#importGradeModal").find(".moadalTitle").html("批量二次导入(不及格)成绩");
-	$.showModal("#importGradeModal",true);
-	$("#gradeInfoFile,#showFileName").val("");
-	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
-	$("#gradeInfoFile").on("change", function(obj) {
-		//判断图片格式
-		var fileName = $("#gradeInfoFile").val();
-		var suffixIndex = fileName.lastIndexOf(".");
-		var suffix = fileName.substring(suffixIndex + 1).toLowerCase();
-		if (suffix != "xls" && suffix !== "xlsx") {
-			toastr.warning('请上传Excel类型的文件');
-			$("#studentInfoFile").val("");
-			return
-		}
-		$("#showFileName").val(fileName.substring(fileName.lastIndexOf("\\") + 1));
-	});
-	//不及格检验导入文件
-	$('#checkGradeFile').unbind('click');
-	$('#checkGradeFile').bind('click', function(e) {
-		checkGradeFileforNotPass();
-		e.stopPropagation();
-	});
-
-	//不及格确认导入文件
-	$('.confirmImportGrade').unbind('click');
-	$('.confirmImportGrade').bind('click', function(e) {
-		confirmImportGradeforNotPass();
-		e.stopPropagation();
-	});
-}
-
-//不及格检验导入文件
-function checkGradeFileforNotPass(){
-	if ($("#gradeInfoFile").val() === "") {
-		toastr.warning('请选择文件');
-		return;
-	}
-
-	var lrrInfo=new Object();
-	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
-	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
-
-	var formData = new FormData();
-	formData.append("file",$('#gradeInfoFile')[0].files[0]);
-	formData.append("lrrInfo",JSON.stringify(lrrInfo));
-
-	$.ajax({
-		url:'/checkGradeFileMakeUp',
-		dataType:'json',
-		type:'POST',
-		async: true,
-		data: formData,
-		processData : false, // 使数据不做处理
-		contentType : false, // 不要设置Content-Type请求头
-		success: function(backjosn){
-			$(".fileLoadingArea").hide();
-			if(backjosn.code===200){
-				showImportSuccessInfo("#importGradeModal",backjosn.msg);
-			}else{
-				showImportErrorInfo("#importGradeModal",backjosn.msg);
-			}
-		},beforeSend: function(xhr) {
-			$(".fileLoadingArea").show();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-	});
-}
-
-//不及格确认导入文件
-function confirmImportGradeforNotPass(){
-	if ($("#gradeInfoFile").val() === "") {
-		toastr.warning('请选择文件');
-		return;
-	}
-	var lrrInfo=new Object();
-	lrrInfo.userykey=JSON.parse($.session.get('userInfo')).userKey;
-	lrrInfo.lrr=$(parent.frames["topFrame"].document).find(".topright").find(".user").find("span")[0].innerText;
-
-	var formData = new FormData();
-	formData.append("file",$('#gradeInfoFile')[0].files[0]);
-	formData.append("lrrInfo",JSON.stringify(lrrInfo));
-
-	$.ajax({
-		url:'/importGradeFileMakeUp',
-		dataType:'json',
-		type:'POST',
-		async: true,
-		data: formData,
-		processData : false, // 使数据不做处理
-		contentType : false, // 不要设置Content-Type请求头
-		success: function(backjosn){
-			$(".fileLoadingArea").hide();
-			if(backjosn.code===200){
-				var currentMainTable=$("#gradeEntryTable").bootstrapTable("getData");
-
-				for (var i = 0; i < currentMainTable.length; i++) {
-					for (var b = 0; b < backjosn.data.length; b++) {
-						if(currentMainTable[i].edu005_ID==backjosn.data[b].edu005_ID){
-							$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
-								id: backjosn.data[b].edu005_ID,
-								row: backjosn.data[b]
-							});
-						}
-					}
-				}
-
-				toastr.success('成功导入'+backjosn.data.length+'条成绩');
-				var reObject = new Object();
-				reObject.fristSelectId = "#level";
-				reObject.actionSelectIds = "#department,#grade,#major";
-				reObject.InputIds = "#className,#courseName,#studentNumber,#studentName";
-				reObject.normalSelectIds = "#xn";
-				reReloadSearchsWithSelect(reObject);
-				$.hideModal("#importGradeModal")
-			}else{
-				showImportErrorInfo("#importGradeModal",backjosn.msg);
-			}
-		},beforeSend: function(xhr) {
-			$(".fileLoadingArea").show();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-	});
-}
-
-
-//初始化页面按钮绑定事件
-function binBind() {
-	//提示框取消按钮
-	$('.cancelTipBtn,.cancel').unbind('click');
-	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$.hideModal();
-		e.stopPropagation();
-	});
-
-	//预备下载不及格成绩模板
-	$('#wantLoadNoPassGradeModel').unbind('click');
-	$('#wantLoadNoPassGradeModel').bind('click', function(e) {
-		wantLoadNoPassGradeModel();
-		e.stopPropagation();
-	});
-
-	//下载不及格模板modal课程focus
-	$('#loadNotPassForKcmc').focus(function(e){
-		getCourseByXNAndUserID();
-		e.stopPropagation();
-	});
-
-	//下载不及格模板modal班级focus
-	$('#loadNotPassForXzbmc').focus(function(e){
-		getclassforNotPass();
-		e.stopPropagation();
-	});
-
-	//不及格预备导入成绩
-	$('#wantConfirmNotPassGrade').unbind('click');
-	$('#wantConfirmNotPassGrade').bind('click', function(e) {
-		wantImportGradesforNotPass();
-		e.stopPropagation();
-	});
-}
 
 
 
