@@ -566,6 +566,33 @@ public class StaffManageController {
     }
 
     /**
+     * 确认录入补考成绩
+     * @param userId
+     * @param SearchCriteria
+     * @return
+     */
+    @RequestMapping("entryMUGrades")
+    @ResponseBody
+    public ResultVO entryMUGrades(@RequestParam("userId") String userId,@RequestParam("SearchCriteria") String SearchCriteria) {
+        JSONObject jsonObject = JSONObject.fromObject(SearchCriteria);
+        List<Edu005> gradeList = JSON.parseArray(jsonObject.getString("gradeList"), Edu005.class);
+        List<String> muClassIDs = JSON.parseArray(jsonObject.getString("muClassIDs"), String.class);
+        ResultVO result = staffManageService.entryMUGrades(userId,gradeList,muClassIDs);
+        return result;
+    }
+
+    /**
+     * 验证是否可录入补考成绩
+     * @return
+     */
+    @RequestMapping("entryMUGradesCheck")
+    @ResponseBody
+    public ResultVO entryMUGradesCheck(@RequestParam("edu005Id") String edu005Id) {
+        ResultVO result = staffManageService.entryMUGradesCheck(edu005Id);
+        return result;
+    }
+
+    /**
          * 根据TGC的id查询需要录入成绩的学生名单
          * @return
          */

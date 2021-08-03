@@ -446,6 +446,104 @@ public class StaffManageService {
         return resultVO;
     }
 
+    //验证是否可录入补考成绩
+    public ResultVO entryMUGradesCheck(String edu005Id){
+        ResultVO resultVO;
+        Edu005 edu005 = edu005Dao.findOne(Long.parseLong(edu005Id));
+        Edu404 edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
+        if (edu404 == null){
+            resultVO = ResultVO.setFailed("补考录入时间未开启!");
+            return resultVO;
+        }
+        if ("1".equals(edu404.getStatus())){
+            resultVO = ResultVO.setFailed("补考录入时间已截止!");
+            return resultVO;
+        }
+        if(edu404.getCount().equals(edu005.getExam_num())){
+            resultVO = ResultVO.setFailed("已录入补考成绩!");
+            return resultVO;
+        }
+        resultVO = ResultVO.setSuccess("通过!");
+        return resultVO;
+    }
+
+    //确认录入补考成绩
+    public ResultVO entryMUGrades(String userId,List<Edu005> edu005s,List<String> ids){
+        ResultVO resultVO;
+        TeacherMUGradeClassPO teacherMUGradeClassPO = teacherMUGradeClassViewDao.findbyid(ids.get(0));
+        Edu404 edu404 = edu404Dao.findbyxnid2(teacherMUGradeClassPO.getXnid());
+        if (edu404 == null){
+            resultVO = ResultVO.setFailed("补考录入时间未开启!");
+            return resultVO;
+        }
+        if ("1".equals(edu404.getStatus())){
+            resultVO = ResultVO.setFailed("补考录入时间已截止!");
+            return resultVO;
+        }
+        for (int i = 0;i<edu005s.size();i++){
+            Edu005 edu005New = edu005s.get(i);
+            Edu005 edu005 = edu005Dao.findOne(edu005New.getEdu005_ID());
+            edu005.setGrade(edu005New.getGrade());
+            double grade = Double.parseDouble(edu005New.getGrade());
+            if (grade < 60.00) {
+                edu005.setGetCredit(0.00);
+                edu005.setIsPassed("F");
+            } else {
+                edu005.setGetCredit(edu005New.getCredit());
+                edu005.setIsPassed("T");
+            }
+            edu005.setExam_num(Integer.parseInt(edu404.getCount()));
+            edu005Dao.save(edu005);
+            Edu0051 edu0051 = new Edu0051();
+            edu0051.setEdu005_ID(edu005.getEdu005_ID());
+            edu0051.setEdu001_ID(edu005.getEdu001_ID());
+            edu0051.setEdu201_ID(edu005.getEdu201_ID());
+            edu0051.setEdu300_ID(edu005.getEdu300_ID());
+            edu0051.setEdu101_ID(edu005.getEdu101_ID());
+            edu0051.setCourseName(edu005.getCourseName());
+            edu0051.setClassName(edu005.getClassName());
+            edu0051.setStudentName(edu005.getStudentName());
+            edu0051.setStudentCode(edu005.getStudentCode());
+            edu0051.setGradeEnter(edu005.getGradeEnter());
+            edu0051.setEntryDate(edu005.getEntryDate());
+            edu0051.setGrade(edu005.getGrade());
+            edu0051.setXnid(edu005.getXnid());
+            edu0051.setXn(edu005.getXn());
+            edu0051.setExam_num(edu005.getExam_num());
+            edu0051Dao.save(edu0051);
+        }
+        for (int i =0;i<ids.size();i++){
+            teacherMUGradeClassPO = teacherMUGradeClassViewDao.findbyid(ids.get(i));
+            List<Edu005> edu005List = edu005Dao.entryMUGrades(teacherMUGradeClassPO.getClassName(),teacherMUGradeClassPO.getCourseName(),edu404.getCount());
+            if(edu005List.size()>0){
+                for (Edu005 edu005:edu005List){
+                    edu005.setExam_num(Integer.parseInt(edu404.getCount()));
+                    edu005Dao.save(edu005);
+                    Edu0051 edu0051 = new Edu0051();
+                    edu0051.setEdu005_ID(edu005.getEdu005_ID());
+                    edu0051.setEdu001_ID(edu005.getEdu001_ID());
+                    edu0051.setEdu201_ID(edu005.getEdu201_ID());
+                    edu0051.setEdu300_ID(edu005.getEdu300_ID());
+                    edu0051.setEdu101_ID(edu005.getEdu101_ID());
+                    edu0051.setCourseName(edu005.getCourseName());
+                    edu0051.setClassName(edu005.getClassName());
+                    edu0051.setStudentName(edu005.getStudentName());
+                    edu0051.setStudentCode(edu005.getStudentCode());
+                    edu0051.setGradeEnter(edu005.getGradeEnter());
+                    edu0051.setEntryDate(edu005.getEntryDate());
+                    edu0051.setGrade(edu005.getGrade());
+                    edu0051.setXnid(edu005.getXnid());
+                    edu0051.setXn(edu005.getXn());
+                    edu0051.setExam_num(edu005.getExam_num());
+                    edu0051Dao.save(edu0051);
+                }
+            }
+        }
+        resultVO = ResultVO.setSuccess("成绩录入成功!");
+        return resultVO;
+    }
+
+
     //查询需要录入补考成绩的班级
     public ResultVO queryMUGradesClass(String userId, Edu001 edu001, Edu005 edu005) {
         ResultVO resultVO;
