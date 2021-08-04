@@ -2594,13 +2594,17 @@ public class AdministrationController {
 
 	/**
 	 * 任务书查询教学班
-	 * @param teachingClassName
 	 * @return
 	 */
 	@RequestMapping("/taskSearchTeachingClass")
 	@ResponseBody
-	public ResultVO taskSearchTeachingClass(@RequestParam("teachingClassName") String teachingClassName) {
-		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName);
+	public ResultVO taskSearchTeachingClass(@RequestParam("SearchCriteria") String SearchCriteria) {
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		String userId = searchObject.getString("userId");
+		String teachingClassName = searchObject.getString("teachingClassName");
+		String xnid = searchObject.getString("xnid");
+
+		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName,xnid,userId);
 		return result;
 	}
 
