@@ -365,7 +365,7 @@ function drawScheduleClassesEmptyTable() {
 	for (var i = 0; i < defaultClassPeriod; i++) {
 		var scheduleClassesInfoObject = new Object();
 		scheduleClassesInfoObject.id = i;
-		scheduleClassesInfoObject.classPeriod = "第" + (i + 1) + "节";
+		scheduleClassesInfoObject.classPeriod =  "第" + (i*2 + 1) + "-"+ (i *2+2)+"节";
 		scheduleClassesInfoObject.monday = "";
 		scheduleClassesInfoObject.tuesday = "";
 		scheduleClassesInfoObject.wednesday = "";
@@ -443,7 +443,7 @@ function stuffScheduleClassesTable(tableInfo) {
 				field: 'classPeriod',
 				title: '课节数',
 				align: 'left',
-				width: 10
+				width: 100
 			}, {
 				field: 'monday',
 				title: '星期一',
@@ -680,7 +680,7 @@ function stuffScheduleClassesEmptyTable2(){
 	for (var i = 0; i < defaultClassPeriod; i++) {
 		var scheduleClassesInfoObject = new Object();
 		scheduleClassesInfoObject.id = i;
-		scheduleClassesInfoObject.classPeriod = "第" + (i + 1) + "节";
+		scheduleClassesInfoObject.classPeriod = "第" + (i*2 + 1) + "-"+ (i *2+2)+"节";
 		scheduleClassesInfoObject.monday = "";
 		scheduleClassesInfoObject.tuesday = "";
 		scheduleClassesInfoObject.wednesday = "";
@@ -719,7 +719,7 @@ function stuffScheduleClassesTable2(tableInfo) {
 				field: 'classPeriod',
 				title: '课节数',
 				align: 'left',
-				width: 10
+				width:100
 			}, {
 				field: 'monday',
 				title: '星期一',
