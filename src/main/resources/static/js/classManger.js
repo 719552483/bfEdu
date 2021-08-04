@@ -1477,7 +1477,7 @@ function allteachingClassAreaStartSearch() {
 	var searchObject = new Object();
 	searchObject.className=className;
 	searchObject.xnid=xn;
-
+	searchObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	$.ajax({
 		method : 'get',
 		cache : false,
