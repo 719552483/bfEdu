@@ -4101,7 +4101,7 @@ public class AdministrationPageService {
 	}
 
 	//任务书查询教学班
-	public ResultVO taskSearchTeachingClass(String teachingClassName) {
+	public ResultVO taskSearchTeachingClass(String teachingClassName,String xnid,String userId) {
 		ResultVO resultVO;
 		Specification<Edu301> specification = new Specification<Edu301>() {
 			public Predicate toPredicate(Root<Edu301> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -4109,6 +4109,10 @@ public class AdministrationPageService {
 				if (teachingClassName != null && !"".equals(teachingClassName)) {
 					predicates.add(cb.like(root.<String>get("jxbmc"), "%"+teachingClassName+"%"));
 				}
+				if(xnid != null && !"".equals(xnid)){
+					predicates.add(cb.equal(root.<String>get("xnid"), xnid));
+				}
+				predicates.add(cb.equal(root.<String>get("userKey"), userId));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
