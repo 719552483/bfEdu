@@ -32,6 +32,7 @@ public class Edu301 {
 	private String xn;//学年
 	private String xnid;//学年id
 	private String userKey;//创建人
+	private String userName;//创建人姓名
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -198,5 +199,13 @@ public class Edu301 {
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }
