@@ -845,6 +845,7 @@ function approvaAction(row,approvalText,tableID){
 				for (var i = 0; i <row.length ; i++) {
 					$(tableID).bootstrapTable('removeByUniqueId',row[i].edu600Id);
 				}
+				choosendApprovalManger=new Array();
 				drawPagination(".approvalMangerTableArea", "审批信息");
 				drawSearchInput(".approvalMangerTableArea");
 				toastr.success('审批流转成功');
