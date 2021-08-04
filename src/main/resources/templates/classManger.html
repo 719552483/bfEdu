@@ -135,90 +135,6 @@
 
 			<div id="tab2" class="tabson myTabson">
 				<span class="isFirstShowTab2 noneStart">T</span>
-<!--				<div class="addTeachingClassArea">-->
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id="generatTeachingClassNames"><span><img src="img/right.png" style="width: 24px;" /></span>批量生成教学班名称</li>-->
-<!--							<li class="click" id="combinedClass"><span><img src="images/t01.png" style="width: 24px;" /></span>合班</li>-->
-<!--							<li class="click" id="saveTeachingClass"><span><img src="images/ico04.png" style="width: 24px;" /></span>保存教学班</li>-->
-<!--							<li class="click" id="generatTeachingClass_refreshStudentNum"><span><img src="images/time.png" style="width: 24px;" /></span>刷新行政班在读人数</li>-->
-<!--							<li class="click" id="generatTeachingClass_startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>-->
-<!--						</ul>-->
-<!--						<ul class="toolbar1">-->
-<!--							<li class="click" id="generatTeachingClass_reSearch"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-
-<!--					<div class="tools">-->
-<!--						<ul class="toolbar">-->
-<!--							<li class="click" id="showAllTeachingClass"><span><img src="images/leftico.png" style="width: 17px; margin-top: 2px;" /></span>教学班列表</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-
-<!--					<div class="searchArea searchAreaWitheSelect">-->
-<!--						<div class="formtitle" style="margin-bottom: 6px;">-->
-<!--							<span>行政班班级库</span>-->
-<!--						</div>-->
-
-<!--						<div class="col4 giveBottom levelSelectArea">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>-->
-<!--									<select class="isSowIndex" id="classManagement_level">-->
-<!--										<option value="seleceConfigTip">请选择</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col4 giveBottom departmentSelectArea">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">二级学院</label>-->
-<!--									<select class="isSowIndex" id="classManagement_department">-->
-<!--										<option value="seleceConfigTip">暂不可选</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col4 giveBottom gradeSelectArea">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>-->
-<!--									<select class="isSowIndex" id="classManagement_grade">-->
-<!--										<option value="seleceConfigTip">暂不可选</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col4 giveBottom majorSelectArea">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>-->
-<!--									<select class="isSowIndex" id="classManagement_major">-->
-<!--										<option value="seleceConfigTip">暂不可选</option>-->
-<!--									</select>-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-
-<!--						<div class="col4 giveBottom">-->
-<!--							<ul class="forminfo">-->
-<!--								<div class="">-->
-<!--									<label class="selectName" style="margin-top: 14px;">行政班名称</label>-->
-<!--									<input name="" type="text" class="myInput searchInput"-->
-<!--										id="classManagement_className" placeholder="请输入行政班名称..." />-->
-<!--								</div>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--					</div>-->
-
-<!--					<div class="classManagementTableArea searchGivePaddingR columnsStyle">-->
-<!--						<table class="tablelist myTableStyle" id="classManagementTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>-->
-<!--					</div>-->
-<!--				</div>-->
 
 				<div class="allteachingClassArea">
 					<div class="tools">
@@ -249,6 +165,19 @@
 								</div>
 							</ul>
 						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学年</label>
+									<select class="isSowIndex" id="allteachingClass_Xn">
+										<option value="seleceConfigTip">暂无选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+
 					</div>
 
 					<div class="teachingClassTableArea searchGivePaddingR columnsStyle">
@@ -399,17 +328,95 @@
 						<div class="giveBottom" style="width: 66.3333%">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">教学班名称</label>
+									<label class="selectName" style="margin-top: 14px;">教学班别名<b>*</b></label>
 									<input name="" type="text" class="myInput searchInput"
 										   id="newNAME" placeholder="请输入教学班名称..." />
 								</div>
 							</ul>
 						</div>
+						<div class="clear"></div>
+
+						<div class="giveBottom" style="width: 66.3333%">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学年<b>*</b></label>
+									<select class="isSowIndex" id="newXn">
+										<option value="seleceConfigTip">暂无选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
 					</div>
 
-					<div class="formtitle" style="margin-bottom: 6px;">
+					<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
 						<span>行政班班级库</span>
 					</div>
+					<div class="tools" style="padding-left: 20px;padding-right: 30px;">
+						<ul class="toolbar">
+							<li class="click" id="new_startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+						</ul>
+
+						<ul class="toolbar1">
+							<li class="click" id="new_reSearch"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col2 giveBottom levelSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
+									<select id="new_level">
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col2 giveBottom departmentSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院</label>
+									<select class="isSowIndex" id="new_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col2 giveBottom gradeSelectArea">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+									<select class="isSowIndex" id="new_grade">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col2 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+									<select class="isSowIndex" id="new_major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+
+								</div>
+							</ul>
+						</div>
+
+						<div class="col2 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">班级名称</label>
+									<input name="" type="text" class="myInput searchInput"
+										   id="new_AdministrationClassName" placeholder="请输入班级名称..." />
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
 
 					<div class="sportSelectArea" style="padding-left: 12px;">
 						<div class="chooseLibirary soprtAreaChildren"/>
