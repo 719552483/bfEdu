@@ -36,7 +36,7 @@ public interface Edu0051Dao extends JpaRepository<Edu0051, Long>, JpaSpecificati
     @Query(value = "select * from EDU0051 where edu005_id = ?1 and exam_num = ?2", nativeQuery = true)
     Edu0051 getGradeByNum(String Edu005_Id,String num);
 
-    @Query(value = "select * from edu0051 where EDU005_ID = ?1 and exam_num != 0", nativeQuery = true)
+    @Query(value = "select * from edu0051 where EDU005_ID = ?1 and exam_num != 0 order by exam_num", nativeQuery = true)
     List<Edu0051> updateMUData(String Edu005_Id);
 
 

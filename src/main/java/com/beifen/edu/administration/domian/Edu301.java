@@ -29,6 +29,9 @@ public class Edu301 {
 	private Integer jxbrs;  //教学班人数
 	private String yxbz;//有效标志
 	private String time;//教学班合成时间
+	private String xn;//学年
+	private String xnid;//学年id
+	private String userKey;//创建人
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -171,5 +174,29 @@ public class Edu301 {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public String getXn() {
+		return xn;
+	}
+
+	public void setXn(String xn) {
+		this.xn = xn;
+	}
+
+	public String getXnid() {
+		return xnid;
+	}
+
+	public void setXnid(String xnid) {
+		this.xnid = xnid;
+	}
+
+	public String getUserKey() {
+		return userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 }
