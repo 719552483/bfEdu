@@ -1740,11 +1740,13 @@ public class AdministrationController {
 		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
 		// 根据层次等信息查出培养计划id
 		String className = searchObject.getString("className");
-
+		String userId = searchObject.getString("userId");
+		String xnid = searchObject.getString("xnid");
 		// 填充搜索对象
 		Edu301 edu301 = new Edu301();
 		edu301.setJxbmc(className);
-		List<Edu301> tableInfo = administrationPageService.searchTeachingClass(edu301,false);
+		edu301.setXnid(xnid);
+		List<Edu301> tableInfo = administrationPageService.searchTeachingClass(edu301,false,userId);
 		returnMap.put("tableInfo", tableInfo);
 		returnMap.put("result", true);
 		return returnMap;
@@ -2607,6 +2609,7 @@ public class AdministrationController {
 		ResultVO result = administrationPageService.taskSearchTeachingClass(teachingClassName,xnid,userId);
 		return result;
 	}
+
 
 	/**
 	 * 查询公众号权限

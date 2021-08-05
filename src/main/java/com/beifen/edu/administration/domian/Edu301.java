@@ -31,7 +31,7 @@ public class Edu301 {
 	private String time;//教学班合成时间
 	private String xn;//学年
 	private String xnid;//学年id
-	private String userKey;//创建人
+	private String userKey;//创建人(edu990的ID)
 	private String userName;//创建人姓名
 	
 	@Id
