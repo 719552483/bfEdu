@@ -171,5 +171,8 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
 
     @Query(value = "select * from EDU005 where CLASS_NAME = ?1 and COURSE_NAME = ?2 and IS_PASSED = 'F' and IS_CONFIRM = 'T' and IS_RESIT = 'T' and (IS_MX = '0' or IS_MX is null) and (EXAM_NUM != ?3 or EXAM_NUM is null)",nativeQuery = true)
     List<Edu005> entryMUGrades(String className,String courseName,String EXAM_NUM);
+
+    @Query(value = "select * from EDU005 where IS_PASSED = 'F' and IS_CONFIRM = 'T' and IS_RESIT = 'T' and (IS_MX = '0' or IS_MX is null) and (EXAM_NUM != ?1 or EXAM_NUM is null)",nativeQuery = true)
+    List<Edu005> endNewMUTime(String EXAM_NUM);
 }
 
