@@ -7,6 +7,7 @@ $(function() {
 	$('.isSowIndex').selectMania(); // 初始化下拉框
 	stuffDepartmnet();
 	deafultSearch();
+	getSemesterInfo();
 });
 
 //查询可选二级学院
@@ -555,6 +556,7 @@ function classModalBtnbind(row,tableID){
 	$('#jxb_ReSearch').bind('click', function(e) {
 		var reObject = new Object();
 		reObject.InputIds = "#jxbmc";
+		reObject.normalSelectIds = "#jxb_xn";
 		reReloadSearchsWithSelect(reObject);
 		getAllJxb();
 		e.stopPropagation();
@@ -614,14 +616,15 @@ function xzbStartSearch(){
 //开始检索教学班
 function jxbStartSearch(){
 	var teachingClassName=$("#jxbmc").val();
-	if(teachingClassName===""){
+	var xn=getNormalSelectValue('jxb_xn');
+	if(teachingClassName===""&&xn===''){
 		toastr.warning("检索条件不能为空");
 		return;
 	}
 	var sendObject=new Object();
 	sendObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	sendObject.teachingClassName=teachingClassName;
-	sendObject.xnid='';
+	sendObject.xnid=xn;
 
 	$.ajax({
 		method : 'get',
@@ -693,7 +696,7 @@ function stuffClassModalSearchArea(){
 //重置班级模态框检索区域
 function reloadClassModalSearchArea(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#batch,#grade";
+	reObject.normalSelectIds = "#batch,#grade,#jxb_xn";
 	reObject.InputIds = "#xzbmc,#jxbmc";
 	reReloadSearchsWithSelect(reObject);
 }
@@ -788,6 +791,11 @@ function stuffJxbTable(tableInfo){
 		},{
 			field : 'jxbmc',
 			title : '教学班别名',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'xn',
+			title : '学年',
 			align : 'left',
 			formatter : paramsMatter
 		},{
@@ -1493,7 +1501,6 @@ function showputedTask(IsmainAreaControl){
 			requestError();
 		},
 		complete: function(xhr, status) {
-			getSemesterInfo();
 			LinkageSelectPublic("#putOutTaskLevel","#putOutTaskDepartment","#putOutTaskGrade","#putOutTaskMajor");
 			requestComplete();
 		},
@@ -2166,17 +2173,7 @@ function getSemesterInfo() {
 		cache: false,
 		url: "/getAllXn",
 		dataType: 'json',
-		beforeSend: function (xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function (textStatus) {
-			requestError();
-		},
-		complete: function (xhr, status) {
-			requestComplete();
-		},
 		success: function (backjson) {
-			hideloding();
 			if (backjson.result) {
 				if(backjson.termInfo.length===0){
 					toastr.warning('暂无学年信息');
@@ -2188,6 +2185,7 @@ function getSemesterInfo() {
 					str += '<option value="' + backjson.termInfo[i].edu400_ID + '">' + backjson.termInfo[i].xnmc + '</option>';
 				}
 				stuffManiaSelect("#putOutTaskYear", str);
+				stuffManiaSelect("#jxb_xn", str);
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
