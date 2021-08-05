@@ -27,6 +27,7 @@ public class ScheduleViewPO {
     private String classRoom;
     private String classId;
     private String className;
+    private String classLittleName;
     private String teacherName;
     private String baseTeacherName;
     private String teacherId;
@@ -280,5 +281,13 @@ public class ScheduleViewPO {
 
     public void setTeacherType(String teacherType) {
         this.teacherType = teacherType;
+    }
+
+    public String getClassLittleName() {
+        return classLittleName;
+    }
+
+    public void setClassLittleName(String classLittleName) {
+        this.classLittleName = classLittleName;
     }
 }

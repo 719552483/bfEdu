@@ -39,6 +39,18 @@ public class StudentSchoolTimetablePO {
     private String pointId;
     private String teacherType;
     private String localAddress;
+    private String classLittleName;
+
+    public String getClassLittleName() {
+        return classLittleName;
+    }
+
+    public void setClassLittleName(String classLittleName) {
+        this.classLittleName = classLittleName;
+    }
+
+
+
 
     public String getLocalAddress() {
         return localAddress;
