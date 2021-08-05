@@ -961,6 +961,7 @@ function addTeachingClassBtnbind() {
 	$('#addTeachingClass').unbind('click');
 	$('#addTeachingClass').bind('click', function(e) {
 		addTeachingClass();
+		$("#tab2 .myTooltip:eq(0)").tooltipify('show');
 		e.stopPropagation();
 	});
 

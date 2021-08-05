@@ -485,12 +485,17 @@ function getAllXzb(){
 
 //获取所有教学班
 function getAllJxb(){
+	var sendObject=new Object();
+	sendObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	sendObject.teachingClassName='';
+	sendObject.xnid='';
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/taskSearchTeachingClass",
 		data: {
-			"teachingClassName":""
+			"SearchCriteria":JSON.stringify(sendObject)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -606,13 +611,17 @@ function jxbStartSearch(){
 		toastr.warning("检索条件不能为空");
 		return;
 	}
+	var sendObject=new Object();
+	sendObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
+	sendObject.teachingClassName=teachingClassName;
+	sendObject.xnid='';
 
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/taskSearchTeachingClass",
 		data: {
-			"teachingClassName":teachingClassName
+			"SearchCriteria":JSON.stringify(sendObject)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {

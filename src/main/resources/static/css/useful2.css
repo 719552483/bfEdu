@@ -2856,6 +2856,15 @@ input:focus{
 	background: rgba(105, 185, 204, 0.788235294117647);
 }
 
+.tooltipify{
+	max-width: 1000px;
+	white-space: normal;
+}
+
+.tooltipify .content{
+	text-indent: 0!important;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
