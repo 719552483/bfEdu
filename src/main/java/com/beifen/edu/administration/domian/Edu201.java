@@ -48,6 +48,7 @@ public class Edu201 {
 	private String jksj; //结课时间
 	private String Edu104_ID;//学院id
 	private String Edu104_mc;//学院名称
+	private String classLittleName;//教学班别名
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -306,5 +307,13 @@ public class Edu201 {
 
 	public void setEdu104_mc(String edu104_mc) {
 		Edu104_mc = edu104_mc;
+	}
+
+	public String getClassLittleName() {
+		return classLittleName;
+	}
+
+	public void setClassLittleName(String classLittleName) {
+		this.classLittleName = classLittleName;
 	}
 }

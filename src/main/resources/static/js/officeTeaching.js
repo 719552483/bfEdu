@@ -138,7 +138,13 @@ function stuffWaitTaskTable(tableInfo){
 					align: 'left',
 					sortable: true,
 					formatter: paramsMatter
-				}, 	{
+				},  {
+					field: 'classLittleName',
+					title: '班级别名',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				},	{
 					field: 'kcmc',
 					title: '课程',
 					align: 'left',
@@ -1654,7 +1660,13 @@ function stuffPuttedOutTable(tableInfo){
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
-			}, 	{
+			},{
+				field: 'classLittleName',
+				title: '班级别名',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},  	{
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',

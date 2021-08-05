@@ -265,7 +265,14 @@ function stuffPkInfoTable(tableInfo,row) {
                 align: 'left',
                 sortable: true,
                 formatter: paramsMatter
-            }, {
+            },{
+                field: 'classLittleName',
+                title: '班级别名',
+                align: 'left',
+                sortable: true,
+                visible: false,
+                formatter: paramsMatter
+            },  {
                 field: 'courseName',
                 title: '课程',
                 align: 'left',

@@ -22,6 +22,7 @@ public class YearSchedulePO {
     private String classRoom;
     private String classId;
     private String className;
+    private String classLittleName;
     private String teacherName;
     private String edu101_id;
     private String classType;
@@ -252,5 +253,13 @@ public class YearSchedulePO {
 
     public void setTeacherType(String teacherType) {
         this.teacherType = teacherType;
+    }
+
+    public String getClassLittleName() {
+        return classLittleName;
+    }
+
+    public void setClassLittleName(String classLittleName) {
+        this.classLittleName = classLittleName;
     }
 }

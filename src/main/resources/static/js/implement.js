@@ -1288,7 +1288,12 @@ function scheduleFormatter(value, row, index) {
 		for (var i = 0; i < value.length; i++) {
 			var reg = new RegExp('"',"g");
 			var teacherNamestr = value[i].teacherName.replace(reg, "");
-			// var teacherNamestr = value[i].userName.replace(reg, "");
+			var classType='';
+			value[i].courseType==='01'?classType='行政班':classType='教学班';
+
+			var className='';
+			value[i].courseType==='02'?className=value[i].classLittleName:className=value[i].className;
+
 			var baseTeacherName;
 			value[i].baseTeacherName===''||value[i].baseTeacherName==null||typeof value[i].baseTeacherName==="undefined"?baseTeacherName='暂无助教':baseTeacherName=value[i].baseTeacherName.replace(reg, "");
 			htmlStr += '<div classRoomID="' + value[i].classRoomId
@@ -1297,8 +1302,8 @@ function scheduleFormatter(value, row, index) {
 					+ '" courseId="' + value[i].courseId
 					+ '" crouseType="'+value[i].courseType+'"  class="singleSchedule singleScheduleHover '
 					+ changeClassAreaBg(value[i].classTypeId) + '">'
-					+ '<span class="scheduleClassName">'+ value[i].className+'</span>'
-				    + '<span class="scheduleClassName" id="'+value[i].edu203_id+'" edu202id="'+value[i].edu202_id+'">'+ value[i].courseName+'</span>'
+					+ '<span class="scheduleClassName myTooltip needTooltip" title="'+value[i].className+'">'+classType+'-'+ className+'</span>'
+				    + '<span class="scheduleClassName myTooltip needTooltip" id="'+value[i].edu203_id+'" edu202id="'+value[i].edu202_id+'" title="'+value[i].courseName+'">课程:'+ value[i].courseName+'</span>'
 					+ '<span class="lastscheduleClassName">'+ value[i].szz+'</span>'
 				    + '<span class="scheduleClassName">任课教师：'+ teacherNamestr+'</span>'
 					+ '<span class="scheduleClassName">助教：'+ baseTeacherName+'</span>'

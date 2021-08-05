@@ -178,6 +178,13 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'left',
 				clickToSelect: false,
 				formatter: classNameMatter
+			},
+			{
+				field: 'classLittleName',
+				title: '班级别名',
+				align: 'left',
+				clickToSelect: false,
+				formatter: paramsMatter
 			},{
 				field: 'xn',
 				title: '学年-(双击选择)',
@@ -773,14 +780,14 @@ function stuffJxbTable(tableInfo){
 		},{
 			field : 'radio',
 			radio : true
-		}, {
-			field : 'jxbmc',
+		},  {
+			field : 'bhxzbmc',
 			title : '教学班名称',
 			align : 'left',
 			formatter : paramsMatter
-		}, {
-			field : 'bhxzbmc',
-			title : '包含行政班',
+		},{
+			field : 'jxbmc',
+			title : '教学班别名',
 			align : 'left',
 			formatter : paramsMatter
 		},{
@@ -811,7 +818,8 @@ function confirmChooseClass(row,tableID){
 		choosendclassName=zxbTableSelected[0].xzbmc;
 		choosendclassValue=zxbTableSelected[0].edu300_ID;
 	}else{
-		choosendclassName=jxbTableSelected[0].jxbmc;
+		row.classLittleName=jxbTableSelected[0].jxbmc;
+		choosendclassName=jxbTableSelected[0].bhxzbmc;
 		choosendclassValue=jxbTableSelected[0].edu301_ID;
 	}
 
@@ -1148,7 +1156,7 @@ function classNameMatter(value, row, index) {
 		].join('');
 	}else{
 		return [
-			'<div class="classChoseArea'+index+' myTooltip" title="'+value+'"><span class="normalTxt classTxt'+index+'">'+value+'</span>' +
+			'<div class="classChoseArea'+index+' myTooltip" title="'+value+'"><span class="classTxt'+index+'">'+value+'</span>' +
 			'</div>'
 		].join('');
 	}
@@ -1585,6 +1593,14 @@ function stuffPutOutTaskTable(tableInfo) {
 				formatter: classNameMatter
 			},
 			{
+				field: 'classLittleName',
+				title: '班级别名',
+				align: 'left',
+				clickToSelect: false,
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
 				field: 'xn',
 				title: '学年-(双击选择)',
 				align: 'left',
@@ -1816,10 +1832,10 @@ function onUncheckAllPutOutTask(row){
 
 //已发布任务书表双击事件
 function onDblClickputOutTaskTable(row, $element, field){
-	if(row.sszt==="passing"){
-		toastr.warning('不允许修改审核中的任务书');
-		return;
-	}
+	// if(row.sszt==="passing"){
+	// 	toastr.warning('不允许修改审核中的任务书');
+	// 	return;
+	// }
 	var index =parseInt($element[0].dataset.index);
 	if(field==="lsmc"){
 		getLsInfo('#putOutTaskTable',index,"ls");

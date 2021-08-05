@@ -125,6 +125,14 @@ function stuffTaskInfoTable(tableInfo,visibleControl) {
 				sortable: true,
 				formatter: paramsMatter
 			}, {
+				field: 'classLittleName',
+				title: '班级别名',
+				align: 'left',
+				clickToSelect: false,
+				visible: false,
+				sortable: true,
+				formatter: paramsMatter
+			}, {
 				field: 'kcmc',
 				title: '课程',
 				align: 'left',
