@@ -399,8 +399,8 @@ function stuffTitle(culturePlanInfo,choosedTask) {
 //初始化课节等下拉框
 function destoryLastStuff(){
 	var reObject = new Object();
-	// reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#kj,#skdd";
 	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#skdd";
+	reObject.multiSelectAreaClass = "multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
 	$(".choosendCycleArea,.singleCycle,.choosendfsKjArea").empty();
@@ -505,7 +505,6 @@ function stuffKjArae(kjInfo,str){
 		str += '<option value="' +kjInfo[i].edu401_ID + '">' + kjInfo[i].kjmc
 			+ '</option>';
 	}
-	// stuffManiaSelect("#kj", str);
 	$("#kj").append(str);
 	$("#kj").multiSelect();
 }
@@ -1073,8 +1072,8 @@ function removeKj(eve){
 
 	//重置第一个select组
 	var reObject = new Object();
-	// reObject.normalSelectIds = "#kj,#xq";
 	reObject.normalSelectIds = "#xq";
+	reObject.multiSelectAreaClass = "multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 }
 
