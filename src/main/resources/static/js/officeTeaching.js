@@ -399,7 +399,8 @@ function stuffTitle(culturePlanInfo,choosedTask) {
 //初始化课节等下拉框
 function destoryLastStuff(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#kj,#skdd";
+	// reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#kj,#skdd";
+	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#skdd";
 	reReloadSearchsWithSelect(reObject);
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
 	$(".choosendCycleArea,.singleCycle,.choosendfsKjArea").empty();
@@ -495,13 +496,18 @@ function  stuffJxrud(jxrudInfo,str){
 	}
 }
 
+var kjOption="";//全局变量接收当前所有二级学院
 //填充课节下拉框
 function stuffKjArae(kjInfo,str){
+	kjOption=kjInfo;
+	str='';
 	for (var i = 0; i < kjInfo.length; i++) {
 		str += '<option value="' +kjInfo[i].edu401_ID + '">' + kjInfo[i].kjmc
 			+ '</option>';
 	}
-	stuffManiaSelect("#kj", str);
+	// stuffManiaSelect("#kj", str);
+	$("#kj").append(str);
+	$("#kj").multiSelect();
 }
 
 //单个课程排课区域返回按钮
@@ -801,7 +807,7 @@ function addNewFsKj(){
 //课节下拉框事件
 function KjBtnschange(){
 	var currentXq=getNormalSelectValue("xq");
-	var currentKj=getNormalSelectValue("kj");
+	var currentKj=$("#kj").val();
 
 	if(currentXq===""){
 		toastr.warning('请选择星期');
@@ -926,15 +932,18 @@ function removeCycle(eve){
 
 //新增课节组
 function AddnewKj(){
+	var currentKj =$("#kj").val();
+	var currentKjmc =getRoleMoreSelectVALUES("#kj");
+
 	var startWeek=getNormalSelectValue("startWeek");
 	var endWeek=getNormalSelectValue("endWeek");
 	var currentXq=getNormalSelectValue("xq");
-	var currentKj=getNormalSelectValue("kj");
+	// var currentKj=getNormalSelectValue("kj");
 	var teacherID=getNormalSelectValue("teacher");
 	var startWeekName=getNormalSelectText("startWeek");
 	var endWeekName=getNormalSelectText("endWeek");
 	var currentXqmc=getNormalSelectText("xq");
-	var currentKjmc=getNormalSelectText("kj");
+	// var currentKjmc=getNormalSelectText("kj");
 	var teacherName=getNormalSelectText("teacher");
 	var location=getNormalSelectValue("jxd");
 	var point=getNormalSelectValue("skdd");
@@ -973,32 +982,39 @@ function AddnewKj(){
 		toastr.warning('请选择星期');
 		return;
 	}
-	if(currentKj===""){
+	if(currentKj==null){
 		toastr.warning('请选择课节');
 		return;
 	}
 
-	if($(".singleKj").find("#choosendKjInfo"+(startWeek+endWeek+currentXq+currentKj)).length!==0){
-		toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmc+'  已安排');
-		return;
+	var currentKjmcArray=currentKjmc.name.split(',');
+	//判断是否已安排
+	for (var i = 0; i < currentKj.length; i++) {
+		if($(".singleKj").find("#choosendKjInfo"+(startWeek+endWeek+currentXq+currentKj[i])).length>=1){
+			toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmcArray[i]+'  已安排');
+			return;
+		}
 	}
 
-	if($(".singleKj").find(".area"+startWeek+endWeek).length<1){
-		$(".singleKj").append('<div class="area area'+(startWeek+endWeek)+'">' +
+	//判断新课节填充位置
+	for (var i = 0; i <currentKj.length; i++) {
+		if($(".singleKj").find(".area"+startWeek+endWeek).length<1){
+			$(".singleKj").append('<div class="area area'+(startWeek+endWeek)+'">' +
 				'<span class="kjRsAreaTitle">第'+startWeek+'周 至 第'+endWeek+'周课节安排</span>' +
-				'<div class="appendArea"><div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'" location="'+location+'" ponit="'+point+'" locationName="'+locationName+'" pointNme="'+pointName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:' +teacherName+' -授课地点:'+locationName+' '+pointName+
-					'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
+				'<div class="appendArea"><div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmcArray[i]+'" xqid="'+currentXq+'" kjid="'+currentKj[i]+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj[i])+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'" location="'+location+'" ponit="'+point+'" locationName="'+locationName+'" pointNme="'+pointName+'">每周'+currentXqmc+'  '+currentKjmcArray[i]+'课 -授课教师:' +teacherName+' -授课地点:'+locationName+' '+pointName+
+				'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
 				'</div>' +
-			'</div>');
-	}else{
-		$(".area"+startWeek+endWeek).find(".appendArea").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmc+'" xqid="'+currentXq+'" kjid="'+currentKj+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj)+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'"  location="'+location+'" ponit="'+point+'" locationName="'+locationName+'" pointNme="'+pointName+'">每周'+currentXqmc+'  '+currentKjmc+'课 -授课教师:'  +teacherName+' -授课地点:'+locationName+' '+pointName+
-		'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
-		'</div>' );
+				'</div>');
+		}else{
+				$(".area"+startWeek+endWeek).find(".appendArea").append('<div class="choosendKjInfo" xqmc="'+currentXqmc+'" kjmc="'+currentKjmcArray[i]+'" xqid="'+currentXq+'" kjid="'+currentKj[i]+'" id="choosendKjInfo'+(startWeek+endWeek+currentXq+currentKj[i])+'" teacherId="'+teacherID+'" teacherName="'+teacherName+'" startWeek="'+startWeek+'" endWeek="'+endWeek+'" startWeekName="'+startWeekName+'" endWeekName="'+endWeekName+'"  location="'+location+'" ponit="'+point+'" locationName="'+locationName+'" pointNme="'+pointName+'">每周'+currentXqmc+'  '+currentKjmcArray[i]+'课 -授课教师:'  +teacherName+' -授课地点:'+locationName+' '+pointName+
+				'<img class="choosendKjImg choosendKjInfoImg" src="images/close1.png"/>' +
+				'</div>' );
+		}
 	}
 
-	//重置select组
+	//重置kj select组
 	var reObject = new Object();
-	reObject.normalSelectIds = "#kj";
+	reObject.multiSelectAreaClass = "multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 
 	$('.choosendKjInfoImg').unbind('click');
@@ -1007,6 +1023,38 @@ function AddnewKj(){
 		e.stopPropagation();
 	});
 	$(".kjRsArea,.singleKj").show();
+}
+
+//获得角色多选的值
+function getRoleMoreSelectVALUES(id) {
+	var values =$(id).val();
+	var valuesTxt = "";
+	if(values!=null){
+		for (var i = 0; i < values.length; ++i) {
+			valuesTxt+=values[i]+',';
+		}
+	}else{
+		return null;
+	}
+	var valuesNames =new Array();
+	for (var r = 0; r < kjOption.length; r++) {
+		for (var v = 0; v < values.length; v++) {
+			if(kjOption[r].edu401_ID===parseInt(values[v])){
+				valuesNames.push(kjOption[r].kjmc);
+			}
+		}
+	}
+
+	var nameStr="";
+	for (var i = 0; i < valuesNames.length; i++) {
+		nameStr+=valuesNames[i]+',';
+	}
+
+	var returnObject=new Object();
+	returnObject.value=valuesTxt.substring(0,valuesTxt.length-1);
+	returnObject.name=nameStr.substring(0,nameStr.length-1);
+
+	return returnObject;
 }
 
 //删除课节组
@@ -1025,7 +1073,8 @@ function removeKj(eve){
 
 	//重置第一个select组
 	var reObject = new Object();
-	reObject.normalSelectIds = "#kj,#xq";
+	// reObject.normalSelectIds = "#kj,#xq";
+	reObject.normalSelectIds = "#xq";
 	reReloadSearchsWithSelect(reObject);
 }
 

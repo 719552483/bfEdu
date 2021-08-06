@@ -1008,6 +1008,22 @@ function reReloadSearchsWithSelect(reObject) {
 				'<option value="seleceConfigTip">暂不可选</option>');
 		$(reObject.actionSelectIds).selectMania(); // 初始化下拉框
 	}
+
+	//清空多选框
+	if (typeof (reObject.multiSelectAreaClass) !== "undefined"){
+		var multiSelectAreaClassAarray=reObject.multiSelectAreaClass.split(",");
+		for (var i = 0; i < multiSelectAreaClassAarray.length;i++){
+			var jsSelect=$("."+multiSelectAreaClassAarray[i]).find(".multi-select-menuitems").find("input");
+			for (var j = 0; j < jsSelect.length; j++) {
+				jsSelect[j].checked = "";
+			}
+
+			var id=$("."+multiSelectAreaClassAarray[i]).find('select').attr('id');
+			$("#"+id).val(null);
+
+			$("."+multiSelectAreaClassAarray[i]).find(".multi-select-button").html("-- 请选择 --");
+		}
+	}
 }
 
 //有标签页页面切换更新面包屑导航
