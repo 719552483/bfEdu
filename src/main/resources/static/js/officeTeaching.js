@@ -805,10 +805,12 @@ function addNewFsKj(){
 
 //课节下拉框事件
 function KjBtnschange(){
+	var toastrTime=0;
 	var currentXq=getNormalSelectValue("xq");
 	var currentKj=$("#kj").val();
 
-	if(currentXq===""){
+	if(currentXq===""&&toastrTime<=0){
+		toastrTime++;
 		toastr.warning('请选择星期');
 		return;
 	}
