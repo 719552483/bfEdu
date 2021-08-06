@@ -933,6 +933,7 @@ function removeCycle(eve){
 
 //新增课节组
 function AddnewKj(){
+	var toastrTime=0;
 	var currentKj =$("#kj").val();
 	var currentKjmc =getRoleMoreSelectVALUES("#kj");
 
@@ -951,40 +952,48 @@ function AddnewKj(){
 	var locationName=getNormalSelectText("jxd");
 	var pointName=getNormalSelectText("skdd");
 
-	if(teacherID===""){
-		toastr.warning('请选择任课教师')
+	if(teacherID===""&&toastrTime<=0){
+		toastr.warning('请选择任课教师');
+		toastrTime++;
 		return;
 	}
 
-	if(location===""){
+	if(location===""&&toastrTime<=0){
 		toastr.warning('请选择教学点');
+		toastrTime++;
 		return;
 	}
-	if(point===""){
+	if(point===""&&toastrTime<=0){
 		toastr.warning('请选择授课地点');
+		toastrTime++;
 		return;
 	}
 
-	if(startWeek===""){
+	if(startWeek===""&&toastrTime<=0){
 		toastr.warning('请选择开始周');
+		toastrTime++;
 		return;
 	}
-	if(endWeek===""){
+	if(endWeek===""&&toastrTime<=0){
 		toastr.warning('请选择结束周');
+		toastrTime++;
 		return;
 	}
 
-	if(parseInt(endWeek)<parseInt(startWeek)){
+	if(parseInt(endWeek)<parseInt(startWeek)&&toastrTime<=0){
 		toastr.warning('开始周必须小于等于结束周');
+		toastrTime++;
 		return;
 	}
 
-	if(currentXq===""){
+	if(currentXq===""&&toastrTime<=0){
 		toastr.warning('请选择星期');
+		toastrTime++;
 		return;
 	}
-	if(currentKj==null){
+	if(currentKj==null&&toastrTime<=0){
 		toastr.warning('请选择课节');
+		toastrTime++;
 		return;
 	}
 
@@ -992,7 +1001,8 @@ function AddnewKj(){
 	//判断是否已安排
 	for (var i = 0; i < currentKj.length; i++) {
 		if($(".singleKj").find("#choosendKjInfo"+(startWeek+endWeek+currentXq+currentKj[i])).length>=1){
-			toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmcArray[i]+'  已安排');
+			toastr.warning(startWeekName+' - '+endWeekName+' '+currentXqmc+currentKjmcArray[i]+'  已安排'&&toastrTime<=0);
+			toastrTime++;
 			return;
 		}
 	}
