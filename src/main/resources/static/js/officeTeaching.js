@@ -400,7 +400,7 @@ function stuffTitle(culturePlanInfo,choosedTask) {
 function destoryLastStuff(){
 	var reObject = new Object();
 	reObject.normalSelectIds = "#term,#startWeek,#endWeek,#xq,#skdd";
-	reObject.multiSelectAreaClass = "multiSelect_ForKjArea";
+	reObject.multiSelectAreaClass = "jz_multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 	$(".choosendTerm,.choosendStartWeek,.choosendEndWeek,.choosendLoaction").html("");
 	$(".choosendCycleArea,.singleCycle,.choosendfsKjArea").empty();
@@ -595,6 +595,7 @@ function scheduleSingleClassBtnBind(){
 
 //tab1的下一步
 function configedJz(isRe){
+	var scheduleInfo;
 	if($(".fsxsSpan")[0].innerText!=="0"){
 		if(typeof isRe==="undefined"){
 			var PKInfo=getJzPKInfo();
@@ -602,7 +603,7 @@ function configedJz(isRe){
 				return;
 			}
 
-			var scheduleInfo=scheduleDetailInfo();
+			scheduleInfo=scheduleDetailInfo();
 			if(scheduleInfo.length==0){
 				return;
 			}
@@ -617,7 +618,7 @@ function configedJz(isRe){
 				return;
 			}
 
-			scheduleDetailInfo(false);
+			scheduleInfo=scheduleDetailInfo(false);
 
 			var checkJzPkRs=checkJzPk();
 			if(!checkJzPkRs){
@@ -630,7 +631,7 @@ function configedJz(isRe){
 			cache : false,
 			url : "/comfirmScheduleCheck",
 			data: {
-				'Edu201Id':$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID,
+				'Edu201Id':typeof isRe==="undefined"?$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID:$('.isReId')[0].innerText,
 				"scheduleDetail":JSON.stringify(scheduleInfo)
 			},
 			dataType : 'json',
@@ -754,14 +755,11 @@ function  checkAllPK(){
 
 //增加分散学时安排
 function addNewFsKj(){
-	var fsxq=getNormalSelectValue("fsxq");
+	// var fsxq=getNormalSelectValue("fsxq");
+	var fsxq =$("#fsxq").val();
 	var fsXs=parseInt($("#fsXs").val());
-	var allHousr=parseInt($(".fsxsSpan")[0].innerText);
-	var PuttedHousr=parseInt($(".fsPuttedHousr")[0].innerText)+fsXs;
-	var waitHour=0;
-	allHousr-PuttedHousr<0?waitHour=0:waitHour=allHousr-PuttedHousr;
 
-	if(fsxq===""){
+	if(fsxq==null){
 		toastr.warning('请选择周数');
 		return;
 	}
@@ -770,23 +768,36 @@ function addNewFsKj(){
 		return;
 	}
 
-	if($(".fskjRsArea").find("#choosendfsKj"+fsxq).length!==0){
-		toastr.warning('该课节安排已选择');
-		return;
+	for (var i = 0; i < fsxq.length; i++) {
+		if($(".fskjRsArea").find("#choosendfsKj"+fsxq[i]).length!==0){
+			toastr.warning('第'+fsxq[i]+'周分散课节安排已选择');
+			return;
+		}
 	}
 
-	if(PuttedHousr>allHousr){
+	var allHousr=parseInt($(".fsxsSpan")[0].innerText);
+	var PuttedHousr=parseInt($(".fsPuttedHousr")[0].innerText);
+	// var waitHour=0;
+	// allHousr-PuttedHousr<0?waitHour=0:waitHour=allHousr-PuttedHousr;
+	var currentPuttedHousr=0;
+	for (var i = 0; i < fsxq.length; i++) {
+		currentPuttedHousr+=fsXs;
+	}
+
+	if(PuttedHousr+currentPuttedHousr>allHousr){
 		toastr.warning('分散课时安排超过'+allHousr+'课时');
 		return;
 	}
 
-	$(".singlefsKj,.choosendfsKjArea").append('<div class="choosendfsKjInfo" xs="'+fsXs+'" fsxq="'+fsxq+'" id="choosendfsKj'+fsxq+'">分散授课安排：第'+fsxq+'周  '+fsXs+'个学时' +
-		'<img class="choosendfsKjImg choosendfsKjInfoImg" src="images/close1.png"/>' +
-		'</div>');
+	for (var i = 0; i < fsxq.length; i++) {
+		$(".singlefsKj,.choosendfsKjArea").append('<div class="choosendfsKjInfo" xs="'+fsXs+'" fsxq="'+fsxq[i]+'" id="choosendfsKj'+fsxq[i]+'">分散授课安排：第'+fsxq[i]+'周  '+fsXs+'个学时' +
+			'<img class="choosendfsKjImg choosendfsKjInfoImg" src="images/close1.png"/>' +
+			'</div>');
+	}
 
 	//重置select
 	var reObject = new Object();
-	reObject.normalSelectIds = "#fsxq";
+	reObject.multiSelectAreaClass = "fs_multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 	$("#fsXs").val(0);
 
@@ -797,10 +808,8 @@ function addNewFsKj(){
 	});
 	$(".fskjRsArea").show();
 
-
-
-	$(".fsPuttedHousr").html(PuttedHousr);
-	$(".fsWaitHousr").html(waitHour);
+	$(".fsPuttedHousr").html(PuttedHousr+currentPuttedHousr);
+	$(".fsWaitHousr").html(allHousr-(PuttedHousr+currentPuttedHousr));
 }
 
 //课节下拉框事件
@@ -1025,7 +1034,7 @@ function AddnewKj(){
 
 	//重置kj select组
 	var reObject = new Object();
-	reObject.multiSelectAreaClass = "multiSelect_ForKjArea";
+	reObject.multiSelectAreaClass = "jz_multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 
 	$('.choosendKjInfoImg').unbind('click');
@@ -1085,7 +1094,7 @@ function removeKj(eve){
 	//重置第一个select组
 	var reObject = new Object();
 	reObject.normalSelectIds = "#xq";
-	reObject.multiSelectAreaClass = "multiSelect_ForKjArea";
+	reObject.multiSelectAreaClass = "jz_multiSelect_ForKjArea";
 	reReloadSearchsWithSelect(reObject);
 }
 
@@ -1106,9 +1115,9 @@ function removefsKj(eve){
 	}
 
 	//重置第一个select组
-	var reObject = new Object();
-	reObject.normalSelectIds = "#fsxq";
-	reReloadSearchsWithSelect(reObject);
+	// var reObject = new Object();
+	// reObject.normalSelectIds = "#fsxq";
+	// reReloadSearchsWithSelect(reObject);
 
 	$(".fsPuttedHousr").html(PuttedHousr);
 	$(".fsWaitHousr").html(waitHour);
@@ -1116,13 +1125,22 @@ function removefsKj(eve){
 
 //根据学年渲染开始结束周
 function drawStartAndEndWeek(allWeeks){
-	var configStr='<option value="seleceConfigTip">请选择</option>';
+	var configStr='';
+	if(allWeeks.length>0){
+		configStr='';
+		for (var i = 0; i < allWeeks.length; i++) {
+			configStr += '<option value="' + allWeeks[i].id + '">'+ allWeeks[i].value+'</option>';
+		}
+		$("#fsxq").append(configStr);
+		$("#fsxq").multiSelect();
+	}
+
+	configStr='<option value="seleceConfigTip">请选择</option>';
 	for (var i = 0; i < allWeeks.length; i++) {
 		configStr += '<option value="' + allWeeks[i].id + '">'+ allWeeks[i].value+'</option>';
 	}
 	stuffManiaSelect("#startWeek", configStr);
 	stuffManiaSelect("#endWeek", configStr);
-	stuffManiaSelect("#fsxq", configStr);
 }
 
 //重新渲染开始结束周
@@ -1885,6 +1903,7 @@ function changePutted(row){
 	}
 
 	$(".isRe").html('T');
+	$(".isReId").html(row.id);
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -1970,7 +1989,7 @@ function stuffChangePuttedInfo(puttedInfo,rowInfo){
 
 //填充再排标题
 function stuffReTitle(culturePlanInfo,choosedTask){
-	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.pyjhmc+'-'+culturePlanInfo.className+
+	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.pyjhmc+'-'+culturePlanInfo.classLittleName+
 		"(总学时：" + choosedTask.edu201.zxs + "课时  集中学时：" + choosedTask.edu201.jzxs + "课时  分散学时：" + choosedTask.edu201.fsxs + "课时)");
 	$(".jzxsSpan").html(choosedTask.edu201.jzxs);
 	$(".fsxsSpan").html(choosedTask.edu201.fsxs);
@@ -2293,8 +2312,8 @@ function getRePutInfo(row){
 					return;
 				}
 				$(".rePutInfoArea").empty();
-				$("#rePutInfoModal").find(".moadalTitle").html(row.className+' ('+row.kcmc+') -再排信息');
-				$("#rePutJxbMC").val(row.className);
+				$("#rePutInfoModal").find(".moadalTitle").html(row.classLittleName+' ('+row.kcmc+') -再排信息');
+				$("#rePutJxbMC").val(row.classLittleName);
 				$("#rePutkCMC").val(row.kcmc);
 				$("#rePutLs").val(row.ls);
 				$.showModal("#rePutInfoModal",false);
@@ -2422,7 +2441,7 @@ function stuffPuttedInfo(puttedInfo,scheduleCompletedDetails,scatterList){
 	$(".puttedfsKjArea").find(".PuttedfsKjArea").remove();
 
 	$("#puttedTerm").val(scheduleCompletedDetails.xn);
-	$("#puttedJxbMC").val(puttedInfo.className);
+	$("#puttedJxbMC").val(puttedInfo.classLittleName);
 	$("#puttedkCMC").val(puttedInfo.kcmc);
 	$("#puttedZyls").val(puttedInfo.zyls);
 	$("#puttedLs").val(puttedInfo.ls);
