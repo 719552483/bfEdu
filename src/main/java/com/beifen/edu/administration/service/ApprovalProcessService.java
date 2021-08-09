@@ -56,6 +56,8 @@ public class ApprovalProcessService {
     @Autowired
     private Edu115Dao edu115Dao;
     @Autowired
+    private Edu116Dao edu116Dao;
+    @Autowired
     private Edu993Dao edu993Dao;
     @Autowired
     private Edu008Dao edu008Dao;
@@ -199,6 +201,15 @@ public class ApprovalProcessService {
             case"09":
                 Edu115 edu115 = edu115Dao.findOne(businessKey);
                 keyWord = edu115.getClassName()+edu115.getCourseName();
+                break;
+            case"10":
+                Edu116 edu116 = edu116Dao.findOne(businessKey);
+                if("0".equals(edu116.getExam_num())){
+                    keyWord = "【"+edu116.getCourseName()+"】："+edu116.getCourseName()+",正考成绩";
+                }else{
+                    keyWord = "【"+edu116.getCourseName()+"】："+edu116.getCourseName()+",第"+edu116.getExam_num()+"次补考成绩";
+                }
+
                 break;
             default:
                 keyWord = "未知类型";

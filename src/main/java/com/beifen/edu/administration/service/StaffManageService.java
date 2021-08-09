@@ -891,7 +891,7 @@ public class StaffManageService {
     }
 
     //修改补考成绩
-    public ResultVO updateMakeUpGrade(List<Edu0051> edu0051s,String userId) {
+    /*public ResultVO updateMakeUpGrade(List<Edu0051> edu0051s,String userId) {
         ResultVO resultVO;
         for (int ii =0;ii<edu0051s.size();ii++) {
             Edu0051 edu0051 = edu0051s.get(ii);
@@ -923,7 +923,7 @@ public class StaffManageService {
         }
         resultVO = ResultVO.setSuccess("成绩修改成功");
         return resultVO;
-    }
+    }*/
 
 
 

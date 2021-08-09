@@ -48,6 +48,8 @@ public class TeachingManageService {
     @Autowired
     Edu115Dao edu115Dao;
     @Autowired
+    Edu116Dao edu116Dao;
+    @Autowired
     Edu113Dao edu113Dao;
     @Autowired
     Edu990Dao edu990Dao;
@@ -81,6 +83,8 @@ public class TeachingManageService {
     Edu402Dao edu402Dao;
     @Autowired
     Edu005Dao edu005Dao;
+    @Autowired
+    Edu0051Dao edu0051Dao;
     @Autowired
     Edu208Dao edu208Dao;
     @Autowired
@@ -232,6 +236,50 @@ public class TeachingManageService {
     }
 
 
+    /**
+     * 修改补考成绩申请
+     * @return
+     */
+    public ResultVO updateMakeUpGrade(Edu0051 edu0051, Edu600 edu600) {
+        ResultVO resultVO;
+        edu0051 = edu0051Dao.findOne(edu0051.getEdu005_ID());
+        Edu990 edu990 = edu990Dao.findOne(edu600.getProposerKey());
+            Edu116 edu116 = new Edu116();
+            edu116.setEdu990_ID(edu990.getBF990_ID());
+            edu116.setUserName(edu990.getPersonName());
+            edu116.setBusinessState("passing");
+            edu116.setXnid(edu0051.getXnid());
+            edu116.setCourseName(edu0051.getCourseName());
+            edu116.setClassName(edu0051.getClassName());
+            edu116.setStudentName(edu0051.getStudentName());
+            edu116.setEdu0051Id(edu0051.getEdu0051_ID()+"");
+            edu116Dao.save(edu116);
+            edu600.setBusinessKey(edu116.getEdu116_ID());
+            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+            if (!isSuccess) {
+                resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+            } else {
+                resultVO = ResultVO.setSuccess("申请成功");
+            }
+        return resultVO;
+    }
+
+    /**
+     * 修改补考成绩申请-验证
+     * @return
+     */
+    public ResultVO updateMakeUpGradeCheck(Edu0051 edu0051) {
+        ResultVO resultVO;
+
+        List<Edu116> edu116s = edu116Dao.queryByEdu0051Id(edu0051.getEdu0051_ID()+"");
+
+        if(edu116s.size()>0){
+            resultVO = ResultVO.setFailed("该学生第"+edu0051.getExam_num()+"次补考成绩已修改，正在审批中...");
+        }else{
+            resultVO = ResultVO.setSuccess("可以申请");
+        }
+        return resultVO;
+    }
 
 
     /**

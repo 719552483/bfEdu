@@ -684,13 +684,13 @@ public class StaffManageController {
      *
      * @return returnMap
      */
-    @RequestMapping("updateMakeUpGrade")
-    @ResponseBody
-    public ResultVO updateMakeUpGrade(@RequestParam("gradeObjectList") String gradeObject,@RequestParam("userId")String userId) {
-        List<Edu0051> edu0051s = JSON.parseArray(gradeObject, Edu0051.class);
-        ResultVO result = staffManageService.updateMakeUpGrade(edu0051s,userId);
-        return result;
-    }
+//    @RequestMapping("updateMakeUpGrade")
+//    @ResponseBody
+//    public ResultVO updateMakeUpGrade(@RequestParam("gradeObjectList") String gradeObject,@RequestParam("userId")String userId) {
+//        List<Edu0051> edu0051s = JSON.parseArray(gradeObject, Edu0051.class);
+//        ResultVO result = staffManageService.updateMakeUpGrade(edu0051s,userId);
+//        return result;
+//    }
 
     /**
      * 确认成绩并生成补考标识
