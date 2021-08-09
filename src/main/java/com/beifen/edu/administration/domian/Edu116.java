@@ -17,6 +17,7 @@ public class Edu116 {
     private String businessExplain;//情况说明
     private String edu0051Id;
     private String exam_num;
+    private String grade;
 
 
 
@@ -111,5 +112,13 @@ public class Edu116 {
 
     public void setExam_num(String exam_num) {
         this.exam_num = exam_num;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

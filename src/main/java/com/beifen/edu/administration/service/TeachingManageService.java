@@ -253,6 +253,7 @@ public class TeachingManageService {
             edu116.setClassName(edu0051.getClassName());
             edu116.setStudentName(edu0051.getStudentName());
             edu116.setEdu0051Id(edu0051.getEdu0051_ID()+"");
+            edu116.setGrade(edu0051.getGrade());
             edu116Dao.save(edu116);
             edu600.setBusinessKey(edu116.getEdu116_ID());
             boolean isSuccess = approvalProcessService.initiationProcess(edu600);

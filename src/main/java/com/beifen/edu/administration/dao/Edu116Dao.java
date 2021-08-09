@@ -16,6 +16,12 @@ public interface Edu116Dao extends JpaRepository<Edu116, Long>, JpaSpecification
     @Query(value = "SELECT * FROM EDU116 where edu0051_id = ?1 and business_State = 'passing'",nativeQuery = true)
     List<Edu116> queryByEdu0051Id(String edu0051_id);
 
+    //审批结束后回写状态
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE edu116 e set e.BUSINESS_STATE =?2 WHERE Edu116_ID =?1", nativeQuery = true)
+    void updateState(String businessKey, String state);
+
 }
 
 

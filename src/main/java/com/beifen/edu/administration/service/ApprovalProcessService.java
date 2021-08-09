@@ -58,6 +58,10 @@ public class ApprovalProcessService {
     @Autowired
     private Edu116Dao edu116Dao;
     @Autowired
+    private Edu0051Dao edu0051Dao;
+    @Autowired
+    private Edu005Dao edu005Dao;
+    @Autowired
     private Edu993Dao edu993Dao;
     @Autowired
     private Edu008Dao edu008Dao;
@@ -65,6 +69,8 @@ public class ApprovalProcessService {
     private StaffManageService staffManageService;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    AdministrationPageService administrationPageService;
 
     @Autowired
     private ReflectUtils utils;
@@ -156,6 +162,12 @@ public class ApprovalProcessService {
                 Edu990 edu9901 = edu990Dao.findOne(edu115.getEdu990_ID());
                 Edu101 one1 = edu101Dao.findOne(Long.parseLong(edu9901.getUserKey()));
                 department = one1.getSzxb();
+                break;
+            case"10":
+                Edu116 edu116 = edu116Dao.findOne(businessKey);
+                Edu990 edu9902 = edu990Dao.findOne(edu116.getEdu990_ID());
+                Edu101 one2 = edu101Dao.findOne(Long.parseLong(edu9902.getUserKey()));
+                department = one2.getSzxb();
                 break;
             default:
                 department = "0000";
@@ -407,6 +419,50 @@ public class ApprovalProcessService {
                     edu993.setCreateDate(simpleDateFormat.format(new Date()));
                     edu993Dao.save(edu993);
                     break;
+                case"10":
+                    edu116Dao.updateState(businessKey, "pass");
+                    Edu116 edu116 = edu116Dao.findOne(Long.parseLong(businessKey));
+                    Edu0051 edu0051old = edu0051Dao.findOne(Long.parseLong(edu116.getEdu0051Id()));
+                    edu0051old.setGrade(edu116.getGrade());
+                    Edu005 edu005 = edu005Dao.findOne(edu0051old.getEdu005_ID());
+                    if (edu0051old.getExam_num() == edu005.getExam_num()) {
+                        if (edu005.getGrade().equals("T")) {
+                            edu005.setGetCredit(edu005.getCredit());
+                            edu005.setIsPassed("T");
+                        } else if (edu005.getGrade().equals("F")) {
+                            edu005.setGetCredit(0.00);
+                            edu005.setIsPassed("F");
+                        } else {
+                            double i = Double.parseDouble(edu005.getGrade());
+                            if (i < 60.00) {
+                                edu005.setGetCredit(0.00);
+                                edu005.setIsPassed("F");
+                            } else {
+                                edu005.setGetCredit(edu005.getCredit());
+                                edu005.setIsPassed("T");
+                            }
+                        }
+                        edu005.setGrade(edu0051old.getGrade());
+                        edu005Dao.save(edu005);
+                    }
+                    administrationPageService.addLog(edu116.getEdu990_ID()+"",6,1,edu0051old.getEdu0051_ID()+"",edu0051old.getStudentName()+":"+edu0051old.getCourseName());
+                    edu0051Dao.save(edu0051old);
+                    Edu990 edu9901 = edu990Dao.queryUserById(edu116.getEdu990_ID().toString());
+                    String userKey1 = edu9901.getUserKey();
+                    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Edu993 edu9931 = new Edu993();
+//                    edu993.setDepartmentCode(edu107.getEdu104());
+                    edu9931.setRoleId(NoteConstant.TEACHER_ROLE);
+                    edu9931.setUserId(userKey1);
+                    String noticeText1 = "【"+edu116.getStudentName()+"】学生，【"+edu116.getCourseName()+"】课程，第"+edu116.getExam_num()+"次补考，修改补考成绩审批通过！";
+                    edu9931.setNoticeText(noticeText1);
+                    edu9931.setNoticeType("05");
+                    edu9931.setBusinessType(NoteConstant.APPROVAL_RESULT_NOT);
+                    edu9931.setBusinessId(edu116.getEdu116_ID().toString());
+                    edu9931.setIsHandle("F");
+                    edu9931.setCreateDate(simpleDateFormat.format(new Date()));
+                    edu993Dao.save(edu9931);
+                    break;
                 default:
                     isSuccess = false;
                     break;
@@ -455,6 +511,23 @@ public class ApprovalProcessService {
                     edu993.setCreateDate(simpleDateFormat.format(new Date()));
                     edu993Dao.save(edu993);
                     edu115Dao.delete(Long.parseLong(businessKey));
+                    break;
+                case"10":
+                    Edu116 edu116 = edu116Dao.findOne(Long.parseLong(businessKey));
+                    Edu990 edu9901 = edu990Dao.queryUserById(edu116.getEdu990_ID().toString());
+                    String userKey1 = edu9901.getUserKey();
+                    simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Edu993 edu9931 = new Edu993();
+                    edu9931.setRoleId(NoteConstant.TEACHER_ROLE);
+                    edu9931.setUserId(userKey1);
+                    String noticeText1 = "【"+edu116.getStudentName()+"】学生，【"+edu116.getCourseName()+"】课程，第"+edu116.getExam_num()+"次补考，修改补考成绩审批未通过！";
+                    edu9931.setNoticeText(noticeText1);
+                    edu9931.setNoticeType("05");
+                    edu9931.setBusinessType(NoteConstant.APPROVAL_RESULT_NOT);
+                    edu9931.setBusinessId(edu116.getEdu116_ID().toString());
+                    edu9931.setIsHandle("F");
+                    edu9931.setCreateDate(simpleDateFormat.format(new Date()));
+                    edu993Dao.save(edu9931);
                     break;
                 default:
                     isSuccess = false;
@@ -761,6 +834,9 @@ public class ApprovalProcessService {
                 break;
             case"09":
                 object = edu115Dao.findOne(Long.parseLong(businessKey));
+                break;
+            case"10":
+                object = edu116Dao.findOne(Long.parseLong(businessKey));
                 break;
             default:
                 break;
