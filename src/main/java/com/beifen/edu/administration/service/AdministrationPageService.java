@@ -4304,7 +4304,7 @@ public class AdministrationPageService {
 			}
 		};
 		List<Edu301> edu301List = edu301DAO.findAll(specification);
-
+		edu301List.addAll(edu301DAO.findAllInDepartment2());
 		if (edu301List.size() != 0) {
 			resultVO = ResultVO.setSuccess("共找到"+edu301List.size()+"个教学班",edu301List);
 		} else {

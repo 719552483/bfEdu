@@ -28,6 +28,7 @@ public class TeachingSchedulePO {
     private String sfxylcj;
     private String pksj;
     private String sfypw;
+    private String classLittleName;//教学班别名
 
     public String getSfypw() {
         return sfypw;
@@ -180,5 +181,13 @@ public class TeachingSchedulePO {
     @Id
     public String getId() {
         return id;
+    }
+
+    public String getClassLittleName() {
+        return classLittleName;
+    }
+
+    public void setClassLittleName(String classLittleName) {
+        this.classLittleName = classLittleName;
     }
 }
