@@ -99,17 +99,21 @@ public class TeachingManageController {
     public ResultVO updateMakeUpGrade(@RequestParam(value = "SearchCriteria") String SearchCriteria) {
         ResultVO result;
         // 将收到的jsonObject转为javabean 关系管理实体类
-        List<net.sf.json.JSONObject> objectList = JSON.parseArray(SearchCriteria, net.sf.json.JSONObject.class);
-        for(int i = 0;i<objectList.size();i++){
-            Edu0051 edu0051 = JSON.parseObject(objectList.get(i).getString("edu0051"), Edu0051.class);
+        JSONObject jsonObject = JSONObject.parseObject(SearchCriteria);
+        Edu600 edu600 = JSON.parseObject(jsonObject.getString("approvalInfo"), Edu600.class);
+        List<Edu0051> edu0051List = JSON.parseArray(jsonObject.getString("edu0051"),Edu0051.class);
+//        List<net.sf.json.JSONObject> objectList = JSON.parseArray(SearchCriteria, net.sf.json.JSONObject.class);
+
+        for(int i = 0;i<edu0051List.size();i++){
+            Edu0051 edu0051 = edu0051List.get(i);
             result = teachingManageService.updateMakeUpGradeCheck(edu0051);
             if(result.getCode()!=200){
                 return result;
             }
         }
-        for(int i = 0;i<objectList.size();i++){
-            Edu600 edu600 = JSON.parseObject(objectList.get(i).getString("approvalInfo"), Edu600.class);
-            Edu0051 edu0051 = JSON.parseObject(objectList.get(i).getString("edu0051"), Edu0051.class);
+        for(int i = 0;i<edu0051List.size();i++){
+//            Edu600 edu600 = JSON.parseObject(objectList.get(i).getString("approvalInfo"), Edu600.class);
+            Edu0051 edu0051 = edu0051List.get(i);
             result = teachingManageService.updateMakeUpGrade(edu0051,edu600);
             if(result.getCode()!=200){
                 return result;

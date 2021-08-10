@@ -513,6 +513,7 @@ public class ApprovalProcessService {
                     edu115Dao.delete(Long.parseLong(businessKey));
                     break;
                 case"10":
+                    edu116Dao.updateState(businessKey, "nopass");
                     Edu116 edu116 = edu116Dao.findOne(Long.parseLong(businessKey));
                     Edu990 edu9901 = edu990Dao.queryUserById(edu116.getEdu990_ID().toString());
                     String userKey1 = edu9901.getUserKey();
