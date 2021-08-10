@@ -216,11 +216,8 @@ public class ApprovalProcessService {
                 break;
             case"10":
                 Edu116 edu116 = edu116Dao.findOne(businessKey);
-                if("0".equals(edu116.getExam_num())){
-                    keyWord = "【"+edu116.getCourseName()+"】："+edu116.getCourseName()+",正考成绩";
-                }else{
-                    keyWord = "【"+edu116.getCourseName()+"】："+edu116.getCourseName()+",第"+edu116.getExam_num()+"次补考成绩";
-                }
+                keyWord = "【"+edu116.getCourseName()+"】"+edu116.getClassName()+":"+edu116.getStudentName()+",第"+edu116.getExam_num()+"次补考成绩";
+
 
                 break;
             default:
@@ -426,14 +423,14 @@ public class ApprovalProcessService {
                     edu0051old.setGrade(edu116.getGrade());
                     Edu005 edu005 = edu005Dao.findOne(edu0051old.getEdu005_ID());
                     if (edu0051old.getExam_num() == edu005.getExam_num()) {
-                        if (edu005.getGrade().equals("T")) {
+                        if (edu0051old.getGrade().equals("T")) {
                             edu005.setGetCredit(edu005.getCredit());
                             edu005.setIsPassed("T");
-                        } else if (edu005.getGrade().equals("F")) {
+                        } else if (edu0051old.getGrade().equals("F")) {
                             edu005.setGetCredit(0.00);
                             edu005.setIsPassed("F");
                         } else {
-                            double i = Double.parseDouble(edu005.getGrade());
+                            double i = Double.parseDouble(edu0051old.getGrade());
                             if (i < 60.00) {
                                 edu005.setGetCredit(0.00);
                                 edu005.setIsPassed("F");

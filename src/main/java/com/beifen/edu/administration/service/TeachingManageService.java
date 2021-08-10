@@ -254,6 +254,7 @@ public class TeachingManageService {
             edu116.setStudentName(edu0051.getStudentName());
             edu116.setEdu0051_ID(edu0051.getEdu0051_ID()+"");
             edu116.setGrade(edu0051Old.getGrade());
+            edu116.setGradeOld(edu0051.getGrade());
             edu116.setExam_num(edu0051.getExam_num()+"");
             edu116Dao.save(edu116);
             edu600.setBusinessKey(edu116.getEdu116_ID());
@@ -276,7 +277,7 @@ public class TeachingManageService {
         List<Edu116> edu116s = edu116Dao.queryByEdu0051Id(edu0051.getEdu0051_ID()+"");
 
         if(edu116s.size()>0){
-            resultVO = ResultVO.setFailed("该学生第"+edu0051.getExam_num()+"次补考成绩已修改，正在审批中...");
+            resultVO = ResultVO.setFailed("该学生第"+edu116s.get(0).getExam_num()+"次补考成绩已修改，正在审批中...");
         }else{
             resultVO = ResultVO.setSuccess("可以申请");
         }

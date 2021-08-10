@@ -17,8 +17,8 @@ public class Edu116 {
     private String businessExplain;//情况说明
     private String Edu0051_ID;
     private String exam_num;
-    private String grade;
-
+    private String grade;//新成绩
+    private String gradeOld;//原成绩
 
 
     @Id
@@ -120,5 +120,13 @@ public class Edu116 {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public String getGradeOld() {
+        return gradeOld;
+    }
+
+    public void setGradeOld(String gradeOld) {
+        this.gradeOld = gradeOld;
     }
 }
