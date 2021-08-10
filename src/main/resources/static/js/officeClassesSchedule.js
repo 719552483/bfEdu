@@ -159,7 +159,7 @@ function stuffTaskInfoTable(tableInfo) {
 		},
 		onDblClickRow : function(row, $element, field) {
 			choosendTeachers.length=0;
-			onDblClickScheduleClassesTable(row, $element, field);
+			onDblClickScheduleClassesTable(row, $element, field,true);
 		},
 		columns: [
 			{
@@ -359,7 +359,7 @@ function onUncheckAllCanPutTask(row){
 }
 
 //任务书表双击事件
-function onDblClickScheduleClassesTable(row, $element, field){
+function onDblClickScheduleClassesTable(row, $element, field,ischeck){
 	var index =parseInt($element[0].dataset.index);
 	if(field==="lsmc"){
 		getLsInfo('#scheduleClassesTable',index,"ls");
@@ -370,7 +370,7 @@ function onDblClickScheduleClassesTable(row, $element, field){
 	}else if(field==="kkbm"){
 		wantChangeKkBM(index,"kkbm");
 	}else if(field==="className"){
-		wantChooseClass(row,"#scheduleClassesTable");
+		wantChooseClass(row,"#scheduleClassesTable",ischeck);
 	}else if(field==="xn"){
 		wantChooseXn(row,"#scheduleClassesTable");
 	}else{
@@ -445,14 +445,14 @@ function confirmChooseXn(row,tableID){
 
 var isFisrtEnterClassModal=true;
 //预备选择班级
-function wantChooseClass(row,tableID){
+function wantChooseClass(row,tableID,isCheck){
 	$(".itab").find("li:eq(0)").find("a").trigger('click');
 	reloadClassModalSearchArea();
 	if(isFisrtEnterClassModal){
 		stuffClassModalSearchArea();
 	}
 
-	getAllXzb();
+	getAllXzb(isCheck);
 	getAllJxb();
 	classModalBtnbind(row,tableID);
 	$.showModal("#chooseClassModal",true);
@@ -460,7 +460,7 @@ function wantChooseClass(row,tableID){
 }
 
 //获取所有行政班
-function getAllXzb(){
+function getAllXzb(isCheck){
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -482,9 +482,9 @@ function getAllXzb(){
 			if (backjson.result) {
 				hideloding();
 				if(backjson.classList.length===0){
-					stuffXzbTable({});
+					stuffXzbTable({},isCheck);
 				}else{
-					stuffXzbTable(backjson.classList);
+					stuffXzbTable(backjson.classList,isCheck);
 				}
 			}
 		}
@@ -702,7 +702,20 @@ function reloadClassModalSearchArea(){
 }
 
 //渲染行政班表
-function stuffXzbTable(tableInfo){
+function stuffXzbTable(tableInfo,isCheck){
+	var cheeckObject=new Object();
+	if(typeof isCheck==='undefined'){
+		cheeckObject={
+			field : 'radio',
+			radio : true
+		};
+	}else{
+		cheeckObject={
+			field : 'check',
+			checkbox : true
+		};
+	}
+
 	$('#xzbTable').bootstrapTable('destroy').bootstrapTable({
 		data : tableInfo,
 		pagination : true,
@@ -720,19 +733,19 @@ function stuffXzbTable(tableInfo){
 		onPageChange : function() {
 			drawPagination(".xzbTableArea", "行政班信息");
 		},
-		columns : [ {
+		columns : [
+		{
 			field : 'edu300_ID',
 			title : 'id',
 			align : 'center',
 			visible : false
-		},{
-			field: 'check',
-			checkbox: true
-		},{
-			field : 'batchName',
-			title : '批次',
-			align : 'left',
-			formatter : paramsMatter
+		},
+		cheeckObject,
+		{
+		field : 'batchName',
+		title : '批次',
+		align : 'left',
+		formatter : paramsMatter
 		}, {
 			field : 'njmc',
 			title : '年级',
@@ -1413,7 +1426,7 @@ function changsfxylcj(tableid,inputid,index){
 function putOut(row,index){
 	var putOutArray=new Array();
 	putOutArray.push(row);
-	checkPutOutInfo(putOutArray);
+	checkPutOutInfo(putOutArray,putOutArray);
 }
 
 //批量发布任务书
@@ -1427,7 +1440,7 @@ function putOutTasks(){
 }
 
 //检查任务书信息
-function checkPutOutInfo(putOutArray){
+function checkPutOutInfo(putOutArray,Tasks){
 	for (var i = 0; i < putOutArray.length; i++) {
 		if(putOutArray[i].ls===""||putOutArray[i].ls==null){
 			toastr.warning('有任务书暂未指定任课老师');
@@ -1458,12 +1471,31 @@ function checkPutOutInfo(putOutArray){
 
 //发送发布任务书的请求
 function sendPutOutInfo(putOutArray){
+	var sendArray=new Array();
+	for (var i = 0; i < putOutArray.length; i++) {
+		if(putOutArray[i].classLittleName===''){
+			var copyArr = new Array();
+			var choosendXzb=putOutArray[i].classId;
+			var choosendXzbNames=putOutArray[i].className;
+			for (var j = 0; j < choosendXzb.length; j++) {
+					copyArr = $.extend(true, [], putOutArray); //数组深度复制 制完成后两个数组对内容修改时互不影响
+					var singleObject=new Object();
+					singleObject=copyArr[i];
+					singleObject.classId=choosendXzb[j];
+					singleObject.className=choosendXzbNames[j];
+					sendArray.push(singleObject);
+			}
+		}else{
+			sendArray.push(putOutArray[i]);
+		}
+	}
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/putOutTask",
 		data: {
-			"taskInfo":JSON.stringify(putOutArray) ,
+			"taskInfo":JSON.stringify(sendArray) ,
 			"approvalInfo":JSON.stringify(getApprovalobect())
 		},
 		dataType : 'json',
