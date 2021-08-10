@@ -240,29 +240,28 @@ public class TeachingManageService {
      * 修改补考成绩申请
      * @return
      */
-    public ResultVO updateMakeUpGrade(Edu0051 edu0051Old, Edu600 edu600) {
+    public ResultVO updateMakeUpGrade(Edu0051 edu0051, Edu600 edu600) {
         ResultVO resultVO;
-        Edu0051 edu0051 = edu0051Dao.findOne(edu0051Old.getEdu005_ID());
+        edu0051 = edu0051Dao.findOne(edu0051.getEdu0051_ID());
         Edu990 edu990 = edu990Dao.findOne(edu600.getProposerKey());
-            Edu116 edu116 = new Edu116();
-            edu116.setEdu990_ID(edu990.getBF990_ID());
-            edu116.setUserName(edu990.getPersonName());
-            edu116.setBusinessState("passing");
-            edu116.setXnid(edu0051.getXnid());
-            edu116.setCourseName(edu0051.getCourseName());
-            edu116.setClassName(edu0051.getClassName());
-            edu116.setStudentName(edu0051.getStudentName());
-            edu116.setEdu0051_ID(edu0051.getEdu0051_ID()+"");
-            edu116.setGrade(edu0051Old.getGrade());
-            edu116.setExam_num(edu0051Old.getExam_num()+"");
-            edu116Dao.save(edu116);
-            edu600.setBusinessKey(edu116.getEdu116_ID());
-            boolean isSuccess = approvalProcessService.initiationProcess(edu600);
-            if (!isSuccess) {
-                resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
-            } else {
-                resultVO = ResultVO.setSuccess("申请成功");
-            }
+        Edu116 edu116 = new Edu116();
+        edu116.setEdu990_ID(edu990.getBF990_ID());
+        edu116.setUserName(edu990.getPersonName());
+        edu116.setBusinessState("passing");
+        edu116.setXnid(edu0051.getXnid());
+        edu116.setCourseName(edu0051.getCourseName());
+        edu116.setClassName(edu0051.getClassName());
+        edu116.setStudentName(edu0051.getStudentName());
+        edu116.setEdu0051_ID(edu0051.getEdu0051_ID()+"");
+        edu116.setGrade(edu0051.getGrade());
+        edu116Dao.save(edu116);
+        edu600.setBusinessKey(edu116.getEdu116_ID());
+        boolean isSuccess = approvalProcessService.initiationProcess(edu600);
+        if (!isSuccess) {
+            resultVO = ResultVO.setApprovalFailed("审批流程发起失败，请联系管理员");
+        } else {
+            resultVO = ResultVO.setSuccess("申请成功");
+        }
         return resultVO;
     }
 
