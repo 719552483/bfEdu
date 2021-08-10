@@ -1266,7 +1266,8 @@ function confirmChooseCrouse(type){
 function confirmExportGrade(){
 	var classes=$("#export_classes").attr("choosendClassId");
 	var crouses=$("#export_crouse").attr("choosendCrouseIds");
-	var trem=getNormalSelectValue("export_grade")
+	var trem=getNormalSelectValue("export_grade");
+	var type=getNormalSelectValue("export_Type");
 	if(classes===""){
 		toastr.warning("请选择班级");
 		return;
@@ -1277,12 +1278,16 @@ function confirmExportGrade(){
 		return;
 	}
 
+	if(type===""){
+		toastr.warning("请选择导出类型");
+		return;
+	}
 	var sendObject=new Object();
 	sendObject.classes=classes;
 	sendObject.crouses=crouses;
 	sendObject.trem=trem;
 
-	var url = "/exportGrade";
+	var url =type==='1'?"/exportGradeAll":'/exportGrade';
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
 	form.append($("<input></input>").attr("type", "hidden").attr("name", "queryInfo").attr("value",JSON.stringify(sendObject)));
 	form.appendTo('body').submit().remove();
