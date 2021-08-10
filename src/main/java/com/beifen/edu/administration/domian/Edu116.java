@@ -15,7 +15,7 @@ public class Edu116 {
     private String studentName;//学生姓名
     private String businessState;//状态
     private String businessExplain;//情况说明
-    private String edu0051Id;
+    private String Edu0051_ID;
     private String exam_num;
     private String grade;
 
@@ -98,12 +98,12 @@ public class Edu116 {
         this.businessExplain = businessExplain;
     }
 
-    public String getEdu0051Id() {
-        return edu0051Id;
+    public String getEdu0051_ID() {
+        return Edu0051_ID;
     }
 
-    public void setEdu0051Id(String edu0051Id) {
-        this.edu0051Id = edu0051Id;
+    public void setEdu0051_ID(String edu0051_ID) {
+        Edu0051_ID = edu0051_ID;
     }
 
     public String getExam_num() {

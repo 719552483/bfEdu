@@ -422,7 +422,7 @@ public class ApprovalProcessService {
                 case"10":
                     edu116Dao.updateState(businessKey, "pass");
                     Edu116 edu116 = edu116Dao.findOne(Long.parseLong(businessKey));
-                    Edu0051 edu0051old = edu0051Dao.findOne(Long.parseLong(edu116.getEdu0051Id()));
+                    Edu0051 edu0051old = edu0051Dao.findOne(Long.parseLong(edu116.getEdu0051_ID()));
                     edu0051old.setGrade(edu116.getGrade());
                     Edu005 edu005 = edu005Dao.findOne(edu0051old.getEdu005_ID());
                     if (edu0051old.getExam_num() == edu005.getExam_num()) {

@@ -3632,14 +3632,14 @@ function tab2BtnBind(){
 //预备修改补考成绩
 function wantModifyReExamInfo(){
 	$('.isSowIndex').selectMania(); //初始化下拉框
-	$('#wantModifyReExamInfo,.historyGradeB').hide();
-	$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput,#reExamInfoModal .select-mania').show();
+	$('#wantModifyReExamInfo,.historyGradeB:gt(0)').hide();
+	$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput:gt(0),#reExamInfoModal .select-mania').show();
 }
 
 //取消修改补考成绩
 function cancelModifyReExamInfo(){
-	$('#wantModifyReExamInfo,.historyGradeB').show();
-	$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput,#reExamInfoModal .select-mania').hide();
+	$('#wantModifyReExamInfo,.historyGradeB:gt(0)').show();
+	$('#comfirmModifyReExamInfo,#cancelModifyReExamInfo,.historyGradeInput:gt(0),#reExamInfoModal .select-mania').hide();
 }
 
 //确认修改补考成绩
@@ -3672,13 +3672,38 @@ function comfirmModifyReExamInfo(currentHistory,row){
 		return;
 	}
 
+	$.hideModal('#reExamInfoModal',false);
+	$.showModal('#remindModifyModal',true);
+	$(".remindModifyModalremindType").html(row.studentName);
+	$(".remindModifyModalremindActionType").html("补考成绩修改发起审批");
+
+	//提示框取消按钮
+	$('.specialCanle3').unbind('click');
+	$('.specialCanle3').bind('click', function(e) {
+		$.hideModal('#remindModifyModal',false);
+		$.showModal('#reExamInfoModal',false);
+		e.stopPropagation();
+	});
+
+	//发送修改请求
+	$('.confirmRemindModify').unbind('click');
+	$('.confirmRemindModify').bind('click', function(e) {
+		var SearchCriteria=new Object();
+		SearchCriteria.approvalInfo=getApprovalobect();
+		SearchCriteria.edu0051=modifyInfo;
+		snedModifyReExamInfo(SearchCriteria);
+		e.stopPropagation();
+	});
+}
+
+//发送修改补考成绩请求
+function snedModifyReExamInfo(SearchCriteria){
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/updateMakeUpGrade",
 		data: {
-			"gradeObjectList":JSON.stringify(modifyInfo),
-			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			"SearchCriteria":JSON.stringify(SearchCriteria)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -3693,33 +3718,61 @@ function comfirmModifyReExamInfo(currentHistory,row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				if(currentHistory[currentHistory.length-1].grade==='T'||currentHistory[currentHistory.length-1].grade==="F"){
-					if(currentHistory[currentHistory.length-1].grade!==getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID)){
-						var updateTableInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId', currentHistory[currentHistory.length-1].edu005_ID);
-						updateTableInfo.grade=getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID);
-						$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
-							id: currentHistory[currentHistory.length-1].edu005_ID,
-							row: updateTableInfo
-						});
-					}
-				}else{
-					if(currentHistory[currentHistory.length-1].grade!==$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val()){
-						var updateTableInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId', currentHistory[currentHistory.length-1].edu005_ID);
-						updateTableInfo.grade=$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val();
-						$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
-							id: currentHistory[currentHistory.length-1].edu005_ID,
-							row: updateTableInfo
-						});
-					}
-				}
-
-				$.hideModal('#reExamInfoModal');
+				$.hideModal();
 				toastr.success(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
 			}
 		}
 	});
+
+	// $.ajax({
+	// 	method : 'get',
+	// 	cache : false,
+	// 	url : "/updateMakeUpGrade",
+	// 	data: {
+	// 		"SearchCriteria":JSON.stringify(SearchCriteria)
+	// 	},
+	// 	dataType : 'json',
+	// 	beforeSend: function(xhr) {
+	// 		requestErrorbeforeSend();
+	// 	},
+	// 	error: function(textStatus) {
+	// 		requestError();
+	// 	},
+	// 	complete: function(xhr, status) {
+	// 		requestComplete();
+	// 	},
+	// 	success : function(backjson) {
+	// 		hideloding();
+	// 		if (backjson.code===200) {
+	// 			if(currentHistory[currentHistory.length-1].grade==='T'||currentHistory[currentHistory.length-1].grade==="F"){
+	// 				if(currentHistory[currentHistory.length-1].grade!==getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID)){
+	// 					var updateTableInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId', currentHistory[currentHistory.length-1].edu005_ID);
+	// 					updateTableInfo.grade=getNormalSelectValue('historyGradeSelect'+currentHistory[currentHistory.length-1].edu0051_ID);
+	// 					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+	// 						id: currentHistory[currentHistory.length-1].edu005_ID,
+	// 						row: updateTableInfo
+	// 					});
+	// 				}
+	// 			}else{
+	// 				if(currentHistory[currentHistory.length-1].grade!==$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val()){
+	// 					var updateTableInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId', currentHistory[currentHistory.length-1].edu005_ID);
+	// 					updateTableInfo.grade=$('#gradeInput'+currentHistory[currentHistory.length-1].edu0051_ID).val();
+	// 					$("#gradeEntryTable").bootstrapTable('updateByUniqueId', {
+	// 						id: currentHistory[currentHistory.length-1].edu005_ID,
+	// 						row: updateTableInfo
+	// 					});
+	// 				}
+	// 			}
+	//
+	// 			$.hideModal('#reExamInfoModal');
+	// 			toastr.success('补考成绩修改审批流转成功');
+	// 		} else {
+	// 			toastr.warning(backjson.msg);
+	// 		}
+	// 	}
+	// });
 }
 
 //判断是否修改
