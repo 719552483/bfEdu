@@ -726,9 +726,9 @@ function stuffXzbTable(tableInfo){
 			align : 'center',
 			visible : false
 		},{
-			field : 'radio',
-			radio : true
-		}, {
+			field: 'check',
+			checkbox: true
+		},{
 			field : 'batchName',
 			title : '批次',
 			align : 'left',
@@ -822,9 +822,16 @@ function confirmChooseClass(row,tableID){
 	var choosendType=$("#chooseClassModal").find("#usual1").find(".itab").find("ul").find(".selected").attr("calssType");
 	var choosendclassName;
 	var choosendclassValue;
+	var xzbName=new Array();
+	var xzbValue=new Array();
 	if(choosendType==="01"){
-		choosendclassName=zxbTableSelected[0].xzbmc;
-		choosendclassValue=zxbTableSelected[0].edu300_ID;
+		for (var i = 0; i < zxbTableSelected.length; i++) {
+			xzbName.push(zxbTableSelected[i].xzbmc);
+			xzbValue.push(zxbTableSelected[i].edu300_ID);
+		}
+		row.classLittleName='';
+		choosendclassName=xzbName;
+		choosendclassValue=xzbValue;
 	}else{
 		row.classLittleName=jxbTableSelected[0].jxbmc;
 		choosendclassName=jxbTableSelected[0].bhxzbmc;
