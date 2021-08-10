@@ -3688,8 +3688,10 @@ function comfirmModifyReExamInfo(currentHistory,row){
 	//发送修改请求
 	$('.confirmRemindModify').unbind('click');
 	$('.confirmRemindModify').bind('click', function(e) {
+		var getApprovalobect=getApprovalobect();
+		getApprovalobect.businessType="10";
 		var SearchCriteria=new Object();
-		SearchCriteria.approvalInfo=getApprovalobect();
+		SearchCriteria.approvalInfo=getApprovalobect;
 		SearchCriteria.edu0051=modifyInfo;
 		snedModifyReExamInfo(SearchCriteria);
 		e.stopPropagation();
