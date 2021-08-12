@@ -175,4 +175,9 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Modifying(clearAutomatically = true)
 	@Query(value = "select  * from(select a.*,row_number() over(partition by a.kcmc order by a.kcmc) su from Edu201 a where xnid = ?1 and sfypk='T' and kcmc in (select COURSE_NAME from edu005 where EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?2) GROUP BY COURSE_NAME) ) where su = 1", nativeQuery = true)
 	List<Edu201> searchCourseByXNAndID(String trem,String edu101Id);
+
+
+
+	@Query(value = "select e.EDU201_ID,e.xn,a.CLASS_NAME,a.COURSE_NAME,e.ls from edu201 e LEFT JOIN(select EDU201_ID,CLASS_NAME,COURSE_NAME from edu005 where EDU201_ID  = ?! GROUP BY CLASS_NAME,COURSE_NAME,EDU201_ID) a on e.EDU201_ID = a.EDU201_ID where e.EDU201_ID  = ?1", nativeQuery = true)
+	List<Edu201> searchClassInfo(String edu201);
 }

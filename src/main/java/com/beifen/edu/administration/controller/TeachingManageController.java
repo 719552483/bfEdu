@@ -727,20 +727,17 @@ public class TeachingManageController {
         return result;
     }
 
+
     /**
-     * 教务查询授课成果
+     * 教务查询班级授课成果
      * @return
      */
-    @RequestMapping("/searchProfessionalCourseResult")
+    @RequestMapping("/searchClassInfo")
     @ResponseBody
-    public ResultVO searchProfessionalCourseResult(@RequestParam("searchInfo") String searchInfo,@RequestParam("xnid") String xnid) {
-
-        Edu107 edu107 = JSON.parseObject(searchInfo, Edu107.class);
-
-        ResultVO result = teachingManageService.searchProfessionalCourseResult(edu107,xnid);
+    public ResultVO searchClassInfo(@RequestParam("edu201Id") String edu201Id) {
+        ResultVO result = teachingManageService.searchClassInfo(edu201Id);
         return result;
     }
-
 
 
     /**
@@ -752,6 +749,23 @@ public class TeachingManageController {
     public ResultVO searchGradeInfo(@RequestParam("searchInfo") String searchInfo) {
         Edu005 edu005 = JSON.parseObject(searchInfo, Edu005.class);
         ResultVO result = teachingManageService.searchGradeInfo(edu005);
+        return result;
+    }
+
+
+
+
+    /**
+     * 教务查询专业授课成果
+     * @return
+     */
+    @RequestMapping("/searchProfessionalCourseResult")
+    @ResponseBody
+    public ResultVO searchProfessionalCourseResult(@RequestParam("searchInfo") String searchInfo,@RequestParam("xnid") String xnid) {
+
+        Edu107 edu107 = JSON.parseObject(searchInfo, Edu107.class);
+
+        ResultVO result = teachingManageService.searchProfessionalCourseResult(edu107,xnid);
         return result;
     }
 

@@ -2316,14 +2316,14 @@ public class TeachingManageService {
                 if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
                     predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
                 }
-                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
-                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                if (courseResultPagePO.getEdu104() != null && !"".equals(courseResultPagePO.getEdu104())) {
+                    predicates.add(cb.equal(root.<String>get("edu104"), courseResultPagePO.getEdu104()));
                 }
-                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
-                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                if (courseResultPagePO.getEdu105() != null && !"".equals(courseResultPagePO.getEdu105())) {
+                    predicates.add(cb.equal(root.<String>get("edu105"), courseResultPagePO.getEdu105()));
                 }
-                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
-                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                if (courseResultPagePO.getEdu106() != null && !"".equals(courseResultPagePO.getEdu106())) {
+                    predicates.add(cb.equal(root.<String>get("edu106"), courseResultPagePO.getEdu106()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
@@ -2429,7 +2429,7 @@ public class TeachingManageService {
         return resultVO;
     }
 
-    //教务查询授课成果
+    //教务查询专业授课成果
     public ResultVO searchProfessionalCourseResult(Edu107 edu107,String xnid) {
         ResultVO resultVO;
         List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
@@ -2474,6 +2474,23 @@ public class TeachingManageService {
         }
         return resultVO;
     }
+
+
+
+
+    //教务查询班级授课成果
+    public ResultVO searchClassInfo(String edu201Id) {
+        ResultVO resultVO;
+        List<Edu201> edu201List = edu201Dao.searchClassInfo(edu201Id);
+
+        if (edu201List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无数据");
+        } else {
+            resultVO = ResultVO.setSuccess("暂无数据",edu201List);
+        }
+        return resultVO;
+    }
+
 
     //获取全部学年
     public ResultVO searchAllXn() {
