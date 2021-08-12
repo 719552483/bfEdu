@@ -178,6 +178,6 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 
 
-	@Query(value = "select e.EDU201_ID,e.xn,a.CLASS_NAME,a.COURSE_NAME,e.ls from edu201 e LEFT JOIN(select EDU201_ID,CLASS_NAME,COURSE_NAME from edu005 where EDU201_ID  = ?! GROUP BY CLASS_NAME,COURSE_NAME,EDU201_ID) a on e.EDU201_ID = a.EDU201_ID where e.EDU201_ID  = ?1", nativeQuery = true)
+	@Query(value = "select e.edu201_id,e.xn,e.CLASS_NAME,e.kcmc,e.ls from edu201 e LEFT JOIN(select EDU201_ID,CLASS_NAME,COURSE_NAME from edu005 where EDU201_ID  = ?1 GROUP BY CLASS_NAME,COURSE_NAME,EDU201_ID) a on e.EDU201_ID = a.EDU201_ID where e.EDU201_ID  = ?1", nativeQuery = true)
 	List<Edu201> searchClassInfo(String edu201);
 }

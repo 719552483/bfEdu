@@ -195,5 +195,14 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "ORDER BY\n" +
             "sum( grade ) DESC",nativeQuery = true)
     List<Edu005> searchProfessionalCourseResult(String edu107_id,String xnid);
+
+
+    //根据任务书查询成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and CLASS_NAME = ?2",nativeQuery = true)
+    String countAllByEdu201AndClassname(Long edu201Id,String classname);
+
+    //根据任务书查询通过成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and CLASS_NAME = ?2 and t.is_passed = 'T'",nativeQuery = true)
+    String countPassByEdu201AndClassname(Long edu201Id,String classname);
 }
 

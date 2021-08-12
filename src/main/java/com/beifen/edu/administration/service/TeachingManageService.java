@@ -2479,15 +2479,47 @@ public class TeachingManageService {
 
 
     //教务查询班级授课成果
-    public ResultVO searchClassInfo(String edu201Id) {
+    public ResultVO searchClassInfo(String edu201_Id) {
         ResultVO resultVO;
-        List<Edu201> edu201List = edu201Dao.searchClassInfo(edu201Id);
-
-        if (edu201List.size() == 0) {
+//        List<Edu201> edu201List = edu201Dao.searchClassInfo(edu201Id);
+        Edu201 edu201 = edu201Dao.findOne(Long.parseLong(edu201_Id));
+        if (edu201 == null) {
             resultVO = ResultVO.setFailed("暂无数据");
-        } else {
-            resultVO = ResultVO.setSuccess("暂无数据",edu201List);
+            return resultVO;
         }
+        List<String> className = Arrays.asList(edu201.getClassName().split(","));
+        List<CourseResultPO> courseResultList = new ArrayList<>();
+        for(int i = 0;i<className.size();i++){
+            Edu201 edu201New = new Edu201();
+            edu201New.setEdu201_ID(edu201.getEdu201_ID());
+            edu201New.setXn(edu201.getXn());
+            edu201New.setKcmc(edu201.getKcmc());
+            edu201New.setLsmc(edu201.getLsmc());
+            edu201New.setClassName(className.get(i));
+            CourseResultPO data = new CourseResultPO();
+            try {
+                BeanUtils.copyProperties(data,edu201New);
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            } catch (InvocationTargetException ex) {
+                ex.printStackTrace();
+            }
+            //查询及格数据
+            String countAll = edu005Dao.countAllByEdu201AndClassname(data.getEdu201_ID(),data.getClassName());
+            String countPass = edu005Dao.countPassByEdu201AndClassname(data.getEdu201_ID(),data.getClassName());
+            if(Integer.parseInt(countPass) != 0){
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                data.setPassingRate(usedPercent);
+            } else {
+                data.setPassingRate("0.00%");
+            }
+            courseResultList.add(data);
+        }
+
+        resultVO = ResultVO.setSuccess("查询成功",courseResultList);
         return resultVO;
     }
 
