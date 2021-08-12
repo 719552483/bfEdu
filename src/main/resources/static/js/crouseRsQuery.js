@@ -1,5 +1,6 @@
 $(function() {
 	judgementPWDisModifyFromImplements();
+	LinkageSelectPublic("#level","#department","#grade","#major");
 	$('.isSowIndex').selectMania(); //初始化下拉框
 	getYearInfo();
 	binBind();
@@ -42,6 +43,7 @@ function getCourseForPresent(){
 
 //填充合格率表
 function stuffCrouseRsForPresentQueryTable(){
+	requestErrorbeforeSend();
 	window.releaseNewsEvents = {
 		'click #gardeDeatils' : function(e, value, row, index) {
 			getGardeDeatils(row);
@@ -92,37 +94,44 @@ function stuffCrouseRsForPresentQueryTable(){
 					title: '唯一标识',
 					align : 'center',
 					visible : false
+				}, {
+					field : 'className',
+					title : '班级名称',
+					align : 'left',
+					sortable: true,
+					formatter : paramsMatter
+				},{
+					field : 'kcmc',
+					title : '课程名称',
+					align : 'left',
+					sortable: true,
+					formatter : paramsMatter
 				},{
 					field : 'xn',
 					title : '学年',
 					align : 'left',
+					visible : false,
+					sortable: true,
 					formatter : paramsMatter
 				},{
 					field : 'classType',
 					title : '班级类型',
 					align : 'left',
 					visible : false,
+					sortable: true,
 					formatter :classTypeMatter
-				}, {
-					field : 'className',
-					title : '班级名称',
-					align : 'left',
-					formatter : paramsMatter
-				},{
-					field : 'kcmc',
-					title : '课程名称',
-					align : 'left',
-					formatter : paramsMatter
 				},{
 					field : 'lsmc',
 					title : '任课教师',
 					align : 'left',
+					sortable: true,
 					formatter : paramsMatter
 				},{
 					field : 'passingRate',
 					title : '及格率',
 					align : 'left',
 					width: "100px",
+					sortable: true,
 					formatter :passingRateMatter
 				},{
 					field : 'action',
@@ -133,6 +142,7 @@ function stuffCrouseRsForPresentQueryTable(){
 					events : releaseNewsEvents,
 				}],
 			responseHandler: function (res) {  //后台返回的结果
+				hideloding();
 				if(res.code == 200){
 					var data = {
 						total: res.data.total,
@@ -151,14 +161,6 @@ function stuffCrouseRsForPresentQueryTable(){
 		});
 	};
 
-	// 得到查询的参数
-	function queryParams(params) {
-		var temp=getCourseForPresentSearchInfo();
-		temp.pageNum=params.pageNumber;
-		temp.pageSize=params.pageSize;
-		return JSON.stringify(temp);
-	}
-
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
 		+ '<li class="queryBtn" id="gardeDeatils"><span><img src="img/info.png" style="width:24px"></span>成绩详情</li>'
@@ -166,50 +168,48 @@ function stuffCrouseRsForPresentQueryTable(){
 		+ '</ul>' ].join('');
 	}
 
-	function classTypeMatter(value, row, index) {
-		if(value==="01"){
-			return [ '<div class="myTooltip" title="行政班">行政班</div>' ]
-				.join('');
-		}else{
-			return [ '<div class="myTooltip" title="教学班">教学班</div>' ]
-				.join('');
-		}
-	}
-
-	function passingRateMatter(value, row, index) {
-		var currentValue=parseFloat(value.split("%")[0]);
-		if(currentValue>0 && currentValue>=50){
-			return [ '<span class="label label-success myTooltip" title="'+value+'">'+value+'</span>' ]
-				.join('');
-		}else{
-			return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
-				.join('');
-		}
+	// 得到查询的参数
+	function queryParams(params) {
+		var temp=getCourseForPresentSearchInfo(false);
+		temp.pageNum=params.pageNumber;
+		temp.pageSize=params.pageSize;
+		return JSON.stringify(temp);
 	}
 
 	return oTableInit;
 }
 
 //获取合格率检索条件
-function getCourseForPresentSearchInfo(){
+function getCourseForPresentSearchInfo(canEmpty){
 	var xnid=getNormalSelectValue("year");
 	var ls=	$("#teacher")[0].attributes[4].nodeValue;
 	var className=$("#className").val();
 	var kcmc=$("#coruseName").val();
+	var level=getNormalSelectValue("level");
+	var department=getNormalSelectValue("department");
+	var grade=getNormalSelectValue("grade");
+	var major=getNormalSelectValue("major");
+	if(xnid===""&&ls===""&&className===""&&kcmc===""&&level===''&&department===''&&grade===''&&major===''&&canEmpty){
+		toastr.warning("检索条件不能为空");
+		return;
+	}
 
 	var returnObject=new Object();
 	returnObject.xnid=xnid;
 	returnObject.ls=ls;
 	returnObject.className=className;
 	returnObject.kcmc=kcmc;
+	returnObject.edu103=level;
+	returnObject.edu104=department;
+	returnObject.edu105=grade;
+	returnObject.edu106=major;
 	return returnObject;
 }
 
 //合格率开始检索
 function startSearch(){
-	var searchInfo=getCourseForPresentSearchInfo();
-	if(searchInfo.xnid===""&&searchInfo.ls===""&&searchInfo.className===""&&searchInfo.kcmc===""){
-		toastr.warning("检索条件不能为空");
+	var searchInfo=getCourseForPresentSearchInfo(true);
+	if(typeof searchInfo==='undefined'){
 		return;
 	}
 	getCourseForPresent();
@@ -218,6 +218,8 @@ function startSearch(){
 //合格率重置检索
 function reReloadSearchs(){
 	var reObject = new Object();
+	reObject.fristSelectId = "#level";
+	reObject.actionSelectIds = "#department,#grade,#major";
 	reObject.normalSelectIds = "#year";
 	reObject.InputIds = "#coruseName,#className,#teacher";
 	reReloadSearchsWithSelect(reObject);
@@ -353,6 +355,137 @@ function getGardeDeatils(row){
 
 //获取成绩详情信息
 function getDeatilsInfo(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchClassInfo",
+		data:{
+			"edu201Id":row.edu201_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$(".crouseRsForPresentArea,.crouseRsForDeatilsArea").hide();
+				$(".crouseRsForDeatils1Area").show();
+				$('.GeneratDeatils1_Name').html(row.xn+' '+row.kcmc);
+				stuffCrouseRsForDeatilsTable1(backjson.data);
+
+				//返回
+				$('#return_crouseRsForDeatils1Area').unbind('click');
+				$('#return_crouseRsForDeatils1Area').bind('click', function(e) {
+					$(".crouseRsForPresentArea").show();
+					$(".crouseRsForDeatils1Area,.crouseRsForDeatilsArea").hide();
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//渲染成绩详情表1
+function stuffCrouseRsForDeatilsTable1(tableInfo){
+	window.releaseNewsEvents = {
+		'click #gardeDeatilsForClass' : function(e, value, row, index) {
+			getGardeDeatilsForStudent(row);
+		}
+	};
+
+	$('#crouseRsForDeatilsTable1').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: '班级授课成果导出'  //文件名称
+		},
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".crouseRsForDeatilsTable1Area", "授课成果");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field : 'edu201_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
+			}, {
+				field : 'className',
+				title : '班级名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'kcmc',
+				title : '课程名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'lsmc',
+				title : '任课教师',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'passingRate',
+				title : '及格率',
+				align : 'left',
+				width: "100px",
+				sortable: true,
+				formatter :passingRateMatter
+			},{
+				field : 'action',
+				title : '操作',
+				align : 'center',
+				clickToSelect : false,
+				formatter : releaseNewsFormatter,
+				events : releaseNewsEvents,
+			}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li class="queryBtn" id="gardeDeatilsForClass"><span><img src="img/info.png" style="width:24px"></span>学生个人成绩详情</li>'
+		+ '</ul>' ].join('');
+	}
+
+	drawPagination(".crouseRsForDeatilsTable1Area", "授课成果");
+	drawSearchInput(".crouseRsForDeatilsTable1Area");
+	changeTableNoRsTip();
+	changeColumnsStyle(".crouseRsForDeatilsTable1Area", "授课成果");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//获取学生个人成绩详情
+function getGardeDeatilsForStudent(row){
 	var searchInfo=getCourseForDeatilsSearchInfo(row);
 	$.ajax({
 		method : 'get',
@@ -375,11 +508,12 @@ function getDeatilsInfo(row){
 			hideloding();
 			if (backjson.code === 200) {
 				crouseRsForDeatilsReSearch();
-				changeShowArea();
 				crouseRsForDeatilsBinBind();
 				stuffCrouseRsForDeatilsTable(backjson.data);
 				$("#currentEdu201_ID").html(row.edu201_ID);
 				$("#currentCourseName").html(row.kcmc);
+				$(".crouseRsForPresentArea,.crouseRsForDeatils1Area").hide();
+				$(".crouseRsForDeatilsArea").show();
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -387,7 +521,7 @@ function getDeatilsInfo(row){
 	});
 }
 
-//渲染成绩详情表
+//渲染成绩详情表2
 function stuffCrouseRsForDeatilsTable(tableInfo){
 	$('#crouseRsForDeatilsTable').bootstrapTable('destroy').bootstrapTable({
 		data: tableInfo,
@@ -650,12 +784,6 @@ function crouseRsForDeatilsReSearch(){
 	reReloadSearchsWithSelect(reObject);
 }
 
-//改变展示区域
-function changeShowArea(){
-	$(".crouseRsForPresentArea").toggle();
-	$(".crouseRsForDeatilsArea").toggle();
-}
-
 //详情按钮事件绑定
 function crouseRsForDeatilsBinBind(){
 	//开始检索
@@ -677,7 +805,8 @@ function crouseRsForDeatilsBinBind(){
 	$('#return').unbind('click');
 	$('#return').bind('click', function(e) {
 		crouseRsForDeatilsReSearch();
-		changeShowArea();
+		$(".crouseRsForPresentArea,.crouseRsForDeatilsArea").hide();
+		$(".crouseRsForDeatils1Area").show();
 		e.stopPropagation();
 	});
 }
@@ -866,6 +995,27 @@ function confirmChoosedTeacher(){
 	$("#teacher").val(choosed[0].xm);
 	$("#teacher").attr("choosendTeacherId",choosed[0].edu101_ID);
 	$.hideModal("#allClassMangersModal");
+}
+
+function classTypeMatter(value, row, index) {
+	if(value==="01"){
+		return [ '<div class="myTooltip" title="行政班">行政班</div>' ]
+			.join('');
+	}else{
+		return [ '<div class="myTooltip" title="教学班">教学班</div>' ]
+			.join('');
+	}
+}
+
+function passingRateMatter(value, row, index) {
+	var currentValue=parseFloat(value.split("%")[0]);
+	if(currentValue>0 && currentValue>=50){
+		return [ '<span class="label label-success myTooltip" title="'+value+'">'+value+'</span>' ]
+			.join('');
+	}else{
+		return [ '<span class="label label-danger myTooltip" title="'+value+'">'+value+'</span>' ]
+			.join('');
+	}
 }
 
 //页面初始化时按钮事件绑定

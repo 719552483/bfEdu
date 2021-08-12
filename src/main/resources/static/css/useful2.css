@@ -322,6 +322,10 @@ padding:1.6em 0em 0.6em 31px !important
 	min-width: 175px;
 }
 
+#crouseRsForDeatilsTable1 td:last-child{
+	width:170px;
+	min-width:170px;
+}
 
 #makeUpgGradeEntryTable td:last-child{
 	width: 190px;
@@ -1679,6 +1683,11 @@ background: rgba(36, 138, 187, 0.77);
        margin-top: 4px;
  }
 
+.crouseRsForDeatilsTable1Area .bootstrap4 .fixed-table-toolbar{
+	margin-top: -50px;
+}
+
+.crouseRsForDeatilsTable1Area .bootstrap4 .search,
 .makeUpgGradeEntryTableArea .bootstrap4 .search,
 .makeUpGradeOverviewTableArea .bootstrap4 .search,
 .gradeOverviewTableArea .bootstrap4 .search,
