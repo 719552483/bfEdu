@@ -174,5 +174,26 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
 
     @Query(value = "select * from EDU005 where IS_PASSED = 'F' and IS_CONFIRM = 'T' and IS_RESIT = 'T' and (IS_MX = '0' or IS_MX is null) and (EXAM_NUM != ?1 or EXAM_NUM is null)",nativeQuery = true)
     List<Edu005> endNewMUTime(String EXAM_NUM);
+
+    @Query(value = "SELECT\n" +
+            "row_number() over(order by student_code) EDU005_ID,\n" +
+            "class_name,\n" +
+            "student_code,\n" +
+            "STUDENT_NAME,\n" +
+            "sum( grade ) sum,\n" +
+            "Round( avg( grade ), 2 )  avg\n" +
+            "FROM\n" +
+            "edu005 \n" +
+            "WHERE\n" +
+            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 ) AND SFSQKS = 'T') \n" +
+            "AND IS_CONFIRM = 'T' \n" +
+            "and XNID = ?2\n" +
+            "GROUP BY\n" +
+            "STUDENT_CODE,\n" +
+            "STUDENT_NAME,\n" +
+            "class_name\n" +
+            "ORDER BY\n" +
+            "sum( grade ) DESC",nativeQuery = true)
+    List<Edu005> searchProfessionalCourseResult(String edu107_id,String xnid);
 }
 

@@ -728,6 +728,22 @@ public class TeachingManageController {
     }
 
     /**
+     * 教务查询授课成果
+     * @return
+     */
+    @RequestMapping("/searchProfessionalCourseResult")
+    @ResponseBody
+    public ResultVO searchProfessionalCourseResult(@RequestParam("searchInfo") String searchInfo,@RequestParam("xnid") String xnid) {
+
+        Edu107 edu107 = JSON.parseObject(searchInfo, Edu107.class);
+
+        ResultVO result = teachingManageService.searchProfessionalCourseResult(edu107,xnid);
+        return result;
+    }
+
+
+
+    /**
      * 教务查询成绩详情
      * @return
      */

@@ -2301,7 +2301,6 @@ public class TeachingManageService {
     //教务查询授课成果
     public ResultVO searchCourseResult(CourseResultPagePO courseResultPagePO) {
         ResultVO resultVO;
-
         Map<String, Object> returnMap = new HashMap<>();
 
         Integer pageNumber = courseResultPagePO.getPageNum();
@@ -2310,6 +2309,38 @@ public class TeachingManageService {
         pageNumber = pageNumber < 0 ? 0 : pageNumber;
         pageSize = pageSize < 0 ? 10 : pageSize;
 
+        //根据条件筛选培养计划
+        Specification<Edu107> Edu107Specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                }
+                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                }
+                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                }
+                if (courseResultPagePO.getEdu103() != null && !"".equals(courseResultPagePO.getEdu103())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), courseResultPagePO.getEdu103()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu107> relationEntities = edu107Dao.findAll(Edu107Specification);
+
+        if (relationEntities.size() == 0) {
+            resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
+            return resultVO;
+        }
+        List<Long> edu107IdList = relationEntities.stream().map(e -> e.getEdu107_ID()).distinct().collect(Collectors.toList());
+        List<Long> edu108IdList = edu108Dao.getEdu108ByEdu107(edu107IdList);
+        if (edu108IdList.size() == 0) {
+            resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
+            return resultVO;
+        }
         Specification<Edu201> specification = new Specification<Edu201>() {
             public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -2325,6 +2356,12 @@ public class TeachingManageService {
                 if (courseResultPagePO.getKcmc() != null && !"".equals(courseResultPagePO.getKcmc())) {
                     predicates.add(cb.like(root.<String>get("kcmc"), "%"+courseResultPagePO.getKcmc()+"%"));
                 }
+                Path<Object> path = root.get("edu108_ID");//定义查询的字段
+                CriteriaBuilder.In<Object> in = cb.in(path);
+                for (int i = 0; i < edu108IdList.size() ; i++) {
+                    in.value(edu108IdList.get(i));//存入值
+                }
+                predicates.add(cb.and(in));
                 predicates.add(cb.equal(root.<String>get("sfsqks"),  "T"));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
@@ -2389,6 +2426,22 @@ public class TeachingManageService {
         returnMap.put("total",count);
 
         resultVO = ResultVO.setSuccess("共找到"+courseResultList.size()+"条课程信息",returnMap);
+        return resultVO;
+    }
+
+    //教务查询授课成果
+    public ResultVO searchProfessionalCourseResult(Edu107 edu107,String xnid) {
+        ResultVO resultVO;
+        List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+        if(edu107List.size() == 0){
+            resultVO = ResultVO.setFailed("未制订培养计划");
+        }else if(edu107List.size() > 1){
+            resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
+        }else{
+            edu107 = edu107List.get(0);
+            List<Edu005> edu005List = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+            resultVO = ResultVO.setSuccess("查询成功！",edu005List);
+        }
         return resultVO;
     }
 

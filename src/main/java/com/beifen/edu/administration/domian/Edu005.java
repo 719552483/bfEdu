@@ -28,8 +28,12 @@ public class Edu005 {
     private String isConfirm; //是否确认
     private String isMx;//是否免修
     private Integer exam_num;//补考次数
+    //成绩查询
     private String xs;//学时（导出时使用）
     private String lx;//类型（导出时使用）
+    //授课成果查询
+    private String sum;//总成绩(导出时使用)
+    private String avg;//总成绩(导出时使用)
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -226,5 +230,21 @@ public class Edu005 {
 
     public void setLx(String lx) {
         this.lx = lx;
+    }
+
+    public String getSum() {
+        return sum;
+    }
+
+    public void setSum(String sum) {
+        this.sum = sum;
+    }
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
     }
 }
