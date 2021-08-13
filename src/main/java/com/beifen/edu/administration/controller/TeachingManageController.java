@@ -789,7 +789,7 @@ public class TeachingManageController {
     }
 
     /**
-     * 导出教务专业授课成果-校验
+     * 导出教务专业授课成果
      * @return
      */
     @RequestMapping("/exportProfessionalCourseResult")
@@ -822,11 +822,6 @@ public class TeachingManageController {
             }
             result = ResultVO.setSuccess("下载成功");
         }
-
-
-
-
-
         return result;
     }
 

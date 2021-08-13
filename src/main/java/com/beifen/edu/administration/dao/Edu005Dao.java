@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.dao;
 
 import com.beifen.edu.administration.domian.Edu005;
+import com.beifen.edu.administration.domian.Edu107;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -270,5 +271,14 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据任务书查询通过成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and CLASS_NAME = ?2 and t.is_passed = 'T'",nativeQuery = true)
     String countPassByEdu201AndClassname(Long edu201Id,String classname);
+
+
+    //详细课程
+    @Query(value = "select course_name from edu005 where EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 )) and XNID = ?2 group by course_name order by course_name",nativeQuery = true)
+    List<String> findCourseListByEdu107Id(String edu107Id,String xnid);
+
+    //根据studentCode,courseName,xnid查询
+    @Query(value = "select * from edu005 where student_code = ?1 and xnid = ?3 and course_name = ?2",nativeQuery = true)
+    Edu005 findedu005bySCX(String sutdentCode,String courseName,String xnid);
 }
 
