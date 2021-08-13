@@ -762,16 +762,71 @@ public class TeachingManageController {
     @RequestMapping("/searchProfessionalCourseResult")
     @ResponseBody
     public ResultVO searchProfessionalCourseResult(@RequestParam("SearchCriteria") String SearchCriteria) {
-
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-
         Edu107 edu107 = JSON.parseObject(jsonObject.getString("searchInfo"), Edu107.class);
         String xnid = jsonObject.getString("xnid");
         String className = jsonObject.getString("className");
         String studentName = jsonObject.getString("studentName");
-
-
         ResultVO result = teachingManageService.searchProfessionalCourseResult(edu107,xnid,className,studentName);
+        return result;
+    }
+
+    /**
+     * 导出教务专业授课成果-校验
+     * @return
+     */
+    @RequestMapping("/exportProfessionalCourseResultCheck")
+    @ResponseBody
+    public ResultVO exportProfessionalCourseResultCheck(@RequestParam("SearchCriteria") String SearchCriteria) {
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        Edu107 edu107 = JSON.parseObject(jsonObject.getString("searchInfo"), Edu107.class);
+        String xnid = jsonObject.getString("xnid");
+        ResultVO result = teachingManageService.exportProfessionalCourseResultCheck(edu107,xnid);
+        if(result.getCode() == 200){
+            result = ResultVO.setSuccess("可以导出数据");
+        }
+        return result;
+    }
+
+    /**
+     * 导出教务专业授课成果-校验
+     * @return
+     */
+    @RequestMapping("/exportProfessionalCourseResult")
+    @ResponseBody
+    public ResultVO exportProfessionalCourseResult(HttpServletRequest request,HttpServletResponse response,@RequestParam("SearchCriteria") String SearchCriteria) {
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        Edu107 edu107 = JSON.parseObject(jsonObject.getString("searchInfo"), Edu107.class);
+        String xnid = jsonObject.getString("xnid");
+        ResultVO result = teachingManageService.exportProfessionalCourseResultCheck(edu107,xnid);
+        if(result.getCode() != 200){
+            return result;
+        }else{
+            List<Edu005PO> edu005POList = (List<Edu005PO>) result.getData();
+            boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+            String fileName;
+            edu107 = edu005POList.get(0).getEdu107();
+            if(isIE){
+                fileName="courseResult";
+            }else{
+                fileName=edu107.getEdu106mc()+"专业"+edu107.getBatchName()+"学生排名明细单";
+            }
+            //创建Excel文件
+            XSSFWorkbook workbook = teachingManageService.exportProfessionalCourseResult(edu005POList,edu107.getEdu106mc(),xnid);
+            try {
+                utils.loadModal(response,fileName, workbook);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            result = ResultVO.setSuccess("下载成功");
+        }
+
+
+
+
+
         return result;
     }
 

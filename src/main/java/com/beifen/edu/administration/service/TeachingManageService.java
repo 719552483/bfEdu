@@ -2443,6 +2443,10 @@ public class TeachingManageService {
             List<Edu005PO> edu005List = new ArrayList<>();
             if(className != null && !"".equals(className) && studentName != null && !"".equals(studentName)){
                 dataList = edu005Dao.searchProfessionalCourseResult4(edu107.getEdu107_ID()+"",xnid,className,studentName);
+                if(dataList.size() == 0){
+                    resultVO = ResultVO.setFailed("暂无数据");
+                    return resultVO;
+                }
                 for(Object[] o:dataList){
                     Edu005PO edu005 = new Edu005PO();
                     edu005.setEdu005_ID(Long.parseLong((String) o[0]));
@@ -2455,6 +2459,10 @@ public class TeachingManageService {
                 }
             }else if(studentName != null && !"".equals(studentName)){
                 dataList = edu005Dao.searchProfessionalCourseResult2(edu107.getEdu107_ID()+"",xnid,studentName);
+                if(dataList.size() == 0){
+                    resultVO = ResultVO.setFailed("暂无数据");
+                    return resultVO;
+                }
                 for(Object[] o:dataList){
                     Edu005PO edu005 = new Edu005PO();
                     edu005.setEdu005_ID(Long.parseLong((String) o[0]));
@@ -2467,6 +2475,10 @@ public class TeachingManageService {
                 }
             }else if(className != null && !"".equals(className)){
                 dataList = edu005Dao.searchProfessionalCourseResult3(edu107.getEdu107_ID()+"",xnid,className);
+                if(dataList.size() == 0){
+                    resultVO = ResultVO.setFailed("暂无数据");
+                    return resultVO;
+                }
                 for(Object[] o:dataList){
                     Edu005PO edu005 = new Edu005PO();
                     edu005.setEdu005_ID(Long.parseLong((String) o[0]));
@@ -2479,6 +2491,10 @@ public class TeachingManageService {
                 }
             }else{
                 dataList = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+                if(dataList.size() == 0){
+                    resultVO = ResultVO.setFailed("暂无数据");
+                    return resultVO;
+                }
                 for(Object[] o:dataList){
                     Edu005PO edu005 = new Edu005PO();
                     edu005.setEdu005_ID(Long.parseLong((String) o[0]));
@@ -2493,6 +2509,92 @@ public class TeachingManageService {
             resultVO = ResultVO.setSuccess("查询成功！",edu005List);
         }
         return resultVO;
+    }
+
+
+    //导出教务专业授课成果-校验
+    public ResultVO exportProfessionalCourseResultCheck(Edu107 edu107,String xnid) {
+        ResultVO resultVO;
+        List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+        if(edu107List.size() == 0){
+            resultVO = ResultVO.setFailed("未制订培养计划");
+        }else if(edu107List.size() > 1){
+            resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
+        }else{
+            edu107 = edu107List.get(0);
+            List<Object[]> dataList;
+            List<Edu005PO> edu005List = new ArrayList<>();
+            dataList = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+            if(dataList.size() == 0){
+                resultVO = ResultVO.setFailed("暂无数据");
+                return resultVO;
+            }for(Object[] o:dataList){
+                Edu005PO edu005 = new Edu005PO();
+                edu005.setEdu005_ID(Long.parseLong((String) o[0]));
+                edu005.setAvg((String) o[5]);
+                edu005.setClassName((String) o[1]);
+                edu005.setStudentCode((String) o[2]);
+                edu005.setStudentName((String) o[3]);
+                edu005.setSum((String) o[4]);
+                edu005.setEdu107(edu107);
+                edu005List.add(edu005);
+            }
+            resultVO = ResultVO.setSuccess("查询成功！",edu005List);
+        }
+        return resultVO;
+    }
+
+
+    //导出教务专业授课成果
+    public XSSFWorkbook exportProfessionalCourseResult(List<Edu005PO> edu005POList,String name,String xnid) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(name+"专业授课成果");
+        Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+        String xnmc = edu400.getXnmc();
+        Edu107 e = edu005POList.get(0).getEdu107();
+
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        //辽宁职业学院XX学年XX学院XX专业学生成绩排名统计表
+        String firstTitle = "辽宁职业学院"+xnmc+e.getEdu104mc()+name+"专业学生成绩排名统计表";
+        XSSFCell cells[] = new XSSFCell[1];
+        cells[0] = firstRow.createCell(0);
+        cells[0].setCellValue(firstTitle);
+
+        XSSFRow twoRow = sheet.createRow(1);// 第二行
+        // 所有标题数组
+        String[] titles = new String[] {"班级","姓名","各门课程成绩","总分", "平均分","名次"};
+
+
+        // 循环设置标题
+        for (int i = 0; i < titles.length; i++) {
+            cells[1] = twoRow.createCell(i);
+            cells[1].setCellValue(titles[i]);
+        }
+
+//        for (int i = 0; i < edu0051List.size(); i++) {
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getXn(),-1,0,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getClassName(),-1,1,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getCourseName(),-1,2,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentName(),-1,3,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentCode(),-1,4,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getEntryDate(),-1,5,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
+//            if(edu0051List.get(i).getExam_num() == 0){
+//                utils.appendCell(sheet,i,"","正考成绩",-1,7,false);
+//            }else{
+//                utils.appendCell(sheet,i,"","第"+edu0051List.get(i).getExam_num()+"次补考成绩",-1,7,false);
+//            }
+//        }
+//
+//        sheet.setColumnWidth(0, 12*256);
+//        sheet.setColumnWidth(1, 16*256);
+//        sheet.setColumnWidth(2, 30*256);
+//        sheet.setColumnWidth(3, 10*256);
+//        sheet.setColumnWidth(4, 20*256);
+//        sheet.setColumnWidth(5, 30*256);
+//        sheet.setColumnWidth(7, 20*256);
+
+        return workbook;
     }
 
     //教务查询成绩详情
@@ -2524,8 +2626,6 @@ public class TeachingManageService {
         }
         return resultVO;
     }
-
-
 
 
     //教务查询班级授课成果

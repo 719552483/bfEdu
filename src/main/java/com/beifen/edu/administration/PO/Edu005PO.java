@@ -1,5 +1,7 @@
 package com.beifen.edu.administration.PO;
 
+import com.beifen.edu.administration.domian.Edu107;
+
 import java.io.Serializable;
 
 public class Edu005PO implements Serializable {
@@ -9,6 +11,7 @@ public class Edu005PO implements Serializable {
     private String studentCode;//学生学号
     private String sum;//总成绩(导出时使用)
     private String avg;//总成绩(导出时使用)
+    private Edu107 edu107;
 
     public Long getEdu005_ID() {
         return Edu005_ID;
@@ -59,6 +62,14 @@ public class Edu005PO implements Serializable {
     }
 
     public Edu005PO() {
+    }
+
+    public Edu107 getEdu107() {
+        return edu107;
+    }
+
+    public void setEdu107(Edu107 edu107) {
+        this.edu107 = edu107;
     }
 
     public Edu005PO(Long edu005_ID, String className, String studentName, String studentCode, String sum, String avg) {
