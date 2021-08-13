@@ -2430,7 +2430,7 @@ public class TeachingManageService {
     }
 
     //教务查询专业授课成果
-    public ResultVO searchProfessionalCourseResult(Edu107 edu107,String xnid) {
+    public ResultVO searchProfessionalCourseResult(Edu107 edu107,String xnid,String className,String studentName) {
         ResultVO resultVO;
         List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
         if(edu107List.size() == 0){
@@ -2439,7 +2439,16 @@ public class TeachingManageService {
             resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
         }else{
             edu107 = edu107List.get(0);
-            List<Edu005> edu005List = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+            List<Edu005> edu005List = new ArrayList<>();
+            if(className == null && "".equals(className) && studentName == null && "".equals(studentName)){
+                edu005List = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+            }else if(className == null && "".equals(className)){
+                edu005List = edu005Dao.searchProfessionalCourseResult2(edu107.getEdu107_ID()+"",xnid,studentName);
+            }else if(studentName == null && "".equals(studentName)){
+                edu005List = edu005Dao.searchProfessionalCourseResult3(edu107.getEdu107_ID()+"",xnid,className);
+            }else{
+                edu005List = edu005Dao.searchProfessionalCourseResult4(edu107.getEdu107_ID()+"",xnid,className,studentName);
+            }
             resultVO = ResultVO.setSuccess("查询成功！",edu005List);
         }
         return resultVO;

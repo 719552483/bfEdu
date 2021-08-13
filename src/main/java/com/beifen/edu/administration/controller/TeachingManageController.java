@@ -761,11 +761,17 @@ public class TeachingManageController {
      */
     @RequestMapping("/searchProfessionalCourseResult")
     @ResponseBody
-    public ResultVO searchProfessionalCourseResult(@RequestParam("searchInfo") String searchInfo,@RequestParam("xnid") String xnid) {
+    public ResultVO searchProfessionalCourseResult(@RequestParam("SearchCriteria") String SearchCriteria) {
 
-        Edu107 edu107 = JSON.parseObject(searchInfo, Edu107.class);
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
 
-        ResultVO result = teachingManageService.searchProfessionalCourseResult(edu107,xnid);
+        Edu107 edu107 = JSON.parseObject(jsonObject.getString("searchInfo"), Edu107.class);
+        String xnid = jsonObject.getString("xnid");
+        String className = jsonObject.getString("className");
+        String studentName = jsonObject.getString("studentName");
+
+
+        ResultVO result = teachingManageService.searchProfessionalCourseResult(edu107,xnid,className,studentName);
         return result;
     }
 
