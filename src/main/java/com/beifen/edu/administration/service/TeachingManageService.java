@@ -2439,15 +2439,56 @@ public class TeachingManageService {
             resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
         }else{
             edu107 = edu107List.get(0);
-            List<Edu005> edu005List = new ArrayList<>();
-            if(className == null && "".equals(className) && studentName == null && "".equals(studentName)){
-                edu005List = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
-            }else if(className == null && "".equals(className)){
-                edu005List = edu005Dao.searchProfessionalCourseResult2(edu107.getEdu107_ID()+"",xnid,studentName);
-            }else if(studentName == null && "".equals(studentName)){
-                edu005List = edu005Dao.searchProfessionalCourseResult3(edu107.getEdu107_ID()+"",xnid,className);
+            List<Object[]> dataList;
+            List<Edu005PO> edu005List = new ArrayList<>();
+            if(className != null && !"".equals(className) && studentName != null && !"".equals(studentName)){
+                dataList = edu005Dao.searchProfessionalCourseResult4(edu107.getEdu107_ID()+"",xnid,className,studentName);
+                for(Object[] o:dataList){
+                    Edu005PO edu005 = new Edu005PO();
+                    edu005.setEdu005_ID(Long.parseLong((String) o[0]));
+                    edu005.setAvg((String) o[5]);
+                    edu005.setClassName((String) o[1]);
+                    edu005.setStudentCode((String) o[2]);
+                    edu005.setStudentName((String) o[3]);
+                    edu005.setSum((String) o[4]);
+                    edu005List.add(edu005);
+                }
+            }else if(studentName != null && !"".equals(studentName)){
+                dataList = edu005Dao.searchProfessionalCourseResult2(edu107.getEdu107_ID()+"",xnid,studentName);
+                for(Object[] o:dataList){
+                    Edu005PO edu005 = new Edu005PO();
+                    edu005.setEdu005_ID(Long.parseLong((String) o[0]));
+                    edu005.setAvg((String) o[5]);
+                    edu005.setClassName((String) o[1]);
+                    edu005.setStudentCode((String) o[2]);
+                    edu005.setStudentName((String) o[3]);
+                    edu005.setSum((String) o[4]);
+                    edu005List.add(edu005);
+                }
+            }else if(className != null && !"".equals(className)){
+                dataList = edu005Dao.searchProfessionalCourseResult3(edu107.getEdu107_ID()+"",xnid,className);
+                for(Object[] o:dataList){
+                    Edu005PO edu005 = new Edu005PO();
+                    edu005.setEdu005_ID(Long.parseLong((String) o[0]));
+                    edu005.setAvg((String) o[5]);
+                    edu005.setClassName((String) o[1]);
+                    edu005.setStudentCode((String) o[2]);
+                    edu005.setStudentName((String) o[3]);
+                    edu005.setSum((String) o[4]);
+                    edu005List.add(edu005);
+                }
             }else{
-                edu005List = edu005Dao.searchProfessionalCourseResult4(edu107.getEdu107_ID()+"",xnid,className,studentName);
+                dataList = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+                for(Object[] o:dataList){
+                    Edu005PO edu005 = new Edu005PO();
+                    edu005.setEdu005_ID(Long.parseLong((String) o[0]));
+                    edu005.setAvg((String) o[5]);
+                    edu005.setClassName((String) o[1]);
+                    edu005.setStudentCode((String) o[2]);
+                    edu005.setStudentName((String) o[3]);
+                    edu005.setSum((String) o[4]);
+                    edu005List.add(edu005);
+                }
             }
             resultVO = ResultVO.setSuccess("查询成功！",edu005List);
         }

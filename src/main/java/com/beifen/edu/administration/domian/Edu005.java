@@ -1,6 +1,7 @@
 package com.beifen.edu.administration.domian;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 //学生成绩表
 @Entity
@@ -245,6 +246,18 @@ public class Edu005 {
     }
 
     public void setAvg(String avg) {
+        this.avg = avg;
+    }
+
+    public Edu005() {
+    }
+
+    public Edu005(Long edu005_ID, String className, String studentCode, String studentName, String sum, String avg) {
+        Edu005_ID = edu005_ID;
+        this.className = className;
+        StudentName = studentName;
+        this.studentCode = studentCode;
+        this.sum = sum;
         this.avg = avg;
     }
 }

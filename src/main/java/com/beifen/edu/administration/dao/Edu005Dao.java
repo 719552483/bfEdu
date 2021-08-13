@@ -176,12 +176,12 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     List<Edu005> endNewMUTime(String EXAM_NUM);
 
     @Query(value = "SELECT\n" +
-            "row_number() over(order by student_code) EDU005_ID,\n" +
+            "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
             "class_name,\n" +
             "student_code,\n" +
             "STUDENT_NAME,\n" +
-            "sum( grade ) sum,\n" +
-            "Round( avg( grade ), 2 )  avg\n" +
+            "TO_CHAR(sum(grade)) sum,\n" +
+            "TO_CHAR(Round(avg(grade),2))  avg\n" +
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
@@ -194,15 +194,15 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "sum( grade ) DESC",nativeQuery = true)
-    List<Edu005> searchProfessionalCourseResult(String edu107_id,String xnid);
+    List<Object[]> searchProfessionalCourseResult(String edu107_id,String xnid);
 
     @Query(value = "SELECT\n" +
-            "row_number() over(order by student_code) EDU005_ID,\n" +
+            "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
             "class_name,\n" +
             "student_code,\n" +
             "STUDENT_NAME,\n" +
-            "sum( grade ) sum,\n" +
-            "Round( avg( grade ), 2 )  avg\n" +
+            "TO_CHAR(sum(grade)) sum,\n" +
+            "TO_CHAR(Round(avg(grade),2))  avg\n" +
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
@@ -216,15 +216,15 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "sum( grade ) DESC",nativeQuery = true)
-    List<Edu005> searchProfessionalCourseResult2(String edu107_id,String xnid,String studentName);
+    List<Object[]> searchProfessionalCourseResult2(String edu107_id,String xnid,String studentName);
 
     @Query(value = "SELECT\n" +
-            "row_number() over(order by student_code) EDU005_ID,\n" +
+            "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
             "class_name,\n" +
             "student_code,\n" +
             "STUDENT_NAME,\n" +
-            "sum( grade ) sum,\n" +
-            "Round( avg( grade ), 2 )  avg\n" +
+            "TO_CHAR(sum(grade)) sum,\n" +
+            "TO_CHAR(Round(avg(grade),2))  avg\n" +
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
@@ -238,15 +238,15 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "sum( grade ) DESC",nativeQuery = true)
-    List<Edu005> searchProfessionalCourseResult3(String edu107_id,String xnid,String className);
+    List<Object[]> searchProfessionalCourseResult3(String edu107_id,String xnid,String className);
 
     @Query(value = "SELECT\n" +
-            "row_number() over(order by student_code) EDU005_ID,\n" +
+            "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
             "class_name,\n" +
             "student_code,\n" +
             "STUDENT_NAME,\n" +
-            "sum( grade ) sum,\n" +
-            "Round( avg( grade ), 2 )  avg\n" +
+            "TO_CHAR(sum(grade)) sum,\n" +
+            "TO_CHAR(Round(avg(grade),2))  avg\n" +
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
@@ -261,7 +261,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "sum( grade ) DESC",nativeQuery = true)
-    List<Edu005> searchProfessionalCourseResult4(String edu107_id,String xnid,String className,String studentName);
+    List<Object[]> searchProfessionalCourseResult4(String edu107_id,String xnid,String className,String studentName);
 
     //根据任务书查询成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and CLASS_NAME = ?2",nativeQuery = true)
