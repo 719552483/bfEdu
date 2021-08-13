@@ -1231,7 +1231,7 @@ function getSingleStudentSearchInfo(){
 
 	var returnObject=new Object();
 	returnObject.searchInfo=searchInfo;
-	returnObject.xnid=xn;3
+	returnObject.xnid=xn;
 	returnObject.className=className;
 	returnObject.studentName=studentName;
 
