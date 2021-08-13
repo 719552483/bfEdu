@@ -7,6 +7,9 @@ $(function() {
 	getCourseForPresent();
 });
 
+/**
+ * tab1
+ * */
 //获取学年信息
 function getYearInfo(){
 	$.ajax({
@@ -32,6 +35,7 @@ function stuffYearSelect(yearInfo){
 			+ '</option>';
 	}
 	stuffManiaSelect("#year", str);
+	stuffManiaSelect("#singleStudent_year", str);
 }
 
 //获取合格率信息
@@ -508,7 +512,7 @@ function getGardeDeatilsForStudent(row){
 			hideloding();
 			if (backjson.code === 200) {
 				crouseRsForDeatilsReSearch();
-				crouseRsForDeatilsBinBind();
+				crouseRsForDeatilsBinBind(row);
 				stuffCrouseRsForDeatilsTable(backjson.data);
 				$("#currentEdu201_ID").html(row.edu201_ID);
 				$("#currentCourseName").html(row.kcmc);
@@ -736,17 +740,17 @@ function getCourseForDeatilsSearchInfo(row) {
 	var returnObject=new Object();
 	returnObject.edu201_ID=row.edu201_ID;
 	returnObject.courseName=row.kcmc;
-	returnObject.className=$("#xzbMc").val();
-	returnObject.StudentName=$("#studentName").val();
+	returnObject.className=row.className;
+	returnObject.StudentName='';
 	return returnObject;
 }
 
 //成绩详情开始检索
-function crouseRsForDeatilsSstartSearch(){
+function crouseRsForDeatilsSstartSearch(row){
 	var searchInfo=new Object();
 	searchInfo.edu201_ID=$("#currentEdu201_ID")[0].innerText;
 	searchInfo.courseName=$("#currentCourseName")[0].innerText;
-	searchInfo.className=$("#xzbMc").val();
+	searchInfo.className=row.className;
 	searchInfo.StudentName=$("#studentName").val();
 	$.ajax({
 		method : 'get',
@@ -780,16 +784,17 @@ function crouseRsForDeatilsSstartSearch(){
 //重置成绩详情检索
 function crouseRsForDeatilsReSearch(){
 	var reObject = new Object();
-	reObject.InputIds = "#xzbMc,#studentName";
+	// reObject.InputIds = "#xzbMc,#studentName";
+	reObject.InputIds = "#studentName";
 	reReloadSearchsWithSelect(reObject);
 }
 
 //详情按钮事件绑定
-function crouseRsForDeatilsBinBind(){
+function crouseRsForDeatilsBinBind(row){
 	//开始检索
 	$('#crouseRsForDeatils_startSearch').unbind('click');
 	$('#crouseRsForDeatils_startSearch').bind('click', function(e) {
-		crouseRsForDeatilsSstartSearch();
+		crouseRsForDeatilsSstartSearch(row);
 		e.stopPropagation();
 	});
 
@@ -1048,3 +1053,209 @@ function binBind(){
 		e.stopPropagation();
 	});
 }
+
+/**
+ * tab1 end
+ * */
+
+/**
+ * tab2
+ * */
+var EJDMElementInfo;
+//判断是否首次点击tab2
+function judgmentIsFristTimeLoadTab2(){
+	var isFirstShowTab2 = $(".isFirstShowTab2")[0].innerText;
+	if (isFirstShowTab2 === "T") {
+		$(".isFirstShowTab2").html("F");
+		EJDMElementInfo=queryEJDMElementInfo();
+		stuffEJDElement(EJDMElementInfo);
+		LinkageSelectPublic("#singleStudent_level","#singleStudent_department","#singleStudent_grade","#singleStudent_major");
+		stuffSingleStudentGradeTable({});
+		tab2BinBind();
+	}
+}
+
+//渲染学生排名表
+function stuffSingleStudentGradeTable(tableInfo){
+	$('#singleStudentGradeTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".singleStudentGradeTableArea", "排名信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field : 'edu201_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
+			}, {
+				field : 'className',
+				title : '行政班名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'kcmc',
+				title : '学生姓名',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'lsmc',
+				title : '学号',
+				align : 'left',
+				sortable: true,
+				visible : false,
+				formatter : paramsMatter
+			},{
+				field : 'lsmc',
+				title : '总分',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			},{
+				field : 'lsmc',
+				title : '平均分',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			}
+		]
+	});
+
+	drawPagination(".singleStudentGradeTableArea", "排名信息");
+	drawSearchInput(".singleStudentGradeTableArea");
+	changeTableNoRsTip();
+	changeColumnsStyle(".singleStudentGradeTableArea", "排名信息");
+	toolTipUp(".myTooltip");
+}
+
+//开始检索学生排名
+function singleStudentStartSearch(){
+	var singleStudentSearchInfo=getSingleStudentSearchInfo();
+	if(typeof singleStudentSearchInfo==='undefined'){
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchProfessionalCourseResult",
+		data: {
+			"SearchCriteria":JSON.stringify(singleStudentSearchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffSingleStudentGradeTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获得学生排名检索对象
+function getSingleStudentSearchInfo(){
+	var edu103=getNormalSelectValue('singleStudent_level');
+	var edu104=getNormalSelectValue('singleStudent_department');
+	var edu105=getNormalSelectValue('singleStudent_grade');
+	var edu106=getNormalSelectValue('singleStudent_major');
+	var batch=getNormalSelectValue('singleStudent_bath');
+	var xn=getNormalSelectValue('singleStudent_year');
+	var className=$('#singleStudent_className').val();
+	var studentName=$('#singleStudent_studentName').val();
+
+	if(edu103===''){
+		toastr.warning('层次不能为空');
+		return;
+	}
+
+	if(edu104===''){
+		toastr.warning('二级学院不能为空');
+		return;
+	}
+
+	if(edu105===''){
+		toastr.warning('年级不能为空');
+		return;
+	}
+
+	if(edu106===''){
+		toastr.warning('专业不能为空');
+		return;
+	}
+
+	if(batch===''){
+		toastr.warning('批次类型不能为空');
+		return;
+	}
+
+	if(xn===''){
+		toastr.warning('学年不能为空');
+		return;
+	}
+
+	var searchInfo=new Object();
+	searchInfo.edu103=edu103;
+	searchInfo.edu104=edu104;
+	searchInfo.edu105=edu105;
+	searchInfo.edu106=edu106;
+	searchInfo.batch=batch;
+
+	var returnObject=new Object();
+	returnObject.searchInfo=searchInfo;
+	returnObject.xnid=xn;3
+	returnObject.className=className;
+	returnObject.studentName=studentName;
+
+	return returnObject;
+}
+
+//tab2页面按钮事件绑定
+function tab2BinBind(){
+	//开始检索
+	$('#singleStudent_startSearch').unbind('click');
+	$('#singleStudent_startSearch').bind('click', function(e) {
+		singleStudentStartSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	// $('#singleStudent_reReloadSearchs').unbind('click');
+	// $('#singleStudent_reReloadSearchs').bind('click', function(e) {
+	// 	reReloadSearchs();
+	// 	e.stopPropagation();
+	// });
+}
+
+/**
+ * tab2 end
+ * */
+

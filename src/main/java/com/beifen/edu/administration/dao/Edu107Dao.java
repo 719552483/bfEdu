@@ -64,6 +64,6 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	List<Edu107> gradeMatchMajorUsed(String njbm);
 
 	//查询年级下的专业
-	@Query(value = "select * from edu107 where edu103 = ?! and edu104 = ?2 and edu105 = ?3 and edu106 = ?4 and batch = ?5", nativeQuery = true)
+	@Query(value = "select * from edu107 where edu103 = ?1 and edu104 = ?2 and edu105 = ?3 and edu106 = ?4 and batch = ?5", nativeQuery = true)
 	List<Edu107> searchProfessionalCourseResult(String edu103,String edu104,String edu105,String edu106,String batch);
 }
