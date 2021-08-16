@@ -777,8 +777,8 @@ public class TeachingManageController {
      */
     @RequestMapping("/searchProfessionalByXY")
     @ResponseBody
-    public ResultVO searchProfessionalByXY() {
-        ResultVO result = teachingManageService.searchProfessionalByXY();
+    public ResultVO searchProfessionalByXY(@RequestParam("xnid") String xnid) {
+        ResultVO result = teachingManageService.searchProfessionalByXY(xnid);
         return result;
     }
 
