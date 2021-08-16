@@ -2431,7 +2431,9 @@ public class TeachingManageService {
         resultVO = ResultVO.setSuccess("共找到"+courseResultList.size()+"条课程信息",returnMap);
         return resultVO;
     }
-    public ResultVO searchProfessionalByXY(String xnid) {
+
+    //教务查询专业授课成果-查询各个学院的
+    public ResultVO searchProfessionalByXY(String xnid,String edu103Id) {
         ResultVO resultVO;
         List<Edu104> edu104List = edu104Dao.findAll();
         List<ProfessionalSortPO> professionalSortPOS = new ArrayList<>();
@@ -2446,32 +2448,17 @@ public class TeachingManageService {
             }
             Long edu104Id = e.getEdu104_ID();
             //查询及格数据
-            if(xnid != null && !"".equals(xnid)){
-                String countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid);
-                String countPass = edu005Dao.countPassByEdu104ndXN(edu104Id,xnid);
-                if(Integer.parseInt(countPass) != 0){
-                    double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
-                    NumberFormat nf = NumberFormat.getPercentInstance();
-                    nf.setMinimumFractionDigits(2);//设置保留小数位
-                    String usedPercent = nf.format(v);
-                    data.setPassingRate(usedPercent);
-                } else {
-                    data.setPassingRate("0.00%");
-                }
-            }else{
-                String countAll = edu005Dao.countAllByEdu104(edu104Id);
-                String countPass = edu005Dao.countPassByEdu104(edu104Id);
-                if(Integer.parseInt(countPass) != 0){
-                    double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
-                    NumberFormat nf = NumberFormat.getPercentInstance();
-                    nf.setMinimumFractionDigits(2);//设置保留小数位
-                    String usedPercent = nf.format(v);
-                    data.setPassingRate(usedPercent);
-                } else {
-                    data.setPassingRate("0.00%");
-                }
+            String countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid,edu103Id);
+            String countPass = edu005Dao.countPassByEdu104ndXN(edu104Id,xnid,edu103Id);
+            if(Integer.parseInt(countPass) != 0){
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                data.setPassingRate(usedPercent);
+            } else {
+                data.setPassingRate("0.00%");
             }
-
             professionalSortPOS.add(data);
         }
         professionalSortPOS.sort(Comparator.comparing(ProfessionalSortPO::getPassingRate).reversed());
