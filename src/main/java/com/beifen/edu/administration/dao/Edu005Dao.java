@@ -280,5 +280,15 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据studentCode,courseName,xnid查询
     @Query(value = "select * from edu005 where student_code = ?1 and xnid = ?3 and course_name = ?2",nativeQuery = true)
     Edu005 findedu005bySCX(String sutdentCode,String courseName,String xnid);
+
+
+
+    //根据学院查询成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where edu104_id = ?1 and sfsqks = 'T') and IS_CONFIRM = 'T'",nativeQuery = true)
+    String countAllByEdu104(Long edu104Id);
+
+    //根据学院查询通过成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where edu104_id = ?1 and sfsqks = 'T') and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
+    String countPassByEdu104(Long edu104Id);
 }
 

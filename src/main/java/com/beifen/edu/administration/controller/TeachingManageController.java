@@ -772,6 +772,17 @@ public class TeachingManageController {
     }
 
     /**
+     * 教务查询专业授课成果
+     * @return
+     */
+    @RequestMapping("/searchProfessionalByXY")
+    @ResponseBody
+    public ResultVO searchProfessionalByXY() {
+        ResultVO result = teachingManageService.searchProfessionalByXY();
+        return result;
+    }
+
+    /**
      * 导出教务专业授课成果-校验
      * @return
      */
