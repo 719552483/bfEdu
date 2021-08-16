@@ -9,7 +9,7 @@ public class ProfessionalSortPO {
     private  String yxbz;//有效标志
     private  String iskk;//是否为开课部门
     private  String ispk;//是否为排课部门
-    private String passingRate; //及格率
+    private Double passingRate; //及格率
 
     public Long getEdu104_ID() {
         return Edu104_ID;
@@ -59,11 +59,11 @@ public class ProfessionalSortPO {
         this.ispk = ispk;
     }
 
-    public String getPassingRate() {
+    public Double getPassingRate() {
         return passingRate;
     }
 
-    public void setPassingRate(String passingRate) {
+    public void setPassingRate(Double passingRate) {
         this.passingRate = passingRate;
     }
 }

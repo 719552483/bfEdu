@@ -2457,16 +2457,16 @@ public class TeachingManageService {
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                 DecimalFormat df = new java.text.DecimalFormat("#.00");
                 String usedPercent = df.format(v);
-                data.setPassingRate(usedPercent);
+                data.setPassingRate(Double.parseDouble(usedPercent));
             } else {
-                data.setPassingRate("0.00");
+                data.setPassingRate(0.00);
             }
             professionalSortPOS.add(data);
         }
         professionalSortPOS.sort(Comparator.comparing(ProfessionalSortPO::getPassingRate).reversed());
         //改为Echar
         List<String> xbmcList = professionalSortPOS.stream().map(i->i.getXbmc()).collect(Collectors.toList());
-        List<String> passingRateList = professionalSortPOS.stream().map(i->i.getPassingRate()).collect(Collectors.toList());
+        List<Double> passingRateList = professionalSortPOS.stream().map(i->i.getPassingRate()).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
         map.put("xbmc",xbmcList);
         map.put("passingRate",passingRateList);
@@ -2476,9 +2476,17 @@ public class TeachingManageService {
 
     //教务查询专业授课成果-查询某一学院各个年级的
     public ResultVO searchProfessionalByNJ(String xnid,String edu103Id,String edu104Id) {
-        ResultVO resultVO = null;
+        ResultVO resultVO;
+        List<String> njList = new ArrayList<>();
+        List<String> passingRateList = new ArrayList<>();
         List<Edu105> edu105List = edu105Dao.findAll();
+        for (Edu105 e : edu105List) {
 
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("njmc",njList);
+        map.put("passingRate",passingRateList);
+        resultVO = ResultVO.setSuccess("查询成功",map);
         return resultVO;
     }
 
