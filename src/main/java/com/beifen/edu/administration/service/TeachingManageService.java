@@ -2466,6 +2466,40 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    //教务查询专业授课成果-查询某一学院各个年级的
+//    public ResultVO searchProfessionalByNJ(String xnid,String edu103Id,String edu104Id) {
+//        ResultVO resultVO;
+//        List<Edu104> edu104List = edu104Dao.findAll();
+//        List<ProfessionalSortPO> professionalSortPOS = new ArrayList<>();
+//        for (Edu104 e : edu104List) {
+//            ProfessionalSortPO data = new ProfessionalSortPO();
+//            try {
+//                BeanUtils.copyProperties(data,e);
+//            } catch (IllegalAccessException ex) {
+//                ex.printStackTrace();
+//            } catch (InvocationTargetException ex) {
+//                ex.printStackTrace();
+//            }
+//            Long edu104Id = e.getEdu104_ID();
+//            //查询及格数据
+//            String countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid,edu103Id);
+//            String countPass = edu005Dao.countPassByEdu104ndXN(edu104Id,xnid,edu103Id);
+//            if(Integer.parseInt(countPass) != 0){
+//                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
+//                NumberFormat nf = NumberFormat.getPercentInstance();
+//                nf.setMinimumFractionDigits(2);//设置保留小数位
+//                String usedPercent = nf.format(v);
+//                data.setPassingRate(usedPercent);
+//            } else {
+//                data.setPassingRate("0.00%");
+//            }
+//            professionalSortPOS.add(data);
+//        }
+//        professionalSortPOS.sort(Comparator.comparing(ProfessionalSortPO::getPassingRate).reversed());
+//        resultVO = ResultVO.setSuccess("查询成功",professionalSortPOS);
+//        return resultVO;
+//    }
+
 
     //教务查询专业授课成果
     public ResultVO searchProfessionalCourseResult(Edu107 edu107,String xnid,String className,String studentName) {

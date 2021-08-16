@@ -779,12 +779,11 @@ public class TeachingManageController {
     @ResponseBody
     public ResultVO searchProfessionalByXY(@RequestParam("SearchCriteria") String SearchCriteria) {
         ResultVO result;
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        ProfessionalRequestPO professionalRequestPO = JSON.parseObject(jsonObject.getString("searchInfo"), ProfessionalRequestPO.class);
+        ProfessionalRequestPO professionalRequestPO = JSON.parseObject(SearchCriteria, ProfessionalRequestPO.class);
         //查询各个学院的
         result = teachingManageService.searchProfessionalByXY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id());
-        //查询某一学院各个年纪的
-//        result = teachingManageService.searchProfessionalByXY(xnid);
+        //查询某一学院各个年级的
+//        result = teachingManageService.searchProfessionalByNJ(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id());
         return result;
     }
 
