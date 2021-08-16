@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -2453,19 +2454,18 @@ public class TeachingManageService {
             String countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid,edu103Id);
             String countPass = edu005Dao.countPassByEdu104ndXN(edu104Id,xnid,edu103Id);
             if(Integer.parseInt(countPass) != 0){
-                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll);
-                NumberFormat nf = NumberFormat.getPercentInstance();
-                nf.setMinimumFractionDigits(2);//设置保留小数位
-                String usedPercent = nf.format(v);
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                DecimalFormat df = new java.text.DecimalFormat("#.00");
+                String usedPercent = df.format(v);
                 data.setPassingRate(usedPercent);
             } else {
-                data.setPassingRate("0.00%");
+                data.setPassingRate("0.00");
             }
             professionalSortPOS.add(data);
         }
         professionalSortPOS.sort(Comparator.comparing(ProfessionalSortPO::getPassingRate).reversed());
         //改为Echar
-        List<String> xbmcList = professionalSortPOS.stream().map(i->i.getXbbm()).collect(Collectors.toList());
+        List<String> xbmcList = professionalSortPOS.stream().map(i->i.getXbmc()).collect(Collectors.toList());
         List<String> passingRateList = professionalSortPOS.stream().map(i->i.getPassingRate()).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
         map.put("xbmc",xbmcList);
