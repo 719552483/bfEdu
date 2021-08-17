@@ -784,6 +784,8 @@ public class TeachingManageController {
         result = teachingManageService.searchProfessionalByXY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id());
         //查询某一学院各个年级的
 //        result = teachingManageService.searchProfessionalByNJ(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id());
+        //查询某一学院某个年级各个专业的
+
         return result;
     }
 

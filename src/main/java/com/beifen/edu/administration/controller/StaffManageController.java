@@ -92,6 +92,48 @@ public class StaffManageController {
      * @param modifyInfo
      * @return
      */
+//    @RequestMapping("modifyTeacher")
+//    @ResponseBody
+//    public ResultVO modifyTeacher(@RequestParam String modifyInfo,@RequestParam("approvalInfo") String approvalInfo) {
+////        Map<String, Object> returnMap = new HashMap();
+//        // 将收到的jsonObject转为javabean 关系管理实体类
+//        JSONObject jsonObject = JSONObject.fromObject(modifyInfo);
+//        JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
+//        Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
+//        Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
+//        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
+//        // 判断身份证是否存在
+//        boolean IDcardIshave = false;
+//        if(edu101.getSfzh() != null && !"".equals(edu101.getSfzh())) {
+//            for (int i = 0; i < allTeacher.size(); i++) {
+//                if (allTeacher.get(i).getSfzh() != null) {
+//                    List<Edu101> edu101List = edu101Dao.teacherIDcardIsExist(allTeacher.get(i).getSfzh(), edu101.getEdu101_ID());
+//                    if (edu101List.size() != 0) {
+////                    IDcardIshave=true;
+////                    returnMap.put("IDcardIshave", IDcardIshave);
+////                    returnMap.put("result", false);
+//                        return ResultVO.setFailed("身份证号重复，请重新修改！");
+//                    }
+//                }
+//            }
+//        }
+////        if (!IDcardIshave) {
+//            //如果修改是将教师改为外聘教师 发起审批流
+//            if(edu101.getJzglxbm().equals("004")){
+//                edu101.setWpjzgspzt("passing");
+//                edu600.setBusinessKey(edu101.getEdu101_ID());
+//                approvalProcessService.initiationProcess(edu600);
+//            }
+//            return staffManageService.updateTeacher(edu101);
+////        }
+//    }
+
+
+    /**
+     * 修改教师
+     * @param modifyInfo
+     * @return
+     */
     @RequestMapping("modifyTeacher")
     @ResponseBody
     public ResultVO modifyTeacher(@RequestParam String modifyInfo,@RequestParam("approvalInfo") String approvalInfo) {
@@ -101,32 +143,27 @@ public class StaffManageController {
         JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
         Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
         Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
+//        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
         // 判断身份证是否存在
-//        boolean IDcardIshave = false;
+        boolean IDcardIshave = false;
         if(edu101.getSfzh() != null && !"".equals(edu101.getSfzh())) {
-            for (int i = 0; i < allTeacher.size(); i++) {
-                if (allTeacher.get(i).getSfzh() != null) {
-                    List<Edu101> edu101List = edu101Dao.teacherIDcardIsExist(allTeacher.get(i).getSfzh(), edu101.getEdu101_ID());
-                    if (edu101List.size() != 0) {
-//                    IDcardIshave=true;
-//                    returnMap.put("IDcardIshave", IDcardIshave);
-//                    returnMap.put("result", false);
-                        return ResultVO.setFailed("身份证号重复，请重新修改！");
-                    }
-                }
+            List<Edu101> edu101List = edu101Dao.teacherIDcardIsExist(edu101.getSfzh(), edu101.getEdu101_ID());
+            if (edu101List.size() != 0) {
+                return ResultVO.setFailed("身份证号重复，请重新修改！");
             }
         }
 //        if (!IDcardIshave) {
-            //如果修改是将教师改为外聘教师 发起审批流
-            if(edu101.getJzglxbm().equals("004")){
-                edu101.setWpjzgspzt("passing");
-                edu600.setBusinessKey(edu101.getEdu101_ID());
-                approvalProcessService.initiationProcess(edu600);
-            }
-            return staffManageService.updateTeacher(edu101);
+        //如果修改是将教师改为外聘教师 发起审批流
+        if(edu101.getJzglxbm().equals("004")){
+            edu101.setWpjzgspzt("passing");
+            edu600.setBusinessKey(edu101.getEdu101_ID());
+            approvalProcessService.initiationProcess(edu600);
+        }
+        return staffManageService.updateTeacher(edu101);
 //        }
     }
+
+
 
 
 

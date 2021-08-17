@@ -281,22 +281,28 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "select * from edu005 where student_code = ?1 and xnid = ?3 and course_name = ?2",nativeQuery = true)
     Edu005 findedu005bySCX(String sutdentCode,String courseName,String xnid);
 
-
-
-    //根据学院查询成绩总数
-//    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where edu104_id = ?1 and sfsqks = 'T') and IS_CONFIRM = 'T'",nativeQuery = true)
-//    String countAllByEdu104(Long edu104Id);
-
     //根据学院和学年查询成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1)) and xnid = ?2) and IS_CONFIRM = 'T'",nativeQuery = true)
     String countAllByEdu104AndXN(Long edu104Id,String xnid,String edu103Id);
 
-    //根据学院查询通过成绩总数
-//    @Query(value = "select to_char(c-unt(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where edu104_id = ?1 and sfsqks = 'T') and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
-//    String countPassByEdu104(Long edu104Id);
-
-    //根据学院和学黏查询通过成绩总数
+    //根据学院和学年查询通过成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1)) and xnid = ?2) and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
-    String countPassByEdu104ndXN(Long edu104Id,String xnid,String edu103Id);
+    String countPassByEdu104AndXN(Long edu104Id,String xnid,String edu103Id);
+
+    //根据年级、学院和学年查询成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1 and edu105 =?4)) and xnid = ?2) and IS_CONFIRM = 'T'",nativeQuery = true)
+    String countAllByEdu104AndXN(Long edu104Id,String xnid,String edu103Id,String edu105);
+
+    //根据年级、学院和学年查询通过成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1 and edu105 =?4)) and xnid = ?2) and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
+    String countPassByEdu104AndXN(Long edu104Id,String xnid,String edu103Id,String edu105);
+
+    //根据专业、年级、学院和学年查询成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1 and edu105 =?4 and edu106 =?5)) and xnid = ?2) and IS_CONFIRM = 'T'",nativeQuery = true)
+    String countAllByEdu106AndXN(Long edu104Id,String xnid,String edu103Id,String edu105,Long edu106Id);
+
+    //根据专业、年级、学院和学年查询通过成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1 and edu105 =?4 and edu106 =?5)) and xnid = ?2) and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
+    String countPassByEdu106AndXN(Long edu104Id,String xnid,String edu103Id,String edu105,Long edu106Id);
 }
 

@@ -48,6 +48,8 @@ public class TeachingManageService {
     @Autowired
     Edu105Dao edu105Dao;
     @Autowired
+    Edu106Dao edu106Dao;
+    @Autowired
     Edu992Dao edu992Dao;
     @Autowired
     Edu112Dao edu112Dao;
@@ -2452,7 +2454,7 @@ public class TeachingManageService {
             Long edu104Id = e.getEdu104_ID();
             //查询及格数据
             String countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid,edu103Id);
-            String countPass = edu005Dao.countPassByEdu104ndXN(edu104Id,xnid,edu103Id);
+            String countPass = edu005Dao.countPassByEdu104AndXN(edu104Id,xnid,edu103Id);
             if(Integer.parseInt(countPass) != 0){
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                 DecimalFormat df = new java.text.DecimalFormat("#.00");
@@ -2478,10 +2480,20 @@ public class TeachingManageService {
     public ResultVO searchProfessionalByNJ(String xnid,String edu103Id,String edu104Id) {
         ResultVO resultVO;
         List<String> njList = new ArrayList<>();
-        List<String> passingRateList = new ArrayList<>();
+        List<Double> passingRateList = new ArrayList<>();
         List<Edu105> edu105List = edu105Dao.findAll();
         for (Edu105 e : edu105List) {
-
+            njList.add(e.getNjmc());
+            String countAll = edu005Dao.countAllByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
+            String countPass = edu005Dao.countPassByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
+            if(Integer.parseInt(countPass) != 0){
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                DecimalFormat df = new java.text.DecimalFormat("#.00");
+                String usedPercent = df.format(v);
+                passingRateList.add(Double.parseDouble(usedPercent));
+            } else {
+                passingRateList.add(0.00);
+            }
         }
         Map<String, Object> map = new HashMap<>();
         map.put("njmc",njList);
@@ -2489,6 +2501,33 @@ public class TeachingManageService {
         resultVO = ResultVO.setSuccess("查询成功",map);
         return resultVO;
     }
+
+    //教务查询专业授课成果-查询某一学院某个年级各个专业的
+    public ResultVO searchProfessionalByZY(String xnid,String edu103Id,String edu104Id,String edu105Id) {
+        ResultVO resultVO;
+        List<String> njList = new ArrayList<>();
+        List<Double> passingRateList = new ArrayList<>();
+        List<Edu106> edu106List = edu106Dao.findAllByDepartmentCode(edu104Id);
+        for (Edu106 e : edu106List) {
+            njList.add(e.getZymc());
+            String countAll = edu005Dao.countAllByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+            String countPass = edu005Dao.countPassByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+            if(Integer.parseInt(countPass) != 0){
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                DecimalFormat df = new java.text.DecimalFormat("#.00");
+                String usedPercent = df.format(v);
+                passingRateList.add(Double.parseDouble(usedPercent));
+            } else {
+                passingRateList.add(0.00);
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("njmc",njList);
+        map.put("passingRate",passingRateList);
+        resultVO = ResultVO.setSuccess("查询成功",map);
+        return resultVO;
+    }
+
 
 
     //教务查询专业授课成果
