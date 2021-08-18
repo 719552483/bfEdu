@@ -2892,6 +2892,21 @@ input:focus{
 
 .rsArea{text-align: center}
 
+.departmentConfigArea{
+	padding: 30px;
+	color: rgb(9, 127, 162);
+	text-align: center;
+	margin-top: 60px;
+}
+
+.departmentChart{
+	min-height: 450px;
+}
+
+.departmentChartArea{
+	margin-top: 35px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

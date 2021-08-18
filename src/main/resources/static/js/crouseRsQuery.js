@@ -5,6 +5,7 @@ $(function() {
 	getYearInfo();
 	binBind();
 	getCourseForPresent();
+	EJDMElementInfo=queryEJDMElementInfo();
 });
 
 /**
@@ -36,6 +37,7 @@ function stuffYearSelect(yearInfo){
 	}
 	stuffManiaSelect("#year", str);
 	stuffManiaSelect("#singleStudent_year", str);
+	stuffManiaSelect("#departmnetArea_year", str);
 }
 
 //获取合格率信息
@@ -1067,7 +1069,6 @@ function judgmentIsFristTimeLoadTab2(){
 	var isFirstShowTab2 = $(".isFirstShowTab2")[0].innerText;
 	if (isFirstShowTab2 === "T") {
 		$(".isFirstShowTab2").html("F");
-		EJDMElementInfo=queryEJDMElementInfo();
 		stuffEJDElement(EJDMElementInfo);
 		LinkageSelectPublic("#singleStudent_level","#singleStudent_department","#singleStudent_grade","#singleStudent_major");
 		stuffSingleStudentGradeTable({});
@@ -1353,5 +1354,216 @@ function tab2BinBind(){
 
 /**
  * tab2 end
+ * */
+
+
+
+/**
+ * tab3
+ * */
+function judgmentIsFristTimeLoadTab3() {
+	var isFirstShowTab3 = $(".isFirstShowTab3")[0].innerText;
+	if (isFirstShowTab3 === "T") {
+		$(".isFirstShowTab3").html("F");
+		stuffEJDElement(EJDMElementInfo);
+		LinkageSelectPublic("#departmnetArea_level","#departmnetArea_department","#departmnetArea_grade","#departmnetArea_major");
+		tab3BinBind();
+	}
+}
+
+//tab3按钮事件绑定
+function departmnetAreaStartSearch(){
+	var departmnetAreaSearchInfo=getDepartmnetAreaSearchInfo();
+	if(typeof departmnetAreaSearchInfo==='undefined'){
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchProfessionalByXY",
+		data: {
+			"SearchCriteria":JSON.stringify(departmnetAreaSearchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$('.departmentConfigArea').hide();
+				$('.departmentChartArea').show().empty();
+				drawChart(backjson.data);
+				chartListener();
+			} else {
+				toastr.warning(backjson.msg);
+				$('.departmentConfigArea').show();
+				$('.departmentChartArea').hide();
+			}
+		}
+	});
+}
+
+//填充  chart
+function drawChart(data) {
+	$('.departmentChartArea').append('<div class="departmentChart col1" id="drawChart0"></div>');
+
+	// 基于准备好的dom，初始化echarts实例
+	var myChart = echarts.init(document.getElementById("drawChart0"));
+
+	var option = {
+		title: {
+			text:data.text,
+			textStyle: {
+				color: 'rgba(94, 173, 197, 0.81)',
+				fontSize: '20'
+			},
+			padding: [5, 10],
+			left: 'center'
+		},
+		animationEasing: 'elasticOut',
+		tooltip: {
+			trigger: 'axis'
+		},
+		dataZoom : [
+			{
+				show: true,//是否显示滑动条
+				type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+				startValue: 0, // 从头开始。
+				endValue: 5, // 一次性展示6个。
+				height: 20,//这里可以设置dataZoom的尺寸
+			}
+		],
+		tooltip: {
+			formatter: function (params) {
+				return params.name + '<br/>' + '及格率:' +params.data + '%' ;
+			}},
+		color: 'rgba(22,178,209,0.66)',
+		grid: {
+			left: '10%',
+			right: '10%',
+			bottom: '15%',
+			top: '20%',
+			containLabel: true
+		},
+		xAxis: {
+			type: 'category',
+			// name: '学院名称',// 给x轴加单位
+			data: data.xbmc,
+			axisLabel: {
+				show: false
+				}
+		},
+		yAxis: {
+			type: 'value',
+			splitLine: {show: false},
+			name: '及格率百分比(%)',// 给y轴加单位
+			max:100,
+			min:0,
+			interval:10 //每次增加几个
+		},
+		series: [{
+			data: data.passingRate,
+			type: 'bar',
+			itemStyle: {
+				normal: {
+					label: {
+						formatter: "{b}"+ "\n\n" +"{c}"+"%",
+						show: true, //开启显示
+						position: 'top', //在上方显示
+						textStyle: { //数值样式
+							color: 'rgba(82,171,212,0.81)',
+							fontSize: 12
+						}
+					}
+				}
+			},
+		}]
+	};
+
+	// 使用刚指定的配置项和数据显示图表
+	myChart.setOption(option);
+}
+
+//获得学院及格率区域检索条件
+function getDepartmnetAreaSearchInfo(){
+	var edu103Id=getNormalSelectValue('departmnetArea_level');
+	var xnid=getNormalSelectValue('departmnetArea_year');
+	var edu104Id=getNormalSelectValue('departmnetArea_department');
+	var edu105Id=getNormalSelectValue('departmnetArea_grade');
+	var edu106Id=getNormalSelectValue('departmnetArea_major');
+	var batch=getNormalSelectValue('departmnetArea_bath');
+	var courseName=$('#departmnetArea_crouseName').val();
+	var edu103IdName=getNormalSelectText('departmnetArea_level');
+	var xnName=getNormalSelectText('departmnetArea_year');
+	var edu104IdName=getNormalSelectText('departmnetArea_department');
+	var edu105IdName=getNormalSelectText('departmnetArea_grade');
+	var edu106IdName=getNormalSelectText('departmnetArea_major');
+	var batchName=getNormalSelectText('departmnetArea_bath');
+
+	if(edu103Id===''){
+		toastr.warning('层次不能为空');
+		return;
+	}
+
+	if(xnid===''){
+		toastr.warning('学年不能为空');
+		return;
+	}
+
+	if(batch!==''&&(edu104Id===''||edu105Id===''||edu106Id==='')){
+		toastr.warning('请补全批次之前的检索条件');
+		return;
+	}
+
+	var returnObject=new Object();
+	returnObject.edu103Id=edu103Id;
+	returnObject.edu104Id=edu104Id;
+	returnObject.edu105Id=edu105Id;
+	returnObject.edu106Id=edu106Id;
+	returnObject.batch=batch;
+	returnObject.courseName=courseName;
+	returnObject.xnid=xnid;
+	returnObject.edu103IdName=edu103IdName;
+	returnObject.edu104IdName=edu104IdName;
+	returnObject.edu105IdName=edu105IdName;
+	returnObject.edu106IdName=edu106IdName;
+	returnObject.batchName=batchName;
+	returnObject.xnName=xnName;
+
+	return returnObject;
+}
+
+// chart自适应
+function chartListener(){
+	// chart自适应
+	window.addEventListener("resize", function() {
+		var all=$('.departmentChartArea').find('.col1');
+		for (var i = 0; i < all.length; i++) {
+			var myChart = echarts.init(document.getElementById(all[i].id));
+			myChart.resize();
+		}
+	});
+}
+
+//tab3页面按钮事件绑定
+function tab3BinBind(){
+	//开始检索
+	$('#departmnetArea_startSearch').unbind('click');
+	$('#departmnetArea_startSearch').bind('click', function(e) {
+		departmnetAreaStartSearch();
+		e.stopPropagation();
+	});
+}
+
+/**
+ * tab3 end
  * */
 
