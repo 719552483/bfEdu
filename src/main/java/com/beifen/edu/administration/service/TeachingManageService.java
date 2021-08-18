@@ -2528,6 +2528,31 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    //教务查询专业授课成果-查询某一学院某个年级某个专业各个批次的
+    public ResultVO searchProfessionalByCourse(String xnid,String edu103Id,String edu104Id,String edu105Id,String edu106Id) {
+        ResultVO resultVO;
+        List<String> njList = new ArrayList<>();
+        List<Double> passingRateList = new ArrayList<>();
+        List<Edu106> edu106List = edu106Dao.findAllByDepartmentCode(edu104Id);
+        for (Edu106 e : edu106List) {
+            njList.add(e.getZymc());
+            String countAll = edu005Dao.countAllByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+            String countPass = edu005Dao.countPassByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+            if(Integer.parseInt(countPass) != 0){
+                double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                DecimalFormat df = new java.text.DecimalFormat("#.00");
+                String usedPercent = df.format(v);
+                passingRateList.add(Double.parseDouble(usedPercent));
+            } else {
+                passingRateList.add(0.00);
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("njmc",njList);
+        map.put("passingRate",passingRateList);
+        resultVO = ResultVO.setSuccess("查询成功",map);
+        return resultVO;
+    }
 
 
     //教务查询专业授课成果
