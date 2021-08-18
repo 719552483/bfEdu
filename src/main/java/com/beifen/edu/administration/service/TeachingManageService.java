@@ -2470,7 +2470,7 @@ public class TeachingManageService {
         List<String> xbmcList = professionalSortPOS.stream().map(i->i.getXbmc()).collect(Collectors.toList());
         List<Double> passingRateList = professionalSortPOS.stream().map(i->i.getPassingRate()).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+"各个学院及格率情况";
+        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"各个学院及格率情况";
         map.put("xbmc",xbmcList);
         map.put("passingRate",passingRateList);
         map.put("text",text);
@@ -2498,7 +2498,7 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
@@ -2512,6 +2512,10 @@ public class TeachingManageService {
         List<String> njList = new ArrayList<>();
         List<Double> passingRateList = new ArrayList<>();
         List<Edu106> edu106List = edu106Dao.findAllByDepartmentCode(edu104Id);
+        if(edu106List.size() == 0){
+            resultVO = ResultVO.setFailed("暂无数据！");
+            return resultVO;
+        }
         for (Edu106 e : edu106List) {
             njList.add(e.getZymc());
             String countAll = edu005Dao.countAllByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
@@ -2526,7 +2530,7 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,各个专业及格率情况";
+        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/各个专业及格率情况";
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
@@ -2540,6 +2544,10 @@ public class TeachingManageService {
         List<String> njList = new ArrayList<>();
         List<Double> passingRateList = new ArrayList<>();
         List<Edu107> edu107List = edu107Dao.searchBatch(edu105Id,edu106Id);
+        if(edu107List.size() == 0){
+            resultVO = ResultVO.setFailed("暂无数据！");
+            return resultVO;
+        }
         for (Edu107 e : edu107List) {
             njList.add(e.getBatchName());
             String countAll = edu005Dao.countAllByEdu107AndXN(e.getEdu107_ID(),xnid);
@@ -2597,7 +2605,7 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业,"+professionalRequestPO.getEdu106IdName()+"各科及格率情况";
+        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业/"+professionalRequestPO.getEdu106IdName()+"各科及格率情况";
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
