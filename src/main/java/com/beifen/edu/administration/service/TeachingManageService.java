@@ -2453,8 +2453,15 @@ public class TeachingManageService {
             }
             Long edu104Id = e.getEdu104_ID();
             //查询及格数据
-            String countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid,edu103Id);
-            String countPass = edu005Dao.countPassByEdu104AndXN(edu104Id,xnid,edu103Id);
+            String countAll;
+            String countPass;
+            if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+                countAll = edu005Dao.countAllByEdu104AndXN2(edu104Id,xnid,edu103Id,professionalRequestPO.getCourseName());
+                countPass = edu005Dao.countPassByEdu104AndXN2(edu104Id,xnid,edu103Id,professionalRequestPO.getCourseName());
+            }else{
+                countAll = edu005Dao.countAllByEdu104AndXN(edu104Id,xnid,edu103Id);
+                countPass = edu005Dao.countPassByEdu104AndXN(edu104Id,xnid,edu103Id);
+            }
             if(Integer.parseInt(countPass) != 0){
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                 DecimalFormat df = new java.text.DecimalFormat("#.00");
@@ -2470,7 +2477,12 @@ public class TeachingManageService {
         List<String> xbmcList = professionalSortPOS.stream().map(i->i.getXbmc()).collect(Collectors.toList());
         List<Double> passingRateList = professionalSortPOS.stream().map(i->i.getPassingRate()).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"各个学院及格率情况";
+        String text;
+        if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"各个学院及格率情况";
+        }else{
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"各个学院及格率情况";
+        }
         map.put("xbmc",xbmcList);
         map.put("passingRate",passingRateList);
         map.put("text",text);
@@ -2486,8 +2498,15 @@ public class TeachingManageService {
         List<Edu105> edu105List = edu105Dao.findAll();
         for (Edu105 e : edu105List) {
             njList.add(e.getNjmc());
-            String countAll = edu005Dao.countAllByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
-            String countPass = edu005Dao.countPassByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
+            String countAll;
+            String countPass;
+            if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+                countAll = edu005Dao.countAllByEdu104AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm(),professionalRequestPO.getCourseName());
+                countPass = edu005Dao.countPassByEdu104AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm(),professionalRequestPO.getCourseName());
+            }else{
+                countAll = edu005Dao.countAllByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
+                countPass = edu005Dao.countPassByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
+            }
             if(Integer.parseInt(countPass) != 0){
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                 DecimalFormat df = new java.text.DecimalFormat("#.00");
@@ -2498,7 +2517,12 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+        String text;
+        if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+        }else{
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+        }
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
@@ -2518,8 +2542,17 @@ public class TeachingManageService {
         }
         for (Edu106 e : edu106List) {
             njList.add(e.getZymc());
-            String countAll = edu005Dao.countAllByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
-            String countPass = edu005Dao.countPassByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+            String countAll;
+            String countPass;
+            if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+                countAll = edu005Dao.countAllByEdu106AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID(),professionalRequestPO.getCourseName());
+                countPass = edu005Dao.countPassByEdu106AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID(),professionalRequestPO.getCourseName());
+            }else{
+                countAll = edu005Dao.countAllByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+                countPass = edu005Dao.countPassByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+            }
+//            String countAll = edu005Dao.countAllByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
+//            String countPass = edu005Dao.countPassByEdu106AndXN(Long.parseLong(edu104Id),xnid,edu103Id,edu105Id,e.getEdu106_ID());
             if(Integer.parseInt(countPass) != 0){
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                 DecimalFormat df = new java.text.DecimalFormat("#.00");
@@ -2530,7 +2563,12 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/各个专业及格率情况";
+        String text;
+        if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/各个专业及格率情况";
+        }else{
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/各个专业及格率情况";
+        }
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
@@ -2550,8 +2588,15 @@ public class TeachingManageService {
         }
         for (Edu107 e : edu107List) {
             njList.add(e.getBatchName());
-            String countAll = edu005Dao.countAllByEdu107AndXN(e.getEdu107_ID(),xnid);
-            String countPass = edu005Dao.countPassByEdu107AndXN(e.getEdu107_ID(),xnid);
+            String countAll;
+            String countPass;
+            if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+                countAll = edu005Dao.countAllByEdu107AndXN2(e.getEdu107_ID(),xnid,professionalRequestPO.getCourseName());
+                countPass = edu005Dao.countPassByEdu107AndXN2(e.getEdu107_ID(),xnid,professionalRequestPO.getCourseName());
+            }else{
+                countAll = edu005Dao.countAllByEdu107AndXN(e.getEdu107_ID(),xnid);
+                countPass = edu005Dao.countPassByEdu107AndXN(e.getEdu107_ID(),xnid);
+            }
             if(Integer.parseInt(countPass) != 0){
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                 DecimalFormat df = new java.text.DecimalFormat("#.00");
@@ -2562,7 +2607,12 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+        String text;
+        if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+        }else{
+            text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+        }
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
@@ -2592,8 +2642,15 @@ public class TeachingManageService {
             for (String courseName : courseNameList) {
                 njList.add(courseName);
                 List<String> edu201ids = edu201Dao.searchEdu201idsbyEdu107AndKcmc(edu107.getEdu107_ID(),xnid,courseName);
-                String countAll = edu005Dao.countAllByEdu201AndXN(edu201ids);
-                String countPass = edu005Dao.countPassByEdu201AndXN(edu201ids);
+                String countAll;
+                String countPass;
+                if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+                    countAll = edu005Dao.countAllByEdu201AndXN2(edu201ids,professionalRequestPO.getCourseName());
+                    countPass = edu005Dao.countPassByEdu201AndXN2(edu201ids,professionalRequestPO.getCourseName());
+                }else{
+                    countAll = edu005Dao.countAllByEdu201AndXN(edu201ids);
+                    countPass = edu005Dao.countPassByEdu201AndXN(edu201ids);
+                }
                 if(Integer.parseInt(countPass) != 0){
                     double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
                     DecimalFormat df = new java.text.DecimalFormat("#.00");
@@ -2605,7 +2662,12 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        String text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业/"+professionalRequestPO.getEdu106IdName()+"各科及格率情况";
+        String text;
+        if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业/"+professionalRequestPO.getEdu106IdName()+"及格率情况";
+        }else{
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业/"+professionalRequestPO.getEdu106IdName()+"各科及格率情况";
+        }
         map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
