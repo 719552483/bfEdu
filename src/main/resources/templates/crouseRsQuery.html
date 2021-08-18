@@ -129,7 +129,7 @@
 								<ul class="forminfo">
 									<div class="">
 										<label class="selectName" style="margin-top: 14px;">任课教师</label>
-										<input name="" type="text" class="myInput searchInput" id="teacher" choosendTeacherId="" placeholder="点击选择任课教师..."/>
+										<input name="" type="text" class="myInput searchInput" id="teacher" choosendTeacherId="" placeholder="点击选择任课教师..." readonly="readonly"/>
 									</div>
 								</ul>
 							</div>
@@ -147,7 +147,7 @@
 								<ul class="forminfo">
 									<div class="">
 										<label class="selectName" style="margin-top: 14px;">课程名称</label>
-										<input name="" type="text" class="myInput searchInput" id="coruseName" placeholder="情输入课程名称..."/>
+										<input name="" type="text" class="myInput searchInput" id="coruseName" placeholder="点击选择课程..." readonly="readonly"/>
 									</div>
 								</ul>
 							</div>
@@ -406,7 +406,7 @@
 							<ul class="forminfo">
 								<div class="">
 									<label class="selectName" style="margin-top: 14px;">课程名称</label>
-									<input name="" type="text" class="myInput searchInput" id="departmnetArea_crouseName" placeholder="请输入课程名称..."/>
+									<input name="" type="text" class="myInput searchInput" id="departmnetArea_crouseName" placeholder="点击选中课程..." readonly="readonly"/>
 								</div>
 							</ul>
 						</div>
@@ -475,6 +475,45 @@
 					</div>
 					<div class="modal-footer tipbtn">
 						<input name="" type="button" class="sure" id="confirmChoosedTeacher" value="确定"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- 选择课程Modal -->
+	<div class="modal fade bs-example-modal-lg" id="allCrouseModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">课程列表</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tools paddingL" style="padding-top:1%">
+							<ul class="toolbar" style="float: none">
+								<li class="click" id="allCrouse_StartSearch"><span><img
+										src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+								<li class="click" id="allCrouse_ReSearch"><span><img
+										src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+							</ul>
+						</div>
+						<div class="searchArea moreInfoSelectStyle">
+							<div class="col2 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">课程名称</label>
+										<input name="" type="text" class="myInput manyInfoInput" id="allCrouse_Name" placeholder="请输入课程名称..." />
+									</div>
+								</ul>
+							</div>
+						</div>
+
+						<div class="chooseCrouseTableArea">
+							<table class="tablelist myTableStyle" id="chooseCrouseTable" data-unique-id="edu108_ID" style="margin-top: 10px;"></table>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="allCrouse_confirm" value="确定"/>&nbsp;
 						<input name="" type="button" class="cancel" value="取消"/>
 					</div>
 				</div>

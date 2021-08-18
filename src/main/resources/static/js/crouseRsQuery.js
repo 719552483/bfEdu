@@ -1025,6 +1025,213 @@ function passingRateMatter(value, row, index) {
 	}
 }
 
+//预备选择课程
+function coruseNamefocus(inputId){
+	var SearchCriteria=new Object();
+	SearchCriteria.kcmc=$("#"+inputId).val();
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/librarySeacchClass",
+		data: {
+			"SearchCriteria":JSON.stringify(SearchCriteria),
+			'userId':$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				allCrouseModalBtnBind();
+				allCrouseReSearch();
+				$.showModal('#allCrouseModal',true);
+				stuffAllCrouse(backjson.data);
+				//确认
+				$('#allCrouse_confirm').unbind('click');
+				$('#allCrouse_confirm').bind('click', function(e) {
+					var choosend=$("#chooseCrouseTable").bootstrapTable("getSelections");
+					if(choosend.length<=0){
+						toastr.warning('请选择课程');
+						return;
+					}
+					$("#"+inputId).val(choosend[0].kcmc);
+					$.hideModal();
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充课程表
+function stuffAllCrouse(tableInfo){
+	$('#chooseCrouseTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		showExport: false,      //是否显示导出
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : false,
+		onPageChange : function() {
+			drawPagination(".chooseCrouseTableArea", "课程信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field : 'radio',
+				radio : true
+			},
+			{
+				field : 'edu108_ID',
+				title: '唯一标识',
+				align : 'center',
+				sortable: true,
+				visible : false
+			},{
+				field : 'kcmc',
+				title : '课程名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'kcxz',
+				title : '课程性质',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			},{
+				field : 'kclx',
+				title : '课程类型',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'ksfs',
+				title : '考试方式',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			}]
+	});
+}
+
+//课程modal事件绑定
+function allCrouseModalBtnBind(){
+	//开始检索
+	$('#allCrouse_StartSearch').unbind('click');
+	$('#allCrouse_StartSearch').bind('click', function(e) {
+		allCrouseStartSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#allCrouse_ReSearch').unbind('click');
+	$('#allCrouse_ReSearch').bind('click', function(e) {
+		allCrouseReSearch();
+		e.stopPropagation();
+	});
+}
+
+//课程modal开始检索
+function allCrouseStartSearch(){
+	if($("#allCrouse_Name").val()===''){
+		toastr.warning('请选择检索条件');
+		return;
+	}
+
+	var SearchCriteria=new Object();
+	SearchCriteria.kcmc=$("#allCrouse_Name").val();
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/librarySeacchClass",
+		data: {
+			"SearchCriteria":JSON.stringify(SearchCriteria),
+			'userId':$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffAllCrouse(backjson.data);
+			} else {
+				stuffAllCrouse({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//课程modal重置检索
+function allCrouseReSearch(){
+	var reObject = new Object();
+	reObject.InputIds = "#allCrouse_Name";
+	reReloadSearchsWithSelect(reObject);
+
+	var SearchCriteria=new Object();
+	SearchCriteria.kcmc='';
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/librarySeacchClass",
+		data: {
+			"SearchCriteria":JSON.stringify(SearchCriteria),
+			'userId':$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffAllCrouse(backjson.data);
+			} else {
+				stuffAllCrouse({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //页面初始化时按钮事件绑定
 function binBind(){
 	//提示框取消按钮
@@ -1038,6 +1245,12 @@ function binBind(){
 	$('#teacher,#yearTeacher').focus(function(e){
 		teacherModalBtnBind();
 		getTeacherInfo();
+		e.stopPropagation();
+	});
+
+	//课程focus
+	$('#coruseName').focus(function(e){
+		coruseNamefocus("coruseName");
 		e.stopPropagation();
 	});
 
@@ -1559,6 +1772,12 @@ function tab3BinBind(){
 	$('#departmnetArea_startSearch').unbind('click');
 	$('#departmnetArea_startSearch').bind('click', function(e) {
 		departmnetAreaStartSearch();
+		e.stopPropagation();
+	});
+
+	//课程focus
+	$('#departmnetArea_crouseName').focus(function(e){
+		coruseNamefocus("departmnetArea_crouseName");
 		e.stopPropagation();
 	});
 }
