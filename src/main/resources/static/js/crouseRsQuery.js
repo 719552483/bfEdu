@@ -1574,6 +1574,7 @@ function tab2BinBind(){
 /**
  * tab3
  * */
+//判断是否首次点击Tba3
 function judgmentIsFristTimeLoadTab3() {
 	var isFirstShowTab3 = $(".isFirstShowTab3")[0].innerText;
 	if (isFirstShowTab3 === "T") {
@@ -1584,7 +1585,7 @@ function judgmentIsFristTimeLoadTab3() {
 	}
 }
 
-//tab3按钮事件绑定
+//学院及格率开始检索
 function departmnetAreaStartSearch(){
 	var departmnetAreaSearchInfo=getDepartmnetAreaSearchInfo();
 	if(typeof departmnetAreaSearchInfo==='undefined'){
@@ -1766,6 +1767,18 @@ function chartListener(){
 	});
 }
 
+//重置检索
+function departmnetAreaReReloadSearchs(){
+	var reObject = new Object();
+	reObject.fristSelectId = "#departmnetArea_level";
+	reObject.actionSelectIds = "#departmnetArea_department,#departmnetArea_grade,#departmnetArea_major";
+	reObject.normalSelectIds = "#departmnetArea_year,#departmnetArea_bath";
+	reObject.InputIds = "#departmnetArea_crouseName";
+	reReloadSearchsWithSelect(reObject);
+	$('.departmentConfigArea').show();
+	$('.departmentChartArea').hide();
+}
+
 //tab3页面按钮事件绑定
 function tab3BinBind(){
 	//开始检索
@@ -1778,6 +1791,13 @@ function tab3BinBind(){
 	//课程focus
 	$('#departmnetArea_crouseName').focus(function(e){
 		coruseNamefocus("departmnetArea_crouseName");
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#departmnetArea_reReloadSearchs').unbind('click');
+	$('#departmnetArea_reReloadSearchs').bind('click', function(e) {
+		departmnetAreaReReloadSearchs();
 		e.stopPropagation();
 	});
 }
