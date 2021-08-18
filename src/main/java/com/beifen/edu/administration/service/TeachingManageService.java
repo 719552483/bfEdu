@@ -2438,7 +2438,7 @@ public class TeachingManageService {
     }
 
     //教务查询专业授课成果-查询各个学院的
-    public ResultVO searchProfessionalByXY(String xnid,String edu103Id) {
+    public ResultVO searchProfessionalByXY(String xnid,String edu103Id,ProfessionalRequestPO professionalRequestPO) {
         ResultVO resultVO;
         List<Edu104> edu104List = edu104Dao.findAll();
         List<ProfessionalSortPO> professionalSortPOS = new ArrayList<>();
@@ -2470,14 +2470,16 @@ public class TeachingManageService {
         List<String> xbmcList = professionalSortPOS.stream().map(i->i.getXbmc()).collect(Collectors.toList());
         List<Double> passingRateList = professionalSortPOS.stream().map(i->i.getPassingRate()).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
+        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+"各个学院及格率情况";
         map.put("xbmc",xbmcList);
         map.put("passingRate",passingRateList);
+        map.put("text",text);
         resultVO = ResultVO.setSuccess("查询成功",map);
         return resultVO;
     }
 
     //教务查询专业授课成果-查询某一学院各个年级的
-    public ResultVO searchProfessionalByNJ(String xnid,String edu103Id,String edu104Id) {
+    public ResultVO searchProfessionalByNJ(String xnid,String edu103Id,String edu104Id,ProfessionalRequestPO professionalRequestPO) {
         ResultVO resultVO;
         List<String> njList = new ArrayList<>();
         List<Double> passingRateList = new ArrayList<>();
@@ -2496,6 +2498,8 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
+        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+        map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
         resultVO = ResultVO.setSuccess("查询成功",map);
@@ -2503,7 +2507,7 @@ public class TeachingManageService {
     }
 
     //教务查询专业授课成果-查询某一学院某个年级各个专业的
-    public ResultVO searchProfessionalByZY(String xnid,String edu103Id,String edu104Id,String edu105Id) {
+    public ResultVO searchProfessionalByZY(String xnid,String edu103Id,String edu104Id,String edu105Id,ProfessionalRequestPO professionalRequestPO) {
         ResultVO resultVO;
         List<String> njList = new ArrayList<>();
         List<Double> passingRateList = new ArrayList<>();
@@ -2522,6 +2526,8 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
+        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,各个专业及格率情况";
+        map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
         resultVO = ResultVO.setSuccess("查询成功",map);
@@ -2529,7 +2535,7 @@ public class TeachingManageService {
     }
 
     //教务查询专业授课成果-查询某一学院某个年级某个专业各个批次的
-    public ResultVO searchProfessionalByCourse(String xnid,String edu103Id,String edu104Id,String edu105Id,String edu106Id) {
+    public ResultVO searchProfessionalByCourse(String xnid,String edu103Id,String edu104Id,String edu105Id,String edu106Id,ProfessionalRequestPO professionalRequestPO) {
         ResultVO resultVO;
         List<String> njList = new ArrayList<>();
         List<Double> passingRateList = new ArrayList<>();
@@ -2548,6 +2554,8 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
+        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+        map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
         resultVO = ResultVO.setSuccess("查询成功",map);
@@ -2555,7 +2563,7 @@ public class TeachingManageService {
     }
 
     //教务查询专业授课成果-查询某一学院某个年级某个专业某一批次各个课程的
-    public ResultVO searchProfessionalByBatch(String xnid,String edu103Id,String edu104Id,String edu105Id,String edu106Id,String batch){
+    public ResultVO searchProfessionalByBatch(String xnid,String edu103Id,String edu104Id,String edu105Id,String edu106Id,String batch,ProfessionalRequestPO professionalRequestPO){
         ResultVO resultVO;
         List<String> njList = new ArrayList<>();
         List<Double> passingRateList = new ArrayList<>();
@@ -2589,6 +2597,8 @@ public class TeachingManageService {
             }
         }
         Map<String, Object> map = new HashMap<>();
+        String text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业,"+professionalRequestPO.getEdu106IdName()+"各科及格率情况";
+        map.put("text",text);
         map.put("xbmc",njList);
         map.put("passingRate",passingRateList);
         resultVO = ResultVO.setSuccess("查询成功",map);

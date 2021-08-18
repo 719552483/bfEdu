@@ -786,19 +786,19 @@ public class TeachingManageController {
             result = ResultVO.setFailed("层次不能为空");
         }else if(professionalRequestPO.getEdu104Id() == null || "".equals(professionalRequestPO.getEdu104Id())){
             //查询各个学院的
-            result = teachingManageService.searchProfessionalByXY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id());
+            result = teachingManageService.searchProfessionalByXY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO);
         }else if(professionalRequestPO.getEdu105Id() == null || "".equals(professionalRequestPO.getEdu105Id())){
             //查询某一学院各个年级的
-            result = teachingManageService.searchProfessionalByNJ(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id());
+            result = teachingManageService.searchProfessionalByNJ(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO);
         }else if(professionalRequestPO.getEdu106Id() == null || "".equals(professionalRequestPO.getEdu106Id())){
             //查询某一学院某个年级各个专业的
-            result = teachingManageService.searchProfessionalByZY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id());
+            result = teachingManageService.searchProfessionalByZY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO);
         }else if(professionalRequestPO.getBatch() == null || "".equals(professionalRequestPO.getBatch())){
             //查询某一学院某个年级某个专业各个批次的
-            result = teachingManageService.searchProfessionalByCourse(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO.getEdu106Id());
+            result = teachingManageService.searchProfessionalByCourse(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO.getEdu106Id(),professionalRequestPO);
         }else{
             //查询某一学院某个年级某个专业某一批次各个课程的
-            result = teachingManageService.searchProfessionalByBatch(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO.getEdu106Id(),professionalRequestPO.getBatch());
+            result = teachingManageService.searchProfessionalByBatch(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO.getEdu106Id(),professionalRequestPO.getBatch(),professionalRequestPO);
         }
         return result;
     }

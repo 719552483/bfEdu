@@ -9,6 +9,13 @@ public class ProfessionalRequestPO {
     private String edu106Id;//专业ID
     private String batch;//批次
     private String courseName;//课程名称
+    private String edu103IdName;
+    private String xnName;
+    private String edu104IdName;
+    private String edu105IdName;
+    private String edu106IdName;
+    private String batchName;
+
 
     public String getXnid() {
         return xnid;
@@ -64,5 +71,53 @@ public class ProfessionalRequestPO {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getEdu103IdName() {
+        return edu103IdName;
+    }
+
+    public void setEdu103IdName(String edu103IdName) {
+        this.edu103IdName = edu103IdName;
+    }
+
+    public String getXnName() {
+        return xnName;
+    }
+
+    public void setXnName(String xnName) {
+        this.xnName = xnName;
+    }
+
+    public String getEdu104IdName() {
+        return edu104IdName;
+    }
+
+    public void setEdu104IdName(String edu104IdName) {
+        this.edu104IdName = edu104IdName;
+    }
+
+    public String getEdu105IdName() {
+        return edu105IdName;
+    }
+
+    public void setEdu105IdName(String edu105IdName) {
+        this.edu105IdName = edu105IdName;
+    }
+
+    public String getEdu106IdName() {
+        return edu106IdName;
+    }
+
+    public void setEdu106IdName(String edu106IdName) {
+        this.edu106IdName = edu106IdName;
+    }
+
+    public String getBatchName() {
+        return batchName;
+    }
+
+    public void setBatchName(String batchName) {
+        this.batchName = batchName;
     }
 }
