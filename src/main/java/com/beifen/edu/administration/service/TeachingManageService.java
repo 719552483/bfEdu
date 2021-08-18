@@ -2501,11 +2501,11 @@ public class TeachingManageService {
             String countAll;
             String countPass;
             if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
-                countAll = edu005Dao.countAllByEdu104AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm(),professionalRequestPO.getCourseName());
-                countPass = edu005Dao.countPassByEdu104AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm(),professionalRequestPO.getCourseName());
+                countAll = edu005Dao.countAllByEdu104AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,e.getEdu105_ID()+"",professionalRequestPO.getCourseName());
+                countPass = edu005Dao.countPassByEdu104AndXN2(Long.parseLong(edu104Id),xnid,edu103Id,e.getEdu105_ID()+"",professionalRequestPO.getCourseName());
             }else{
-                countAll = edu005Dao.countAllByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
-                countPass = edu005Dao.countPassByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getNjbm());
+                countAll = edu005Dao.countAllByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getEdu105_ID()+"");
+                countPass = edu005Dao.countPassByEdu104AndXN(Long.parseLong(edu104Id),xnid,edu103Id,e.getEdu105_ID()+"");
             }
             if(Integer.parseInt(countPass) != 0){
                 double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
@@ -2639,25 +2639,38 @@ public class TeachingManageService {
                 resultVO = ResultVO.setFailed("暂无数据");
                 return resultVO;
             }
-            for (String courseName : courseNameList) {
-                njList.add(courseName);
-                List<String> edu201ids = edu201Dao.searchEdu201idsbyEdu107AndKcmc(edu107.getEdu107_ID(),xnid,courseName);
-                String countAll;
-                String countPass;
-                if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
-                    countAll = edu005Dao.countAllByEdu201AndXN2(edu201ids,professionalRequestPO.getCourseName());
-                    countPass = edu005Dao.countPassByEdu201AndXN2(edu201ids,professionalRequestPO.getCourseName());
+            if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
+                if(!courseNameList.contains(professionalRequestPO.getCourseName())){
+                    resultVO = ResultVO.setFailed("该培养计划中不包含该门课程");
+                    return resultVO;
                 }else{
-                    countAll = edu005Dao.countAllByEdu201AndXN(edu201ids);
-                    countPass = edu005Dao.countPassByEdu201AndXN(edu201ids);
+                    njList.add(professionalRequestPO.getCourseName());
+                    List<String> edu201ids = edu201Dao.searchEdu201idsbyEdu107AndKcmc(edu107.getEdu107_ID(),xnid,professionalRequestPO.getCourseName());
+                    String countAll = edu005Dao.countAllByEdu201AndXN(edu201ids);
+                    String countPass = edu005Dao.countPassByEdu201AndXN(edu201ids);
+                    if(Integer.parseInt(countPass) != 0){
+                        double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                        DecimalFormat df = new java.text.DecimalFormat("#.00");
+                        String usedPercent = df.format(v);
+                        passingRateList.add(Double.parseDouble(usedPercent));
+                    } else {
+                        passingRateList.add(0.00);
+                    }
                 }
-                if(Integer.parseInt(countPass) != 0){
-                    double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
-                    DecimalFormat df = new java.text.DecimalFormat("#.00");
-                    String usedPercent = df.format(v);
-                    passingRateList.add(Double.parseDouble(usedPercent));
-                } else {
-                    passingRateList.add(0.00);
+            }else{
+                for (String courseName : courseNameList) {
+                    njList.add(courseName);
+                    List<String> edu201ids = edu201Dao.searchEdu201idsbyEdu107AndKcmc(edu107.getEdu107_ID(),xnid,courseName);
+                    String countAll = edu005Dao.countAllByEdu201AndXN(edu201ids);
+                    String countPass = edu005Dao.countPassByEdu201AndXN(edu201ids);
+                    if(Integer.parseInt(countPass) != 0){
+                        double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                        DecimalFormat df = new java.text.DecimalFormat("#.00");
+                        String usedPercent = df.format(v);
+                        passingRateList.add(Double.parseDouble(usedPercent));
+                    } else {
+                        passingRateList.add(0.00);
+                    }
                 }
             }
         }
