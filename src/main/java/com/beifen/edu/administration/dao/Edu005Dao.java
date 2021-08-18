@@ -304,5 +304,21 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据专业、年级、学院和学年查询通过成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1 and edu105 =?4 and edu106 =?5)) and xnid = ?2) and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
     String countPassByEdu106AndXN(Long edu104Id,String xnid,String edu103Id,String edu105,Long edu106Id);
+
+    //根据专业、年级、学院和学年查询成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1) and xnid = ?2) and IS_CONFIRM = 'T'",nativeQuery = true)
+    String countAllByEdu107AndXN(Long edu107Id,String xnid);
+
+    //根据专业、年级、学院和学年查询通过成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1) and xnid = ?2) and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
+    String countPassByEdu107AndXN(Long edu107Id,String xnid);
+
+    //根据专业、年级、学院和学年查询成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in ?1 and IS_CONFIRM = 'T'",nativeQuery = true)
+    String countAllByEdu201AndXN(List<String> edu201ids);
+
+    //根据专业、年级、学院和学年查询通过成绩总数
+    @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in ?1 and IS_CONFIRM = 'T' and IS_PASSED = 'T'",nativeQuery = true)
+    String countPassByEdu201AndXN(List<String> edu201ids);
 }
 

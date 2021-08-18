@@ -176,8 +176,12 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "select  * from(select a.*,row_number() over(partition by a.kcmc order by a.kcmc) su from Edu201 a where xnid = ?1 and sfypk='T' and kcmc in (select COURSE_NAME from edu005 where EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?2) GROUP BY COURSE_NAME) ) where su = 1", nativeQuery = true)
 	List<Edu201> searchCourseByXNAndID(String trem,String edu101Id);
 
-
-
 	@Query(value = "select e.edu201_id,e.xn,e.CLASS_NAME,e.kcmc,e.ls from edu201 e LEFT JOIN(select EDU201_ID,CLASS_NAME,COURSE_NAME from edu005 where EDU201_ID  = ?1 GROUP BY CLASS_NAME,COURSE_NAME,EDU201_ID) a on e.EDU201_ID = a.EDU201_ID where e.EDU201_ID  = ?1", nativeQuery = true)
 	List<Edu201> searchClassInfo(String edu201);
+
+	@Query(value = "select kcmc from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1) and xnid = ?2 GROUP BY kcmc", nativeQuery = true)
+	List<String> searchCourseNamebyEdu107(Long EDU107_ID,String xnid);
+
+	@Query(value = "select EDU201_ID from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1) and xnid = ?2 and kcmc = ?3", nativeQuery = true)
+	List<String> searchEdu201idsbyEdu107AndKcmc(Long EDU107_ID,String xnid,String courseName);
 }
