@@ -810,8 +810,8 @@ public class TeachingManageController {
     @RequestMapping("/searchPassRate")
     @ResponseBody
     public ResultVO searchPassRate(@RequestParam("SearchCriteria") String SearchCriteria) {
-        StudentPassViewPO studentPassViewPO = JSON.parseObject(SearchCriteria, StudentPassViewPO.class);
-        ResultVO result = teachingManageService.searchPassRate(studentPassViewPO);
+        StudentXNPassViewPO studentXNPassViewPO = JSON.parseObject(SearchCriteria, StudentXNPassViewPO.class);
+        ResultVO result = teachingManageService.searchPassRate(studentXNPassViewPO);
         return result;
     }
 

@@ -117,6 +117,8 @@ public class TeachingManageService {
     CourseMakeUpViewDao courseMakeUpViewDao;
     @Autowired
     StudentPassViewDao studentPassViewDao;
+    @Autowired
+    StudentXNPassViewDao studentXNPassViewDao;
 
     ReflectUtils utils = new ReflectUtils();
 
@@ -2773,46 +2775,88 @@ public class TeachingManageService {
     }
 
     //教务查询学生及格率
-    public ResultVO searchPassRate(StudentPassViewPO studentPassViewPO){
+    public ResultVO searchPassRate(StudentXNPassViewPO studentPassViewPO){
         ResultVO resultVO;
 
-        Specification<StudentPassViewPO> specification = new Specification<StudentPassViewPO>() {
-            public Predicate toPredicate(Root<StudentPassViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<Predicate>();
-                if (studentPassViewPO.getPycc() != null && !"".equals(studentPassViewPO.getPycc())) {
-                    predicates.add(cb.equal(root.<String>get("pycc"),  studentPassViewPO.getPycc()));
+        if(studentPassViewPO.getXnid() != null && !"".equals(studentPassViewPO.getXnid())){
+            Specification<StudentXNPassViewPO> specification = new Specification<StudentXNPassViewPO>() {
+                public Predicate toPredicate(Root<StudentXNPassViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    if (studentPassViewPO.getPycc() != null && !"".equals(studentPassViewPO.getPycc())) {
+                        predicates.add(cb.equal(root.<String>get("pycc"),  studentPassViewPO.getPycc()));
+                    }
+                    if (studentPassViewPO.getSzxb() != null && !"".equals(studentPassViewPO.getSzxb())) {
+                        predicates.add(cb.equal(root.<String>get("szxb"),  studentPassViewPO.getSzxb()));
+                    }
+                    if (studentPassViewPO.getNj() != null && !"".equals(studentPassViewPO.getNj())) {
+                        predicates.add(cb.equal(root.<String>get("nj"),  studentPassViewPO.getNj()));
+                    }
+                    if (studentPassViewPO.getZybm() != null && !"".equals(studentPassViewPO.getZybm())) {
+                        predicates.add(cb.equal(root.<String>get("zybm"),  studentPassViewPO.getZybm()));
+                    }
+                    if (studentPassViewPO.getEdu300_ID() != null && !"".equals(studentPassViewPO.getEdu300_ID())) {
+                        predicates.add(cb.equal(root.<String>get("Edu300_ID"),  studentPassViewPO.getEdu300_ID()));
+                    }
+                    if (studentPassViewPO.getXm() != null && !"".equals(studentPassViewPO.getXm())) {
+                        predicates.add(cb.like(root.<String>get("xm"),  "%"+studentPassViewPO.getXm()+"%"));
+                    }
+                    if (studentPassViewPO.getBatch() != null && !"".equals(studentPassViewPO.getBatch())) {
+                        predicates.add(cb.equal(root.<String>get("batch"),  studentPassViewPO.getBatch()));
+                    }
+                    predicates.add(cb.equal(root.<String>get("xnid"),  studentPassViewPO.getXnid()));
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
-                if (studentPassViewPO.getSzxb() != null && !"".equals(studentPassViewPO.getSzxb())) {
-                    predicates.add(cb.equal(root.<String>get("szxb"),  studentPassViewPO.getSzxb()));
-                }
-                if (studentPassViewPO.getNj() != null && !"".equals(studentPassViewPO.getNj())) {
-                    predicates.add(cb.equal(root.<String>get("nj"),  studentPassViewPO.getNj()));
-                }
-                if (studentPassViewPO.getZybm() != null && !"".equals(studentPassViewPO.getZybm())) {
-                    predicates.add(cb.equal(root.<String>get("zybm"),  studentPassViewPO.getZybm()));
-                }
-                if (studentPassViewPO.getEdu300_ID() != null && !"".equals(studentPassViewPO.getEdu300_ID())) {
-                    predicates.add(cb.equal(root.<String>get("Edu300_ID"),  studentPassViewPO.getEdu300_ID()));
-                }
-                if (studentPassViewPO.getXm() != null && !"".equals(studentPassViewPO.getXm())) {
-                    predicates.add(cb.like(root.<String>get("xm"),  "%"+studentPassViewPO.getXm()+"%"));
-                }
-                if (studentPassViewPO.getBatch() != null && !"".equals(studentPassViewPO.getBatch())) {
-                    predicates.add(cb.like(root.<String>get("batch"),  "%"+studentPassViewPO.getBatch()+"%"));
-                }
-
-                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            };
+            List<StudentXNPassViewPO> studentXNPassViewPOList = studentXNPassViewDao.findAll(specification);
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            for(StudentXNPassViewPO s:studentXNPassViewPOList){
+                String checkOnPercent = nf.format(Double.parseDouble(s.getRate()));
+                s.setRate(checkOnPercent);
+                s.setXn(studentPassViewPO.getXn());
             }
-        };
-        List<StudentPassViewPO> studentPassViewPOList = studentPassViewDao.findAll(specification);
-        NumberFormat nf = NumberFormat.getPercentInstance();
-        nf.setMinimumFractionDigits(2);//设置保留小数位
-        for(StudentPassViewPO s:studentPassViewPOList){
-            String checkOnPercent = nf.format(Double.parseDouble(s.getRate()));
-            s.setRate(checkOnPercent);
+            resultVO = ResultVO.setSuccess("查询成功",studentXNPassViewPOList);
+        }else{
+            Specification<StudentPassViewPO> specification = new Specification<StudentPassViewPO>() {
+                public Predicate toPredicate(Root<StudentPassViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    if (studentPassViewPO.getPycc() != null && !"".equals(studentPassViewPO.getPycc())) {
+                        predicates.add(cb.equal(root.<String>get("pycc"),  studentPassViewPO.getPycc()));
+                    }
+                    if (studentPassViewPO.getSzxb() != null && !"".equals(studentPassViewPO.getSzxb())) {
+                        predicates.add(cb.equal(root.<String>get("szxb"),  studentPassViewPO.getSzxb()));
+                    }
+                    if (studentPassViewPO.getNj() != null && !"".equals(studentPassViewPO.getNj())) {
+                        predicates.add(cb.equal(root.<String>get("nj"),  studentPassViewPO.getNj()));
+                    }
+                    if (studentPassViewPO.getZybm() != null && !"".equals(studentPassViewPO.getZybm())) {
+                        predicates.add(cb.equal(root.<String>get("zybm"),  studentPassViewPO.getZybm()));
+                    }
+                    if (studentPassViewPO.getEdu300_ID() != null && !"".equals(studentPassViewPO.getEdu300_ID())) {
+                        predicates.add(cb.equal(root.<String>get("Edu300_ID"),  studentPassViewPO.getEdu300_ID()));
+                    }
+                    if (studentPassViewPO.getXm() != null && !"".equals(studentPassViewPO.getXm())) {
+                        predicates.add(cb.like(root.<String>get("xm"),  "%"+studentPassViewPO.getXm()+"%"));
+                    }
+                    if (studentPassViewPO.getBatch() != null && !"".equals(studentPassViewPO.getBatch())) {
+                        predicates.add(cb.like(root.<String>get("batch"),  "%"+studentPassViewPO.getBatch()+"%"));
+                    }
+
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                }
+            };
+            List<StudentPassViewPO> studentPassViewPOList = studentPassViewDao.findAll(specification);
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            for(StudentPassViewPO s:studentPassViewPOList){
+                String checkOnPercent = nf.format(Double.parseDouble(s.getRate()));
+                s.setRate(checkOnPercent);
+            }
+            resultVO = ResultVO.setSuccess("查询成功",studentPassViewPOList);
         }
 
-        resultVO = ResultVO.setSuccess("查询成功",studentPassViewPOList);
+
+
         return resultVO;
     }
 
