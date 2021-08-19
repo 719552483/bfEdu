@@ -2903,8 +2903,16 @@ public class TeachingManageService {
         }
         for(Edu300 e:classEntities){
             ClassGraduationPO classGraduationPO = new ClassGraduationPO();
-            classGraduationPO.setEdu300(e);
+            try {
+                BeanUtils.copyProperties(classGraduationPO,e);
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            } catch (InvocationTargetException ex) {
+                ex.printStackTrace();
+            }
+            classGraduationPO.setOwn(e.getZxrs()+"");
             String pass = edu005Dao.searchGraduationRate(e.getXzbmc(),num);
+            classGraduationPO.setPass(pass);
             if(Integer.parseInt(pass) != 0){
                 double v = Double.parseDouble(pass) / e.getZxrs();
                 NumberFormat nf = NumberFormat.getPercentInstance();
