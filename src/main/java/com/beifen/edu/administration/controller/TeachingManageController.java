@@ -785,7 +785,7 @@ public class TeachingManageController {
         }else if(professionalRequestPO.getEdu103Id() == null || "".equals(professionalRequestPO.getEdu103Id())){
             result = ResultVO.setFailed("层次不能为空");
         }else if(professionalRequestPO.getEdu104Id() == null || "".equals(professionalRequestPO.getEdu104Id())){
-            //查询各个学院的
+            //查询各个学院的studentGetGrades
             result = teachingManageService.searchProfessionalByXY(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO);
         }else if(professionalRequestPO.getEdu105Id() == null || "".equals(professionalRequestPO.getEdu105Id())){
             //查询某一学院各个年级的
@@ -802,6 +802,19 @@ public class TeachingManageController {
         }
         return result;
     }
+
+    /**
+     * 教务查询学生及格率
+     * @return
+     */
+    @RequestMapping("/searchPassRate")
+    @ResponseBody
+    public ResultVO searchPassRate(@RequestParam("SearchCriteria") String SearchCriteria) {
+        StudentPassViewPO studentPassViewPO = JSON.parseObject(SearchCriteria, StudentPassViewPO.class);
+        ResultVO result = teachingManageService.searchPassRate(studentPassViewPO);
+        return result;
+    }
+
 
     /**
      * 导出教务专业授课成果-校验

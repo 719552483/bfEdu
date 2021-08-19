@@ -4321,27 +4321,27 @@ public class AdministrationPageService {
 		//修改用户名
 		edu990Dao.changeYhmByStudentXh(oldEdu001.getXh(),newEdu001.getXh());
 		//删除成绩表信息
-		edu005Dao.deleteByEdu001Id(oldEdu001.getEdu001_ID());
+//		edu005Dao.deleteByEdu001Id(oldEdu001.getEdu001_ID());
 		//查询需要生成成绩单的任务书
 		List<Edu201> edu201List = edu201DAO.findTaskWithNewClass(newEdu001.getEdu300_ID());
 		//生成成绩单
-		if(edu201List.size() != 0) {
-			for (Edu201 edu201 : edu201List) {
-				Edu005 edu005 = new Edu005();
-				edu005.setEdu001_ID(oldEdu001.getEdu001_ID());
-				edu005.setEdu201_ID(edu201.getEdu201_ID());
-				edu005.setEdu300_ID(Long.parseLong(newEdu001.getEdu300_ID()));
-				edu005.setCourseName(edu201.getKcmc());
-				edu005.setClassName(newEdu001.getXzbname());
-				edu005.setStudentName(oldEdu001.getXm());
-				edu005.setStudentCode(newEdu001.getXh());
-				edu005.setIsExamCrouse(edu201.getSfxylcj());
-				edu005.setCredit(edu201.getXf());
-				edu005.setXnid(edu201.getXnid());
-				edu005.setXn(edu201.getXn());
-				edu005Dao.save(edu005);
-			}
-		}
+//		if(edu201List.size() != 0) {
+//			for (Edu201 edu201 : edu201List) {
+//				Edu005 edu005 = new Edu005();
+//				edu005.setEdu001_ID(oldEdu001.getEdu001_ID());
+//				edu005.setEdu201_ID(edu201.getEdu201_ID());
+//				edu005.setEdu300_ID(Long.parseLong(newEdu001.getEdu300_ID()));
+//				edu005.setCourseName(edu201.getKcmc());
+//				edu005.setClassName(newEdu001.getXzbname());
+//				edu005.setStudentName(oldEdu001.getXm());
+//				edu005.setStudentCode(newEdu001.getXh());
+//				edu005.setIsExamCrouse(edu201.getSfxylcj());
+//				edu005.setCredit(edu201.getXf());
+//				edu005.setXnid(edu201.getXnid());
+//				edu005.setXn(edu201.getXn());
+//				edu005Dao.save(edu005);
+//			}
+//		}
 
 		//更新学生信息
 		oldEdu001.setPycc(newEdu001.getPycc());
