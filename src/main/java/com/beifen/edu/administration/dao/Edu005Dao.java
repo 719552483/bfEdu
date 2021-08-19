@@ -360,5 +360,8 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据专业、年级、学院和学年查询通过成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in ?1 and IS_CONFIRM = 'T' and IS_PASSED = 'T' and course_name = ?2",nativeQuery = true)
     String countPassByEdu201AndXN2(List<String> edu201ids,String courseName);
+
+    @Query(value = "select count(0) from (select count(0) num  from edu005 where CLASS_NAME = ?1 and (IS_PASSED = 'F' or IS_PASSED is null) GROUP BY STUDENT_CODE) where num <= ?2",nativeQuery = true)
+    String searchGraduationRate(String class_name,String num);
 }
 

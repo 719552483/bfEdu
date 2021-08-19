@@ -2808,6 +2808,10 @@ public class TeachingManageService {
                 }
             };
             List<StudentXNPassViewPO> studentXNPassViewPOList = studentXNPassViewDao.findAll(specification);
+            if(studentXNPassViewPOList.size() == 0){
+                resultVO = ResultVO.setFailed("暂无数据");
+                return resultVO;
+            }
             NumberFormat nf = NumberFormat.getPercentInstance();
             nf.setMinimumFractionDigits(2);//设置保留小数位
             for(StudentXNPassViewPO s:studentXNPassViewPOList){
@@ -2846,6 +2850,10 @@ public class TeachingManageService {
                 }
             };
             List<StudentPassViewPO> studentPassViewPOList = studentPassViewDao.findAll(specification);
+            if(studentPassViewPOList.size() == 0){
+                resultVO = ResultVO.setFailed("暂无数据");
+                return resultVO;
+            }
             NumberFormat nf = NumberFormat.getPercentInstance();
             nf.setMinimumFractionDigits(2);//设置保留小数位
             for(StudentPassViewPO s:studentPassViewPOList){
@@ -2857,6 +2865,58 @@ public class TeachingManageService {
 
 
 
+        return resultVO;
+    }
+
+    //教务查询学生预计毕业率
+    public ResultVO searchGraduationRate(Edu300 edu300,String num){
+        ResultVO resultVO;
+        Specification<Edu300> specification = new Specification<Edu300>() {
+            public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu300.getPyccbm() != null && !"".equals(edu300.getPyccbm())) {
+                    predicates.add(cb.equal(root.<String>get("pyccbm"), edu300.getPyccbm()));
+                }
+                if (edu300.getXbbm() != null && !"".equals(edu300.getXbbm())) {
+                    predicates.add(cb.equal(root.<String>get("xbbm"), edu300.getXbbm()));
+                }
+                if (edu300.getNjbm() != null && !"".equals(edu300.getNjbm())) {
+                    predicates.add(cb.equal(root.<String>get("njbm"), edu300.getNjbm()));
+                }
+                if (edu300.getZybm() != null && !"".equals(edu300.getZybm())) {
+                    predicates.add(cb.equal(root.<String>get("zybm"), edu300.getZybm()));
+                }
+                if (edu300.getBatch() != null && !"".equals(edu300.getBatch())) {
+                    predicates.add(cb.equal(root.<String>get("batch"),  edu300.getBatch()));
+                }
+                if (edu300.getXzbmc() != null && !"".equals(edu300.getXzbmc())) {
+                    predicates.add(cb.like(root.<String>get("xzbmc"), '%' + edu300.getXzbmc() + '%'));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu300> classEntities = edu300Dao.findAll(specification);
+        List<ClassGraduationPO> classGraduationPOList = new ArrayList<>();
+        if(classEntities.size() == 0){
+            resultVO = ResultVO.setFailed("暂无数据");
+            return resultVO;
+        }
+        for(Edu300 e:classEntities){
+            ClassGraduationPO classGraduationPO = new ClassGraduationPO();
+            classGraduationPO.setEdu300(e);
+            String pass = edu005Dao.searchGraduationRate(e.getXzbmc(),num);
+            if(Integer.parseInt(pass) != 0){
+                double v = Double.parseDouble(pass) / e.getZxrs();
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                classGraduationPO.setRate(usedPercent);
+            } else {
+                classGraduationPO.setRate("0.00%");
+            }
+            classGraduationPOList.add(classGraduationPO);
+        }
+        resultVO = ResultVO.setSuccess("查询成功",classGraduationPOList);
         return resultVO;
     }
 
@@ -3049,7 +3109,6 @@ public class TeachingManageService {
         return resultVO;
     }
 
-
     //教务查询班级授课成果
     public ResultVO searchClassInfo(String edu201_Id) {
         ResultVO resultVO;
@@ -3094,7 +3153,6 @@ public class TeachingManageService {
         resultVO = ResultVO.setSuccess("查询成功",courseResultList);
         return resultVO;
     }
-
 
     //获取全部学年
     public ResultVO searchAllXn() {
