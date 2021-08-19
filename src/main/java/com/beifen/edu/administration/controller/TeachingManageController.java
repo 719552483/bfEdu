@@ -807,13 +807,13 @@ public class TeachingManageController {
      * 教务查询学生及格率
      * @return
      */
-    @RequestMapping("/searchPassRate")
-    @ResponseBody
-    public ResultVO searchPassRate(@RequestParam("SearchCriteria") String SearchCriteria) {
-        StudentXNPassViewPO studentXNPassViewPO = JSON.parseObject(SearchCriteria, StudentXNPassViewPO.class);
-        ResultVO result = teachingManageService.searchPassRate(studentXNPassViewPO);
-        return result;
-    }
+//    @RequestMapping("/searchPassRate")
+//    @ResponseBody
+//    public ResultVO searchPassRate(@RequestParam("SearchCriteria") String SearchCriteria) {
+//        StudentXNPassViewPO studentXNPassViewPO = JSON.parseObject(SearchCriteria, StudentXNPassViewPO.class);
+//        ResultVO result = teachingManageService.searchPassRate(studentXNPassViewPO);
+//        return result;
+//    }
 
     /**
      * 教务查询学生预计毕业率
@@ -823,10 +823,17 @@ public class TeachingManageController {
     @ResponseBody
     public ResultVO searchGraduationRate(@RequestParam("SearchCriteria") String SearchCriteria) {
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        Edu300 edu300 = JSON.parseObject(jsonObject.getString("class"), Edu300.class);
-        String num = jsonObject.getString("num");
-        ResultVO result = teachingManageService.searchGraduationRate(edu300,num);
-        return result;
+        String type = jsonObject.getString("type");
+        if("1".equals(type)){//1为及格率
+            StudentXNPassViewPO studentXNPassViewPO = JSON.parseObject(jsonObject.getString("class"), StudentXNPassViewPO.class);
+            ResultVO result = teachingManageService.searchPassRate(studentXNPassViewPO);
+            return result;
+        }else{//2为毕业率
+            Edu300 edu300 = JSON.parseObject(jsonObject.getString("class"), Edu300.class);
+            String num = jsonObject.getString("num");
+            ResultVO result = teachingManageService.searchGraduationRate(edu300,num);
+            return result;
+        }
     }
 
 
