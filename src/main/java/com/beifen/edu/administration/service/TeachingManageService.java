@@ -2924,6 +2924,7 @@ public class TeachingManageService {
             }
             classGraduationPOList.add(classGraduationPO);
         }
+        classGraduationPOList.sort(Comparator.comparing(ClassGraduationPO::getRate).reversed());
         resultVO = ResultVO.setSuccess("查询成功",classGraduationPOList);
         return resultVO;
     }
