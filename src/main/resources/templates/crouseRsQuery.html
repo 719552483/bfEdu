@@ -51,8 +51,9 @@
 				<div class="itab">
 					<ul>
 						<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">授课成果展示</a></li>
-						<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">学生个人成绩排名</a></li>
 						<li><a href="#tab3" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab3()">学院及格率</a></li>
+						<li><a href="#tab4" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab4()">学生及格率/毕业率</a></li>
+						<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">学生个人成绩排名</a></li>
 					</ul>
 				</div>
 
@@ -415,6 +416,137 @@
 
 					<div class="departmentConfigArea">暂无数据,请选择有效的检索条件......</div>
 					<div class="departmentChartArea noneStart"></div>
+				</div>
+
+				<div id="tab4" class="tabson myTabson">
+					<span class="isFirstShowTab4 noneStart">T</span>
+					<div class="formtext myformtext myformtextTipArea noneStart">
+						<b>提示：宽容基数不输入时默认为0</b>
+					</div>
+
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="student2Data_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						</ul>
+						<ul class="toolbar1">
+							<li class="click" id="student2Data_reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次<b>*</b></label>
+									<select class="isSowIndex" id="student2Data_level" >
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院</label>
+									<select class="isSowIndex" id="student2Data_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+									<select class="isSowIndex" id="student2Data_grade">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+									<select class="isSowIndex" id="student2Data_major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+
+								</div>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">批次类型</label>
+									<select class="isSowIndex" id="student2Data_bath">
+										<option value="seleceConfigTip">暂无批次</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<select class="isSowIndex" id="student2Data_year">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">行政班名称</label>
+									<input name="" type="text" class="myInput searchInput" id="student2Data_className" placeholder="请输入行政班名称..."/>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学生姓名</label>
+									<input name="" type="text" class="myInput searchInput" id="student2Data_studentName" placeholder="请输入学生姓名..."/>
+								</div>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">查询类型<b>*</b></label>
+									<select class="isSowIndex" id="student2Data_type">
+										<option value="seleceConfigTip">请选择</option>
+										<option value="1">及格率</option>
+										<option value="2">毕业率</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom student2Data_byNumArea noneStart">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">宽容基数</label>
+									<input name="" type="text" class="myInput searchInput" id="student2Data_byNum" placeholder="请输入允许不及格的科目数 (默认为0)..."/>
+								</div>
+							</ul>
+						</div>
+					</div>
+
+					<div class="tab4TableArea mainStudentBaseInfoTableArea columnsStyle searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="tab4Table" data-unique-id="edu001_ID" style="margin-top: 10px;"></table>
+					</div>
 				</div>
 
 			</div>

@@ -825,11 +825,12 @@ public class TeachingManageController {
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
         String type = jsonObject.getString("type");
         if("1".equals(type)){//1为及格率
-            StudentXNPassViewPO studentXNPassViewPO = JSON.parseObject(jsonObject.getString("class"), StudentXNPassViewPO.class);
+            String classInfo = jsonObject.getString("classInfo");
+            StudentXNPassViewPO studentXNPassViewPO = JSON.parseObject(classInfo, StudentXNPassViewPO.class);
             ResultVO result = teachingManageService.searchPassRate(studentXNPassViewPO);
             return result;
         }else{//2为毕业率
-            Edu300 edu300 = JSON.parseObject(jsonObject.getString("class"), Edu300.class);
+            Edu300 edu300 = JSON.parseObject(jsonObject.getString("classInfo"), Edu300.class);
             String num = jsonObject.getString("num");
             ResultVO result = teachingManageService.searchGraduationRate(edu300,num);
             return result;

@@ -38,6 +38,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#year", str);
 	stuffManiaSelect("#singleStudent_year", str);
 	stuffManiaSelect("#departmnetArea_year", str);
+	stuffManiaSelect("#student2Data_year", str);
 }
 
 //获取合格率信息
@@ -1804,5 +1805,303 @@ function tab3BinBind(){
 
 /**
  * tab3 end
+ * */
+
+/**
+ * tab4
+ * */
+//判断是否首次点击Tba4
+function judgmentIsFristTimeLoadTab4(){
+	var isFirstShowTab4 = $(".isFirstShowTab4")[0].innerText;
+	if (isFirstShowTab4 === "T") {
+		$(".isFirstShowTab4").html("F");
+		stuffEJDElement(EJDMElementInfo);
+		LinkageSelectPublic("#student2Data_level","#student2Data_department","#student2Data_grade","#student2Data_major");
+		tab4BinBind();
+		stuffTab4Table({},getNormalSelectValue('student2Data_type'));
+	}
+}
+
+//填充tab4 Table
+function stuffTab4Table(tableInfo,type){
+	var columnses=[];
+	if(type==='1'){
+		columnses=[ {
+			field : 'edu001_ID',
+			title: '唯一标识',
+			align : 'center',
+			sortable: true,
+			visible : false
+		},{
+			field :'xm',
+			title : '姓名',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field : 'pyccmc',
+			title : '培养层次',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		},{
+			field : 'szxbmc',
+			title : '二级学院',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		}, {
+			field : 'njmc',
+			title : '年级',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		},{
+			field :'zymc',
+			title : '专业',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'batchName',
+			title : '批次',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+
+		},{
+			field :'xzbname',
+			title : '行政班',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'own',
+			title : '课程总数',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'pass',
+			title : '通过课程数',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'rate',
+			title : '及格率',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}];
+	}else{
+		columnses=[ {
+			field : 'edu300_ID',
+			title: '唯一标识',
+			align : 'center',
+			sortable: true,
+			visible : false
+		},{
+			field : 'pyccmc',
+			title : '学生姓名1',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		},{
+			field : 'pyccmc1',
+			title : '行政班1',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		}, {
+			field : 'pyccmc',
+			title : '学号1',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		},{
+			field :'pyccmc',
+			title : '毕业率',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}];
+	}
+
+	$('#tab4Table').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: type==='1'||type===''?'及格率导出':'毕业率导出' //文件名称
+		},
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".mainStudentBaseInfoTableArea", "数据");
+		},
+		columns: columnses
+	});
+
+	drawPagination(".mainStudentBaseInfoTableArea", "数据");
+	drawSearchInput(".mainStudentBaseInfoTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".mainStudentBaseInfoTableArea", "数据");
+}
+
+//类型下拉框change事件
+function student2DataByNumChange(){
+	var type=getNormalSelectValue('student2Data_type');
+
+	if(type==='1'||type===''){
+		$('.student2Data_byNumArea').hide();
+		$('#tab4').find('.myformtextTipArea').hide();
+	}else{
+		$('.student2Data_byNumArea').show();
+		$('#tab4').find('.myformtextTipArea').show();
+	}
+	$('#student2Data_byNum').val('');
+}
+
+//tab4开始检索
+function student2DataStartSearch(){
+	var tab4SearchInfo=getTab4SearchInfo();
+	if(typeof tab4SearchInfo==='undefined'){
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchGraduationRate",
+		data: {
+			"SearchCriteria":JSON.stringify(tab4SearchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffTab4Table(backjson.data,getNormalSelectValue('student2Data_type'));
+			} else {
+				stuffTab4Table({},getNormalSelectValue('student2Data_type'));
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获得Tab4的检索对象
+function getTab4SearchInfo(){
+	var edu103Id=getNormalSelectValue('student2Data_level');
+	var edu104Id=getNormalSelectValue('student2Data_department');
+	var edu105Id=getNormalSelectValue('student2Data_grade');
+	var edu106Id=getNormalSelectValue('student2Data_major');
+	var xnid=getNormalSelectValue('student2Data_year');
+	var batch=getNormalSelectValue('student2Data_bath');
+	var className=$('#student2Data_className').val();
+	var studentName=$('#student2Data_studentName').val();
+	var type=getNormalSelectValue('student2Data_type');
+	var byNum=$('#student2Data_byNum').val();
+	var edu103IdName=getNormalSelectText('student2Data_level');
+	var edu104IdName=getNormalSelectText('student2Data_department');
+	var edu105IdName=getNormalSelectText('student2Data_grade');
+	var edu106IdName=getNormalSelectText('student2Data_major');
+	var xnidName=getNormalSelectText('student2Data_year');
+	var batchName=getNormalSelectText('student2Data_bath');
+
+	if(edu103Id===''){
+		toastr.warning('层次不能为空');
+		return;
+	}
+
+	if(type===''){
+		toastr.warning('查询类型不能为空');
+		return;
+	}
+
+	if(byNum!==''&&isNaN(byNum)){
+		toastr.warning('宽容基数必须是数字');
+		return;
+	}
+
+	var classObJECT=new Object();
+	classObJECT.pyccbm=edu103Id;
+	classObJECT.xbbm=edu104Id;
+	classObJECT.nj=edu105Id;
+	classObJECT.zybm=edu106Id;
+	classObJECT.batch=batch;
+	classObJECT.xnid=xnid;
+	classObJECT.xzbmc=className;
+	classObJECT.studentName=studentName;
+	classObJECT.pyccmc=edu103IdName;
+	classObJECT.xbmc=edu104IdName;
+	classObJECT.edu105IdName=edu105IdName;
+	classObJECT.zymc=edu106IdName;
+	classObJECT.xnidName=xnidName;
+	classObJECT.batchName=batchName;
+
+	var returnObject=new Object();
+	returnObject.type=type;
+	returnObject.num=byNum;
+	returnObject.classInfo=classObJECT;
+
+	return returnObject;
+}
+
+//tab4重置检索
+function student2DataReReloadSearchs(){
+	var reObject = new Object();
+	reObject.fristSelectId = "#student2Data_level";
+	reObject.actionSelectIds = "#student2Data_department,#student2Data_grade,#student2Data_major";
+	reObject.normalSelectIds = "#student2Data_year,#student2Data_bath,#student2Data_type";
+	reObject.InputIds = "#student2Data_className,#student2Data_studentName,#student2Data_byNum";
+	reReloadSearchsWithSelect(reObject);
+	stuffTab4Table({},getNormalSelectValue('student2Data_type'));
+	$('.student2Data_byNumArea').hide();
+	$('#tab4').find('.myformtextTipArea').hide();
+}
+
+//tab4页面按钮事件绑定
+function tab4BinBind(){
+	//类型change事件
+	$("#student2Data_type").change(function() {
+		student2DataByNumChange();
+	});
+
+	//开始检索
+	$('#student2Data_startSearch').unbind('click');
+	$('#student2Data_startSearch').bind('click', function(e) {
+		student2DataStartSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#student2Data_reReloadSearchs').unbind('click');
+	$('#student2Data_reReloadSearchs').bind('click', function(e) {
+		student2DataReReloadSearchs();
+		e.stopPropagation();
+	});
+}
+/**
+ * tab4 end
  * */
 
