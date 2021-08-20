@@ -544,8 +544,8 @@
 						</div>
 					</div>
 
-					<div class="tab4TableArea mainStudentBaseInfoTableArea columnsStyle searchGivePaddingR">
-						<table class="tablelist myTableStyle" id="tab4Table" data-unique-id="edu001_ID" style="margin-top: 10px;"></table>
+					<div class="tab4TableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="tab4Table" style="margin-top: 10px;"></table>
 					</div>
 				</div>
 
@@ -699,7 +699,44 @@
 		</div>
 	</div>
 
-	<!-- ajax请求masking -->
+	<!-- 毕业率详情Modal -->
+	<div class="modal fade bs-example-modal-lg" id="graduateDeatilsModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="graduateDeatilsTableArea searchGivePaddingR">
+							<table class="tablelist myTableStyle" id="graduateDeatilsTable" style="margin-top: 10px;"></table>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="cancel" value="返回"/>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	<!-- 成绩详情Modal -->
+	<div class="modal fade bs-example-modal-lg" id="studentGraduateInfoModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="specialCanle" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="historyInfo"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="specialCanle" value="返回"/>
+					</div>
+				</div>
+			</div>
+	</div>
+
+
+		<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 		<div class="spinner-box">
 			<div class="pulse-container">

@@ -1687,6 +1687,7 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+.graduateDeatilsTableArea .bootstrap4 .search,
 .tab4TableArea .bootstrap4 .search,
 .singleStudentGradeTableArea .bootstrap4 .search,
 .crouseRsForDeatilsTable1Area .bootstrap4 .search,
@@ -2907,6 +2908,31 @@ input:focus{
 .departmentChartArea{
 	margin-top: 35px;
 }
+
+#graduateDeatilsModal .fixed-table-container{
+    margin-right: 12px;
+    margin-left: 20px;
+}
+
+#graduateDeatilsModal .fixed-table-pagination{
+    margin-left: 27px;
+}
+
+#studentGraduateInfoModal .historyArea{
+	margin-bottom: 8px;
+}
+
+#studentGraduateInfoModal .historyArea .greenTxt{
+	color: green!important;
+	line-height: 17px!important;;
+}
+
+#studentGraduateInfoModal .historyArea .redTxt{
+	color: #d70101!important;
+	line-height: 17px!important;;
+}
+
+
 
 @keyframes serachAnimation {
     10% {
