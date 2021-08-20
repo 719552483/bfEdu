@@ -1546,7 +1546,7 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 				align : 'center',
 				visible : false
 			},{
-				field : 'StudentName',
+				field : 'studentName',
 				title : '学生姓名',
 				align : 'left',
 				sortable: true,
@@ -1639,6 +1639,7 @@ function singleStudentStartSearch(){
 			if (backjson.code === 200) {
 				stuffSingleStudentGradeTable(backjson.data,singleStudentSearchInfo.type);
 			} else {
+				stuffSingleStudentGradeTable({},singleStudentSearchInfo.type);
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -2559,19 +2560,25 @@ function getTab4SearchInfo(){
 
 	var classObJECT=new Object();
 	classObJECT.pyccbm=edu103Id;
-	classObJECT.xbbm=edu104Id;
-	classObJECT.nj=edu105Id;
 	classObJECT.zybm=edu106Id;
 	classObJECT.batch=batch;
 	classObJECT.xnid=xnid;
-	classObJECT.xzbmc=className;
-	classObJECT.studentName=studentName;
 	classObJECT.pyccmc=edu103IdName;
 	classObJECT.xbmc=edu104IdName;
 	classObJECT.edu105IdName=edu105IdName;
 	classObJECT.zymc=edu106IdName;
 	classObJECT.xnidName=xnidName;
 	classObJECT.batchName=batchName;
+	if(type==='2'){
+		classObJECT.njbm=edu105Id;
+		classObJECT.xbbm=edu104Id;
+		classObJECT.xzbmc=className;
+	}else{
+		classObJECT.nj=edu105Id;
+		classObJECT.szxb=edu104Id;
+		classObJECT.xzbname=className;
+		classObJECT.xm=studentName;
+	}
 
 	var returnObject=new Object();
 	returnObject.type=type;
