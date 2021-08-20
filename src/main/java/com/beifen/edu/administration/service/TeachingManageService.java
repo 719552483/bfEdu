@@ -2795,6 +2795,7 @@ public class TeachingManageService {
                     if (studentName != null && !"".equals(studentName)) {
                         predicates.add(cb.like(root.<String> get("StudentName"), "%"+studentName+"%"));
                     }
+                    predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
                     predicates.add(cb.equal(root.<String> get("courseName"), courseName));
                     predicates.add(cb.equal(root.<String> get("xnid"), xnid));
                     Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
@@ -2807,8 +2808,11 @@ public class TeachingManageService {
                     return cb.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
             };
-
             List<Edu005> edu005List = edu005Dao.findAll(specification);
+            if(edu005List.size() == 0){
+                resultVO = ResultVO.setFailed("暂无数据");
+                return resultVO;
+            }
             resultVO = ResultVO.setSuccess("查询成功！",edu005List);
         }
         return resultVO;
