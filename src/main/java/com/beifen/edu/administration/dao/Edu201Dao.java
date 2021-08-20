@@ -92,6 +92,10 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	List<Edu201> queryCulturePlanIds(List<Long> current108s);
 
 	//根据108ID获取任务书集合
+	@Query(value = "select e.edu201_id from Edu201 e where e.edu108_ID in ?1 AND SFSQKS = 'T' and xnid = ?2",nativeQuery = true)
+	List<Long> queryCulturePlanIdsNew(List<Long> current108s,String xnid);
+
+	//根据108ID获取任务书集合
 	@Query(value = "select e.ls from Edu201 e where e.edu108_ID in ?1 and e.sfypk = 'T'  and e.sszt = 'pass' GROUP BY ls",nativeQuery = true)
 	List<String> queryCoursePlanIds(List<Long> current108s);
 

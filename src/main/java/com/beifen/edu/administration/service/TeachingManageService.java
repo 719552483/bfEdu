@@ -2774,6 +2774,46 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    //教务查询专业授课成果(单学科)
+    public ResultVO searchProfessionalCourseResult2(Edu107 edu107,String xnid,String className,String studentName,String courseName) {
+        ResultVO resultVO;
+        List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+        if(edu107List.size() == 0){
+            resultVO = ResultVO.setFailed("未制订培养计划");
+        }else if(edu107List.size() > 1){
+            resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
+        }else{
+            List<Long> edu107IdList = edu107List.stream().map(e -> e.getEdu107_ID()).distinct().collect(Collectors.toList());
+            List<Long> edu108List = edu108Dao.getEdu108ByEdu107(edu107IdList);
+            List<Long> edu201List = edu201Dao.queryCulturePlanIdsNew(edu108List,xnid);
+            Specification<Edu005> specification = new Specification<Edu005>() {
+                public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicates = new ArrayList<Predicate>();
+                    if (className != null && !"".equals(className)) {
+                        predicates.add(cb.like(root.<String> get("className"), "%"+className+"%"));
+                    }
+                    if (studentName != null && !"".equals(studentName)) {
+                        predicates.add(cb.like(root.<String> get("StudentName"), "%"+studentName+"%"));
+                    }
+                    predicates.add(cb.equal(root.<String> get("courseName"), courseName));
+                    predicates.add(cb.equal(root.<String> get("xnid"), xnid));
+                    Path<Object> Edu201Path = root.get("edu201_ID");//定义查询的字段
+                    CriteriaBuilder.In<Object> inEdu201 = cb.in(Edu201Path);
+                    for (int i = 0; i < edu201List.size(); i++) {
+                        inEdu201.value(edu201List.get(i));//存入值
+                    }
+                    predicates.add(cb.and(inEdu201));
+                    query.orderBy(cb.desc(root.get("grade")));
+                    return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                }
+            };
+
+            List<Edu005> edu005List = edu005Dao.findAll(specification);
+            resultVO = ResultVO.setSuccess("查询成功！",edu005List);
+        }
+        return resultVO;
+    }
+
     //教务查询学生及格率
     public ResultVO searchPassRate(StudentXNPassViewPO studentPassViewPO){
         ResultVO resultVO;
