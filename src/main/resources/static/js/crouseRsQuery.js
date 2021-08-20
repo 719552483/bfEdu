@@ -1135,6 +1135,11 @@ function stuffAllCrouse(tableInfo){
 				formatter : paramsMatter
 			}]
 	});
+
+	drawPagination(".chooseCrouseTableArea", "课程信息");
+	drawSearchInput(".chooseCrouseTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
 }
 
 //课程modal事件绑定
@@ -1485,35 +1490,16 @@ function judgmentIsFristTimeLoadTab2(){
 		$(".isFirstShowTab2").html("F");
 		stuffEJDElement(EJDMElementInfo);
 		LinkageSelectPublic("#singleStudent_level","#singleStudent_department","#singleStudent_grade","#singleStudent_major");
-		stuffSingleStudentGradeTable({});
+		stuffSingleStudentGradeTable({},'1');
 		tab2BinBind();
 	}
 }
 
 //渲染学生排名表
-function stuffSingleStudentGradeTable(tableInfo){
-	$('#singleStudentGradeTable').bootstrapTable('destroy').bootstrapTable({
-		data: tableInfo,
-		pagination: true,
-		pageNumber: 1,
-		pageSize : 10,
-		pageList : [ 10 ],
-		showToggle: false,
-		showFooter: false,
-		clickToSelect: true,
-		search: true,
-		editable: false,
-		striped: true,
-		sidePagination: "client",
-		toolbar: '#toolbar',
-		showColumns: true,
-		onPageChange: function() {
-			drawPagination(".singleStudentGradeTableArea", "排名信息");
-		},
-		onPostBody: function() {
-			toolTipUp(".myTooltip");
-		},
-		columns: [
+function stuffSingleStudentGradeTable(tableInfo,type){
+	var columns=[];
+	if(type==='1'){
+		columns=[
 			{
 				field : 'edu201_ID',
 				title: '唯一标识',
@@ -1552,6 +1538,69 @@ function stuffSingleStudentGradeTable(tableInfo){
 				formatter :paramsMatter
 			}
 		]
+	}else {
+		columns=[
+			{
+				field : 'edu201_ID',
+				title: '唯一标识',
+				align : 'center',
+				visible : false
+			},{
+				field : 'StudentName',
+				title : '学生姓名',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			}, {
+				field : 'courseName',
+				title : '班级名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'studentCode',
+				title : '课程名称',
+				align : 'left',
+				sortable: true,
+				formatter : paramsMatter
+			},{
+				field : 'xn',
+				title : '学年',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			},{
+				field : 'grade',
+				title : '成绩',
+				align : 'left',
+				sortable: true,
+				formatter :paramsMatter
+			}
+		]
+	}
+
+	$('#singleStudentGradeTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".singleStudentGradeTableArea", "排名信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: columns
 	});
 
 	drawPagination(".singleStudentGradeTableArea", "排名信息");
@@ -1588,7 +1637,7 @@ function singleStudentStartSearch(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				stuffSingleStudentGradeTable(backjson.data);
+				stuffSingleStudentGradeTable(backjson.data,singleStudentSearchInfo.type);
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -1612,6 +1661,7 @@ function getSingleStudentSearchInfo(){
 	var xnName=getNormalSelectText('singleStudent_year');
 	var className=$('#singleStudent_className').val();
 	var studentName=$('#singleStudent_studentName').val();
+	var courseName=$('#singleStudent_courseName').val();
 
 	if(edu103===''){
 		toastr.warning('层次不能为空');
@@ -1661,7 +1711,8 @@ function getSingleStudentSearchInfo(){
 	returnObject.xnName=xnName;
 	returnObject.className=className;
 	returnObject.studentName=studentName;
-
+	courseName===''?returnObject.type='1':returnObject.type='2';
+	returnObject.courseName=courseName;
 	return returnObject;
 }
 
@@ -1671,7 +1722,7 @@ function singleStudentReReloadSearchs(){
 	reObject.fristSelectId = "#singleStudent_level";
 	reObject.actionSelectIds = "#singleStudent_department,#singleStudent_grade,#singleStudent_major";
 	reObject.normalSelectIds = "#singleStudent_year,#singleStudent_bath";
-	reObject.InputIds = "#singleStudent_className,#singleStudent_studentName";
+	reObject.InputIds = "#singleStudent_className,#singleStudent_studentName,#singleStudent_courseName";
 	reReloadSearchsWithSelect(reObject);
 	stuffSingleStudentGradeTable({});
 }
@@ -1768,6 +1819,12 @@ function tab2BinBind(){
 	//行政班focus
 	$('#singleStudent_className').focus(function(e){
 		xzbFocus("singleStudent_className");
+		e.stopPropagation();
+	});
+
+	//课程focus
+	$('#singleStudent_courseName').focus(function(e){
+		coruseNamefocus("singleStudent_courseName");
 		e.stopPropagation();
 	});
 }
