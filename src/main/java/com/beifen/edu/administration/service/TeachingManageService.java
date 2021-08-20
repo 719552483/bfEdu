@@ -2794,8 +2794,8 @@ public class TeachingManageService {
                     if (studentPassViewPO.getZybm() != null && !"".equals(studentPassViewPO.getZybm())) {
                         predicates.add(cb.equal(root.<String>get("zybm"),  studentPassViewPO.getZybm()));
                     }
-                    if (studentPassViewPO.getEdu300_ID() != null && !"".equals(studentPassViewPO.getEdu300_ID())) {
-                        predicates.add(cb.equal(root.<String>get("Edu300_ID"),  studentPassViewPO.getEdu300_ID()));
+                    if (studentPassViewPO.getXzbname() != null && !"".equals(studentPassViewPO.getXzbname())) {
+                        predicates.add(cb.like(root.<String>get("xzbname"), "%"+ studentPassViewPO.getXzbname()+"%"));
                     }
                     if (studentPassViewPO.getXm() != null && !"".equals(studentPassViewPO.getXm())) {
                         predicates.add(cb.like(root.<String>get("xm"),  "%"+studentPassViewPO.getXm()+"%"));
@@ -2836,8 +2836,8 @@ public class TeachingManageService {
                     if (studentPassViewPO.getZybm() != null && !"".equals(studentPassViewPO.getZybm())) {
                         predicates.add(cb.equal(root.<String>get("zybm"),  studentPassViewPO.getZybm()));
                     }
-                    if (studentPassViewPO.getEdu300_ID() != null && !"".equals(studentPassViewPO.getEdu300_ID())) {
-                        predicates.add(cb.equal(root.<String>get("Edu300_ID"),  studentPassViewPO.getEdu300_ID()));
+                    if (studentPassViewPO.getXzbname() != null && !"".equals(studentPassViewPO.getXzbname())) {
+                        predicates.add(cb.like(root.<String>get("xzbname"), "%"+ studentPassViewPO.getXzbname()+"%"));
                     }
                     if (studentPassViewPO.getXm() != null && !"".equals(studentPassViewPO.getXm())) {
                         predicates.add(cb.like(root.<String>get("xm"),  "%"+studentPassViewPO.getXm()+"%"));
