@@ -1233,6 +1233,201 @@ function allCrouseReSearch(){
 	});
 }
 
+//行政班focus
+function xzbFocus(id){
+	xzbReReloadSearchs();
+	getXzb();
+	xzbBtnBind(id);
+	$.showModal('#allClassModal',true);
+	LinkageSelectPublic("#allClass_level","#allClass_department","#allClass_grade","#allClass_major");
+}
+
+//获取行政班
+function getXzb(){
+	var serachObject=getXzbSearchInfo();
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAdministrationClass",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"SearchCriteria":JSON.stringify(serachObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAdministrationClassTable(backjson.data);
+			} else {
+				stuffAdministrationClassTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充行政班表
+function stuffAdministrationClassTable(tableInfo){
+	$('#allClass_administrationClassTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".administrationClassTableArea", "行政班信息");
+		},
+		columns: [ {
+			field : 'radio',
+			radio : true
+		},  {
+			field : 'edu300_ID',
+			title: '唯一标识',
+			align : 'center',
+			sortable: true,
+			visible : false
+		}, {
+			field : 'xzbmc',
+			title : '行政班名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field : 'pyccmc',
+			title : '培养层次',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		}, {
+			field : 'xbmc',
+			title : '所属二级学院',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field : 'njmc',
+			title : '年级',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field : 'zymc',
+			title : '专业',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field : 'batchName',
+			title : '批次',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter,
+			visible : false
+		},{
+			field : 'xzbbh',
+			title : '行政班班号',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter,
+			visible : false
+		},
+		{
+			field : 'xzbdm',
+			title : '行政班代码',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter,
+			visible : false
+		},{
+			field : 'xzbbm',
+			title : '行政班编码',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter,
+			visible : false
+		}]
+	});
+	drawPagination(".administrationClassTableArea", "行政班信息");
+	drawSearchInput(".administrationClassTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".administrationClassTableArea", "行政班信息");
+}
+
+//获取行政班检索条件
+function getXzbSearchInfo(){
+	var returnObject=new Object();
+	returnObject.level=getNormalSelectValue('allClass_level');
+	returnObject.department=getNormalSelectValue('allClass_department');
+	returnObject.grade=getNormalSelectValue('allClass_grade');
+	returnObject.major=getNormalSelectValue('allClass_major');
+	returnObject.className=$('#allClass_Name').val();
+	return returnObject;
+}
+
+//行政班Modal重置检索
+function xzbReReloadSearchs(){
+	var reObject = new Object();
+	reObject.fristSelectId = "#allClass_level";
+	reObject.InputIds = "#allClass_Name";
+	reObject.actionSelectIds = "#allClass_department,#allClass_grade,#allClass_major";
+	reReloadSearchsWithSelect(reObject);
+	getXzb();
+}
+
+//确认选择行政班
+function allClassConfirm(id){
+	var choosedClass = $("#allClass_administrationClassTable").bootstrapTable("getSelections");
+	if(choosedClass.length<=0){
+		toastr.warning('暂未选择行政班');
+		return;
+	}
+	$('#'+id).val(choosedClass[0].xzbmc);
+	$.hideModal();
+}
+
+//行政班modal事件绑定
+function xzbBtnBind(id){
+	//开始检索
+	$('#allClass_StartSearch').unbind('click');
+	$('#allClass_StartSearch').bind('click', function(e) {
+		getXzb();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#allClass_ReSearch').unbind('click');
+	$('#allClass_ReSearch').bind('click', function(e) {
+		xzbReReloadSearchs();
+		e.stopPropagation();
+	});
+
+	//确认选择
+	$('#allClass_confirm').unbind('click');
+	$('#allClass_confirm').bind('click', function(e) {
+		allClassConfirm(id);
+		e.stopPropagation();
+	});
+}
+
 //页面初始化时按钮事件绑定
 function binBind(){
 	//提示框取消按钮
@@ -1255,6 +1450,12 @@ function binBind(){
 		e.stopPropagation();
 	});
 
+	//行政班focus
+	$('#className').focus(function(e){
+		xzbFocus("className");
+		e.stopPropagation();
+	});
+
 	//开始检索
 	$('#startSearch').unbind('click');
 	$('#startSearch').bind('click', function(e) {
@@ -1269,7 +1470,6 @@ function binBind(){
 		e.stopPropagation();
 	});
 }
-
 /**
  * tab1 end
  * */
@@ -1563,6 +1763,12 @@ function tab2BinBind(){
 
 	$("#singleStudent_year").change(function() {
 		singleStudentStartSearch();
+	});
+
+	//行政班focus
+	$('#singleStudent_className').focus(function(e){
+		xzbFocus("singleStudent_className");
+		e.stopPropagation();
 	});
 }
 
@@ -1874,7 +2080,6 @@ function stuffTab4Table(tableInfo,type){
 			align : 'left',
 			sortable: true,
 			formatter : paramsMatter
-
 		},{
 			field :'xzbname',
 			title : '行政班',
@@ -2352,6 +2557,12 @@ function tab4BinBind(){
 	$('#student2Data_reReloadSearchs').unbind('click');
 	$('#student2Data_reReloadSearchs').bind('click', function(e) {
 		student2DataReReloadSearchs();
+		e.stopPropagation();
+	});
+
+	//行政班focus
+	$('#student2Data_className').focus(function(e){
+		xzbFocus("student2Data_className");
 		e.stopPropagation();
 	});
 }
