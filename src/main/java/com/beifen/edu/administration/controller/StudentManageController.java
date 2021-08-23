@@ -255,6 +255,47 @@ public class StudentManageController {
         return result;
     }
 
+
+    /**
+     * 数据报表-学生
+     *
+     * @return returnMap
+     */
+//    @RequestMapping("exportStudentNum")
+//    @ResponseBody
+//    public ResultVO exportStudentNum(HttpServletRequest request,HttpServletResponse response,@RequestParam("searchInfo") String searchInfo) {
+//        ResultVO result;
+//        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(searchInfo);
+//        String szxb = jsonObject.getString("szxb");
+//        String szxbmc = jsonObject.getString("szxbmc");
+//        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+//        String fileName;
+//        if(isIE){
+//            fileName="exportStudentNum";
+//        }else{
+//            if(szxb != null && !"".equals(szxb)){
+//                fileName=szxbmc+"，学生基础信息表";
+//            }else{
+//                fileName="全校学生基础信息表";
+//            }
+//
+//        }
+//        //创建Excel文件
+//        XSSFWorkbook workbook = studentManageService.exportStudentNum(szxb);
+//        try {
+//            utils.loadModal(response,fileName, workbook);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        result = ResultVO.setSuccess("下载成功");
+//        return result;
+//    }
+
+
+
+
     /**
      * 生成学生名单
      * @param searchInfo

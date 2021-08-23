@@ -13,6 +13,7 @@ public class Edu602 {
     private Long lastRole;//上一步审批角色
     private Long currentRole;//当前审批角色
     private Long nextRole;//下一步审批角色
+    private String currentRoleMc;//当前审批角色名称
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -65,5 +66,13 @@ public class Edu602 {
 
     public void setNextRole(Long nextRole) {
         this.nextRole = nextRole;
+    }
+
+    public String getCurrentRoleMc() {
+        return currentRoleMc;
+    }
+
+    public void setCurrentRoleMc(String currentRoleMc) {
+        this.currentRoleMc = currentRoleMc;
     }
 }

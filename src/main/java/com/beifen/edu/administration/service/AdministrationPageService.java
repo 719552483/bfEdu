@@ -117,6 +117,10 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu500Dao edu500Dao;
 	@Autowired
+	private Edu602Dao edu602Dao;
+	@Autowired
+	private Edu603Dao edu603Dao;
+	@Autowired
 	private Edu993Dao edu993Dao;
 	@Autowired
 	private Edu990Dao edu990Dao;
@@ -3309,6 +3313,32 @@ public class AdministrationPageService {
 		return edu500List;
 	}
 
+	public List<Edu603> queryAllApprove() {
+		List<Edu603> edu500List = edu603Dao.queryAllApprove();
+		return edu500List;
+	}
+
+	public ResultVO getApproveDetail(String edu603Id) {
+		ResultVO resultVO;
+		Edu603 edu603 = edu603Dao.findOne(Long.parseLong(edu603Id));
+		List<Edu602> edu602List = edu602Dao.getApproveDetail(edu603.getBusinessType());
+		resultVO = ResultVO.setSuccess("查询成功",edu602List);
+		return resultVO;
+	}
+
+	public ResultVO newEdu603() {
+		List<Edu000> edu000List = edu000DAO.queryejdm("splx");
+		for(Edu000 e:edu000List){
+			Edu603 edu603 = new Edu603();
+			edu603.setBusinessType(e.getEjdm());
+			edu603.setBusinessName(e.getEjdmz());
+			edu603.setSfqy("T");
+			String num = edu602Dao.selectCount(e.getEjdm());
+			edu603.setNum(Integer.parseInt(num));
+			edu603Dao.save(edu603);
+		}
+		return ResultVO.setSuccess("1");
+	}
 
 	//查询全部二级学院
 	public ResultVO getAllDepartment() {

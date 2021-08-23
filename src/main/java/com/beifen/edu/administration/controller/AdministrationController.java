@@ -433,8 +433,23 @@ public class AdministrationController {
 		returnMap.put("allTeacher", staffManageService.queryAllTeacher());
 		returnMap.put("allTerm", administrationPageService.queryAllXn());
 		returnMap.put("AllLocal", administrationPageService.queryAllLocal());
+		returnMap.put("allApprove",administrationPageService.queryAllApprove());
 		returnMap.put("result", true);
 		return returnMap;
+	}
+
+	@RequestMapping("/newEdu603")
+	@ResponseBody
+	public ResultVO newEdu603() {
+		ResultVO result = administrationPageService.newEdu603();
+		return result;
+	}
+
+	@RequestMapping("/getApproveDetail")
+	@ResponseBody
+	public ResultVO getApproveDetail(@RequestParam("edu603Id") String edu603Id) {
+		ResultVO result = administrationPageService.getApproveDetail(edu603Id);
+		return result;
 	}
 
 
