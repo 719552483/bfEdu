@@ -12,4 +12,8 @@ public interface Edu600Dao extends JpaRepository<Edu600, Long>, JpaSpecification
     //根据关联键查询
     @Query(value = "select * from Edu600 t where t.BUSINESS_KEY =?1",nativeQuery = true)
     Edu600 countoneByBUSINESSKEY(String BUSINESS_KEY);
+
+    //根据关联键查询
+    @Query(value = "select * from edu600 where approval_end = 'F' and is_delete = 'F' and business_type = ?1",nativeQuery = true)
+    List<Edu600> updateApproveDetailCheck(String BUSINESS_KEY);
 }

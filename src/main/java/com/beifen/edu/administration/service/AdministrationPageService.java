@@ -117,6 +117,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu500Dao edu500Dao;
 	@Autowired
+	private Edu600Dao edu600Dao;
+	@Autowired
 	private Edu602Dao edu602Dao;
 	@Autowired
 	private Edu603Dao edu603Dao;
@@ -3323,6 +3325,39 @@ public class AdministrationPageService {
 		Edu603 edu603 = edu603Dao.findOne(Long.parseLong(edu603Id));
 		List<Edu602> edu602List = edu602Dao.getApproveDetail(edu603.getBusinessType());
 		resultVO = ResultVO.setSuccess("查询成功",edu602List);
+		return resultVO;
+	}
+
+	//修改审批流程名字
+	public ResultVO updateApproveName(String edu603Id,String businessName) {
+		ResultVO resultVO;
+		Edu603 edu603 = edu603Dao.findOne(Long.parseLong(edu603Id));
+		edu603.setBusinessName(businessName);
+		edu603Dao.save(edu603);
+		edu000DAO.updateApproveName(businessName,edu603.getBusinessType());
+		resultVO = ResultVO.setSuccess("修改成功");
+		return resultVO;
+	}
+
+	//修改审批流程状态
+	public ResultVO updateApproveZt(String edu603Id,String sfqy) {
+		ResultVO resultVO;
+		Edu603 edu603 = edu603Dao.findOne(Long.parseLong(edu603Id));
+		edu603.setSfqy(sfqy);
+		edu603Dao.save(edu603);
+		resultVO = ResultVO.setSuccess("修改成功");
+		return resultVO;
+	}
+
+	public ResultVO updateApproveDetailCheck(String edu603Id) {
+		ResultVO resultVO;
+		Edu603 edu603 = edu603Dao.findOne(Long.parseLong(edu603Id));
+		List<Edu600> edu600List = edu600Dao.updateApproveDetailCheck(edu603.getBusinessType());
+		if(edu600List.size()>0){
+			resultVO = ResultVO.setFailed("还有未审批完成的数据，请先进行审批再修改审批流程！");
+		}else{
+			resultVO = ResultVO.setSuccess("可以修改");
+		}
 		return resultVO;
 	}
 

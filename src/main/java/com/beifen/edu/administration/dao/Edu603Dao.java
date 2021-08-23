@@ -15,4 +15,7 @@ public interface Edu603Dao extends JpaRepository<Edu603, Long>, JpaSpecification
     //查看所有审批流
     @Query(value = "select * from edu603 e order by business_type", nativeQuery = true)
     List<Edu603> queryAllApprove();
+
+    @Query(value = "select * from edu603 e where business_type = ?1", nativeQuery = true)
+    Edu603 queryApproveByType(String business_type);
 }

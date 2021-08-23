@@ -48,4 +48,9 @@ public interface Edu000Dao extends  JpaRepository<Edu000, Long>,JpaSpecification
 	@Query(value = "delete from edu000 where BF000_ID in ?1", nativeQuery = true)
     void deleteInEdu000Ids(List<String> deleteArray);
 
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE edu000 set ejdmz = ?1 where ejdmglzd = 'splx' and ejdm = ?2", nativeQuery = true)
+	void updateApproveName(String ejdmz, String ejdm);
+
 }

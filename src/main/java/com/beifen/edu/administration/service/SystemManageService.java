@@ -60,6 +60,8 @@ public class SystemManageService {
     @Autowired
     Edu202Dao edu202Dao;
     @Autowired
+    Edu603Dao edu603Dao;
+    @Autowired
     Edu995Dao edu995Dao;
     @Autowired
     RedisUtils redisUtils;
@@ -649,6 +651,11 @@ public class SystemManageService {
     public ResultVO addSecondaryCode(Edu000 edu000) {
         ResultVO resultVO;
         edu000Dao.save(edu000);
+        if("splx".equals(edu000.getEjdmglzd())){
+            Edu603 edu603 = edu603Dao.queryApproveByType(edu000.getEjdm());
+            edu603.setBusinessName(edu000.getEjdmz());
+            edu603Dao.save(edu603);
+        }
         resultVO = ResultVO.setSuccess("操作成功",edu000);
         return resultVO;
     }

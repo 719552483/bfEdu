@@ -445,6 +445,10 @@ public class AdministrationController {
 		return result;
 	}
 
+
+	/**
+	 * 获取审批流详情
+	 */
 	@RequestMapping("/getApproveDetail")
 	@ResponseBody
 	public ResultVO getApproveDetail(@RequestParam("edu603Id") String edu603Id) {
@@ -452,6 +456,35 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 * 判断是否可以修改审批流程
+	 */
+	@RequestMapping("/updateApproveDetailCheck")
+	@ResponseBody
+	public ResultVO updateApproveDetailCheck(@RequestParam("edu603Id") String edu603Id) {
+		ResultVO result = administrationPageService.updateApproveDetailCheck(edu603Id);
+		return result;
+	}
+
+	/**
+	 * 修改审批流程名字
+	 */
+	@RequestMapping("/updateApproveName")
+	@ResponseBody
+	public ResultVO updateApproveName(@RequestParam("edu603Id") String edu603Id,@RequestParam("businessName") String businessName) {
+		ResultVO result = administrationPageService.updateApproveName(edu603Id,businessName);
+		return result;
+	}
+
+	/**
+	 * 修改审批流程状态
+	 */
+	@RequestMapping("/updateApproveZt")
+	@ResponseBody
+	public ResultVO updateApproveZt(@RequestParam("edu603Id") String edu603Id,@RequestParam("sfqy") String sfqy) {
+		ResultVO result = administrationPageService.updateApproveZt(edu603Id,sfqy);
+		return result;
+	}
 
 	/**
 	 * 获得所有层次关系管理信息
