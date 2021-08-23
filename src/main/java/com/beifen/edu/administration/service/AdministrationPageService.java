@@ -2602,7 +2602,7 @@ public class AdministrationPageService {
 			actionKey = 0;
 			bussinsneType = 0;
 			if (edu200s.size() != 0) {
-				resultVO = ResultVO.setFailed("课程名称重复，无法添加");
+				resultVO = ResultVO.setFailed("【"+edu200.getKcmc()+"】课程名称重复，无法添加");
 				return resultVO;
 			}
 		}
@@ -2743,11 +2743,25 @@ public class AdministrationPageService {
 			count = importClasses.size();
 			for (int i = 0; i < importClasses.size(); i++) {
 				Edu200 edu200 = importClasses.get(i);
+					List<Edu200> edu200s = edu200DAO.queryAllByName(edu200.getKcmc());
+					if (edu200s.size() != 0) {
+						resultVO = ResultVO.setFailed("【"+edu200.getKcmc()+"】课程名称重复，无法添加");
+						return resultVO;
+					}
+			}
+			for (int i = 0; i < importClasses.size(); i++) {
+				Edu200 edu200 = importClasses.get(i);
 				edu200.setLrr(lrrmc);
 				edu200.setLrrID(Long.parseLong(userKey));
-				ResultVO result = addNewClass(edu600, edu200,userId);
+				Edu600 edu600New = new Edu600();
+				try {
+					BeanUtils.copyProperties(edu600New, edu600);
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				ResultVO result = addNewClass(edu600New, edu200,userId);
 				if (result.getCode() == 500) {
-					resultVO = ResultVO.setFailed("数据导入失败");
+					resultVO = result;
 					if (saveIds.size() != 0) {
 						edu200DAO.deleteByIds(saveIds);
 					}

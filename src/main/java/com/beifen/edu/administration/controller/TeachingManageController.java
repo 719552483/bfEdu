@@ -843,6 +843,19 @@ public class TeachingManageController {
         }
     }
 
+    /**
+     * 教务查询课程完成进度
+     * @return
+     */
+//    @RequestMapping("/searchCourseProgress")
+//    @ResponseBody
+//    public ResultVO searchCourseProgress(@RequestParam("SearchCriteria") String SearchCriteria) {
+//        CourseProgressPO courseProgressPO = JSON.parseObject(SearchCriteria, CourseProgressPO.class);
+//        if(){
+//
+//        }
+//    }
+
 
     /**
      * 导出教务专业授课成果-校验
