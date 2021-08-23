@@ -1201,26 +1201,7 @@ function confirmImportNewClass(){
 				toolTipUp(".myTooltip");
 				$.hideModal("#importNewClassModal");
 			} else {
-				if(!backjosn.data.isExcel){
-					showImportErrorInfo("#importNewClassModal","请上传xls或xlsx类型的文件");
-					return
-				}
-				if(!backjosn.data.sheetCountPass){
-					showImportErrorInfo("#importNewClassModal","上传文件的标签页个数不正确");
-					return
-				}
-				if(!backjosn.data.modalPass){
-					showImportErrorInfo("#importNewClassModal","模板格式与原始模板不对应");
-					return
-				}
-				if(!backjosn.data.haveData){
-					showImportErrorInfo("#importNewClassModal","文件暂无数据");
-					return
-				}
-				if(!backjosn.data.dataCheck){
-					showImportErrorInfo("#importNewClassModal",backjosn.data.checkTxt);
-					return
-				}
+				showImportErrorInfo("#importNewClassModal",backjosn.msg);
 				toastr.warning(backjosn.msg);
 			}
         },beforeSend: function(xhr) {
