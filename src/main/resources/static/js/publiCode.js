@@ -53,6 +53,7 @@ function drawJiaoWuPublicCodeTables(backjson){
 	stuffAllDepartmentTable(backjson.allDepartment);
 	stuffAllGradeTable(backjson.allGrade);
 	stuffAllMajorTable(backjson.allMajor);
+	stuffAllApproveTable(backjson.allApprove);
 	stuffMajorBelongtoSelect();
 }
 
@@ -1743,6 +1744,445 @@ function sendMajorRemoveInfo(removeArray){
 		}
 	});
 }
+
+//填充审批流程表
+function stuffAllApproveTable(allApprove){
+	window.releaseNewsEvents = {
+		'click #modifySingleApprove': function(e, value, row, index) {
+			modifySingleApprove(row,index);
+		},
+		'click #writeSingleApprove': function(e, value, row, index) {
+			writeSingleApprove(row);
+		},
+		'click #confriModifySingleApprove': function(e, value, row, index) {
+			confriModifySingleApprove(row,index);
+		},
+		'click #cancelModifySingleApprove': function(e, value, row, index) {
+			cancelModifySingleApprove(row,index);
+		}
+	};
+
+	$('#allApproveTable').bootstrapTable('destroy').bootstrapTable({
+		data: allApprove,
+		pagination: true,
+		pageNumber: 1,
+		pageSize: 5,
+		pageList: [5],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPageChange: function() {
+			drawPagination(".allApproveTableArea", "审批流程");
+		},
+		onPostBody : function() {
+			sfqyControlBind();
+			toolTipUp(".myTooltip");
+		},
+		columns: [{
+			field: 'edu603Id',
+			title: '唯一ID',
+			align: 'center',
+			sortable: true,
+			visible: false
+		}, {
+			field: 'businessName',
+			title: '审批类型',
+			align: 'left',
+			sortable: true,
+			formatter: businessNameMatter
+		},
+		{
+			field: 'num',
+			title: '审批节点个数',
+			align: 'center',
+			sortable: true,
+			width:'50',
+			formatter: numMatter
+		}, {
+			field: 'sfqy',
+			title: '使用状态',
+			align: 'left',
+			sortable: true,
+			width:'200',
+			formatter: sfqyMatter
+		},{
+			field: 'action',
+			title: '操作',
+			align: 'center',
+			clickToSelect: false,
+			formatter: releaseNewsFormatter,
+			events: releaseNewsEvents,
+		}
+		]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [
+			'<ul class="toolbar tabletoolbar">' +
+			'<li class="modifyBtn modifySingleApprove'+index+'" id="modifySingleApprove"><span><img src="images/t02.png" style="width:24px"></span>修改</li>' +
+			'<li class="modifyBtn writeSingleApprove'+index+'" id="writeSingleApprove"><span><img src="img/info.png" style="width:24px"></span>详情/自定义节点</li>'+
+			'<li class="noneStart confrimModifySingleApprove'+index+'" id="confriModifySingleApprove"><span><img src="img/right.png" style="width:24px"></span>确定</li>' +
+			'<li class="noneStart cancelModifySingleApprove'+index+'" id="cancelModifySingleApprove"><span><img src="images/t03.png" style="width:24px"></span>取消</li>' +
+			'</ul>'
+		]
+			.join('');
+	}
+
+	function businessNameMatter(value, row, index) {
+		return [ '<div class="myTooltip businessNameTxt'+index+'" title="'+value+'">'+value+'</div>' +
+				'<input name="" type="text" class="dfinput Mydfinput noneStart" id="businessName'+index+'" spellcheck="false">' ]
+			.join('');
+	}
+
+	function numMatter(value, row, index) {
+		return [ '<div class="myTooltip" title="'+value+'个">'+value+'个</div>' ]
+			.join('');
+	}
+
+	function sfqyMatter(value, row, index) {
+		if (value==="T") {
+			return [
+				'<span class="noneStart">是</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="sfqyControl" id="sfqyControl'+index+'" edu603Id="'+row.edu603Id+'" type="checkbox" checked="checked"><label></label></div></section>'
+			]
+				.join('');
+		} else {
+			return [
+				'<span class="noneStart">否</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="sfqyControl" id="sfqyControl'+index+'" edu603Id="'+row.edu603Id+'" type="checkbox"><label></label></div></section>'
+			]
+				.join('');
+		}
+	}
+
+	drawSearchInput(".allApproveTableArea ");
+	drawPagination(".allApproveTableArea", "审批流程");
+	toolTipUp(".myTooltip");
+	btnControl();
+}
+
+//switch事件绑定
+function sfqyControlBind() {
+	$(".sfqyControl").change(function(e) {
+			var index=parseInt(e.currentTarget.attributes[0].nodeValue);
+			var edu603Id=e.currentTarget.attributes[3].nodeValue;
+			var currentStatu=$('#sfqyControl'+index)[0].checked;
+			currentStatu?currentStatu="T":currentStatu="F";
+			$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/updateApproveZt",
+			data:{
+				"edu603Id":edu603Id,
+				"sfqy":currentStatu
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code === 200) {
+					$('#allApproveTable').bootstrapTable('updateCell', {
+						index: index,
+						field: "sfqy",
+						value:currentStatu
+					});
+				} else {
+					toastr.warning(backjson.msg);
+				}
+			}
+		});
+			e.stopPropagation();
+	});
+}
+
+//预备修改单个审批流程
+function modifySingleApprove(row,index){
+	$('#businessName'+index).show();
+	$('.confrimModifySingleApprove'+index).show();
+	$('.cancelModifySingleApprove'+index).show();
+	$('.businessNameTxt'+index).hide();
+	$('.modifySingleApprove'+index).hide();
+	$('.writeSingleApprove'+index).hide();
+	$('#businessName'+index).val(row.businessName).focus();
+}
+
+//取消修改单个审批流程
+function cancelModifySingleApprove(row,index){
+	$('#businessName'+index).hide();
+	$('.confrimModifySingleApprove'+index).hide();
+	$('.cancelModifySingleApprove'+index).hide();
+	$('.businessNameTxt'+index).show();
+	$('.modifySingleApprove'+index).show();
+	$('.writeSingleApprove'+index).show();
+}
+
+//确认修改单个审批流程
+function confriModifySingleApprove(row,index){
+	var newName=$('#businessName'+index).val();
+	if(newName===''){
+		toastr.warning('审批类型不能为空');
+	}
+
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.businessName);
+	$(".remindActionType").html("修改");
+	//确认发布任务书
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendModifySingleApprove(row,newName);
+		e.stopPropagation();
+	});
+}
+
+//发送修改单个审批流程的名字
+function sendModifySingleApprove(row,newName){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/updateApproveName",
+		data: {
+			"edu603Id":row.edu603Id,
+			"businessName":newName
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				row.businessName=newName;
+				$('#allApproveTable').bootstrapTable('updateByUniqueId', {
+					id: row.edu603Id,
+					row: row
+				});
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获取审批流程详情
+function writeSingleApprove(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getApproveDetail",
+		data: {
+			"edu603Id":row.edu603Id
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$.showModal("#approvalDetailsModal",true);
+				$("#approvalDetailsModal").find(".moadalTitle").html(row.businessName+"详情");
+				$(".historyInfo").empty();
+				$('.reShowApprovalDetails,.confirmChangeApprovalDetails').hide();
+				var historyTxt="";
+				for (var i = 0; i < backjson.data.length; i++) {
+					var currentHistory= backjson.data[i];
+					historyTxt+='<div class="historyArea historyArea'+i+'" index="'+i+'" id="'+currentHistory.edu602Id+'">' +
+								'<p class="Historystep" approvalIndex="'+currentHistory.approvalIndex+'" businessType="'+currentHistory.businessType+'" currentRole="'+currentHistory.currentRole+'" currentRoleMc="'+currentHistory.currentRoleMc+'" edu602Id="'+currentHistory.edu602Id+'" lastRole="'+currentHistory.lastRole+'">审批节点'+(i+1)+'</p>' +
+							'<div>' +
+						'<span><cite>节点顺序：</cite><b>'+nullMatter(currentHistory.approvalIndex)+'</b></span>'+
+						'<span><cite>审批角色：</cite><b>'+nullMatter(currentHistory.currentRoleMc)+'</b></span>'+
+						'<p class="col2 addNextStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/iadd.png"/>新增下一节点</p>'+
+						'<p class="col2 deleteThisStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/close1.png">删除此节点</p>'+
+						'</div></div>' ;
+					if((i+1)!=backjson.data.length){
+						historyTxt+='<img class="spiltImg spiltImg'+currentHistory.edu602Id+'" id="spiltImg'+currentHistory.edu602Id+'" src="images/uew_icon_hover.png"/>';
+					}
+				}
+				$(".historyInfo").append(historyTxt);
+
+				//新增下一节点
+				$('.addNextStep').unbind('click');
+				$('.addNextStep').bind('click', function(e) {
+					// addXn();
+					e.stopPropagation();
+				});
+
+				//删除此节点
+				$('.deleteThisStep').unbind('click');
+				$('.deleteThisStep').bind('click', function(e) {
+					deleteThisStep(e);
+					e.stopPropagation();
+				});
+
+				//还原
+				$('.reShowApprovalDetails').unbind('click');
+				$('.reShowApprovalDetails').bind('click', function(e) {
+					writeSingleApprove(row);
+					e.stopPropagation();
+				});
+
+				//修改审批节点
+				$('.confirmChangeApprovalDetails').unbind('click');
+				$('.confirmChangeApprovalDetails').bind('click', function(e) {
+					confirmChangeApprovalDetails(row.edu603Id);
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//删除此节点
+function deleteThisStep(eve){
+	var currentAll=$('.historyInfo').find('.historyArea').length;
+	if(currentAll<=2){
+		toastr.warning('至少保留两个节点');
+		return;
+	}
+
+	var id=eve.currentTarget.parentElement.parentElement.id;
+	var isLast=eve.currentTarget.attributes[1].nodeValue;
+	if(parseInt(isLast)===currentAll&&eve.currentTarget.parentElement.parentElement.previousSibling!=null){
+		$('#'+eve.currentTarget.parentElement.parentElement.previousSibling.id).remove();
+	}
+	$('.spiltImg'+id).remove();
+	$('#'+id).remove();
+
+	if($('.historyInfo').find('.historyArea').length===1){
+		$('.spiltImg').remove();
+	}
+
+	currentAll=$('.historyInfo').find('.historyArea');
+	for (var i = 0; i < currentAll.length; i++) {
+		var index=currentAll[i].attributes[1].nodeValue;
+		$('.historyArea'+index).find('.Historystep').html('审批节点'+(i+1));
+		$('.historyArea'+index).find('span:eq(0)').find('b').html(i+1);
+	}
+
+	$('.confirmChangeApprovalDetails,.reShowApprovalDetails').show();
+}
+
+//修改审批节点
+function confirmChangeApprovalDetails(edu603Id){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/updateApproveDetailCheck",
+		data: {
+			"edu603Id":edu603Id
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var SearchCriteria=new Object();
+				SearchCriteria.edu603Id=edu603Id;
+
+				var jsList=new Array();
+				var current=$('.historyInfo').find('.historyArea');
+				for (var i = 0; i < current.length; i++) {
+					jsList.push(current[i].childNodes[0].attributes[3].nodeValue);
+				}
+
+				SearchCriteria.jsList=jsList;
+
+				$.hideModal('#approvalDetailsModal',false);
+				$.showModal("#changeApprovalDetailsRemindModal",true);
+				$("#changeApprovalDetailsRemindModal").find(".remindType").html("审批流程");
+				$("#changeApprovalDetailsRemindModal").find(".remindActionType").html("修改");
+
+				$('.confirmRemindcChangeApprovalDetails').unbind('click');
+				$('.confirmRemindcChangeApprovalDetails').bind('click', function(e) {
+					sendChangeApprovalInfo(SearchCriteria);
+					e.stopPropagation();
+				});
+
+				$('.specialCanle').unbind('click');
+				$('.specialCanle').bind('click', function(e) {
+					$.hideModal('#changeApprovalDetailsRemindModal',false);
+					$.showModal("#approvalDetailsModal",true);
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//发送修改审批节点请求
+function sendChangeApprovalInfo(SearchCriteria){
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/updateApproveDetail",
+		data: {
+			"SearchCriteria":JSON.stringify(SearchCriteria)
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				var row=$('#allApproveTable').bootstrapTable('getRowByUniqueId',SearchCriteria.edu603Id);
+				row.num=backjson.data.length
+				$('#allApproveTable').bootstrapTable('updateByUniqueId', {
+					id: SearchCriteria.edu603Id,
+					row: row
+				});
+				toolTipUp(".myTooltip");
+				$.hideModal();
+				toastr.success(backjson.msg);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 /**
  * tab1 end
  * */

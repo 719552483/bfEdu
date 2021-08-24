@@ -322,6 +322,11 @@ padding:1.6em 0em 0.6em 31px !important
 	min-width: 175px;
 }
 
+#allApproveTable td:last-child{
+	width:235px;
+	min-width:235px;
+}
+
 #crouseRsForDeatilsTable1 td:last-child{
 	width:170px;
 	min-width:170px;
@@ -1431,7 +1436,7 @@ float: left;
     width:25px;
 }
 
-@media screen and (max-width:1174px) {
+@media screen and (max-width:700px) {
 .publicCodeModelArea{
    display:none;
 }
@@ -1882,6 +1887,11 @@ margin: 0px 0px -14px -15px!important;
 .spiltImg{
     margin-left: 48%;
 	margin-top: 5px;
+}
+
+.publicApprovalDetails .spiltImg{
+    margin-left: -5%;
+    margin-top: 5px;
 }
 
 .Historystep{
@@ -2932,7 +2942,18 @@ input:focus{
 	line-height: 17px!important;;
 }
 
+.addNextStep .approvalActionImg{
+	width: 19px;
+}
 
+.deleteThisStep .approvalActionImg{
+	width: 17px;
+}
+
+#approvalDetailsModal .col2{
+	margin-top: 15px;
+	color: rgb(22 56 72 / 92%);
+}
 
 @keyframes serachAnimation {
     10% {
