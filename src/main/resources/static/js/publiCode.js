@@ -2506,8 +2506,7 @@ function confrimModifyXn(row,index){
 		xnObject.zzs=WeeksBetw(modifyXn_startTime,modifyXn_endTime);
 		xnObject.relaseTime=modifyXn_relaseTime;
 		xnObject.lrsj=modifyXn_lrsjTime;
-		xnObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
-		
+
 		$("#remindModal").find(".remindType").html("学年");
 		$("#remindModal").find(".remindActionType").html("修改");
 		$.showModal("#remindModal",true);
@@ -2528,7 +2527,8 @@ function sendModifyXnInfo(xnObject){
 		url : "/addNewXn",
 		dataType : 'json',
 		data: {
-            "xninfo":JSON.stringify(xnObject) 
+            "xninfo":JSON.stringify(xnObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
@@ -2656,7 +2656,6 @@ function confimAddXn(){
 	xnObject.zzs=WeeksBetw(startTime,endTime);
 	xnObject.relaseTime=relaseTime;
 	xnObject.lrsj=gradeStop;
-	xnObject.userId=$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue;
 	sendNewXnInfo(xnObject);
 }
 
@@ -2668,7 +2667,8 @@ function sendNewXnInfo(xnObject){
 		url : "/addNewXn",
 		dataType : 'json',
 		data: {
-            "xninfo":JSON.stringify(xnObject) 
+            "xninfo":JSON.stringify(xnObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
         },
 		beforeSend: function(xhr) {
 			requestErrorbeforeSend();
