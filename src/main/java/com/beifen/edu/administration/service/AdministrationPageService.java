@@ -3389,6 +3389,8 @@ public class AdministrationPageService {
 			edu602Dao.save(edu602);
 		}
 		List<Edu602> edu602List = edu602Dao.getApproveDetail(busType);
+		edu603.setNum(edu602List.size());
+		edu603Dao.save(edu603);
 		resultVO = ResultVO.setSuccess("修改成功",edu602List);
 		return resultVO;
 	}
