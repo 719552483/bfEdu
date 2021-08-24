@@ -28,6 +28,8 @@ public class TeachingSchedulePO {
     private String sfxylcj;
     private String pksj;
     private String sfypw;
+    private String xn;
+    private String xnid;
     private String classLittleName;//教学班别名
 
     public String getSfypw() {
@@ -189,5 +191,21 @@ public class TeachingSchedulePO {
 
     public void setClassLittleName(String classLittleName) {
         this.classLittleName = classLittleName;
+    }
+
+    public String getXn() {
+        return xn;
+    }
+
+    public void setXn(String xn) {
+        this.xn = xn;
+    }
+
+    public String getXnid() {
+        return xnid;
+    }
+
+    public void setXnid(String xnid) {
+        this.xnid = xnid;
     }
 }

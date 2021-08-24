@@ -1875,6 +1875,7 @@ public class AdministrationPageService {
 
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 		edu201.setPksj(df.format(new Date()));
+		edu201.setSfypk("T");
 		edu201DAO.save(edu201);
 
 		return isSuccess;
@@ -2534,6 +2535,9 @@ public class AdministrationPageService {
 				}
 				if (teachingSchedule.getKcxzid() != null && !"".equals(teachingSchedule.getKcxzid())) {
 					predicates.add(cb.equal(root.<String>get("kcxzid"), teachingSchedule.getKcxzid()));
+				}
+				if (teachingSchedule.getXnid() != null && !"".equals(teachingSchedule.getXnid())) {
+					predicates.add(cb.equal(root.<String>get("xnid"), teachingSchedule.getXnid()));
 				}
 				if (teachingSchedule.getSfypw() != null && !"".equals(teachingSchedule.getSfypw()) && !"0".equals(teachingSchedule.getSfypw())) {
 					predicates.add(cb.equal(root.<String>get("sfypw"), teachingSchedule.getSfypw()));
@@ -3283,6 +3287,9 @@ public class AdministrationPageService {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				if (edu108.getKcxzCode() != null && !"".equals(edu108.getKcxzCode())) {
 					predicates.add(cb.equal(root.<String>get("kcxzCode"), edu108.getKcxzCode()));
+				}
+				if (edu108.getXnid() != null && !"".equals(edu108.getXnid())) {
+					predicates.add(cb.equal(root.<String>get("xnid"), edu108.getXnid()));
 				}
 				Path<Object> path = root.get("edu107_ID");//定义查询的字段
 				CriteriaBuilder.In<Object> in = cb.in(path);
