@@ -4,7 +4,9 @@ import com.beifen.edu.administration.domian.Edu602;
 import com.sun.istack.internal.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,4 +21,10 @@ public interface Edu602Dao extends JpaRepository<Edu602, Long>, JpaSpecification
 
     @Query(value = "select * from edu602 where business_type = ?1 order by APPROVAL_INDEX", nativeQuery = true)
     List<Edu602> getApproveDetail(String type);
+
+    //改动审批流程时，需先删除原审批流程
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from edu602 where business_type = ?1", nativeQuery = true)
+    void deleteEdu602BybusType(String busType);
 }

@@ -467,6 +467,19 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 修改审批流程
+	 */
+	@RequestMapping("/updateApproveDetail")
+	@ResponseBody
+	public ResultVO updateApproveDetail(@RequestParam("SearchCriteria") String SearchCriteria) {
+		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+		String edu603Id = jsonObject.getString("edu603Id");
+		List<String> detailList = JSON.parseArray(jsonObject.getString("jsList"),String.class);
+		ResultVO result = administrationPageService.updateApproveDetail(edu603Id,detailList);
+		return result;
+	}
+
+	/**
 	 * 修改审批流程名字
 	 */
 	@RequestMapping("/updateApproveName")
