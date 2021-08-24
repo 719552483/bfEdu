@@ -2942,7 +2942,8 @@ input:focus{
 	line-height: 17px!important;;
 }
 
-.addNextStep .approvalActionImg{
+
+.modifyStep .approvalActionImg{
 	width: 19px;
 }
 
@@ -2950,7 +2951,23 @@ input:focus{
 	width: 17px;
 }
 
-#approvalDetailsModal .col2{
+.addNextStep .approvalActionImg,
+.addLastStep .approvalActionImg{
+	width: 23px;
+}
+
+.addLastStep .approvalActionImg{
+	transform: translateX(0px) rotate(180deg);
+	-ms-transform: translateX(0px) rotate(180deg);
+	/* IE 9 */
+	-webkit-transform: translateX(0px) rotate(180deg);
+	/* Safari and Chrome */
+	-o-transform: translateX(0px) rotate(180deg);
+	/* Opera */
+	-moz-transform: translateX(0px) rotate(180deg);
+}
+
+#approvalDetailsModal .col4{
 	margin-top: 15px;
 	color: rgb(22 56 72 / 92%);
 }

@@ -2015,8 +2015,10 @@ function writeSingleApprove(row){
 							'<div>' +
 						'<span><cite>节点顺序：</cite><b>'+nullMatter(currentHistory.approvalIndex)+'</b></span>'+
 						'<span><cite>审批角色：</cite><b>'+nullMatter(currentHistory.currentRoleMc)+'</b></span>'+
-						'<p class="col2 addNextStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/iadd.png"/>新增下一节点</p>'+
-						'<p class="col2 deleteThisStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/close1.png">删除此节点</p>'+
+						'<p class="col4 addLastStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/uew_icon_hover.png">新增上一节点</p>'+
+						'<p class="col4 addNextStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/uew_icon_hover.png"/>新增下一节点</p>'+
+						'<p class="col4 modifyStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/t02.png">修改此节点</p>'+
+						'<p class="col4 deleteThisStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/close1.png">删除此节点</p>'+
 						'</div></div>' ;
 					if((i+1)!=backjson.data.length){
 						historyTxt+='<img class="spiltImg spiltImg'+currentHistory.edu602Id+'" id="spiltImg'+currentHistory.edu602Id+'" src="images/uew_icon_hover.png"/>';
