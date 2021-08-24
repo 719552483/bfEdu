@@ -2232,6 +2232,7 @@ public class AdministrationController {
 		String gradeCode = culturePlan.getString("grade");
 		String majorCode = culturePlan.getString("major");
 		String kcxz = culturePlan.getString("kcxz");
+		String xnid = culturePlan.getString("xnid");
 
 		Edu107 edu107 = new Edu107();
 		edu107.setEdu103(levelCode);
@@ -2241,7 +2242,7 @@ public class AdministrationController {
 
 		Edu108 edu108 = new Edu108();
 		edu108.setKcxzCode(kcxz);
-
+		edu108.setXnid(xnid);
 
 		ResultVO result= administrationPageService.getTaskByCulturePlanByUser(edu107,edu108,userId);
 		return result;
