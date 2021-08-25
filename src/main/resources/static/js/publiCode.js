@@ -2003,60 +2003,80 @@ function writeSingleApprove(row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				$.showModal("#approvalDetailsModal",true);
-				$("#approvalDetailsModal").find(".moadalTitle").html(row.businessName+"详情");
-				$(".historyInfo").empty();
-				$('.reShowApprovalDetails,.confirmChangeApprovalDetails').hide();
-				var historyTxt="";
-				for (var i = 0; i < backjson.data.length; i++) {
-					var currentHistory= backjson.data[i];
-					historyTxt+='<div class="historyArea historyArea'+i+'" index="'+i+'" id="'+currentHistory.edu602Id+'">' +
-								'<p class="Historystep" approvalIndex="'+currentHistory.approvalIndex+'" businessType="'+currentHistory.businessType+'" currentRole="'+currentHistory.currentRole+'" currentRoleMc="'+currentHistory.currentRoleMc+'" edu602Id="'+currentHistory.edu602Id+'" lastRole="'+currentHistory.lastRole+'">审批节点'+(i+1)+'</p>' +
-							'<div>' +
-						'<span><cite>节点顺序：</cite><b>'+nullMatter(currentHistory.approvalIndex)+'</b></span>'+
-						'<span><cite>审批角色：</cite><b>'+nullMatter(currentHistory.currentRoleMc)+'</b></span>'+
-						'<p class="col4 addLastStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/uew_icon_hover.png">新增上一节点</p>'+
-						'<p class="col4 addNextStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/uew_icon_hover.png"/>新增下一节点</p>'+
-						'<p class="col4 modifyStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/t02.png">修改此节点</p>'+
-						'<p class="col4 deleteThisStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/close1.png">删除此节点</p>'+
-						'</div></div>' ;
-					if((i+1)!=backjson.data.length){
-						historyTxt+='<img class="spiltImg spiltImg'+currentHistory.edu602Id+'" id="spiltImg'+currentHistory.edu602Id+'" src="images/uew_icon_hover.png"/>';
-					}
-				}
-				$(".historyInfo").append(historyTxt);
-
-				//新增下一节点
-				$('.addNextStep').unbind('click');
-				$('.addNextStep').bind('click', function(e) {
-					// addXn();
-					e.stopPropagation();
-				});
-
-				//删除此节点
-				$('.deleteThisStep').unbind('click');
-				$('.deleteThisStep').bind('click', function(e) {
-					deleteThisStep(e);
-					e.stopPropagation();
-				});
-
-				//还原
-				$('.reShowApprovalDetails').unbind('click');
-				$('.reShowApprovalDetails').bind('click', function(e) {
-					writeSingleApprove(row);
-					e.stopPropagation();
-				});
-
-				//修改审批节点
-				$('.confirmChangeApprovalDetails').unbind('click');
-				$('.confirmChangeApprovalDetails').bind('click', function(e) {
-					confirmChangeApprovalDetails(row.edu603Id);
-					e.stopPropagation();
-				});
+				stuffWriteSingleApprove(backjson.data,row);
 			} else {
 				toastr.warning(backjson.msg);
 			}
 		}
+	});
+}
+
+//渲染审批流程详情
+function stuffWriteSingleApprove(data,row){
+	$('.isModifying').html('F');
+	$.showModal("#approvalDetailsModal",true);
+	$("#approvalDetailsModal").find(".moadalTitle").html(row.businessName+"详情");
+	$(".historyInfo").empty();
+	$('.reShowApprovalDetails,.confirmChangeApprovalDetails').hide();
+	var historyTxt="";
+	for (var i = 0; i < data.length; i++) {
+		var currentHistory= data[i];
+		historyTxt+='<div class="historyArea historyArea'+i+'" index="'+i+'" id="'+currentHistory.edu602Id+'">' +
+			'<p class="Historystep" approvalIndex="'+currentHistory.approvalIndex+'" businessType="'+currentHistory.businessType+'" currentRole="'+currentHistory.currentRole+'" currentRoleMc="'+currentHistory.currentRoleMc+'" edu602Id="'+currentHistory.edu602Id+'" lastRole="'+currentHistory.lastRole+'">审批节点'+(i+1)+'</p>' +
+			'<div>' +
+			'<span><cite>节点顺序：</cite><b>'+nullMatter(currentHistory.approvalIndex)+'</b></span>'+
+			'<span><cite>审批角色：</cite><b>'+nullMatter(currentHistory.currentRoleMc)+'</b><div class="searchArea searchAreaWitheSelect searchAreaWitheSelect'+currentHistory.edu602Id+'"><div class="col1"><div class=""><select class="isSowIndex noneStart" id="role'+currentHistory.edu602Id+'"/><input name="" type="button" class="sure noneStart cancelChangeBtn" id="cancelChange'+currentHistory.edu602Id+'" value="取消"/></div></div></div></span>'+
+			'<p class="col4 addLastStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/uew_icon_hover.png">新增上一节点</p>'+
+			'<p class="col4 addNextStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/uew_icon_hover.png"/>新增下一节点</p>'+
+			'<p class="col4 modifyStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/t02.png">修改此节点</p>'+
+			'<p class="col4 deleteThisStep" index="'+(i+1)+'"><img class="approvalActionImg" src="images/close1.png">删除此节点</p>'+
+			'</div></div>';
+		if((i+1)!=data.length){
+			historyTxt+='<img class="spiltImg spiltImg'+currentHistory.edu602Id+'" id="spiltImg'+currentHistory.edu602Id+'" src="images/uew_icon_hover.png"/>';
+		}
+	}
+	$(".historyInfo").append(historyTxt);
+
+	//新增上一节点
+	$('.addLastStep').unbind('click');
+	$('.addLastStep').bind('click', function(e) {
+		addLastStep(data,row,e);
+		e.stopPropagation();
+	});
+
+	//新增下一节点
+	$('.addNextStep').unbind('click');
+	$('.addNextStep').bind('click', function(e) {
+		addNextStep(data,row,e);
+		e.stopPropagation();
+	});
+
+	//修改当前节点
+	$('.modifyStep').unbind('click');
+	$('.modifyStep').bind('click', function(e) {
+		modifyStep(e,data);
+		e.stopPropagation();
+	});
+
+	//删除此节点
+	$('.deleteThisStep').unbind('click');
+	$('.deleteThisStep').bind('click', function(e) {
+		deleteThisStep(e);
+		e.stopPropagation();
+	});
+
+	//还原
+	$('.reShowApprovalDetails').unbind('click');
+	$('.reShowApprovalDetails').bind('click', function(e) {
+		writeSingleApprove(row);
+		e.stopPropagation();
+	});
+
+	//确认修改审批节点
+	$('.confirmChangeApprovalDetails').unbind('click');
+	$('.confirmChangeApprovalDetails').bind('click', function(e) {
+		confirmChangeApprovalDetails(row.edu603Id);
+		e.stopPropagation();
 	});
 }
 
@@ -2090,7 +2110,285 @@ function deleteThisStep(eve){
 	$('.confirmChangeApprovalDetails,.reShowApprovalDetails').show();
 }
 
-//修改审批节点
+//修改当前节点
+function modifyStep(eve,rowData){
+	var isModifying=$('.isModifying')[0].innerText;
+	if(isModifying==='T'){
+		toastr.warning('请先进行上一个修改操作');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRole",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200 && backjson.data.allRole.length!=0) {
+				var id=eve.currentTarget.parentElement.parentElement.id;
+				var allRole=backjson.data.allRole;
+				var currentRole=eve.currentTarget.parentElement.parentElement.childNodes[0].attributes[3].nodeValue;
+				var str = '';
+				for (var i = 0; i <allRole.length; i++) {
+					str += '<option value="' + allRole[i].bf991_ID + '">' + allRole[i].js + '</option>';
+				}
+				stuffManiaSelect('#role'+id, str);
+				$('#'+id).find('span:eq(1)').find('b').hide();
+				$('.searchAreaWitheSelect'+id).show();
+				$('#cancelChange'+id).show();
+				$('.isModifying').html('T');
+				stuffManiaSelectWithDeafult2('#role'+id,currentRole);
+
+				$('#role'+id).off('change').change(function(e) {
+					modifyStepChangeAction(id,currentRole,rowData);
+					e.stopPropagation();
+				});
+
+				//取消
+				$('#cancelChange'+id).unbind('click');
+				$('#cancelChange'+id).bind('click', function(e) {
+					$('#'+id).find('span:eq(1)').find('b').show();
+					$('.searchAreaWitheSelect'+id).hide();
+					$('#cancelChange'+id).hide();
+					$('.isModifying').html('F');
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//修改当前节点change事件
+function modifyStepChangeAction(id,currentRole,rowData){
+	var changeRole=getNormalSelectValue('role'+id);
+	var changeRoleTxt=getNormalSelectText('role'+id);
+
+	var copyArr = $.extend(true, [], rowData); //数组深度复制 制完成后两个数组对内容修改时互不影响
+	for (var i = 0; i < copyArr.length; i++) {
+		if(copyArr[i].currentRole===parseInt(currentRole)){
+			copyArr.splice(i,1);
+		}
+	}
+
+	for (var i = 0; i < copyArr.length; i++) {
+		if(copyArr[i].currentRole===parseInt(changeRole)){
+			toastr.warning('该角色已包含');
+			return;
+		}
+	}
+	$('#'+id).find('span:eq(1)').find('b').show().html(changeRoleTxt);
+	$('.searchAreaWitheSelect'+id).hide();
+	$('#cancelChange'+id).hide();
+	$('#'+id).find('.Historystep').attr('currentRole',changeRole);
+	$('#'+id).find('.Historystep').attr('currentRoleMc',changeRoleTxt);
+	$('.confirmChangeApprovalDetails,.reShowApprovalDetails').show();
+	$('.isModifying').html('F');
+}
+
+//新增上一节点
+function addLastStep(data,row,eve){
+	var isModifying=$('.isModifying')[0].innerText;
+	if(isModifying==='T'){
+		toastr.warning('请先进行上一个新增操作');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRole",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200 && backjson.data.allRole.length!=0) {
+				var allRole=backjson.data.allRole;
+				var currentIndex=eve.currentTarget.parentElement.parentElement.attributes[1].nodeValue;;
+				// //拼接新对象
+				var appendObject=new Object();
+				appendObject.index=parseInt(currentIndex);
+				appendObject.edu602Id=newUuid();
+				appendObject.approvalIndex=parseInt(currentIndex)+1;
+				appendObject.businessType='';
+				appendObject.currentRole=allRole[0].bf991_ID;
+				appendObject.currentRoleMc=allRole[0].js;
+				appendObject.lastRole='';
+
+				var data2 = new Array();
+				for (var i = 0; i < data.length; i++) {
+					if(i === appendObject.index){
+						data2.push(appendObject);
+						data[i].index = data[i].index+1;
+						var appendObject2 = data[i];
+						appendObject2.approvalIndex = parseInt(appendObject2.approvalIndex)+1;
+						data2.push(appendObject2);
+					}else if(i<appendObject.index){
+						data2.push(data[i]);
+					}else{
+						var appendObject2 = data[i];
+						data[i].index = data[i].index+1;
+						appendObject2.approvalIndex = parseInt(appendObject2.approvalIndex)+1;
+						data2.push(appendObject2);
+					}
+
+				}
+				stuffWriteSingleApprove(data2,row);
+
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i <allRole.length; i++) {
+					str += '<option value="' + allRole[i].bf991_ID + '">' + allRole[i].js + '</option>';
+				}
+				stuffManiaSelect('#role'+appendObject.edu602Id, str);
+				$('#'+appendObject.edu602Id).find('span:eq(1)').find('b').hide();
+				$('.searchAreaWitheSelect'+appendObject.edu602Id).show();
+				$('#cancelChange'+appendObject.edu602Id).show();
+				$('.isModifying').html('T');
+
+				$('#role'+appendObject.edu602Id).change(function(e) {
+					modifyStepChangeAction(appendObject.edu602Id,allRole[0].bf991_ID,data2);
+					e.stopPropagation();
+				});
+
+				//取消
+				$('#cancelChange'+appendObject.edu602Id).unbind('click');
+				$('#cancelChange'+appendObject.edu602Id).bind('click', function(e) {
+					if(getNormalSelectValue('role'+appendObject.edu602Id)===''){
+						toastr.warning('请选择角色');
+						return;
+					}
+
+					$('#'+appendObject.edu602Id).find('span:eq(1)').find('b').show();
+					$('.searchAreaWitheSelect'+appendObject.edu602Id).hide();
+					$('#cancelChange'+appendObject.edu602Id).hide();
+					$('.isModifying').html('F');
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//新增下一节点
+function addNextStep(data,row,eve){
+	var isModifying=$('.isModifying')[0].innerText;
+	if(isModifying==='T'){
+		toastr.warning('请先进行上一个新增操作');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllRole",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200 && backjson.data.allRole.length!=0) {
+				var allRole=backjson.data.allRole;
+				var currentIndex=eve.currentTarget.parentElement.parentElement.attributes[1].nodeValue;;
+				// //拼接新对象
+				var appendObject=new Object();
+				appendObject.index=parseInt(currentIndex)+1;
+				appendObject.edu602Id=newUuid();
+				appendObject.approvalIndex=parseInt(currentIndex)+2;
+				appendObject.businessType='';
+				appendObject.currentRole=allRole[0].bf991_ID;
+				appendObject.currentRoleMc=allRole[0].js;
+				appendObject.lastRole='';
+
+				var data2 = new Array();
+				if(appendObject.index === data.length){
+					data.push(appendObject);
+					data2= data;
+					stuffWriteSingleApprove(data2,row);
+				}else{
+					for (var i = 0; i < data.length; i++) {
+						if(i<appendObject.index){
+							data2.push(data[i]);
+						}else if(i === appendObject.index){
+							data2.push(appendObject);
+							var appendObject2 = data[i];
+							data[i].index = data[i].index+1;
+							appendObject2.approvalIndex = parseInt(appendObject2.approvalIndex)+1;
+							data2.push(appendObject2);
+						}else{
+							var appendObject2 = data[i];
+							data[i].index = data[i].index+1;
+							appendObject2.approvalIndex = parseInt(appendObject2.approvalIndex)+1;
+							data2.push(appendObject2);
+						}
+					}
+					stuffWriteSingleApprove(data2,row);
+				}
+
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i <allRole.length; i++) {
+					str += '<option value="' + allRole[i].bf991_ID + '">' + allRole[i].js + '</option>';
+				}
+				stuffManiaSelect('#role'+appendObject.edu602Id, str);
+				$('#'+appendObject.edu602Id).find('span:eq(1)').find('b').hide();
+				$('.searchAreaWitheSelect'+appendObject.edu602Id).show();
+				$('#cancelChange'+appendObject.edu602Id).show();
+				$('.isModifying').html('T');
+
+				$('#role'+appendObject.edu602Id).change(function(e) {
+					modifyStepChangeAction(appendObject.edu602Id,allRole[0].bf991_ID,data2);
+					e.stopPropagation();
+				});
+
+				//取消
+				$('#cancelChange'+appendObject.edu602Id).unbind('click');
+				$('#cancelChange'+appendObject.edu602Id).bind('click', function(e) {
+					if(getNormalSelectValue('role'+appendObject.edu602Id)===''){
+						toastr.warning('请选择角色');
+						return;
+					}
+
+					$('#'+appendObject.edu602Id).find('span:eq(1)').find('b').show();
+					$('.searchAreaWitheSelect'+appendObject.edu602Id).hide();
+					$('#cancelChange'+appendObject.edu602Id).hide();
+					$('.isModifying').html('F');
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//确认修改审批节点
 function confirmChangeApprovalDetails(edu603Id){
 	$.ajax({
 		method: 'get',

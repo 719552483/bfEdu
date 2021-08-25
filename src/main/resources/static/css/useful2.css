@@ -2972,6 +2972,20 @@ input:focus{
 	color: rgb(22 56 72 / 92%);
 }
 
+#approvalDetailsModal .select-mania-dropdown{
+	position: inherit!important;
+}
+
+#approvalDetailsModal .searchAreaWitheSelect .select-mania{
+	margin-left: -36px !important;
+	width: 62% !important;
+	margin-bottom: 1% !important;
+}
+
+#approvalDetailsModal .cancelChangeBtn{
+	width: 50px;
+}
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
