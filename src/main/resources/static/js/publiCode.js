@@ -2082,6 +2082,11 @@ function stuffWriteSingleApprove(data,row){
 
 //删除此节点
 function deleteThisStep(eve){
+	var isModifying=$('.isModifying')[0].innerText;
+	if(isModifying==='T'){
+		toastr.warning('请先进行上一个修改操作');
+		return;
+	}
 	var currentAll=$('.historyInfo').find('.historyArea').length;
 	if(currentAll<=2){
 		toastr.warning('至少保留两个节点');
@@ -2108,6 +2113,7 @@ function deleteThisStep(eve){
 	}
 
 	$('.confirmChangeApprovalDetails,.reShowApprovalDetails').show();
+	$('.isModifying').html('F');
 }
 
 //修改当前节点
@@ -2179,6 +2185,7 @@ function modifyStepChangeAction(id,currentRole,rowData){
 	for (var i = 0; i < copyArr.length; i++) {
 		if(copyArr[i].currentRole===parseInt(currentRole)){
 			copyArr.splice(i,1);
+			break;
 		}
 	}
 
