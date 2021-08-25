@@ -2284,6 +2284,11 @@ function addLastStep(data,row,eve){
 						return;
 					}
 
+					if(parseInt(getNormalSelectValue('role'+appendObject.edu602Id))===appendObject.currentRole){
+						toastr.warning('角色已包含');
+						return;
+					}
+
 					$('#'+appendObject.edu602Id).find('span:eq(1)').find('b').show();
 					$('.searchAreaWitheSelect'+appendObject.edu602Id).hide();
 					$('#cancelChange'+appendObject.edu602Id).hide();
@@ -2379,6 +2384,11 @@ function addNextStep(data,row,eve){
 				$('#cancelChange'+appendObject.edu602Id).bind('click', function(e) {
 					if(getNormalSelectValue('role'+appendObject.edu602Id)===''){
 						toastr.warning('请选择角色');
+						return;
+					}
+
+					if(parseInt(getNormalSelectValue('role'+appendObject.edu602Id))===appendObject.currentRole){
+						toastr.warning('角色已包含');
 						return;
 					}
 
