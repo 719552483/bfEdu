@@ -3390,7 +3390,7 @@ public class AdministrationPageService {
 			if (i == detailList.size()-1){
 				edu602.setNextRole(0L);
 			}else{
-				edu602.setLastRole(Long.parseLong(detailList.get(i+1)));
+				edu602.setNextRole(Long.parseLong(detailList.get(i+1)));
 			}
 			edu602.setCurrentRoleMc(edu991Dao.queryNAMEBy991id(detailList.get(i)));
 			edu602Dao.save(edu602);
