@@ -472,10 +472,15 @@ public class AdministrationController {
 	@RequestMapping("/updateApproveDetail")
 	@ResponseBody
 	public ResultVO updateApproveDetail(@RequestParam("SearchCriteria") String SearchCriteria) {
+		ResultVO result;
 		com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
 		String edu603Id = jsonObject.getString("edu603Id");
+		result = administrationPageService.updateApproveDetailCheck(edu603Id);
+		if(result.getCode()!=200){
+			return result;
+		}
 		List<String> detailList = JSON.parseArray(jsonObject.getString("jsList"),String.class);
-		ResultVO result = administrationPageService.updateApproveDetail(edu603Id,detailList);
+		result = administrationPageService.updateApproveDetail(edu603Id,detailList);
 		return result;
 	}
 
