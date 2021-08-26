@@ -13,6 +13,7 @@ public class Edu403 {
 	private String jsz;//结束周
 	private String kssx;//课时上限
 	private String type;//类型1：集中2：分散
+	private String nodeValue;//类型名称
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -70,5 +71,13 @@ public class Edu403 {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getNodeValue() {
+		return nodeValue;
+	}
+
+	public void setNodeValue(String nodeValue) {
+		this.nodeValue = nodeValue;
 	}
 }
