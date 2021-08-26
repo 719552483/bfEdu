@@ -573,10 +573,10 @@
                     <div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
                 </div>
                 <div class="modal-body">
-					<div class="tools">
-						<ul class="toolbar">
-							<li class="click" id="addThiskjLimit"><span><img src="images/t01.png" style="width: 24px;" /></span>添加限制</li>
-						</ul>
+					<div class="formtext myformtext myformtextTipArea" style="margin-bottom: 35px;margin-bottom: 35px;margin-top: -10px;">
+						<b>提示：1.选择学年、开始周、结束周、最大课节限制</b><br clear="none"/>
+						<b>2.添加单个限制</b><br clear="none"/>
+						<b>3.确认添加已选限制</b><br clear="none"/>
 					</div>
 
 					<div class="comtitle">
@@ -589,6 +589,19 @@
 					<div class="addedLimitArea"/>
 
 					<div class="only_col_SelectTipInfo searchArea moreInfoSelectStyle">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">限制类型<b>*</b></label>
+									<select class="isSowIndex" id="addkjLimit_type">
+										<option value="seleceConfigTip">请选择</option>
+										<option value="1">集中课时限制</option>
+										<option value="2">分散课时现制</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
                         <div class="col1 giveBottom">
                             <ul class="forminfo">
                                 <div class="">
@@ -635,9 +648,15 @@
 							</ul>
 						</div>
                     </div>
+
+					<div class="tools" style="margin-left: 9%;margin-top: 6%;">
+						<ul class="toolbar">
+							<li class="click" id="addThiskjLimit"><span><img src="images/t01.png" style="width: 24px;" /></span>添加单个限制</li>
+						</ul>
+					</div>
                 </div>
                 <div class="modal-footer tipbtn">
-                    <input name="" type="button" class="sure addkjLimit_confimBtn" value="确定"/>&nbsp;
+                    <input name="" type="button" class="sure addkjLimit_confimBtn" value="确认添加"/>&nbsp;
                     <input name="" type="button" class="cancel" value="取消"/>
                 </div>
             </div>
