@@ -2768,7 +2768,7 @@ function confrimModifyXn(row,index){
 	var modifyXn_endTime=$("#modifyXn_endTime"+index).val();
 	var modifyXn_relaseTime=$("#modifyXn_relaseTime"+index).val();
 	var modifyXn_lrsjTime=$("#modifyXn_lrsjTime"+index).val();
-	if(modifyXn_name===row.xnmc&&modifyXn_startTime===row.kssj&&modifyXn_endTime===row.jssj&&modifyXn_relaseTime==row.relaseTime){
+	if(modifyXn_name===row.xnmc&&modifyXn_startTime===row.kssj&&modifyXn_endTime===row.jssj&&modifyXn_relaseTime==row.relaseTime&&modifyXn_lrsjTime===row.lrsj){
 		cancelModifyXn(row,index);
 	}else{
 		if(modifyXn_name===""){
