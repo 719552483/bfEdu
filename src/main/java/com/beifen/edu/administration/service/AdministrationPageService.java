@@ -1623,7 +1623,7 @@ public class AdministrationPageService {
 			}
 		}
 		for(Integer key:map.keySet()){
-			String kssx = edu403DAO.queryXZCount(ee.getXnid(),key+"");
+			String kssx = edu403DAO.queryXZCount(ee.getXnid(),key+"","1");
 			//有课时限制时，进行课时判断
 			if(kssx != null){
 				//如果排课直接超过限制，则直接返回
@@ -3288,9 +3288,9 @@ public class AdministrationPageService {
 				if (edu108.getKcxzCode() != null && !"".equals(edu108.getKcxzCode())) {
 					predicates.add(cb.equal(root.<String>get("kcxzCode"), edu108.getKcxzCode()));
 				}
-				if (edu108.getXnid() != null && !"".equals(edu108.getXnid())) {
-					predicates.add(cb.equal(root.<String>get("xnid"), edu108.getXnid()));
-				}
+//				if (edu108.getXnid() != null && !"".equals(edu108.getXnid())) {
+//					predicates.add(cb.equal(root.<String>get("xnid"), edu108.getXnid()));
+//				}
 				Path<Object> path = root.get("edu107_ID");//定义查询的字段
 				CriteriaBuilder.In<Object> in = cb.in(path);
 				for (int i = 0; i <edu107Ids.size() ; i++) {
@@ -3309,7 +3309,13 @@ public class AdministrationPageService {
 		}
 
 		List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
-		List<Edu201> edu201List = edu201DAO.queryCulturePlanIds(edu108Ids);
+		List<Edu201> edu201List;
+		if (edu108.getXnid() != null && !"".equals(edu108.getXnid())) {
+			edu201List = edu201DAO.queryCulturePlanIds(edu108Ids,edu108.getXnid());
+		}else{
+			edu201List = edu201DAO.queryCulturePlanIds(edu108Ids);
+		}
+
 
 		if(edu201List.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无可排课程");

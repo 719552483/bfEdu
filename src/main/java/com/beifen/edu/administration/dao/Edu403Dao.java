@@ -14,7 +14,7 @@ import java.util.List;
 @Configuration
 public interface Edu403Dao extends JpaRepository<Edu403, Long>, JpaSpecificationExecutor<Edu403> {
 
-    @Query(value = "SELECT * FROM EDU403 where xnid = ?1 ORDER BY ksz",nativeQuery = true)
+    @Query(value = "SELECT * FROM EDU403 where xnid = ?1 ORDER BY type,ksz",nativeQuery = true)
     List<Edu403> selectAll(String id);
 
     // 根据学年id删除
@@ -30,6 +30,6 @@ public interface Edu403Dao extends JpaRepository<Edu403, Long>, JpaSpecification
     void deleteKssxById(String id);
 
     //查询某一周限制的
-    @Query(value = "SELECT kssx FROM EDU403 where xnid = ?1 and ksz <= ?2 and jsz >= ?2",nativeQuery = true)
-    String queryXZCount(String xnid,String szz);
+    @Query(value = "SELECT kssx FROM EDU403 where xnid = ?1 and ksz <= ?2 and jsz >= ?2 and type = ?3",nativeQuery = true)
+    String queryXZCount(String xnid,String szz,String type);
 }

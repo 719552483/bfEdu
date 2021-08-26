@@ -12,6 +12,7 @@ public class Edu403 {
 	private String ksz;//开始周
 	private String jsz;//结束周
 	private String kssx;//课时上限
+	private String type;//类型1：集中2：分散
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
 	@SequenceGenerator(name = "BF_SEQUENCE", sequenceName = "BF_SEQUENCE")
@@ -61,5 +62,13 @@ public class Edu403 {
 
 	public void setKssx(String kssx) {
 		this.kssx = kssx;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
