@@ -156,6 +156,12 @@ function stuffWaitTaskTable(tableInfo){
 					sortable: true,
 					formatter: paramsMatter
 				},{
+					field: 'xn',
+					title: '学年',
+					align: 'left',
+					sortable: true,
+					formatter: paramsMatter
+				},{
 					field: 'edu104_mc',
 					title: '所属系部',
 					align: 'left',
@@ -1766,6 +1772,12 @@ function stuffPuttedOutTable(tableInfo){
 			{
 				field: 'pyjhmc',
 				title: '培养计划名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'xn',
+				title: '学年',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
