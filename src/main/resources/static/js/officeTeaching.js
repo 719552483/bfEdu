@@ -10,6 +10,7 @@ $(function() {
 	binBind();
 	$("input[type='number']").inputSpinner();
 	deafultSearch();
+	getYearInfo();
 });
 
 //初始化检索
@@ -25,6 +26,7 @@ function deafultSearch(){
 	returnObject.majorTxt = "";
 	returnObject.kcxz="";
 	returnObject.kcxzTxt="";
+	returnObject.xnid="";
 
 	$.ajax({
 		method : 'get',
@@ -55,6 +57,34 @@ function deafultSearch(){
 			}
 		}
 	});
+}
+
+//获取学年信息
+function getYearInfo(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchAllXn",
+		dataType : 'json',
+		success : function(backjson) {
+			if (backjson.code === 200) {
+				stuffYearSelect(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充学年下拉框
+function stuffYearSelect(yearInfo){
+	var str = '<option value="seleceConfigTip">全部</option>';
+	for (var i = 0; i < yearInfo.length; i++) {
+		str += '<option value="' + yearInfo[i].edu400_ID + '">' + yearInfo[i].xnmc
+			+ '</option>';
+	}
+	stuffManiaSelect("#xn", str);
+	stuffManiaSelect("#puttedXn", str);
 }
 
 //获取-专业培养计划- 有逻辑关系select信息
@@ -1521,12 +1551,12 @@ function getNotNullSearchs() {
 	var gradeValue =getNormalSelectValue("grade");
 	var majorValue =getNormalSelectValue("major");
 	var kcxz =getNormalSelectValue("kcxz");
+	var xnid =getNormalSelectValue("xn");
 	var levelText = getNormalSelectText("level");
 	var departmentText = getNormalSelectText("department");
 	var gradeText =getNormalSelectText("grade");
 	var majorText =getNormalSelectText("major");
 	var kcxzText =getNormalSelectText("kcxz");
-
 
 	var returnObject = new Object();
 	returnObject.level = levelValue;
@@ -1538,7 +1568,8 @@ function getNotNullSearchs() {
 	returnObject.gradeTxt = gradeText;
 	returnObject.majorTxt = majorText;
 	returnObject.kcxz=kcxz;
-	returnObject.kcxzTxt=kcxzText
+	returnObject.kcxzTxt=kcxzText;
+	returnObject.xnid=xnid;
 	return returnObject;
 }
 
@@ -1550,6 +1581,7 @@ function puttedSchedule(){
 	searchObject.pyjhnj="";
 	searchObject.pyjhzy="";
 	searchObject.kcxzid="";
+	searchObject.xnid="";
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -1651,7 +1683,13 @@ function getPuttedScheduleInfo(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.result) {
-				stuffPuttedOutTable(sortPuttedCrouse(backjson.taskList));
+				if(backjson.taskList.length===0){
+					stuffPuttedOutTable({});
+					toastr.warning('暂无数据');
+				}else{
+					stuffPuttedOutTable(sortPuttedCrouse(backjson.taskList));
+					toastr.success('共找到'+backjson.taskList.length+'门已排课程');
+				}
 			} else {
 				toastr.warning('操作失败，请重试');
 			}
@@ -2530,14 +2568,15 @@ function getPuttedSelectValue(){
    searchObject.pyjhnj=getNormalSelectValue("puttedgrade");
    searchObject.pyjhzy=getNormalSelectValue("puttedmajor");
    searchObject.kcxzid=getNormalSelectValue("puttedkcxz");
-	searchObject.sfypw=getNormalSelectValue("puttedkcStatus");
+   searchObject.sfypw=getNormalSelectValue("puttedkcStatus");
+   searchObject.xnid=getNormalSelectValue("puttedXn");
    return searchObject;
 }
 
 //待排重置检索
 function research(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#level,#department,#grade,#major,#kcxz";
+	reObject.normalSelectIds = "#level,#department,#grade,#major,#kcxz,#xn";
 	reReloadSearchsWithSelect(reObject);
 	startSearch();
 }
@@ -2545,7 +2584,7 @@ function research(){
 //已排排重置检索
 function putted_reSearch(){
 	var reObject = new Object();
-	reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz,#puttedkcStatus";
+	reObject.normalSelectIds = "#puttedlevel,#putteddepartment,#puttedgrade,#puttedmajor,#puttedkcxz,#puttedkcStatus,#puttedXn";
 	reReloadSearchsWithSelect(reObject);
 	getPuttedScheduleInfo();
 }
