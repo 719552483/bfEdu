@@ -1342,7 +1342,7 @@ public class AdministrationPageService {
 			return resultVO;
 		}
 		edu404Old.setCount(count+"");
-		edu404Old.setStatus("1");
+		edu404Old.setStatus("0");
 		edu404Old.setStartDateRange(edu404.getStartDateRange());
 		edu404Old.setEndDateRange(edu404.getEndDateRange());
 		edu404Dao.save(edu404Old);
@@ -3984,8 +3984,8 @@ public class AdministrationPageService {
 			int count = 0;
 			// 遍历集合数据，产生数据行
 			for (int i = 0; i < totalRows; i++) {
-				int rowIndex = i + 1;
-				XSSFRow contentRow = sheet.getRow(rowIndex);
+				int rowIndex = i + +2;
+				XSSFRow contentRow = sheet.getRow(rowIndex-1);
 				XSSFCell cell0 = contentRow.getCell(0);
 				XSSFCell cell1 = contentRow.getCell(1);
 				XSSFCell cell2 = contentRow.getCell(2);
@@ -4005,7 +4005,7 @@ public class AdministrationPageService {
 					String studentCode = contentRow.getCell(4).toString();
 					Edu005 edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
 					if(edu005 == null){
-						resultVO = ResultVO.setFailed("第"+rowIndex+"行您不是该课程的任课教课");
+						resultVO = ResultVO.setFailed("第"+rowIndex+"行您不是该课程的任课教课或未查到该学生信息");
 						return resultVO;
 					}else{
 						Edu404 edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
