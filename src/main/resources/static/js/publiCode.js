@@ -3680,7 +3680,7 @@ function modifyLimit(row){
 		if(row.xnid===thisYearLimit[i].xnid){
 			var pkjsxz=thisYearLimit[i].pkjsxz;
 			for (var j = 0; j < pkjsxz.length; j++) {
-				stuffThiskjLimit(pkjsxz[j].xn,pkjsxz[j].xnid,pkjsxz[j].ksz,pkjsxz[j].jsz,pkjsxz[j].kssx,false,pkjsxz[j].edu403_ID,pkjsxz[j].type,pkjsxz[j].nodeValue);
+				stuffThiskjLimit(pkjsxz[j].xn,pkjsxz[j].xnid,pkjsxz[j].ksz,pkjsxz[j].jsz,pkjsxz[j].kssx,true,pkjsxz[j].edu403_ID,pkjsxz[j].type,pkjsxz[j].nodeValue);
 			}
 		}
 	}
