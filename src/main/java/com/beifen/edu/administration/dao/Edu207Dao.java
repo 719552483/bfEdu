@@ -97,4 +97,8 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
             "      and r.xnid = ?2" +
             "      and to_number(n.week) < ?1",nativeQuery = true)
     Long getFsksClassPeriodCompleted(int week,String edu400ID);
+
+
+    @Query(value = "select sum(CLASS_HOURS) from EDU207 where Edu201_ID in (select edu201_id from edu201 where EDU201_ID in (select e.Edu201_ID from edu204 e where e.Edu300_ID =?1) and xnid = ?2)  and week = ?3 ", nativeQuery = true)
+    Integer comfirmScheduleFSCheck(String classId,String xnid,String week);
 }

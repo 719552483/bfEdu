@@ -1628,7 +1628,7 @@ public class AdministrationPageService {
 			if(kssx != null){
 				//如果排课直接超过限制，则直接返回
 				if(map.get(key)>Integer.parseInt(kssx)){
-					resultVO = ResultVO.setFailed("第"+key+"周排课课时超过排课限制（限制为："+kssx+"节）");
+					resultVO = ResultVO.setFailed("第"+key+"周集中排课课时超过排课限制（限制为："+kssx+"节）");
 					return resultVO;
 				}else{
 					//班级ids
@@ -1639,7 +1639,7 @@ public class AdministrationPageService {
 						//相加判断是否大于限制数量
 						if((count+map.get(key))>Integer.parseInt(kssx)){
 							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(classId);
-							resultVO = ResultVO.setFailed("【"+edu300.getXzbmc()+"】第"+key+"周排课课时超过排课限制（限制为："+kssx+"节）");
+							resultVO = ResultVO.setFailed("【"+edu300.getXzbmc()+"】第"+key+"周集中排课课时超过排课限制（限制为："+kssx+"节）");
 							return resultVO;
 						}
 					}
@@ -1651,6 +1651,38 @@ public class AdministrationPageService {
 		resultVO = ResultVO.setSuccess("验证成功");
 		return resultVO;
 	}
+
+	//确认排课-检验(分散)
+	public ResultVO comfirmScheduleFSCheck(String edu201Id,List<Edu207> edu207List) {
+		ResultVO resultVO;
+		Edu201 ee = edu201DAO.findOne(Long.parseLong(edu201Id));
+		//班级ids
+		List<Long> classIds = edu204Dao.searchEdu300IdByEdu201Id2(edu201Id);
+		for(Edu207 e:edu207List){
+			String kssx = edu403DAO.queryXZCount(ee.getXnid(),e.getWeek(),"2");
+			if(kssx != null){
+				if(e.getClassHours()>Integer.parseInt(kssx)){
+					resultVO = ResultVO.setFailed("第"+e.getWeek()+"周分散排课课时超过排课限制（限制为："+kssx+"节）");
+					return resultVO;
+				}else{
+					for(int i = 0;i<classIds.size();i++){
+						String classId = String.valueOf(classIds.get(i));
+						//获取已经排课的课时数量
+						int count = edu207Dao.comfirmScheduleFSCheck(classId,ee.getXnid(),e.getWeek());
+						//相加判断是否大于限制数量
+						if((count+e.getClassHours())>Integer.parseInt(kssx)){
+							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(classId);
+							resultVO = ResultVO.setFailed("【"+edu300.getXzbmc()+"】第"+e.getWeek()+"周分散排课课时超过排课限制（限制为："+kssx+"节）");
+							return resultVO;
+						}
+					}
+				}
+			}
+		}
+		resultVO = ResultVO.setSuccess("验证成功");
+		return resultVO;
+	}
+
 	//检查是否有排课冲突
 	public ResultVO checkSchedule(List<Edu203> edu203List,String edu201Id) {
 		ResultVO resultVO;

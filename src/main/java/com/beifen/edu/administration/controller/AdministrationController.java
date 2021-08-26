@@ -2353,6 +2353,14 @@ public class AdministrationController {
 			return returnMap;
 		}
 
+		result = administrationPageService.comfirmScheduleFSCheck(edu201Id,edu207List);
+		if(result.getCode() != 200){
+			returnMap.put("code", 204);
+			returnMap.put("result", false);
+			returnMap.put("msg", result.getMsg());
+			return returnMap;
+		}
+
 		//保存排课信息
 		boolean isSuccess = administrationPageService.saveSchedule(edu201Id, edu203List, edu207List,sfpw);
 		if(isSuccess){
@@ -2364,7 +2372,7 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 确认排课-检验
+	 * 确认排课-检验（集中）
 	 * @param edu201Id
 	 * @param scheduleDetail
 	 * @return
@@ -2376,6 +2384,21 @@ public class AdministrationController {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		return result;
+	}
+
+	/**
+	 * 确认排课-检验（分散）
+	 * @param edu201Id
+	 * @return
+	 */
+	@RequestMapping("/comfirmScheduleFSCheck")
+	@ResponseBody
+	public ResultVO comfirmScheduleFSCheck(@RequestParam("Edu201Id") String edu201Id,@RequestParam("scatteredClass") String scatteredClass) {
+		Map<String, Object> returnMap = new HashMap();
+		// 将收到的jsonObject转为javabean 关系管理实体类
+		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
+		ResultVO result = administrationPageService.comfirmScheduleFSCheck(edu201Id,edu207List);
 		return result;
 	}
 
@@ -2391,6 +2414,11 @@ public class AdministrationController {
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
 		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		if(result.getCode() != 200){
+			result.setCode(204);
+			return result;
+		}
+		result = administrationPageService.comfirmScheduleFSCheck(edu201Id,edu207List);
 		if(result.getCode() != 200){
 			result.setCode(204);
 			return result;
