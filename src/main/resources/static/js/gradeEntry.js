@@ -2450,6 +2450,24 @@ function wantEntryMakeUpGrade(row){
 		comfirmMakeUpGradeEntry(choosend);
 		e.stopPropagation();
 	});
+
+	//补考成绩详情开始检索
+	$('#makeUpGradeDetails_startSearch').unbind('click');
+	$('#makeUpGradeDetails_startSearch').bind('click', function(e) {
+		makeUpGradeDetailsStartSearch(choosend);
+		e.stopPropagation();
+	});
+
+	//成绩详情重置检索
+	$('#makeUpGradeDetails_research').unbind('click');
+	$('#makeUpGradeDetails_research').bind('click', function(e) {
+		var reObject = new Object();
+		reObject.InputIds = "#makeUpGradeDetails_studentNumber,#makeUpGradeDetails_studentName";
+		reObject.normalSelectIds = "#makeUpGradeDetails_course,#makeUpGradeDetails_xn,#makeUpGradeDetails_class";
+		reReloadSearchsWithSelect(reObject);
+		getMakeUpGradeDetails(choosend,false);
+		e.stopPropagation();
+	});
 }
 
 //获取补考成绩详情
@@ -2458,7 +2476,7 @@ function getMakeUpGradeDetails(choosend,needHide){
 	for (let i = 0; i <choosend.length ; i++) {
 		SearchCriteria.push(choosend[i].id);
 	}
-	var searchObject=getMakeUpDetailsSearchObject(true);
+	var searchObject=getMakeUpDetailsSearchObject(true,choosend);
 	searchObject.ids=SearchCriteria;
 
 	$.ajax({
@@ -3052,12 +3070,19 @@ function stuffMakeUpGradeDetailsSearch(choosend){
 }
 
 //获得补考成绩详情检索对象
-function getMakeUpDetailsSearchObject(canEmpty){
+function getMakeUpDetailsSearchObject(canEmpty,choosendArray){
 	var returnObject = new Object();
 	var SearchCriteria=new Array();
-	var choosend=$("#makeUpGradeOverviewTable").bootstrapTable("getSelections");
-	for (let i = 0; i <choosend.length ; i++) {
-		SearchCriteria.push(choosend[i].id);
+	var choosend;
+	if(choosendArray.length<=1){
+		for (let i = 0; i <choosendArray.length ; i++) {
+			SearchCriteria.push(choosendArray[i].id);
+		}
+	}else{
+		choosend=$("#makeUpGradeOverviewTable").bootstrapTable("getSelections");
+		for (let i = 0; i <choosend.length ; i++) {
+			SearchCriteria.push(choosend[i].id);
+		}
 	}
 
 	var xnid =getNormalSelectValue("makeUpGradeDetails_xn");
@@ -3116,8 +3141,8 @@ function makeUpGradeOverviewResearch(){
 }
 
 //补考详情开始检索
-function makeUpGradeDetailsStartSearch(){
-	var searchObject=getMakeUpDetailsSearchObject(false);
+function makeUpGradeDetailsStartSearch(choosend){
+	var searchObject=getMakeUpDetailsSearchObject(false,choosend);
 	if(typeof searchObject.SearchCriteria==='undefined'){
 		return;
 	}
@@ -3143,7 +3168,7 @@ function makeUpGradeDetailsStartSearch(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				stuffMakeUpGradeDetailsSearch(backjson.data);
+				stuffMakeStudentBaseInfoTable(backjson.data);
 				toastr.success(backjson.msg);
 			}  else {
 				stuffMakeStudentBaseInfoTable({});
@@ -3571,29 +3596,6 @@ function tab2BtnBind(){
 	$('#makeUpGradeDetails_return').bind('click', function(e) {
 		$('.makeUpGradeOverview').show();
 		$('.makeUpGradeDetails').hide();
-		e.stopPropagation();
-	});
-
-	//补考成绩详情开始检索
-	$('#makeUpGradeDetails_startSearch').unbind('click');
-	$('#makeUpGradeDetails_startSearch').bind('click', function(e) {
-		makeUpGradeDetailsStartSearch();
-		e.stopPropagation();
-	});
-
-	//成绩详情重置检索
-	$('#makeUpGradeDetails_research').unbind('click');
-	$('#makeUpGradeDetails_research').bind('click', function(e) {
-		var reObject = new Object();
-		reObject.InputIds = "#makeUpGradeDetails_studentNumber,#makeUpGradeDetails_studentName";
-		reObject.normalSelectIds = "#makeUpGradeDetails_course,#makeUpGradeDetails_xn,#makeUpGradeDetails_class";
-		reReloadSearchsWithSelect(reObject);
-		var SearchCriteria=new Array();
-		var choosend=$("#makeUpGradeOverviewTable").bootstrapTable("getSelections");
-		for (let i = 0; i <choosend.length ; i++) {
-			SearchCriteria.push(choosend[i].id);
-		}
-		getMakeUpGradeDetails(choosend,false);
 		e.stopPropagation();
 	});
 
