@@ -1668,7 +1668,11 @@ public class AdministrationPageService {
 					for(int i = 0;i<classIds.size();i++){
 						String classId = String.valueOf(classIds.get(i));
 						//获取已经排课的课时数量
-						int count = edu207Dao.comfirmScheduleFSCheck(classId,ee.getXnid(),e.getWeek());
+						Integer count = edu207Dao.comfirmScheduleFSCheck(classId,ee.getXnid(),e.getWeek());
+						if(count == null){
+							resultVO = ResultVO.setSuccess("验证成功");
+							return resultVO;
+						}
 						//相加判断是否大于限制数量
 						if((count+e.getClassHours())>Integer.parseInt(kssx)){
 							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(classId);
