@@ -2285,16 +2285,16 @@ function stuffMakeUpGradeOverviewTable(Info){
 			fileName: '补考总览表'  //文件名称
 		},
 		onCheck : function(row) {
-			onCheckGradeOverview(row);
+			onCheckMakeUpGradeOverview(row);
 		},
 		onUncheck : function(row) {
-			onUncheckGradeOverview(row);
+			onUncheckMakeUpGradeOverview(row);
 		},
 		onCheckAll : function(rows) {
-			onCheckAllGradeOverview(rows);
+			onCheckAllMakeUpGradeOverview(rows);
 		},
 		onUncheckAll : function(rows,rows2) {
-			onUncheckAllGradeOverview(rows2);
+			onUncheckMakeUpAllGradeOverview(rows2);
 		},
 		onPageChange: function() {
 			drawPagination(".makeUpGradeOverviewTableArea", "补考成绩录入数据");
@@ -2362,7 +2362,7 @@ function stuffMakeUpGradeOverviewTable(Info){
 }
 
 //单选补考总览
-function onCheckGradeOverview(row){
+function onCheckMakeUpGradeOverview(row){
 	if(choosendMakeUpGradeOverview.length<=0){
 		choosendMakeUpGradeOverview.push(row);
 	}else{
@@ -2380,7 +2380,7 @@ function onCheckGradeOverview(row){
 }
 
 //单反选补考总览
-function onUncheckGradeOverview(row){
+function onUncheckMakeUpGradeOverview(row){
 	if(choosendMakeUpGradeOverview.length<=1){
 		choosendMakeUpGradeOverview.length=0;
 	}else{
@@ -2393,14 +2393,14 @@ function onUncheckGradeOverview(row){
 }
 
 //全选补考总览
-function onCheckAllGradeOverview(row){
+function onCheckAllMakeUpGradeOverview(row){
 	for (var i = 0; i < row.length; i++) {
 		choosendMakeUpGradeOverview.push(row[i]);
 	}
 }
 
 //全反选补考总览
-function onUncheckAllGradeOverview(row){
+function onUncheckAllMakeUpGradeOverview(row){
 	var a=new Array();
 	for (var i = 0; i < row.length; i++) {
 		a.push(row[i].id);
