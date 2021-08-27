@@ -2478,6 +2478,21 @@ public class AdministrationController {
 		// 将收到的jsonObject转为javabean 关系管理实体类
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
+		String edu201Id = administrationPageService.getedu201Idbyedu202Id(edu202Id);
+		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		if(result.getCode() != 200){
+			returnMap.put("code", 204);
+			returnMap.put("result", false);
+			returnMap.put("msg", result.getMsg());
+			return returnMap;
+		}
+		result = administrationPageService.comfirmScheduleFSCheck(edu201Id,edu207List);
+		if(result.getCode() != 200){
+			returnMap.put("code", 204);
+			returnMap.put("result", false);
+			returnMap.put("msg", result.getMsg());
+			return returnMap;
+		}
 		boolean isSuccess = administrationPageService.reSaveSchedule(edu202Id, edu203List, edu207List,userId,userName,sfpw);
 //		if(isSuccess){
 //			administrationPageService.taskPutSchedule(edu201Id);
