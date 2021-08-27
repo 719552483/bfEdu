@@ -377,6 +377,21 @@ public class DateUtils {
 
 
     /**
+     * 根据日期获取 星期 （2019-05-06 ——> 星期一）
+     * @return
+     */
+    public static String dateToWeek(Date now) {
+        String[] weekDays = {"07", "01", "02", "03", "04", "05", "06"};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        //一周的第几天
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0)
+            w = 0;
+        return weekDays[w];
+    }
+
+    /**
      * 计算两个日期之间的年份差距
      *
      * @param firstDate

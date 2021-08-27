@@ -2973,6 +2973,62 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    public ResultVO searchCourseProgress(String xnid){
+        ResultVO resultVO;
+        //查询所有系部
+        List<Map> mapList = new ArrayList<>();
+        List<Edu104> edu104List = edu104Dao.findAll();
+        Edu400 edu400 = edu400Dao.getTermInfoById(xnid);
+        try{
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String kssj = edu400.getKssj();
+            Date startDate = sdf.parse(kssj);
+            String jssj = edu400.getJssj();
+            Date endDate = sdf.parse(jssj);
+            if(now.getTime()<startDate.getTime()){
+                for(Edu104 edu104:edu104List){
+                    Map map = new HashMap();
+                    map.put("xbmc",edu104.getXbmc());
+                    map.put("progress",0.00);
+                    mapList.add(map);
+                }
+            }else if(now.getTime()>endDate.getTime()){
+                for(Edu104 edu104:edu104List){
+                    Map map = new HashMap();
+                    map.put("xbmc",edu104.getXbmc());
+                    map.put("progress",100.00);
+                    mapList.add(map);
+                }
+            }else{
+                //获取当前教学周
+                int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                //获取当前星期id
+                String xqid = DateUtils.dateToWeek(now);
+
+                for(Edu104 edu104:edu104List){
+                    Map map = new HashMap();
+                    String countAll = edu203Dao.getPKcount(xnid,edu104.getEdu104_ID()+"");
+                    String countPass = edu203Dao.getPKcount2(xnid,edu104.getEdu104_ID()+"",week,xqid);
+                    if(Integer.parseInt(countPass) != 0){
+                        double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                        DecimalFormat df = new java.text.DecimalFormat("#.00");
+                        String usedPercent = df.format(v);
+                        map.put("progress",Double.parseDouble(usedPercent));
+                    } else {
+                        map.put("progress",0.00);
+                    }
+                    map.put("xbmc",edu104.getXbmc());
+                    mapList.add(map);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        resultVO = ResultVO.setSuccess("查询成功",mapList);
+        return resultVO;
+    }
+
     //导出教务专业授课成果-校验
     public ResultVO exportProfessionalCourseResultCheck(Edu107 edu107,String xnid) {
         ResultVO resultVO;
