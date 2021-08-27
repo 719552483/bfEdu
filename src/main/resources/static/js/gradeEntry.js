@@ -2294,7 +2294,7 @@ function stuffMakeUpGradeOverviewTable(Info){
 			onCheckAllMakeUpGradeOverview(rows);
 		},
 		onUncheckAll : function(rows,rows2) {
-			onUncheckMakeUpAllGradeOverview(rows2);
+			onUncheckAllMakeUpGradeOverview(rows2);
 		},
 		onPageChange: function() {
 			drawPagination(".makeUpGradeOverviewTableArea", "补考成绩录入数据");
