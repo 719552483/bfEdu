@@ -2446,9 +2446,19 @@ public class AdministrationController {
 		List<Edu203> edu203List = JSON.parseArray(scheduleDetail, Edu203.class);
 		List<Edu207> edu207List = JSON.parseArray(scatteredClass, Edu207.class);
 		String edu201Id = administrationPageService.getedu201Idbyedu202Id(edu202Id);
-		ResultVO result = administrationPageService.checkSchedule(edu203List,edu201Id);
+		ResultVO result = administrationPageService.comfirmScheduleCheck(edu201Id,edu203List);
+		if(result.getCode() != 200){
+			result.setCode(204);
+			return result;
+		}
+		result = administrationPageService.comfirmScheduleFSCheck(edu201Id,edu207List);
+		if(result.getCode() != 200){
+			result.setCode(204);
+			return result;
+		}
+		result = administrationPageService.checkSchedule(edu203List,edu201Id);
 		if(200==result.getCode()){
-			boolean isSuccess = administrationPageService.reSaveSchedule(edu202Id, edu203List, edu207List,userId,userName,sfpw);
+			administrationPageService.reSaveSchedule(edu202Id, edu203List, edu207List,userId,userName,sfpw);
 			result = ResultVO.setSuccess("排课成功");
 		}
 		return result;
