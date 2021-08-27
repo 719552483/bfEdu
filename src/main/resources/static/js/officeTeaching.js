@@ -2356,6 +2356,8 @@ function finalConfirmPk2(rowInfo,sfpw,scheduleInfo,fsxsInfo){
 					controlScheduleArea();
 					toastr.success('再排成功');
 					$.hideModal();
+				}else{
+					toastr.warning(backjson.msg);
 				}
 			}
 		});
