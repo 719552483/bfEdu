@@ -718,12 +718,38 @@ function configedFsNextStep(isRe){
 			return;
 		}
 	}
-	$(".itab").find("li:eq(2)").find("a").trigger('click');
-	var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
-	if(currentJzxs==0){
-		$(".scheduleSingleClassArea").find("#tab3").find('.cannottxt').hide();
-		$(".scheduleSingleClassArea").find("#tab3").find('.rsArea').show();
-	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/comfirmScheduleFSCheck",
+		data: {
+			'Edu201Id':typeof isRe==="undefined"?$("#WaitTaskTable").bootstrapTable("getSelections")[0].edu201_ID:$('.isReId')[0].innerText,
+			"scatteredClass":JSON.stringify(getfsxs())
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$(".itab").find("li:eq(2)").find("a").trigger('click');
+				var currentJzxs=parseInt($(".jzxsSpan ")[0].innerText);
+				if(currentJzxs==0){
+					$(".scheduleSingleClassArea").find("#tab3").find('.cannottxt').hide();
+					$(".scheduleSingleClassArea").find("#tab3").find('.rsArea').show();
+				}
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //tab3的上一步
