@@ -2525,7 +2525,7 @@ public class TeachingManageService {
         if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
             text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
         }else{
-            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
         }
         map.put("text",text);
         map.put("xbmc",njList);
@@ -2613,9 +2613,9 @@ public class TeachingManageService {
         Map<String, Object> map = new HashMap<>();
         String text;
         if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
-            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
         }else{
-            text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
         }
         map.put("text",text);
         map.put("xbmc",njList);
@@ -2991,6 +2991,10 @@ public class TeachingManageService {
                     Map map = new HashMap();
                     map.put("xbmc",edu104.getXbmc());
                     map.put("progress",0.00);
+                    String countAll = edu203Dao.getPKcount(xnid,edu104.getEdu104_ID()+"");
+                    map.put("all",Integer.parseInt(countAll));
+                    map.put("completed",0);
+                    map.put("unfinished",Integer.parseInt(countAll));
                     mapList.add(map);
                 }
             }else if(now.getTime()>endDate.getTime()){
@@ -2998,6 +3002,10 @@ public class TeachingManageService {
                     Map map = new HashMap();
                     map.put("xbmc",edu104.getXbmc());
                     map.put("progress",100.00);
+                    String countAll = edu203Dao.getPKcount(xnid,edu104.getEdu104_ID()+"");
+                    map.put("all",Integer.parseInt(countAll));
+                    map.put("completed",Integer.parseInt(countAll));
+                    map.put("unfinished",0);
                     mapList.add(map);
                 }
             }else{
@@ -3015,8 +3023,14 @@ public class TeachingManageService {
                         DecimalFormat df = new java.text.DecimalFormat("#.00");
                         String usedPercent = df.format(v);
                         map.put("progress",Double.parseDouble(usedPercent));
+                        map.put("all",Integer.parseInt(countAll));
+                        map.put("completed",Integer.parseInt(countPass));
+                        map.put("unfinished",Integer.parseInt(countAll)-Integer.parseInt(countPass));
                     } else {
                         map.put("progress",0.00);
+                        map.put("all",Integer.parseInt(countAll));
+                        map.put("completed",0);
+                        map.put("unfinished",Integer.parseInt(countAll));
                     }
                     map.put("xbmc",edu104.getXbmc());
                     mapList.add(map);

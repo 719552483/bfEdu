@@ -525,4 +525,31 @@ public class StudentManageController {
     }
 
 
+    /**
+     * 学生报表数据
+     * @return
+     */
+    @RequestMapping("/studentReport")
+    @ResponseBody
+    public ResultVO studentReport(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+        ResultVO result;
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName="学生报表数据";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = studentManageService.studentReport();
+        try {
+            utils.loadModal(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
 }
