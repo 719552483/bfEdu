@@ -39,6 +39,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#singleStudent_year", str);
 	stuffManiaSelect("#departmnetArea_year", str);
 	stuffManiaSelect("#student2Data_year", str);
+	stuffManiaSelect("#progress_year", str);
 }
 
 //获取合格率信息
@@ -2632,5 +2633,133 @@ function tab4BinBind(){
 }
 /**
  * tab4 end
+ * */
+
+
+/**
+ * tab5 start
+ * */
+function judgmentIsFristTimeLoadTab5(){
+	var isFirstShowTab5 = $(".isFirstShowTab5")[0].innerText;
+	if (isFirstShowTab5 === "T") {
+		$(".isFirstShowTab5").html("F");
+		stuffProgressTable({});
+		tab5BtnBind();
+	}
+}
+
+//获取学年授课进度
+function getYearProgress(year){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseProgress",
+		data: {
+			"xnid":year
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffProgressTable(backjson.data);
+			} else {
+				stuffProgressTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//填充学年授课进度 Table
+function stuffProgressTable(tableInfo){
+	$('#tab5Table').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".tab5TableArea", "授课进度信息");
+		},
+		columns: [{
+			field :'xbmc',
+			title : '二级学院名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'completed',
+			title : '已完成课时',
+			align : 'left',
+			sortable: true,
+			formatter : ksMatter
+		},{
+			field :'unfinished',
+			title : '未完成课时',
+			align : 'left',
+			sortable: true,
+			formatter : ksMatter
+		},{
+			field :'all',
+			title : '总课时',
+			align : 'left',
+			sortable: true,
+			formatter : ksMatter
+		},{
+			field :'progress',
+			title : '完成百分比',
+			align : 'left',
+			sortable: true,
+			formatter :progressMatter
+		}]
+	});
+
+	function ksMatter(value, row, index) {
+		return [ '<div class="myTooltip" title="' + value + '课时">' + value + '课时</div>' ]
+			.join('');
+	}
+
+	function progressMatter(value, row, index) {
+		return [ '<div class="myTooltip" title="' + value + '%">' + value + '%</div>' ]
+			.join('');
+	}
+
+	drawPagination(".tab5TableArea", "授课进度信息");
+	drawSearchInput(".tab5TableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".tab5TableArea", "授课进度信息");
+}
+
+//tab5事件绑定
+function tab5BtnBind(){
+	//学年change事件
+	$("#progress_year").change(function() {
+		var year=getNormalSelectValue('progress_year');
+		if(year===''){
+			return;
+		}
+		getYearProgress(year);
+	});
+}
+/**
+ * tab5 end
  * */
 
