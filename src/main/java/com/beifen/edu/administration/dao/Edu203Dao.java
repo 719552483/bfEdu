@@ -140,8 +140,13 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Query(value = "update edu203 t set t.LOCAL_NAME = ?2 where t.LOCAL_ID =?1", nativeQuery = true)
     void updateLocalName(Long edu500_id, String local_NAME);
 
-    //查询排课数量
+    //根据学年查询排课总数量
     // select count(*) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where EDU201_ID in (select EDU201_ID from edu201 where EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID = '9045'))) and week = 1
-    @Query(value = "select count(*) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where EDU201_ID in (select EDU201_ID from edu201 where EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID = ?1))) and week = ?2", nativeQuery = true)
-    String getPKcount(String classId,String szz);
+    @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2)))", nativeQuery = true)
+    String getPKcount(String xnid,String xbbm);
+
+    //根据学年查询已上课总数量
+    // select count(*) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where EDU201_ID in (select EDU201_ID from edu201 where EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID = '9045'))) and week = 1
+    @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2))) and (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
+    String getPKcount2(String xnid,String xbbm,int week,String xqid);
 }

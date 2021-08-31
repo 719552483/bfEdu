@@ -9,6 +9,10 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -880,5 +884,48 @@ public class StudentManageService {
 
         resultVO = ResultVO.setSuccess("生成成功");
         return resultVO;
+    }
+
+
+    //学生报表数据
+    public XSSFWorkbook studentReport() {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("全校扩招汇总表");
+
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFCell cells[] = new XSSFCell[2];
+        // 所有标题数组
+        String[] titles = new String[5]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+        List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
+        titles[0] = "序号";
+        CellRangeAddress region1 = new CellRangeAddress(0, 0, 0, 2);
+        sheet.addMergedRegion(region1);
+        titles[1] = "年级批次";
+        CellRangeAddress region2 = new CellRangeAddress(1, 1, 0, 2);
+        sheet.addMergedRegion(region2);
+        titles[2] = "分院";
+        CellRangeAddress region3 = new CellRangeAddress(2, 2, 0, 2);
+        sheet.addMergedRegion(region3);
+        titles[3] = "专业";
+        CellRangeAddress region4 = new CellRangeAddress(3, 3, 0, 2);
+        sheet.addMergedRegion(region4);
+        titles[4] = "辽宁职业学院高职扩招学生汇总表";
+//        CellRangeAddress region5 = new CellRangeAddress(3, 3, 0, 2);
+//        sheet.addMergedRegion(region5);
+//        for(int j = 0;j<size;j++){
+//            titles[j+2] = edu005List.get(j).getCourseName();
+//        }
+
+        // 循环设置标题
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = firstRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
+
+
+
+//        sheet.setColumnWidth(0, 12*256);
+
+        return workbook;
     }
 }

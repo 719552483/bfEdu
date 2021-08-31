@@ -2525,7 +2525,7 @@ public class TeachingManageService {
         if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
             text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
         }else{
-            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"各个年级及格率情况";
         }
         map.put("text",text);
         map.put("xbmc",njList);
@@ -2613,9 +2613,9 @@ public class TeachingManageService {
         Map<String, Object> map = new HashMap<>();
         String text;
         if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
-            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+            text = "["+professionalRequestPO.getCourseName()+"]"+professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
         }else{
-            text = professionalRequestPO.getEdu103IdName()+","+professionalRequestPO.getXnName()+","+professionalRequestPO.getEdu104IdName()+","+professionalRequestPO.getEdu105IdName()+"年级,"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
+            text = professionalRequestPO.getEdu103IdName()+"/"+professionalRequestPO.getXnName()+"/"+professionalRequestPO.getEdu104IdName()+"/"+professionalRequestPO.getEdu105IdName()+"年级/"+professionalRequestPO.getEdu105IdName()+"专业各个批次及格率情况";
         }
         map.put("text",text);
         map.put("xbmc",njList);
@@ -2970,6 +2970,95 @@ public class TeachingManageService {
         }
         classGraduationPOList.sort(Comparator.comparing(ClassGraduationPO::getRate).reversed());
         resultVO = ResultVO.setSuccess("查询成功",classGraduationPOList);
+        return resultVO;
+    }
+
+    public ResultVO searchCourseProgress(String xnid){
+        ResultVO resultVO;
+        //查询所有系部
+        List<Map> mapList = new ArrayList<>();
+        List<Edu104> edu104List = edu104Dao.findAll();
+        Edu400 edu400 = edu400Dao.getTermInfoById(xnid);
+        try{
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String kssj = edu400.getKssj();
+            Date startDate = sdf.parse(kssj);
+            String jssj = edu400.getJssj();
+            Date endDate = sdf.parse(jssj);
+            if(now.getTime()<startDate.getTime()){
+                for(Edu104 edu104:edu104List){
+                    Map map = new HashMap();
+                    map.put("xbmc",edu104.getXbmc());
+                    map.put("progress",0.00);
+                    String countAll = edu203Dao.getPKcount(xnid,edu104.getEdu104_ID()+"");
+                    map.put("all",Integer.parseInt(countAll));
+                    map.put("completed",0);
+                    map.put("unfinished",Integer.parseInt(countAll));
+                    mapList.add(map);
+                }
+            }else if(now.getTime()>endDate.getTime()){
+                for(Edu104 edu104:edu104List){
+                    Map map = new HashMap();
+                    map.put("xbmc",edu104.getXbmc());
+                    map.put("progress",100.00);
+                    String countAll = edu203Dao.getPKcount(xnid,edu104.getEdu104_ID()+"");
+                    map.put("all",Integer.parseInt(countAll));
+                    map.put("completed",Integer.parseInt(countAll));
+                    map.put("unfinished",0);
+                    mapList.add(map);
+                }
+            }else{
+                //获取当前教学周
+                int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                //获取当前星期id
+                String xqid = DateUtils.dateToWeek(now);
+
+                for(Edu104 edu104:edu104List){
+                    Map map = new HashMap();
+                    String countAll = edu203Dao.getPKcount(xnid,edu104.getEdu104_ID()+"");
+                    String countPass = edu203Dao.getPKcount2(xnid,edu104.getEdu104_ID()+"",week,xqid);
+                    if(Integer.parseInt(countPass) != 0){
+                        double v = Double.parseDouble(countPass) / Double.parseDouble(countAll) * 100;
+                        DecimalFormat df = new java.text.DecimalFormat("#.00");
+                        String usedPercent = df.format(v);
+                        map.put("progress",Double.parseDouble(usedPercent));
+                        map.put("all",Integer.parseInt(countAll));
+                        map.put("completed",Integer.parseInt(countPass));
+                        map.put("unfinished",Integer.parseInt(countAll)-Integer.parseInt(countPass));
+                    } else {
+                        map.put("progress",0.00);
+                        map.put("all",Integer.parseInt(countAll));
+                        map.put("completed",0);
+                        map.put("unfinished",Integer.parseInt(countAll));
+                    }
+                    map.put("xbmc",edu104.getXbmc());
+                    mapList.add(map);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Collections.sort(mapList, new Comparator<Map>() {
+            @Override
+            public int compare(Map o1, Map o2) {
+                Double progress1 = (Double)o1.get("progress");
+                Double progress2 = (Double)o2.get("progress");
+                int i = progress2.compareTo(progress1);
+                // 如果百分比相同则进行第二次比较
+                if (i == 0) {
+                    // 第二次比较课时数量
+                    Integer all1 = (Integer)o1.get("all");
+                    Integer all2 = (Integer)o2.get("all");
+                    int j = all2.compareTo(all1);
+                    return j;
+                }
+                return i;
+            }
+        });
+
+        resultVO = ResultVO.setSuccess("查询成功",mapList);
         return resultVO;
     }
 

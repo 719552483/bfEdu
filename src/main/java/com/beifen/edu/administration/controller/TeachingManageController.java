@@ -847,14 +847,12 @@ public class TeachingManageController {
      * 教务查询课程完成进度
      * @return
      */
-//    @RequestMapping("/searchCourseProgress")
-//    @ResponseBody
-//    public ResultVO searchCourseProgress(@RequestParam("SearchCriteria") String SearchCriteria) {
-//        CourseProgressPO courseProgressPO = JSON.parseObject(SearchCriteria, CourseProgressPO.class);
-//        if(){
-//
-//        }
-//    }
+    @RequestMapping("/searchCourseProgress")
+    @ResponseBody
+    public ResultVO searchCourseProgress(@RequestParam("xnid") String xnid) {
+        ResultVO result = teachingManageService.searchCourseProgress(xnid);
+        return result;
+    }
 
 
     /**
