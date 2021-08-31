@@ -893,9 +893,9 @@ public class StudentManageService {
         XSSFSheet sheet = workbook.createSheet("全校扩招汇总表");
 
         XSSFRow firstRow = sheet.createRow(0);// 第一行
-        XSSFCell cells[] = new XSSFCell[1];
+        XSSFCell cells[] = new XSSFCell[2];
         // 所有标题数组
-        String[] titles = new String[4]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+        String[] titles = new String[5]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
         List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
         titles[0] = "序号";
         CellRangeAddress region1 = new CellRangeAddress(0, 0, 0, 2);
@@ -907,20 +907,20 @@ public class StudentManageService {
         CellRangeAddress region3 = new CellRangeAddress(2, 2, 0, 2);
         sheet.addMergedRegion(region3);
         titles[3] = "专业";
-        CellRangeAddress region4 = new CellRangeAddress(2, 2, 0, 2);
+        CellRangeAddress region4 = new CellRangeAddress(3, 3, 0, 2);
         sheet.addMergedRegion(region4);
         titles[4] = "辽宁职业学院高职扩招学生汇总表";
-        CellRangeAddress region5 = new CellRangeAddress(2, 2, 0, 2);
-        sheet.addMergedRegion(region5);
+//        CellRangeAddress region5 = new CellRangeAddress(3, 3, 0, 2);
+//        sheet.addMergedRegion(region5);
 //        for(int j = 0;j<size;j++){
 //            titles[j+2] = edu005List.get(j).getCourseName();
 //        }
 
         // 循环设置标题
-//        for (int i = 0; i < titles.length; i++) {
-//            cells[0] = firstRow.createCell(i);
-//            cells[0].setCellValue(titles[i]);
-//        }
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = firstRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
 
 
 

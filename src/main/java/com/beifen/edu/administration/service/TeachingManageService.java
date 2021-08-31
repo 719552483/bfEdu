@@ -3039,6 +3039,25 @@ public class TeachingManageService {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        Collections.sort(mapList, new Comparator<Map>() {
+            @Override
+            public int compare(Map o1, Map o2) {
+                Double progress1 = (Double)o1.get("progress");
+                Double progress2 = (Double)o2.get("progress");
+                int i = progress2.compareTo(progress1);
+                // 如果百分比相同则进行第二次比较
+                if (i == 0) {
+                    // 第二次比较课时数量
+                    Integer all1 = (Integer)o1.get("all");
+                    Integer all2 = (Integer)o2.get("all");
+                    int j = all2.compareTo(all1);
+                    return j;
+                }
+                return i;
+            }
+        });
+
         resultVO = ResultVO.setSuccess("查询成功",mapList);
         return resultVO;
     }
