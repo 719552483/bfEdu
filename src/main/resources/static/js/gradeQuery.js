@@ -221,37 +221,44 @@ function stuffStudentGradeTable(tableInfo) {
 
 
 	function gradeMatter(value, row, index) {
-		if (value==="T"||value==="F") {
-			var str="";
-			value==="T"?str="通过":str="不通过";
-			if(str==="通过"){
-				return [
-					'<div class="myTooltip greenTxt" title="'+str+'">'+str+'</div>'
-				]
-					.join('');
-			}else{
-				return [
-					'<div class="myTooltip redTxt" title="'+str+'">'+str+'</div>'
-				]
-					.join('');
-			}
-		} else {
-			if(value==null||value===""||typeof value==="undefined"){
-				return [
-					'<div class="myTooltip normalTxt" title="暂无成绩">暂无成绩</div>'
-				]
-					.join('');
-			}else{
-				if(parseInt(value)<60){
+		if(row.isConfirm===''||row.isConfirm==null||typeof row.isConfirm==='undefined'){
+			return [
+				'<div class="myTooltip normalTxt" title="成绩暂未确认">成绩暂未确认</div>'
+			]
+				.join('');
+		}else{
+			if (value==="T"||value==="F") {
+				var str="";
+				value==="T"?str="通过":str="不通过";
+				if(str==="通过"){
 					return [
-						'<div class="myTooltip redTxt" title="'+value+'">'+value+'</div>'
+						'<div class="myTooltip greenTxt" title="'+str+'">'+str+'</div>'
 					]
 						.join('');
 				}else{
 					return [
-						'<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
+						'<div class="myTooltip redTxt" title="'+str+'">'+str+'</div>'
 					]
 						.join('');
+				}
+			} else {
+				if(value==null||value===""||typeof value==="undefined"){
+					return [
+						'<div class="myTooltip normalTxt" title="暂无成绩">暂无成绩</div>'
+					]
+						.join('');
+				}else{
+					if(parseInt(value)<60){
+						return [
+							'<div class="myTooltip redTxt" title="'+value+'">'+value+'</div>'
+						]
+							.join('');
+					}else{
+						return [
+							'<div class="myTooltip greenTxt" title="'+value+'">'+value+'</div>'
+						]
+							.join('');
+					}
 				}
 			}
 		}
