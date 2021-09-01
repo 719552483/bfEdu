@@ -516,7 +516,7 @@ public class StudentManageService {
                 if (studentCode != null && !"".equals(studentCode)) {
                     predicates.add(cb.equal(root.<String>get("studentCode"), studentCode));
                 }
-                predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
+//                predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
@@ -898,18 +898,21 @@ public class StudentManageService {
         String[] titles = new String[5]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
         List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
         titles[0] = "序号";
-        CellRangeAddress region1 = new CellRangeAddress(0, 0, 0, 2);
+        CellRangeAddress region1 = new CellRangeAddress(0, 2, 0, 0);
         sheet.addMergedRegion(region1);
         titles[1] = "年级批次";
-        CellRangeAddress region2 = new CellRangeAddress(1, 1, 0, 2);
+        CellRangeAddress region2 = new CellRangeAddress(0, 2, 1, 1);
         sheet.addMergedRegion(region2);
         titles[2] = "分院";
-        CellRangeAddress region3 = new CellRangeAddress(2, 2, 0, 2);
+        CellRangeAddress region3 = new CellRangeAddress(0, 2, 2, 2);
         sheet.addMergedRegion(region3);
         titles[3] = "专业";
-        CellRangeAddress region4 = new CellRangeAddress(3, 3, 0, 2);
+        CellRangeAddress region4 = new CellRangeAddress(0, 2, 3, 3);
         sheet.addMergedRegion(region4);
         titles[4] = "辽宁职业学院高职扩招学生汇总表";
+        for(int i = 0;i<edu000List.size();i++){
+            utils.appendCell(sheet,i,"",edu000List.get(i).getEjdmz(),-1,0,false);
+        }
 //        CellRangeAddress region5 = new CellRangeAddress(3, 3, 0, 2);
 //        sheet.addMergedRegion(region5);
 //        for(int j = 0;j<size;j++){
