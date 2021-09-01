@@ -449,7 +449,18 @@ public class TeachingManageService {
         }
 
         List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
-        List<String> edu201List = edu201Dao.queryCoursePlanIdsNew(edu108Ids,timeTable.getSemester());
+
+        List<String> edu201List = new ArrayList<>();
+        if(edu108Ids.size()>1000) {
+            List<List<Long>> edu108Idss = utils.splitList(edu108Ids, 1000);
+            for(List<Long> e:edu108Idss){
+                edu201List.addAll(edu201Dao.queryCoursePlanIdsNew(e,timeTable.getSemester()));
+            }
+        }else{
+            edu201List = edu201Dao.queryCoursePlanIdsNew(edu108Ids,timeTable.getSemester());
+        }
+
+
 //        List<String> list = new ArrayList<String>();
 //        for(int i = 0;i <edu201List.size();i++){
 //            String ss = edu201List.get(i);
@@ -1230,6 +1241,18 @@ public class TeachingManageService {
 
         List edu108Ids = utils.heavyListMethod(edu108IdList);
 
+        List<String> edu201List = new ArrayList<>();
+        if(edu108Ids.size()>1000) {
+            List<List<Long>> edu108Idss = utils.splitList(edu108Ids, 1000);
+            for(List<Long> e:edu108Idss){
+                edu201List.addAll(edu201Dao.queryCoursePlanIdsNew(e,schedulePO.getSemester()));
+            }
+        }else{
+            edu201List = edu201Dao.queryCoursePlanIdsNew(edu108Ids,schedulePO.getSemester());
+        }
+
+
+        List<String> finalEdu201List = edu201List;
         Specification<ScheduleViewPO> scheduleViewPOSpecification = new Specification<ScheduleViewPO>() {
             public Predicate toPredicate(Root<ScheduleViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -1257,10 +1280,10 @@ public class TeachingManageService {
                 if (schedulePO.getTeacherId() != null && !"".equals(schedulePO.getTeacherId())) {
                     predicates.add(cb.or(cb.like(root.<String>get("teacherId"), "%"+schedulePO.getTeacherId()+"%"),cb.like(root.<String>get("baseTeacherId"), "%"+schedulePO.getTeacherId()+"%")));
                 }
-                Path<Object> path = root.get("courseId");//定义查询的字段
+                Path<Object> path = root.get("edu201_id");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
-                for (int i = 0; i <edu108Ids.size() ; i++) {
-                    in.value(edu108Ids.get(i));//存入值
+                for (int i = 0; i < finalEdu201List.size() ; i++) {
+                    in.value(finalEdu201List.get(i));//存入值
                 }
                 predicates.add(cb.and(in));
 
@@ -2313,6 +2336,11 @@ public class TeachingManageService {
     //教务查询授课成果
     public ResultVO searchCourseResult(CourseResultPagePO courseResultPagePO) {
         ResultVO resultVO;
+
+        if (courseResultPagePO.getXnid() == null || "".equals(courseResultPagePO.getXnid())) {
+            resultVO = ResultVO.setFailed("请选择学年");
+            return resultVO;
+        }
         Map<String, Object> returnMap = new HashMap<>();
 
         Integer pageNumber = courseResultPagePO.getPageNum();
@@ -2353,6 +2381,23 @@ public class TeachingManageService {
             resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
             return resultVO;
         }
+
+        List<Long> edu201Ids = new ArrayList<>();
+        if(edu108IdList.size()>1000) {
+            List<List<Long>> edu108Idss = utils.splitList(edu108IdList, 1000);
+            for(List<Long> e:edu108Idss){
+                edu201Ids.addAll(edu201Dao.queryCulturePlanIdsNew(e,courseResultPagePO.getXnid()));
+            }
+        }else{
+            edu201Ids = edu201Dao.queryCulturePlanIdsNew(edu108IdList,courseResultPagePO.getXnid());
+        }
+
+        if (edu201Ids.size() == 0) {
+            resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
+            return resultVO;
+        }
+
+        List<Long> finalEdu201Ids = edu201Ids;
         Specification<Edu201> specification = new Specification<Edu201>() {
             public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -2368,10 +2413,10 @@ public class TeachingManageService {
                 if (courseResultPagePO.getKcmc() != null && !"".equals(courseResultPagePO.getKcmc())) {
                     predicates.add(cb.like(root.<String>get("kcmc"), "%"+courseResultPagePO.getKcmc()+"%"));
                 }
-                Path<Object> path = root.get("edu108_ID");//定义查询的字段
+                Path<Object> path = root.get("edu201_ID");//定义查询的字段
                 CriteriaBuilder.In<Object> in = cb.in(path);
-                for (int i = 0; i < edu108IdList.size() ; i++) {
-                    in.value(edu108IdList.get(i));//存入值
+                for (int i = 0; i < finalEdu201Ids.size() ; i++) {
+                    in.value(finalEdu201Ids.get(i));//存入值
                 }
                 predicates.add(cb.and(in));
                 predicates.add(cb.equal(root.<String>get("sfsqks"),  "T"));

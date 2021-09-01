@@ -395,7 +395,16 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
             return resultVO;
         }
-        List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+        List<String> edu201Ids = new ArrayList<>();
+        if(edu108IdList.size()>1000) {
+            List<List<Long>> edu108Idss = utils.splitList(edu108IdList, 1000);
+            for(List<Long> e:edu108Idss){
+                edu201Ids.addAll(edu201Dao.getTaskByEdu108Ids(e));
+            }
+        }else{
+            edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+        }
+
         //两个201id集合去交集
         edu201IdList.retainAll(edu201Ids);
         if(edu201IdList.size() == 0) {
@@ -681,7 +690,15 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("暂无可以录入成绩的课程");
             return resultVO;
         }
-        List<String> edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+        List<String> edu201Ids = new ArrayList<>();
+        if(edu108IdList.size()>1000) {
+            List<List<Long>> edu108Idss = utils.splitList(edu108IdList, 1000);
+            for(List<Long> e:edu108Idss){
+                edu201Ids.addAll(edu201Dao.getTaskByEdu108Ids(e));
+            }
+        }else{
+            edu201Ids = edu201Dao.getTaskByEdu108Ids(edu108IdList);
+        }
         //两个201id集合去交集
         edu201IdList.retainAll(edu201Ids);
         if(edu201IdList.size() == 0) {

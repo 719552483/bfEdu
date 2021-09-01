@@ -942,29 +942,53 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setFailed("暂未找到开课计划");
 			return resultVO;
 		}
+		List<Edu206> edu206IdList = new ArrayList<>();
+		if(edu108Ids.size()>1000){
+			List<List<Long>> edu108Idss = utils.splitList(edu108Ids, 1000);
+			for(List<Long> e:edu108Idss){
+				Specification<Edu206> specification = new Specification<Edu206>() {
+					public Predicate toPredicate(Root<Edu206> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+						List<Predicate> predicates = new ArrayList<Predicate>();
+						if (edu206.getKcmc() != null && !"".equals(edu206.getKcmc())) {
+							predicates.add(cb.like(root.<String>get("kcmc"), "%"+edu206.getKcmc()+"%"));
+						}
+						if (edu206.getPyjhmc() != null && !"".equals(edu206.getPyjhmc())) {
+							predicates.add(cb.like(root.<String>get("pyjhmc"), "%"+edu206.getPyjhmc()+"%"));
+						}
+						Path<Object> path = root.get("edu108_ID");//定义查询的字段
+						CriteriaBuilder.In<Object> in = cb.in(path);
+						for (int i = 0; i <e.size() ; i++) {
+							in.value(e.get(i));//存入值
+						}
+						predicates.add(cb.and(in));
 
-
-		Specification<Edu206> specification = new Specification<Edu206>() {
-			public Predicate toPredicate(Root<Edu206> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				List<Predicate> predicates = new ArrayList<Predicate>();
-				if (edu206.getKcmc() != null && !"".equals(edu206.getKcmc())) {
-					predicates.add(cb.like(root.<String>get("kcmc"), "%"+edu206.getKcmc()+"%"));
-				}
-				if (edu206.getPyjhmc() != null && !"".equals(edu206.getPyjhmc())) {
-					predicates.add(cb.like(root.<String>get("pyjhmc"), "%"+edu206.getPyjhmc()+"%"));
-				}
-				Path<Object> path = root.get("edu108_ID");//定义查询的字段
-				CriteriaBuilder.In<Object> in = cb.in(path);
-				for (int i = 0; i <edu108Ids.size() ; i++) {
-					in.value(edu108Ids.get(i));//存入值
-				}
-				predicates.add(cb.and(in));
-
-				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+						return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+					}
+				};
+				edu206IdList.addAll(edu206Dao.findAll(specification));
 			}
-		};
+		}else{
+			Specification<Edu206> specification = new Specification<Edu206>() {
+				public Predicate toPredicate(Root<Edu206> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+					List<Predicate> predicates = new ArrayList<Predicate>();
+					if (edu206.getKcmc() != null && !"".equals(edu206.getKcmc())) {
+						predicates.add(cb.like(root.<String>get("kcmc"), "%"+edu206.getKcmc()+"%"));
+					}
+					if (edu206.getPyjhmc() != null && !"".equals(edu206.getPyjhmc())) {
+						predicates.add(cb.like(root.<String>get("pyjhmc"), "%"+edu206.getPyjhmc()+"%"));
+					}
+					Path<Object> path = root.get("edu108_ID");//定义查询的字段
+					CriteriaBuilder.In<Object> in = cb.in(path);
+					for (int i = 0; i <edu108Ids.size() ; i++) {
+						in.value(edu108Ids.get(i));//存入值
+					}
+					predicates.add(cb.and(in));
 
-		List<Edu206> edu206IdList = edu206Dao.findAll(specification);
+					return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+			};
+			edu206IdList = edu206Dao.findAll(specification);
+		}
 
 
 		if (edu206IdList.size() == 0){
@@ -3345,14 +3369,22 @@ public class AdministrationPageService {
 		}
 
 		List<Long> edu108Ids = edu108List.stream().map(Edu108::getEdu108_ID).collect(Collectors.toList());
-		List<Edu201> edu201List;
+		List<Edu201> edu201List = new ArrayList<>();
 		if (edu108.getXnid() != null && !"".equals(edu108.getXnid())) {
-			edu201List = edu201DAO.queryCulturePlanIds(edu108Ids,edu108.getXnid());
+			if(edu108Ids.size()>1000){
+				List<List<Long>> edu108Idss = utils.splitList(edu108Ids, 1000);
+				for(List<Long> e:edu108Idss){
+					edu201List.addAll(edu201DAO.queryCulturePlanIds(e,edu108.getXnid()));
+				}
+			}
 		}else{
-			edu201List = edu201DAO.queryCulturePlanIds(edu108Ids);
+			if(edu108Ids.size()>1000){
+				List<List<Long>> edu108Idss = utils.splitList(edu108Ids, 1000);
+				for(List<Long> e:edu108Idss){
+					edu201List.addAll(edu201DAO.queryCulturePlanIds(e));
+				}
+			}
 		}
-
-
 		if(edu201List.size() == 0) {
 			resultVO = ResultVO.setFailed("暂无可排课程");
 		} else {
