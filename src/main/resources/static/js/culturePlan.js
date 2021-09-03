@@ -2069,7 +2069,7 @@ function confirmBackCourse(row){
 				$.hideModal();
 				toastr.warning(backjson.msg);
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
