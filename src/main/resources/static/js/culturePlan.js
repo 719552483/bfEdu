@@ -1860,6 +1860,9 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 	window.generatCourseEvents = {
 		'click #generatCourseInfo' : function(e, value, row, index) {
 			showCourseInfo(row);
+		},
+		'click #backCourse' : function(e, value, row, index) {
+			backCourse(row);
 		}
 	};
 
@@ -1956,6 +1959,7 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 	function generatCourseFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
 				+ '<li id="generatCourseInfo"><span><img src="img/info.png" style="width:24px"></span>详情</li>'
+				+ '<li id="backCourse"><span><img src="images/close.png" style="width:24px"></span>退回</li>'
 				+ '</ul>' ].join('');
 	}
 	drawPagination(".generatCourseArea", "课程");
@@ -2016,6 +2020,59 @@ function onUncheckAllCourse(row){
 			i--;
 		}
 	}
+}
+
+//预备退回开课计划
+function backCourse(row){
+	if (row.sfsckkjh==="F") {
+		toastr.warning('该课程暂未生成开课计划课程');
+		return;
+	}
+	$.showModal("#remindModal",true);
+	$(".remindType").html(row.kcmc);
+	$(".remindActionType").html("开课计划退回");
+
+	// 确认新增开课计划
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		confirmBackCourse(row);
+		e.stopPropagation();
+	});
+}
+
+//确认退回开课计划
+function confirmBackCourse(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/backGeneratCoursePalnInfo",
+		data: {
+			"edu108_Id":row.edu108_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$('#generatCourseTable').bootstrapTable('updateByUniqueId', {
+					id: row.edu108_ID,
+					row: backjson.data
+				});
+				$.hideModal();
+				toastr.warning(backjson.msg);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
 }
 
 //展示课程信息
