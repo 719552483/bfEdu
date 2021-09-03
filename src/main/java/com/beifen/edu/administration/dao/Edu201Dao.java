@@ -191,4 +191,7 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 	@Query(value = "select EDU201_ID from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1) and xnid = ?2 and kcmc = ?3", nativeQuery = true)
 	List<String> searchEdu201idsbyEdu107AndKcmc(Long EDU107_ID,String xnid,String courseName);
+
+	@Query(value = "select * from edu201 where EDU108_ID = ?1", nativeQuery = true)
+	List<Edu201> findEdu201IdsByedu108id(String edu108_id);
 }

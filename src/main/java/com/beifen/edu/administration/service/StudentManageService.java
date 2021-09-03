@@ -9,11 +9,10 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -886,49 +885,209 @@ public class StudentManageService {
         return resultVO;
     }
 
+    public List<Edu300> queryStudentReport(String xbbm) {
+        List<Edu300> edu300List = new ArrayList<>();
+        edu300List = edu300Dao.queryStudentReport(xbbm);
+        return edu300List;
+    }
+
 
     //学生报表数据
     public XSSFWorkbook studentReport() {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("全校扩招汇总表");
-
         XSSFRow firstRow = sheet.createRow(0);// 第一行
-        XSSFCell cells[] = new XSSFCell[2];
+        XSSFCell cells[] = new XSSFCell[3];
         // 所有标题数组
         String[] titles = new String[5]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
         List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
         titles[0] = "序号";
-        CellRangeAddress region1 = new CellRangeAddress(0, 2, 0, 0);
-        sheet.addMergedRegion(region1);
         titles[1] = "年级批次";
-        CellRangeAddress region2 = new CellRangeAddress(0, 2, 1, 1);
-        sheet.addMergedRegion(region2);
         titles[2] = "分院";
-        CellRangeAddress region3 = new CellRangeAddress(0, 2, 2, 2);
-        sheet.addMergedRegion(region3);
         titles[3] = "专业";
-        CellRangeAddress region4 = new CellRangeAddress(0, 2, 3, 3);
-        sheet.addMergedRegion(region4);
         titles[4] = "辽宁职业学院高职扩招学生汇总表";
-        for(int i = 0;i<edu000List.size();i++){
-            utils.appendCell(sheet,i,"",edu000List.get(i).getEjdmz(),-1,0,false);
-        }
-//        CellRangeAddress region5 = new CellRangeAddress(3, 3, 0, 2);
-//        sheet.addMergedRegion(region5);
-//        for(int j = 0;j<size;j++){
-//            titles[j+2] = edu005List.get(j).getCourseName();
-//        }
-
-        // 循环设置标题
         for (int i = 0; i < titles.length; i++) {
             cells[0] = firstRow.createCell(i);
             cells[0].setCellValue(titles[i]);
         }
+        XSSFRow firstRow2 = sheet.createRow(1);
+        XSSFRow firstRow3 = sheet.createRow(2);
+        for(int i = 0;i<edu000List.size();i++){
+            cells[1] = firstRow2.createCell(i*2+4);
+            cells[1].setCellValue(edu000List.get(i).getEjdmz());
+            cells[2] = firstRow3.createCell(i*2+4);
+            cells[2].setCellValue("男");
+            cells[2] = firstRow3.createCell(i*2+5);
+            cells[2].setCellValue("女");
+            CellRangeAddress region = new CellRangeAddress(1, 1, i*2+4, i*2+5);
+            sheet.addMergedRegion(region);
+        }
+        cells[1] = firstRow2.createCell(edu000List.size()*2+4);
+        cells[1].setCellValue("合计");
+        cells[2] = firstRow3.createCell(edu000List.size()*2+4);
+        cells[2].setCellValue("男");
+        cells[2] = firstRow3.createCell(edu000List.size()*2+5);
+        cells[2].setCellValue("女");
+        CellRangeAddress region = new CellRangeAddress(1, 1, edu000List.size()*2+4, edu000List.size()*2+5);
+        sheet.addMergedRegion(region);
+        cells[1] = firstRow2.createCell(edu000List.size()*2+6);
+        cells[1].setCellValue("总计");
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, edu000List.size()*2+6, edu000List.size()*2+6));
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));//序号
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));//年级批次
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));//分院
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 3, 3));//专业
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, edu000List.size()*2+6));//辽宁职业学院高职扩招学生汇总表
 
+        //上面都是标题 呕~
+        List<Edu300> edu300List = edu300Dao.findAllGroupByZybm();
+        for (int i = 2;i<edu300List.size()+2;i++){
+            Edu300 edu300 = edu300List.get(i-2);
+            utils.appendCell(sheet,i,"",(i-1)+"",-1,0,false);
+            utils.appendCell(sheet,i,"",edu300.getNjmc()+edu300.getBatchName(),-1,1,false);
+            utils.appendCell(sheet,i,"",edu300.getXbmc(),-1,2,false);
+            utils.appendCell(sheet,i,"",edu300.getZymc(),-1,3,false);
+            List<Long> edu300Ids = edu300Dao.findAllByZybm(edu300.getNjbm(),edu300.getZybm(),edu300.getBatch());
+            for(int j =0;j<edu000List.size();j++){
+                String lxM = edu001Dao.queryStudentCount(edu300Ids,"M",edu000List.get(j).getEjdm());
+                String lxF = edu001Dao.queryStudentCount(edu300Ids,"F",edu000List.get(j).getEjdm());
+                utils.appendCell(sheet,i,"",lxM,-1,4+j*2,false);
+                utils.appendCell(sheet,i,"",lxF,-1,5+j*2,false);
+            }
+            String lxM = edu001Dao.queryStudentCount(edu300Ids,"M");
+            String lxF = edu001Dao.queryStudentCount(edu300Ids,"F");
+            utils.appendCell(sheet,i,"",lxM,-1,4+edu000List.size()*2,false);
+            utils.appendCell(sheet,i,"",lxF,-1,5+edu000List.size()*2,false);
+            String all = edu001Dao.queryStudentCount(edu300Ids);
+            utils.appendCell(sheet,i,"",all,-1,6+edu000List.size()*2,false);
+        }
 
-
-//        sheet.setColumnWidth(0, 12*256);
-
+        sheet.setColumnWidth(0, 5*256);
+        sheet.setColumnWidth(1, 20*256);
+        sheet.setColumnWidth(2, 25*256);
+        sheet.setColumnWidth(3, 25*256);
         return workbook;
+    }
+
+    //学生报表数据-分专业
+    public XSSFWorkbook studentReport2(List<Edu300> edu300List) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(edu300List.get(0).getXbmc()+"扩招汇总表");
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFCell cells[] = new XSSFCell[3];
+        // 所有标题数组
+        String[] titles = new String[5]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+        List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
+        titles[0] = "序号";
+        titles[1] = "分院专业";
+        titles[2] = "年级批次";
+        titles[3] = "班级";
+        titles[4] = "辽宁职业学院高职扩招学生汇总表";
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = firstRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
+        XSSFRow firstRow2 = sheet.createRow(1);
+        XSSFRow firstRow3 = sheet.createRow(2);
+        for(int i = 0;i<edu000List.size();i++){
+            cells[1] = firstRow2.createCell(i*2+4);
+            cells[1].setCellValue(edu000List.get(i).getEjdmz());
+            cells[2] = firstRow3.createCell(i*2+4);
+            cells[2].setCellValue("男");
+            cells[2] = firstRow3.createCell(i*2+5);
+            cells[2].setCellValue("女");
+            CellRangeAddress region = new CellRangeAddress(1, 1, i*2+4, i*2+5);
+            sheet.addMergedRegion(region);
+        }
+        cells[1] = firstRow2.createCell(edu000List.size()*2+4);
+        cells[1].setCellValue("合计");
+        cells[2] = firstRow3.createCell(edu000List.size()*2+4);
+        cells[2].setCellValue("男");
+        cells[2] = firstRow3.createCell(edu000List.size()*2+5);
+        cells[2].setCellValue("女");
+        CellRangeAddress region = new CellRangeAddress(1, 1, edu000List.size()*2+4, edu000List.size()*2+5);
+        sheet.addMergedRegion(region);
+        cells[1] = firstRow2.createCell(edu000List.size()*2+6);
+        cells[1].setCellValue("总计");
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, edu000List.size()*2+6, edu000List.size()*2+6));
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));//序号
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));//年级批次
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));//分院
+        sheet.addMergedRegion(new CellRangeAddress(0, 2, 3, 3));//专业
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, edu000List.size()*2+6));//辽宁职业学院高职扩招学生汇总表
+
+        //上面都是标题 呕~
+//        List<Edu300> edu300List = edu300Dao.findAllGroupByZybm();
+        for (int i = 2;i<edu300List.size()+2;i++){
+            Edu300 edu300 = edu300List.get(i-2);
+            utils.appendCell(sheet,i,"",(i-1)+"",-1,0,false);
+            utils.appendCell(sheet,i,"",edu300.getNjmc()+edu300.getBatchName(),-1,2,false);
+            utils.appendCell(sheet,i,"",edu300.getXbmc()+"-"+edu300.getZymc(),-1,1,false);
+            utils.appendCell(sheet,i,"",edu300.getXzbmc(),-1,3,false);
+            List<Long> edu300Ids = new ArrayList<>();
+            edu300Ids.add(edu300.getEdu300_ID());
+            for(int j =0;j<edu000List.size();j++){
+                String lxM = edu001Dao.queryStudentCount(edu300Ids,"M",edu000List.get(j).getEjdm());
+                String lxF = edu001Dao.queryStudentCount(edu300Ids,"F",edu000List.get(j).getEjdm());
+                utils.appendCell(sheet,i,"",lxM,-1,4+j*2,false);
+                utils.appendCell(sheet,i,"",lxF,-1,5+j*2,false);
+            }
+            String lxM = edu001Dao.queryStudentCount(edu300Ids,"M");
+            String lxF = edu001Dao.queryStudentCount(edu300Ids,"F");
+            utils.appendCell(sheet,i,"",lxM,-1,4+edu000List.size()*2,false);
+            utils.appendCell(sheet,i,"",lxF,-1,5+edu000List.size()*2,false);
+            String all = edu001Dao.queryStudentCount(edu300Ids);
+            utils.appendCell(sheet,i,"",all,-1,6+edu000List.size()*2,false);
+        }
+
+        sheet.setColumnWidth(0, 5*256);
+        sheet.setColumnWidth(1, 20*256);
+        sheet.setColumnWidth(2, 25*256);
+        sheet.setColumnWidth(3, 25*256);
+        return workbook;
+    }
+
+    //授课信息报表
+    public XSSFWorkbook teachingInfoReport() {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("授课信息");
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFRow twoRow = sheet.createRow(1);// 第一行
+
+        XSSFCell cells[] = new XSSFCell[3];
+        // 所有标题数组
+        cells[0] = firstRow.createCell(0);
+        cells[0].setCellValue("辽宁职业学院高职扩招学年授课信息统计表");
+        String[] titles = new String[3]; /*{"学年","行政班名称","课程名称","学生姓名", "学号","成绩"}*/
+        List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
+        titles[0] = "序号";
+        titles[1] = "学年";
+        titles[2] = "授课教师数";
+        for (int i = 0; i < titles.length; i++) {
+            cells[1] = twoRow.createCell(i);
+            cells[1].setCellValue(titles[i]);
+        }
+        cells[1] = twoRow.createCell(5);
+        cells[1].setCellValue("学年授课课程门数");
+        cells[1] = twoRow.createCell(6);
+        cells[1].setCellValue("学年总学时数");
+        XSSFRow threeRow = sheet.createRow(2);//第三行
+        cells[2] = threeRow.createCell(2);
+        cells[2].setCellValue("专任教师");
+        cells[2] = threeRow.createCell(3);
+        cells[2].setCellValue("兼职教师");
+        cells[2] = threeRow.createCell(4);
+        cells[2].setCellValue("外聘教师");
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 0, 0));//序号
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 1, 1));//学年
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 2, 4));//授课教师数
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));//辽宁职业学院高职扩招学年授课信息统计表
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 5, 5));//
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));//
+
+        sheet.setColumnWidth(5, 25*256);
+        sheet.setColumnWidth(6, 25*256);
+        return workbook;
+
     }
 }

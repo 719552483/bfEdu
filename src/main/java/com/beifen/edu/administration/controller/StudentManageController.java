@@ -543,7 +543,68 @@ public class StudentManageController {
         //创建Excel文件
         XSSFWorkbook workbook = studentManageService.studentReport();
         try {
-            utils.loadModal(response,fileName, workbook);
+            utils.loadModal2(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
+     * 学生报表数据
+     * @return
+     */
+    @RequestMapping("/studentCollegeReport")
+    @ResponseBody
+    public ResultVO studentReportCollege(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
+        ResultVO result;
+
+        List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+        if(edu300List.size() == 0){
+            result = ResultVO.setFailed("该学院咱无数据");
+        }
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName=edu300List.get(0).getXbmc()+"学生报表数据";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = studentManageService.studentReport2(edu300List);
+        try {
+            utils.loadModal2(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
+     * 授课信息报表
+     * @return
+     */
+    @RequestMapping("/teachingInfoReport")
+    @ResponseBody
+    public ResultVO teachingInfoReport(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+        ResultVO result;
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName="授课信息报表数据";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = studentManageService.teachingInfoReport();
+        try {
+            utils.loadModal2(response,fileName, workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

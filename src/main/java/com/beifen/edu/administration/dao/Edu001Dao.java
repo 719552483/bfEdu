@@ -110,4 +110,13 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//查询学号是否存在
 	@Query(value = "select * from edu001 e where e.xh = ?1 and e.Edu001_ID <> ?2 ",nativeQuery = true)
 	List<Edu001> checkXH(String xh, Long edu001_id);
+
+	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2 and sylxbm = ?3",nativeQuery = true)
+	String queryStudentCount(List<Long> edu300ids,String xb,String sylx);
+
+	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2",nativeQuery = true)
+	String queryStudentCount(List<Long> edu300ids,String xb);
+
+	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1",nativeQuery = true)
+	String queryStudentCount(List<Long> edu300ids);
 }

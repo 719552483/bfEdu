@@ -3017,6 +3017,18 @@ public class ReflectUtils {
         workbook.write(response.getOutputStream());
 	}
 
+	// 下载模板2
+	public void loadModal2(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
+		setEXCELstyle2(workbook);
+		setEXCELformatter(workbook);
+		ExcelStuffSelect(workbook,filename);
+		// 解决导出文件名中文乱码
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition","attachment;filename="+new String(filename.getBytes("UTF-8"),"iso-8859-1")+".xls");
+		response.setHeader("Content-type","application/vnd.ms-excel");
+		workbook.write(response.getOutputStream());
+	}
+
 	// 下载模板
 	public void loadModalwithNote(HttpServletResponse response,String filename, XSSFWorkbook workbook) throws IOException, ParseException {
 		setEXCELstyleWithNote(workbook);
@@ -3972,6 +3984,46 @@ public class ReflectUtils {
 			}
 		}
 		
+	}
+
+	//设置模title样式2
+	private void setEXCELstyle2(XSSFWorkbook workbook) throws ParseException {
+		workbook.getSheetAt(0).getRow(0).setHeightInPoints(30); //sheet1标题行行高设置
+
+		for(int i = 0;i<=2;i++){
+			Row row = workbook.getSheetAt(0).getRow(i); //  sheet1第一行标题行
+			//sheet1 样式
+			int firstCellIndex = row.getFirstCellNum(); //  sheet1第一行标题行第一cell
+			int lastCellIndex = row.getLastCellNum(); //  sheet1第一行标题行最后cell
+			//遍历sheet1 标题行cell
+			for (int cIndex = firstCellIndex; cIndex <= lastCellIndex; cIndex++) {
+				//标题列全局样式
+				CellStyle style = workbook.createCellStyle();
+				style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//上下对齐
+				style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());//背景色
+				style.setFillPattern(CellStyle.SOLID_FOREGROUND);//前景色
+				XSSFFont redFont = workbook.createFont();
+				// 当前cell
+				Cell cell = row.getCell(cIndex);
+				if(cell!=null&&!getCellData(cell).equals("")){
+					if(cell.toString().indexOf("*")!=-1){
+						// 必填列样式
+						redFont.setColor(IndexedColors.RED.getIndex());//文字颜色
+						style.setFont(redFont);//文字颜色
+						cell.setCellStyle(style);
+						cell.setCellValue(cell.toString());
+					}else{
+						redFont.setColor(IndexedColors.GREY_80_PERCENT.getIndex());//文字颜色
+						style.setFont(redFont);//文字颜色
+						cell.setCellStyle(style);
+						cell.setCellValue(cell.toString());
+					}
+				}
+			}
+		}
+
+
 	}
 
 	//设置模title样式

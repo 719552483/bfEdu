@@ -1533,6 +1533,17 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 退回开课计划
+	 * @return
+	 */
+	@RequestMapping("/backGeneratCoursePalnInfo")
+	@ResponseBody
+	public ResultVO backGeneratCoursePalnInfo(@RequestParam("edu108_Id") String edu108_Id) {
+		ResultVO result = administrationPageService.backGeneratCoursePalnInfo(edu108_Id);
+		return result;
+	}
+
+	/**
 	 * 确认生成开课计划
 	 */
 	@RequestMapping("/generatCoursePlan")

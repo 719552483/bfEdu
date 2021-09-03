@@ -1249,6 +1249,10 @@ public class AdministrationPageService {
 		int actionKey = 9;
 		int bussinsneType = 1;
 		Edu404 edu404 = edu404Dao.findOne(Long.parseLong(edu404Id));
+		if("1".equals(edu404.getStatus())){
+			resultVO = ResultVO.setFailed("已关闭限制");
+			return resultVO;
+		}
 		edu404.setStatus("1");
 		edu404Dao.save(edu404);
 		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"",edu404.getXnmc());
@@ -3033,6 +3037,21 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	//退回开课计划
+	public ResultVO backGeneratCoursePalnInfo(String edu108_id) {
+		ResultVO resultVO;
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu201> edu201s = edu201DAO.findEdu201IdsByedu108id(edu108_id);
+		if(edu201s.size()>0){
+			resultVO = ResultVO.setFailed("已存在发布的教学任务书，不能删除！");
+		}else{
+			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108_id));
+			edu108.setSfsckkjh("F");
+			edu108DAO.save(edu108);
+			resultVO = ResultVO.setSuccess("退回成功",edu108);
+		}
+		return resultVO;
+	}
 
 	//生成专业下所有课程开课计划
 	public ResultVO generatAllClassAllCourse(String edu107_id) {
@@ -3376,6 +3395,8 @@ public class AdministrationPageService {
 				for(List<Long> e:edu108Idss){
 					edu201List.addAll(edu201DAO.queryCulturePlanIds(e,edu108.getXnid()));
 				}
+			}else{
+				edu201List = edu201DAO.queryCulturePlanIds(edu108Ids,edu108.getXnid());
 			}
 		}else{
 			if(edu108Ids.size()>1000){
@@ -3383,6 +3404,8 @@ public class AdministrationPageService {
 				for(List<Long> e:edu108Idss){
 					edu201List.addAll(edu201DAO.queryCulturePlanIds(e));
 				}
+			}else{
+				edu201List = edu201DAO.queryCulturePlanIds(edu108Ids);
 			}
 		}
 		if(edu201List.size() == 0) {
