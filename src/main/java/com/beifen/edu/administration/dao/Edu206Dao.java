@@ -4,7 +4,9 @@ import com.beifen.edu.administration.domian.Edu206;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,4 +21,10 @@ public interface Edu206Dao extends JpaRepository<Edu206, Long>, JpaSpecification
             "and c.EDU104 in ?1 ", nativeQuery = true)
     List<Edu206> findTaskIdByDepartments(List<String> departments);
 
+
+    // 根据edu108id删除年级
+    @Transactional
+    @Modifying
+    @Query(value = "delete from edu206 where Edu108_ID =?1", nativeQuery = true)
+    void deleteByedu108(String edu108ID);
 }

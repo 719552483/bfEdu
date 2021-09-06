@@ -565,6 +565,7 @@ public class StudentManageController {
         List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
         if(edu300List.size() == 0){
             result = ResultVO.setFailed("该学院咱无数据");
+            return result;
         }
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
         String fileName;
@@ -605,6 +606,69 @@ public class StudentManageController {
         XSSFWorkbook workbook = studentManageService.teachingInfoReport();
         try {
             utils.loadModal2(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
+     * 授课信息报表-各学院
+     * @return
+     */
+    @RequestMapping("/teachingInfoCollegeReport")
+    @ResponseBody
+    public ResultVO teachingInfoCollegeReport(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
+        ResultVO result;
+        List<Edu106> edu106List = studentManageService.queryCollege(xbbm);
+        if(edu106List.size() == 0){
+            result = ResultVO.setFailed("该学院咱无数据");
+            return result;
+        }
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName=edu106List.get(0).getDepartmentName()+"授课信息报表数据";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = studentManageService.teachingInfoCollegeReport(edu106List);
+        try {
+            utils.loadModal2(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    //导出班级学生原始成绩
+    @RequestMapping("/exportGradeByClassIdAndcourseName")
+    @ResponseBody
+    public ResultVO exportGradeByClassIdAndcourseName(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String courseName = jsonObject.getString("courseName");
+        String className = jsonObject.getString("className");
+        List<String> list = Arrays.asList(className.split(","));
+
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName="初始成绩导出";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = studentManageService.exportGradeByClassIdAndcourseName(courseName,list);
+        try {
+            utils.loadModal(response,fileName, workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

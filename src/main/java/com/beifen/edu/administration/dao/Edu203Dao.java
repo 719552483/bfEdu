@@ -149,4 +149,10 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     // select count(*) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where EDU201_ID in (select EDU201_ID from edu201 where EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID = '9045'))) and week = 1
     @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2))) and (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
     String getPKcount2(String xnid,String xbbm,int week,String xqid);
+
+    @Query(value = "select count(0) from(select count(0) from (select e.* from edu203 e left join edu101 ee on e.EDU101_ID = ee.EDU101_ID left join edu202 eee on e.EDU202_ID = eee.EDU202_ID where ee.JZGLXBM = ?2 and xnid = ?1) GROUP BY EDU101_ID)", nativeQuery = true)
+    String getjsslByXnAndLx(String xnid,String lx);
+
+    @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
+    String getzxsByXnid(String xnid);
 }

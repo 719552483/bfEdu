@@ -2382,6 +2382,15 @@ public class AdministrationController {
 		return returnMap;
 	}
 
+	@RequestMapping("/taskPutSchedule")
+	@ResponseBody
+	public Object taskPutSchedule(@RequestParam("edu201Id") String edu201Id) {
+		Map<String, Object> returnMap = new HashMap();
+		administrationPageService.taskPutSchedule(edu201Id);
+		returnMap.put("result", 1);
+		return returnMap;
+	}
+
 	/**
 	 * 确认排课-检验（集中）
 	 * @param edu201Id

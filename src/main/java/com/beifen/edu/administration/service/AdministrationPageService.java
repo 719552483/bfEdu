@@ -1258,7 +1258,7 @@ public class AdministrationPageService {
 		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"",edu404.getXnmc());
 		//结束时补全所有没有录入补考成绩的学生
 //		String exam = Integer.parseInt(edu404.getCount());
-		List<Edu005> edu005List = edu005Dao.endNewMUTime(edu404.getCount());
+		List<Edu005> edu005List = edu005Dao.endNewMUTime(edu404.getCount(),edu404.getXnid());
 		Date currentTime = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = formatter.format(currentTime);
@@ -2477,34 +2477,63 @@ public class AdministrationPageService {
 			return entities;
 		}
 
+		if(edu108Ids.size()>1000) {
+			List<List<Long>> edu108Idss = utils.splitList(edu108Ids, 1000);
+			for(List<Long> e:edu108Idss){
 
-		Specification<Edu201> specification = new Specification<Edu201>() {
-			public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				List<Predicate> predicates = new ArrayList<Predicate>();
+				Specification<Edu201> specification = new Specification<Edu201>() {
+					public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+						List<Predicate> predicates = new ArrayList<Predicate>();
+						if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
+							predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu201.getKcmc() + '%'));
+						}
+
+						if (edu201.getSszt() != null && !"".equals(edu201.getSszt())) {
+							predicates.add(cb.equal(root.<String>get("sszt"), edu201.getSszt()));
+						}
+
+						Path<Object> path = root.get("edu108_ID");//定义查询的字段
+						CriteriaBuilder.In<Object> in = cb.in(path);
+						for (int i = 0; i <e.size() ; i++) {
+							in.value(e.get(i));//存入值
+						}
+						predicates.add(cb.and(in));
+
+						return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+					}
+				};
+				entities.addAll( edu201DAO.findAll(specification));
+			}
+		}else{
+			Specification<Edu201> specification = new Specification<Edu201>() {
+				public Predicate toPredicate(Root<Edu201> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+					List<Predicate> predicates = new ArrayList<Predicate>();
 //				if (edu201.getPyjhmc() != null && !"".equals(edu201.getPyjhmc())) {
 //					predicates.add(cb.like(root.<String>get("pyjhmc"), '%' + edu201.getPyjhmc() + '%'));
 //				}
 
-				if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
-					predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu201.getKcmc() + '%'));
+					if (edu201.getKcmc() != null && !"".equals(edu201.getKcmc())) {
+						predicates.add(cb.like(root.<String>get("kcmc"), '%' + edu201.getKcmc() + '%'));
+					}
+
+					if (edu201.getSszt() != null && !"".equals(edu201.getSszt())) {
+						predicates.add(cb.equal(root.<String>get("sszt"), edu201.getSszt()));
+					}
+
+					Path<Object> path = root.get("edu108_ID");//定义查询的字段
+					CriteriaBuilder.In<Object> in = cb.in(path);
+					for (int i = 0; i <edu108Ids.size() ; i++) {
+						in.value(edu108Ids.get(i));//存入值
+					}
+					predicates.add(cb.and(in));
+
+					return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 				}
+			};
+			entities = edu201DAO.findAll(specification);
+		}
 
-				if (edu201.getSszt() != null && !"".equals(edu201.getSszt())) {
-					predicates.add(cb.equal(root.<String>get("sszt"), edu201.getSszt()));
-				}
 
-				Path<Object> path = root.get("edu108_ID");//定义查询的字段
-				CriteriaBuilder.In<Object> in = cb.in(path);
-				for (int i = 0; i <edu108Ids.size() ; i++) {
-					in.value(edu108Ids.get(i));//存入值
-				}
-				predicates.add(cb.and(in));
-
-				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
-			}
-		};
-
-		entities = edu201DAO.findAll(specification);
 		return entities;
 	}
 
@@ -3048,6 +3077,7 @@ public class AdministrationPageService {
 			Edu108 edu108 = edu108DAO.findOne(Long.parseLong(edu108_id));
 			edu108.setSfsckkjh("F");
 			edu108DAO.save(edu108);
+			edu206Dao.deleteByedu108(edu108_id);
 			resultVO = ResultVO.setSuccess("退回成功",edu108);
 		}
 		return resultVO;

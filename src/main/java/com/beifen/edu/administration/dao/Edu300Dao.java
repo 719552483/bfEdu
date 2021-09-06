@@ -112,7 +112,7 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	List<Edu300> searchAdministrationClassGradeModelMakeUp(String edu101Id,String trem,List<String> couserName);
 
 
-	@Query(value = "select * from (SELECT a.*,row_number ( ) over ( partition BY a.zybm,a.batch ORDER BY a.zybm,a.batch ) su FROM EDU300 a ) where su = 1 ORDER BY xbbm,zybm,batch",nativeQuery = true)
+	@Query(value = "select * from (SELECT a.*,row_number ( ) over ( partition BY a.zybm,a.batch ORDER BY a.zybm,a.batch ) su FROM EDU300 a ) where su = 1 ORDER BY njmc,batch",nativeQuery = true)
 	List<Edu300> findAllGroupByZybm();
 
 	@Query(value = "select edu300_id from edu300 where njbm = ?1 and zybm = ?2 and batch = ?3",nativeQuery = true)
