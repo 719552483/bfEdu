@@ -364,7 +364,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "select count(0) from (select count(0) num  from edu005 where CLASS_NAME = ?1 and (IS_PASSED = 'F' or IS_PASSED is null) GROUP BY STUDENT_CODE) where num <= ?2",nativeQuery = true)
     String searchGraduationRate(String class_name,String num);
 
-    @Query(value = "select * from edu005 where course_name = ?1 and class_name in ?2 ",nativeQuery = true)
-    List<Edu005> exportGradeByClassIdAndcourseName(String courseName,List<String> className);
+    @Query(value = "select * from edu005 where course_name = ?1 and class_name in ?2 and xnid = ?3",nativeQuery = true)
+    List<Edu005> exportGradeByClassIdAndcourseName(String courseName,List<String> className,String xnid);
 }
 

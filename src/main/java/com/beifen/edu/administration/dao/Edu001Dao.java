@@ -119,4 +119,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 
 	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1",nativeQuery = true)
 	String queryStudentCount(List<Long> edu300ids);
+
+	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2 and (zt_code = '002' or zt_code = '003')",nativeQuery = true)
+	String queryStudentCode(List<Long> edu300ids,String xb);
 }

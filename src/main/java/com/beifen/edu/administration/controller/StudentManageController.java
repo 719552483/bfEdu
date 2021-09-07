@@ -656,6 +656,7 @@ public class StudentManageController {
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
         String courseName = jsonObject.getString("courseName");
         String className = jsonObject.getString("className");
+        String xnid = jsonObject.getString("xnid");
         List<String> list = Arrays.asList(className.split(","));
 
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
@@ -666,7 +667,7 @@ public class StudentManageController {
             fileName="初始成绩导出";
         }
         //创建Excel文件
-        XSSFWorkbook workbook = studentManageService.exportGradeByClassIdAndcourseName(courseName,list);
+        XSSFWorkbook workbook = studentManageService.exportGradeByClassIdAndcourseName(courseName,list,xnid);
         try {
             utils.loadModal(response,fileName, workbook);
         } catch (IOException e) {
