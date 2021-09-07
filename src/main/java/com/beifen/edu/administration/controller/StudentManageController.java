@@ -678,4 +678,18 @@ public class StudentManageController {
         result = ResultVO.setSuccess("下载成功");
         return result;
     }
+
+    //导出班级学生原始成绩-校验
+    @RequestMapping("/exportGradeByClassIdAndcourseNameCheck")
+    @ResponseBody
+    public ResultVO exportGradeByClassIdAndcourseNameCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String courseName = jsonObject.getString("courseName");
+        String className = jsonObject.getString("className");
+        String xnid = jsonObject.getString("xnid");
+        List<String> list = Arrays.asList(className.split(","));
+        result = studentManageService.exportGradeByClassIdAndcourseNameCheck(courseName,list,xnid);
+        return result;
+    }
 }

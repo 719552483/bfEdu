@@ -1277,4 +1277,19 @@ public class StudentManageService {
 
         return workbook;
     }
+
+    public ResultVO exportGradeByClassIdAndcourseNameCheck(String courseName,List<String> list,String xnid) {
+        ResultVO resultVO;
+        for (int i = 0; i <list.size() ; i++) {
+            List<String> className = new ArrayList<>();
+            className.add(list.get(i));
+            List<Edu005> edu005List = edu005Dao.exportGradeByClassIdAndcourseName(courseName,className,xnid);
+            if(edu005List.size() == 0){
+                resultVO = ResultVO.setFailed(className+"没有"+courseName+"课程数据");
+                return resultVO;
+            }
+        }
+        resultVO = ResultVO.setSuccess("成功");
+        return resultVO;
+    }
 }
