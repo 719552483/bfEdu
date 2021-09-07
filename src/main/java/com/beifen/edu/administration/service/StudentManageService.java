@@ -551,9 +551,9 @@ public class StudentManageService {
     }
 
     // 根据班级查询学科
-    public ResultVO searchCourseByClass(String edu300_ID,String trem) {
+    public ResultVO searchCourseByClasses(List<String> edu300_IDs,String trem) {
         ResultVO resultVO;
-        List<Edu201> edu201List = edu201Dao.searchCourseByClass(edu300_ID,trem);
+        List<Edu201> edu201List = edu201Dao.searchCourseByClass(edu300_IDs,trem);
 //        List<Edu201> edu201List2 = edu201Dao.searchCourseByClass2(edu300_ID,trem);
 //        edu201List.addAll(edu201List2);
         if (edu201List.size() == 0) {
@@ -903,7 +903,7 @@ public class StudentManageService {
     }
 
 
-    //学生报表数据
+    //学生报表数据  ugly but useful
     public XSSFWorkbook studentReport() {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("全校扩招汇总表");

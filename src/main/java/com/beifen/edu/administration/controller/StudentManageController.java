@@ -386,10 +386,11 @@ public class StudentManageController {
      * @return
      */
 
-    @RequestMapping("/searchCourseByClass")
+    @RequestMapping("/searchCourseByClasses")
     @ResponseBody
-    public ResultVO searchCourseByClass(@RequestParam("edu300_ID") String edu300_ID,@RequestParam("term") String term) {
-        ResultVO result =studentManageService.searchCourseByClass(edu300_ID,term);
+    public ResultVO searchCourseByClasses(@RequestParam("edu300_ID") String edu300_ID,@RequestParam("term") String term) {
+        List<String> list = Arrays.asList(edu300_ID.split(","));
+        ResultVO result =studentManageService.searchCourseByClasses(list,term);
         return result;
     }
 
