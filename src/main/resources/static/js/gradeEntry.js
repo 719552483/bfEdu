@@ -1850,7 +1850,7 @@ function wantLoadGradeModel() {
 function reStuffWantLoadGradeModel(){
 	var reObject = new Object();
 	reObject.InputIds = "#loadForXzbmc,#loadForKcmc";
-	reObject.normalSelectIds = "#loadForXn";
+	reObject.normalSelectIds = "#loadForXn,#loadForModelType";
 	reReloadSearchsWithSelect(reObject);
 	$("#loadForXzbmc").attr("choosendClassId",'');
 }
@@ -1860,6 +1860,7 @@ function ComfirmLoadGradeModel(){
 	var xnid=getNormalSelectValue("loadForXn");
 	var className=$("#loadForXzbmc").val();
 	var courseName=$("#loadForKcmc").val();
+	var type=getNormalSelectValue("loadForModelType");
 
 	if(className===""){
 		toastr.warning("请选择行政班");
@@ -1881,35 +1882,68 @@ function ComfirmLoadGradeModel(){
 	gradeInfo.xn=getNormalSelectText("loadForXn");
 	gradeInfo.className=className;
 	gradeInfo.courseName=courseName;
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/wantDownloadGradeModal",
-		data: {
-			"gradeInfo":JSON.stringify(gradeInfo)
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code===200) {
-				var url = "/downloadGradeModal";
-				var form = $("<form></form>").attr("action", url).attr("method", "post");
-				form.append($("<input></input>").attr("type", "hidden").attr("name", "gradeInfo").attr("value",JSON.stringify(gradeInfo)));
-				form.appendTo('body').submit().remove();
-			} else {
-				toastr.warning(backjson.msg);
+
+	if(type===''||type==='1'){
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/wantDownloadGradeModal",
+			data: {
+				"gradeInfo":JSON.stringify(gradeInfo)
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					var url = "/downloadGradeModal";
+					var form = $("<form></form>").attr("action", url).attr("method", "post");
+					form.append($("<input></input>").attr("type", "hidden").attr("name", "gradeInfo").attr("value",JSON.stringify(gradeInfo)));
+					form.appendTo('body').submit().remove();
+				} else {
+					toastr.warning(backjson.msg);
+				}
 			}
-		}
-	});
+		});
+	}else{
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/exportGradeByClassIdAndcourseNameCheck",
+			data: {
+				"SearchCriteria":JSON.stringify(gradeInfo)
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					var url = "/exportGradeByClassIdAndcourseName";
+					var form = $("<form></form>").attr("action", url).attr("method", "post");
+					form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(gradeInfo)));
+					form.appendTo('body').submit().remove();
+				} else {
+					toastr.warning(backjson.msg);
+				}
+			}
+		});
+	}
 }
 
 //预备导入成绩
@@ -2069,6 +2103,15 @@ function tab1BtnBind() {
 			return;
 		}
 		getGradeOverviewDateLimit(getNormalSelectValue("gradeOverview_xn"));
+	});
+
+	//下载模板modal 类型change事件
+	$("#loadForModelType").change(function() {
+		var reObject = new Object();
+		reObject.InputIds = "#loadForXzbmc,#loadForKcmc";
+		reObject.normalSelectIds = "#loadForXn";
+		reReloadSearchsWithSelect(reObject);
+		$("#loadForXzbmc").attr("choosendClassId",'');
 	});
 
 	//下载模板modal班级focus
@@ -3858,6 +3901,12 @@ function research(){
 
 //获取所有行政班
 function getAllClass(isCheck){
+	var type=getNormalSelectValue('loadForModelType');
+	if(type===''){
+		toastr.warning('请选择模板类型');
+		return;
+	}
+
 	var serachObject=new Object();
 	serachObject.level='';
 	serachObject.department='';
@@ -3887,7 +3936,12 @@ function getAllClass(isCheck){
 			if (backjson.code === 200) {
 				$.hideModal("#wantLoadGradeModal",false);
 				$.showModal("#chooseCalssModal",true);
-				stuffAdministrationClassTable(backjson.data,isCheck);
+				if(type==='1'){
+					stuffAdministrationClassTable(backjson.data,isCheck);
+				}else{
+					stuffAdministrationClassTable(backjson.data,true);
+				}
+
 				//提示框取消按钮
 				$('.specialCanle1').unbind('click');
 				$('.specialCanle1').bind('click', function(e) {
@@ -3918,8 +3972,15 @@ function confirmChoosedClass(){
 		return;
 	}
 
-	$("#loadForXzbmc").attr("choosendClassId",choosendClass[0].edu300_ID);
-	$("#loadForXzbmc").val(choosendClass[0].xzbmc);
+	var choosendClassId=new Array();
+	var choosendClassText=new Array();
+	for (var i = 0; i < choosendClass.length; i++) {
+		choosendClassId.push(choosendClass[i].edu300_ID);
+		choosendClassText.push(choosendClass[i].xzbmc);
+	}
+
+	$("#loadForXzbmc").attr("choosendClassId",choosendClassId.toString());
+	$("#loadForXzbmc").val(choosendClassText.toString());
 	$.hideModal("#chooseCalssModal",false);
 	$.showModal("#wantLoadGradeModal",true);
 }
@@ -4116,6 +4177,7 @@ function getCoruses(){
 		toastr.warning('请先选择学年');
 		return;
 	}
+
 	searchCourseByClass(chosendClass,choosendTerm);
 }
 
@@ -4124,7 +4186,7 @@ function searchCourseByClass(chosendClass,choosendTerm){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/searchCourseByClass",
+		url : "/searchCourseByClasses",
 		data: {
 			"edu300_ID":chosendClass,
 			"term":choosendTerm
