@@ -66,14 +66,21 @@ function addUser() {
 	var pwd = $("#add_pwd").val();
 	var confirmPwd = $("#add_confirmPwd").val();
 	var roleBtnDepartment =$("#roleBtnDepartment").val();
-
-	verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment);
+	var personName =$("#add_userXm").val();
+	verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment,personName);
 }
 
 //验证用户输入
-function verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment) {
-	if (username === "") {
+function verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment,personName) {
+	if (personName === "") {
 		toastr.warning('用户名不能为空');
+		$(".saveNewAccountSetUp").addClass("animated shake");
+		reomveAnimation('.saveNewAccountSetUp', "animated shake");
+		return;
+	}
+
+	if (username === "") {
+		toastr.warning('账号不能为空');
 		$(".saveNewAccountSetUp").addClass("animated shake");
 		reomveAnimation('.saveNewAccountSetUp', "animated shake");
 		return;
@@ -177,14 +184,15 @@ function verifyNewUserInfo(username, newRole, pwd, confirmPwd,roleBtnDepartment)
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		//保存新用户设置
-		saveNewUser(username, newRole, pwd);
+		saveNewUser(username, newRole, pwd,personName);
 		e.stopPropagation();
 	});
 }
 
 //发送新用户保存数据库
-function saveNewUser(username, newRole, pwd) {
+function saveNewUser(username, newRole, pwd,personName) {
 	var newUserObject = new Object();
+	newUserObject.personName =personName;
 	newUserObject.yhm = username;
 	newUserObject.js = newRole.name;
 	newUserObject.jsId = newRole.value;
@@ -215,7 +223,7 @@ function saveNewUser(username, newRole, pwd) {
 			if(backjson.code===200){
 				$.hideModal("#remindModal");
 				var reObject = new Object();
-				reObject.InputIds = "#add_username,#add_pwd,#add_confirmPwd";
+				reObject.InputIds = "#add_username,#add_pwd,#add_confirmPwd,#add_userXm";
 				reReloadSearchsWithSelect(reObject);
 				emptyMUtiSelect();
 				toastr.success(backjson.msg);
@@ -720,7 +728,6 @@ function removeuUerAjaxDemo(removeArray) {
 				tableRemoveAction("#allUserTable", removeArray, ".allUserTableArea", "用户信息");
 				$.hideModal("#remindModal");
 				$(".myTooltip").tooltipify();
-				toastr.success(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
 			}
