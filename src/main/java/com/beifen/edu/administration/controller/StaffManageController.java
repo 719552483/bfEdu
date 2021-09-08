@@ -56,19 +56,19 @@ public class StaffManageController {
         JSONObject approvalObject = JSONObject.fromObject(approvalInfo);
         Edu101 edu101 = (Edu101) JSONObject.toBean(jsonObject, Edu101.class);
         Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
-        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
+//        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
         // 判断身份证是否存在
         boolean IDcardIshave = false;
-        for (int i = 0; i < allTeacher.size(); i++) {
-            if(allTeacher.get(i).getSfzh()!=null){
-                if(allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
-                    IDcardIshave=true;
-                    break;
-                }
-            }
-        }
+//        for (int i = 0; i < allTeacher.size(); i++) {
+//            if(allTeacher.get(i).getSfzh()!=null){
+//                if(allTeacher.get(i).getSfzh().equals(edu101.getSfzh())){
+//                    IDcardIshave=true;
+//                    break;
+//                }
+//            }
+//        }
 
-        if (!IDcardIshave) {
+//        if (!IDcardIshave) {
             String jzgh = staffManageService.getNewTeacherJzgh();
             edu101.setJzgh(jzgh);
             staffManageService.addTeacher(edu101);
@@ -80,7 +80,7 @@ public class StaffManageController {
             }
             returnMap.put("newId", edu101.getEdu101_ID());
             returnMap.put("jzgh", jzgh);
-        }
+//        }
 
         returnMap.put("IDcardIshave", IDcardIshave);
         returnMap.put("result", true);
@@ -145,13 +145,13 @@ public class StaffManageController {
         Edu600 edu600 = (Edu600) JSONObject.toBean(approvalObject, Edu600.class);
 //        List<Edu101> allTeacher = staffManageService.queryAllTeacher();
         // 判断身份证是否存在
-        boolean IDcardIshave = false;
-        if(edu101.getSfzh() != null && !"".equals(edu101.getSfzh())) {
-            List<Edu101> edu101List = edu101Dao.teacherIDcardIsExist(edu101.getSfzh(), edu101.getEdu101_ID());
-            if (edu101List.size() != 0) {
-                return ResultVO.setFailed("身份证号重复，请重新修改！");
-            }
-        }
+//        boolean IDcardIshave = false;
+//        if(edu101.getSfzh() != null && !"".equals(edu101.getSfzh())) {
+//            List<Edu101> edu101List = edu101Dao.teacherIDcardIsExist(edu101.getSfzh(), edu101.getEdu101_ID());
+//            if (edu101List.size() != 0) {
+//                return ResultVO.setFailed("身份证号重复，请重新修改！");
+//            }
+//        }
 //        if (!IDcardIshave) {
         //如果修改是将教师改为外聘教师 发起审批流
         if(edu101.getJzglxbm().equals("004")){
