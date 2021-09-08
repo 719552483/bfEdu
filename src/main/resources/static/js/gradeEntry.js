@@ -3972,7 +3972,7 @@ function confirmChoosedClass(){
 		return;
 	}
 
-	if(choosendClass.length>1){
+	if(choosendClass.length>=1){
 		chooseClassTable=choosendClass;
 	}
 
