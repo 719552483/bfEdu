@@ -2728,7 +2728,7 @@ public class ReflectUtils {
 		for (int i = 0; i < chosedTeachers.size(); i++) {
 			appendCell(sheet,i,"",String.valueOf(chosedTeachers.get(i).getEdu101_ID()),-1,0,false);
 			appendCell(sheet,i,"",chosedTeachers.get(i).getXm(),-1,1,false);
-			if(chosedTeachers.get(i).getXb().equals("M")){
+			if("M".equals(chosedTeachers.get(i).getXb())){
 				appendCell(sheet,i,"","男",-1,2,false);
 			}else{
 				appendCell(sheet,i,"","女",-1,2,false);
@@ -2738,7 +2738,7 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",chosedTeachers.get(i).getSfzh(),-1,5,false);
 			appendCell(sheet,i,"",chosedTeachers.get(i).getSzxbmc(),-1,6,false);
 			appendCell(sheet,i,"",chosedTeachers.get(i).getZymc(),-1,7,false);
-			if(chosedTeachers.get(i).getHf().equals("T")){
+			if("T".equals(chosedTeachers.get(i).getHf())){
 				appendCell(sheet,i,"","已婚",-1,8,false);
 			}else{
 				appendCell(sheet,i,"","未婚",-1,8,false);

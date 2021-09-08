@@ -2635,6 +2635,12 @@ public class AdministrationPageService {
 				if (teachingSchedule.getSfypw() != null && !"".equals(teachingSchedule.getSfypw()) && !"0".equals(teachingSchedule.getSfypw())) {
 					predicates.add(cb.equal(root.<String>get("sfypw"), teachingSchedule.getSfypw()));
 				}
+				if (teachingSchedule.getClassName() != null && !"".equals(teachingSchedule.getClassName())) {
+					predicates.add(cb.like(root.<String>get("className"), "%"+teachingSchedule.getClassName()+"%"));
+				}
+				if (teachingSchedule.getKcmc() != null && !"".equals(teachingSchedule.getKcmc())) {
+					predicates.add(cb.like(root.<String>get("kcmc"), "%"+teachingSchedule.getKcmc()+"%"));
+				}
 
 				Path<Object> path = root.get("pyjhxb");//定义查询的字段
 				CriteriaBuilder.In<Object> in = cb.in(path);
