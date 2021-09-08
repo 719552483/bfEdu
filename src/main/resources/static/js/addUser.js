@@ -336,7 +336,7 @@ function stuffTable() {
 						},
 						{
 							field: 'yhm',
-							title: '用户名',
+							title: '账号',
 							sortable: true,
 							formatter: userNameFormatter,
 							align: 'left'
