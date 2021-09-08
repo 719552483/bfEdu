@@ -554,12 +554,18 @@ public class StudentManageService {
     public ResultVO searchCourseByClasses(List<String> edu300_IDs,String trem) {
         ResultVO resultVO;
         List<Edu201> edu201List = edu201Dao.searchCourseByClass(edu300_IDs,trem);
+
+        List<Edu201> collect = edu201List.stream().collect(Collectors.collectingAndThen(
+                Collectors.toCollection(
+                        () -> new TreeSet<>(Comparator.comparing(user -> user.getKcmc()))),
+                ArrayList::new));
+
 //        List<Edu201> edu201List2 = edu201Dao.searchCourseByClass2(edu300_ID,trem);
 //        edu201List.addAll(edu201List2);
         if (edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无课程信息");
         } else {
-            resultVO = ResultVO.setSuccess("查询成功",edu201List);
+            resultVO = ResultVO.setSuccess("查询成功",collect);
         }
         return resultVO;
     }
@@ -1260,11 +1266,19 @@ public class StudentManageService {
             utils.appendCell(sheet,i,"",edu005List.get(i).getCourseName(),-1,2,false);
             utils.appendCell(sheet,i,"",edu005List.get(i).getStudentName(),-1,3,false);
             utils.appendCell(sheet,i,"",edu005List.get(i).getStudentCode(),-1,4,false);
-            if("F".equals(edu005List.get(i).getIsResit())){
+            if(edu005List.get(i).getIsMx() != null){
+                utils.appendCell(sheet,i,"",edu005List.get(i).getGrade(),-1,5,false);
+            }else if (edu005List.get(i).getIsConfirm() == null) {
+                utils.appendCell(sheet,i,"",edu005List.get(i).getGrade(),-1,5,false);
+            }else if("F".equals(edu005List.get(i).getIsResit())){
                 utils.appendCell(sheet,i,"",edu005List.get(i).getGrade(),-1,5,false);
             }else{
                 Edu0051 edu0051 = edu0051Dao.getGradeByNum(edu005List.get(i).getEdu005_ID()+"","0");
-                utils.appendCell(sheet,i,"",edu0051.getGrade(),-1,5,false);
+                if(edu0051 == null){
+                    utils.appendCell(sheet,i,"",edu005List.get(i).getGrade(),-1,5,false);
+                }else{
+                    utils.appendCell(sheet,i,"",edu0051.getGrade(),-1,5,false);
+                }
             }
             utils.appendCell(sheet,i,"",edu000Dao.queryEjdmMcByEjdmZ(edu005List.get(i).getIsMx(),"IS_MX"),-1,6,false);
         }

@@ -2880,7 +2880,7 @@ public class ReflectUtils {
 		XSSFCell cells[] = new XSSFCell[1];
 		
 		// 所有标题数组
-		String[] titles = new String[] {"*姓名","*性别", "*教职工类型", "*所属二级学院", "*出生日期", "身份证号","所属专业",
+		String[] titles = new String[] {"*姓名","*性别", "*教职工类型", "*所属二级学院", "出生日期", "身份证号","所属专业",
 				"婚否", "民族", "职称", "文化程度 ", "到校时间", "政治面貌 ", "联系方式" };
 		
 		// 循环设置标题
