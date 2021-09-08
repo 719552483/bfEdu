@@ -3966,17 +3966,21 @@ function getAllClass(isCheck){
 
 //确认选择行政班
 function confirmChoosedClass(){
-	var choosendClass=$("#chooseClassTable").bootstrapTable("getSelections");
-	if(choosendClass.length==0){
+	var chooseClassTable=$("#chooseClassTable").bootstrapTable("getSelections");
+	if(chooseClassTable.length==0){
 		toastr.warning('请选择班级');
 		return;
 	}
 
+	if(choosendClass.length>1){
+		chooseClassTable=choosendClass;
+	}
+
 	var choosendClassId=new Array();
 	var choosendClassText=new Array();
-	for (var i = 0; i < choosendClass.length; i++) {
-		choosendClassId.push(choosendClass[i].edu300_ID);
-		choosendClassText.push(choosendClass[i].xzbmc);
+	for (var i = 0; i < chooseClassTable.length; i++) {
+		choosendClassId.push(chooseClassTable[i].edu300_ID);
+		choosendClassText.push(chooseClassTable[i].xzbmc);
 	}
 
 	$("#loadForXzbmc").attr("choosendClassId",choosendClassId.toString());
