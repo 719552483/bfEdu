@@ -42,6 +42,7 @@ function getSemesterInfo() {
 				}
 				stuffManiaSelect("#semester", str);
 				stuffManiaSelect("#fsSemester", str);
+				stuffManiaSelect("#changeTeacher_semester", str);
 
 				//changge事件
 				$("#semester").change(function() {
@@ -247,6 +248,12 @@ function singleScheduleAction(eve) {
 
 //获取课程详情
 function showChooseModal(eve){
+	var searchInfo=getScheduleSearchInfo(true);
+	if(searchInfo.classActionType==="2"){
+		toastr.warning('该类型暂无操作');
+		return;
+	}
+
 	if(rediesValue.length===0){
 		toastr.warning('暂无学年');
 		return;
@@ -258,16 +265,14 @@ function showChooseModal(eve){
 	$("#ChooseModal").find(".itab").find("li:eq(0)").find("a").addClass("selected");
 	$("#ChooseModal").find(".itab").find("li:eq(1)").find("a").removeClass("selected");
 
-	var searchInfo=getScheduleSearchInfo(true);
 	if(typeof searchInfo==="undefined"){
 		return;
 	}
 	emptyChoose();
 	var titletxt="";
+
 	if(searchInfo.classActionType==="1"){
 		titletxt=eve.currentTarget.childNodes[0].innerText+'-'+eve.currentTarget.childNodes[1].innerText+" 选择调课信息";
-	}else if(searchInfo.classActionType==="2"){
-		titletxt= eve.currentTarget.childNodes[0].innerText + '-' + eve.currentTarget.childNodes[1].innerText +" 选择串课信息";
 	}
 
 	$("#ChooseModal").find(".moadalTitle").html(titletxt);
@@ -487,13 +492,6 @@ function teacherModalBtnBind(){
 		allClassMangersReSearch();
 		e.stopPropagation();
 	});
-
-	//确认选择
-	$('#confirmChoosedTeacher').unbind('click');
-	$('#confirmChoosedTeacher').bind('click', function(e) {
-		confirmChoosedTeacher();
-		e.stopPropagation();
-	});
 }
 
 //教师开始检索
@@ -547,7 +545,7 @@ function allClassMangersReSearch(){
 	getTeacherInfo();
 }
 
-//确认选择教师
+//调课确认选择教师
 function confirmChoosedTeacher(){
 	var choosed=$("#allClassMangersTable").bootstrapTable("getSelections");
 	if(choosed.length==0){
@@ -558,6 +556,19 @@ function confirmChoosedTeacher(){
 	$("#choose_teacher").attr("choosendTeacherId",choosed[0].edu101_ID);
 	$.hideModal("#allClassMangersModal",false);
 	$.showModal("#ChooseModal",true);
+}
+
+//换老师 确认选择教师
+function confirmChoosedTeacher2(){
+	var choosed=$("#allClassMangersTable").bootstrapTable("getSelections");
+	if(choosed.length==0){
+		toastr.warning('请选择教师');
+		return;
+	}
+	$("#newTeacher").val(choosed[0].xm);
+	$("#newTeacher").attr("choosendTeacherId",choosed[0].edu101_ID);
+	$.hideModal("#allClassMangersModal",false);
+	$.showModal("#PuttedDetailsModal",true);
 }
 
 //获取所有教师
@@ -583,7 +594,39 @@ function getTeacherInfo(actionModal){
 				if(typeof actionModal==="undefined"){
 					$.hideModal("#ChooseModal",false);
 					$.showModal("#allClassMangersModal",true);
+					//二级模态框返回按钮事件
+					$('.specialCanle').unbind('click');
+					$('.specialCanle').bind('click', function(e) {
+						$.hideModal("#allClassMangersModal",false);
+						$.showModal("#ChooseModal",true);
+						e.stopPropagation();
+					});
+
+					//确认选择
+					$('#confirmChoosedTeacher').unbind('click');
+					$('#confirmChoosedTeacher').bind('click', function(e) {
+						confirmChoosedTeacher();
+						e.stopPropagation();
+					});
+				}else{
+					$.hideModal("#PuttedDetailsModal",false);
+					$.showModal("#allClassMangersModal",true);
+					//二级模态框返回按钮事件
+					$('.specialCanle').unbind('click');
+					$('.specialCanle').bind('click', function(e) {
+						$.hideModal("#allClassMangersModal",false);
+						$.showModal("#PuttedDetailsModal",true);
+						e.stopPropagation();
+					});
+
+					//确认选择
+					$('#confirmChoosedTeacher').unbind('click');
+					$('#confirmChoosedTeacher').bind('click', function(e) {
+						confirmChoosedTeacher2();
+						e.stopPropagation();
+					});
 				}
+				teacherModalBtnBind();
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -657,6 +700,471 @@ function stuffAllClassMangersTable(tableInfo){
 	toolTipUp(".myTooltip");
 }
 
+//集中类型 change事件
+function classActionTypeChangeAction(){
+	var type=getNormalSelectValue("classActionType");
+	if(type==='2'){
+		stuffChangeTeacherArea(true);
+	}
+}
+
+//填充授课教师调整Modal内容
+function stuffChangeTeacherArea(canEmtpy){
+	if(canEmtpy){
+		changeTeacherReReloadSearch();
+	}
+
+	var searchCondition=getChangeTeacherSearchInfo(canEmtpy);
+	if(typeof searchCondition==='undefined'){
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchTeachingScheduleCompleted",
+		data: {
+			"searchCondition":JSON.stringify(searchCondition),
+			'userId':$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			//开始检索
+			$('#changeTeacher_startSearch').unbind('click');
+			$('#changeTeacher_startSearch').bind('click', function(e) {
+				changeTeacherStartSearch();
+				e.stopPropagation();
+			});
+
+			//开始调整
+			$('#changeTeacher_startChange').unbind('click');
+			$('#changeTeacher_startChange').bind('click', function(e) {
+				changeTeacherStartChange();
+				e.stopPropagation();
+			});
+
+			//重置检索
+			$('#changeTeacher_reReloadSearch').unbind('click');
+			$('#changeTeacher_reReloadSearch').bind('click', function(e) {
+				changeTeacherReReloadSearch();
+				stuffChangeTeacherArea(true);
+				e.stopPropagation();
+			});
+			if (backjson.taskList.length>=1) {
+				$.showModal('#changeTeacherModal',true);
+				drawPuttedTable(backjson.taskList);
+			} else {
+				drawPuttedTable({});
+				toastr.warning('暂无数据');
+			}
+		}
+	});
+}
+
+//渲染已排课表table
+function drawPuttedTable(tableInfo){
+	$('#puttedCrouseTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onPageChange: function() {
+			drawPagination(".puttedCrouseTableArea", "已排课表");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field : 'radio',
+				radio : true
+			}, {
+				field: 'edu202_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			},
+			{
+				field: 'xn',
+				title: '学年',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
+				field: 'className',
+				title: '班级名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'classLittleName',
+				title: '班级别名',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'kcmc',
+				title: '课程',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'ls',
+				title: '任课老师',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'zyls',
+				title: '助教',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			},{
+				field: 'sfypw',
+				title: '排课状态',
+				align: 'left',
+				sortable: true,
+				formatter: sfypwMatter,
+				visible: false
+			}
+		]
+	});
+
+	function sfypwMatter(value, row, index) {
+		if (row.sfypw==="1") {
+			return [ '<div class="greenTxt" title="已排完">已排完</div>' ]
+				.join('');
+		} else if (row.sfypw==="2"){
+			return [ '<div class="redTxt" title="未排完">未排完</div>' ]
+				.join('');
+		}
+	}
+
+	drawPagination(".puttedCrouseTableArea", "已排课表");
+	changeColumnsStyle(".puttedCrouseTableArea", "已排课表");
+	drawSearchInput(".puttedCrouseTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//开始调整
+function changeTeacherStartChange() {
+	var choosend=$("#puttedCrouseTable").bootstrapTable("getSelections");
+	if(choosend.length<=0){
+		toastr.warning('请选择课程');
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchScheduleCompletedDetail",
+		data: {
+			"Edu202Id":choosend[0].edu202_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			//返回
+			$('.specialCanle1').unbind('click');
+			$('.specialCanle1').bind('click', function(e) {
+				$.hideModal('#PuttedDetailsModal',false);
+				$.showModal('#changeTeacherModal',true);
+				e.stopPropagation();
+			});
+
+			//确认选择教师
+			$('#confirmChangeTeacher').unbind('click');
+			$('#confirmChangeTeacher').bind('click', function(e) {
+				confirmChangeTeacher(choosend);
+				e.stopPropagation();
+			});
+			if (backjson.result) {
+				$("#PuttedDetailsModal").find(".moadalTitle").html(choosend[0].kcmc+' -已排课时信息');
+				$.hideModal('#changeTeacherModal',false);
+				$.showModal('#PuttedDetailsModal',true);
+				$('#newTeacher').val('');
+				$("#newTeacher").attr("choosendTeacherId",'');
+				stuffPuttedDetails(backjson.scheduleCompletedDetails.classPeriodList);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+//换教师确认选择教师
+function confirmChangeTeacher(choosend){
+	var newTeacherName=$("#newTeacher").val();
+	var newTeacherId=$("#newTeacher").attr("choosendTeacherId");
+	if(newTeacherId===''||newTeacherName===''){
+		toastr.warning('请选择新教师');
+		return;
+	}
+
+	if(newTeacherName===choosend[0].ls){
+		toastr.warning(choosend[0].ls+'不可选择');
+		return;
+	}
+
+	if(choosendKj.length<=0){
+		toastr.warning('请选择课节');
+		return;
+	}
+	// $.ajax({
+	// 	method : 'get',
+	// 	cache : false,
+	// 	url : "/searchScheduleCompletedDetail",
+	// 	data: {
+	// 		"Edu202Id":choosend[0].edu202_ID
+	// 	},
+	// 	dataType : 'json',
+	// 	beforeSend: function(xhr) {
+	// 		requestErrorbeforeSend();
+	// 	},
+	// 	error: function(textStatus) {
+	// 		requestError();
+	// 	},
+	// 	complete: function(xhr, status) {
+	// 		requestComplete();
+	// 	},
+	// 	success : function(backjson) {
+	// 		hideloding();
+	// 		if (backjson.result) {
+	// 			$("#PuttedDetailsModal").find(".moadalTitle").html(choosend[0].kcmc+' -已排课时信息');
+	// 			$.hideModal('#changeTeacherModal',false);
+	// 			$.showModal('#PuttedDetailsModal',true);
+	// 			$('#newTeacher').val('');
+	// 			$("#newTeacher").attr("choosendTeacherId",'');
+	// 			stuffPuttedDetails(backjson.scheduleCompletedDetails.classPeriodList);
+	// 		} else {
+	// 			toastr.warning('操作失败，请重试');
+	// 		}
+	// 	}
+	// });
+}
+
+var choosendKj=new Array();
+//填充已排集中课时安排表
+function stuffPuttedDetails(tableInfo){
+	choosendKj=new Array();
+	$('#puttedDetailsTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onCheck : function(row) {
+			onCheckKj(row);
+		},
+		onUncheck : function(row) {
+			onUncheckKj(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllKj(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllKj(rows2);
+		},
+		onPageChange: function() {
+			drawPagination(".puttedDetailsTableArea", "已排课时信息");
+			for (var i = 0; i < choosendKj.length; i++) {
+				$("#puttedDetailsTable").bootstrapTable("checkBy", {field:"edu203_ID", values:[choosendKj[i].edu203_ID]})
+			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field: 'check',
+				checkbox: true
+			}, {
+				field: 'edu203_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			},
+			{
+				field: 'ksz',
+				title: '开始周',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},
+			{
+				field: 'jsz',
+				title: '结束周',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'xqmc',
+				title: '星期',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'kjmc',
+				title: '课节',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'teacherName',
+				title: '教师',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'pointName',
+				title: '授课地点',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter,
+				visible: false
+			}
+		]
+	});
+
+	drawPagination(".puttedDetailsTableArea", "已排课时信息");
+	changeColumnsStyle(".puttedDetailsTableArea", "已排课时信息");
+	drawSearchInput(".puttedDetailsTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//单选
+function onCheckKj(row){
+	if(choosendKj.length<=0){
+		choosendKj.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendKj.length; i++) {
+			if(choosendKj[i].edu203_ID===row.edu203_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendKj.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheckKj(row){
+	if(choosendKj.length<=1){
+		choosendKj.length=0;
+	}else{
+		for (var i = 0; i < choosendKj.length; i++) {
+			if(choosendKj[i].edu203_ID===row.edu203_ID){
+				choosendKj.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllKj(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendKj.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllKj(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu203_ID);
+	}
+
+
+	for (var i = 0; i < choosendKj.length; i++) {
+		if(a.indexOf(choosendKj[i].edu203_ID)!==-1){
+			choosendKj.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//已排课表开始检索
+function changeTeacherStartSearch() {
+	stuffChangeTeacherArea(false);
+}
+
+//已排课表重置检索
+function changeTeacherReReloadSearch(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#changeTeacher_semester";
+	reObject.InputIds = "#changeTeacher_className,#changeTeacher_crouseName";
+	reReloadSearchsWithSelect(reObject);
+}
+
+//获得已排课表检索对象
+function getChangeTeacherSearchInfo(canEmpty){
+	var className=$('#changeTeacher_className').val();
+	var crouseName=$('#changeTeacher_crouseName').val();
+	var xnid=getNormalSelectValue('changeTeacher_semester');
+	if(xnid===''&&crouseName===''&&className===''&&!canEmpty){
+		toastr.warning('检索条件不能为空');
+		return;
+	}
+
+	var returnObject=new Object();
+	returnObject.pyjhcc='';
+	returnObject.pyjhxb='';
+	returnObject.pyjhnj='';
+	returnObject.pyjhzy='';
+	returnObject.kcxzid='';
+	returnObject.xnid=xnid;
+	returnObject.className=className;
+	returnObject.kcmc=crouseName;
+	return returnObject;
+}
+
 //初始化页面按钮绑定事件
 function btnBind() {
 	//提示框取消按钮
@@ -666,18 +1174,20 @@ function btnBind() {
 		e.stopPropagation();
 	});
 
-	//二级模态框返回按钮事件
-	$('.specialCanle').unbind('click');
-	$('.specialCanle').bind('click', function(e) {
-		$.hideModal("#allClassMangersModal",false);
-		$.showModal("#ChooseModal",true);
+	//类型 change事件
+	$("#classActionType").change(function() {
+		classActionTypeChangeAction();
+	});
+
+	//调课教师focus
+	$('#choose_teacher').focus(function(e){
+		getTeacherInfo();
 		e.stopPropagation();
 	});
 
-	//教师focus
-	$('#choose_teacher').focus(function(e){
-		teacherModalBtnBind();
-		getTeacherInfo();
+	//调整教师focus
+	$('#newTeacher').focus(function(e){
+		getTeacherInfo('PuttedDetailsModal');
 		e.stopPropagation();
 	});
 }

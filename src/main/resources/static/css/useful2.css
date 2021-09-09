@@ -1612,7 +1612,7 @@ background: rgba(36, 138, 187, 0.77);
 }
 
 .timeOutCanle,
-.specialCanle {
+.specialCanle,.specialCanle1 {
 	background: url(../images/btnbg2.png) repeat-x;
 	color: rgba(0, 0, 0, 0.7490196078431373);
 	font-weight: normal;
@@ -1693,6 +1693,7 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+.puttedDetailsTableArea .bootstrap4 .search,
 .tab5TableArea .bootstrap4 .search,
 .graduateDeatilsTableArea .bootstrap4 .search,
 .tab4TableArea .bootstrap4 .search,
@@ -1720,6 +1721,11 @@ background: rgba(36, 138, 187, 0.77);
 .teacherBaseInfoTableArea .bootstrap4 .search{
        margin-top: 12px;
  }
+
+.puttedCrouseTableArea .bootstrap4 .search{
+	margin-top: 10px;
+}
+
 .administrationClassTableArea  .bootstrap4 .search{
         margin-top: 6px;
  }
@@ -2986,6 +2992,10 @@ input:focus{
 
 #approvalDetailsModal .cancelChangeBtn{
 	width: 50px;
+}
+
+.puttedCrouseTableArea .fixed-table-pagination .pagination-info{
+	margin-right: 12px;
 }
 
 @keyframes serachAnimation {
