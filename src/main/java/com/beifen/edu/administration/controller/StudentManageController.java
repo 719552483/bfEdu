@@ -558,6 +558,25 @@ public class StudentManageController {
      * 学生报表数据
      * @return
      */
+    @RequestMapping("/studentCollegeReportCheck")
+    @ResponseBody
+    public ResultVO studentCollegeReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
+        ResultVO result;
+
+        List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+        if (edu300List.size() == 0) {
+            result = ResultVO.setFailed("该学院咱无数据");
+        }else{
+            result = ResultVO.setSuccess("下载成功");
+
+        }
+        return result;
+    }
+
+    /**
+     * 学生报表数据
+     * @return
+     */
     @RequestMapping("/studentCollegeReport")
     @ResponseBody
     public ResultVO studentReportCollege(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
