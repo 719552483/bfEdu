@@ -816,7 +816,36 @@ function downloadSome(){
 		toastr.warning('请选择二级学院');
 		return;
 	}
-
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/studentCollegeReportCheck",
+		data: {
+			"xbbm":xb
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/studentCollegeReport";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "xbbm").attr("value",xb));
+				form.appendTo('body').submit().remove();
+				toastr.info('文件下载中，请稍后...');
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //初始化页面按钮绑定事件
