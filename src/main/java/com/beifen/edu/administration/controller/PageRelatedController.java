@@ -305,4 +305,9 @@ public class PageRelatedController {
 	public String actionLogPage() {
 		return "actionLog";
 	}
+
+	@RequestMapping("reportFormStudent")
+	public String reportFormStudentPage() {
+		return "reportFormStudent";
+	}
 }
