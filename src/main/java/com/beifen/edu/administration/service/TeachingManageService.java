@@ -76,6 +76,8 @@ public class TeachingManageService {
     @Autowired
     Edu203Dao edu203Dao;
     @Autowired
+    Edu205Dao edu205Dao;
+    @Autowired
     RedisUtils redisUtils;
     @Autowired
     Edu201Dao edu201Dao;
@@ -914,7 +916,33 @@ public class TeachingManageService {
         resultVO = ResultVO.setSuccess("成功删除了"+deleteIdList.size()+"条日志");
         return resultVO;
     }
+    //教师调课-只调教师
+    public ResultVO changeScheduleTeacher(List<Edu203> edu203List,String teacherId,String edu201Id) {
+        ResultVO resultVO;
+        Edu201 edu201 = edu201Dao.findOne(Long.parseLong(edu201Id));
+        Edu101 edu101 = edu101Dao.findOne(Long.parseLong(teacherId));
+        String edu101Ids = edu201.getLs();
+        List<String> list = Arrays.asList(edu101Ids.split(","));
+        if (!list.contains(teacherId)){
+            edu201.setLs(edu101Ids+",teacherId");
+            edu201.setLsmc(edu201.getLsmc()+","+edu101.getXm());
+            edu201Dao.save(edu201);
+            Edu205 save = new Edu205();
+            save.setEdu201_ID(edu201.getEdu201_ID());
+            save.setTeacherType("02");
+            save.setEdu101_ID(edu101.getEdu101_ID());
+            save.setTeacherName(edu101.getXm());
+            edu205Dao.save(save);
+        }
+        for(Edu203 e:edu203List){
+            e.setEdu101_id(teacherId);
+            e.setTeacherName(edu101.getXm());
+            edu203Dao.save(e);
+        }
+        resultVO = ResultVO.setSuccess("调课成功");
+        return resultVO;
 
+    }
     //教师调课
     public ResultVO changeSchedule(Edu203 edu203,Edu203 edu203old,String type,String user_id) {
         ResultVO resultVO;

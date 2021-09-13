@@ -372,6 +372,22 @@ public class TeachingManageController {
     }
 
     /**
+     * 教师调课-只调教师
+     * @return
+     */
+    @RequestMapping("/changeScheduleTeacher")
+    @ResponseBody
+    public ResultVO changeScheduleTeacher(@RequestParam String SearchCriteria) {
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String changInfo = jsonObject.getString("changInfo");
+        String teacherId = jsonObject.getString("teacherId");
+        String edu201Id = jsonObject.getString("edu201Id");
+        List<Edu203> edu203List = JSON.parseArray(changInfo, Edu203.class);
+        ResultVO result = teachingManageService.changeScheduleTeacher(edu203List,teacherId,edu201Id);
+        return result;
+    }
+
+    /**
      * 教师调课-分散学时（检验）
      * @param
      * @return

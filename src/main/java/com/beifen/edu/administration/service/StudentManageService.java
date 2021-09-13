@@ -1306,4 +1306,29 @@ public class StudentManageService {
         resultVO = ResultVO.setSuccess("成功");
         return resultVO;
     }
+
+    //学生学年及格率报表
+    public XSSFWorkbook exportStudentPassReport(List<String> xnid) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("学生学年及格率报表");
+
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFCell cells[] = new XSSFCell[3];
+        // 所有标题数组
+        String[] titles = new String[] {"序号","年级","专业","人数"};
+        for (int i = 0; i < titles.length; i++) {
+            cells[0] = firstRow.createCell(i);
+            cells[0].setCellValue(titles[i]);
+        }
+
+
+        sheet.setColumnWidth(0, 12*256);
+        sheet.setColumnWidth(1, 16*256);
+        sheet.setColumnWidth(2, 30*256);
+        sheet.setColumnWidth(3, 10*256);
+        sheet.setColumnWidth(4, 20*256);
+
+        return workbook;
+    }
+
 }
