@@ -1177,10 +1177,10 @@ function stuffStudentBaseInfoTable(tableInfo) {
 //预备录入成绩
 function wantGradeEntry(row,index){
 	var thisInfo=$("#gradeEntryTable").bootstrapTable('getRowByUniqueId',row.edu005_ID);
-	if(thisInfo.isConfirm==='T'||thisInfo.grade==='T'||parseFloat(thisInfo.grade)>=60){
-		toastr.warning("暂无操作");
-		return;
-	}
+	// if(thisInfo.isConfirm==='T'||thisInfo.grade==='T'||parseFloat(thisInfo.grade)>=60){
+	// 	toastr.warning("暂无操作");
+	// 	return;
+	// }
 
 	if(!(thisInfo.isMx==='0'||thisInfo.isMx===''||typeof thisInfo.isMx==='undefined'||thisInfo.isMx==null)){
 		toastr.warning("请先修改该学生免修状态");

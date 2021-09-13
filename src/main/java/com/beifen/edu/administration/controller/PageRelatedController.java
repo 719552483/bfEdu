@@ -310,4 +310,22 @@ public class PageRelatedController {
 	public String reportFormStudentPage() {
 		return "reportFormStudent";
 	}
+
+    @RequestMapping("reportFormTeach")
+    public String reportFormTeachPage() {
+        return "reportFormTeach";
+    }
+
+
+	@RequestMapping("reportFormPoint")
+	public String reportFormPointPage() {
+		return "reportFormPoint";
+	}
+
+	@RequestMapping("reportFormMoney")
+	public String reportFormMoneyPage() {
+		return "reportFormMoney";
+	}
+
+
 }

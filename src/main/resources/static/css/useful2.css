@@ -2999,6 +2999,19 @@ input:focus{
 	margin-right: 12px;
 }
 
+.localInfoTableAreawithNoAction #localInfoTable td:last-child {
+    width: 230px;
+    min-width: 230px;
+}
+
+.pointInfoTableAreaWithNoAction #pointInfoTable td:last-child {
+    width: 110px;
+    min-width: 110px;
+}
+
+
+
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
