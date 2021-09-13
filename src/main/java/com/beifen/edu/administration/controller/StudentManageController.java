@@ -668,6 +668,23 @@ public class StudentManageController {
         return result;
     }
 
+    /**
+     * 授课信息报表-各学院
+     * @return
+     */
+    @RequestMapping("/teachingInfoCollegeReportCheck")
+    @ResponseBody
+    public ResultVO teachingInfoCollegeReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
+        ResultVO result;
+        List<Edu106> edu106List = studentManageService.queryCollege(xbbm);
+        if(edu106List.size() == 0){
+            result = ResultVO.setFailed("该学院咱无数据");
+            return result;
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
     //导出班级学生原始成绩
     @RequestMapping("/exportGradeByClassIdAndcourseName")
     @ResponseBody
