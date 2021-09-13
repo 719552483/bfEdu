@@ -82,6 +82,8 @@ public class TeachingManageService {
     @Autowired
     Edu201Dao edu201Dao;
     @Autowired
+    Edu202Dao edu202Dao;
+    @Autowired
     Edu114Dao edu114Dao;
     @Autowired
     Edu207Dao edu207Dao;
@@ -917,9 +919,10 @@ public class TeachingManageService {
         return resultVO;
     }
     //教师调课-只调教师
-    public ResultVO changeScheduleTeacher(List<Edu203> edu203List,String teacherId,String edu201Id) {
+    public ResultVO changeScheduleTeacher(List<Edu203> edu203List,String teacherId,String edu202Id) {
         ResultVO resultVO;
-        Edu201 edu201 = edu201Dao.findOne(Long.parseLong(edu201Id));
+        Edu202 edu202 = edu202Dao.findOne(Long.parseLong(edu202Id));
+        Edu201 edu201 = edu201Dao.findOne(edu202.getEdu201_ID());
         Edu101 edu101 = edu101Dao.findOne(Long.parseLong(teacherId));
         String edu101Ids = edu201.getLs();
         List<String> list = Arrays.asList(edu101Ids.split(","));

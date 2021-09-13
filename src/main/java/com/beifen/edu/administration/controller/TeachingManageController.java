@@ -381,9 +381,9 @@ public class TeachingManageController {
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
         String changInfo = jsonObject.getString("changInfo");
         String teacherId = jsonObject.getString("teacherId");
-        String edu201Id = jsonObject.getString("edu201Id");
+        String edu202Id = jsonObject.getString("edu202Id");
         List<Edu203> edu203List = JSON.parseArray(changInfo, Edu203.class);
-        ResultVO result = teachingManageService.changeScheduleTeacher(edu203List,teacherId,edu201Id);
+        ResultVO result = teachingManageService.changeScheduleTeacher(edu203List,teacherId,edu202Id);
         return result;
     }
 
