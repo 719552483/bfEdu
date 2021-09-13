@@ -2610,6 +2610,8 @@ function getPuttedSelectValue(){
    searchObject.kcxzid=getNormalSelectValue("puttedkcxz");
    searchObject.sfypw=getNormalSelectValue("puttedkcStatus");
    searchObject.xnid=getNormalSelectValue("puttedXn");
+   searchObject.className='';
+   searchObject.kcmc='';
    return searchObject;
 }
 

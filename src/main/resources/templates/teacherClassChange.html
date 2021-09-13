@@ -61,6 +61,7 @@
 							<b>3.左键选中课程</b><br></br>
 							<b>4.选择新的课时安排，确认提交</b><br></br>
 						</div>
+
 						<div class="searchArea searchAreaWitheSelect">
 							<div class="col4 giveBottom">
 								<ul class="forminfo">
@@ -91,6 +92,7 @@
 										<select id="classActionType" class="isSowIndex">
 											<option value="seleceConfigTip">请选择</option>
 											<option value="1">调课</option>
+											<option value="2">授课教师批量调整</option>
 											<!--									<option value="2">串课</option>-->
 										</select>
 									</div>
@@ -435,6 +437,102 @@
 					<div class="modal-footer tipbtn">
 						<input name="" type="button" class="sure" id="confirmChoosedTeacher" value="确定"/>&nbsp;
 						<input name="" type="button" class="specialCanle" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 授课教师调整Modal -->
+		<div class="modal fade bs-example-modal-lg" id="changeTeacherModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">授课教师调整</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="tools">
+							<ul class="toolbar">
+								<li class="click" id="changeTeacher_startSearch"><span><img src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+								<li class="click" id="changeTeacher_startChange"><span><img src="img/right.png" style="width: 24px;" /></span>开始调整</li>
+							</ul>
+							<ul class="toolbar1">
+								<li class="click" id="changeTeacher_reReloadSearch"><span><img src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+							</ul>
+						</div>
+
+						<div class="searchArea searchAreaWitheSelect">
+							<div class="col2 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">学年</label>
+										<select id="changeTeacher_semester" class="isSowIndex">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col2 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">班级名称</label>
+										<input name="" type="text" class="myInput searchInput" id="changeTeacher_className" placeholder="请输入班级名称..." />
+									</div>
+								</ul>
+							</div>
+							<div class="clear"></div>
+
+							<div class="col2 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">课程名称</label>
+										<input name="" type="text" class="myInput searchInput" id="changeTeacher_crouseName" placeholder="请输入课程名称..." />
+									</div>
+								</ul>
+							</div>
+
+						</div>
+						<div class="clear"></div>
+
+						<div class="puttedCrouseTableArea searchGivePaddingR columnsStyle">
+							<table class="tablelist myTableStyle" id="puttedCrouseTable" data-unique-id="edu202_ID" style="margin-top: 10px;"></table>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 集中课时Modal -->
+		<div class="modal fade bs-example-modal-lg" id="PuttedDetailsModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="specialCanle1" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="searchArea searchAreaWitheSelect">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;width: 10%;" readonly="readonly">新教师</label>
+										<input name="" type="text" class="myInput searchInput" id="newTeacher" placeholder="点击选择教师..." />
+									</div>
+								</ul>
+							</div>
+						</div>
+
+						<div class="puttedDetailsTableArea searchGivePaddingR columnsStyle">
+							<table class="tablelist myTableStyle" id="puttedDetailsTable" data-unique-id="edu203_ID" style="margin-top: 10px;"></table>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmChangeTeacher" value="确定"/>&nbsp;
+						<input name="" type="button" class="specialCanle1" value="取消"/>
 					</div>
 				</div>
 			</div>
