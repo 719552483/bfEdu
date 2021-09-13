@@ -678,7 +678,7 @@ public class StudentManageController {
         ResultVO result;
         List<Edu106> edu106List = studentManageService.queryCollege(xbbm);
         if(edu106List.size() == 0){
-            result = ResultVO.setFailed("该学院咱无数据");
+            result = ResultVO.setFailed("该学院暂无数据");
             return result;
         }
         result = ResultVO.setSuccess("下载成功");
