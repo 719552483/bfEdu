@@ -943,37 +943,82 @@ function confirmChangeTeacher(choosend){
 		toastr.warning('请选择课节');
 		return;
 	}
-	// $.ajax({
-	// 	method : 'get',
-	// 	cache : false,
-	// 	url : "/searchScheduleCompletedDetail",
-	// 	data: {
-	// 		"Edu202Id":choosend[0].edu202_ID
-	// 	},
-	// 	dataType : 'json',
-	// 	beforeSend: function(xhr) {
-	// 		requestErrorbeforeSend();
-	// 	},
-	// 	error: function(textStatus) {
-	// 		requestError();
-	// 	},
-	// 	complete: function(xhr, status) {
-	// 		requestComplete();
-	// 	},
-	// 	success : function(backjson) {
-	// 		hideloding();
-	// 		if (backjson.result) {
-	// 			$("#PuttedDetailsModal").find(".moadalTitle").html(choosend[0].kcmc+' -已排课时信息');
-	// 			$.hideModal('#changeTeacherModal',false);
-	// 			$.showModal('#PuttedDetailsModal',true);
-	// 			$('#newTeacher').val('');
-	// 			$("#newTeacher").attr("choosendTeacherId",'');
-	// 			stuffPuttedDetails(backjson.scheduleCompletedDetails.classPeriodList);
-	// 		} else {
-	// 			toastr.warning('操作失败，请重试');
-	// 		}
-	// 	}
-	// });
+
+	var sendObject=new Object();
+	sendObject.changInfo=choosendKj;
+	sendObject.edu202Id=choosend[0].edu202_ID;
+	sendObject.teacherId=newTeacherId;
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/changeScheduleTeacher",
+		data: {
+			"SearchCriteria":JSON.stringify(sendObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+			reGetScheduleInfoNew();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$.hideModal();
+				toastr.success(backjson.msg);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//批量改变老师后重新刷新课程表
+function reGetScheduleInfoNew(){
+	var semester=getNormalSelectValue("semester");
+	var weekTime=getNormalSelectValue("weekTime");
+	if(semester===""||weekTime===""){
+		return;
+	}
+
+	var searchObject=getScheduleSearchInfo(false);
+	if(typeof(searchObject) === "undefined"){
+		return;
+	}
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/getScheduleInfoNew",
+		data:{
+			"searchObject":JSON.stringify(searchObject),
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue,
+			"jsId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].id
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stuffScheduleClassesTable(backjson.data.newInfo);
+			} else {
+				drawScheduleClassesEmptyTable()
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 var choosendKj=new Array();
