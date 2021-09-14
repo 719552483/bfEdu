@@ -25,6 +25,7 @@ import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -43,6 +44,8 @@ public class StudentManageService {
     private Edu001Dao edu001Dao;
     @Autowired
     private Edu101Dao edu101Dao;
+    @Autowired
+    private Edu105Dao edu105Dao;
     @Autowired
     private Edu106Dao edu106Dao;
     @Autowired
@@ -1308,25 +1311,107 @@ public class StudentManageService {
     }
 
     //学生学年及格率报表
-    public XSSFWorkbook exportStudentPassReport(List<String> xnid) {
+    public XSSFWorkbook exportStudentPassReport(List<String> xnids) {
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("学生学年及格率报表");
+        for(String xnid:xnids){
+            Edu400 e = edu400Dao.findOne(Long.parseLong(xnid));
+            XSSFSheet sheet = workbook.createSheet("学生."+e.getXnmc()+"及格率报表");
 
-        XSSFRow firstRow = sheet.createRow(0);// 第一行
-        XSSFCell cells[] = new XSSFCell[3];
-        // 所有标题数组
-        String[] titles = new String[] {"序号","年级","专业","人数"};
-        for (int i = 0; i < titles.length; i++) {
-            cells[0] = firstRow.createCell(i);
-            cells[0].setCellValue(titles[i]);
+            XSSFRow firstRow = sheet.createRow(0);// 第一行
+            XSSFRow twoRow = sheet.createRow(1);// 第2行
+            XSSFCell cells[] = new XSSFCell[3];
+            // 所有标题数组
+            String[] titles = new String[] {"序号","年级","专业","人数"};
+            for (int i = 0; i < titles.length; i++) {
+                cells[0] = firstRow.createCell(i);
+                cells[0].setCellValue(titles[i]);
+                sheet.addMergedRegion(new CellRangeAddress(0,2,i,i));//
+            }
+            //学年
+            cells[0] = firstRow.createCell(4);
+            cells[0].setCellValue(e.getXnmc());
+            sheet.addMergedRegion(new CellRangeAddress(0,0,4,9));
+            //及格率（%）
+            cells[1] = twoRow.createCell(4);
+            cells[1].setCellValue("及格率（%）");
+            sheet.addMergedRegion(new CellRangeAddress(1,2,4,4));
+            //学年专业学生不及格情况统计占比（%）
+            cells[1] = twoRow.createCell(5);
+            cells[1].setCellValue("学年专业学生不及格情况统计占比（%）");
+            sheet.addMergedRegion(new CellRangeAddress(1,1,5,9));
+
+            //不及格人数占比
+            String[] titles2 = new String[] {"1科不及格人数占比","2科不及格人数占比","3科不及格人数占比","4科不及格人数占比","5科及以上不及格人数占比"};
+            XSSFRow threeRow = sheet.createRow(2);// 第3行
+            for (int i = 0; i < titles2.length; i++) {
+                cells[0] = threeRow.createCell(i+5);
+                cells[0].setCellValue(titles2[i]);
+            }
+            List<Edu105> edu105List = edu105Dao.queryAllGrade();
+            int index = 0;
+            for(Edu105 edu105:edu105List){
+                List<String> edu300List = edu300Dao.findAllZy(edu105.getEdu105_ID()+"");
+                for(int i = 1;i<=edu300List.size();i++){
+                    Edu106 edu106 = edu106Dao.query106BYID(edu300List.get(i-1));
+                    utils.appendCell(sheet, index+i+1,"", (index+i)+"", -1, 0, false);
+                    utils.appendCell(sheet, index+i+1, "", edu105.getNjmc(), -1, 1, false);
+                    utils.appendCell(sheet, index+i+1, "", edu106.getZymc(), -1, 2, false);
+                    //人数
+                    String peopleNum = edu300Dao.findPeopleNum(edu300List.get(i-1),edu105.getEdu105_ID()+"");
+                    utils.appendCell(sheet, index+i+1, "", peopleNum, -1, 3, false);
+                    Integer passNum = Integer.parseInt(peopleNum);
+                    //1-4科不及格
+                    for(int j = 1;j<5;j++){
+                        String noPassPeopleNum = edu005Dao.findNoPassPeopleNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",j+"",xnid);
+                        passNum = passNum-Integer.parseInt(noPassPeopleNum);
+                        if("0".equals(noPassPeopleNum)){
+                            utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 4+j, false);
+                        }else{
+                            double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
+                            NumberFormat nf = NumberFormat.getPercentInstance();
+                            nf.setMinimumFractionDigits(2);//设置保留小数位
+                            String usedPercent = nf.format(v);
+                            utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 4+j, false);
+                        }
+                    }
+                    //5科+不及格
+                    String noPassPeopleNum = edu005Dao.findNoPassPeopleNum2(edu300List.get(i-1),edu105.getEdu105_ID()+"","5",xnid);
+                    passNum = passNum-Integer.parseInt(noPassPeopleNum);
+                    if("0".equals(noPassPeopleNum)){
+                        utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 9, false);
+                    }else{
+                        double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
+                        NumberFormat nf = NumberFormat.getPercentInstance();
+                        nf.setMinimumFractionDigits(2);//设置保留小数位
+                        String usedPercent = nf.format(v);
+                        utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 9, false);
+                    }
+                    //及格率
+                    String gradeListNum = edu005Dao.findGradeListNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
+                    if("0".equals(gradeListNum)){
+                        utils.appendCell(sheet, index+i+1, "", "该专业暂无课程或未录成绩", -1, 4, false);
+                    }else{
+                        double v = Double.parseDouble(passNum.toString()) / Double.parseDouble(peopleNum);
+                        NumberFormat nf = NumberFormat.getPercentInstance();
+                        nf.setMinimumFractionDigits(2);//设置保留小数位
+                        String usedPercent = nf.format(v);
+                        utils.appendCell(sheet, index+i+1, "", usedPercent, -1, 4, false);
+                    }
+                }
+                index = edu300List.size();
+            }
+            sheet.setColumnWidth(0, 4*256);
+            sheet.setColumnWidth(1, 5*256);
+            sheet.setColumnWidth(2, 20*256);
+            sheet.setColumnWidth(3, 5*256);
+            sheet.setColumnWidth(4, 22*256);
+            sheet.setColumnWidth(5, 15*256);
+            sheet.setColumnWidth(6, 15*256);
+            sheet.setColumnWidth(7, 15*256);
+            sheet.setColumnWidth(8, 15*256);
+            sheet.setColumnWidth(9, 15*256);
         }
 
-
-        sheet.setColumnWidth(0, 12*256);
-        sheet.setColumnWidth(1, 16*256);
-        sheet.setColumnWidth(2, 30*256);
-        sheet.setColumnWidth(3, 10*256);
-        sheet.setColumnWidth(4, 20*256);
 
         return workbook;
     }

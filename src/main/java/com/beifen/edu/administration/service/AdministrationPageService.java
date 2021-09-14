@@ -3678,6 +3678,7 @@ public class AdministrationPageService {
 				}
 //				predicates.add(cb.equal(root.<String>get("isExamCrouse"),"T"));
 				predicates.add(cb.isNull(root.<String>get("isConfirm")));
+				query.orderBy(cb.asc(root.get("studentCode")));
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};

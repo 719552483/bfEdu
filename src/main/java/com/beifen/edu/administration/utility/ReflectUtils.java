@@ -2522,7 +2522,7 @@ public class ReflectUtils {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"*生源类型","*培养层次", "*二级学院", "*年级", "*专业", "*行政班", "*学生ID", "*学生姓名",
+		String[] titles = new String[] {"*生源类型","*培养层次", "*二级学院", "*年级", "*专业", "*行政班", "*学号", "*学生姓名",
 				"曾用名", "*性别", "*状态", "*出生日期", "身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
@@ -2541,8 +2541,8 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",chosedStudents.get(i).getNjmc(),-1,3,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZymc(),-1,4,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getXzbname(),-1,5,false);
-//			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,6,false);
+//			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
 			if(chosedStudents.get(i).getXb().equals("M")){
@@ -2621,7 +2621,7 @@ public class ReflectUtils {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"*生源类型","*培养层次", "*二级学院", "*年级", "*专业", "*行政班", "*学生ID", "*学生姓名",
+		String[] titles = new String[] {"*生源类型","*培养层次", "*二级学院", "*年级", "*专业", "*行政班", "*学号", "*学生姓名",
 				"曾用名", "*性别", "*状态", "*出生日期", "身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
@@ -2640,8 +2640,8 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",chosedStudents.get(i).getNjmc(),-1,3,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZymc(),-1,4,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getXzbname(),-1,5,false);
-//			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,5,false);
-			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
+			appendCell(sheet,i,"",chosedStudents.get(i).getXh(),-1,6,false);
+//			appendCell(sheet,i,"",chosedStudents.get(i).getEdu001_ID().toString(),-1,6,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getXm(),-1,7,false);
 			appendCell(sheet,i,"",chosedStudents.get(i).getZym(),-1,8,false);
 			if(chosedStudents.get(i).getXb().equals("M")){
@@ -4003,6 +4003,7 @@ public class ReflectUtils {
 				style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 				style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());//背景色
 				style.setFillPattern(CellStyle.SOLID_FOREGROUND);//前景色
+				style.setWrapText(true);
 				XSSFFont redFont = workbook.createFont();
 				// 当前cell
 				Cell cell = row.getCell(cIndex);

@@ -364,7 +364,16 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "select count(0) from (select count(0) num  from edu005 where CLASS_NAME = ?1 and (IS_PASSED = 'F' or IS_PASSED is null) GROUP BY STUDENT_CODE) where num <= ?2",nativeQuery = true)
     String searchGraduationRate(String class_name,String num);
 
-    @Query(value = "select * from edu005 where course_name = ?1 and class_name in ?2 and xnid = ?3",nativeQuery = true)
+    @Query(value = "select * from edu005 where course_name = ?1 and class_name in ?2 and xnid = ?3 order by student_code",nativeQuery = true)
     List<Edu005> exportGradeByClassIdAndcourseName(String courseName,List<String> className,String xnid);
+
+    @Query(value = "select count(*) from (select count(STUDENT_CODE) from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and IS_CONFIRM = 'T' and xnid = ?4 and GRADE < 60 GROUP BY STUDENT_CODE HAVING count(STUDENT_CODE) = ?3)",nativeQuery = true)
+    String findNoPassPeopleNum(String zybm,String njbm,String nopass,String xnid);
+
+    @Query(value = "select count(*) from (select count(STUDENT_CODE) from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and IS_CONFIRM = 'T' and xnid = ?4 and GRADE < 60 GROUP BY STUDENT_CODE HAVING count(STUDENT_CODE) >= ?3)",nativeQuery = true)
+    String findNoPassPeopleNum2(String zybm,String njbm,String nopass,String xnid);
+
+    @Query(value = "select COUNT(*) from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and xnid = ?3 and IS_CONFIRM = 'T'",nativeQuery = true)
+    String findGradeListNum(String zybm,String njbm,String xnid);
 }
 

@@ -927,7 +927,7 @@ public class TeachingManageService {
         String edu101Ids = edu201.getLs();
         List<String> list = Arrays.asList(edu101Ids.split(","));
         if (!list.contains(teacherId)){
-            edu201.setLs(edu101Ids+",teacherId");
+            edu201.setLs(edu101Ids+","+teacherId);
             edu201.setLsmc(edu201.getLsmc()+","+edu101.getXm());
             edu201Dao.save(edu201);
             Edu205 save = new Edu205();
@@ -1472,11 +1472,20 @@ public class TeachingManageService {
             List<SchoolTimetablePO> orderList = new ArrayList<>();
             for ( int j = i ;j < size; j++) {
                 SchoolTimetablePO info = yearSchedules.get(j);
-                if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId()) && teacherid.equals(info.getEdu101_id())) {
-                    orderList.add(info);
-                }
-                if (j == size-1 || !(kjid.equals(info.getKjid()) && teacherid.equals(info.getEdu101_id()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId()))) {
-                    break;
+                if(teacherid == null){
+                    if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId())) {
+                        orderList.add(info);
+                    }
+                    if (j == size-1 || !(kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId()))) {
+                        break;
+                    }
+                }else{
+                    if (kjid.equals(info.getKjid()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId()) && teacherid.equals(info.getEdu101_id())) {
+                        orderList.add(info);
+                    }
+                    if (j == size-1 || !(kjid.equals(info.getKjid()) && teacherid.equals(info.getEdu101_id()) && xqid.equals(info.getXqid()) && classid.equals(info.getClassId()))) {
+                        break;
+                    }
                 }
             }
             List<String> ssz = new ArrayList<>();
