@@ -829,7 +829,7 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				title: '学号',
 				align: 'left',
 				sortable: true,
-				visible: false,
+				visible: true,
 				formatter: paramsMatter
 			} ,{
 				field: 'grade',
@@ -2650,7 +2650,7 @@ function stuffMakeStudentBaseInfoTable(tableInfo) {
 				title: '学号',
 				align: 'left',
 				sortable: true,
-				visible: false,
+				visible: true,
 				formatter: paramsMatter
 			} ,{
 				field: 'grade',
