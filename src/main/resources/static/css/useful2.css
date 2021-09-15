@@ -3009,8 +3009,9 @@ input:focus{
     min-width: 110px;
 }
 
-
-
+.downLoadStudentFileXnTableArea .fixed-table-container thead th .both{
+    text-align: center;
+}
 
 @keyframes serachAnimation {
     10% {
