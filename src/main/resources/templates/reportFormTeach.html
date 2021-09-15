@@ -438,6 +438,7 @@
 					<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="student2Data_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+							<li class="click" id="downLoadStudentFile"><span><img src="images/ico04.png" style="width: 24px;"/></span>及格率报表数据</li>
 						</ul>
 						<ul class="toolbar1">
 							<li class="click" id="student2Data_reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
@@ -887,7 +888,27 @@
 			</div>
 		</div>
 
-		<!-- ajax请求masking -->
+	<!-- 学生学年及格率报表数据Modal -->
+	<div class="modal fade bs-example-modal-lg" id="downLoadStudentFileModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">下载学生学年及格率报表数据</span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="downLoadStudentFileXnTableArea searchGivePaddingR">
+							<table class="tablelist myTableStyle" id="downLoadStudentFileXnTable" data-unique-id="edu400_ID" style="margin-top: 10px;"></table>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="sure" id="confirmStudentFileDownLoad" value="下载"/>&nbsp;
+						<input name="" type="button" class="cancel" value="取消"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 		<div class="spinner-box">
 			<div class="pulse-container">

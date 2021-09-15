@@ -40,6 +40,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#departmnetArea_year", str);
 	stuffManiaSelect("#student2Data_year", str);
 	stuffManiaSelect("#progress_year", str);
+	stuffDownLoadStudentFileXnTable(yearInfo);
 }
 
 //获取合格率信息
@@ -2604,6 +2605,176 @@ function student2DataReReloadSearchs(){
     $('#student2Data_studentName').attr("placeholder", '请输入学生姓名...');
 }
 
+//下载学生学年及格率报表数据
+function downLoadStudentFile(){
+	$.showModal('#downLoadStudentFileModal',true);
+
+}
+
+var choosendXn=new Array();
+//下载学生学年及格率报表数据Modal 填充学年表
+function stuffDownLoadStudentFileXnTable(tableInfo){
+	choosendXn=new Array();
+
+	$('#downLoadStudentFileXnTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		showExport: false,      //是否显示导出
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : false,
+		onCheck : function(row) {
+			onCheckXnManger(row);
+		},
+		onUncheck : function(row) {
+			onUncheckXnManger(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllXnManger(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllXnManger(rows2);
+		},
+		onPageChange : function() {
+			drawPagination(".downLoadStudentFileXnTableArea", "学年信息");
+			for (var i = 0; i < choosendXn.length; i++) {
+				$("#downLoadStudentFileXnTable").bootstrapTable("checkBy", {field:"edu400_ID", values:[choosendXn[i].edu400_ID]})
+			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns : [ {
+			field : 'edu400_ID',
+			title: '唯一标识',
+			align : 'left',
+			sortable: true,
+			visible : false
+		},{
+			field: 'check',
+			align : 'center',
+			checkbox: true
+		}, {
+			field : 'xnmc',
+			title : '学年',
+			align : 'center',
+			sortable: true,
+			formatter :paramsMatter
+		} ]
+	});
+
+	drawPagination(".downLoadStudentFileXnTableArea", "学年信息");
+	drawSearchInput(".downLoadStudentFileXnTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".downLoadStudentFileXnTableArea", "学年信息");
+}
+
+//单选
+function onCheckXnManger(row){
+	if(choosendXn.length<=0){
+		choosendXn.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendXn.length; i++) {
+			if(choosendXn[i].edu400_ID===row.edu400_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendXn.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheckXnManger(row){
+	if(choosendXn.length<=1){
+		choosendXn.length=0;
+	}else{
+		for (var i = 0; i < choosendXn.length; i++) {
+			if(choosendXn[i].edu400_ID===row.edu400_ID){
+				choosendXn.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllXnManger(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendXn.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllXnManger(row){
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu400_ID);
+	}
+
+
+	for (var i = 0; i < choosendXn.length; i++) {
+		if(a.indexOf(choosendXn[i].edu400_ID)!==-1){
+			choosendXn.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//确认下载学生学年及格率报表数据
+function confirmStudentFileDownLoad(){
+	var xn=choosendXn;
+	if(xn.length<=0){
+		toastr.warning('请选择学年');
+		return;
+	}
+	var xns=new Array();
+	for (var i = 0; i < choosendXn.length; i++) {
+		xns.push(choosendXn[i].edu400_ID);
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/exportStudentPassReportCheck",
+		data: {
+			"xnid":JSON.stringify(xns)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/exportStudentPassReport";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "xnid").attr("value",JSON.stringify(xns)));
+				form.appendTo('body').submit().remove();
+				toastr.info('文件下载中，请稍候...');
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //tab4页面按钮事件绑定
 function tab4BinBind(){
 	//类型change事件
@@ -2622,6 +2793,20 @@ function tab4BinBind(){
 	$('#student2Data_reReloadSearchs').unbind('click');
 	$('#student2Data_reReloadSearchs').bind('click', function(e) {
 		student2DataReReloadSearchs();
+		e.stopPropagation();
+	});
+
+	//下载学生学年及格率报表数据
+	$('#downLoadStudentFile').unbind('click');
+	$('#downLoadStudentFile').bind('click', function(e) {
+		downLoadStudentFile();
+		e.stopPropagation();
+	});
+
+	//确认下载学生学年及格率报表数据
+	$('#confirmStudentFileDownLoad').unbind('click');
+	$('#confirmStudentFileDownLoad').bind('click', function(e) {
+		confirmStudentFileDownLoad();
 		e.stopPropagation();
 	});
 
