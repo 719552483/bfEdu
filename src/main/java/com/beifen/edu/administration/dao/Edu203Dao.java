@@ -155,4 +155,10 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
 
     @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
     String getzxsByXnid(String xnid);
+
+    //更新教学点名称
+    @Transactional
+    @Modifying
+    @Query(value = "", nativeQuery = true)
+    void closedScheduleTeacher(String xnid,String week,String xqid);
 }

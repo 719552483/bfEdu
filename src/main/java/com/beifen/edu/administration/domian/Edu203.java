@@ -23,6 +23,7 @@ public class Edu203 {
 	private String pointId; //任务点id
 	private String pointName; //任务点名称
 	private String attendance; //出勤率
+	private String closedState;//停课状态
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -163,5 +164,13 @@ public class Edu203 {
 
 	public void setAttendance(String attendance) {
 		this.attendance = attendance;
+	}
+
+	public String getClosedState() {
+		return closedState;
+	}
+
+	public void setClosedState(String closedState) {
+		this.closedState = closedState;
 	}
 }

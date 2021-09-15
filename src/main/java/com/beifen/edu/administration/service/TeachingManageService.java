@@ -944,8 +944,17 @@ public class TeachingManageService {
         }
         resultVO = ResultVO.setSuccess("调课成功");
         return resultVO;
-
     }
+
+    //教师停课-所有学院
+    public ResultVO closedScheduleTeacher(String xnid,String week,String xqid) {
+        ResultVO resultVO;
+        edu203Dao.closedScheduleTeacher(xnid,week,xqid);
+        resultVO = ResultVO.setSuccess("停课成功");
+        return resultVO;
+    }
+
+
     //教师调课
     public ResultVO changeSchedule(Edu203 edu203,Edu203 edu203old,String type,String user_id) {
         ResultVO resultVO;

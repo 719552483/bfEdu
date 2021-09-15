@@ -760,4 +760,17 @@ public class StudentManageController {
         result = ResultVO.setSuccess("下载成功");
         return result;
     }
+
+    //学生学年及格率报表
+    @RequestMapping("/exportStudentPassReportCheck")
+    @ResponseBody
+    public ResultVO exportStudentPassReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xnid = jsonObject.getString("xnid");
+        List<String> list = Arrays.asList(xnid.split(","));
+
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
 }

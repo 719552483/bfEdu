@@ -388,6 +388,21 @@ public class TeachingManageController {
     }
 
     /**
+     * 教师停课-所有学院
+     * @return
+     */
+    @RequestMapping("/closedScheduleTeacher")
+    @ResponseBody
+    public ResultVO closedScheduleTeacher(@RequestParam String SearchCriteria) {
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xnid = jsonObject.getString("xnid");
+        String week = jsonObject.getString("week");
+        String xqid = jsonObject.getString("xqid");
+        ResultVO result = teachingManageService.closedScheduleTeacher(xnid,week,xqid);
+        return result;
+    }
+
+    /**
      * 教师调课-分散学时（检验）
      * @param
      * @return
