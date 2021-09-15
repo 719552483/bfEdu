@@ -2748,7 +2748,7 @@ function confirmStudentFileDownLoad(){
 		cache : false,
 		url : "/exportStudentPassReportCheck",
 		data: {
-			"xnid":JSON.stringify(xns)
+			"SearchCriteria":JSON.stringify(xns)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -2765,7 +2765,7 @@ function confirmStudentFileDownLoad(){
 			if (backjson.code===200) {
 				var url = "/exportStudentPassReport";
 				var form = $("<form></form>").attr("action", url).attr("method", "post");
-				form.append($("<input></input>").attr("type", "hidden").attr("name", "xnid").attr("value",JSON.stringify(xns)));
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(xns)));
 				form.appendTo('body').submit().remove();
 				toastr.info('文件下载中，请稍候...');
 			} else {
