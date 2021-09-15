@@ -737,9 +737,7 @@ public class StudentManageController {
     @ResponseBody
     public ResultVO exportStudentPassReport(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        String xnid = jsonObject.getString("xnid");
-        List<String> list = Arrays.asList(xnid.split(","));
+        List<String> list = JSON.parseArray(SearchCriteria, String.class);
 
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
         String fileName;
@@ -751,7 +749,7 @@ public class StudentManageController {
         //创建Excel文件
         XSSFWorkbook workbook = studentManageService.exportStudentPassReport(list);
         try {
-            utils.loadModal2(response,fileName, workbook);
+            utils.loadModal3(response,fileName, workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -766,10 +764,6 @@ public class StudentManageController {
     @ResponseBody
     public ResultVO exportStudentPassReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        String xnid = jsonObject.getString("xnid");
-        List<String> list = Arrays.asList(xnid.split(","));
-
         result = ResultVO.setSuccess("下载成功");
         return result;
     }

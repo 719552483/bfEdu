@@ -159,6 +159,6 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     //更新教学点名称
     @Transactional
     @Modifying
-    @Query(value = "", nativeQuery = true)
+    @Query(value = "update (select t.* from edu203 t LEFT JOIN edu202 e on t.EDU202_ID = e.EDU202_ID where e.xnid = ?1 and t.xqid = ?3 and week = ?2) set CLOSED_STATE = '1'", nativeQuery = true)
     void closedScheduleTeacher(String xnid,String week,String xqid);
 }
