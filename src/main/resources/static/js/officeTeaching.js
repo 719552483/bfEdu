@@ -2065,7 +2065,9 @@ function stuffChangePuttedInfo(puttedInfo,rowInfo){
 
 //填充再排标题
 function stuffReTitle(culturePlanInfo,choosedTask){
-	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.pyjhmc+'-'+culturePlanInfo.classLittleName+
+	var className='';
+	culturePlanInfo.classLittleName===''||culturePlanInfo.classLittleName==null||typeof culturePlanInfo.classLittleName==='undefined'?className=culturePlanInfo.className:className=culturePlanInfo.classLittleName;
+	$(".scheduleInfoTxt,.scheduleRsTitle").html(culturePlanInfo.pyjhmc+'-'+className+
 		"(总学时：" + choosedTask.edu201.zxs + "课时  集中学时：" + choosedTask.edu201.jzxs + "课时  分散学时：" + choosedTask.edu201.fsxs + "课时)");
 	$(".jzxsSpan").html(choosedTask.edu201.jzxs);
 	$(".fsxsSpan").html(choosedTask.edu201.fsxs);
