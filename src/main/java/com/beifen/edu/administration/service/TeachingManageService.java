@@ -854,6 +854,16 @@ public class TeachingManageService {
     public ResultVO askForExam(List<String> edu201IdList, Edu600 edu600) {
         ResultVO resultVO;
         for (String businessKey : edu201IdList) {
+            String count = edu203Dao.checkIsAskForExam(businessKey);
+            if(!"0".equals(count)){
+                Edu201 edu201 = edu201Dao.findOne(Long.parseLong(businessKey));
+                String msg = "【"+edu201.getKcmc()+"】"+edu201.getClassName()+"存在停课课程，暂不能结课!";
+                resultVO = ResultVO.setFailed(msg);
+                return resultVO;
+            }
+        }
+
+        for (String businessKey : edu201IdList) {
             edu201Dao.changeTestStatus(businessKey,"T");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
             String time = df.format(new Date());
@@ -947,9 +957,13 @@ public class TeachingManageService {
     }
 
     //教师停课-所有学院
-    public ResultVO closedScheduleTeacher(String xnid,String week,String xqid) {
+    public ResultVO closedScheduleTeacher(String xnid,String week,String xqid,String edu104Id) {
         ResultVO resultVO;
-        edu203Dao.closedScheduleTeacher(xnid,week,xqid);
+        if(edu104Id != null && !"".equals(edu104Id)){
+            edu203Dao.closedScheduleTeacher(xnid,week,xqid,edu104Id);
+        }else{
+            edu203Dao.closedScheduleTeacher(xnid,week,xqid);
+        }
         resultVO = ResultVO.setSuccess("停课成功");
         return resultVO;
     }
@@ -1498,15 +1512,20 @@ public class TeachingManageService {
                 }
             }
             List<String> ssz = new ArrayList<>();
+            List<String> tkbs = new ArrayList<>();
             for (SchoolTimetablePO e : orderList) {
                 if (e.getKsz().equals(e.getJsx())) {
                     ssz.add("第"+e.getKsz()+"周");
                 } else {
                     ssz.add("第"+e.getKsz()+"-"+e.getJsx()+"周");
                 }
+                if("1".equals(e.getClosedState())){
+                    tkbs.add("本周停课");
+                }
             }
             SchoolTimetablePO addInfo = orderList.get(0);
             addInfo.setSzz(utils.listToString(ssz,','));
+            addInfo.setClosedState(utils.listToString(tkbs,','));
             newList.add(addInfo);
             i += orderList.size()-1;
         }
@@ -1531,15 +1550,21 @@ public class TeachingManageService {
                 }
             }
             List<String> ssz = new ArrayList<>();
+            List<String> tkbs = new ArrayList<>();
             for (YearSchedulePO e : orderList) {
                 if (e.getKsz().equals(e.getJsz())) {
                     ssz.add("第"+e.getKsz()+"周");
                 } else {
                     ssz.add("第"+e.getKsz()+"-"+e.getJsz()+"周");
                 }
+                if("1".equals(e.getClosedState())){
+                    tkbs.add("第"+e.getWeek()+"周停课");
+                }
             }
+
             YearSchedulePO addInfo = orderList.get(0);
-            addInfo.setSzz(utils.listToString(ssz,','));
+            addInfo.setSzz(utils.listToString(ssz.stream().distinct().collect(Collectors.toList()),','));
+            addInfo.setClosedState(utils.listToString(tkbs,','));
             newList.add(addInfo);
             i += orderList.size()-1;
         }

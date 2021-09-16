@@ -398,7 +398,8 @@ public class TeachingManageController {
         String xnid = jsonObject.getString("xnid");
         String week = jsonObject.getString("week");
         String xqid = jsonObject.getString("xqid");
-        ResultVO result = teachingManageService.closedScheduleTeacher(xnid,week,xqid);
+        String edu104Id = jsonObject.getString("edu104Id");
+        ResultVO result = teachingManageService.closedScheduleTeacher(xnid,week,xqid,edu104Id);
         return result;
     }
 

@@ -156,9 +156,23 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
     String getzxsByXnid(String xnid);
 
-    //更新教学点名称
     @Transactional
     @Modifying
     @Query(value = "update (select t.* from edu203 t LEFT JOIN edu202 e on t.EDU202_ID = e.EDU202_ID where e.xnid = ?1 and t.xqid = ?3 and week = ?2) set CLOSED_STATE = '1'", nativeQuery = true)
     void closedScheduleTeacher(String xnid,String week,String xqid);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update (\n" +
+            "select t.* from edu203 t \n" +
+            "LEFT JOIN edu202 e on t.EDU202_ID = e.EDU202_ID\n" +
+            "left join edu201 ee on e.edu201_id = ee. edu201_id\n" +
+            "left join edu108 eee on ee.EDU108_ID = eee.EDU108_ID\n" +
+            "LEFT JOIN edu107 eeee on eee.EDU107_ID = eeee.EDU107_ID\n" +
+            "where e.xnid = '31952' and t.xqid = '07' and week = '11' and edu104 = '8103'\n" +
+            ") set CLOSED_STATE = '1'", nativeQuery = true)
+    void closedScheduleTeacher(String xnid,String week,String xqid,String ed104_id);
+
+    @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from edu202 where EDU201_ID = ?1) and CLOSED_STATE = '1'", nativeQuery = true)
+    String checkIsAskForExam(String edu201Id);
 }

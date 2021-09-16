@@ -41,6 +41,7 @@ public class SchoolTimetablePO {
     private String pointId;
     private String szz;
     private String localAddress;
+    private String closedState;//停课状态
 
     public String getLocalAddress() {
         return localAddress;
@@ -304,5 +305,13 @@ public class SchoolTimetablePO {
 
     public void setClassLittleName(String classLittleName) {
         this.classLittleName = classLittleName;
+    }
+
+    public String getClosedState() {
+        return closedState;
+    }
+
+    public void setClosedState(String closedState) {
+        this.closedState = closedState;
     }
 }

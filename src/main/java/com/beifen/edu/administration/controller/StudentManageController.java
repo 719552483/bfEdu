@@ -395,6 +395,19 @@ public class StudentManageController {
     }
 
     /**
+     * 根据班级查询学科
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/searchCourseByClass")
+    @ResponseBody
+    public ResultVO searchCourseByClass(@RequestParam("edu300_ID") String edu300_ID,@RequestParam("term") String term) {
+        ResultVO result =studentManageService.searchCourseByClass(edu300_ID,term);
+        return result;
+    }
+
+    /**
      * 根据学年查询学科
      * @param
      * @return

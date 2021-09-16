@@ -37,6 +37,24 @@ public class YearSchedulePO {
     private String baseTeacherId;
     private String teacherType;
     private String localAddress;
+    private String closedState;//停课状态
+    private String week;
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week;
+    }
+
+    public String getClosedState() {
+        return closedState;
+    }
+
+    public void setClosedState(String closedState) {
+        this.closedState = closedState;
+    }
 
     public String getLocalAddress() {
         return localAddress;
