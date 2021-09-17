@@ -538,6 +538,27 @@ public class StudentManageController {
         return result;
     }
 
+    /**
+     * 学生报表数据-页面展示
+     * @return
+     */
+    @RequestMapping("/studentReportData")
+    @ResponseBody
+    public ResultVO studentReportData(@RequestParam(value = "xbbm")String xbbm){
+        ResultVO result;
+        if(xbbm != null && !"".equals(xbbm)){
+            List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+            if (edu300List.size() == 0) {
+                result = ResultVO.setFailed("该学院暂无数据!");
+                return result;
+            }
+            result = studentManageService.studentReportData(edu300List);
+        }else{
+            result = studentManageService.studentReportDataAll();
+        }
+        return result;
+    }
+
 
     /**
      * 学生报表数据
