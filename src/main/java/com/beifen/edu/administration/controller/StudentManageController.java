@@ -395,6 +395,19 @@ public class StudentManageController {
     }
 
     /**
+     * 根据班级查询学科
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/searchCourseByClass")
+    @ResponseBody
+    public ResultVO searchCourseByClass(@RequestParam("edu300_ID") String edu300_ID,@RequestParam("term") String term) {
+        ResultVO result =studentManageService.searchCourseByClass(edu300_ID,term);
+        return result;
+    }
+
+    /**
      * 根据学年查询学科
      * @param
      * @return
@@ -522,6 +535,27 @@ public class StudentManageController {
     @ResponseBody
     public ResultVO studentGetAppraise(@RequestParam("userId") String userId) {
         ResultVO result =studentManageService.studentGetAppraise(userId);
+        return result;
+    }
+
+    /**
+     * 学生报表数据-页面展示
+     * @return
+     */
+    @RequestMapping("/studentReportData")
+    @ResponseBody
+    public ResultVO studentReportData(@RequestParam(value = "xbbm")String xbbm){
+        ResultVO result;
+        if(xbbm != null && !"".equals(xbbm)){
+            List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+            if (edu300List.size() == 0) {
+                result = ResultVO.setFailed("该学院暂无数据!");
+                return result;
+            }
+            result = studentManageService.studentReportData(edu300List);
+        }else{
+            result = studentManageService.studentReportDataAll();
+        }
         return result;
     }
 
@@ -737,9 +771,7 @@ public class StudentManageController {
     @ResponseBody
     public ResultVO exportStudentPassReport(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        String xnid = jsonObject.getString("xnid");
-        List<String> list = Arrays.asList(xnid.split(","));
+        List<String> list = JSON.parseArray(SearchCriteria, String.class);
 
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
         String fileName;
@@ -751,12 +783,21 @@ public class StudentManageController {
         //创建Excel文件
         XSSFWorkbook workbook = studentManageService.exportStudentPassReport(list);
         try {
-            utils.loadModal2(response,fileName, workbook);
+            utils.loadModal3(response,fileName, workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    //学生学年及格率报表
+    @RequestMapping("/exportStudentPassReportCheck")
+    @ResponseBody
+    public ResultVO exportStudentPassReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        ResultVO result;
         result = ResultVO.setSuccess("下载成功");
         return result;
     }
