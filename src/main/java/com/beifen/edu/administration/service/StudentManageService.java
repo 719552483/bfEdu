@@ -942,34 +942,32 @@ public class StudentManageService {
             Edu300 edu300 = edu300List.get(i-2);
             //判断是否为同一批次和年级
             List<Long> edu300Ids = edu300Dao.findAllByZybm(edu300.getNjbm(),edu300.getZybm(),edu300.getBatch());
-            if(i != 2){
-                Edu300 edu300Last = edu300List.get(i-3);
-                if(!edu300.getNjbm().equals(edu300Last.getNjbm()) || !edu300.getBatch().equals(edu300Last.getBatch())){
-                    map.put("gradeBatch","小计");
-                    //各个类型人数
-//                    List<String> list = new ArrayList<>();
-                    for(int j =0;j<edu000List.size();j++){
-                        String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M",edu000List.get(j).getEjdm());
-                        map.put("man"+(j+1),lxM);
-                        String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F",edu000List.get(j).getEjdm());
-                        map.put("woman"+(j+1),lxF);
-                    }
-//                    map.put("allSylxCount",list);
-                    String xtxm = edu001Dao.queryStudentCode(edu300IdsAll,"M");
-                    String xtxf = edu001Dao.queryStudentCode(edu300IdsAll,"F");
-                    map.put("xtxm",xtxm);
-                    map.put("xtxf",xtxf);
-                    String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M"); //合计男
-                    String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F"); //合计女
-                    map.put("hjM",lxM);
-                    map.put("hjF",lxF);
-                    String all = edu001Dao.queryStudentCount(edu300IdsAll);
-                    map.put("all",all);
-                    mapList.add(map);
-                    edu300IdsAll.clear();
-                    map = new HashMap();
-                }
-            }
+//            if(i != 2){
+//                Edu300 edu300Last = edu300List.get(i-3);
+//                if(!edu300.getNjbm().equals(edu300Last.getNjbm()) || !edu300.getBatch().equals(edu300Last.getBatch())){
+//                    map.put("gradeBatch","小计");
+//                    //各个类型人数
+//                    for(int j =0;j<edu000List.size();j++){
+//                        String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M",edu000List.get(j).getEjdm());
+//                        map.put("man"+(j+1),lxM);
+//                        String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F",edu000List.get(j).getEjdm());
+//                        map.put("woman"+(j+1),lxF);
+//                    }
+//                    String xtxm = edu001Dao.queryStudentCode(edu300IdsAll,"M");
+//                    String xtxf = edu001Dao.queryStudentCode(edu300IdsAll,"F");
+//                    map.put("xtxm",xtxm);
+//                    map.put("xtxf",xtxf);
+//                    String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M"); //合计男
+//                    String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F"); //合计女
+//                    map.put("hjM",lxM);
+//                    map.put("hjF",lxF);
+//                    String all = edu001Dao.queryStudentCount(edu300IdsAll);
+//                    map.put("all",all);
+//                    mapList.add(map);
+//                    edu300IdsAll.clear();
+//                    map = new HashMap();
+//                }
+//            }
             edu300IdsAll.addAll(edu300Ids);
             //年纪批次
             map.put("gradeBatch",edu300.getNjmc()+edu300.getBatchName());
@@ -997,7 +995,54 @@ public class StudentManageService {
             map.put("all",all);
             mapList.add(map);
         }
-        result = ResultVO.setSuccess("查询成功",mapList);
+
+        //columns
+        Object[] objects = new Object[3];
+        List l = new ArrayList();
+        //标题
+        Map map = new HashMap();
+        map.put("title","辽宁职业学院高职扩招学生汇总表");
+        map.put("colspan",edu000List.size()*2+6);
+        l.add(map);
+        objects[0] = l;
+        //第二行
+        l = new ArrayList();
+        StudentPO studentPO = new StudentPO("gradeBatch","年级批次","middle","center",1,2);
+        l.add(studentPO);
+        studentPO = new StudentPO("xbmc","分院","middle","center",1,2);
+        l.add(studentPO);
+        studentPO = new StudentPO("zymc","专业","middle","center",1,2);
+        l.add(studentPO);
+        List l2 = new ArrayList();
+        for(int j =0;j<edu000List.size();j++){
+            StudentPO2 studentPO2 = new StudentPO2(edu000List.get(j).getEjdmz(),"middle","center",2,1);
+            StudentPO3 studentPO3 = new StudentPO3("man"+(j+1),"男","middle","center");
+            l2.add(studentPO3);
+            studentPO3 = new StudentPO3("woman"+(j+1),"女","middle","center");
+            l2.add(studentPO3);
+            l.add(studentPO2);
+        }
+        StudentPO2 studentPO2 = new StudentPO2("休退学","middle","center",2,1);
+        StudentPO3 studentPO3 = new StudentPO3("xtxm","男","middle","center");
+        l2.add(studentPO3);
+        studentPO3 = new StudentPO3("xtxf","女","middle","center");
+        l2.add(studentPO3);
+        l.add(studentPO2);
+        studentPO2 = new StudentPO2("合计","middle","center",2,1);
+        studentPO3 = new StudentPO3("hjM","男","middle","center");
+        l2.add(studentPO3);
+        studentPO3 = new StudentPO3("hjF","女","middle","center");
+        l2.add(studentPO3);
+        l.add(studentPO2);
+        studentPO = new StudentPO("all","总计","middle","center",1,2);
+        l.add(studentPO);
+        objects[1] = l;
+        objects[2] = l2;
+        Map re = new HashMap();
+        re.put("tableInfo",mapList);
+        re.put("columns",objects);
+        result = ResultVO.setSuccess("查询成功",re);
+//        result = ResultVO.setSuccess("查询成功",mapList);
         return result;
     }
     //学生报表数据-页面-各个学院
@@ -1032,7 +1077,7 @@ public class StudentManageService {
         List l = new ArrayList();
         //标题
         Map map = new HashMap();
-        map.put("title","辽宁职业学院高职扩招学生汇总表");
+        map.put("title",edu300List.get(0).getXbmc()+"扩招汇总表");
         map.put("colspan",edu000List.size()*2+6);
         l.add(map);
         objects[0] = l;
@@ -1056,7 +1101,7 @@ public class StudentManageService {
         StudentPO2 studentPO2 = new StudentPO2("合计","middle","center",2,1);
         StudentPO3 studentPO3 = new StudentPO3("hjM","男","middle","center");
         l2.add(studentPO3);
-        studentPO3 = new StudentPO3("hjM","女","middle","center");
+        studentPO3 = new StudentPO3("hjF","女","middle","center");
         l2.add(studentPO3);
         l.add(studentPO2);
         studentPO = new StudentPO("all","总计","middle","center",1,2);
