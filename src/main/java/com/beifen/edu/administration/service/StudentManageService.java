@@ -1070,9 +1070,33 @@ public class StudentManageService {
         ResultVO result;
         List<Map> mapList = new ArrayList<>();
         List<Edu000> edu000List = edu000Dao.queryejdm("sylx");
+        List<Long> edu300IdsAll = new ArrayList<>();
         for (int i = 2;i<edu300List.size()+2;i++){
             Map map = new HashMap();
             Edu300 edu300 = edu300List.get(i-2);
+            if(i != 2){
+                Edu300 edu300Last = edu300List.get(i-3);
+                if(!edu300.getNjbm().equals(edu300Last.getNjbm()) || !edu300.getBatch().equals(edu300Last.getBatch()) || !edu300.getXbbm().equals(edu300Last.getXbbm())  || !edu300.getZybm().equals(edu300Last.getZybm())){
+                    map.put("gradeBatch","小计");
+                    //各个类型人数
+                    for(int j =0;j<edu000List.size();j++){
+                        String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M",edu000List.get(j).getEjdm());
+                        map.put("man"+(j+1),lxM);
+                        String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F",edu000List.get(j).getEjdm());
+                        map.put("woman"+(j+1),lxF);
+                    }
+                    String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M"); //合计男
+                    String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F"); //合计女
+                    map.put("hjM",lxM);
+                    map.put("hjF",lxF);
+                    String all = edu001Dao.queryStudentCount(edu300IdsAll);
+                    map.put("all",all);
+                    mapList.add(map);
+                    edu300IdsAll.clear();
+                    map = new HashMap();
+                }
+            }
+            edu300IdsAll.add(edu300.getEdu300_ID());
             map.put("xbzy",edu300.getXbmc()+"-"+edu300.getZymc());
             map.put("gradeBatch",edu300.getNjmc()+edu300.getBatchName());
             map.put("className",edu300.getXzbmc());
@@ -1092,11 +1116,28 @@ public class StudentManageService {
             map.put("all",all);
             mapList.add(map);
         }
+        Map map = new HashMap();
+        map.put("gradeBatch","小计");
+        //各个类型人数
+        for(int j =0;j<edu000List.size();j++){
+            String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M",edu000List.get(j).getEjdm());
+            map.put("man"+(j+1),lxM);
+            String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F",edu000List.get(j).getEjdm());
+            map.put("woman"+(j+1),lxF);
+        }
+        String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M"); //合计男
+        String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F"); //合计女
+        map.put("hjM",lxM);
+        map.put("hjF",lxF);
+        String all = edu001Dao.queryStudentCount(edu300IdsAll);
+        map.put("all",all);
+        mapList.add(map);
+
         //columns
         Object[] objects = new Object[3];
         List l = new ArrayList();
         //标题
-        Map map = new HashMap();
+        map = new HashMap();
         map.put("title",edu300List.get(0).getXbmc()+"扩招汇总表");
         map.put("colspan",edu000List.size()*2+6);
         l.add(map);
