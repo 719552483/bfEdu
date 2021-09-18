@@ -544,10 +544,14 @@ public class StudentManageController {
      */
     @RequestMapping("/studentReportData")
     @ResponseBody
-    public ResultVO studentReportData(@RequestParam(value = "xbbm")String xbbm){
+    public ResultVO studentReportData(@RequestParam String SearchCriteria){
         ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String batch = jsonObject.getString("batch");
         if(xbbm != null && !"".equals(xbbm)){
-            List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+            List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm,njbm,batch);
             if (edu300List.size() == 0) {
                 result = ResultVO.setFailed("该学院暂无数据!");
                 return result;
@@ -594,12 +598,16 @@ public class StudentManageController {
      */
     @RequestMapping("/studentCollegeReportCheck")
     @ResponseBody
-    public ResultVO studentCollegeReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
+    public ResultVO studentCollegeReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String batch = jsonObject.getString("batch");
 
-        List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+        List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm,njbm,batch);
         if (edu300List.size() == 0) {
-            result = ResultVO.setFailed("该学院咱无数据");
+            result = ResultVO.setFailed("该学院暂无数据");
         }else{
             result = ResultVO.setSuccess("下载成功");
 
@@ -613,12 +621,15 @@ public class StudentManageController {
      */
     @RequestMapping("/studentCollegeReport")
     @ResponseBody
-    public ResultVO studentReportCollege(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "xbbm")String xbbm) throws IOException, ParseException {
+    public ResultVO studentReportCollege(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
-
-        List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm);
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String batch = jsonObject.getString("batch");
+        List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm,njbm,batch);
         if(edu300List.size() == 0){
-            result = ResultVO.setFailed("该学院咱无数据");
+            result = ResultVO.setFailed("该学院暂无数据");
             return result;
         }
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());

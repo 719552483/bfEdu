@@ -918,9 +918,18 @@ public class StudentManageService {
         return resultVO;
     }
 
-    public List<Edu300> queryStudentReport(String xbbm) {
+    public List<Edu300> queryStudentReport(String xbbm,String njbm,String batch) {
         List<Edu300> edu300List = new ArrayList<>();
-        edu300List = edu300Dao.queryStudentReport(xbbm);
+        if(njbm != null && "".equals(njbm)){
+            if(batch != null && "".equals(batch)){
+                edu300List = edu300Dao.queryStudentReport(xbbm,njbm,batch);
+            }else{
+                edu300List = edu300Dao.queryStudentReport(xbbm,njbm);
+            }
+        }else{
+            edu300List = edu300Dao.queryStudentReport(xbbm);
+        }
+
         return edu300List;
     }
 
