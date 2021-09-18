@@ -228,13 +228,16 @@ function binBind() {
 		getReportInfo();
 		e.stopPropagation();
 	});
-	//
-	// //重置检索
-	// $('#researchStudents').unbind('click');
-	// $('#researchStudents').bind('click', function(e) {
-	// 	researchStudents();
-	// 	e.stopPropagation();
-	// });
+
+	//重置检索
+	$('#researchStudents').unbind('click');
+	$('#researchStudents').bind('click', function(e) {
+		var reObject = new Object();
+		reObject.normalSelectIds = "#department";
+		reReloadSearchsWithSelect(reObject);
+		getReportInfo();
+		e.stopPropagation();
+	});
 
 	//全院学生报表数据
 	$('#downloadAll').unbind('click');
