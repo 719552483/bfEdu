@@ -6,6 +6,15 @@ public class StudentPO2 {
     private String align;
     private Integer colspan;
     private Integer rowspan;
+    private String formatter;
+
+    public String getFormatter() {
+        return formatter;
+    }
+
+    public void setFormatter(String formatter) {
+        this.formatter = formatter;
+    }
 
     public String getTitle() {
         return title;
@@ -47,12 +56,21 @@ public class StudentPO2 {
         this.rowspan = rowspan;
     }
 
-    public StudentPO2(String title, String valign, String align, Integer colspan, Integer rowspan) {
+//    public StudentPO2(String title, String valign, String align, Integer colspan, Integer rowspan,) {
+//        this.title = title;
+//        this.valign = valign;
+//        this.align = align;
+//        this.colspan = colspan;
+//        this.rowspan = rowspan;
+//    }
+
+    public StudentPO2(String title, String valign, String align, Integer colspan, Integer rowspan, String formatter) {
         this.title = title;
         this.valign = valign;
         this.align = align;
         this.colspan = colspan;
         this.rowspan = rowspan;
+        this.formatter = formatter;
     }
 
     public StudentPO2() {

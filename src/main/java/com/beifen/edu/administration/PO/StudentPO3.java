@@ -5,6 +5,15 @@ public class StudentPO3 {
     private String title;
     private String valign;
     private String align;
+    private String formatter;
+
+    public String getFormatter() {
+        return formatter;
+    }
+
+    public void setFormatter(String formatter) {
+        this.formatter = formatter;
+    }
 
     public String getField() {
         return field;
@@ -38,11 +47,12 @@ public class StudentPO3 {
         this.align = align;
     }
 
-    public StudentPO3(String field, String title, String valign, String align) {
+    public StudentPO3(String field, String title, String valign, String align, String formatter) {
         this.field = field;
         this.title = title;
         this.valign = valign;
         this.align = align;
+        this.formatter = formatter;
     }
 
     public StudentPO3() {

@@ -7,6 +7,15 @@ public class StudentPO {
     private String align;
     private Integer colspan;
     private Integer rowspan;
+    private String formatter;
+
+    public String getFormatter() {
+        return formatter;
+    }
+
+    public void setFormatter(String formatter) {
+        this.formatter = formatter;
+    }
 
     public String getField() {
         return field;
@@ -56,13 +65,14 @@ public class StudentPO {
         this.rowspan = rowspan;
     }
 
-    public StudentPO(String field, String title, String valign, String align, Integer colspan, Integer rowspan) {
+    public StudentPO(String field, String title, String valign, String align, Integer colspan, Integer rowspan, String formatter) {
         this.field = field;
         this.title = title;
         this.valign = valign;
         this.align = align;
         this.colspan = colspan;
         this.rowspan = rowspan;
+        this.formatter = formatter;
     }
 
     public StudentPO() {

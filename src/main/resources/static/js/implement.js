@@ -1910,3 +1910,8 @@ function newUuid() {
 	var uuid = s.join("");
 	return uuid;
 }
+
+//合并列
+function mergeCountCells(tableID,index,fieldName,colspanNum,rowspanNum){
+	$('#'+tableID).bootstrapTable('mergeCells', {index: index, field:fieldName, colspan: colspanNum, rowspan: rowspanNum});
+}
