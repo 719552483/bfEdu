@@ -189,9 +189,8 @@ function downloadAll(){
 
 //分院学生报表数据
 function downloadSome(){
-	var xb=getNormalSelectValue('department');
-	if(xb===''){
-		toastr.warning('请选择二级学院');
+	var searchCriteria=getSearchInfo();
+	if(typeof searchCriteria==='undefined'){
 		return;
 	}
 	$.ajax({
@@ -199,7 +198,7 @@ function downloadSome(){
 		cache : false,
 		url : "/studentCollegeReportCheck",
 		data: {
-			"xbbm":xb
+			"SearchCriteria":JSON.stringify(searchCriteria)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -216,7 +215,7 @@ function downloadSome(){
 			if (backjson.code===200) {
 				var url = "/studentCollegeReport";
 				var form = $("<form></form>").attr("action", url).attr("method", "post");
-				form.append($("<input></input>").attr("type", "hidden").attr("name", "xbbm").attr("value",xb));
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(searchCriteria)));
 				form.appendTo('body').submit().remove();
 				toastr.info('文件下载中，请稍后...');
 			} else {
