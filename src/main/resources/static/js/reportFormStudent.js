@@ -1,6 +1,9 @@
+var EJDMElementInfo;
 $(function() {
 	judgementPWDisModifyFromImplements();
 	$('.isSowIndex').selectMania(); //初始化下拉框
+	EJDMElementInfo=queryEJDMElementInfo();
+	stuffEJDElement(EJDMElementInfo);
 	binBind();
 	getXbInfo();
 	getReportInfo();
@@ -35,13 +38,16 @@ function stuffXbInfo(selectInfo){
 
 //获取学生报表数据
 function getReportInfo(){
-	var xbbm=getNormalSelectValue('department');
+	var searchCriteria=getSearchInfo();
+	if(typeof searchCriteria==='undefined'){
+		return;
+	}
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/studentReportData",
 		data: {
-			"xbbm":xbbm
+			"SearchCriteria":JSON.stringify(searchCriteria)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -220,6 +226,37 @@ function downloadSome(){
 	});
 }
 
+//获得检索对象
+function getSearchInfo(){
+	var returnOnject=new Object()
+	var xbbm=getNormalSelectValue('department');
+	var nj = getNormalSelectValue("nj");
+	var pc =getNormalSelectValue("pc");
+
+	if(nj!==''&&xbbm===''){
+		toastr.warning('请选择二级学院');
+		return;
+	}
+
+	if(pc!==''&&(xbbm===''||nj==='')){
+		if(xbbm===''){
+			toastr.warning('请选择二级学院');
+			return;
+		}
+
+		if(nj===''){
+			toastr.warning('请选择年级');
+			return;
+		}
+	}
+
+	returnOnject.xbbm=xbbm;
+	returnOnject.njbm=nj;
+	returnOnject.batch=pc;
+
+	return returnOnject;
+}
+
 //初始化页面按钮绑定事件
 function binBind() {
 	//开始检索
@@ -233,7 +270,7 @@ function binBind() {
 	$('#researchStudents').unbind('click');
 	$('#researchStudents').bind('click', function(e) {
 		var reObject = new Object();
-		reObject.normalSelectIds = "#department";
+		reObject.normalSelectIds = "#department,#nj,#pc";
 		reReloadSearchsWithSelect(reObject);
 		getReportInfo();
 		e.stopPropagation();
@@ -251,6 +288,44 @@ function binBind() {
 	$('#downloadSome').bind('click', function(e) {
 		downloadSome();
 		e.stopPropagation();
+	});
+
+	//学院change事件
+	$("#department").change(function() {
+		var xbbm=getNormalSelectValue('department');
+		if(xbbm!==''){
+			$.ajax({
+				method : 'get',
+				cache : false,
+				url : "/departmentMatchGrade",
+				data: {
+					"departmentCode":xbbm
+				},
+				dataType : 'json',
+				beforeSend: function(xhr) {
+					requestErrorbeforeSend();
+				},
+				error: function(textStatus) {
+					requestError();
+				},
+				complete: function(xhr, status) {
+					requestComplete();
+				},
+				success : function(backjson) {
+					hideloding();
+					if (backjson.result) {
+						var str = '<option value="seleceConfigTip">请选择</option>';
+						for (var i = 0; i <  backjson.grade.length; i++) {
+							str += '<option value="' +  backjson.grade[i].edu105_ID + '">' +  backjson.grade[i].njmc
+								+ '</option>';
+						}
+						stuffManiaSelect("#nj", str);
+					} else {
+						toastr.warning('暂无年级');
+					}
+				}
+			});
+		}
 	});
 }
 

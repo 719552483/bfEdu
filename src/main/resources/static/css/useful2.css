@@ -3016,6 +3016,13 @@ input:focus{
 	display: none;
 }
 
+.reportFormStudentTableArea .fixed-table-body {
+    border-left: 1px solid #b6cad270;
+    border-right: 1px solid #b6cad270;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
 .reportTable thead,.reportTable thead tr:not(:first-child) th{
 	border: 1px solid #b6cad2 !important;
 }
@@ -3043,8 +3050,12 @@ input:focus{
 }
 
 .reportTable>tbody>tr>td {
-	border-top: 1px dotted #c7c7c7 !important;
+    border-top: 1px dotted #c7c7c7 !important;
 }
+
+
+
+
 
 @keyframes serachAnimation {
     10% {

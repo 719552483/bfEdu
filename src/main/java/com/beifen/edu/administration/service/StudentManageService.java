@@ -920,8 +920,8 @@ public class StudentManageService {
 
     public List<Edu300> queryStudentReport(String xbbm,String njbm,String batch) {
         List<Edu300> edu300List = new ArrayList<>();
-        if(njbm != null && "".equals(njbm)){
-            if(batch != null && "".equals(batch)){
+        if(njbm != null && !"".equals(njbm)){
+            if(batch != null && !"".equals(batch)){
                 edu300List = edu300Dao.queryStudentReport(xbbm,njbm,batch);
             }else{
                 edu300List = edu300Dao.queryStudentReport(xbbm,njbm);
