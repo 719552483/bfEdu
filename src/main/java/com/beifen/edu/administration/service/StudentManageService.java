@@ -1144,9 +1144,9 @@ public class StudentManageService {
         objects[0] = l;
         //第二行
         l = new ArrayList();
-        StudentPO studentPO = new StudentPO("xbzy","分院专业","middle","center",1,2,"paramsMatter");
+        StudentPO studentPO = new StudentPO("gradeBatch","年级批次","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
-        studentPO = new StudentPO("gradeBatch","年级批次","middle","center",1,2,"paramsMatter");
+        studentPO = new StudentPO("xbzy","分院专业","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
         studentPO = new StudentPO("className","班级","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
