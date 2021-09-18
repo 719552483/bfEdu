@@ -1002,7 +1002,7 @@ public class StudentManageService {
         //标题
         Map map = new HashMap();
         map.put("title","辽宁职业学院高职扩招学生汇总表");
-        map.put("colspan",edu000List.size()*2+6);
+        map.put("colspan",edu000List.size()*2+8);
         l.add(map);
         objects[0] = l;
         //第二行
