@@ -538,31 +538,6 @@ public class StudentManageController {
         return result;
     }
 
-    /**
-     * 学生报表数据-页面展示
-     * @return
-     */
-    @RequestMapping("/studentReportData")
-    @ResponseBody
-    public ResultVO studentReportData(@RequestParam String SearchCriteria){
-        ResultVO result;
-        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        String xbbm = jsonObject.getString("xbbm");
-        String njbm = jsonObject.getString("njbm");
-        String batch = jsonObject.getString("batch");
-        if(xbbm != null && !"".equals(xbbm)){
-            List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm,njbm,batch);
-            if (edu300List.size() == 0) {
-                result = ResultVO.setFailed("该学院暂无数据!");
-                return result;
-            }
-            result = studentManageService.studentReportData(edu300List);
-        }else{
-            result = studentManageService.studentReportDataAll();
-        }
-        return result;
-    }
-
 
     /**
      * 学生报表数据
@@ -810,6 +785,51 @@ public class StudentManageController {
     public ResultVO exportStudentPassReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
         result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
+     * 学生报表数据-报表
+     * @return
+     */
+    @RequestMapping("/studentReportData")
+    @ResponseBody
+    public ResultVO studentReportData(@RequestParam String SearchCriteria){
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String batch = jsonObject.getString("batch");
+        if(xbbm != null && !"".equals(xbbm)){
+            List<Edu300> edu300List = studentManageService.queryStudentReport(xbbm,njbm,batch);
+            if (edu300List.size() == 0) {
+                result = ResultVO.setFailed("该学院暂无数据!");
+                return result;
+            }
+            result = studentManageService.studentReportData(edu300List);
+        }else{
+            result = studentManageService.studentReportDataAll();
+        }
+        return result;
+    }
+
+    /**
+     * 学生报表数据-报表
+     * @return
+     */
+    @RequestMapping("/pointReportData")
+    @ResponseBody
+    public ResultVO pointReportData(@RequestParam String SearchCriteria){
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String city = jsonObject.getString("city");
+        List<Edu500> list = studentManageService.queryPointByCity(city);
+        if(list.size() == 0){
+            result = ResultVO.setFailed("暂无教学点信息");
+        }
+        result = studentManageService.pointReportData(list);
+
+
         return result;
     }
 }

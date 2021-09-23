@@ -1,9 +1,6 @@
 package com.beifen.edu.administration.service;
 
-import com.beifen.edu.administration.PO.StudentBreakPO;
-import com.beifen.edu.administration.PO.StudentPO;
-import com.beifen.edu.administration.PO.StudentPO2;
-import com.beifen.edu.administration.PO.StudentPO3;
+import com.beifen.edu.administration.PO.*;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
@@ -12,6 +9,7 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -71,6 +69,12 @@ public class StudentManageService {
     private Edu204Dao edu204Dao;
     @Autowired
     private Edu400Dao edu400Dao;
+    @Autowired
+    private Edu500Dao edu500Dao;
+    @Autowired
+    private Edu501Dao edu501Dao;
+    @Autowired
+    private Edu502Dao edu502Dao;
     @Autowired
     private Edu006Dao edu006Dao;
     @Autowired
@@ -1687,6 +1691,57 @@ public class StudentManageService {
 
 
         return workbook;
+    }
+
+    //查询教学任务点
+    public List<Edu500> queryPointByCity(String city) {
+        List<Edu500> list;
+        if(city != null && !"".equals(city)){
+            list = edu500Dao.exportPointByCity(city);
+        }else{
+            list = edu500Dao.findAll();
+        }
+        return list;
+    }
+
+    public ResultVO pointReportData(List<Edu500> list){
+        ResultVO resultVO;
+        List<PointReport> pointReportList = new ArrayList<>();
+        try{
+            for (Edu500 edu500 :list){
+                PointReport pointReport = new PointReport();
+                BeanUtils.copyProperties(pointReport, edu500);
+                List<Edu501> edu501List = edu501Dao.findAllByEdu501Id(pointReport.getEdu500Id()+"");
+                List<PointDetailReport> pointDetailReportList = new ArrayList<>();
+                for (Edu501 edu501:edu501List){
+                    PointDetailReport pointDetailReport = new PointDetailReport();
+                    BeanUtils.copyProperties(pointDetailReport, edu501);
+                    //场地平均使用率
+                    Integer countAll = edu203Dao.findEdu203Count();
+                    Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(pointDetailReport.getEdu501Id()+"");
+                    //计算平均使用率
+                    if(countUsed != 0){
+                        double v = Double.parseDouble(countUsed.toString()) / Double.parseDouble(countAll.toString());
+                        NumberFormat nf = NumberFormat.getPercentInstance();
+                        nf.setMinimumFractionDigits(2);//设置保留小数位
+                        String usedPercent = nf.format(v);
+                        pointDetailReport.setUsedPercent(usedPercent);
+                    } else {
+                        pointDetailReport.setUsedPercent("0.00%");
+                    }
+                    pointDetailReport.setCountUsed(countUsed+"");
+                    List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501.getEdu501Id()+"");
+                    pointDetailReport.setEdu502List(edu502List);
+                    pointDetailReportList.add(pointDetailReport);
+                }
+                pointReport.setPointDetailReportList(pointDetailReportList);
+                pointReportList.add(pointReport);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        resultVO = ResultVO.setSuccess("查询成功！",pointReportList);
+        return resultVO;
     }
 
 }
