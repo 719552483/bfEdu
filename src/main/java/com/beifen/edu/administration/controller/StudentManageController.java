@@ -826,10 +826,9 @@ public class StudentManageController {
         List<Edu500> list = studentManageService.queryPointByCity(city);
         if(list.size() == 0){
             result = ResultVO.setFailed("暂无教学点信息");
+            return result;
         }
         result = studentManageService.pointReportData(list);
-
-
         return result;
     }
 }
