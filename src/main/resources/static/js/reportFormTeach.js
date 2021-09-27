@@ -2909,12 +2909,15 @@ function drawAllTable(tableInfo){
 					title: "学年",
 					valign:"middle",
 					align:"center",
+					sortable: true,
+					formatter: paramsMatter,
 					colspan: 1,
 					rowspan: 2
 				},
 				{
 					title: "授课教师数",
 					valign:"middle",
+					formatter: peopleNumMatter,
 					align:"center",
 					colspan: 3,
 					rowspan: 1
@@ -2922,32 +2925,40 @@ function drawAllTable(tableInfo){
 				{
 					field: 'skms',
 					title: "学年授课课程门数",
+					formatter: kcMSNumMatter,
 					valign:"middle",
 					align:"center",
+					sortable: true,
 					colspan: 1,
 					rowspan: 2
 				},
 				{
 					field: 'zxs',
 					title: "学年总学时数",
+					formatter: xsNumMatter,
 					valign:"middle",
 					align:"center",
+					sortable: true,
 					colspan: 1,
 					rowspan: 2
 				},
 				{
 					field: 'jhxs',
 					title: "计划学时数",
+					formatter: xsNumMatter,
 					valign:"middle",
 					align:"center",
+					sortable: true,
 					colspan: 1,
 					rowspan: 2
 				},
 				{
 					field: 'sjskxs',
 					title: "实际授课学时数",
+					formatter: xsNumMatter,
 					valign:"middle",
 					align:"center",
+					sortable: true,
 					colspan: 1,
 					rowspan: 2
 				}
@@ -2957,18 +2968,24 @@ function drawAllTable(tableInfo){
 					field: 'zrjs',
 					title: '专任教师',
 					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
 					align:"center"
 				},
 				{
 					field: 'jzjs',
 					title: '兼职教师',
 					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
 					align:"center"
 				},
 				{
 					field: 'wpjs',
 					title: '外聘教师',
 					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
 					align:"center"
 				}
 			]
@@ -3013,15 +3030,19 @@ function drawDepartmentTable(tableInfo){
 					field: 'zymc',
 					title: "专业",
 					valign:"middle",
+					formatter: paramsMatter,
 					align:"center",
 					colspan: 1,
+					sortable: true,
 					rowspan: 2
 				},
 				{
 					field: 'xnmc',
 					title: "学年",
+					formatter: paramsMatter,
 					valign:"middle",
 					align:"center",
+					sortable: true,
 					colspan: 1,
 					rowspan: 2
 				},
@@ -3029,39 +3050,48 @@ function drawDepartmentTable(tableInfo){
 					title: "授课教师数",
 					valign:"middle",
 					align:"center",
+					formatter: peopleNumMatter,
 					colspan: 3,
 					rowspan: 1
 				},
 				{
 					field: 'skms',
 					title: "学年授课课程门数",
+					formatter: kcMSNumMatter,
 					valign:"middle",
 					align:"center",
 					colspan: 1,
+					sortable: true,
 					rowspan: 2
 				},
 				{
 					field: 'zxs',
 					title: "学年总学时数",
 					valign:"middle",
+					formatter: xsNumMatter,
 					align:"center",
 					colspan: 1,
+					sortable: true,
 					rowspan: 2
 				},
 				{
 					field: 'jhxs',
 					title: "计划学时数",
 					valign:"middle",
+					formatter: xsNumMatter,
 					align:"center",
 					colspan: 1,
+					sortable: true,
 					rowspan: 2
 				},
 				{
 					field: 'sjskxs',
 					title: "实际授课学时数",
 					valign:"middle",
+					formatter: xsNumMatter,
 					align:"center",
 					colspan: 1,
+					sortable: true,
 					rowspan: 2
 				}
 			],
@@ -3070,18 +3100,24 @@ function drawDepartmentTable(tableInfo){
 					field: 'zrjs',
 					title: '专任教师',
 					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
 					align:"center"
 				},
 				{
 					field: 'jzjs',
 					title: '兼职教师',
 					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
 					align:"center"
 				},
 				{
 					field: 'wpjs',
 					title: '外聘教师',
 					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
 					align:"center"
 				}
 			]
@@ -3256,4 +3292,28 @@ function tab5BtnBind(){
 /**
  * tab5 end
  * */
+
+//人数格式化
+function peopleNumMatter(value, row, index) {
+	return [
+		'<div class="myTooltip" title="'+value+'人">'+value+'人</div>'
+	]
+		.join('');
+}
+
+//课程门数格式化
+function kcMSNumMatter(value, row, index) {
+	return [
+		'<div class="myTooltip" title="'+value+'门">'+value+'门</div>'
+	]
+		.join('');
+}
+
+//学时格式化
+function xsNumMatter(value, row, index) {
+	return [
+		'<div class="myTooltip" title="'+value+'学时">'+value+'学时</div>'
+	]
+		.join('');
+}
 
