@@ -564,13 +564,28 @@
 				<div id="tab5" class="tabson myTabson">
 					<div class="tools">
 						<ul class="toolbar">
+							<li class="click" id="startSearchTab5"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 							<li class="click" id="allInfoDownLoad"><span><img src="images/ico05.png" style="width: 24px;"/></span>全院授课信息报表数据</li>
 							<li class="click" id="someInfoDownLoad"><span><img src="images/ico04.png" style="width: 24px;"/></span>分院授课信息报表数据</li>
+						</ul>
+						<ul class="toolbar1">
+							<li class="click" id="reReloadSearchsTab5"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
 						</ul>
 					</div>
 					<span class="isFirstShowTab5 noneStart">T</span>
 
 					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院</label>
+									<select class="isSowIndex" id="progress_department">
+										<option value="seleceConfigTip">请选择</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
@@ -584,7 +599,7 @@
 					</div>
 
 					<div class="tab5TableArea searchGivePaddingR">
-						<table class="tablelist myTableStyle" id="tab5Table" style="margin-top: 10px;"></table>
+						<table class="tablelist myTableStyle reportTable" id="tab5Table" style="margin-top: 10px;"></table>
 					</div>
 				</div>
 
@@ -858,35 +873,6 @@
 				</div>
 			</div>
 	</div>
-
-	<!-- 分院授课报表数据Modal -->
-	<div class="modal fade bs-example-modal-lg" id="someInfoDownLoadModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<div class="tiptop"><span class="moadalTitle">分院授课报表数据</span><a class="cancel" shape="rect"></a></div>
-					</div>
-					<div class="modal-body">
-						<div class="searchArea searchAreaWitheSelect">
-							<div class="col1 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">二级学院</label>
-										<select class="isSowIndex" id="someInfoDownLoad_department">
-											<option value="seleceConfigTip">暂不可选</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer tipbtn">
-						<input name="" type="button" class="sure" id="confirmSomeInfoDownLoad" value="确定"/>&nbsp;
-						<input name="" type="button" class="cancel" value="取消"/>
-					</div>
-				</div>
-			</div>
-		</div>
 
 	<!-- 学生学年及格率报表数据Modal -->
 	<div class="modal fade bs-example-modal-lg" id="downLoadStudentFileModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">

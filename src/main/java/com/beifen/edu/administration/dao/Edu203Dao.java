@@ -174,7 +174,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
     String getzxsByXnid(String xnid);
 
-    @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1 and EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?1))) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
+    @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?2 and EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?1))) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
     String getzxsByXnid2(String edu106,String xnid);
 
     @Transactional

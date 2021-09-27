@@ -2828,19 +2828,20 @@ function judgmentIsFristTimeLoadTab5(){
 	var isFirstShowTab5 = $(".isFirstShowTab5")[0].innerText;
 	if (isFirstShowTab5 === "T") {
 		$(".isFirstShowTab5").html("F");
-		stuffProgressTable({});
+		getTab5TableInfo(1);
 		tab5BtnBind();
 	}
 }
 
-//获取学年授课进度
-function getYearProgress(year){
+//获取tab5的数据
+function getTab5TableInfo(type){
+	var searchInfo=getTab5SearchInfo(true);
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/searchCourseProgress",
+		url : "/teachInfoReportData",
 		data: {
-			"xnid":year
+			"SearchCriteria":JSON.stringify(searchInfo)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -2854,18 +2855,30 @@ function getYearProgress(year){
 		},
 		success : function(backjson) {
 			hideloding();
-			if (backjson.code === 200) {
-				stuffProgressTable(backjson.data);
+			if (backjson.code==200) {
+				stuffTab5Table(backjson.data,type);
 			} else {
-				stuffProgressTable({});
 				toastr.warning(backjson.msg);
 			}
 		}
 	});
 }
 
-//填充学年授课进度 Table
-function stuffProgressTable(tableInfo){
+//填充tab5的表格
+function stuffTab5Table(tableInfo,stuffType){
+	if(stuffType==1){
+		drawAllTable(tableInfo);
+	}else{
+		drawDepartmentTable(tableInfo);
+	}
+}
+
+//渲染全院表格
+function drawAllTable(tableInfo){
+	var searchInfo=getTab5SearchInfo(true);
+	var stuffTitle='';
+	searchInfo.xnmc===''?stuffTitle='全学年':stuffTitle=searchInfo.xnmc;
+
 	$('#tab5Table').bootstrapTable('destroy').bootstrapTable({
 		data : tableInfo,
 		pagination : true,
@@ -2879,71 +2892,312 @@ function stuffProgressTable(tableInfo){
 		editable : false,
 		striped : true,
 		toolbar : '#toolbar',
-		showColumns : true,
+		showColumns : false,
 		onPageChange : function() {
 			drawPagination(".tab5TableArea", "授课进度信息");
 		},
-		columns: [{
-			field :'xbmc',
-			title : '二级学院名称',
-			align : 'left',
-			sortable: true,
-			formatter : paramsMatter
-		},{
-			field :'completed',
-			title : '已完成课时',
-			align : 'left',
-			sortable: true,
-			formatter : ksMatter
-		},{
-			field :'unfinished',
-			title : '未完成课时',
-			align : 'left',
-			sortable: true,
-			formatter : ksMatter
-		},{
-			field :'all',
-			title : '总课时',
-			align : 'left',
-			sortable: true,
-			formatter : ksMatter
-		},{
-			field :'progress',
-			title : '完成百分比',
-			align : 'left',
-			sortable: true,
-			formatter :progressMatter
-		}]
+		columns:[
+			[
+				{
+					title: "辽宁职业学院高职扩招"+stuffTitle+"授课进度信息统计表",
+					colspan: 8
+				}
+			],
+			[
+				{
+					field: 'xnmc',
+					title: "学年",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					title: "授课教师数",
+					valign:"middle",
+					align:"center",
+					colspan: 3,
+					rowspan: 1
+				},
+				{
+					field: 'skms',
+					title: "学年授课课程门数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'zxs',
+					title: "学年总学时数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'jhxs',
+					title: "计划学时数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'sjskxs',
+					title: "实际授课学时数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				}
+			],
+			[
+				{
+					field: 'zrjs',
+					title: '专任教师',
+					valign:"middle",
+					align:"center"
+				},
+				{
+					field: 'jzjs',
+					title: '兼职教师',
+					valign:"middle",
+					align:"center"
+				},
+				{
+					field: 'wpjs',
+					title: '外聘教师',
+					valign:"middle",
+					align:"center"
+				}
+			]
+		]
 	});
-
-	function ksMatter(value, row, index) {
-		return [ '<div class="myTooltip" title="' + value + '课时">' + value + '课时</div>' ]
-			.join('');
-	}
-
-	function progressMatter(value, row, index) {
-		return [ '<div class="myTooltip" title="' + value + '%">' + value + '%</div>' ]
-			.join('');
-	}
 
 	drawPagination(".tab5TableArea", "授课进度信息");
 	drawSearchInput(".tab5TableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
-	changeColumnsStyle(".tab5TableArea", "授课进度信息");
 }
+
+//渲染分选表格
+function drawDepartmentTable(tableInfo){
+	var searchInfo=getTab5SearchInfo(true);
+	$('#tab5Table').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : false,
+		onPageChange : function() {
+			drawPagination(".tab5TableArea", "授课进度信息");
+		},
+		columns:[
+			[
+				{
+					title: "辽宁职业学院高职扩招"+searchInfo.xbmc+searchInfo.xnmc+"授课进度信息统计表",
+					colspan: 9
+				}
+			],
+			[
+				{
+					field: 'zymc',
+					title: "专业",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'xnmc',
+					title: "学年",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					title: "授课教师数",
+					valign:"middle",
+					align:"center",
+					colspan: 3,
+					rowspan: 1
+				},
+				{
+					field: 'skms',
+					title: "学年授课课程门数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'zxs',
+					title: "学年总学时数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'jhxs',
+					title: "计划学时数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'sjskxs',
+					title: "实际授课学时数",
+					valign:"middle",
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				}
+			],
+			[
+				{
+					field: 'zrjs',
+					title: '专任教师',
+					valign:"middle",
+					align:"center"
+				},
+				{
+					field: 'jzjs',
+					title: '兼职教师',
+					valign:"middle",
+					align:"center"
+				},
+				{
+					field: 'wpjs',
+					title: '外聘教师',
+					valign:"middle",
+					align:"center"
+				}
+			]
+		]
+	});
+
+	drawPagination(".tab5TableArea", "授课进度信息");
+	drawSearchInput(".tab5TableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//获取tab5的检索对象
+function getTab5SearchInfo(canEmpty){
+	var xn=getNormalSelectValue('progress_year');
+	var xb=getNormalSelectValue('progress_department');
+
+	var xnmc=getNormalSelectText('progress_year');
+	var xbmc=getNormalSelectText('progress_department');
+	if((xn===''&&xb==='')&&!canEmpty){
+		toastr.warning('检索条件不能为空');
+		return;
+	}
+
+	var returnObject=new Object();
+	returnObject.xn=xn;
+	returnObject.xb=xb;
+	returnObject.xnmc=xnmc;
+	returnObject.xbmc=xbmc;
+	return returnObject;
+}
+
+//开始检索
+function startSearchTab5(){
+	var tab5SearchInfo=getTab5SearchInfo(false);
+	if(typeof tab5SearchInfo==='undefined'){
+		return;
+	}
+	var type=0;
+	if(tab5SearchInfo.xb!==''){
+		type=2;
+	}else{
+		type=1;
+	}
+	getTab5TableInfo(type);
+}
+
+//重置检索
+function reReloadSearchsTab5(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#progress_year,#progress_department";
+	reReloadSearchsWithSelect(reObject);
+	getTab5TableInfo(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //全院授课信息报表数据
 function allInfoDownLoad(){
+	var searchInfo=getTab5SearchInfo(true);
 	var url = "/teachingInfoReport";
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
-	form.append($("<input></input>").attr("type", "hidden"));
+	form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(searchInfo)));
 	form.appendTo('body').submit().remove();
 	toastr.info('文件下载中，请稍候...');
 }
 
 //分院授课报表数据
 function someInfoDownLoad(){
+	var searchInfo=getTab5SearchInfo(false);
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/teachingInfoCollegeReportCheck",
+		data: {
+			"SearchCriteria":JSON.stringify(searchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/teachingInfoCollegeReport";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(searchInfo)));
+				form.appendTo('body').submit().remove();
+				toastr.info('文件下载中，请稍候...');
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//学院下拉框
+function stuffDepartmentSelect(){
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -2968,54 +3222,8 @@ function someInfoDownLoad(){
 					str += '<option value="' + backjson.data[i].edu104_ID + '">' + backjson.data[i].xbmc
 						+ '</option>';
 				}
+				stuffManiaSelect("#progress_department", str);
 				stuffManiaSelect("#someInfoDownLoad_department", str);
-				//确认分院授课报表数据
-				$('#confirmSomeInfoDownLoad').unbind('click');
-				$('#confirmSomeInfoDownLoad').bind('click', function(e) {
-					confirmSomeInfoDownLoad();
-					e.stopPropagation();
-				});
-				$.showModal('#someInfoDownLoadModal',true);
-			} else {
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
-}
-
-//确认分院授课报表数据
-function confirmSomeInfoDownLoad(){
-	var xb=getNormalSelectValue('someInfoDownLoad_department');
-	if(xb===''){
-		toastr.warning('请选择二级学院');
-		return;
-	}
-
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/teachingInfoCollegeReportCheck",
-		data: {
-			"xbbm":xb
-		},
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code===200) {
-				var url = "/teachingInfoCollegeReport";
-				var form = $("<form></form>").attr("action", url).attr("method", "post");
-				form.append($("<input></input>").attr("type", "hidden").attr("name", "xbbm").attr("value",xb));
-				form.appendTo('body').submit().remove();
-				toastr.info('文件下载中，请稍候...');
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -3025,15 +3233,6 @@ function confirmSomeInfoDownLoad(){
 
 //tab5事件绑定
 function tab5BtnBind(){
-	//学年change事件
-	$("#progress_year").change(function() {
-		var year=getNormalSelectValue('progress_year');
-		if(year===''){
-			return;
-		}
-		getYearProgress(year);
-	});
-
 	//全院授课信息报表数据
 	$('#allInfoDownLoad').unbind('click');
 	$('#allInfoDownLoad').bind('click', function(e) {
@@ -3045,6 +3244,23 @@ function tab5BtnBind(){
 	$('#someInfoDownLoad').unbind('click');
 	$('#someInfoDownLoad').bind('click', function(e) {
 		someInfoDownLoad();
+		e.stopPropagation();
+	});
+
+	//填充学院下拉框
+	stuffDepartmentSelect();
+
+	//开始检索
+	$('#startSearchTab5').unbind('click');
+	$('#startSearchTab5').bind('click', function(e) {
+		startSearchTab5();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#reReloadSearchsTab5').unbind('click');
+	$('#reReloadSearchsTab5').bind('click', function(e) {
+		reReloadSearchsTab5();
 		e.stopPropagation();
 	});
 }
