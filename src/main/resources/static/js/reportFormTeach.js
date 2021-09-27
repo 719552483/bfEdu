@@ -3150,6 +3150,9 @@ function allInfoDownLoad(){
 //分院授课报表数据
 function someInfoDownLoad(){
 	var searchInfo=getTab5SearchInfo(false);
+	if(typeof searchInfo==='undefined'){
+		return;
+	}
 	$.ajax({
 		method : 'get',
 		cache : false,
