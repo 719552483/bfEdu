@@ -814,7 +814,7 @@ public class StudentManageController {
     }
 
     /**
-     * 学生报表数据-报表
+     * 教学点报表数据-报表
      * @return
      */
     @RequestMapping("/pointReportData")
@@ -829,6 +829,30 @@ public class StudentManageController {
             return result;
         }
         result = studentManageService.pointReportData(list);
+        return result;
+    }
+
+    /**
+     * 授课信息报表数据-报表
+     * @return
+     */
+    @RequestMapping("/teachInfoReportData")
+    @ResponseBody
+    public ResultVO teachInfoReportData(@RequestParam String SearchCriteria){
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xb");
+        String xnid = jsonObject.getString("xn");
+        if(xbbm != null && !"".equals(xbbm)){
+            List<Edu106> edu106List = studentManageService.queryCollege(xbbm);
+            if(edu106List.size() == 0){
+                result = ResultVO.setFailed("该学院暂无数据");
+                return result;
+            }
+            result = studentManageService.teachInfoReportData(edu106List,xnid);
+        }else{
+            result = studentManageService.teachInfoReportDataAll(xnid);
+        }
         return result;
     }
 }

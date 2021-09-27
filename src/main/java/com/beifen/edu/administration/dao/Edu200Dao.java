@@ -67,4 +67,8 @@ public interface Edu200Dao extends JpaRepository<Edu200, Long>, JpaSpecification
 	//查询课程数量
 	@Query(value = "select count(0) from edu200", nativeQuery = true)
     Long findAllCourse();
+
+	//查询课程代码是否重复
+	@Query(value = "select count(*) from edu200 where kcdm = ?1", nativeQuery = true)
+	String findKcdm(String kcdm);
 }

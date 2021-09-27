@@ -141,20 +141,41 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     void updateLocalName(Long edu500_id, String local_NAME);
 
     //根据学年查询排课总数量
-    // select count(*) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where EDU201_ID in (select EDU201_ID from edu201 where EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID = '9045'))) and week = 1
-    @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2)))", nativeQuery = true)
+    @Query(value = "select count(0)*2 from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2)))", nativeQuery = true)
     String getPKcount(String xnid,String xbbm);
 
     //根据学年查询已上课总数量
-    // select count(*) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where EDU201_ID in (select EDU201_ID from edu201 where EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID = '9045'))) and week = 1
-    @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2))) and (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
+    @Query(value = "select count(0)*2 from edu203 where EDU202_ID in (select EDU202_ID from EDU202 where xnid = ?1 and EDU201_ID in (select EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where xbbm = ?2))) and (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
     String getPKcount2(String xnid,String xbbm,int week,String xqid);
+
+    //根据学年查询已上课总数量
+    @Query(value = "select count(*)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where  week < ?2 or (week = ?2 and xqid < ?3) and ee.xnid = ?1", nativeQuery = true)
+    String getPKcount3(String xnid,int week,String xqid);
+
+    @Query(value = "select count(*)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where  week < ?2 or (week = ?2 and xqid < ?3) and ee.xnid = ?1 and ee.EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?4))", nativeQuery = true)
+    String getPKcount4(String xnid,int week,String xqid,String zybm);
 
     @Query(value = "select count(0) from(select count(0) from (select e.* from edu203 e left join edu101 ee on e.EDU101_ID = ee.EDU101_ID left join edu202 eee on e.EDU202_ID = eee.EDU202_ID where ee.JZGLXBM = ?2 and xnid = ?1) GROUP BY EDU101_ID)", nativeQuery = true)
     String getjsslByXnAndLx(String xnid,String lx);
 
+    @Query(value = "select count(0) from(\n" +
+            "select count(0) from (\n" +
+            "select e.* from EDU203 e\n" +
+            "left join edu101 ee on e.EDU101_ID = ee.EDU101_ID \n" +
+            "where EDU202_ID in (\n" +
+            "select EDU202_ID from EDU202 where EDU201_ID in (\n" +
+            "select DISTINCT EDU201_ID from edu204 where edu300_id in  (\n" +
+            "select edu300_id from edu300 where zybm = ?1)) and xnid = ?2) and ee.JZGLXBM = ?3\n" +
+            ")\n" +
+            "GROUP BY EDU101_ID\n" +
+            ")", nativeQuery = true)
+    String getjsslByXnAndLx2(String zybm,String xnid,String lx);
+
     @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
     String getzxsByXnid(String xnid);
+
+    @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1 and EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?1))) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
+    String getzxsByXnid2(String edu106,String xnid);
 
     @Transactional
     @Modifying

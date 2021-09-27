@@ -5,6 +5,7 @@ import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import net.sf.json.JSONArray;
@@ -1744,4 +1745,186 @@ public class StudentManageService {
         return resultVO;
     }
 
+    //授课信息报表数据-报表-全校的
+    public ResultVO teachInfoReportDataAll(String xnid){
+        ResultVO resultVO;
+        List<Map> list = new ArrayList<>();
+        if(xnid != null && !"".equals(xnid)){
+            Map map = new HashMap();
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+            map.put("xnmc",edu400.getXnmc());
+            String zrjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","001");
+            String jzjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","003");
+            String wpjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","004");
+            map.put("zrjs",zrjs);
+            map.put("jzjs",jzjs);
+            map.put("wpjs",wpjs);
+            String skms = edu201Dao.findskmsByxnid(edu400.getEdu400_ID()+"");
+            map.put("skms",skms);
+            String zxs = edu203Dao.getzxsByXnid(edu400.getEdu400_ID()+"");
+            map.put("zxs",zxs);
+            map.put("jhxs",zxs);
+            try{
+                Date now = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String kssj = edu400.getKssj();
+                Date startDate = sdf.parse(kssj);
+                String jssj = edu400.getJssj();
+                Date endDate = sdf.parse(jssj);
+
+                if(now.getTime()<startDate.getTime()){
+                    map.put("sjskxs","0");
+                }else if(now.getTime()>endDate.getTime()){
+                    map.put("sjskxs",zxs);
+                }else{
+                    //获取当前教学周
+                    int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                    //获取当前星期id
+                    String xqid = DateUtils.dateToWeek(now);
+                    String countPass = edu203Dao.getPKcount3(xnid,week,xqid);
+                    map.put("sjskxs",countPass);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            list.add(map);
+        }else{
+            List<Edu400> edu400List = edu400Dao.findAllXn();
+            for(Edu400 edu400:edu400List){
+                Map map = new HashMap();
+                map.put("xnmc",edu400.getXnmc());
+                String zrjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","001");
+                String jzjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","003");
+                String wpjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","004");
+                map.put("zrjs",zrjs);
+                map.put("jzjs",jzjs);
+                map.put("wpjs",wpjs);
+                String skms = edu201Dao.findskmsByxnid(edu400.getEdu400_ID()+"");
+                map.put("skms",skms);
+                String zxs = edu203Dao.getzxsByXnid(edu400.getEdu400_ID()+"");
+                map.put("zxs",zxs);
+                map.put("jhxs",zxs);
+                try{
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String kssj = edu400.getKssj();
+                    Date startDate = sdf.parse(kssj);
+                    String jssj = edu400.getJssj();
+                    Date endDate = sdf.parse(jssj);
+
+                    if(now.getTime()<startDate.getTime()){
+                        map.put("sjskxs","0");
+                    }else if(now.getTime()>endDate.getTime()){
+                        map.put("sjskxs",zxs);
+                    }else{
+                        //获取当前教学周
+                        int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                        //获取当前星期id
+                        String xqid = DateUtils.dateToWeek(now);
+                        String countPass = edu203Dao.getPKcount3(xnid,week,xqid);
+                        map.put("sjskxs",countPass);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                list.add(map);
+            }
+        }
+        resultVO = ResultVO.setSuccess("查询成功",list);
+        return resultVO;
+    }
+
+    //授课信息报表数据-报表-分院的
+    public ResultVO teachInfoReportData(List<Edu106> edu106List,String xnid) {
+        ResultVO resultVO;
+        List<Map> list = new ArrayList<>();
+        if (xnid != null && !"".equals(xnid)) {
+            for (Edu106 edu106 : edu106List) {
+                Map map = new HashMap();
+                Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                map.put("xnmc", edu400.getXnmc());
+                String zrjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "001");
+                String jzjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "003");
+                String wpjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "004");
+                map.put("zrjs", zrjs);
+                map.put("jzjs", jzjs);
+                map.put("wpjs", wpjs);
+                String skms = edu201Dao.findskmsByxnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                map.put("skms", skms);
+                String zxs = edu203Dao.getzxsByXnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                map.put("zxs", zxs);
+                map.put("jhxs", zxs);
+                try {
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String kssj = edu400.getKssj();
+                    Date startDate = sdf.parse(kssj);
+                    String jssj = edu400.getJssj();
+                    Date endDate = sdf.parse(jssj);
+
+                    if (now.getTime() < startDate.getTime()) {
+                        map.put("sjskxs", "0");
+                    } else if (now.getTime() > endDate.getTime()) {
+                        map.put("sjskxs", zxs);
+                    } else {
+                        //获取当前教学周
+                        int week = DateUtils.calcWeekOffset(startDate, now) + 1;
+                        //获取当前星期id
+                        String xqid = DateUtils.dateToWeek(now);
+                        String countPass = edu203Dao.getPKcount4(xnid, week, xqid, edu106.getEdu106_ID() + "");
+                        map.put("sjskxs", countPass);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                list.add(map);
+            }
+
+        } else {
+            List<Edu400> edu400List = edu400Dao.findAllXn();
+            for (Edu106 edu106 : edu106List) {
+                for (Edu400 edu400 : edu400List) {
+                    Map map = new HashMap();
+                    map.put("xnmc", edu400.getXnmc());
+                    String zrjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "001");
+                    String jzjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "003");
+                    String wpjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "004");
+                    map.put("zrjs", zrjs);
+                    map.put("jzjs", jzjs);
+                    map.put("wpjs", wpjs);
+                    String skms = edu201Dao.findskmsByxnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                    map.put("skms", skms);
+                    String zxs = edu203Dao.getzxsByXnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                    map.put("zxs", zxs);
+                    map.put("jhxs", zxs);
+                    try {
+                        Date now = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String kssj = edu400.getKssj();
+                        Date startDate = sdf.parse(kssj);
+                        String jssj = edu400.getJssj();
+                        Date endDate = sdf.parse(jssj);
+
+                        if (now.getTime() < startDate.getTime()) {
+                            map.put("sjskxs", "0");
+                        } else if (now.getTime() > endDate.getTime()) {
+                            map.put("sjskxs", zxs);
+                        } else {
+                            //获取当前教学周
+                            int week = DateUtils.calcWeekOffset(startDate, now) + 1;
+                            //获取当前星期id
+                            String xqid = DateUtils.dateToWeek(now);
+                            String countPass = edu203Dao.getPKcount4(xnid, week, xqid, edu106.getEdu106_ID() + "");
+                            map.put("sjskxs", countPass);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    list.add(map);
+                }
+            }
+        }
+        resultVO = ResultVO.setSuccess("查询成功", list);
+        return resultVO;
+    }
 }

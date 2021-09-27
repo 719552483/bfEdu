@@ -2722,7 +2722,14 @@ public class AdministrationPageService {
 		//如果为新增，赋予必要属性
 		if (edu200.getBF200_ID() == null) {
 			isAdd = true;
-			String newkcdm = creatCourseCode(edu200.getDepartmentCode());
+			String newkcdm = "";
+			for(;;){
+				newkcdm = creatCourseCode(edu200.getDepartmentCode());
+				String count = edu200DAO.findKcdm(newkcdm);
+				if("0".equals(count)){
+					break;
+				}
+			}
 			edu200.setKcdm(newkcdm);
 		} else {
 			//保留原始数据
