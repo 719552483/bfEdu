@@ -3137,20 +3137,6 @@ function reReloadSearchsTab5(){
 	getTab5TableInfo(1);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //全院授课信息报表数据
 function allInfoDownLoad(){
 	var searchInfo=getTab5SearchInfo(true);
