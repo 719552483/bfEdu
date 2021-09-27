@@ -633,8 +633,10 @@ public class StudentManageController {
      */
     @RequestMapping("/teachingInfoReport")
     @ResponseBody
-    public ResultVO teachingInfoReport(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+    public ResultVO teachingInfoReport(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xnid = jsonObject.getString("xn");
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
         String fileName;
         if(isIE){
@@ -643,7 +645,7 @@ public class StudentManageController {
             fileName="授课信息报表数据";
         }
         //创建Excel文件
-        XSSFWorkbook workbook = studentManageService.teachingInfoReport();
+        XSSFWorkbook workbook = studentManageService.teachingInfoReport(xnid);
         try {
             utils.loadModal2(response,fileName, workbook);
         } catch (IOException e) {

@@ -152,7 +152,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Query(value = "select count(*)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where  week < ?2 or (week = ?2 and xqid < ?3) and ee.xnid = ?1", nativeQuery = true)
     String getPKcount3(String xnid,int week,String xqid);
 
-    @Query(value = "select count(*)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where  week < ?2 or (week = ?2 and xqid < ?3) and ee.xnid = ?1 and ee.EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?4))", nativeQuery = true)
+    @Query(value = "select count(*)*2 from (select edu101_id,week,xqid,kjid from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.xnid = ?1 and ee.EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?4)) and  (week < ?2 or (week = ?2 and xqid < ?3)) GROUP BY edu101_id,week,xqid,kjid)", nativeQuery = true)
     String getPKcount4(String xnid,int week,String xqid,String zybm);
 
     @Query(value = "select count(0) from(select count(0) from (select e.* from edu203 e left join edu101 ee on e.EDU101_ID = ee.EDU101_ID left join edu202 eee on e.EDU202_ID = eee.EDU202_ID where ee.JZGLXBM = ?2 and xnid = ?1) GROUP BY EDU101_ID)", nativeQuery = true)

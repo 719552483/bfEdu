@@ -1409,7 +1409,7 @@ public class StudentManageService {
     }
 
     //授课信息报表
-    public XSSFWorkbook teachingInfoReport() {
+    public XSSFWorkbook teachingInfoReport(String xnid) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("授课信息");
         XSSFRow firstRow = sheet.createRow(0);// 第一行
@@ -1432,6 +1432,12 @@ public class StudentManageService {
         cells[1].setCellValue("学年授课课程门数");
         cells[1] = twoRow.createCell(6);
         cells[1].setCellValue("学年总学时数");
+        cells[1] = twoRow.createCell(7);
+        cells[1].setCellValue("计划学时数");
+        cells[1] = twoRow.createCell(8);
+        cells[1].setCellValue("实际授课学时数");
+
+
         XSSFRow threeRow = sheet.createRow(2);//第三行
         cells[2] = threeRow.createCell(2);
         cells[2].setCellValue("专任教师");
@@ -1442,27 +1448,95 @@ public class StudentManageService {
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 0, 0));//序号
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 1, 1));//学年
         sheet.addMergedRegion(new CellRangeAddress(1, 1, 2, 4));//授课教师数
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));//辽宁职业学院高职扩招学年授课信息统计表
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8));//辽宁职业学院高职扩招学年授课信息统计表
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 5, 5));//
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));//
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));//
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));//
 
-        List<Edu400> edu400List = edu400Dao.findAllXn();
+        if(xnid != null && !"".equals(xnid)){
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+            utils.appendCell(sheet,2,"",1+"",-1,0,false);
+            utils.appendCell(sheet,2,"",edu400.getXnmc(),-1,1,false);
+            String zrjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","001");
+            utils.appendCell(sheet,2,"",zrjs,-1,2,false);
+            String jzjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","003");
+            utils.appendCell(sheet,2,"",jzjs,-1,3,false);
+            String wpjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","004");
+            utils.appendCell(sheet,2,"",wpjs,-1,4,false);
+            String skms = edu201Dao.findskmsByxnid(edu400.getEdu400_ID()+"");
+            utils.appendCell(sheet,2,"",skms,-1,5,false);
+            String zxs = edu203Dao.getzxsByXnid(edu400.getEdu400_ID()+"");
+            utils.appendCell(sheet,2,"",zxs,-1,6,false);
+            utils.appendCell(sheet,2,"",zxs,-1,7,false);
 
-        for(int i = 0;i<edu400List.size();i++){
-            Edu400 e = edu400List.get(i);
-            utils.appendCell(sheet,i+2,"",(i+1)+"",-1,0,false);
-            utils.appendCell(sheet,i+2,"",e.getXnmc(),-1,1,false);
-            String zrjs = edu203Dao.getjsslByXnAndLx(e.getEdu400_ID()+"","001");
-            utils.appendCell(sheet,i+2,"",zrjs,-1,2,false);
-            String jzjs = edu203Dao.getjsslByXnAndLx(e.getEdu400_ID()+"","003");
-            utils.appendCell(sheet,i+2,"",jzjs,-1,3,false);
-            String wpjs = edu203Dao.getjsslByXnAndLx(e.getEdu400_ID()+"","004");
-            utils.appendCell(sheet,i+2,"",wpjs,-1,4,false);
-            String skms = edu201Dao.findskmsByxnid(e.getEdu400_ID()+"");
-            utils.appendCell(sheet,i+2,"",skms,-1,5,false);
-            String zxs = edu203Dao.getzxsByXnid(e.getEdu400_ID()+"");
-            utils.appendCell(sheet,i+2,"",zxs,-1,6,false);
+            try{
+                Date now = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String kssj = edu400.getKssj();
+                Date startDate = sdf.parse(kssj);
+                String jssj = edu400.getJssj();
+                Date endDate = sdf.parse(jssj);
+                if(now.getTime()<startDate.getTime()){
+                    utils.appendCell(sheet,2,"","0",-1,8,false);
+                }else if(now.getTime()>endDate.getTime()){
+                    utils.appendCell(sheet,2,"",zxs,-1,8,false);
+                }else{
+                    //获取当前教学周
+                    int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                    //获取当前星期id
+                    String xqid = DateUtils.dateToWeek(now);
+                    String countPass = edu203Dao.getPKcount3(xnid,week,xqid);
+                    utils.appendCell(sheet,2,"",countPass,-1,8,false);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }else{
+            List<Edu400> edu400List = edu400Dao.findAllXn();
+            for(int i = 0;i<edu400List.size();i++){
+                Edu400 edu400 = edu400List.get(i);
+                utils.appendCell(sheet,i+2,"",(i+1)+"",-1,0,false);
+                utils.appendCell(sheet,i+2,"",edu400.getXnmc(),-1,1,false);
+                String zrjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","001");
+                utils.appendCell(sheet,i+2,"",zrjs,-1,2,false);
+                String jzjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","003");
+                utils.appendCell(sheet,i+2,"",jzjs,-1,3,false);
+                String wpjs = edu203Dao.getjsslByXnAndLx(edu400.getEdu400_ID()+"","004");
+                utils.appendCell(sheet,i+2,"",wpjs,-1,4,false);
+                String skms = edu201Dao.findskmsByxnid(edu400.getEdu400_ID()+"");
+                utils.appendCell(sheet,i+2,"",skms,-1,5,false);
+                String zxs = edu203Dao.getzxsByXnid(edu400.getEdu400_ID()+"");
+                utils.appendCell(sheet,i+2,"",zxs,-1,6,false);
+                utils.appendCell(sheet,i+2,"",zxs,-1,7,false);
+                try{
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String kssj = edu400.getKssj();
+                    Date startDate = sdf.parse(kssj);
+                    String jssj = edu400.getJssj();
+                    Date endDate = sdf.parse(jssj);
+                    if(now.getTime()<startDate.getTime()){
+                        utils.appendCell(sheet,i+2,"","0",-1,8,false);
+                    }else if(now.getTime()>endDate.getTime()){
+                        utils.appendCell(sheet,i+2,"",zxs,-1,8,false);
+                    }else{
+                        //获取当前教学周
+                        int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                        //获取当前星期id
+                        String xqid = DateUtils.dateToWeek(now);
+                        String countPass = edu203Dao.getPKcount3(xnid,week,xqid);
+                        utils.appendCell(sheet,i+2,"",countPass,-1,8,false);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
+
+
+
 
         sheet.setColumnWidth(1, 20*256);
         sheet.setColumnWidth(5, 25*256);
@@ -1916,7 +1990,7 @@ public class StudentManageService {
                             int week = DateUtils.calcWeekOffset(startDate, now) + 1;
                             //获取当前星期id
                             String xqid = DateUtils.dateToWeek(now);
-                            String countPass = edu203Dao.getPKcount4(xnid, week, xqid, edu106.getEdu106_ID() + "");
+                            String countPass = edu203Dao.getPKcount4(edu400.getEdu400_ID()+"", week, xqid, edu106.getEdu106_ID() + "");
                             map.put("sjskxs", countPass);
                         }
                     } catch (Exception e) {
