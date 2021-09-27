@@ -3047,15 +3047,14 @@ input:focus{
 
 .reportTable thead tr:not(:first-child) th{
 	background: #b6cad21f;
+    line-height: 1.5!important;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .reportTable>tbody>tr>td {
     border-top: 1px dotted #c7c7c7 !important;
 }
-
-
-
-
 
 @keyframes serachAnimation {
     10% {
