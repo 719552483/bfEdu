@@ -1842,6 +1842,7 @@ public class StudentManageService {
             for (Edu106 edu106 : edu106List) {
                 Map map = new HashMap();
                 Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                map.put("zymc",edu106.getZymc());
                 map.put("xnmc", edu400.getXnmc());
                 String zrjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "001");
                 String jzjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "003");
@@ -1885,6 +1886,7 @@ public class StudentManageService {
             for (Edu106 edu106 : edu106List) {
                 for (Edu400 edu400 : edu400List) {
                     Map map = new HashMap();
+                    map.put("zymc",edu106.getZymc());
                     map.put("xnmc", edu400.getXnmc());
                     String zrjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "001");
                     String jzjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "003");
