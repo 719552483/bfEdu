@@ -1538,6 +1538,12 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 				align : 'left',
 				sortable: true,
 				formatter :paramsMatter
+			},{
+				field : '',
+				title : '排名',
+				align : 'left',
+				sortable: true,
+				formatter :pmMatter
 			}
 		]
 	}else {
@@ -1554,13 +1560,13 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 				sortable: true,
 				formatter : paramsMatter
 			}, {
-				field : 'courseName',
+				field : 'className',
 				title : '班级名称',
 				align : 'left',
 				sortable: true,
 				formatter : paramsMatter
 			},{
-				field : 'studentCode',
+				field : 'courseName',
 				title : '课程名称',
 				align : 'left',
 				sortable: true,
@@ -1605,6 +1611,15 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 		columns: columns
 	});
 
+
+	//排名格式化
+	function pmMatter(value, row, index) {
+		return [
+			'<div class="myTooltip" title="第'+(index+1)+'名">第'+(index+1)+'名</div>'
+		]
+			.join('');
+	}
+
 	drawPagination(".singleStudentGradeTableArea", "排名信息");
 	drawSearchInput(".singleStudentGradeTableArea");
 	changeTableNoRsTip();
@@ -1613,8 +1628,8 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 }
 
 //开始检索学生排名
-function singleStudentStartSearch(){
-	var singleStudentSearchInfo=getSingleStudentSearchInfo();
+function singleStudentStartSearch(canNoBatch){
+	var singleStudentSearchInfo=getSingleStudentSearchInfo(canNoBatch);
 	if(typeof singleStudentSearchInfo==='undefined'){
 		return;
 	}
@@ -1649,7 +1664,7 @@ function singleStudentStartSearch(){
 }
 
 //获得学生排名检索对象
-function getSingleStudentSearchInfo(){
+function getSingleStudentSearchInfo(canNoBatch){
 	var edu103=getNormalSelectValue('singleStudent_level');
 	var edu103Name=getNormalSelectText('singleStudent_level');
 	var edu104=getNormalSelectValue('singleStudent_department');
@@ -1686,13 +1701,13 @@ function getSingleStudentSearchInfo(){
 		return;
 	}
 
-	if(batch===''){
-		toastr.warning('批次类型不能为空');
+	if(xn===''){
+		toastr.warning('学年不能为空');
 		return;
 	}
 
-	if(xn===''){
-		toastr.warning('学年不能为空');
+	if(batch===''&&!canNoBatch){
+		toastr.warning('批次类型不能为空');
 		return;
 	}
 
@@ -1732,7 +1747,7 @@ function singleStudentReReloadSearchs(){
 
 //预备学生个人成绩排名导出
 function exportGradeSingleStudent(){
-	var singleStudentSearchInfo=getSingleStudentSearchInfo();
+	var singleStudentSearchInfo=getSingleStudentSearchInfo(false);
 	if(typeof singleStudentSearchInfo==='undefined'){
 		return;
 	}
@@ -1797,7 +1812,7 @@ function tab2BinBind(){
 	//开始检索
 	$('#singleStudent_startSearch').unbind('click');
 	$('#singleStudent_startSearch').bind('click', function(e) {
-		singleStudentStartSearch();
+		singleStudentStartSearch(true);
 		e.stopPropagation();
 	});
 
@@ -1815,9 +1830,9 @@ function tab2BinBind(){
 		e.stopPropagation();
 	});
 
-	$("#singleStudent_year").change(function() {
-		singleStudentStartSearch();
-	});
+	// $("#singleStudent_year").change(function() {
+	// 	singleStudentStartSearch();
+	// });
 
 	//行政班focus
 	$('#singleStudent_className').focus(function(e){
