@@ -2955,7 +2955,7 @@ function drawAllTable(tableInfo){
 				{
 					field: 'sjskxs',
 					title: "实际授课学时数",
-					formatter: xsNumMatter,
+					formatter: sjskxsMatter,
 					valign:"middle",
 					align:"center",
 					sortable: true,
@@ -3088,7 +3088,7 @@ function drawDepartmentTable(tableInfo){
 					field: 'sjskxs',
 					title: "实际授课学时数",
 					valign:"middle",
-					formatter: xsNumMatter,
+					formatter: sjskxsMatter,
 					align:"center",
 					colspan: 1,
 					sortable: true,
@@ -3315,5 +3315,22 @@ function xsNumMatter(value, row, index) {
 		'<div class="myTooltip" title="'+value+'学时">'+value+'学时</div>'
 	]
 		.join('');
+}
+
+//实际授课学时格式化
+function sjskxsMatter(value, row, index) {
+	var sjskxs=row.sjskxs;
+	var zxs=row.zxs;
+	if(sjskxs===zxs){
+		return [
+			'<div class="myTooltip greenTxt" title="'+value+'学时">'+value+'学时<i class="iconfont icon-yixuanze greenTxt" style="padding-left: 12px"></i></div>'
+		]
+			.join('');
+	}else{
+		return [
+			'<div class="myTooltip normalTxt" title="'+value+'学时" style="margin-left: -35px;">'+value+'学时</div>'
+		]
+			.join('');
+	}
 }
 
