@@ -1570,6 +1570,10 @@ public class StudentManageService {
         cells[1].setCellValue("学年授课课程门数");
         cells[1] = twoRow.createCell(7);
         cells[1].setCellValue("学年总学时数");
+        cells[1] = twoRow.createCell(8);
+        cells[1].setCellValue("计划学时数");
+        cells[1] = twoRow.createCell(9);
+        cells[1].setCellValue("实际授课学时数");
         XSSFRow threeRow = sheet.createRow(2);//第三行
         cells[2] = threeRow.createCell(3);
         cells[2].setCellValue("专任教师");
@@ -1581,9 +1585,11 @@ public class StudentManageService {
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 1, 1));//专业
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 2, 2));//学年
         sheet.addMergedRegion(new CellRangeAddress(1, 1, 3, 5));//授课教师数
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));//辽宁职业学院高职扩招学年授课信息统计表
-        sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));//
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));//辽宁职业学院高职扩招学年授课信息统计表
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));//
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));//
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));//
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, 9, 9));//
 
         List<Edu400> edu400List = edu400Dao.findAllXn();
 
