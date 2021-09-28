@@ -50,172 +50,11 @@
 			<div id="usual1" class="usual">
 				<div class="itab">
 					<ul>
-						<li><a href="#tab1" class="selected" onclick="drawBreadPilot(this)">授课成果展示</a></li>
-						<li><a href="#tab3" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab3()">学院及格率</a></li>
+						<li><a href="#tab3" onclick="drawBreadPilot(this)">学院及格率</a></li>
 						<li><a href="#tab4" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab4()">学生及格率/毕业率</a></li>
 						<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">学生个人成绩排名</a></li>
 						<li><a href="#tab5" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab5()">授课进度</a></li>
 					</ul>
-				</div>
-
-				<div id="tab1" class="tabson myTabson">
-					<div class="crouseRsForPresentArea">
-						<div class="tools">
-							<ul class="toolbar">
-								<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
-							</ul>
-							<ul class="toolbar1">
-								<li class="click" id="reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
-							</ul>
-						</div>
-
-						<div class="searchArea searchAreaWitheSelect">
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
-										<select class="isSowIndex" id="level" >
-											<option value="seleceConfigTip">暂不可选</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">二级学院</label>
-										<select class="isSowIndex" id="department">
-											<option value="seleceConfigTip">暂不可选</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
-										<select class="isSowIndex" id="grade">
-											<option value="seleceConfigTip">暂不可选</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
-										<select class="isSowIndex" id="major">
-											<option value="seleceConfigTip">暂不可选</option>
-										</select>
-
-									</div>
-								</ul>
-							</div>
-							<div class="clear"></div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
-										<select class="isSowIndex" id="year">
-											<option value="seleceConfigTip">暂无学年</option>
-										</select>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">任课教师</label>
-										<input name="" type="text" class="myInput searchInput" id="teacher" choosendTeacherId="" placeholder="点击选择任课教师..." readonly="readonly"/>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">行政班</label>
-										<input name="" type="text" class="myInput searchInput" id="className" placeholder="点击选择行政班..." readonly="readonly"/>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">课程名称</label>
-										<input name="" type="text" class="myInput searchInput" id="coruseName" placeholder="点击选择课程..." readonly="readonly"/>
-									</div>
-								</ul>
-							</div>
-						</div>
-
-						<div class="crouseRsForPresentQueryTableArea mainStudentBaseInfoTableArea columnsStyle searchGivePaddingR">
-							<table class="tablelist myTableStyle" id="crouseRsForPresentQueryTable" data-unique-id="edu201_ID" style="margin-top: 10px;"></table>
-						</div>
-					</div>
-
-					<div class="crouseRsForDeatils1Area noneStart">
-						<div class="formtext myformtext">
-							<b class="GeneratDeatils1_Name"></b> -授课成果详情
-						</div>
-
-						<div class="tools">
-							<ul class="toolbar">
-								<li class="click" id="return_crouseRsForDeatils1Area"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
-							</ul>
-						</div>
-
-						<div class="crouseRsForDeatilsTable1Area searchGivePaddingR columnsStyle">
-							<table class="tablelist myTableStyle" id="crouseRsForDeatilsTable1" data-unique-id="" style="margin-top: 10px;"></table>
-						</div>
-					</div>
-
-					<div class="crouseRsForDeatilsArea noneStart">
-						<div class="formtext myformtext">
-							<b class="GeneratDeatils1_Name"></b> -学生个人成绩
-						</div>
-						<span id="currentEdu201_ID" class="noneStart"></span>
-						<span id="currentCourseName" class="noneStart"></span>
-						<div class="tools">
-							<ul class="toolbar">
-								<li class="click" id="return"><span><img src="img/back.png" style="width: 24px;"/></span>返回</li>
-								<li class="click" id="crouseRsForDeatils_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
-							</ul>
-							<ul class="toolbar1">
-								<li class="click" id="crouseRsForDeatils_reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
-							</ul>
-						</div>
-
-						<div class="searchArea searchAreaWitheSelect">
-							<div class="col4 giveBottom noneStart">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">行政班名称</label>
-										<input name="" type="text" class="myInput searchInput" id="xzbMc" placeholder="请输入行政班名称..."/>
-									</div>
-								</ul>
-							</div>
-
-							<div class="col4 giveBottom">
-								<ul class="forminfo">
-									<div class="">
-										<label class="selectName" style="margin-top: 14px;">学生姓名</label>
-										<input name="" type="text" class="myInput searchInput" id="studentName" placeholder="请输入学生姓名..."/>
-									</div>
-								</ul>
-							</div>
-						</div>
-
-						<div class="crouseRsForDeatilsTableArea searchGivePaddingR columnsStyle">
-							<table class="tablelist myTableStyle" id="crouseRsForDeatilsTable" data-unique-id="" style="margin-top: 10px;"></table>
-						</div>
-					</div>
 				</div>
 
 				<div id="tab2" class="tabson myTabson">
@@ -334,8 +173,6 @@
 				</div>
 
 				<div id="tab3" class="tabson myTabson">
-					<span class="isFirstShowTab3 noneStart">T</span>
-
 					<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="departmnetArea_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
