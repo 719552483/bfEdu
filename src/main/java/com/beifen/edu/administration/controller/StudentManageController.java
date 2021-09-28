@@ -681,7 +681,7 @@ public class StudentManageController {
             fileName=edu106List.get(0).getDepartmentName()+"授课信息报表数据";
         }
         //创建Excel文件
-        XSSFWorkbook workbook = studentManageService.teachingInfoCollegeReport(edu106List);
+        XSSFWorkbook workbook = studentManageService.teachingInfoCollegeReport(edu106List,xnid);
         try {
             utils.loadModal2(response,fileName, workbook);
         } catch (IOException e) {

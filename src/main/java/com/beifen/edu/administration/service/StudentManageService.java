@@ -1534,10 +1534,6 @@ public class StudentManageService {
                 }
             }
         }
-
-
-
-
         sheet.setColumnWidth(1, 20*256);
         sheet.setColumnWidth(5, 25*256);
         sheet.setColumnWidth(6, 25*256);
@@ -1546,7 +1542,7 @@ public class StudentManageService {
     }
 
     //授课信息报表-各学院
-    public XSSFWorkbook teachingInfoCollegeReport(List<Edu106> edu106List) {
+    public XSSFWorkbook teachingInfoCollegeReport(List<Edu106> edu106List,String xnid) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("授课信息");
         XSSFRow firstRow = sheet.createRow(0);// 第一行
@@ -1591,7 +1587,18 @@ public class StudentManageService {
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));//
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 9, 9));//
 
-        List<Edu400> edu400List = edu400Dao.findAllXn();
+
+        if(xnid != null && !"".equals(xnid)){
+
+        }else{
+            List<Edu400> edu400List = edu400Dao.findAllXn();
+            for(int i = 0;i<edu106List.size();i++){
+                for(int j = 0;j<edu400List.size();j++){
+                    utils.appendCell(sheet,i*j+j+2,"",(i*j+j+1)+"",-1,0,false);
+                    utils.appendCell(sheet,i*j+j+2,"",(i*j+j+1)+"",-1,0,false);
+                }
+            }
+        }
 
 
 
