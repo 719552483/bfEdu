@@ -842,6 +842,7 @@ public class TeachingManageController {
             String name = (String)map.get("xbmc");
             List<String> nameList = Arrays.asList(name.split(","));
             String num = (String)map.get("passingRate");
+            String text = (String)map.get("text");
             List<String> numList = Arrays.asList(num.split(","));
             for (int i = 0; i < nameList.size(); i++) {
                 Map mm = new HashMap();
@@ -849,7 +850,10 @@ public class TeachingManageController {
                 mm.put("passingRate",numList.get(i));
                 list.add(mm);
             }
-            result = ResultVO.setSuccess("查询成功",list);
+            map = new HashMap<>();
+            map.put("data",list);
+            map.put("text",text);
+            result = ResultVO.setSuccess("查询成功",map);
         }
         return result;
     }
