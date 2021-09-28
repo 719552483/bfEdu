@@ -776,13 +776,6 @@ function confrimkExportGradeSingleStudent(singleStudentSearchInfo){
 
 //tab2页面按钮事件绑定
 function tab2BinBind(){
-	//提示框取消按钮
-	$('.cancelTipBtn,.cancel').unbind('click');
-	$('.cancelTipBtn,.cancel').bind('click', function(e) {
-		$.hideModal();
-		e.stopPropagation();
-	});
-
 	//开始检索
 	$('#singleStudent_startSearch').unbind('click');
 	$('#singleStudent_startSearch').bind('click', function(e) {
@@ -1025,6 +1018,13 @@ function departmnetAreaReReloadSearchs(){
 
 //tab3页面按钮事件绑定
 function tab3BinBind(){
+	//提示框取消按钮
+	$('.cancelTipBtn,.cancel').unbind('click');
+	$('.cancelTipBtn,.cancel').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+
 	//开始检索
 	$('#departmnetArea_startSearch').unbind('click');
 	$('#departmnetArea_startSearch').bind('click', function(e) {
@@ -1584,8 +1584,14 @@ function student2DataReReloadSearchs(){
 
 //下载学生学年及格率报表数据
 function downLoadStudentFile(){
-	$.showModal('#downLoadStudentFileModal',true);
+	var unCheckArray=new Array();
+	for (var i = 0; i <choosendXn.length; i++) {
+		unCheckArray.push(choosendXn[i].edu400_ID);
+	}
 
+	$("#downLoadStudentFileXnTable").bootstrapTable("uncheckBy", {field:"edu400_ID", values:unCheckArray});
+	$.showModal('#downLoadStudentFileModal',true);
+	choosendXn=new Array();
 }
 
 var choosendXn=new Array();
@@ -1597,8 +1603,8 @@ function stuffDownLoadStudentFileXnTable(tableInfo){
 		data : tableInfo,
 		pagination : true,
 		pageNumber : 1,
-		pageSize : 10,
-		pageList : [ 10 ],
+		pageSize : 5,
+		pageList : [ 5 ],
 		showToggle : false,
 		showFooter : false,
 		showExport: false,      //是否显示导出
@@ -1695,6 +1701,7 @@ function onCheckAllXnManger(row){
 
 //全反选
 function onUncheckAllXnManger(row){
+	var a=new Array();
 	for (var i = 0; i < row.length; i++) {
 		a.push(row[i].edu400_ID);
 	}
