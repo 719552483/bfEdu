@@ -836,14 +836,12 @@ public class TeachingManageController {
             //查询某一学院某个年级某个专业某一批次各个课程的
             result = teachingManageService.searchProfessionalByBatch(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO.getEdu106Id(),professionalRequestPO.getBatch(),professionalRequestPO);
         }
-        if("1".equals(professionalRequestPO.getShow()) && "200".equals(result.getCode())){
+        if("1".equals(professionalRequestPO.getShow()) && 200 == result.getCode()){
             Map<String, Object> map = (Map<String, Object>) result.getData();
             List<Map> list = new ArrayList<>();
-            String name = (String)map.get("xbmc");
-            List<String> nameList = Arrays.asList(name.split(","));
-            String num = (String)map.get("passingRate");
+            List<String> nameList = (List<String>)map.get("xbmc");
+            List<String> numList = (List<String>)map.get("passingRate");
             String text = (String)map.get("text");
-            List<String> numList = Arrays.asList(num.split(","));
             for (int i = 0; i < nameList.size(); i++) {
                 Map mm = new HashMap();
                 mm.put("name",nameList.get(i));

@@ -1693,6 +1693,7 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+.departmentTableArea .bootstrap4 .search,
 .puttedDetailsTableArea .bootstrap4 .search,
 .tab5TableArea .bootstrap4 .search,
 .graduateDeatilsTableArea .bootstrap4 .search,
@@ -3054,6 +3055,15 @@ input:focus{
 
 .reportTable>tbody>tr>td {
     border-top: 1px dotted #c7c7c7 !important;
+}
+
+.departmentTableArea{
+    margin: 0px auto;
+	width: 85%;
+}
+
+.departmentTableArea thead tr:first-child .th-inner{
+	letter-spacing: unset;
 }
 
 @keyframes serachAnimation {

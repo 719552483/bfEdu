@@ -173,6 +173,10 @@
 				</div>
 
 				<div id="tab3" class="tabson myTabson">
+					<div class="formtext myformtext myformtextTipArea">
+						<b>提示：展示方式默认为图形展示</b>
+					</div>
+
 					<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="departmnetArea_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
@@ -259,11 +263,28 @@
 								</div>
 							</ul>
 						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">展示方式</label>
+									<select class="isSowIndex" id="singleStudent_showType">
+										<option value="seleceConfigTip">请选择</option>
+										<option value="2">图形</option>
+										<option value="1">图表</option>
+									</select>
+								</div>
+							</ul>
+						</div>
 					</div>
 					<div class="clear"></div>
 
 					<div class="departmentConfigArea">暂无数据,请选择有效的检索条件......</div>
 					<div class="departmentChartArea noneStart"></div>
+
+					<div class="departmentTableArea reportTable searchGivePaddingR">
+						<table class="tablelist myTableStyle reportTable" id="tab3Table" style="margin-top: 10px;"></table>
+					</div>
 				</div>
 
 				<div id="tab4" class="tabson myTabson">
@@ -275,7 +296,8 @@
 					<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="student2Data_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
-							<li class="click" id="downLoadStudentFile"><span><img src="images/ico04.png" style="width: 24px;"/></span>及格率报表数据</li>
+							<li class="click" id="showStudentFile"><span><img src="img/reportFormTeach.png" style="width: 20px;"/></span>及格率报表数据展示</li>
+							<li class="click" id="downLoadStudentFile"><span><img src="images/ico04.png" style="width: 24px;"/></span>及格率报表数据下载</li>
 						</ul>
 						<ul class="toolbar1">
 							<li class="click" id="student2Data_reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>

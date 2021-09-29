@@ -850,16 +850,90 @@ function departmnetAreaStartSearch(){
 			hideloding();
 			if (backjson.code === 200) {
 				$('.departmentConfigArea').hide();
-				$('.departmentChartArea').show().empty();
-				drawChart(backjson.data);
-				chartListener();
+
+				if(departmnetAreaSearchInfo.show==1){
+					stuffTab3Table(backjson.data);
+					$('.departmentTableArea').show();
+					$('.departmentChartArea').hide();
+				}else{
+					$('.departmentChartArea').show().empty();
+					$('.departmentTableArea').hide();
+					drawChart(backjson.data);
+					chartListener();
+				}
 			} else {
 				toastr.warning(backjson.msg);
 				$('.departmentConfigArea').show();
 				$('.departmentChartArea').hide();
+				$('.departmentTableArea').hide();
 			}
 		}
 	});
+}
+
+//填充  tab3 table
+function stuffTab3Table(tableInfo){
+	$('#tab3Table').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo.data,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: tableInfo.text+'导出'  //文件名称
+		},
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".departmentTableArea", "及格率信息");
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns:[
+			[
+				{
+					title: tableInfo.text,
+					colspan: 2
+				}
+			],
+			[
+				{
+					field : 'name',
+					title : '二级学院名称',
+					align : 'center',
+					sortable: true,
+					formatter :paramsMatter
+				},
+				{
+					field : 'passingRate',
+					title : '及格率',
+					align : 'center',
+					sortable: true,
+					formatter :passingRateMatter
+				}
+			]
+		]
+	});
+
+	function passingRateMatter(value, row, index) {
+		return [ '<div class="myTooltip normalTxt" title="'+value+'%">'+value+'%</div>' ]
+			.join('');
+	}
+
+	drawPagination(".departmentTableArea", "及格率信息");
+	drawSearchInput(".departmentTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".departmentTableArea", "及格率信息");
 }
 
 //填充  chart
@@ -870,6 +944,17 @@ function drawChart(data) {
 	var myChart = echarts.init(document.getElementById("drawChart0"));
 
 	var option = {
+		toolbox: {
+			show: true,
+			right:100,
+			feature: {
+				saveAsImage: {
+					show:true,
+					excludeComponents :['toolbox'],
+					pixelRatio: 2
+				}
+			}
+		},
 		title: {
 			text:data.text,
 			textStyle: {
@@ -958,6 +1043,7 @@ function getDepartmnetAreaSearchInfo(){
 	var edu105IdName=getNormalSelectText('departmnetArea_grade');
 	var edu106IdName=getNormalSelectText('departmnetArea_major');
 	var batchName=getNormalSelectText('departmnetArea_bath');
+	var showType=getNormalSelectValue('singleStudent_showType');
 
 	if(edu103Id===''){
 		toastr.warning('层次不能为空');
@@ -988,6 +1074,7 @@ function getDepartmnetAreaSearchInfo(){
 	returnObject.edu106IdName=edu106IdName;
 	returnObject.batchName=batchName;
 	returnObject.xnName=xnName;
+	showType===''||showType==='1'?returnObject.show=1:returnObject.show==2;
 
 	return returnObject;
 }
@@ -1009,11 +1096,12 @@ function departmnetAreaReReloadSearchs(){
 	var reObject = new Object();
 	reObject.fristSelectId = "#departmnetArea_level";
 	reObject.actionSelectIds = "#departmnetArea_department,#departmnetArea_grade,#departmnetArea_major";
-	reObject.normalSelectIds = "#departmnetArea_year,#departmnetArea_bath";
+	reObject.normalSelectIds = "#departmnetArea_year,#departmnetArea_bath,#singleStudent_showType";
 	reObject.InputIds = "#departmnetArea_crouseName";
 	reReloadSearchsWithSelect(reObject);
 	$('.departmentConfigArea').show();
 	$('.departmentChartArea').hide();
+	$('.departmentTableArea').hide();
 }
 
 //tab3页面按钮事件绑定
@@ -1043,6 +1131,11 @@ function tab3BinBind(){
 	$('#departmnetArea_reReloadSearchs').bind('click', function(e) {
 		departmnetAreaReReloadSearchs();
 		e.stopPropagation();
+	});
+
+	//type change事件
+	$("#singleStudent_showType").change(function() {
+		departmnetAreaStartSearch();
 	});
 }
 
