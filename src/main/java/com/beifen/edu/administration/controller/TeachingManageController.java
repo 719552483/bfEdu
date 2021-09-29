@@ -19,9 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //教务管理控制层
 @Controller
@@ -837,6 +835,25 @@ public class TeachingManageController {
         }else{
             //查询某一学院某个年级某个专业某一批次各个课程的
             result = teachingManageService.searchProfessionalByBatch(professionalRequestPO.getXnid(),professionalRequestPO.getEdu103Id(),professionalRequestPO.getEdu104Id(),professionalRequestPO.getEdu105Id(),professionalRequestPO.getEdu106Id(),professionalRequestPO.getBatch(),professionalRequestPO);
+        }
+        if("1".equals(professionalRequestPO.getShow()) && "200".equals(result.getCode())){
+            Map<String, Object> map = (Map<String, Object>) result.getData();
+            List<Map> list = new ArrayList<>();
+            String name = (String)map.get("xbmc");
+            List<String> nameList = Arrays.asList(name.split(","));
+            String num = (String)map.get("passingRate");
+            String text = (String)map.get("text");
+            List<String> numList = Arrays.asList(num.split(","));
+            for (int i = 0; i < nameList.size(); i++) {
+                Map mm = new HashMap();
+                mm.put("name",nameList.get(i));
+                mm.put("passingRate",numList.get(i));
+                list.add(mm);
+            }
+            map = new HashMap<>();
+            map.put("data",list);
+            map.put("text",text);
+            result = ResultVO.setSuccess("查询成功",map);
         }
         return result;
     }

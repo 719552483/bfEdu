@@ -186,6 +186,28 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
+            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
+            "AND IS_CONFIRM = 'T' \n" +
+            "and XNID = ?2\n" +
+            "GROUP BY\n" +
+            "STUDENT_CODE,\n" +
+            "STUDENT_NAME,\n" +
+            "class_name\n" +
+            "ORDER BY\n" +
+            "avg(grade) DESC",nativeQuery = true)
+    List<Object[]> searchProfessionalCourseResult(List<String> edu107_id,String xnid);
+
+
+    @Query(value = "SELECT\n" +
+            "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
+            "class_name,\n" +
+            "student_code,\n" +
+            "STUDENT_NAME,\n" +
+            "TO_CHAR(sum(grade)) sum,\n" +
+            "TO_CHAR(Round(avg(grade),2))  avg\n" +
+            "FROM\n" +
+            "edu005 \n" +
+            "WHERE\n" +
             "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 ) AND SFSQKS = 'T') \n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
@@ -194,7 +216,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "STUDENT_NAME,\n" +
             "class_name\n" +
             "ORDER BY\n" +
-            "sum( grade ) DESC",nativeQuery = true)
+            "avg(grade) DESC",nativeQuery = true)
     List<Object[]> searchProfessionalCourseResult(String edu107_id,String xnid);
 
     @Query(value = "SELECT\n" +
@@ -207,7 +229,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 ) AND SFSQKS = 'T') \n" +
+            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
             "and STUDENT_NAME like %?3%\n" +
@@ -216,8 +238,8 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "STUDENT_NAME,\n" +
             "class_name\n" +
             "ORDER BY\n" +
-            "sum( grade ) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult2(String edu107_id,String xnid,String studentName);
+            "avg(grade) DESC",nativeQuery = true)
+    List<Object[]> searchProfessionalCourseResult2(List<String> edu107_id,String xnid,String studentName);
 
     @Query(value = "SELECT\n" +
             "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
@@ -229,7 +251,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 ) AND SFSQKS = 'T') \n" +
+            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
             "and class_name like %?3%\n" +
@@ -238,8 +260,8 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "STUDENT_NAME,\n" +
             "class_name\n" +
             "ORDER BY\n" +
-            "sum( grade ) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult3(String edu107_id,String xnid,String className);
+            "avg(grade) DESC",nativeQuery = true)
+    List<Object[]> searchProfessionalCourseResult3(List<String> edu107_id,String xnid,String className);
 
     @Query(value = "SELECT\n" +
             "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
@@ -251,7 +273,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 ) AND SFSQKS = 'T') \n" +
+            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
             "and class_name like %?3%\n" +
@@ -261,8 +283,8 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "STUDENT_NAME,\n" +
             "class_name\n" +
             "ORDER BY\n" +
-            "sum( grade ) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult4(String edu107_id,String xnid,String className,String studentName);
+            "avg(grade) DESC",nativeQuery = true)
+    List<Object[]> searchProfessionalCourseResult4(List<String> edu107_id,String xnid,String className,String studentName);
 
     //根据任务书查询成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and CLASS_NAME = ?2",nativeQuery = true)

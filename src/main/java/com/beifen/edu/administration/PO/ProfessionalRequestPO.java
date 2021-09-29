@@ -15,7 +15,15 @@ public class ProfessionalRequestPO {
     private String edu105IdName;
     private String edu106IdName;
     private String batchName;
+    private String show;
 
+    public String getShow() {
+        return show;
+    }
+
+    public void setShow(String show) {
+        this.show = show;
+    }
 
     public String getXnid() {
         return xnid;

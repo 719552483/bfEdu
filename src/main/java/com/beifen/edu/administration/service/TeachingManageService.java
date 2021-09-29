@@ -2815,17 +2815,28 @@ public class TeachingManageService {
     //教务查询专业授课成果
     public ResultVO searchProfessionalCourseResult(Edu107 edu107,String xnid,String className,String studentName) {
         ResultVO resultVO;
-        List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+        List<Edu107> edu107List = new ArrayList<>();
+        if(edu107.getBatch() != null && !"".equals(edu107.getBatch())){
+            edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+            if(edu107List.size() > 1){
+                resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
+                return resultVO;
+            }
+        }else{
+            edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106());
+        }
+
         if(edu107List.size() == 0){
             resultVO = ResultVO.setFailed("未制订培养计划");
-        }else if(edu107List.size() > 1){
-            resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
         }else{
-            edu107 = edu107List.get(0);
+            List<String> ids = new ArrayList<>();
+            for(Edu107 e:edu107List){
+                ids.add(e.getEdu107_ID()+"");
+            }
             List<Object[]> dataList;
             List<Edu005PO> edu005List = new ArrayList<>();
             if(className != null && !"".equals(className) && studentName != null && !"".equals(studentName)){
-                dataList = edu005Dao.searchProfessionalCourseResult4(edu107.getEdu107_ID()+"",xnid,className,studentName);
+                dataList = edu005Dao.searchProfessionalCourseResult4(ids,xnid,className,studentName);
                 if(dataList.size() == 0){
                     resultVO = ResultVO.setFailed("暂无数据");
                     return resultVO;
@@ -2841,7 +2852,7 @@ public class TeachingManageService {
                     edu005List.add(edu005);
                 }
             }else if(studentName != null && !"".equals(studentName)){
-                dataList = edu005Dao.searchProfessionalCourseResult2(edu107.getEdu107_ID()+"",xnid,studentName);
+                dataList = edu005Dao.searchProfessionalCourseResult2(ids,xnid,studentName);
                 if(dataList.size() == 0){
                     resultVO = ResultVO.setFailed("暂无数据");
                     return resultVO;
@@ -2857,7 +2868,7 @@ public class TeachingManageService {
                     edu005List.add(edu005);
                 }
             }else if(className != null && !"".equals(className)){
-                dataList = edu005Dao.searchProfessionalCourseResult3(edu107.getEdu107_ID()+"",xnid,className);
+                dataList = edu005Dao.searchProfessionalCourseResult3(ids,xnid,className);
                 if(dataList.size() == 0){
                     resultVO = ResultVO.setFailed("暂无数据");
                     return resultVO;
@@ -2873,7 +2884,7 @@ public class TeachingManageService {
                     edu005List.add(edu005);
                 }
             }else{
-                dataList = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
+                dataList = edu005Dao.searchProfessionalCourseResult(ids,xnid);
                 if(dataList.size() == 0){
                     resultVO = ResultVO.setFailed("暂无数据");
                     return resultVO;
