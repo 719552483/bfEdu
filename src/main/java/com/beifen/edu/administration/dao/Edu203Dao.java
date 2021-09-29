@@ -34,8 +34,8 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Query(value = "SELECT e.* FROM EDU203 e left join edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.xnid = ?2 and e.POINT_ID = ?1 ", nativeQuery = true)
     List<Edu203> findEdu203IdsByEdu501Id(String toString,String xnid);
 
-    @Query(value = "SELECT count(*) FROM EDU203 where POINT_ID = ?1 ", nativeQuery = true)
-    Integer findEdu203CountByEdu501Id(String toString);
+    @Query(value = "SELECT count(*) FROM EDU203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID  where POINT_ID = ?1 and xnid = ?2", nativeQuery = true)
+    Integer findEdu203CountByEdu501Id(String toString,String xnid);
 
     @Query(value = "SELECT count(*) FROM EDU203 e left join edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.xnid = ?1 ", nativeQuery = true)
     Integer findEdu203IdsByxnid(String xnid);

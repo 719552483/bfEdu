@@ -830,13 +830,20 @@ public class StudentManageController {
     public ResultVO pointReportData(@RequestParam String SearchCriteria){
         ResultVO result;
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
-        String city = jsonObject.getString("city");
-        List<Edu500> list = studentManageService.queryPointByCity(city);
+        String cityCode = jsonObject.getString("cityCode");
+        String country = jsonObject.getString("country");
+        String localName = jsonObject.getString("localName");
+        String xnid = jsonObject.getString("xn");
+        Edu500 edu500 = new Edu500();
+        edu500.setCityCode(cityCode);
+        edu500.setCountry(country);
+        edu500.setLocalName(localName);
+        List<Edu500> list = studentManageService.queryPointByCity(edu500);
         if(list.size() == 0){
             result = ResultVO.setFailed("暂无教学点信息");
             return result;
         }
-        result = studentManageService.pointReportData(list);
+        result = studentManageService.pointReportData(list,xnid);
         return result;
     }
 

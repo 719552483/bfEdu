@@ -1782,52 +1782,68 @@ public class StudentManageService {
     }
 
     //查询教学任务点
-    public List<Edu500> queryPointByCity(String city) {
-        List<Edu500> list;
-        if(city != null && !"".equals(city)){
-            list = edu500Dao.exportPointByCity(city);
-        }else{
-            list = edu500Dao.findAll();
+    public List<Edu500> queryPointByCity(Edu500 edu500) {
+        Specification<Edu500> specification = new Specification<Edu500>() {
+            public Predicate toPredicate(Root<Edu500> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu500.getLocalName() != null && !"".equals(edu500.getLocalName())) {
+                    predicates.add(cb.like(root.<String> get("localName"), "%"+edu500.getLocalName()+"%"));
+                }
+                if (edu500.getCountry() != null && !"".equals(edu500.getCountry())) {
+                    predicates.add(cb.like(root.<String> get("country"), "%"+edu500.getCountry()+"%"));
+                }
+                if (edu500.getCityCode() != null && !"".equals(edu500.getCityCode())) {
+                    predicates.add(cb.equal(root.<String> get("cityCode"), edu500.getCityCode()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu500> edu500s = edu500Dao.findAll(specification);
+
+        if(edu500s.size() == 0) {
+            return edu500s;
         }
-        return list;
+
+        List<Long> edu500Ids = edu500s.stream().map(Edu500::getEdu500Id).collect(Collectors.toList());
+
+        List<Edu500> edu500List = edu500Dao.findAllByEdu500Ids(edu500Ids);
+
+        return edu500List;
     }
 
-    public ResultVO pointReportData(List<Edu500> list){
+    public ResultVO pointReportData(List<Edu500> list,String xnid){
         ResultVO resultVO;
         List<PointReport> pointReportList = new ArrayList<>();
-        try{
+        if(xnid != null && !"".equals(xnid)){
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
             for (Edu500 edu500 :list){
-                PointReport pointReport = new PointReport();
-                BeanUtils.copyProperties(pointReport, edu500);
-                List<Edu501> edu501List = edu501Dao.findAllByEdu501Id(pointReport.getEdu500Id()+"");
-                List<PointDetailReport> pointDetailReportList = new ArrayList<>();
-                for (Edu501 edu501:edu501List){
-                    PointDetailReport pointDetailReport = new PointDetailReport();
-                    BeanUtils.copyProperties(pointDetailReport, edu501);
-                    //场地平均使用率
-                    Integer countAll = edu203Dao.findEdu203Count();
-                    Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(pointDetailReport.getEdu501Id()+"");
-                    //计算平均使用率
-                    if(countUsed != 0){
-                        double v = Double.parseDouble(countUsed.toString()) / Double.parseDouble(countAll.toString());
-                        NumberFormat nf = NumberFormat.getPercentInstance();
-                        nf.setMinimumFractionDigits(2);//设置保留小数位
-                        String usedPercent = nf.format(v);
-                        pointDetailReport.setUsedPercent(usedPercent);
-                    } else {
-                        pointDetailReport.setUsedPercent("0.00%");
-                    }
-                    pointDetailReport.setCountUsed(countUsed+"");
+                List<Edu501> edu501List = edu501Dao.findAllByEdu501Id(edu500.getEdu500Id()+"");
+                for(Edu501 edu501:edu501List){
+                    PointReport pointReport = new PointReport();
+                    pointReport.setEdu500Id(edu500.getEdu500Id());
+                    pointReport.setCity(edu500.getCity());
+                    pointReport.setCityCode(edu500.getCityCode());
+                    pointReport.setCountry(edu500.getCountry());
+                    pointReport.setLocalAddress(edu500.getLocalAddress());
+                    pointReport.setLocalName(edu500.getLocalName());
+                    pointReport.setPointCount(edu500.getPointCount());
+                    pointReport.setPointRemarks(edu500.getRemarks());
+                    //
+                    pointReport.setXn(edu400.getXnmc());
+                    pointReport.setCapacity(edu501.getCapacity());
+                    pointReport.setPointName(edu501.getPointName());
+                    pointReport.setRemarks(edu501.getRemarks());
                     List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501.getEdu501Id()+"");
-                    pointDetailReport.setEdu502List(edu502List);
-                    pointDetailReportList.add(pointDetailReport);
+                    pointReport.setEdu502List(edu502List);
+                    Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(edu501.getEdu501Id()+"",xnid);
+                    pointReport.setCountUsed(countUsed+"");
+                    pointReport.setComplete(countUsed+"");
+                    pointReport.setUnfinished("0");
+                    pointReportList.add(pointReport);
                 }
-                pointReport.setPointDetailReportList(pointDetailReportList);
-                pointReportList.add(pointReport);
             }
-        }catch(Exception e){
-            e.printStackTrace();
         }
+
         resultVO = ResultVO.setSuccess("查询成功！",pointReportList);
         return resultVO;
     }
