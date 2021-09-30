@@ -3199,29 +3199,31 @@ public class TeachingManageService {
         List<Edu107> edu107List = edu107Dao.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
         if(edu107List.size() == 0){
             resultVO = ResultVO.setFailed("未制订培养计划");
+            return resultVO;
         }else if(edu107List.size() > 1){
             resultVO = ResultVO.setFailed("该专业批次制订了多个培养计划，无法统计");
+            return resultVO;
         }else{
             edu107 = edu107List.get(0);
-            List<Object[]> dataList;
-            List<Edu005PO> edu005List = new ArrayList<>();
-            dataList = edu005Dao.searchProfessionalCourseResult(edu107.getEdu107_ID()+"",xnid);
-            if(dataList.size() == 0){
-                resultVO = ResultVO.setFailed("暂无数据");
-                return resultVO;
-            }for(Object[] o:dataList){
-                Edu005PO edu005 = new Edu005PO();
-                edu005.setEdu005_ID(Long.parseLong((String) o[0]));
-                edu005.setAvg((String) o[5]);
-                edu005.setClassName((String) o[1]);
-                edu005.setStudentCode((String) o[2]);
-                edu005.setStudentName((String) o[3]);
-                edu005.setSum((String) o[4]);
-                edu005.setEdu107(edu107);
-                edu005List.add(edu005);
-            }
-            resultVO = ResultVO.setSuccess("查询成功！",edu005List);
         }
+        List<Object[]> dataList;
+        List<Edu005PO> edu005List = new ArrayList<>();
+        dataList = edu005Dao.searchProfessionalCourseResult(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),xnid);
+        if(dataList.size() == 0){
+            resultVO = ResultVO.setFailed("暂无数据");
+            return resultVO;
+        }for(Object[] o:dataList){
+            Edu005PO edu005 = new Edu005PO();
+            edu005.setEdu005_ID(Long.parseLong((String) o[0]));
+            edu005.setAvg((String) o[5]);
+            edu005.setClassName((String) o[1]);
+            edu005.setStudentCode((String) o[2]);
+            edu005.setStudentName((String) o[3]);
+            edu005.setSum((String) o[4]);
+            edu005.setEdu107(edu107);
+            edu005List.add(edu005);
+        }
+        resultVO = ResultVO.setSuccess("查询成功！",edu005List);
         return resultVO;
     }
 
@@ -3318,6 +3320,149 @@ public class TeachingManageService {
                     utils.appendCell(sheet,i+2,"",edu005.getGrade(),-1,3+j,false);
                 }
             }
+            //总分
+            utils.appendCell(sheet,i+2,"",edu005POList.get(i).getSum(),-1,3+courseNameList.size(),false);
+            //平均分
+            utils.appendCell(sheet,i+2,"",edu005POList.get(i).getAvg(),-1,4+courseNameList.size(),false);
+            //名次
+            utils.appendCell(sheet,i+2,"","第"+(i+1)+"名",-1,5+courseNameList.size(),false);
+        }
+
+//        for (int i = 0; i < edu0051List.size(); i++) {
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getXn(),-1,0,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getClassName(),-1,1,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getCourseName(),-1,2,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentName(),-1,3,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getStudentCode(),-1,4,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getEntryDate(),-1,5,false);
+//            utils.appendCell(sheet,i,"",edu0051List.get(i).getGrade(),-1,6,false);
+//            if(edu0051List.get(i).getExam_num() == 0){
+//                utils.appendCell(sheet,i,"","正考成绩",-1,7,false);
+//            }else{
+//                utils.appendCell(sheet,i,"","第"+edu0051List.get(i).getExam_num()+"次补考成绩",-1,7,false);
+//            }
+//        }
+//
+        sheet.setColumnWidth(0, 20*256);
+        sheet.setColumnWidth(1, 12*256);
+        sheet.setColumnWidth(2, 20*256);
+//        sheet.setColumnWidth(3, 10*256);
+//        sheet.setColumnWidth(4, 20*256);
+//        sheet.setColumnWidth(5, 30*256);
+//        sheet.setColumnWidth(7, 20*256);
+
+        return workbook;
+    }
+
+    //导出教务专业授课成果copy
+    public XSSFWorkbook exportProfessionalCourseResultCopy(List<Edu005PO> edu005POList,String name,String xnid,Edu107 edu107) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(name+"专业授课成果");
+        Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+        String xnmc = edu400.getXnmc();
+        Edu107 e = edu005POList.get(0).getEdu107();
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        //辽宁职业学院XX学年XX学院XX专业学生成绩排名统计表
+        String firstTitle = "辽宁职业学院"+xnmc+e.getEdu104mc()+name+"专业学生成绩排名统计表";
+        XSSFCell cells[] = new XSSFCell[1];
+//        cells[0] = firstRow.createCell(0);
+//        cells[0].setCellValue(firstTitle);
+        XSSFCell cell2 = firstRow.createCell(0);
+        cell2.setCellValue(firstTitle);
+        XSSFRow twoRow = sheet.createRow(1);// 第二行
+        // 所有标题数组
+//        String[] titles = new String[] {"班级","姓名","各门课程成绩","总分", "平均分","名次"};
+        //班级
+        cells[0] = twoRow.createCell(0);
+        cells[0].setCellValue("班级");
+        CellRangeAddress region2 = new CellRangeAddress(1, 2, 0, 0);
+        sheet.addMergedRegion(region2);
+        //姓名
+        cells[0] = twoRow.createCell(1);
+        cells[0].setCellValue("姓名");
+        CellRangeAddress region3 = new CellRangeAddress(1, 2, 1, 1);
+        sheet.addMergedRegion(region3);
+        //学号
+        cells[0] = twoRow.createCell(2);
+        cells[0].setCellValue("学号");
+        CellRangeAddress region8 = new CellRangeAddress(1, 2, 2, 2);
+        sheet.addMergedRegion(region8);
+        //各门课程成绩
+//        cells[0] = twoRow.createCell(2);
+//        cells[0].setCellValue("各门课程成绩");
+        //详细成绩
+        List<String> courseNameList = edu005Dao.findCourseListByEdu107IdNew(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),xnid);
+        edu005Dao.searchProfessionalCourseResult(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),xnid);
+
+        XSSFRow threeRow = sheet.createRow(2);// 第三行
+        for(int i =0;i<courseNameList.size();i++){
+            cells[0] = threeRow.createCell(3+i);
+            cells[0].setCellValue(courseNameList.get(i));
+        }
+        CellRangeAddress region7 = new CellRangeAddress(1, 1, 3, 2+courseNameList.size());
+        sheet.addMergedRegion(region7);
+
+        XSSFCell cell = twoRow.createCell(3);
+        cell.setCellValue("各门课程成绩");
+        CellStyle cellStyle = workbook.createCellStyle();
+        //字体居中
+        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cell.setCellStyle(cellStyle);
+        //总分
+        cells[0] = twoRow.createCell(3+courseNameList.size());
+        cells[0].setCellValue("总分");
+        CellRangeAddress region4 = new CellRangeAddress(1, 2, 3+courseNameList.size(), 3+courseNameList.size());
+        sheet.addMergedRegion(region4);
+        //平均分
+        cells[0] = twoRow.createCell(4+courseNameList.size());
+        cells[0].setCellValue("平均分");
+        CellRangeAddress region5 = new CellRangeAddress(1, 2, 4+courseNameList.size(), 4+courseNameList.size());
+        sheet.addMergedRegion(region5);
+        //名次
+        cells[0] = twoRow.createCell(5+courseNameList.size());
+        cells[0].setCellValue("名次");
+        CellRangeAddress region6 = new CellRangeAddress(1, 2, 5+courseNameList.size(), 5+courseNameList.size());
+        sheet.addMergedRegion(region6);
+        //合并单元格
+        CellRangeAddress region = new CellRangeAddress(0, 0, 0, 5+courseNameList.size());
+        sheet.addMergedRegion(region);
+        cell2.setCellStyle(cellStyle);
+
+        for (int i = 0; i < edu005POList.size(); i++) {
+            //班级
+            utils.appendCell(sheet,i+2,"",edu005POList.get(i).getClassName(),-1,0,false);
+            //姓名
+            utils.appendCell(sheet,i+2,"",edu005POList.get(i).getStudentName(),-1,1,false);
+            //学号
+            utils.appendCell(sheet,i+2,"",edu005POList.get(i).getStudentCode(),-1,2,false);
+            //各个科目详情
+            List<Edu005> edu005List = edu005Dao.findedu005bySCXCopy(edu005POList.get(i).getStudentCode(),xnid);
+            if(edu005List.size() == courseNameList.size()){
+                for(int j = 0;j<courseNameList.size();j++){
+                    Edu005 edu005 = edu005List.get(j);
+                    if(edu005.getIsMx() != null){
+                        utils.appendCell(sheet,i+2,"",edu000Dao.queryEjdmMcByEjdmZ(edu005.getIsMx(),"IS_MX"),-1,3+j,false);
+                    }else if(edu005.getIsConfirm() == null){
+                        utils.appendCell(sheet,i+2,"","成绩未确认",-1,3+j,false);
+                    }else{
+                        utils.appendCell(sheet,i+2,"",edu005.getGrade(),-1,3+j,false);
+                    }
+                }
+            }else{
+                for(int j = 0;j<courseNameList.size();j++){
+                    Edu005 edu005 = edu005Dao.findedu005bySCX(edu005POList.get(i).getStudentCode(),courseNameList.get(j),xnid);
+                    if(edu005 == null){
+                        utils.appendCell(sheet,i+2,"","暂无成绩",-1,3+j,false);
+                    }else if(edu005.getIsMx() != null){
+                        utils.appendCell(sheet,i+2,"",edu000Dao.queryEjdmMcByEjdmZ(edu005.getIsMx(),"IS_MX"),-1,3+j,false);
+                    }else if(edu005.getIsConfirm() == null){
+                        utils.appendCell(sheet,i+2,"","成绩未确认",-1,3+j,false);
+                    }else{
+                        utils.appendCell(sheet,i+2,"",edu005.getGrade(),-1,3+j,false);
+                    }
+                }
+            }
+
             //总分
             utils.appendCell(sheet,i+2,"",edu005POList.get(i).getSum(),-1,3+courseNameList.size(),false);
             //平均分

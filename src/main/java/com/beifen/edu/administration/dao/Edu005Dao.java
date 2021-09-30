@@ -198,26 +198,28 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     List<Object[]> searchProfessionalCourseResult(List<String> edu107_id,String xnid);
 
 
-    @Query(value = "SELECT\n" +
-            "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
-            "class_name,\n" +
-            "student_code,\n" +
-            "STUDENT_NAME,\n" +
-            "TO_CHAR(sum(grade)) sum,\n" +
-            "TO_CHAR(Round(avg(grade),2))  avg\n" +
-            "FROM\n" +
-            "edu005 \n" +
-            "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID = ?1 ) AND SFSQKS = 'T') \n" +
-            "AND IS_CONFIRM = 'T' \n" +
-            "and XNID = ?2\n" +
-            "GROUP BY\n" +
-            "STUDENT_CODE,\n" +
-            "STUDENT_NAME,\n" +
-            "class_name\n" +
-            "ORDER BY\n" +
-            "avg(grade) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult(String edu107_id,String xnid);
+    @Query(value = "SELECT \n" +
+            "              TO_CHAR(row_number() over(order by student_code)) EDU005_ID, \n" +
+            "              class_name, \n" +
+            "              student_code, \n" +
+            "              STUDENT_NAME, \n" +
+            "              TO_CHAR(sum(grade)) sum, \n" +
+            "              TO_CHAR(Round(avg(grade),2))  avg \n" +
+            "              FROM \n" +
+            "              edu005 e\n" +
+            "LEFT JOIN edu300 on CLASS_NAME = xzbmc\n" +
+            "              WHERE \n" +
+            "              EDU201_ID IN (select DISTINCT EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and NJbm = ?2 and BATCH = ?3))  \n" +
+            "              AND IS_CONFIRM = 'T'  \n" +
+            "              and XNID = ?4\n" +
+            "              and zybm = ?1\n" +
+            "              GROUP BY \n" +
+            "              STUDENT_CODE, \n" +
+            "              STUDENT_NAME, \n" +
+            "              class_name \n" +
+            "              ORDER BY \n" +
+            "              avg(grade) DESC",nativeQuery = true)
+    List<Object[]> searchProfessionalCourseResult(String zybm,String njbm,String batch,String xnid);
 
     @Query(value = "SELECT\n" +
             "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
@@ -302,6 +304,10 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     //根据studentCode,courseName,xnid查询
     @Query(value = "select * from edu005 where student_code = ?1 and xnid = ?3 and course_name = ?2",nativeQuery = true)
     Edu005 findedu005bySCX(String sutdentCode,String courseName,String xnid);
+
+    //根据studentCode,courseName,xnid查询
+    @Query(value = "select * from edu005 where XNID = ?2 and STUDENT_CODE = ?1 and  IS_CONFIRM = 'T'  ORDER BY course_name",nativeQuery = true)
+    List<Edu005> findedu005bySCXCopy(String sutdentCode,String xnid);
 
     //根据学院和学年查询成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in (select edu201_id from edu201 where EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID in (select EDU107_ID from edu107 where edu103 = ?3 and edu104 = ?1)) and xnid = ?2) and IS_CONFIRM = 'T'",nativeQuery = true)
@@ -397,5 +403,15 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
 
     @Query(value = "select COUNT(*) from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and xnid = ?3 and IS_CONFIRM = 'T'",nativeQuery = true)
     String findGradeListNum(String zybm,String njbm,String xnid);
+
+    @Query(value = "SELECT COURSE_NAME from edu005 \n" +
+            "LEFT JOIN edu300 on CLASS_NAME = xzbmc\n" +
+            "where EDU201_ID IN (select DISTINCT EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and NJbm = ?2 and BATCH = ?3))  \n" +
+            "and XNID = ?4\n" +
+            "AND IS_CONFIRM = 'T' \n" +
+            "and zybm = ?1\t\n" +
+            "GROUP BY \tCOURSE_NAME\n" +
+            "ORDER BY COURSE_NAME",nativeQuery = true)
+    List<String> findCourseListByEdu107IdNew(String zybm,String njbm,String batch,String xnid);
 }
 

@@ -943,7 +943,7 @@ public class TeachingManageController {
                 fileName=edu107.getEdu106mc()+"专业"+edu107.getBatchName()+"学生排名明细单";
             }
             //创建Excel文件
-            XSSFWorkbook workbook = teachingManageService.exportProfessionalCourseResult(edu005POList,edu107.getEdu106mc(),xnid);
+            XSSFWorkbook workbook = teachingManageService.exportProfessionalCourseResultCopy(edu005POList,edu107.getEdu106mc(),xnid,edu107);
             try {
                 utils.loadModal(response,fileName, workbook);
             } catch (IOException e) {

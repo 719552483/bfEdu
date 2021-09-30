@@ -1837,13 +1837,93 @@ public class StudentManageService {
                     pointReport.setEdu502List(edu502List);
                     Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(edu501.getEdu501Id()+"",xnid);
                     pointReport.setCountUsed(countUsed+"");
-                    pointReport.setComplete(countUsed+"");
-                    pointReport.setUnfinished("0");
+
+
+                    try{
+                        Date now = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String kssj = edu400.getKssj();
+                        Date startDate = sdf.parse(kssj);
+                        String jssj = edu400.getJssj();
+                        Date endDate = sdf.parse(jssj);
+                        if(now.getTime()<startDate.getTime()){
+                            pointReport.setComplete("0");
+                            pointReport.setUnfinished(countUsed+"");
+                        }else if(now.getTime()>endDate.getTime()){
+                            pointReport.setComplete(countUsed+"");
+                            pointReport.setUnfinished("0");
+                        }else{
+                            //获取当前教学周
+                            int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                            //获取当前星期id
+                            String xqid = DateUtils.dateToWeek(now);
+                            Integer countPass = edu203Dao.getPKcount3(xnid,week,xqid,edu501.getEdu501Id()+"");
+                            pointReport.setComplete(countPass+"");
+                            pointReport.setUnfinished((countUsed-countPass)+"");
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     pointReportList.add(pointReport);
                 }
             }
-        }
+        }else{
+            List<Edu400> edu400List = edu400Dao.findAll();
+            for (Edu500 edu500 :list){
+                List<Edu501> edu501List = edu501Dao.findAllByEdu501Id(edu500.getEdu500Id()+"");
+                for(Edu501 edu501:edu501List){
+                    for(Edu400 edu400:edu400List){
+                        PointReport pointReport = new PointReport();
+                        pointReport.setEdu500Id(edu500.getEdu500Id());
+                        pointReport.setCity(edu500.getCity());
+                        pointReport.setCityCode(edu500.getCityCode());
+                        pointReport.setCountry(edu500.getCountry());
+                        pointReport.setLocalAddress(edu500.getLocalAddress());
+                        pointReport.setLocalName(edu500.getLocalName());
+                        pointReport.setPointCount(edu500.getPointCount());
+                        pointReport.setPointRemarks(edu500.getRemarks());
+                        //
+                        pointReport.setXn(edu400.getXnmc());
+                        pointReport.setCapacity(edu501.getCapacity());
+                        pointReport.setPointName(edu501.getPointName());
+                        pointReport.setRemarks(edu501.getRemarks());
+                        List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501.getEdu501Id()+"");
+                        pointReport.setEdu502List(edu502List);
+                        Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(edu501.getEdu501Id()+"",xnid);
+                        pointReport.setCountUsed(countUsed+"");
 
+
+                        try{
+                            Date now = new Date();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            String kssj = edu400.getKssj();
+                            Date startDate = sdf.parse(kssj);
+                            String jssj = edu400.getJssj();
+                            Date endDate = sdf.parse(jssj);
+                            if(now.getTime()<startDate.getTime()){
+                                pointReport.setComplete("0");
+                                pointReport.setUnfinished(countUsed+"");
+                            }else if(now.getTime()>endDate.getTime()){
+                                pointReport.setComplete(countUsed+"");
+                                pointReport.setUnfinished("0");
+                            }else{
+                                //获取当前教学周
+                                int week = DateUtils.calcWeekOffset(startDate,now)+1;
+                                //获取当前星期id
+                                String xqid = DateUtils.dateToWeek(now);
+                                Integer countPass = edu203Dao.getPKcount3(xnid,week,xqid,edu501.getEdu501Id()+"");
+                                pointReport.setComplete(countPass+"");
+                                pointReport.setUnfinished((countUsed-countPass)+"");
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        pointReportList.add(pointReport);
+                    }
+
+                }
+            }
+        }
         resultVO = ResultVO.setSuccess("查询成功！",pointReportList);
         return resultVO;
     }

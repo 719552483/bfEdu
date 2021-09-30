@@ -4069,7 +4069,7 @@ public class AdministrationPageService {
 				XSSFCell cell3 = contentRow.getCell(3);
 				XSSFCell cell4 = contentRow.getCell(4);
 				if (cell0 == null || cell1 == null || cell2 == null || cell3 == null || cell4 == null) {
-					resultVO = ResultVO.setFailed("第"+rowIndex+"行存在空值");
+					resultVO = ResultVO.setFailed("第"+rowIndex+1+"行存在空值");
 					return resultVO;
 				}
 				XSSFCell cell6 = contentRow.getCell(6);
