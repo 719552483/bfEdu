@@ -98,28 +98,28 @@ function drawReportFormPointTable(tableInfo){
             var currentPage=$('#localInfoTable').bootstrapTable('getData',{'useCurrentPage':true});
             var rowsObject=new Object();
             rowsObject.rows=currentPage;
-            mergeRowCells(rowsObject, "localName", $("#localInfoTable"),tableInfo);
+            mergeRowCells(rowsObject, "city", $("#localInfoTable"),tableInfo);
         },
         onPostBody: function() {
             toolTipUp(".myTooltip");
             var currentPage=$('#localInfoTable').bootstrapTable('getData',{'useCurrentPage':true});
             var rowsObject=new Object();
             rowsObject.rows=currentPage;
-            mergeRowCells(rowsObject, "localName", $("#localInfoTable"),tableInfo);
+            mergeRowCells(rowsObject, "city", $("#localInfoTable"),tableInfo);
             $('.verticalAlignCell').css('vertical-align', 'middle');
         },
         columns: [
-           {
-                field: 'localName',
-                class: 'verticalAlignCell',
-                title: '教学点名称',
+            {
+                field: 'city',
+                title: '地级市',
                 align: 'center',
+                class: 'verticalAlignCell',
                 sortable: true,
                 formatter: paramsMatter
             },
             {
-                field: 'city',
-                title: '地级市',
+                field: 'xn',
+                title: '学年',
                 align: 'left',
                 sortable: true,
                 formatter: paramsMatter
@@ -127,6 +127,13 @@ function drawReportFormPointTable(tableInfo){
             {
                 field: 'country',
                 title: '区/县',
+                align: 'left',
+                sortable: true,
+                formatter: paramsMatter
+            },
+           {
+                field: 'localName',
+                title: '教学点名称',
                 align: 'left',
                 sortable: true,
                 formatter: paramsMatter
@@ -179,13 +186,6 @@ function drawReportFormPointTable(tableInfo){
                 align: 'left',
                 sortable: true,
                 formatter: edu502ListMatter
-            },
-            {
-                field: 'xn',
-                title: '学年',
-                align: 'left',
-                sortable: true,
-                formatter: paramsMatter
             },
             {
                 field: 'countUsed',
@@ -255,7 +255,7 @@ function drawReportFormPointTable(tableInfo){
 
     var rowsObject=new Object();
     rowsObject.rows=tableInfo;
-    mergeRowCells(rowsObject, "localName", $("#localInfoTable"),tableInfo);
+    mergeRowCells(rowsObject, "city", $("#localInfoTable"),tableInfo);
 }
 
 //获得检索区域的值
