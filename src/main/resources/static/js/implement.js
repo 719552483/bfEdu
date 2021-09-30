@@ -1916,4 +1916,50 @@ function mergeCountCells(tableID,index,fieldName,colspanNum,rowspanNum){
 	$('#'+tableID).bootstrapTable('mergeCells', {index: index, field:fieldName, colspan: colspanNum, rowspan: rowspanNum});
 }
 
+//合并行
+function mergeRowCells(data, fieldName, target,tableInfo) {
+    if (data.rows.length == 0) {
+        return;
+    }
+    var numArr = [];
+    var number=0;
+    if( data.rows.length>1){
+        for (let i = 0; i < data.rows.length; i++) {
+            if(data.rows[i][fieldName]!='' && data.rows[i][fieldName]!='-'){
+                if(data.rows[i-1]){
+                    if(data.rows[i-1][fieldName]!='' && data.rows[i-1][fieldName]!='-'){
+                        if(data.rows[i-1][fieldName]==data.rows[i][fieldName]){
+                            number++
+                        }
+                        else{
+                            number=number+1
+                            numArr.push({index:i-number,number:number,pan:'1'})
+                            number=0
+                        }
+                    }
+                }
+                if(!data.rows[i+1]){
+                    number=number
+                    numArr.push({index:i-number,number:number+1,pan:'2'})
+                    number=0
+                }else{
+                    if(data.rows[i+1][fieldName]=='' || data.rows[i+1][fieldName]=='-'){
+                        number=number
+                        numArr.push({index:i-number,number:number+1,pan:'3'})
+                        number=0
+                    }
+                }
+            }else{
+                numArr.push({index:i,number:1,pan:'4'})
+            }
+        }
+    }else{
+        numArr.push({index:0,number:1,pan:'5'})
+    }
+    // console.log(numArr);
+    for (let x = 0; x < numArr.length; x++) {
+        var index= numArr[x]['index'];
+		$(target).bootstrapTable('mergeCells', { index: index, field: fieldName, colspan: 1, rowspan: numArr[x]['number']});
+    }
+}
 
