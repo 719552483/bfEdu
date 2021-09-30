@@ -1889,7 +1889,7 @@ public class StudentManageService {
                         pointReport.setRemarks(edu501.getRemarks());
                         List<Edu502> edu502List = edu502Dao.findAllByEdu501Id(edu501.getEdu501Id()+"");
                         pointReport.setEdu502List(edu502List);
-                        Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(edu501.getEdu501Id()+"",xnid);
+                        Integer countUsed = edu203Dao.findEdu203CountByEdu501Id(edu501.getEdu501Id()+"",edu400.getEdu400_ID()+"");
                         pointReport.setCountUsed(countUsed+"");
 
 
@@ -1911,7 +1911,7 @@ public class StudentManageService {
                                 int week = DateUtils.calcWeekOffset(startDate,now)+1;
                                 //获取当前星期id
                                 String xqid = DateUtils.dateToWeek(now);
-                                Integer countPass = edu203Dao.getPKcount3(xnid,week,xqid,edu501.getEdu501Id()+"");
+                                Integer countPass = edu203Dao.getPKcount3(edu400.getEdu400_ID()+"",week,xqid,edu501.getEdu501Id()+"");
                                 pointReport.setComplete(countPass+"");
                                 pointReport.setUnfinished((countUsed-countPass)+"");
                             }
