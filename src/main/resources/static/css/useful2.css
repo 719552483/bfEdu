@@ -3095,12 +3095,6 @@ input:focus{
 	color: black;
 }
 
-.localInfoTableAreawithNoAction table tbody tr td:first-child{
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-}
-
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);

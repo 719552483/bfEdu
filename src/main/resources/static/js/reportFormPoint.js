@@ -106,10 +106,12 @@ function drawReportFormPointTable(tableInfo){
             var rowsObject=new Object();
             rowsObject.rows=currentPage;
             mergeRowCells(rowsObject, "localName", $("#localInfoTable"),tableInfo);
+            $('.verticalAlignCell').css('vertical-align', 'middle');
         },
         columns: [
            {
                 field: 'localName',
+                class: 'verticalAlignCell',
                 title: '教学点名称',
                 align: 'center',
                 sortable: true,
