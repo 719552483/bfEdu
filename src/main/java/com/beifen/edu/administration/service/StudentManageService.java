@@ -536,7 +536,7 @@ public class StudentManageService {
                     predicates.add(cb.equal(root.<String>get("studentCode"), studentCode));
                 }
                 if (edu005.getEdu300_ID() != null && !"".equals(edu005.getEdu300_ID())) {
-                    predicates.add(cb.equal(root.<String>get("Edu300_ID"), edu005.getEdu300_ID()));
+                    predicates.add(cb.equal(root.<String>get("edu300_ID"), edu005.getEdu300_ID()));
                 }
                 if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
                     predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
