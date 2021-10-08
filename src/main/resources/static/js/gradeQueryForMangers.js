@@ -364,7 +364,7 @@ function reExamInfo(row){
 	});
 }
 
-//预备选择学生
+//主页面预备选择学生
 function wantChooseStudent(){
 	var reObject = new Object();
 	reObject.InputIds = "#chooseStudent_className,#chooseStudent_StudentName,#chooseStudent_number";
@@ -686,29 +686,51 @@ function startSearch(){
 
 //获取检索对象
 function getSearchObject(){
+	var queryType= getNormalSelectValue("queryType");
 	var grade = getNormalSelectValue("grade");
-	// var courseName=$("#courseName").val();
 	var student=$("#student").attr("studentId");
+	var xzb = $("#xzb").attr("xzbId");
+	var courseName=$("#courseName").val();
 
-	if(student===""){
-		toastr.warning('请选择学生');
-		return;
+	if(queryType==='student'){
+		if(student===""){
+			toastr.warning('请选择学生');
+			return;
+		}
+	}else{
+		if(xzb===""){
+			toastr.warning('请选择行政班');
+			return;
+		}
+
+		if(courseName===""){
+			toastr.warning('请选择课程');
+			return;
+		}
 	}
 
 	var returnObject = new Object();
 	returnObject.student = student;
 	returnObject.grade = grade;
-	// returnObject.courseName = courseName;
+	returnObject.edu300_ID = xzb;
+	returnObject.courseName = courseName;
 	return returnObject;
 }
 
 //重置检索
 function research() {
 	var reObject = new Object();
-	reObject.InputIds = "#student";
+	reObject.InputIds = "#xzb,#courseName,#student";
 	reObject.normalSelectIds = "#grade";
-	reReloadSearchsWithSelect(reObject);
+	$("#xzb").attr("xzbId","");
 	$("#student").attr("studentId","");
+	$("#courseName").attr("courseName","");
+	reReloadSearchsWithSelect(reObject);
+	stuffManiaSelectWithDeafult("#queryType", 'student');  //类型
+	$('.gradeSearch').show();
+	$('.studentSearch').show();
+	$('.xzbSearch').hide();
+	$('.courseNameSearch').hide();
 	drawStudentGradeEmptyTable();
 }
 
@@ -2117,6 +2139,136 @@ function exportAllGradeConfirm(){
 	});
 }
 
+//主页面查询类型change事件
+function changeQueryType(){
+	var type=getNormalSelectValue('queryType');
+	if(type==='student'){
+		$('.gradeSearch').show();
+		$('.studentSearch').show();
+		$('.xzbSearch').hide();
+		$('.courseNameSearch').hide();
+	}else{
+		$('.gradeSearch').hide();
+		$('.studentSearch').hide();
+		$('.xzbSearch').show();
+		$('.courseNameSearch').show();
+	}
+
+}
+
+//主页面预备选择行政班
+function wantChooseXzb(){
+	$("#chooseCalss_className").val("");
+	getAllClass('');
+
+	//检索行政班
+	$('#chooseCalss_StartSearch').unbind('click');
+	$('#chooseCalss_StartSearch').bind('click', function(e) {
+		chooseCalssStartSearch();
+		e.stopPropagation();
+	});
+
+	//重置检索行政班
+	$('#chooseCalss_ReSearch').unbind('click');
+	$('#chooseCalss_ReSearch').bind('click', function(e) {
+		chooseCalssReSearch();
+		e.stopPropagation();
+	});
+
+	//提示框取消按钮
+	$('.specialCanle1').unbind('click');
+	$('.specialCanle1').bind('click', function(e) {
+		$.hideModal();
+		e.stopPropagation();
+	});
+
+	//主页面与被选择行政班-确认选择行政班
+	$('#confirmChoosedClalss').unbind('click');
+	$('#confirmChoosedClalss').bind('click', function(e) {
+		confirmChoosedClassForMainPage();
+		e.stopPropagation();
+	});
+}
+
+//主页面确认选择行政班
+function confirmChoosedClassForMainPage(){
+	var choosendClass=$("#chooseClassTable").bootstrapTable("getSelections");
+	if(choosendClass.length==0){
+		toastr.warning('请选择班级');
+		return;
+	}
+
+	$("#xzb").attr("xzbId",choosendClass[0].edu300_ID);
+	$("#xzb").val(choosendClass[0].xzbmc);
+	$.hideModal();
+}
+
+//主页面预备选择课程
+function wantChooseCourseName(){
+	var edu300_ID=$("#xzb").attr("xzbId");
+	if(edu300_ID===''){
+		toastr.warning('请选择行政班');
+		return;
+	}
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchCourseByClassOnly",
+		data: {
+			"edu300_ID":edu300_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				choosendCrouses.length = 0;
+				$.showModal("#chooseCruoseModal",true);
+				stuffCrouseClassTable(backjson.data,2);
+
+				//主页面确认选择课程
+				$('#confirmChooseCrouse').unbind('click');
+				$('#confirmChooseCrouse').bind('click', function(e) {
+					var choosendCrousesIds=new Array();
+					var choosendCrousesNames=new Array();
+					var tableSelected= $("#chooseCrouseTable").bootstrapTable("getSelections");
+					if(tableSelected.length==0){
+						toastr.warning('请选择课程');
+						return;
+					}
+					for (var i = 0; i < tableSelected.length; i++) {
+						choosendCrousesIds.push(tableSelected[i].edu108_ID);
+						choosendCrousesNames.push(tableSelected[i].kcmc);
+					}
+					$("#courseName").attr("courseName",choosendCrousesNames);
+					$("#courseName").val(choosendCrousesNames);
+					$.hideModal();
+					e.stopPropagation();
+				});
+
+				//提示框取消按钮
+				$('.specialCanle2').unbind('click');
+				$('.specialCanle2').bind('click', function(e) {
+					$.hideModal();
+					e.stopPropagation();
+				});
+			} else {
+				stuffCrouseClassTable({},2);
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //初始化页面按钮绑定事件
 function btnBind(){
 	//重置检索
@@ -2140,9 +2292,26 @@ function btnBind(){
 		e.stopPropagation();
 	});
 
-	//学生focus
+	//主页面查询类型change事件
+	$("#queryType").change(function() {
+		changeQueryType();
+	});
+
+	//主页面学生focus
 	$('#student').focus(function(e){
 		wantChooseStudent();
+		e.stopPropagation();
+	});
+
+	//主页面行政班focus
+	$('#xzb').focus(function(e){
+		wantChooseXzb();
+		e.stopPropagation();
+	});
+
+	//主页面课程focus
+	$('#courseName').focus(function(e){
+		wantChooseCourseName();
 		e.stopPropagation();
 	});
 

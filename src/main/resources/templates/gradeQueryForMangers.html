@@ -68,12 +68,25 @@
 					<div class="col4 giveBottom">
 						<ul class="forminfo">
 							<div class="">
+								<label class="selectName" style="margin-top: 14px;">查询类型</label>
+								<select class="isSowIndex" id="queryType">
+									<option value="student">学生个人成绩</option>
+									<option value="class">班级总体成绩</option>
+								</select>
+							</div>
+						</ul>
+					</div>
+
+					<div class="col4 giveBottom studentSearch">
+						<ul class="forminfo">
+							<div class="">
 								<label class="selectName" style="margin-top: 14px;">学生<b>*</b></label>
 								<input name="" type="text" class="myInput searchInput" id="student" studentId="" placeholder="点击选择学生..." readonly="readonly"/>
 							</div>
 						</ul>
 					</div>
-					<div class="col4 giveBottom">
+
+					<div class="col4 giveBottom gradeSearch">
 						<ul class="forminfo">
 							<div class="">
 								<label class="selectName" style="margin-top: 14px;">学年</label>
@@ -83,14 +96,24 @@
 							</div>
 						</ul>
 					</div>
-<!--					<div class="col4 giveBottom">-->
-<!--						<ul class="forminfo">-->
-<!--							<div class="">-->
-<!--								<label class="selectName" style="margin-top: 14px;">课程名称</label>-->
-<!--								<input name="" type="text" class="myInput searchInput" id="courseName" placeholder="请填写课程名称..."/>-->
-<!--							</div>-->
-<!--						</ul>-->
-<!--					</div>-->
+
+					<div class="col4 giveBottom xzbSearch noneStart">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">行政班<b>*</b></label>
+								<input name="" type="text" class="myInput searchInput" id="xzb" xzbId="" placeholder="点击选择行政班..." readonly="readonly"/>
+							</div>
+						</ul>
+					</div>
+
+					<div class="col4 giveBottom courseNameSearch noneStart">
+						<ul class="forminfo">
+							<div class="">
+								<label class="selectName" style="margin-top: 14px;">课程<b>*</b></label>
+								<input name="" type="text" class="myInput searchInput" id="courseName" courseName="" placeholder="点击选择课程..." readonly="readonly"/>
+							</div>
+						</ul>
+					</div>
 				</div>
 
 				<div class="studentGradeTableArea columnsStyle searchGivePaddingR">
