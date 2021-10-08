@@ -512,14 +512,17 @@ public class StudentManageService {
     public ResultVO studentGetGrades(String userKey,Edu005 edu005) {
         ResultVO resultVO;
 
-        Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
-        if(one == null) {
-            resultVO = ResultVO.setFailed("您不是本校学生,无法查询成绩");
-            return resultVO;
+        String studentCode;
+        if(userKey == null || "".equals(userKey)){
+            studentCode = "";
+        }else{
+            Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
+            if(one == null) {
+                resultVO = ResultVO.setFailed("您不是本校学生,无法查询成绩");
+                return resultVO;
+            }
+            studentCode = one.getXh();
         }
-        String studentCode = one.getXh();
-
-
         Specification<Edu005> specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -531,6 +534,12 @@ public class StudentManageService {
                 }
                 if (studentCode != null && !"".equals(studentCode)) {
                     predicates.add(cb.equal(root.<String>get("studentCode"), studentCode));
+                }
+                if (edu005.getEdu300_ID() != null && !"".equals(edu005.getEdu300_ID())) {
+                    predicates.add(cb.equal(root.<String>get("Edu300_ID"), edu005.getEdu300_ID()));
+                }
+                if (edu005.getCourseName() != null && !"".equals(edu005.getCourseName())) {
+                    predicates.add(cb.equal(root.<String>get("courseName"), edu005.getCourseName()));
                 }
 //                predicates.add(cb.isNotNull(root.<String>get("isConfirm")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
