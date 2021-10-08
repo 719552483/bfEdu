@@ -691,12 +691,17 @@ function getSearchObject(){
 	var student=$("#student").attr("studentId");
 	var xzb = $("#xzb").attr("xzbId");
 	var courseName=$("#courseName").val();
+	var returnObject = new Object();
 
 	if(queryType==='student'){
 		if(student===""){
 			toastr.warning('请选择学生');
 			return;
 		}
+		returnObject.student = student;
+		returnObject.grade = grade;
+		returnObject.edu300_ID = '';
+		returnObject.courseName = '';
 	}else{
 		if(xzb===""){
 			toastr.warning('请选择行政班');
@@ -707,13 +712,12 @@ function getSearchObject(){
 			toastr.warning('请选择课程');
 			return;
 		}
+		returnObject.student = '';
+		returnObject.grade = '';
+		returnObject.edu300_ID = xzb;
+		returnObject.courseName = courseName;
 	}
 
-	var returnObject = new Object();
-	returnObject.student = student;
-	returnObject.grade = grade;
-	returnObject.edu300_ID = xzb;
-	returnObject.courseName = courseName;
 	return returnObject;
 }
 
