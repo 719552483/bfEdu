@@ -512,14 +512,17 @@ public class StudentManageService {
     public ResultVO studentGetGrades(String userKey,Edu005 edu005) {
         ResultVO resultVO;
 
-        Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
-        if(one == null) {
-            resultVO = ResultVO.setFailed("您不是本校学生,无法查询成绩");
-            return resultVO;
+        String studentCode;
+        if(userKey == null || "".equals(userKey)){
+            studentCode = "";
+        }else{
+            Edu001 one = edu001Dao.findOne(Long.parseLong(userKey));
+            if(one == null) {
+                resultVO = ResultVO.setFailed("您不是本校学生,无法查询成绩");
+                return resultVO;
+            }
+            studentCode = one.getXh();
         }
-        String studentCode = one.getXh();
-
-
         Specification<Edu005> specification = new Specification<Edu005>() {
             public Predicate toPredicate(Root<Edu005> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
