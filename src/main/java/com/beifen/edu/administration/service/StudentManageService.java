@@ -51,6 +51,8 @@ public class StudentManageService {
     @Autowired
     private Edu106Dao edu106Dao;
     @Autowired
+    private Edu107Dao edu107Dao;
+    @Autowired
     private Edu203Dao edu203Dao;
     @Autowired
     private Edu300Dao edu300Dao;
@@ -339,7 +341,15 @@ public class StudentManageService {
 
         // 判断是否改变行政班
         if (oldEdu001.getEdu300_ID().equals(edu001.getEdu300_ID())) {
-            edu001.setXh(oldEdu001.getXh());
+            if(edu001.getXh() == null || "".equals(edu001.getXh())){
+                edu001.setXh(oldEdu001.getXh());
+            }else{
+                List<Edu001> edu001List = edu001Dao.checkXH(edu001.getXh(), edu001.getEdu001_ID());
+                if(edu001List.size() != 0) {
+                    resultVO = ResultVO.setFailed("新输入的学号已存在，请重新输入");
+                    return resultVO;
+                }
+            }
             edu001Dao.save(edu001);
         } else {
             // 判断修改是否会超过行政班容纳人数
@@ -585,11 +595,14 @@ public class StudentManageService {
     }
 
     // 根据班级查询学科
-    public ResultVO searchCourseByClassOnly(String edu300_ID) {
+    public ResultVO searchCourseByClassOnly(String edu300_ID,String xnid) {
         ResultVO resultVO;
-        List<Edu201> edu201List = edu201Dao.searchCourseByClassOnly(edu300_ID);
-//        List<Edu201> edu201List2 = edu201Dao.searchCourseByClass2(edu300_ID,trem);
-//        edu201List.addAll(edu201List2);
+        List<Edu201> edu201List = new ArrayList<>();
+        if(xnid == null || "".equals(xnid)){
+            edu201List = edu201Dao.searchCourseByClassOnly(edu300_ID);
+        }else{
+            edu201List = edu201Dao.searchCourseByClassOnly(edu300_ID,xnid);
+        }
         if (edu201List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无课程信息");
         } else {
@@ -2135,4 +2148,39 @@ public class StudentManageService {
         resultVO = ResultVO.setSuccess("查询成功", list);
         return resultVO;
     }
+
+    //判断有无培养计划
+    public ResultVO studentPassReportCheck(Edu107 edu107) {
+        ResultVO resultVO;
+        Specification<Edu107> Edu107Specification = new Specification<Edu107>() {
+            public Predicate toPredicate(Root<Edu107> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu107.getEdu103() != null && !"".equals(edu107.getEdu103())) {
+                    predicates.add(cb.equal(root.<String>get("edu103"), edu107.getEdu103()));
+                }
+                if (edu107.getEdu104() != null && !"".equals(edu107.getEdu104())) {
+                    predicates.add(cb.equal(root.<String>get("edu104"), edu107.getEdu104()));
+                }
+                if (edu107.getEdu105() != null && !"".equals(edu107.getEdu105())) {
+                    predicates.add(cb.equal(root.<String>get("edu105"), edu107.getEdu105()));
+                }
+                if (edu107.getEdu106() != null && !"".equals(edu107.getEdu106())) {
+                    predicates.add(cb.equal(root.<String>get("edu106"),  edu107.getEdu106()));
+                }
+                if (edu107.getBatch() != null && !"".equals(edu107.getBatch())) {
+                    predicates.add(cb.equal(root.<String>get("batch"),  edu107.getBatch()));
+                }
+                predicates.add(cb.equal(root.<String>get("xbsp"),  "pass"));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu107> edu107List = edu107Dao.findAll(Edu107Specification);
+        if(edu107List.size() == 0){
+            resultVO = ResultVO.setFailed("暂时没有符合条件的课程");
+            return resultVO;
+        }
+        resultVO = ResultVO.setSuccess("cg",edu107List);
+        return resultVO;
+    }
+
 }

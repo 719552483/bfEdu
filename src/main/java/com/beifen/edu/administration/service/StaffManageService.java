@@ -1037,6 +1037,23 @@ public class StaffManageService {
         return resultVO;
     }
 
+    //查询所有上课老师
+    public ResultVO queryAllClassTeachers(String xnid) {
+        ResultVO resultVO;
+        List<Edu101> edu101List = new ArrayList<>();
+        if(xnid == null || "".equals(xnid)){
+            edu101List = edu101Dao.queryAllClassTeachers();
+        }else{
+            edu101List = edu101Dao.queryAllClassTeachers(xnid);
+        }
+        if(edu101List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无授课老师");
+        } else {
+            resultVO = ResultVO.setSuccess("查询成功",edu101List);
+        }
+        return resultVO;
+    }
+
 
     //获取考勤信息
     public CourseCheckOnPO getCourseCheckOnInfo(String courseId) {

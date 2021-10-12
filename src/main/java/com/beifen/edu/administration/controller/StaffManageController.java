@@ -450,6 +450,18 @@ public class StaffManageController {
     }
 
     /**
+     * 查询所有教师
+     *
+     * @return returnMap
+     */
+    @RequestMapping("queryAllClassTeachers")
+    @ResponseBody
+    public ResultVO queryAllClassTeachers(@RequestParam("xnid") String xnid) {
+        ResultVO result = staffManageService.queryAllClassTeachers(xnid);
+        return result;
+    }
+
+    /**
      * 搜索教师
      *
      * @param SearchCriteria

@@ -415,8 +415,8 @@ public class StudentManageController {
 
     @RequestMapping("/searchCourseByClassOnly")
     @ResponseBody
-    public ResultVO searchCourseByClassOnly(@RequestParam("edu300_ID") String edu300_ID) {
-        ResultVO result =studentManageService.searchCourseByClassOnly(edu300_ID);
+    public ResultVO searchCourseByClassOnly(@RequestParam("edu300_ID") String edu300_ID,@RequestParam("xnid") String xnid) {
+        ResultVO result =studentManageService.searchCourseByClassOnly(edu300_ID,xnid);
         return result;
     }
 
@@ -880,6 +880,26 @@ public class StudentManageController {
             result = studentManageService.teachInfoReportData(edu106List,xnid);
         }else{
             result = studentManageService.teachInfoReportDataAll(xnid);
+        }
+        return result;
+    }
+
+    /**
+     * 及格率报表数据展示-报表
+     * @return
+     */
+    @RequestMapping("/studentPassReport")
+    @ResponseBody
+    public ResultVO studentPassReport(@RequestParam String SearchCriteria){
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        Edu107 edu107 = (Edu107) JSONObject.toBean(jsonObject, Edu107.class);
+        result = studentManageService.studentPassReportCheck(edu107);
+        if(result.getCode() != 200){
+            return result;
+        }else{
+            List<Edu107> edu107List = (List<Edu107>) result.getData();
+//            result = studentManageService.studentPassReport(edu107List,edu107);
         }
         return result;
     }
