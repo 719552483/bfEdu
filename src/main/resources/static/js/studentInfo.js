@@ -742,7 +742,7 @@ function modifyStudent(row,index){
 	$("#addStudentModal").find(".formtext").show();
 	$("#addStudentModal").find(".moadalTitle").html(row.xm+"-详细信息");
 	$('#addStudentModal').find(".modal-body").find("input").attr("disabled", false) // 将input元素设置为readonly
-	$(".XhArea").hide();
+	$(".XhArea").show();
 	//清空模态框中元素原始值
 	emptyStudentBaseInfoArea();
 	$(".addStudentTip").show();
@@ -751,10 +751,10 @@ function modifyStudent(row,index){
 	stuffStudentDetails(row);
 	//为模态框联动select绑定事件
 	LinkageSelectPublic("#addStudentpycc","#addStudentxb","#addStudentnj","#addStudentzy",row.pycc);
-	$("#addStudentxzb").change(function() {
-		$(".XhArea").show();
-		$("#addStudentNum").val(row.xh);
-	});
+	// $("#addStudentxzb").change(function() {
+	// 	$(".XhArea").show();
+	// 	$("#addStudentNum").val(row.xh);
+	// });
 	//修改学生确认按钮
 	$('.confirmBtn').unbind('click');
 	$('.confirmBtn').bind('click', function(e) {

@@ -40,6 +40,7 @@ function stuffNj(){
 			stuffManiaSelect("#gradeSituationGrade", str);
 			stuffManiaSelect("#gradeSituationGradeForNotPass", str);
 			stuffManiaSelect("#chooseStudent_xn", str);
+			stuffManiaSelect("#chooseCruose_grade", str);
 		}
 	});
 }
@@ -960,6 +961,7 @@ function wantChooseExportCrouse(type){
 			toastr.warning('请先选择学年');
 			return;
 		}
+		$("#chooseCruoseModal").find(".searchArea").hide();
 		searchCourseByClass(chosendClass,choosendTerm,type);
 		//提示框取消按钮
 		$('.specialCanle2').unbind('click');
@@ -975,6 +977,7 @@ function wantChooseExportCrouse(type){
 			toastr.warning('请先选择学年');
 			return;
 		}
+		$("#chooseCruoseModal").find(".searchArea").hide();
 		searchCourseByXN(chosendTerm,chosendTermText,type);
 		//提示框取消按钮
 		$('.specialCanle2').unbind('click');
@@ -2220,7 +2223,8 @@ function wantChooseCourseName(){
 		cache : false,
 		url : "/searchCourseByClassOnly",
 		data: {
-			"edu300_ID":edu300_ID
+			"edu300_ID":edu300_ID,
+			"xnid":''
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -2237,6 +2241,8 @@ function wantChooseCourseName(){
 			if (backjson.code === 200) {
 				choosendCrouses.length = 0;
 				$.showModal("#chooseCruoseModal",true);
+				$("#chooseCruoseModal").find(".moadalTitle").html("选择课程");
+				$("#chooseCruoseModal").find(".searchArea").show();
 				stuffCrouseClassTable(backjson.data,2);
 
 				//主页面确认选择课程
@@ -2263,6 +2269,43 @@ function wantChooseCourseName(){
 				$('.specialCanle2').unbind('click');
 				$('.specialCanle2').bind('click', function(e) {
 					$.hideModal();
+					e.stopPropagation();
+				});
+
+				//课程模态框学年change事件绑定
+				$("#chooseCruose_grade").change(function(e) {
+					var currentXn=getNormalSelectValue('chooseCruose_grade');
+					if(currentXn===''){
+						wantChooseCourseName();
+					}
+					$.ajax({
+						method : 'get',
+						cache : false,
+						url : "/searchCourseByClassOnly",
+						data: {
+							"edu300_ID":edu300_ID,
+							"xnid":currentXn
+						},
+						dataType : 'json',
+						beforeSend: function(xhr) {
+							requestErrorbeforeSend();
+						},
+						error: function(textStatus) {
+							requestError();
+						},
+						complete: function(xhr, status) {
+							requestComplete();
+						},
+						success : function(backjson) {
+							hideloding();
+							if (backjson.code=== 200) {
+								stuffCrouseClassTable(backjson.data,2);
+							} else {
+								toastr.warning(backjson.msg);
+								return false;
+							}
+						}
+					});
 					e.stopPropagation();
 				});
 			} else {
