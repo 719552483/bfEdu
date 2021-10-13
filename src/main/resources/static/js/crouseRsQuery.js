@@ -31,8 +31,11 @@ function getYearInfo(){
 //填充学年下拉框
 function stuffYearSelect(yearInfo){
 	var str = '<option value="seleceConfigTip">请选择</option>';
+	var strAll = '<option value="seleceConfigTip">全部</option>';
 	for (var i = 0; i < yearInfo.length; i++) {
 		str += '<option value="' + yearInfo[i].edu400_ID + '">' + yearInfo[i].xnmc
+			+ '</option>';
+		strAll += '<option value="' + yearInfo[i].edu400_ID + '">' + yearInfo[i].xnmc
 			+ '</option>';
 	}
 	stuffManiaSelect("#year", str);
@@ -40,6 +43,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#departmnetArea_year", str);
 	stuffManiaSelect("#student2Data_year", str);
 	stuffManiaSelect("#progress_year", str);
+	stuffManiaSelect("#teacher_year", strAll);
 }
 
 //获取合格率信息
@@ -2737,8 +2741,13 @@ function stuffProgressTable(tableInfo){
 	}
 
 	function progressMatter(value, row, index) {
-		return [ '<div class="myTooltip" title="' + value + '%">' + value + '%</div>' ]
-			.join('');
+		if(parseInt(row.all)===0){
+			return [ '<div class="myTooltip normalTxt" title="总课时为0,暂无百分比">---</div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip" title="' + value + '%">' + value + '%</div>' ]
+				.join('');
+		}
 	}
 
 	drawPagination(".tab5TableArea", "授课进度信息");
@@ -2761,5 +2770,296 @@ function tab5BtnBind(){
 }
 /**
  * tab5 end
+ * */
+
+
+
+
+/**
+ * tab6 start
+ * */
+function judgmentIsFristTimeLoadTab6(){
+	var isFirstShowTab6 = $(".isFirstShowTab6")[0].innerText;
+	if (isFirstShowTab6 === "T") {
+		$(".isFirstShowTab6").html("F");
+		getTeachTableInfo('');
+		tab6BtnBind();
+		tab6ChartListener();
+	}
+}
+
+//获取教师授课情况概貌主Table数据
+function getTeachTableInfo(year){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryAllClassTeachers",
+		data: {
+			"xnid":year
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffTeachTable(backjson.data.tableInfo);
+				stuffTeachChart(backjson.data);
+			} else {
+				stuffTeachTable({});
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//教师授课情况概貌 主Table
+function stuffTeachTable(tableInfo){
+	window.releaseNewsEvents = {
+		'click #teachSingleDeatils' : function(e, value, row, index) {
+			teachSingleDeatils(row);
+		}
+	};
+
+	$('#tab6Table').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".tab6TableArea", "教师授课信息");
+		},
+		columns: [{
+			field :'xm',
+			title : '姓名',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'jzgh',
+			title : '教职工号',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'jzglx',
+			title : '教职工类型',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'szxbmc',
+			title : '所在系部',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'zc',
+			title : '职称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'whcd',
+			title : '文化程度',
+			align : 'left',
+			sortable: true,
+			visible : false,
+			formatter : paramsMatter
+		},{
+			field : 'action',
+			title : '操作',
+			align : 'center',
+			clickToSelect : false,
+			formatter : releaseNewsFormatter,
+			events : releaseNewsEvents,
+		}]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li class="queryBtn" id="teachSingleDeatils"><span><img src="img/info.png" style="width:24px"></span>个人授课情况分析</li>'
+		+ '</ul>' ].join('');
+	}
+
+	drawPagination(".tab6TableArea", "教师授课信息");
+	drawSearchInput(".tab6TableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".tab6TableArea", "教师授课信息");
+}
+
+//个人授课情况分析
+function teachSingleDeatils(row){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryAllClassTeachersDetail",
+		data: {
+			"edu101Id":row.edu101_ID
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				$('#teachSingleDeatilsModal').find('.moadalTitle').html(row.xm+getNormalSelectText('teacher_year')+'个人授课情况分析');
+
+				$.showModal('#teachSingleDeatilsModal',true);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//教师授课情况概貌 主Chart
+function stuffTeachChart(chartInfo){
+	var xnmc=getNormalSelectText('teacher_year');
+	var legend1=new Array();
+	var legend2=new Array();
+	for (var i = 0; i < chartInfo.data.length; i++) {
+		legend1.push(chartInfo.data[i].name);
+	}
+
+	for (var i = 0; i < chartInfo.data2.length; i++) {
+		legend2.push(chartInfo.data2[i].name);
+	}
+
+
+	// 基于准备好的dom，初始化echarts实例
+	var myChart1 = echarts.init(document.getElementById("tab6Chart1"));
+
+	var option1 = {
+		title: {
+			text: xnmc+'教师类型分布',
+			left: "center",
+			textStyle: {
+				color: 'rgba(96,173,197,0.96)',
+				fontWeight: '800', //粗细
+				fontSize: '20',
+			},
+		},
+		tooltip: {},
+		legend: {
+			left: 'center',
+			bottom:'bottom',
+			type: 'scroll',
+			data: legend1
+		},
+		radar: {
+			name: {
+				textStyle: {
+					color: '#fff',
+					backgroundColor: '#999',
+					borderRadius: 3,
+					padding: [3, 5]
+				}
+			},
+			indicator: chartInfo.indicator
+		},
+		series: [{
+			name: '预算 vs 开销（Budget vs spending）',
+			type: 'radar',
+			data: chartInfo.data
+		}]
+	};
+
+	// 使用刚指定的配置项和数据显示图表
+	myChart1.setOption(option1);
+
+
+	// 基于准备好的dom，初始化echarts实例
+	var myChart2 = echarts.init(document.getElementById("tab6Chart2"));
+
+	var option2 = {
+		title: {
+			text: xnmc+'学时分布',
+			left: "center",
+			textStyle: {
+				color: 'rgba(96,173,197,0.96)',
+				fontWeight: '800', //粗细
+				fontSize: '20',
+			},
+		},
+		tooltip: {},
+		legend: {
+			left: 'center',
+			bottom:'bottom',
+			type: 'scroll',
+			data: legend2
+		},
+		radar: {
+			name: {
+				textStyle: {
+					color: '#fff',
+					backgroundColor: '#999',
+					borderRadius: 3,
+					padding: [3, 5]
+				}
+			},
+			indicator: chartInfo.indicator2
+		},
+		series: [{
+			name: '预算 vs 开销（Budget vs spending）',
+			type: 'radar',
+			data: chartInfo.data2
+		}]
+	};
+
+	// 使用刚指定的配置项和数据显示图表
+	myChart2.setOption(option2);
+}
+
+// chart自适应
+function tab6ChartListener(){
+	// chart自适应
+	window.addEventListener("resize", function() {
+		var all=$('.tab6ChartArea').find('.tab6ChartSingleArea');
+		for (var i = 0; i < all.length; i++) {
+			var myChart = echarts.init(document.getElementById(all[i].id));
+			myChart.resize();
+		}
+	});
+}
+
+//tab5事件绑定
+function tab6BtnBind(){
+	//学年change事件
+	$("#teacher_year").change(function() {
+		var year=getNormalSelectValue('teacher_year');
+		if(year===''){
+			getTeachTableInfo('');
+		}else{
+			getTeachTableInfo(year);
+		}
+	});
+}
+/**
+ * tab6 end
  * */
 

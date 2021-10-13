@@ -38,6 +38,7 @@ function stuffYearSelect(yearInfo){
 	stuffManiaSelect("#departmnetArea_year", str);
 	stuffManiaSelect("#student2Data_year", str);
 	stuffManiaSelect("#progress_year", str);
+	stuffManiaSelect("#tab4ReportArea_year", str);
 	stuffDownLoadStudentFileXnTable(yearInfo);
 }
 
@@ -1852,6 +1853,188 @@ function confirmStudentFileDownLoad(){
 	});
 }
 
+//及格率报表数据展示
+function showStudentFile(){
+	$('.tab4ReportArea').show();
+	$('.tab4MainArea').hide();
+	studentFileAreaBtnBind();
+	var a=[{'xnmc':'45455'}];
+	stuffTab4ReportTable(a);
+}
+
+//及格率报表数据开始检索
+function tab4ReportAreaStartSearch(){
+
+}
+
+//获取及格率报表数据
+function getTab4ReportInfo(){
+	stuffTab4ReportTable();
+}
+
+//填充及格率报表
+function stuffTab4ReportTable(tableInfo){
+	$('#tab4ReportAreaTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : false,
+		// exportDataType: "all",
+		// showExport: true,      //是否显示导出
+		// exportOptions:{
+		// 	fileName: '辽宁职业学院XX学院学生及格率统计表'  //文件名称
+		// },
+		onPageChange : function() {
+			drawPagination(".tab4ReportArea", "授课信息数据");
+		},
+		columns:[
+			[
+				{
+					title: "辽宁职业学院XX学院学生及格率统计表",
+					colspan: 10
+				}
+			],
+			[
+				{
+					field: 'xnmc',
+					title: "年级",
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					formatter: paramsMatter,
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'zxs',
+					title: "批次",
+					formatter: paramsMatter,
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					title: "专业",
+					valign:"middle",
+					formatter: paramsMatter,
+					align:"center",
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'zxs',
+					title: "人数",
+					formatter: paramsMatter,
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					colspan: 1,
+					rowspan: 2
+				},{
+					field: 'zxs',
+					title: "2019-2020学年",
+					formatter: paramsMatter,
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					colspan: 3,
+					rowspan: 1
+				},
+				{
+					field: 'zxs',
+					title: "总体及格率(%)",
+					formatter: paramsMatter,
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'zxs',
+					title: "预计毕业率(%)",
+					formatter: paramsMatter,
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					colspan: 1,
+					rowspan: 2
+				},
+				{
+					field: 'zxs',
+					title: "实际毕业率(%)",
+					formatter: paramsMatter,
+					valign:"middle",
+					align:"center",
+					sortable: true,
+					colspan: 1,
+					rowspan: 2
+				}
+			],
+			[
+				{
+					field: 'zrjs',
+					title: '本学年课程总数',
+					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
+					align:"center"
+				},
+				{
+					field: 'jzjs',
+					title: '及格率(%)',
+					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
+					align:"center"
+				},
+				{
+					field: 'wpjs',
+					title: '学年专业学生不及格情况统计占比(%)',
+					valign:"middle",
+					sortable: true,
+					formatter: peopleNumMatter,
+					align:"center"
+				}
+			]
+		]
+	});
+
+	drawPagination(".tab4ReportArea", "授课信息数据");
+	drawSearchInput(".tab4ReportArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//及格率报表数据展示 按钮事件绑定
+function studentFileAreaBtnBind(){
+	//返回
+	$('#returnTab4MainArea').unbind('click');
+	$('#returnTab4MainArea').bind('click', function(e) {
+		$('.tab4ReportArea').hide();
+		$('.tab4MainArea').show();
+		e.stopPropagation();
+	});
+
+	//开始检索
+	$('#tab4ReportArea_startSearch').unbind('click');
+	$('#tab4ReportArea_startSearch').bind('click', function(e) {
+		tab4ReportAreaStartSearch();
+		e.stopPropagation();
+	});
+}
+
 //tab4页面按钮事件绑定
 function tab4BinBind(){
 	//类型change事件
@@ -1890,6 +2073,13 @@ function tab4BinBind(){
 	//行政班focus
 	$('#student2Data_className').focus(function(e){
 		xzbFocus("student2Data_className");
+		e.stopPropagation();
+	});
+
+	//及格率报表数据展示
+	$('#showStudentFile').unbind('click');
+	$('#showStudentFile').bind('click', function(e) {
+		showStudentFile();
 		e.stopPropagation();
 	});
 }

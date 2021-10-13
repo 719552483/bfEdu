@@ -1058,8 +1058,8 @@ public class StaffManageService {
                 List<Edu400> edu400List = edu400Dao.findAllXn();
                 List<Map> mapList = new ArrayList<>();
                 List<Map> mapList2 = new ArrayList<>();
-                int max = 0;
-                int max2 = 0;
+                int max[] = new int[edu000List.size()];
+                int max2[] = new int[edu000List.size()];
                 for(Edu400 edu400:edu400List){
                     Map mapData = new HashMap();
                     Map mapData2 = new HashMap();
@@ -1070,11 +1070,11 @@ public class StaffManageService {
                     for (int i = 0;i<edu000List.size();i++){
                         value[i] = edu101Dao.queryAllClassTeachersNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
                         value2[i] = edu101Dao.queryAllClassTeachersTNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
-                        if(max < value[i]){
-                            max = value[i];
+                        if(max[i] < value[i]){
+                            max[i] = value[i];
                         }
-                        if(max2 < value2[i]){
-                            max2 = value2[i];
+                        if(max2[i] < value2[i]){
+                            max2[i] = value2[i];
                         }
                     }
                     mapData.put("value",value);
@@ -1086,14 +1086,23 @@ public class StaffManageService {
                 map.put("data2",mapList2);
                 mapList = new ArrayList<>();
                 mapList2 = new ArrayList<>();
-                for(Edu000 edu000:edu000List){
+                for(int i = 0;i<edu000List.size();i++){
+                    Edu000 edu000 = edu000List.get(i);
                     Map mapData = new HashMap();
                     mapData.put("name",edu000.getEjdmz());
-                    mapData.put("max",max);
+                    if(max[i] == 0){
+                        mapData.put("max",10);
+                    }else{
+                        mapData.put("max",max[i]+10);
+                    }
                     mapList.add(mapData);
                     Map mapData2 = new HashMap();
                     mapData2.put("name",edu000.getEjdmz());
-                    mapData2.put("max",max2);
+                    if(max[i] == 0){
+                        mapData2.put("max",10);
+                    }else{
+                        mapData2.put("max",max2[i]+100);
+                    }
                     mapList2.add(mapData2);
                 }
                 map.put("indicator",mapList);
@@ -1108,16 +1117,16 @@ public class StaffManageService {
                 mapData2.put("name",edu400.getXnmc());
                 int[] value = new int[edu000List.size()];
                 int[] value2 = new int[edu000List.size()];
-                int max = 0;
-                int max2 = 0;
+                int max[] = new int[edu000List.size()];
+                int max2[] = new int[edu000List.size()];
                 for (int i = 0;i<edu000List.size();i++){
                     value[i] = edu101Dao.queryAllClassTeachersNum(xnid,edu000List.get(i).getEjdm());
                     value2[i] = edu101Dao.queryAllClassTeachersTNum(xnid,edu000List.get(i).getEjdm());
-                    if(max < value[i]){
-                        max = value[i];
+                    if(max[i] < value[i]){
+                        max[i] = value[i];
                     }
-                    if(max2 < value2[i]){
-                        max2 = value2[i];
+                    if(max2[i] < value2[i]){
+                        max2[i] = value2[i];
                     }
                 }
                 mapData.put("value",value);
@@ -1128,14 +1137,23 @@ public class StaffManageService {
                 map.put("data2",mapList2);
                 mapList = new ArrayList<>();
                 mapList2 = new ArrayList<>();
-                for(Edu000 edu000:edu000List){
+                for(int i = 0;i<edu000List.size();i++){
+                    Edu000 edu000 = edu000List.get(i);
                     mapData = new HashMap();
                     mapData.put("name",edu000.getEjdmz());
-                    mapData.put("max",max);
+                    if(max[i] == 0){
+                        mapData.put("max",10);
+                    }else{
+                        mapData.put("max",max[i]+10);
+                    }
                     mapList.add(mapData);
                     mapData2 = new HashMap();
                     mapData2.put("name",edu000.getEjdmz());
-                    mapData2.put("max",max2);
+                    if(max[i] == 0){
+                        mapData2.put("max",10);
+                    }else{
+                        mapData2.put("max",max2[i]+100);
+                    }
                     mapList2.add(mapData2);
                 }
                 map.put("indicator",mapList);

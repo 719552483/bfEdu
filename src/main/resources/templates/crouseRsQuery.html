@@ -55,6 +55,7 @@
 						<li><a href="#tab4" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab4()">学生及格率/毕业率</a></li>
 						<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">学生个人成绩排名</a></li>
 						<li><a href="#tab5" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab5()">授课进度</a></li>
+						<li><a href="#tab6" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab6()">教师授课情况分析</a></li>
 					</ul>
 				</div>
 
@@ -567,7 +568,7 @@
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年<b>*</b></label>
 									<select class="isSowIndex" id="progress_year">
 										<option value="seleceConfigTip">暂无学年</option>
 									</select>
@@ -578,6 +579,40 @@
 
 					<div class="tab5TableArea searchGivePaddingR">
 						<table class="tablelist myTableStyle" id="tab5Table" style="margin-top: 10px;"></table>
+					</div>
+				</div>
+
+				<div id="tab6" class="tabson myTabson">
+					<span class="isFirstShowTab6 noneStart">T</span>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<select class="isSowIndex" id="teacher_year">
+										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+
+					<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
+						<span>教师授课概貌</span>
+					</div>
+					<div class="tab6ChartArea">
+						<div class="col2 tab6ChartSingleArea" id="tab6Chart1"></div>
+						<div class="col2 tab6ChartSingleArea" id="tab6Chart2"></div>
+					</div>
+					<div class="clear"></div>
+
+					<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
+						<span>参与授课教师情况</span>
+					</div>
+					<div class="tab6TableArea searchGivePaddingR">
+						<table class="tablelist myTableStyle" id="tab6Table" style="margin-top: 10px;"></table>
 					</div>
 				</div>
 
@@ -852,8 +887,30 @@
 			</div>
 	</div>
 
+	<!-- 个人授课情况分析Modal -->
+	<div class="modal fade bs-example-modal-lg" id="teachSingleDeatilsModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle"></span><a class="cancel" shape="rect"></a></div>
+					</div>
+					<div class="modal-body">
+						<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
+							<span>课程类型分布</span>
+						</div>
 
-		<!-- ajax请求masking -->
+						<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
+							<span>授课详情</span>
+						</div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" class="cancel" value="返回"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 		<div class="spinner-box">
 			<div class="pulse-container">
