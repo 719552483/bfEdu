@@ -209,4 +209,11 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 
 	@Query(value = "select count(0) from(select kcmc from edu201 where EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?1)) and xnid = ?2 group by kcmc)", nativeQuery = true)
 	String findskmsByxnid2(String zybm,String xnid);
+
+	@Query(value = "select * from edu201 where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) order by to_number(xnid)", nativeQuery = true)
+	List<Edu201> queryAllClassTeachersDetail(String edu101Id);
+
+	@Query(value = "select count(*) from edu204 where edu201_id = ?1", nativeQuery = true)
+	String queryBJSL(String edu201Id);
+
 }
