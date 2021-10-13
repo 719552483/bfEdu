@@ -1057,54 +1057,89 @@ public class StaffManageService {
             if(xnid == null || "".equals(xnid)){
                 List<Edu400> edu400List = edu400Dao.findAllXn();
                 List<Map> mapList = new ArrayList<>();
+                List<Map> mapList2 = new ArrayList<>();
                 int max = 0;
+                int max2 = 0;
                 for(Edu400 edu400:edu400List){
                     Map mapData = new HashMap();
+                    Map mapData2 = new HashMap();
                     mapData.put("name",edu400.getXnmc());
+                    mapData2.put("name",edu400.getXnmc());
                     int[] value = new int[edu000List.size()];
+                    int[] value2 = new int[edu000List.size()];
                     for (int i = 0;i<edu000List.size();i++){
                         value[i] = edu101Dao.queryAllClassTeachersNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
+                        value2[i] = edu101Dao.queryAllClassTeachersTNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
                         if(max < value[i]){
                             max = value[i];
+                        }
+                        if(max2 < value2[i]){
+                            max2 = value2[i];
                         }
                     }
                     mapData.put("value",value);
                     mapList.add(mapData);
-
+                    mapData2.put("value",value2);
+                    mapList2.add(mapData2);
                 }
                 map.put("data",mapList);
+                map.put("data2",mapList2);
                 mapList = new ArrayList<>();
+                mapList2 = new ArrayList<>();
                 for(Edu000 edu000:edu000List){
                     Map mapData = new HashMap();
                     mapData.put("name",edu000.getEjdmz());
                     mapData.put("max",max);
                     mapList.add(mapData);
+                    Map mapData2 = new HashMap();
+                    mapData2.put("name",edu000.getEjdmz());
+                    mapData2.put("max",max2);
+                    mapList2.add(mapData2);
                 }
                 map.put("indicator",mapList);
+                map.put("indicator2",mapList2);
             }else{
                 Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
                 List<Map> mapList = new ArrayList<>();
+                List<Map> mapList2 = new ArrayList<>();
                 Map mapData = new HashMap();
+                Map mapData2 = new HashMap();
                 mapData.put("name",edu400.getXnmc());
+                mapData2.put("name",edu400.getXnmc());
                 int[] value = new int[edu000List.size()];
+                int[] value2 = new int[edu000List.size()];
                 int max = 0;
+                int max2 = 0;
                 for (int i = 0;i<edu000List.size();i++){
                     value[i] = edu101Dao.queryAllClassTeachersNum(xnid,edu000List.get(i).getEjdm());
+                    value2[i] = edu101Dao.queryAllClassTeachersTNum(xnid,edu000List.get(i).getEjdm());
                     if(max < value[i]){
                         max = value[i];
                     }
+                    if(max2 < value2[i]){
+                        max2 = value2[i];
+                    }
                 }
                 mapData.put("value",value);
+                mapData2.put("value",value2);
                 mapList.add(mapData);
                 map.put("data",mapList);
+                mapList2.add(mapData2);
+                map.put("data2",mapList2);
                 mapList = new ArrayList<>();
+                mapList2 = new ArrayList<>();
                 for(Edu000 edu000:edu000List){
                     mapData = new HashMap();
                     mapData.put("name",edu000.getEjdmz());
                     mapData.put("max",max);
                     mapList.add(mapData);
+                    mapData2 = new HashMap();
+                    mapData2.put("name",edu000.getEjdmz());
+                    mapData2.put("max",max2);
+                    mapList2.add(mapData2);
                 }
                 map.put("indicator",mapList);
+                map.put("indicator2",mapList2);
             }
             resultVO = ResultVO.setSuccess("查询成功",map);
         }
