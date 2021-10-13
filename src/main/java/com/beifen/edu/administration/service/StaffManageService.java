@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 public class StaffManageService {
 
     @Autowired
+    Edu000Dao edu000Dao;
+    @Autowired
     Edu101Dao edu101Dao;
     @Autowired
     Edu001Dao edu001Dao;
@@ -1051,8 +1053,60 @@ public class StaffManageService {
         } else {
             Map map = new HashMap();
             map.put("tableInfo",edu101List);
-//            map.put("charInfo",);
-            resultVO = ResultVO.setSuccess("查询成功",edu101List);searchCourseGetGrade
+            List<Edu000> edu000List = edu000Dao.queryejdm("jzglx");
+            if(xnid == null || "".equals(xnid)){
+                List<Edu400> edu400List = edu400Dao.findAllXn();
+                List<Map> mapList = new ArrayList<>();
+                int max = 0;
+                for(Edu400 edu400:edu400List){
+                    Map mapData = new HashMap();
+                    mapData.put("name",edu400.getXnmc());
+                    int[] value = new int[edu000List.size()];
+                    for (int i = 0;i<edu000List.size();i++){
+                        value[i] = edu101Dao.queryAllClassTeachersNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
+                        if(max < value[i]){
+                            max = value[i];
+                        }
+                    }
+                    mapData.put("value",value);
+                    mapList.add(mapData);
+
+                }
+                map.put("data",mapList);
+                mapList = new ArrayList<>();
+                for(Edu000 edu000:edu000List){
+                    Map mapData = new HashMap();
+                    mapData.put("name",edu000.getEjdmz());
+                    mapData.put("max",max);
+                    mapList.add(mapData);
+                }
+                map.put("indicator",mapList);
+            }else{
+                Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                List<Map> mapList = new ArrayList<>();
+                Map mapData = new HashMap();
+                mapData.put("name",edu400.getXnmc());
+                int[] value = new int[edu000List.size()];
+                int max = 0;
+                for (int i = 0;i<edu000List.size();i++){
+                    value[i] = edu101Dao.queryAllClassTeachersNum(xnid,edu000List.get(i).getEjdm());
+                    if(max < value[i]){
+                        max = value[i];
+                    }
+                }
+                mapData.put("value",value);
+                mapList.add(mapData);
+                map.put("data",mapList);
+                mapList = new ArrayList<>();
+                for(Edu000 edu000:edu000List){
+                    mapData = new HashMap();
+                    mapData.put("name",edu000.getEjdmz());
+                    mapData.put("max",max);
+                    mapList.add(mapData);
+                }
+                map.put("indicator",mapList);
+            }
+            resultVO = ResultVO.setSuccess("查询成功",map);
         }
         return resultVO;
     }

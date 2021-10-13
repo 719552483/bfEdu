@@ -90,4 +90,8 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	//查询所有上课老师-xnid
 	@Query(value = "select * from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.xnid = ?1 GROUP BY EDU101_ID)",nativeQuery = true)
 	List<Edu101> queryAllClassTeachers(String xnid);
+
+	//查询所有上课老师数量-xnid
+	@Query(value = "select count(*) from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.xnid = ?1 GROUP BY EDU101_ID) and jzglxbm = ?2",nativeQuery = true)
+	Integer queryAllClassTeachersNum(String xnid,String jzglxbm);
 }
