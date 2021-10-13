@@ -213,7 +213,17 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "select * from edu201 where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) order by to_number(xnid)", nativeQuery = true)
 	List<Edu201> queryAllClassTeachersDetail(String edu101Id);
 
+	@Query(value = "select * from edu201 where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) and xnid = ?2", nativeQuery = true)
+	List<Edu201> queryAllClassTeachersDetail(String edu101Id,String xnid);
+
 	@Query(value = "select count(*) from edu204 where edu201_id = ?1", nativeQuery = true)
 	String queryBJSL(String edu201Id);
+
+	@Query(value = "select count(0) from edu201 e LEFT JOIN edu108 ee on e.EDU108_ID = ee.EDU108_ID where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) and e.xnid = ?2 and KCLX_CODE = ?3", nativeQuery = true)
+	Integer queryAllClassTeachersDetailKCLX(String edu101Id,String xnid,String kclx);
+
+	@Query(value = "select count(0) from edu201 e LEFT JOIN edu108 ee on e.EDU108_ID = ee.EDU108_ID where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) and KCLX_CODE = ?2", nativeQuery = true)
+	Integer queryAllClassTeachersDetailKCLX(String edu101Id,String kclx);
+
 
 }

@@ -1165,25 +1165,68 @@ public class StaffManageService {
     }
 
     //查询所有上课老师授课情况
-    public ResultVO queryAllClassTeachersDetail(String edu101Id) {
+    public ResultVO queryAllClassTeachersDetail(String edu101Id,String xnid) {
         ResultVO resultVO;
-
-        List<Edu201> edu201List = edu201Dao.queryAllClassTeachersDetail(edu101Id);
-        if(edu201List.size() == 0) {
-            resultVO = ResultVO.setFailed("暂无数据！");
-        } else {
-            for(Edu201 e:edu201List){
-                if("01".equals(e.getClassType())){
-                    e.setBjsl("1");
-                }else{
+        Map resultMap = new HashMap();
+        List<Edu201> edu201List;
+        if(xnid == null || "".equals(xnid)){
+            edu201List = edu201Dao.queryAllClassTeachersDetail(edu101Id);
+            if(edu201List.size() == 0) {
+                resultVO = ResultVO.setFailed("暂无数据！");
+            } else {
+                for(Edu201 e:edu201List){
+                    if("01".equals(e.getClassType())){
+                        e.setBjsl("1");
+                    }else{
 //                    String num = edu201Dao.queryBJSL(e.getEdu201_ID()+"");
 //                    e.setBjsl(num);
-                    String className = e.getClassName();
-                    int num = className.length() - className.replaceAll(",", "").length() + 1;
-                    e.setBjsl(num+"");
+                        String className = e.getClassName();
+                        int num = className.length() - className.replaceAll(",", "").length() + 1;
+                        e.setBjsl(num+"");
+                    }
                 }
+                resultMap.put("tableInfo",edu201List);
+
+                List<Edu000> edu000List = edu000Dao.queryejdm("cklx");
+                List<Map> mapList = new ArrayList<>();
+                for(Edu000 edu000:edu000List){
+                    Map map = new HashMap();
+                    map.put("name",edu000.getEjdmz());
+                    map.put("value",edu201Dao.queryAllClassTeachersDetailKCLX(edu101Id,edu000.getEjdm()));
+                    mapList.add(map);
+                }
+                resultMap.put("data",mapList);
+                resultVO = ResultVO.setSuccess("查询成功",resultMap);
             }
-            resultVO = ResultVO.setSuccess("查询成功",edu201List);
+        }else{
+            edu201List = edu201Dao.queryAllClassTeachersDetail(edu101Id,xnid);
+            if(edu201List.size() == 0) {
+                resultVO = ResultVO.setFailed("暂无数据！");
+            } else {
+                for(Edu201 e:edu201List){
+                    if("01".equals(e.getClassType())){
+                        e.setBjsl("1");
+                    }else{
+//                    String num = edu201Dao.queryBJSL(e.getEdu201_ID()+"");
+//                    e.setBjsl(num);
+                        String className = e.getClassName();
+                        int num = className.length() - className.replaceAll(",", "").length() + 1;
+                        e.setBjsl(num+"");
+                    }
+                }
+                resultMap.put("tableInfo",edu201List);
+
+                List<Edu000> edu000List = edu000Dao.queryejdm("cklx");
+                List<Map> mapList = new ArrayList<>();
+                for(Edu000 edu000:edu000List){
+                    Map map = new HashMap();
+                    map.put("name",edu000.getEjdmz());
+                    map.put("value",edu201Dao.queryAllClassTeachersDetailKCLX(edu101Id,xnid,edu000.getEjdm()));
+                    mapList.add(map);
+                }
+                resultMap.put("data",mapList);
+                resultVO = ResultVO.setSuccess("查询成功",resultMap);
+            }
         }
         return resultVO;
     }

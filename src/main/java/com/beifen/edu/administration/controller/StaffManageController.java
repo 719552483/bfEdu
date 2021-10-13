@@ -468,8 +468,8 @@ public class StaffManageController {
      */
     @RequestMapping("queryAllClassTeachersDetail")
     @ResponseBody
-    public ResultVO queryAllClassTeachersDetail(@RequestParam("edu101Id") String edu101Id) {
-        ResultVO result = staffManageService.queryAllClassTeachersDetail(edu101Id);
+    public ResultVO queryAllClassTeachersDetail(@RequestParam("edu101Id") String edu101Id,@RequestParam("xnid") String xnid) {
+        ResultVO result = staffManageService.queryAllClassTeachersDetail(edu101Id,xnid);
         return result;
     }
 
