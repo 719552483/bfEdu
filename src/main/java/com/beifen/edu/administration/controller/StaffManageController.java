@@ -450,7 +450,7 @@ public class StaffManageController {
     }
 
     /**
-     * 查询所有教师
+     * 查询所有上课老师
      *
      * @return returnMap
      */
@@ -458,6 +458,18 @@ public class StaffManageController {
     @ResponseBody
     public ResultVO queryAllClassTeachers(@RequestParam("xnid") String xnid) {
         ResultVO result = staffManageService.queryAllClassTeachers(xnid);
+        return result;
+    }
+
+    /**
+     * 查询所有上课老师授课情况
+     *
+     * @return returnMap
+     */
+    @RequestMapping("queryAllClassTeachersDetail")
+    @ResponseBody
+    public ResultVO queryAllClassTeachersDetail(@RequestParam("edu101Id") String edu101Id) {
+        ResultVO result = staffManageService.queryAllClassTeachersDetail(edu101Id);
         return result;
     }
 

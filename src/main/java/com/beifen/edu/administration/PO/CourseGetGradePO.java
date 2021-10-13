@@ -6,6 +6,7 @@ public class CourseGetGradePO {
     private String trem;//学年id
     private String sfsqks;//是否结课
     private String confirm;//是否确认成绩
+    private String teacherId;//教师id
 
     public String getTrem() {
         return trem;
@@ -29,5 +30,13 @@ public class CourseGetGradePO {
 
     public void setConfirm(String confirm) {
         this.confirm = confirm;
+    }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
     }
 }

@@ -834,6 +834,9 @@ public class TeachingManageService {
                         predicates.add(cb.isNull(root.<String>get("isConfirm")));
                     }
                 }
+                if (courseGetGradePO.getTeacherId() != null && !"".equals(courseGetGradePO.getTeacherId())) {
+                    predicates.add(cb.like(root.<String> get("ls"), "%"+courseGetGradePO.getTeacherId()+"%"));
+                }
                 predicates.add(cb.equal(root.<String>get("xnid"), courseGetGradePO.getTrem()));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

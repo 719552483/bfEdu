@@ -1049,7 +1049,34 @@ public class StaffManageService {
         if(edu101List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无授课老师");
         } else {
-            resultVO = ResultVO.setSuccess("查询成功",edu101List);
+            Map map = new HashMap();
+            map.put("tableInfo",edu101List);
+//            map.put("charInfo",);
+            resultVO = ResultVO.setSuccess("查询成功",edu101List);searchCourseGetGrade
+        }
+        return resultVO;
+    }
+
+    //查询所有上课老师授课情况
+    public ResultVO queryAllClassTeachersDetail(String edu101Id) {
+        ResultVO resultVO;
+
+        List<Edu201> edu201List = edu201Dao.queryAllClassTeachersDetail(edu101Id);
+        if(edu201List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无数据！");
+        } else {
+            for(Edu201 e:edu201List){
+                if("01".equals(e.getClassType())){
+                    e.setBjsl("1");
+                }else{
+//                    String num = edu201Dao.queryBJSL(e.getEdu201_ID()+"");
+//                    e.setBjsl(num);
+                    String className = e.getClassName();
+                    int num = className.length() - className.replaceAll(",", "").length() + 1;
+                    e.setBjsl(num+"");
+                }
+            }
+            resultVO = ResultVO.setSuccess("查询成功",edu201List);
         }
         return resultVO;
     }
