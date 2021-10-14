@@ -271,7 +271,7 @@ function onUncheckAll(row){
 function askForExam(row,index){
 	$.showModal("#remindModal",true);
 	$(".remindType").html("课程-"+row.kcmc);
-	$(".remindActionType").html("  考试申请");
+	$(".remindActionType").html("  课时已全部结束 并发起考试申请");
 	//确认发布任务书
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
@@ -291,7 +291,7 @@ function askForExams(){
 	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html("所选课程");
-	$(".remindActionType").html("考试申请");
+	$(".remindActionType").html("课时已全部结束 并发起考试申请");
 	//确认发布任务书
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
