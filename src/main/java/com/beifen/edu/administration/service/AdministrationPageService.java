@@ -4448,14 +4448,14 @@ public class AdministrationPageService {
 				String studentCode = contentRow.getCell(4).toString();
 				XSSFCell gradeCell = contentRow.getCell(5);
 				XSSFCell mxzt = contentRow.getCell(6);
-				if(studentCode.equals("19022312043")){
-					System.out.println("123");
+				if (gradeCell != null){
+					System.out.println("---------------------------");
 				}
 				if (gradeCell != null || mxzt != null ) {
 					Edu005 edu005;
 					edu005 = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode);
 					if (edu005 != null) {
-						if(mxzt != null && !"".equals(mxzt)){
+						if(mxzt != null && !"".equals(mxzt.toString())){
 							String mx = edu000DAO.queryEjdmByEjdmZ(mxzt.toString(),"IS_MX");
 							edu005.setIsMx(mx);
 							if(gradeCell == null && "0".equals(mx)){
