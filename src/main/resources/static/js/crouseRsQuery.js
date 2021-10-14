@@ -2840,6 +2840,11 @@ function stuffTeachTable(tableInfo){
 		search : true,
 		editable : false,
 		striped : true,
+		exportDataType: "all",
+		showExport: true,      //是否显示导出
+		exportOptions:{
+			fileName: getNormalSelectValue('teacher_year')+'教师授课情况分析导出'  //文件名称
+		},
 		toolbar : '#toolbar',
 		showColumns : true,
 		onPageChange : function() {
@@ -2912,7 +2917,8 @@ function teachSingleDeatils(row){
 		cache : false,
 		url : "/queryAllClassTeachersDetail",
 		data: {
-			"edu101Id":row.edu101_ID
+			"edu101Id":row.edu101_ID,
+			'xnid':getNormalSelectValue('teacher_year')
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -2927,13 +2933,158 @@ function teachSingleDeatils(row){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				$('#teachSingleDeatilsModal').find('.moadalTitle').html(row.xm+getNormalSelectText('teacher_year')+'个人授课情况分析');
-
 				$.showModal('#teachSingleDeatilsModal',true);
+				$('#teachSingleDeatilsModal').find('.moadalTitle').html(row.xm+getNormalSelectText('teacher_year')+'个人授课情况分析');
+				stuffSingleTeachTable(backjson.data.tableInfo);
+				stuffSingleTeachChart(backjson.data.data,row.xm);
+				// var myChart = echarts.init(document.getElementById("singleTeachChartArea"));
+
 			} else {
 				toastr.warning(backjson.msg);
 			}
 		}
+	});
+}
+
+//教师个人授课情况Table
+function stuffSingleTeachTable(tableInfo){
+	$('#singleTeachTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onPageChange : function() {
+			drawPagination(".singleTeachTable", "教师个人授课信息");
+		},
+		columns: [{
+			field :'xn',
+			title : '学年',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'kcmc',
+			title : '课程名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'className',
+			title : '班级名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'bjsl',
+			title : '班级数量',
+			align : 'left',
+			sortable: true,
+			visible : false,
+			formatter : paramsMatter
+		},{
+			field :'jxbrs',
+			title : '授课人数',
+			align : 'left',
+			sortable: true,
+			visible : false,
+			formatter : paramsMatter
+		},{
+			field :'xf',
+			title : '学分',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'zxs',
+			title : '总学时',
+			align : 'left',
+			sortable: true,
+			visible : false,
+			formatter : paramsMatter
+		},{
+			field :'fsxs',
+			title : '分散学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'jzxs',
+			title : '集中学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}]
+	});
+
+	drawPagination(".singleTeachTable", "教师个人授课信息");
+	drawSearchInput(".singleTeachTable");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".singleTeachTable", "教师个人授课信息");
+}
+
+//教师个人授课情况饼图
+function stuffSingleTeachChart(chartInfo,xm) {
+	var legendData=new Array();
+	for (var i = 0; i < chartInfo.length; i++) {
+		legendData.push(chartInfo[i].name);
+	}
+
+	var myChart = echarts.init(document.getElementById("singleTeachChartArea"));
+	option = {
+		title: {
+			text: getNormalSelectText('teacher_year')+xm+'个人授课课程类型分布',
+			left: 'center',
+			textStyle: {
+				color: 'rgba(96,173,197,0.96)',
+				fontSize: '16'
+			},
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: '{a} <br/>{b} : {c}节 ({d}%)'
+		},
+		legend: {
+			left: 'center',
+			bottom:'bottom',
+			data: legendData
+		},
+		series: [
+			{
+				name: '课程数',
+				type: 'pie',
+				radius: '55%',
+				// center: ['50%', '60%'],
+				data: chartInfo,
+				emphasis: {
+					itemStyle: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						shadowColor: 'rgba(0, 0, 0, 0.5)'
+					}
+				}
+			}
+		]
+	};
+
+	myChart.setOption(option);
+
+	$('#teachSingleDeatilsModal').on('shown.bs.modal',function(){
+		myChart.resize()
+	})
+
+	// chart自适应
+	window.addEventListener("resize", function() {
+		myChart.resize();
 	});
 }
 
@@ -2983,7 +3134,7 @@ function stuffTeachChart(chartInfo){
 			indicator: chartInfo.indicator
 		},
 		series: [{
-			name: '预算 vs 开销（Budget vs spending）',
+			name: '类型分布',
 			type: 'radar',
 			data: chartInfo.data
 		}]
@@ -3025,7 +3176,7 @@ function stuffTeachChart(chartInfo){
 			indicator: chartInfo.indicator2
 		},
 		series: [{
-			name: '预算 vs 开销（Budget vs spending）',
+			name: '学时分布',
 			type: 'radar',
 			data: chartInfo.data2
 		}]
