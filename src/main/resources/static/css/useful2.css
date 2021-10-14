@@ -1698,6 +1698,7 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+.singleTeachTable .bootstrap4 .search,
 .tab6TableArea .bootstrap4 .search,
 .departmentTableArea .bootstrap4 .search,
 .puttedDetailsTableArea .bootstrap4 .search,
@@ -3104,6 +3105,10 @@ input:focus{
 .tab6ChartSingleArea{
 	height: 500px;
 	margin-bottom: 25px;
+}
+
+#singleTeachChartArea{
+	height: 300px;
 }
 
 @keyframes serachAnimation {
