@@ -59,25 +59,25 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 	//获取大屏教师类型
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.JZGLX) teacher_type, to_char(t.JZGLXBM) teacher_type_name\n" +
 			"from (select distinct m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM\n" +
-			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
-			"            from edu107 a,\n" +
-			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID and a.batch in ?2 and a.edu105 in ?1) m,\n" +
-			"           EDU203 n,\n" +
-			"           EDU201 r,\n" +
-			"           EDU101 s,\n" +
-			"           edu202 o,\n" +
-			"           EDU108 p,\n" +
-			"           EDU107 q\n" +
-			"      where n.EDU202_ID = o.EDU202_ID\n" +
-			"        and o.EDU201_ID = r.EDU201_ID\n" +
-			"        and s.EDU101_ID = n.EDU101_ID\n" +
-			"        and p.EDU107_ID = q.EDU107_ID\n" +
-			"        and r.EDU108_ID = p.EDU108_ID\n" +
-			"        and m.EDU104_ID = q.EDU104\n" +
-			"        and n.TEACHER_TYPE = '01'\n" +
-			"        and r.xnid in ?3" +
-			"      group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM) t\n" +
+			"from (select distinct b.EDU104_ID, b.XBMC\n" +
+			"from edu107 a,\n" +
+			"edu104 b\n" +
+			"where a.EDU104 = b.EDU104_ID and a.batch in ?2 and a.edu105 in ?1 ) m,\n" +
+			"EDU203 n,\n" +
+			"EDU201 r,\n" +
+			"EDU101 s,\n" +
+			"edu202 o,\n" +
+			"edu204 d,\n" +
+			"edu300 f\n" +
+			"where n.EDU202_ID = o.EDU202_ID\n" +
+			"and o.EDU201_ID = r.EDU201_ID\n" +
+			"and s.EDU101_ID = n.EDU101_ID\n" +
+			"and d.EDU201_ID = r.EDU201_ID\n" +
+			"and f.edu300_id = d.edu300_id\n" +
+			"and m.EDU104_ID = f.xbbm\n" +
+			"and n.TEACHER_TYPE = '01'\n" +
+			"and r.xnid in ?3\n" +
+			"group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM) t\n" +
 			"group by t.EDU104_ID, t.XBMC, t.JZGLX, t.JZGLXBM\n" +
 			"order by t.EDU104_ID, t.JZGLX",nativeQuery = true)
 	List<Object[]> getTeacherType(List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList
@@ -115,25 +115,25 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 	//根据二级学院获取教师类型
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.JZGLX) teacher_type, to_char(t.JZGLXBM) teacher_type_name\n" +
 			"from (select distinct m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM\n" +
-			"      from (select distinct b.EDU104_ID, b.XBMC\n" +
-			"            from edu107 a,\n" +
-			"                 edu104 b\n" +
-			"            where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
-			"           EDU203 n,\n" +
-			"           EDU201 r,\n" +
-			"           EDU101 s,\n" +
-			"           edu202 o,\n" +
-			"           EDU108 p,\n" +
-			"           EDU107 q\n" +
-			"      where n.EDU202_ID = o.EDU202_ID\n" +
-			"        and o.EDU201_ID = r.EDU201_ID\n" +
-			"        and s.EDU101_ID = n.EDU101_ID\n" +
-			"        and p.EDU107_ID = q.EDU107_ID\n" +
-			"        and r.EDU108_ID = p.EDU108_ID\n" +
-			"        and m.EDU104_ID = q.EDU104\n" +
-			"        and n.TEACHER_TYPE = '01'\n" +
-			"        and r.xnid in ?4" +
-			"      group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM) t\n" +
+			"from (select distinct b.EDU104_ID, b.XBMC\n" +
+			"from edu107 a,\n" +
+			"edu104 b\n" +
+			"where a.EDU104 = b.EDU104_ID and a.EDU104 = ?1 and a.batch in ?3 and a.edu105 in ?2) m,\n" +
+			"EDU203 n,\n" +
+			"EDU201 r,\n" +
+			"EDU101 s,\n" +
+			"edu202 o,\n" +
+			"EDU108 p,\n" +
+			"EDU107 q\n" +
+			"where n.EDU202_ID = o.EDU202_ID\n" +
+			"and o.EDU201_ID = r.EDU201_ID\n" +
+			"and s.EDU101_ID = n.EDU101_ID\n" +
+			"and p.EDU107_ID = q.EDU107_ID\n" +
+			"and r.EDU108_ID = p.EDU108_ID\n" +
+			"and m.EDU104_ID = q.EDU104\n" +
+			"and n.TEACHER_TYPE = '01'\n" +
+			"and r.xnid in ?4\n" +
+			"group by m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM) t\n" +
 			"group by t.EDU104_ID, t.XBMC, t.JZGLX, t.JZGLXBM\n" +
 			"order by t.EDU104_ID, t.JZGLX",nativeQuery = true)
 	List<Object[]> getTeacherTypeInDepartment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
