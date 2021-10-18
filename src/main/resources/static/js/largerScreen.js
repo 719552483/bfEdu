@@ -394,8 +394,8 @@ function stuffTeacherTypeCount(teacherTypeData,isSingle){
 	var typeThreeDatas = [];
 
 	//分组
-	var screen=window.screen.width;
 	var groupNum=3;
+	// var screen=window.screen.width;
 	// if(screen<=1366){
 	// 	groupNum=;
 	// }else{
@@ -1712,13 +1712,13 @@ function searchReStuffTeacherTypeCount(teacherTypeData){
 	var typeThreeDatas = [];
 
 	//分组
-	var screen=window.screen.width;
-	var groupNum=0;
-	if(screen<=1366){
-		groupNum=3;
-	}else{
-		groupNum=4;
-	}
+	var groupNum=3;
+	// var screen=window.screen.width;
+	// if(screen<=1366){
+	// 	groupNum=3;
+	// }else{
+	// 	groupNum=4;
+	// }
 	for(var i=0;i<xAxisDatas.length;i+=groupNum){
 		Titledatas.push(xAxisDatas.slice(i,i+groupNum));
 	}
