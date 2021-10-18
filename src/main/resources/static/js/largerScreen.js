@@ -395,12 +395,12 @@ function stuffTeacherTypeCount(teacherTypeData,isSingle){
 
 	//分组
 	var screen=window.screen.width;
-	var groupNum=0;
-	if(screen<=1366){
-		groupNum=3;
-	}else{
-		groupNum=4;
-	}
+	var groupNum=3;
+	// if(screen<=1366){
+	// 	groupNum=;
+	// }else{
+	// 	groupNum=2;
+	// }
 	for(var i=0;i<xAxisDatas.length;i+=groupNum){
 		Titledatas.push(xAxisDatas.slice(i,i+groupNum));
 	}
@@ -1591,7 +1591,7 @@ function stuffStudentCount2(seriesdata,yAxisData){
 
 //渲染年级批次学年选择
 function stuffChoosenArea(choosenInfo){
-	var str='<li><a choosendvalue="" class="reStuffChooend">全年级</a></li>';
+	var str='<li><a class="reStuffChooend" choosendvalue="">全年级</a></li>';
 	//年级
 	var schoolYearInfo=choosenInfo.schoolYearInfo;
 	for (var i = 0; i < schoolYearInfo.length; i++) {
@@ -1608,7 +1608,7 @@ function stuffChoosenArea(choosenInfo){
 
 	$(".batchArea").empty().append(str);
 
-	str='<li><a choosendvalue="" class="reStuffChooend">全学年</a></li>';
+	str='<li><a class="reStuffChooend" choosendvalue="">全学年</a></li>';
 	//学年
 	var yearInfo=choosenInfo.yearInfo;
 	for (var i = 0; i < yearInfo.length; i++) {
