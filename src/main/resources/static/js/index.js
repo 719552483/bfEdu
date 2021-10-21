@@ -504,8 +504,11 @@ function drawReminds(reminds){
 	var str="";
 	var stffNum=0;
 	for (var i = 0; i < reminds.length; i++) {
-		if(reminds[i].isHandle==="F"&&stffNum<=3){
+		if(reminds[i].isHandle==="F"){
 			stffNum++;
+		}
+
+		if(reminds[i].isHandle==="F"&&stffNum<=4){
 			str+='<a class="showMoreReminds" id="showMoreReminds'+reminds[i].edu993_ID+'"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
 		}
 	}
@@ -515,13 +518,33 @@ function drawReminds(reminds){
 	}
 
 
-	if(stffNum<=3){
+	if(stffNum<=4){
 		$(parent.frames["topFrame"].document).find(".user").find("i").hide();
 		$(parent.frames["topFrame"].document).find(".user").find("b").hide();
+	}else if(stffNum>4&&stffNum<=99){
+		$(parent.frames["topFrame"].document).find(".user").find("i").show();
+		$(parent.frames["topFrame"].document).find(".user").find("b").show();
+		$(parent.frames["topFrame"].document).find(".user").find("b").html(stffNum-4);
+		// 顶部红色数字点击事件
+		$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
+		$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
+			showMoreReminds(reminds);
+			$('.allRemindArea').show();
+			$('.mainindex').hide().css("padding","0px");
+			e.stopPropagation();
+		});
 	}else{
 		$(parent.frames["topFrame"].document).find(".user").find("i").show();
 		$(parent.frames["topFrame"].document).find(".user").find("b").show();
-		$(parent.frames["topFrame"].document).find(".user").find("b").html(stffNum-3);
+		$(parent.frames["topFrame"].document).find(".user").find("b").html('99+');
+		// 顶部红色数字点击事件
+		$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
+		$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
+			showMoreReminds(reminds);
+			$('.allRemindArea').show();
+			$('.mainindex').hide().css("padding","0px");
+			e.stopPropagation();
+		});
 	}
 
 	$(".remindlist").append(str);
@@ -642,6 +665,8 @@ function showMoreReminds(reminds){
 			}
 		}
 	}
+
+	$('#moreNoticeTable').bootstrapTable('uncheckAll');
 
 	$('#moreNoticeTable').bootstrapTable('destroy').bootstrapTable({
 		data: reminds,
