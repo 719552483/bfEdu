@@ -616,10 +616,10 @@ function sendReadedRemind(sendArray){
 			requestError();
 		},
 		complete: function(xhr, status) {
+			loadReminds();
 			requestComplete();
 		},
 		success : function(backjson) {
-			hideloding();
 			if (backjson.code===200) {
 				for (var i = 0; i <choosendReminds.length ; i++) {
 					for (var j = 0; j < sendArray.length; j++) {
