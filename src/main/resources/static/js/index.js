@@ -507,7 +507,6 @@ function drawReminds(reminds){
 		if(reminds[i].isHandle==="F"){
 			stffNum++;
 		}
-
 		if(reminds[i].isHandle==="F"&&stffNum<=4){
 			str+='<a class="showMoreReminds" id="showMoreReminds'+reminds[i].edu993_ID+'"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
 		}
@@ -517,34 +516,10 @@ function drawReminds(reminds){
 		str='<li class="NoNotice">暂无未处理的提醒事项...</li>';
 	}
 
-
-	if(stffNum<=4){
-		$(parent.frames["topFrame"].document).find(".user").find("i").hide();
-		$(parent.frames["topFrame"].document).find(".user").find("b").hide();
-	}else if(stffNum>4&&stffNum<=99){
-		$(parent.frames["topFrame"].document).find(".user").find("i").show();
-		$(parent.frames["topFrame"].document).find(".user").find("b").show();
-		$(parent.frames["topFrame"].document).find(".user").find("b").html(stffNum-4);
-		// 顶部红色数字点击事件
-		$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
-		$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
-			showMoreReminds(reminds);
-			$('.allRemindArea').show();
-			$('.mainindex').hide().css("padding","0px");
-			e.stopPropagation();
-		});
+	if(stffNum<=99){
+		topRedRemindsStyle(stffNum,reminds);
 	}else{
-		$(parent.frames["topFrame"].document).find(".user").find("i").show();
-		$(parent.frames["topFrame"].document).find(".user").find("b").show();
-		$(parent.frames["topFrame"].document).find(".user").find("b").html('99+');
-		// 顶部红色数字点击事件
-		$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
-		$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
-			showMoreReminds(reminds);
-			$('.allRemindArea').show();
-			$('.mainindex').hide().css("padding","0px");
-			e.stopPropagation();
-		});
+		topRedRemindsStyle('99+',reminds);
 	}
 
 	$(".remindlist").append(str);
@@ -569,6 +544,21 @@ function drawReminds(reminds){
 	$('.readed').unbind('click');
 	$('.readed').bind('click', function(e) {
 		readedRemind();
+		e.stopPropagation();
+	});
+}
+
+// 顶部红色数字样式和点击事件
+function topRedRemindsStyle(stffNum,reminds){
+	$(parent.frames["topFrame"].document).find(".user").find("i").show();
+	$(parent.frames["topFrame"].document).find(".user").find("b").show();
+	$(parent.frames["topFrame"].document).find(".user").find("b").html(stffNum);
+	// 顶部红色数字点击事件
+	$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
+	$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
+		showMoreReminds(reminds);
+		$('.allRemindArea').show();
+		$('.mainindex').hide().css("padding","0px");
 		e.stopPropagation();
 	});
 }
