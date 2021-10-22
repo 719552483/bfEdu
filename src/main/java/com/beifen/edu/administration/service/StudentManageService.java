@@ -1758,7 +1758,7 @@ public class StudentManageService {
                     utils.appendCell(sheet, index+i+1, "", edu105.getNjmc(), -1, 1, false);
                     utils.appendCell(sheet, index+i+1, "", edu106.getZymc(), -1, 2, false);
                     //人数
-                    String peopleNum = edu300Dao.findPeopleNum(edu300List.get(i-1),edu105.getEdu105_ID()+"");
+                    String peopleNum = edu300Dao.findPeopleNum0(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
                     utils.appendCell(sheet, index+i+1, "", peopleNum, -1, 3, false);
                     Integer passNum = Integer.parseInt(peopleNum);
                     //1-4科不及格
@@ -1793,6 +1793,7 @@ public class StudentManageService {
                         utils.appendCell(sheet, index+i+1, "", "该专业暂无课程或未录成绩", -1, 4, false);
                     }else{
                         double v = Double.parseDouble(passNum.toString()) / Double.parseDouble(peopleNum);
+//                        String passs = edu005Dao.findGradeListNumP(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
                         NumberFormat nf = NumberFormat.getPercentInstance();
                         nf.setMinimumFractionDigits(2);//设置保留小数位
                         String usedPercent = nf.format(v);
@@ -2183,4 +2184,19 @@ public class StudentManageService {
         return resultVO;
     }
 
+    public ResultVO studentPassReport(List<Edu107> edu107List) {
+        ResultVO resultVO;
+        List<Map> mapList = new ArrayList<>();
+        for (Edu107 edu107:edu107List){
+            Map map = new HashMap();
+            String peopleNum = edu300Dao.findPeopleNum(edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+            map.put("nj",edu107.getEdu105mc());
+            map.put("pc",edu107.getBatchName());
+            map.put("zy",edu107.getEdu106mc());
+            map.put("peopleNum",peopleNum);
+            mapList.add(map);
+        }
+        resultVO = ResultVO.setSuccess("cg",mapList);
+        return resultVO;
+    }
 }

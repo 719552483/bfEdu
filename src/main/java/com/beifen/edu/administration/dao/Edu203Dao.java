@@ -203,4 +203,11 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
 
     @Query(value = "select count(0) from edu203 where EDU202_ID in (select EDU202_ID from edu202 where EDU201_ID = ?1) and CLOSED_STATE = '1'", nativeQuery = true)
     String checkIsAskForExam(String edu201Id);
+
+    @Query(value = "select count(0)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.EDU201_ID = ?1 and EDU101_ID = ?2", nativeQuery = true)
+    String findXsByTeacher(String edu201Id,String edu101Id);
+
+    @Query(value = "select count(0)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.EDU201_ID = ?1 and EDU101_ID = ?2 and  (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
+    String findYsxsByTeacher(String edu201Id,String edu101Id,String week,String xqid);
+
 }

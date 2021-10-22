@@ -4073,7 +4073,7 @@ public class AdministrationPageService {
 					return resultVO;
 				}
 				XSSFCell cell6 = contentRow.getCell(6);
-				if (cell6 != null && !"正常".equals(cell6.toString())){
+				if (cell6 != null && !"正常".equals(cell6.toString()) && !"".equals(cell6.toString())){
 					continue;
 				}
 				XSSFCell cell = contentRow.getCell(5);
@@ -4085,9 +4085,11 @@ public class AdministrationPageService {
 						isNum = data.matches("^(-?\\d+)(\\.\\d+)?$");
 					}
 					if(!isNum) {
-						resultVO = ResultVO.setFailed("第"+rowIndex+"行成绩不是数字");
+						resultVO = ResultVO.setFailed("第"+(rowIndex+1)+"行成绩不是数字");
 						return resultVO;
 					}
+				}else{
+
 				}
 			}
 
