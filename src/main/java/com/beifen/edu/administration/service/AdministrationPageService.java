@@ -2436,6 +2436,9 @@ public class AdministrationPageService {
 				if (edu107.getEdu106() != null && !"".equals(edu107.getEdu106())) {
 					predicates.add(cb.equal(root.<String>get("edu106"),  edu107.getEdu106()));
 				}
+				if (edu107.getBatch() != null && !"".equals(edu107.getBatch())) {
+					predicates.add(cb.equal(root.<String>get("batch"),  edu107.getBatch()));
+				}
 				Path<Object> path = root.get("edu104");//定义查询的字段
 				CriteriaBuilder.In<Object> in = cb.in(path);
 				for (int i = 0; i <departments.size() ; i++) {
