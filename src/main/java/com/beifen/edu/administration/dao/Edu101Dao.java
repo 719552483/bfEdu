@@ -84,18 +84,18 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	String queryTeacherIdByUserId(String userId);
 
 	//查询所有上课老师
-	@Query(value = "select * from edu101 where edu101_id in (select EDU101_ID from edu203  GROUP BY EDU101_ID)",nativeQuery = true)
-	List<Edu101> queryAllClassTeachers();
+	@Query(value = "select * from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.edu201_id in ?1 GROUP BY EDU101_ID)",nativeQuery = true)
+	List<Edu101> queryAllClassTeachers(List<Long> edu300Ids);
 
 	//查询所有上课老师-xnid
-	@Query(value = "select * from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.xnid = ?1 GROUP BY EDU101_ID)",nativeQuery = true)
-	List<Edu101> queryAllClassTeachers(String xnid);
+	@Query(value = "select * from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.xnid = ?1 and ee.edu201_id in ?2 GROUP BY EDU101_ID)",nativeQuery = true)
+	List<Edu101> queryAllClassTeachers(String xnid,List<Long> edu300Ids);
 
 	//查询所有上课老师数量-xnid
-	@Query(value = "select count(*) from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.xnid = ?1 GROUP BY EDU101_ID) and jzglxbm = ?2",nativeQuery = true)
-	Integer queryAllClassTeachersNum(String xnid,String jzglxbm);
+	@Query(value = "select count(*) from edu101 where edu101_id in (select EDU101_ID from edu203 e left JOIN edu202 ee on e.edu202_id = ee.edu202_id where ee.xnid = ?1 and ee.edu201_id in ?3 GROUP BY EDU101_ID) and jzglxbm = ?2",nativeQuery = true)
+	Integer queryAllClassTeachersNum(String xnid,String jzglxbm,List<Long> edu300Ids);
 
 	//查询所有上课老师数量-xnid
-	@Query(value = "select count(0)*2 from (select e.edu101_id,week,xqid,kjid from edu203 e LEFT JOIN edu101 eee on e.EDU101_ID = eee.EDU101_ID where edu202_id in (select edu202_id from edu202 where xnid = ?1) and jzglxbm = ?2 group by e.edu101_id,week,xqid,kjid)",nativeQuery = true)
-	Integer queryAllClassTeachersTNum(String xnid,String jzglxbm);
+	@Query(value = "select count(0)*2 from (select e.edu101_id,week,xqid,kjid from edu203 e LEFT JOIN edu101 eee on e.EDU101_ID = eee.EDU101_ID where edu202_id in (select edu202_id from edu202 where xnid = ?1 and edu201_id in ?3) and jzglxbm = ?2 group by e.edu101_id,week,xqid,kjid)",nativeQuery = true)
+	Integer queryAllClassTeachersTNum(String xnid,String jzglxbm,List<Long> edu300Ids);
 }

@@ -456,8 +456,11 @@ public class StaffManageController {
      */
     @RequestMapping("queryAllClassTeachers")
     @ResponseBody
-    public ResultVO queryAllClassTeachers(@RequestParam("xnid") String xnid) {
-        ResultVO result = staffManageService.queryAllClassTeachers(xnid);
+    public ResultVO queryAllClassTeachers(@RequestParam("SearchCriteria") String SearchCriteria) {
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(SearchCriteria);
+        Edu300 edu300 = JSON.parseObject(jsonObject.getString("classInfo"), Edu300.class);
+        String xnid = jsonObject.getString("xnid");
+        ResultVO result = staffManageService.queryAllClassTeachers(xnid,edu300);
         return result;
     }
 

@@ -46,6 +46,8 @@ public class StaffManageService {
     @Autowired
     Edu205Dao edu205Dao;
     @Autowired
+    Edu300Dao edu300Dao;
+    @Autowired
     Edu005Dao edu005Dao;
     @Autowired
     Edu400Dao edu400Dao;
@@ -1041,13 +1043,35 @@ public class StaffManageService {
     }
 
     //查询所有上课老师
-    public ResultVO queryAllClassTeachers(String xnid) {
+    public ResultVO queryAllClassTeachers(String xnid,Edu300 edu300) {
         ResultVO resultVO;
+
+        Specification<Edu300> specification = new Specification<Edu300>() {
+            public Predicate toPredicate(Root<Edu300> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu300.getPyccbm() != null && !"".equals(edu300.getPyccbm())) {
+                    predicates.add(cb.equal(root.<String>get("pyccbm"), edu300.getPyccbm()));
+                }
+                if (edu300.getXbbm() != null && !"".equals(edu300.getXbbm())) {
+                    predicates.add(cb.equal(root.<String>get("xbbm"), edu300.getXbbm()));
+                }
+                if (edu300.getNjbm() != null && !"".equals(edu300.getNjbm())) {
+                    predicates.add(cb.equal(root.<String>get("njbm"), edu300.getNjbm()));
+                }
+                if (edu300.getZybm() != null && !"".equals(edu300.getZybm())) {
+                    predicates.add(cb.equal(root.<String>get("zybm"), edu300.getZybm()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu300> classEntities = edu300Dao.findAll(specification);
+        List<Long> edu300Ids = classEntities.stream().map(Edu300::getEdu300_ID).collect(Collectors.toList());
+
         List<Edu101> edu101List = new ArrayList<>();
         if(xnid == null || "".equals(xnid)){
-            edu101List = edu101Dao.queryAllClassTeachers();
+            edu101List = edu101Dao.queryAllClassTeachers(edu300Ids);
         }else{
-            edu101List = edu101Dao.queryAllClassTeachers(xnid);
+            edu101List = edu101Dao.queryAllClassTeachers(xnid,edu300Ids);
         }
         if(edu101List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无授课老师");
@@ -1069,8 +1093,8 @@ public class StaffManageService {
                     int[] value = new int[edu000List.size()];
                     int[] value2 = new int[edu000List.size()];
                     for (int i = 0;i<edu000List.size();i++){
-                        value[i] = edu101Dao.queryAllClassTeachersNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
-                        value2[i] = edu101Dao.queryAllClassTeachersTNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm());
+                        value[i] = edu101Dao.queryAllClassTeachersNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm(),edu300Ids);
+                        value2[i] = edu101Dao.queryAllClassTeachersTNum(edu400.getEdu400_ID()+"",edu000List.get(i).getEjdm(),edu300Ids);
                         if(max[i] < value[i]){
                             max[i] = value[i];
                         }
@@ -1121,8 +1145,8 @@ public class StaffManageService {
                 int max[] = new int[edu000List.size()];
                 int max2[] = new int[edu000List.size()];
                 for (int i = 0;i<edu000List.size();i++){
-                    value[i] = edu101Dao.queryAllClassTeachersNum(xnid,edu000List.get(i).getEjdm());
-                    value2[i] = edu101Dao.queryAllClassTeachersTNum(xnid,edu000List.get(i).getEjdm());
+                    value[i] = edu101Dao.queryAllClassTeachersNum(xnid,edu000List.get(i).getEjdm(),edu300Ids);
+                    value2[i] = edu101Dao.queryAllClassTeachersTNum(xnid,edu000List.get(i).getEjdm(),edu300Ids);
                     if(max[i] < value[i]){
                         max[i] = value[i];
                     }

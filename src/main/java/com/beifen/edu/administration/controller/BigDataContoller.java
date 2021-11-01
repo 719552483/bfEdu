@@ -39,7 +39,7 @@ public class BigDataContoller {
     }
 
     /**
-     *财务信息存储
+     *  新增修改财务信息详情
      * @param financeInfo
      * @return
      */
@@ -52,7 +52,7 @@ public class BigDataContoller {
     }
 
     /**
-     *财务信息存储
+     * 批量删除财务信息详情
      * @param deleteIds
      * @return
      */

@@ -75,7 +75,7 @@ public class BigDataService {
         return resultVO;
     }
 
-    //保存大数据财务信息
+    //新增修改财务信息详情
     public ResultVO saveFinanceInfoDetail(Edu8001 edu8001) {
         ResultVO resultVO;
         String createDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -84,7 +84,7 @@ public class BigDataService {
         resultVO = ResultVO.setSuccess("操作成功",edu8001);
         return resultVO;
     }
-    //删除大数据财务信息
+    //批量删除财务信息详情
     public ResultVO deleteFinanceInfodetail(List<String> edu8001IdList) {
         ResultVO resultVO;
         edu8001Dao.deleteFinanceInfodetail(edu8001IdList);

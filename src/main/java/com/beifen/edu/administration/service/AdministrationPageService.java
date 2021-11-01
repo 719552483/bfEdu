@@ -542,7 +542,8 @@ public class AdministrationPageService {
 		ResultVO resultVO;
 
 		JSONArray edu108Ids = culturePlan.getJSONArray("crouses");
-
+		String xnid =  culturePlan.getString("xnid");
+		String xnmc =  culturePlan.getString("xnmc");
 		// eud108 课程更改开课计划属性
 		for (int i = 0; i < edu108Ids.size(); i++) {
 			String edu108Id = edu108Ids.get(i).toString();
@@ -563,6 +564,8 @@ public class AdministrationPageService {
 			edu206.setJzxs(edu108.getJzxs());
 			edu206.setFsxs(edu108.getFsxs());
 			edu206.setXf(edu108.getXf());
+			edu206.setXnid(xnid);
+			edu206.setXn(xnmc);
 			edu206Dao.save(edu206);
 		}
 
