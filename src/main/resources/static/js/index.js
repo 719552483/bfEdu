@@ -1031,72 +1031,45 @@ function stuffCourseCount(){
 //根据URL判断是否直接显示更多消息
 function isWantShowMoreReminds(){
 	var isWantShowMoreReminds=window.location.search.split('=')[1];
-	if(typeof isWantShowMoreReminds!=='undefined'&&isWantShowMoreReminds==='true'){
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/searchNotes",
-			data: {
-				"roleId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id,
-				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-			},
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				hideloding();
-				if (backjson.code===200) {
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchNotes",
+		data: {
+			"roleId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				if(typeof isWantShowMoreReminds!=='undefined'&&isWantShowMoreReminds==='true'){
 					$('.mainindex').hide().css("padding","0px");;
 					$('.allRemindArea').show();
 					showMoreReminds(backjson.data);
 				}else{
-					showMoreReminds([]);
-				}
-			}
-		});
-	}else{
-		$.ajax({
-			method : 'get',
-			cache : false,
-			url : "/searchNotes",
-			data: {
-				"roleId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id,
-				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
-			},
-			dataType : 'json',
-			beforeSend: function(xhr) {
-				requestErrorbeforeSend();
-			},
-			error: function(textStatus) {
-				requestError();
-			},
-			complete: function(xhr, status) {
-				requestComplete();
-			},
-			success : function(backjson) {
-				hideloding();
-				if (backjson.code===200) {
 					$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
 					$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
-						$('.mainindex').hide().css("padding","0px");;
+						$('.mainindex').hide().css("padding","0px");
 						$('.allRemindArea').show();
 						showMoreReminds(backjson.data);
 						e.stopPropagation();
 					});
-				}else{
-					showMoreReminds([]);
 				}
+			}else{
+				showMoreReminds([]);
 			}
-		});
-
-	}
+		}
+	});
 }
 
 $(function() {
