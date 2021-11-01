@@ -616,8 +616,12 @@ function sendReadedRemind(sendArray){
 					}
 				}
 				var currentNum=parseInt($(parent.frames["topFrame"].document).find(".user").find("b").html());
-				$(parent.frames["topFrame"].document).find(".user").find("b").html(currentNum-choosendReminds.length);
-
+				if(currentNum-choosendReminds.length==0){
+					$(parent.frames["topFrame"].document).find(".user").find("i").hide();
+					$(parent.frames["topFrame"].document).find(".user").find("b").hide();
+				}else{
+					$(parent.frames["topFrame"].document).find(".user").find("b").html(currentNum-choosendReminds.length);
+				}
 				toastr.success(backjson.msg);
 				$.hideModal();
 			} else {
