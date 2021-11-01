@@ -50,6 +50,8 @@ public class Edu201 {
 	private String Edu104_mc;//学院名称
 	private String classLittleName;//教学班别名
 	private String bjsl;//班级数量
+	private String jsxs;//教师的学时
+	private String ysxs;//已上的学时
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -324,5 +326,21 @@ public class Edu201 {
 
 	public void setBjsl(String bjsl) {
 		this.bjsl = bjsl;
+	}
+
+	public String getJsxs() {
+		return jsxs;
+	}
+
+	public void setJsxs(String jsxs) {
+		this.jsxs = jsxs;
+	}
+
+	public String getYsxs() {
+		return ysxs;
+	}
+
+	public void setYsxs(String ysxs) {
+		this.ysxs = ysxs;
 	}
 }

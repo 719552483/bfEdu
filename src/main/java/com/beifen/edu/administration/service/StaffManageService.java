@@ -5,6 +5,7 @@ import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.constant.RedisDataConstant;
 import com.beifen.edu.administration.dao.*;
 import com.beifen.edu.administration.domian.*;
+import com.beifen.edu.administration.utility.DateUtils;
 import com.beifen.edu.administration.utility.RedisUtils;
 import com.beifen.edu.administration.utility.ReflectUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -1164,6 +1165,40 @@ public class StaffManageService {
         return resultVO;
     }
 
+    public Edu201 setXs(Edu201 e,String edu101Id){
+        try {
+            Edu400 edu400 = edu400Dao.findOne(Long.parseLong(e.getXnid()));
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String kssj = edu400.getKssj();
+            Date startDate = sdf.parse(kssj);
+            String jssj = edu400.getJssj();
+            Date endDate = sdf.parse(jssj);
+            if (now.getTime() < startDate.getTime()) {
+//                        map.put("sjskxs", "0");
+                String numm = edu203Dao.findXsByTeacher(e.getEdu201_ID()+"",edu101Id);
+                e.setJsxs(numm);
+                e.setYsxs("0");
+            } else if (now.getTime() > endDate.getTime()) {
+//                        map.put("sjskxs", zxs);
+                String numm = edu203Dao.findXsByTeacher(e.getEdu201_ID()+"",edu101Id);
+                e.setJsxs(numm);
+                e.setYsxs(numm);
+            }else{
+                String numm = edu203Dao.findXsByTeacher(e.getEdu201_ID()+"",edu101Id);
+                e.setJsxs(numm);
+                int week = DateUtils.calcWeekOffset(startDate, now) + 1;
+                //获取当前星期id
+                String xqid = DateUtils.dateToWeek(now);
+                String countPass = edu203Dao.findYsxsByTeacher(e.getEdu201_ID()+"",edu101Id, week+"", xqid);
+                e.setYsxs(countPass);
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+        return e;
+    }
+
     //查询所有上课老师授课情况
     public ResultVO queryAllClassTeachersDetail(String edu101Id,String xnid) {
         ResultVO resultVO;
@@ -1175,6 +1210,7 @@ public class StaffManageService {
                 resultVO = ResultVO.setFailed("暂无数据！");
             } else {
                 for(Edu201 e:edu201List){
+                    e = setXs(e,edu101Id);
                     if("01".equals(e.getClassType())){
                         e.setBjsl("1");
                     }else{
@@ -1203,17 +1239,64 @@ public class StaffManageService {
             if(edu201List.size() == 0) {
                 resultVO = ResultVO.setFailed("暂无数据！");
             } else {
-                for(Edu201 e:edu201List){
-                    if("01".equals(e.getClassType())){
-                        e.setBjsl("1");
+                try {
+                    Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String kssj = edu400.getKssj();
+                    Date startDate = sdf.parse(kssj);
+                    String jssj = edu400.getJssj();
+                    Date endDate = sdf.parse(jssj);
+                    if (now.getTime() < startDate.getTime()) {
+//                        map.put("sjskxs", "0");
+                        for(Edu201 e:edu201List){
+                            if("01".equals(e.getClassType())){
+                                e.setBjsl("1");
+                            }else{
+                                String className = e.getClassName();
+                                int num = className.length() - className.replaceAll(",", "").length() + 1;
+                                e.setBjsl(num+"");
+                            }
+                            String numm = edu203Dao.findXsByTeacher(e.getEdu201_ID()+"",edu101Id);
+                            e.setJsxs(numm);
+                            e.setYsxs("0");
+                        }
+                    } else if (now.getTime() > endDate.getTime()) {
+//                        map.put("sjskxs", zxs);
+                        for(Edu201 e:edu201List){
+                            if("01".equals(e.getClassType())){
+                                e.setBjsl("1");
+                            }else{
+                                String className = e.getClassName();
+                                int num = className.length() - className.replaceAll(",", "").length() + 1;
+                                e.setBjsl(num+"");
+                            }
+                            String numm = edu203Dao.findXsByTeacher(e.getEdu201_ID()+"",edu101Id);
+                            e.setJsxs(numm);
+                            e.setYsxs(numm);
+                        }
                     }else{
-//                    String num = edu201Dao.queryBJSL(e.getEdu201_ID()+"");
-//                    e.setBjsl(num);
-                        String className = e.getClassName();
-                        int num = className.length() - className.replaceAll(",", "").length() + 1;
-                        e.setBjsl(num+"");
+                        for(Edu201 e:edu201List){
+                            if("01".equals(e.getClassType())){
+                                e.setBjsl("1");
+                            }else{
+                                String className = e.getClassName();
+                                int num = className.length() - className.replaceAll(",", "").length() + 1;
+                                e.setBjsl(num+"");
+                            }
+                            String numm = edu203Dao.findXsByTeacher(e.getEdu201_ID()+"",edu101Id);
+                            e.setJsxs(numm);
+                            int week = DateUtils.calcWeekOffset(startDate, now) + 1;
+                            //获取当前星期id
+                            String xqid = DateUtils.dateToWeek(now);
+                            String countPass = edu203Dao.findYsxsByTeacher(e.getEdu201_ID()+"",edu101Id, week+"", xqid);
+                            e.setYsxs(countPass);
+                        }
                     }
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
+
                 resultMap.put("tableInfo",edu201List);
 
                 List<Edu000> edu000List = edu000Dao.queryejdm("cklx");

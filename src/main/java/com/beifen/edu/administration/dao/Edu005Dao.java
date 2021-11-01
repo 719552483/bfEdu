@@ -404,6 +404,11 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "select COUNT(*) from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and xnid = ?3 and IS_CONFIRM = 'T'",nativeQuery = true)
     String findGradeListNum(String zybm,String njbm,String xnid);
 
+    @Query(value = "select count(*) from (\n" +
+            "select EDU001_ID,count(*) from (\n" +
+            "select * from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and xnid = ?3 and IS_CONFIRM = 'T' and grade <60) GROUP BY EDU001_ID)\n",nativeQuery = true)
+    String findGradeListNumP(String zybm,String njbm,String xnid);
+
     @Query(value = "SELECT COURSE_NAME from edu005 \n" +
             "LEFT JOIN edu300 on CLASS_NAME = xzbmc\n" +
             "where EDU201_ID IN (select DISTINCT EDU201_ID from edu204 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and NJbm = ?2 and BATCH = ?3))  \n" +

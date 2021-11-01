@@ -899,7 +899,7 @@ public class StudentManageController {
             return result;
         }else{
             List<Edu107> edu107List = (List<Edu107>) result.getData();
-//            result = studentManageService.studentPassReport(edu107List,edu107);
+            result = studentManageService.studentPassReport(edu107List);
         }
         return result;
     }

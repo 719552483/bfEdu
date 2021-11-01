@@ -130,6 +130,11 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select zybm from edu300 where njbm = ?1 GROUP BY zybm",nativeQuery = true)
 	List<String> findAllZy(String njbm);
 
-	@Query(value = "select sum(ZXRS) from edu300 where zybm = ?1 and njbm = ?2",nativeQuery = true)
-	String findPeopleNum(String zybm,String njbm);
+	@Query(value = "select count(*) from (\n" +
+			"select EDU001_ID,count(*) from (\n" +
+			"select * from edu005 where EDU300_ID in (select EDU300_ID from edu300 where zybm = ?1 and njbm = ?2) and xnid = ?3) GROUP BY EDU001_ID)",nativeQuery = true)
+	String findPeopleNum0(String zybm,String njbm,String xnid);
+
+	@Query(value = "select sum(ZXRS) from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3",nativeQuery = true)
+	String findPeopleNum(String zybm,String njbm,String batch);
 }
