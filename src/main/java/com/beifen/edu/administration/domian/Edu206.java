@@ -37,6 +37,7 @@ public class Edu206 {
 	private String fkyj;  //反馈意见
 	private String sfypk;  //是否已排课
 	private Double xf;//学分
+	private String isNew;//是否为改版后增加的（是否含有学年）
 
 
 
@@ -258,5 +259,13 @@ public class Edu206 {
 
 	public void setJzxs(Double jzxs) {
 		this.jzxs = jzxs;
+	}
+
+	public String getIsNew() {
+		return isNew;
+	}
+
+	public void setIsNew(String isNew) {
+		this.isNew = isNew;
 	}
 }

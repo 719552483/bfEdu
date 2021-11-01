@@ -566,6 +566,7 @@ public class AdministrationPageService {
 			edu206.setXf(edu108.getXf());
 			edu206.setXnid(xnid);
 			edu206.setXn(xnmc);
+			edu206.setIsNew("T");
 			edu206Dao.save(edu206);
 		}
 
