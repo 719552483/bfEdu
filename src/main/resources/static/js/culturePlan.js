@@ -1817,36 +1817,55 @@ function wantGeneratCoursePaln() {
 		return;
 	}
 
-	// 发送查询所有用户请求
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/getGeneratCoursePalnInfo",
-		data: {
-            "culturePlanInfo":$(".edu107Id")[0].innerText
-        },
+		url : "/searchAllXn",
 		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
+		async:false,
 		success : function(backjson) {
-			hideloding();
 			if (backjson.code === 200) {
-				if(backjson.data.tableInfo.length===0){
-					toastr.info('请添加专业课程');
-					return;
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					str += '<option value="' + backjson.data[i].edu400_ID + '">' + backjson.data[i].xnmc
+						+ '</option>';
 				}
-				$(".GeneratCoursePaln_currentMajorName").html($(".planName")[0].innerText);
-				$(".generatCoursePalnArea").show();
-				$(".culturePlanArea").hide();
-				stuffGeneratCoursePalnTable(backjson.data.tableInfo);
-				generatCoursePalnBtnbind();
+				stuffManiaSelect("#generatCourse_xn", str);
+				// 查询可选专业课程库
+				$.ajax({
+					method : 'get',
+					cache : false,
+					url : "/getGeneratCoursePalnInfo",
+					data: {
+						"culturePlanInfo":$(".edu107Id")[0].innerText
+					},
+					dataType : 'json',
+					beforeSend: function(xhr) {
+						requestErrorbeforeSend();
+					},
+					error: function(textStatus) {
+						requestError();
+					},
+					complete: function(xhr, status) {
+						requestComplete();
+					},
+					success : function(backjson) {
+						hideloding();
+						if (backjson.code === 200) {
+							if(backjson.data.tableInfo.length===0){
+								toastr.info('请添加专业课程');
+								return;
+							}
+							$(".GeneratCoursePaln_currentMajorName").html($(".planName")[0].innerText);
+							$(".generatCoursePalnArea").show();
+							$(".culturePlanArea").hide();
+							stuffGeneratCoursePalnTable(backjson.data.tableInfo);
+							generatCoursePalnBtnbind();
+						} else {
+							toastr.warning(backjson.msg);
+						}
+					}
+				});
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -1857,6 +1876,7 @@ function wantGeneratCoursePaln() {
 var choosendCourse=new Array();
 // 填充开课计划课程库表格
 function stuffGeneratCoursePalnTable(tableInfo) {
+	choosendCourse=new Array();
 	window.generatCourseEvents = {
 		'click #generatCourseInfo' : function(e, value, row, index) {
 			showCourseInfo(row);
@@ -2085,7 +2105,20 @@ function showCourseInfo(row) {
 
 // 准备生成开课计划
 function startGeneratCourse() {
+	var xn = getNormalSelectValue('generatCourse_xn');
+
+	if (xn==='') {
+		toastr.warning('暂未绑定开课计划学年');
+		return;
+	}
+	var xnmc = getNormalSelectText('generatCourse_xn');
+
 	var courses = $('#generatCourseTable').bootstrapTable('getSelections');
+
+	if (courses.length === 0) {
+		toastr.warning('暂未选择课程');
+		return;
+	}
 
 	if (courses.length === 0) {
 		toastr.warning('暂未选择课程');
@@ -2106,13 +2139,13 @@ function startGeneratCourse() {
 	// 确认新增开课计划
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
-		confirmAddGeneratCoursePaln();
+		confirmAddGeneratCoursePaln(xn,xnmc);
 		e.stopPropagation();
 	});
 }
 
 // 生成班级开课计划
-function confirmAddGeneratCoursePaln() {
+function confirmAddGeneratCoursePaln(xn,xnmc) {
 	var coursesArray = new Array();
 
 	//获取培养计划ID
@@ -2122,6 +2155,8 @@ function confirmAddGeneratCoursePaln() {
 	}
 	var sendObject=new Object();
 	sendObject.crouses=coursesArray;
+	sendObject.xnid=xn;
+	sendObject.xnmc=xnmc;
 	sendGeneratCoursePalnInfo(sendObject);
 }
 

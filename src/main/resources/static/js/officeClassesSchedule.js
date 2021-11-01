@@ -372,7 +372,11 @@ function onDblClickScheduleClassesTable(row, $element, field,ischeck){
 	}else if(field==="className"){
 		wantChooseClass(row,"#scheduleClassesTable",ischeck);
 	}else if(field==="xn"){
-		wantChooseXn(row,"#scheduleClassesTable");
+		if(row.xn===''||row.xn==null){
+			wantChooseXn(row,"#scheduleClassesTable");
+		}else{
+			toastr.warning('学年已绑定');
+		}
 	}else{
 		return;
 	}
