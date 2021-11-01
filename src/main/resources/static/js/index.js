@@ -467,6 +467,11 @@ function returnBack(){
 	$(".allShortcuts,.moreNoticeArea").hide();
 }
 
+
+
+
+
+
 //加载提醒
 function loadReminds(){
 	$.ajax({
@@ -507,22 +512,20 @@ function drawReminds(reminds){
 		if(reminds[i].isHandle==="F"){
 			stffNum++;
 		}
-		if(reminds[i].isHandle==="F"&&stffNum<=4){
-			str+='<a class="showMoreReminds" id="showMoreReminds'+reminds[i].edu993_ID+'"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
-		}
 	}
 
 	if(stffNum===0){
 		str='<li class="NoNotice">暂无未处理的提醒事项...</li>';
-	}
-
-	if(stffNum<=99){
-		topRedRemindsStyle(stffNum,reminds);
 	}else{
-		topRedRemindsStyle('99+',reminds);
+		for (var i = 0; i < reminds.length; i++) {
+			if(reminds[i].isHandle==="F"&&stffNum<=4){
+				str+='<a class="showMoreReminds" id="showMoreReminds'+reminds[i].edu993_ID+'"><li>'+reminds[i].noticeText+'<br><b>'+reminds[i].createDate+'</b></li></a>';
+			}
+		}
 	}
 
 	$(".remindlist").append(str);
+
 	//展示更多提醒||全部提醒
 	$('.showMoreReminds,.moreRemind').unbind('click');
 	$('.showMoreReminds,.moreRemind').bind('click', function(e) {
@@ -537,28 +540,17 @@ function drawReminds(reminds){
 	$('.remindReturnBtn').bind('click', function(e) {
 		$('.allRemindArea').hide();
 		$('.mainindex').show().css("padding","20px");
+		var myChart = echarts.init(document.getElementById('chart1'));
+		myChart.resize();
+		var myChart = echarts.init(document.getElementById('chart2'));
+		myChart.resize();
 		e.stopPropagation();
 	});
 
-	// 返回
+	// 已读提醒
 	$('.readed').unbind('click');
 	$('.readed').bind('click', function(e) {
 		readedRemind();
-		e.stopPropagation();
-	});
-}
-
-// 顶部红色数字样式和点击事件
-function topRedRemindsStyle(stffNum,reminds){
-	$(parent.frames["topFrame"].document).find(".user").find("i").show();
-	$(parent.frames["topFrame"].document).find(".user").find("b").show();
-	$(parent.frames["topFrame"].document).find(".user").find("b").html(stffNum);
-	// 顶部红色数字点击事件
-	$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
-	$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
-		showMoreReminds(reminds);
-		$('.allRemindArea').show();
-		$('.mainindex').hide().css("padding","0px");
 		e.stopPropagation();
 	});
 }
@@ -623,6 +615,9 @@ function sendReadedRemind(sendArray){
 						}
 					}
 				}
+				var currentNum=parseInt($(parent.frames["topFrame"].document).find(".user").find("b").html());
+				$(parent.frames["topFrame"].document).find(".user").find("b").html(currentNum-choosendReminds.length);
+
 				toastr.success(backjson.msg);
 				$.hideModal();
 			} else {
@@ -1033,8 +1028,80 @@ function stuffCourseCount(){
 	$('.courseCount').html(courseCount);
 }
 
+//根据URL判断是否直接显示更多消息
+function isWantShowMoreReminds(){
+	var isWantShowMoreReminds=window.location.search.split('=')[1];
+	if(typeof isWantShowMoreReminds!=='undefined'&&isWantShowMoreReminds==='true'){
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/searchNotes",
+			data: {
+				"roleId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id,
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					$('.mainindex').hide().css("padding","0px");;
+					$('.allRemindArea').show();
+					showMoreReminds(backjson.data);
+				}else{
+					showMoreReminds([]);
+				}
+			}
+		});
+	}else{
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/searchNotes",
+			data: {
+				"roleId":$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id,
+				"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
+					$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
+						$('.mainindex').hide().css("padding","0px");;
+						$('.allRemindArea').show();
+						showMoreReminds(backjson.data);
+						e.stopPropagation();
+					});
+				}else{
+					showMoreReminds([]);
+				}
+			}
+		});
+
+	}
+}
+
 $(function() {
 	judgementPWDisModifyFromImplements();
+	isWantShowMoreReminds();
 	loadUserScdlsj();
 	ShortcutsButtonBind();
 	drawAuthorityGroup();

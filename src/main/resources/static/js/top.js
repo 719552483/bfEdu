@@ -14,6 +14,7 @@ $(function() {
 	});
 	loadUserInfo();
 	stuffCurrenRoleName();
+	getRemindsInfo();
 })
 
 /*
@@ -98,4 +99,70 @@ function  confirmChangeRole(eve){
 	$(".user").removeClass("choseingClass");
 	parent.rightFrame.location.href="index.html";
 
+}
+
+//获取提醒事项信息
+function getRemindsInfo(){
+	var userId = JSON.parse($.session.get('userInfo')).bF990_ID;
+	var roleId=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a")[0].id;
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/searchNotes",
+		data: {
+			"roleId":roleId,
+			"userId":userId
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			if (backjson.code===200) {
+				var notReads=new Array();
+				for (var i = 0; i < backjson.data.length; i++) {
+					if(backjson.data[i].isHandle==="F"){
+						notReads.push(backjson.data[i]);
+					}
+				}
+
+				if(notReads.length>0){
+					$(parent.frames["topFrame"].document).find(".user").find("i").show();
+					$(parent.frames["topFrame"].document).find(".user").find("b").show();
+					$(parent.frames["topFrame"].document).find(".user").find("b").unbind('click');
+					$(parent.frames["topFrame"].document).find(".user").find("b").bind('click', function(e) {
+						isIndexPage(backjson.data);
+						e.stopPropagation();
+					});
+
+					if(notReads.length<=99){
+						$(parent.frames["topFrame"].document).find(".user").find("b").html(notReads.length);
+					}else{
+						$(parent.frames["topFrame"].document).find(".user").find("b").html('99+');
+					}
+				}
+			}
+		}
+	});
+}
+
+//判断main 定位不在index页面
+function isIndexPage(reminds) {
+	var thisUrl= parent.document.getElementById("rightFrame").contentWindow.location.href;
+	if(thisUrl.indexOf('index.html')===-1){
+		//main 定位不在index页面
+		topRedRemindsAction(false,reminds);
+	}else{
+		//main 定位在index页面
+		topRedRemindsAction(true,reminds);
+	}
+}
+
+//红色数字事件
+function topRedRemindsAction(isIndexPage,reminds){
+	if(isIndexPage){
+		$(parent.frames["rightFrame"].document).find('.mainindex').hide();
+		$(parent.frames["rightFrame"].document).find('.allRemindArea').show();
+		$(parent.frames["rightFrame"].document).find('#moreNoticeTable').bootstrapTable('uncheckAll');
+	}else{
+		window.parent.document.getElementById("rightFrame").src="index.html?isWantShowMoreReminds=true";
+	}
 }
