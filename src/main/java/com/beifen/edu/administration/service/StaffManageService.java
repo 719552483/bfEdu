@@ -1061,6 +1061,9 @@ public class StaffManageService {
                 if (edu300.getZybm() != null && !"".equals(edu300.getZybm())) {
                     predicates.add(cb.equal(root.<String>get("zybm"), edu300.getZybm()));
                 }
+                if (edu300.getBatch() != null && !"".equals(edu300.getBatch())) {
+                    predicates.add(cb.equal(root.<String>get("batch"), edu300.getBatch()));
+                }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };

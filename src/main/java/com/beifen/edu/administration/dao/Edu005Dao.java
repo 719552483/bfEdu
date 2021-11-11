@@ -186,7 +186,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
+            "EDU300_ID in ?1\n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
             "GROUP BY\n" +
@@ -195,7 +195,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "avg(grade) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult(List<String> edu107_id,String xnid);
+    List<Object[]> searchProfessionalCourseResult(List<String> edu300_id,String xnid);
 
 
     @Query(value = "SELECT \n" +
@@ -231,7 +231,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
+            "edu300_Id IN ?1 \n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
             "and STUDENT_NAME like %?3%\n" +
@@ -241,7 +241,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "avg(grade) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult2(List<String> edu107_id,String xnid,String studentName);
+    List<Object[]> searchProfessionalCourseResult2(List<String> edu300_id,String xnid,String studentName);
 
     @Query(value = "SELECT\n" +
             "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
@@ -253,7 +253,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
+            "edu300_Id IN ?1\n" +
             "AND IS_CONFIRM = 'T' \n" +
             "and XNID = ?2\n" +
             "and class_name like %?3%\n" +
@@ -263,7 +263,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "class_name\n" +
             "ORDER BY\n" +
             "avg(grade) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult3(List<String> edu107_id,String xnid,String className);
+    List<Object[]> searchProfessionalCourseResult3(List<String> edu300_id,String xnid,String className);
 
     @Query(value = "SELECT\n" +
             "TO_CHAR(row_number() over(order by student_code)) EDU005_ID,\n" +
@@ -275,18 +275,17 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
             "FROM\n" +
             "edu005 \n" +
             "WHERE\n" +
-            "EDU201_ID IN ( SELECT EDU201_ID FROM edu201 WHERE EDU108_ID IN ( SELECT EDU108_ID FROM edu108 WHERE EDU107_ID in ?1 ) AND SFSQKS = 'T') \n" +
-            "AND IS_CONFIRM = 'T' \n" +
-            "and XNID = ?2\n" +
-            "and class_name like %?3%\n" +
-            "and STUDENT_NAME like %?4%\n" +
+            "IS_CONFIRM = 'T' \n" +
+            "and XNID = ?1\n" +
+            "and class_name like %?2%\n" +
+            "and STUDENT_NAME like %?3%\n" +
             "GROUP BY\n" +
             "STUDENT_CODE,\n" +
             "STUDENT_NAME,\n" +
             "class_name\n" +
             "ORDER BY\n" +
             "avg(grade) DESC",nativeQuery = true)
-    List<Object[]> searchProfessionalCourseResult4(List<String> edu107_id,String xnid,String className,String studentName);
+    List<Object[]> searchProfessionalCourseResult4(String xnid,String className,String studentName);
 
     //根据任务书查询成绩总数
     @Query(value = "select to_char(count(0)) from edu005 t where t.Edu201_ID =?1 and CLASS_NAME = ?2",nativeQuery = true)
