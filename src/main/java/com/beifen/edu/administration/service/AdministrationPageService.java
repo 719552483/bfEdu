@@ -3152,6 +3152,7 @@ public class AdministrationPageService {
 	public ResultVO culturePlanAddClass(String edu107Id, List<String> edu300Ids) {
 		ResultVO resultVO;
 		List<Edu300> edu300List = new ArrayList<>();
+		edu1071DAO.removeByEdu107Id(edu107Id);
 		for(String edu300Id:edu300Ids){
 			Edu1071 edu1071 = new Edu1071();
 			edu1071.setEdu107_ID(Long.parseLong(edu107Id));
