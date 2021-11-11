@@ -219,10 +219,20 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 	@Query(value = "select count(*) from edu204 where edu201_id = ?1", nativeQuery = true)
 	String queryBJSL(String edu201Id);
 
-	@Query(value = "select count(0) from edu201 e LEFT JOIN edu108 ee on e.EDU108_ID = ee.EDU108_ID where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) and e.xnid = ?2 and KCLX_CODE = ?3", nativeQuery = true)
+	@Query(value = "select count(0) from (select kjid,xqid,week from edu203 e\n" +
+			"LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID\n" +
+			"LEFT JOIN edu201 eee on eee.EDU201_ID = ee.EDU201_ID\n" +
+			"LEFT JOIN edu108 eeee on eeee.EDU108_ID = eee.EDU108_ID\n" +
+			"where e.EDU101_ID = ?1 and ee.xnid = ?2 and KCLX_CODE = ?3\n" +
+			"GROUP BY kjid,xqid,week)\n", nativeQuery = true)
 	Integer queryAllClassTeachersDetailKCLX(String edu101Id,String xnid,String kclx);
 
-	@Query(value = "select count(0) from edu201 e LEFT JOIN edu108 ee on e.EDU108_ID = ee.EDU108_ID where edu201_id in (select edu201_id from edu205 where edu101_id = ?1) and KCLX_CODE = ?2", nativeQuery = true)
+	@Query(value = "select count(0) from (select kjid,xqid,week from edu203 e\n" +
+			"LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID\n" +
+			"LEFT JOIN edu201 eee on eee.EDU201_ID = ee.EDU201_ID\n" +
+			"LEFT JOIN edu108 eeee on eeee.EDU108_ID = eee.EDU108_ID\n" +
+			"where e.EDU101_ID = ?1 and KCLX_CODE = ?2\n" +
+			"GROUP BY kjid,xqid,week)\n", nativeQuery = true)
 	Integer queryAllClassTeachersDetailKCLX(String edu101Id,String kclx);
 
 

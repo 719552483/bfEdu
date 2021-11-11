@@ -1116,6 +1116,40 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 查询培养计划下的班级
+	 */
+	@RequestMapping("/queryCulturePlanClass")
+	@ResponseBody
+	public ResultVO queryCulturePlanClass(@RequestParam("edu107Id") String edu107Id) {
+		ResultVO result = administrationPageService.queryCulturePlanClass(edu107Id);
+		return result;
+	}
+
+	/**
+	 * 绑定培养计划对应班级
+	 */
+	@RequestMapping("/culturePlanAddClass")
+	@ResponseBody
+	public ResultVO culturePlanAddClass(@RequestParam("edu107Id") String edu107Id,
+										 @RequestParam("edu300Ids") String edu300Ids) {
+		List<String> classArray = JSON.parseArray(edu300Ids, String.class);
+		ResultVO result = administrationPageService.culturePlanAddClass(edu107Id,classArray);
+		return result;
+	}
+
+	/**
+	 * 查询未发布任务书的班级
+	 */
+	@RequestMapping("/queryNotPutedTasksClass")
+	@ResponseBody
+	public ResultVO queryNotPutedTasksClass(@RequestParam("SearchCriteria") String SearchCriteria) {
+		Edu107 edu107 = JSON.parseObject(SearchCriteria, Edu107.class);
+		ResultVO result = administrationPageService.queryNotPutedTasksClass(edu107);
+		return result;
+	}
+
+
+	/**
 	 * 修改培养计划下的专业课程
 	 * @param edu107Id
 	 * @param modifyInfo
@@ -2165,6 +2199,32 @@ public class AdministrationController {
 		returnMap.put("taskInfo", administrationPageService.queryTaskByID(ID));
 		returnMap.put("result", true);
 		return returnMap;
+	}
+
+
+	/**
+	 * 检索未发布的教学任务书（漏掉的行政班）
+	 * @return returnMap
+	 */
+	@RequestMapping("searchUnpublishedTasks")
+	@ResponseBody
+	public ResultVO searchUnpublishedTasks(@RequestParam("SearchCriteria") String SearchCriteria) {
+		Map<String, Object> returnMap = new HashMap();
+		JSONObject searchObject = JSONObject.fromObject(SearchCriteria);
+		//层次
+		String levelCode = searchObject.getString("level");
+		//学院
+		String departmentCode = searchObject.getString("department");
+		//年级
+		String gradeCode = searchObject.getString("grade");
+		//专业
+		String majorCode = searchObject.getString("major");
+		//批次
+		String batch = searchObject.getString("batch");
+		String xnid = searchObject.getString("xnid");
+		ResultVO resultVO = administrationPageService.searchUnpublishedTasks(levelCode,departmentCode,gradeCode,majorCode,batch,xnid);
+
+		return resultVO;
 	}
 
 

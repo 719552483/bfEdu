@@ -83,6 +83,8 @@ public class AdministrationPageService {
 	@Autowired
 	private Edu107Dao edu107DAO;
 	@Autowired
+	private Edu1071Dao edu1071DAO;
+	@Autowired
 	private Edu108Dao edu108DAO;
 	@Autowired
 	private Edu300Dao edu300DAO;
@@ -289,6 +291,7 @@ public class AdministrationPageService {
 	// 删除层次关系
 	public void removeRelation(String edu107ID) {
 		edu107DAO.removeRelation(edu107ID);
+		edu1071DAO.removeByEdu107Id(edu107ID);
 		//
 		// /*
 		// * 删除层次关系下的教学班、课表、教学任务书都不应存在 学生的相应教学班删除
@@ -2414,6 +2417,12 @@ public class AdministrationPageService {
 		return entities;
 	}
 
+	//检索未发布的教学任务书（漏掉的行政班）
+	public ResultVO searchUnpublishedTasks(String levelCode, String departmentCode,String gradeCode,String majorCode,String batch,String xnid){
+		ResultVO resultVO;
+		return null;
+	}
+
 
 	// 检索已发布的教学任务书
 	public List<Edu201> searchPutOutTasks(Edu107 edu107,Edu201 edu201,String userId) {
@@ -3074,6 +3083,88 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	//查询未发布任务书的班级
+	public ResultVO queryNotPutedTasksClass(Edu107 edu107){
+		ResultVO resultVO;
+		List<Edu206> edu206s = new ArrayList<>();
+		List<Edu107> edu107List = edu107DAO.searchProfessionalCourseResult(edu107.getEdu103(),edu107.getEdu104(),edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+		if(edu107List.size() == 0){
+			resultVO = ResultVO.setFailed("该专业暂无培养计划");
+			return resultVO;
+		}else if(edu107List.size() > 1){
+			for(Edu107 e:edu107List){
+				List<Edu1071> edu1071List = edu1071DAO.findByEdu107Id(e.getEdu107_ID()+"");
+				if(edu1071List.size() == 0){
+					resultVO = ResultVO.setFailed("【"+e.getPyjhmc()+"】该培养计划未绑定班级");
+					return resultVO;
+				}
+				List<Long> classIdList = edu1071List.stream().map(ee -> ee.getEdu300_ID()).distinct().collect(Collectors.toList());
+				List<Edu206> edu206List = edu206Dao.findTaskByEdu107Id(e.getEdu107_ID()+"");
+				if(edu206List.size() != 0){
+					for(Edu206 edu206:edu206List){
+						List<Edu300> edu300List = edu300DAO.queryNotPutedTasksClass(classIdList,edu206.getKcmc(),edu206.getXnid());
+						for(Edu300 edu300:edu300List){
+							Edu206 edu206New = new Edu206();
+							try {
+								BeanUtils.copyProperties(edu206New, edu206);
+							}catch (Exception exception){
+								exception.printStackTrace();
+							}
+							edu206New.setClassId(edu300.getEdu300_ID());
+							edu206New.setClassName(edu300.getXzbmc());
+							edu206New.setClassType("01");
+							edu206s.add(edu206New);
+						}
+					}
+				}
+			}
+		}else{
+			Edu107 e = edu107List.get(0);
+			List<Long> classIdList = edu300DAO.findAllidss(edu107.getEdu105(),edu107.getEdu106(),edu107.getBatch());
+			List<Edu206> edu206List = edu206Dao.findTaskByEdu107Id(e.getEdu107_ID()+"");
+			if(edu206List.size() != 0){
+				for(Edu206 edu206:edu206List){
+					List<Edu300> edu300List = edu300DAO.queryNotPutedTasksClass(classIdList,edu206.getKcmc(),edu206.getXnid());
+					for(Edu300 edu300:edu300List){
+						Edu206 edu206New = new Edu206();
+						try {
+							BeanUtils.copyProperties(edu206New, edu206);
+						}catch (Exception exception){
+							exception.printStackTrace();
+						}
+						edu206New.setClassId(edu300.getEdu300_ID());
+						edu206New.setClassName(edu300.getXzbmc());
+						edu206New.setClassType("01");
+						edu206s.add(edu206New);
+					}
+				}
+			}
+		}
+		if(edu206s.size() == 0){
+			resultVO = ResultVO.setFailed("该专业暂无培养计划");
+		}else{
+			resultVO = ResultVO.setSuccess("查询成功",edu206s);
+		}
+		return resultVO;
+	}
+
+	//绑定培养计划对应班级
+	public ResultVO culturePlanAddClass(String edu107Id, List<String> edu300Ids) {
+		ResultVO resultVO;
+		List<Edu300> edu300List = new ArrayList<>();
+		for(String edu300Id:edu300Ids){
+			Edu1071 edu1071 = new Edu1071();
+			edu1071.setEdu107_ID(Long.parseLong(edu107Id));
+			Edu300 edu300 = edu300DAO.findOne(Long.parseLong(edu300Id));
+			edu1071.setEdu300_ID(edu300.getEdu300_ID());
+			edu1071.setClassName(edu300.getXzbmc());
+			edu1071DAO.save(edu1071);
+			edu300List.add(edu300);
+		}
+		resultVO = ResultVO.setSuccess("保存成功",edu300List);
+		return resultVO;
+	}
+
 	//生成开课计划查询课程库和班级信息
 	public ResultVO getGeneratCoursePalnInfo(String edu107_id) {
 		ResultVO resultVO;
@@ -3159,6 +3250,21 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	public ResultVO queryCulturePlanClass(String edu107Id) {
+		ResultVO resultVO;
+		Map map = new HashMap();
+		List<Edu300> edu300List = edu300DAO.queryCulturePlanClass(Long.parseLong(edu107Id));
+		map.put("bindclass",edu300List);
+		List<Edu300> edu300s = edu300DAO.findAll();
+		map.put("allclass",edu300s);
+//		if(edu300List.size() == 0) {
+//			resultVO = ResultVO.setFailed("暂未查到绑定班级");
+//		}else {
+//			resultVO = ResultVO.setSuccess("共查询到"+edu300List.size()+"个班级",edu300List);
+//		}
+		resultVO = ResultVO.setSuccess("查询成功",map);
+		return resultVO;
+	}
 
 	//根据权限查询系部
 	public ResultVO getUsefulDepartment(String userId) {

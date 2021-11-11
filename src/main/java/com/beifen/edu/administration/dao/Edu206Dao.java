@@ -27,4 +27,7 @@ public interface Edu206Dao extends JpaRepository<Edu206, Long>, JpaSpecification
     @Modifying
     @Query(value = "delete from edu206 where Edu108_ID =?1", nativeQuery = true)
     void deleteByedu108(String edu108ID);
+
+    @Query(value = "select * from edu206 where xnid is not null and EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1)", nativeQuery = true)
+    List<Edu206> findTaskByEdu107Id(String edu107Id);
 }
