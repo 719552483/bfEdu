@@ -3255,8 +3255,14 @@ public class AdministrationPageService {
 		Map map = new HashMap();
 		List<Edu300> edu300List = edu300DAO.queryCulturePlanClass(Long.parseLong(edu107Id));
 		map.put("bindclass",edu300List);
-		List<Edu300> edu300s = edu300DAO.findAll();
-		map.put("allclass",edu300s);
+		if(edu300List.size() == 0){
+			List<Edu300> edu300s = edu300DAO.findAll();
+			map.put("allclass",edu300s);
+		}else{
+			List<Long> classIdList = edu300List.stream().map(ee -> ee.getEdu300_ID()).distinct().collect(Collectors.toList());
+			List<Edu300> edu300s = edu300DAO.findAllNotInList(classIdList);
+			map.put("allclass",edu300s);
+		}
 //		if(edu300List.size() == 0) {
 //			resultVO = ResultVO.setFailed("暂未查到绑定班级");
 //		}else {
