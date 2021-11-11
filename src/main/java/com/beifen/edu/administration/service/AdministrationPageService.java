@@ -3152,6 +3152,7 @@ public class AdministrationPageService {
 	public ResultVO culturePlanAddClass(String edu107Id, List<String> edu300Ids) {
 		ResultVO resultVO;
 		List<Edu300> edu300List = new ArrayList<>();
+		edu1071DAO.removeByEdu107Id(edu107Id);
 		for(String edu300Id:edu300Ids){
 			Edu1071 edu1071 = new Edu1071();
 			edu1071.setEdu107_ID(Long.parseLong(edu107Id));
@@ -3255,8 +3256,14 @@ public class AdministrationPageService {
 		Map map = new HashMap();
 		List<Edu300> edu300List = edu300DAO.queryCulturePlanClass(Long.parseLong(edu107Id));
 		map.put("bindclass",edu300List);
-		List<Edu300> edu300s = edu300DAO.findAll();
-		map.put("allclass",edu300s);
+		if(edu300List.size() == 0){
+			List<Edu300> edu300s = edu300DAO.findAll();
+			map.put("allclass",edu300s);
+		}else{
+			List<Long> classIdList = edu300List.stream().map(ee -> ee.getEdu300_ID()).distinct().collect(Collectors.toList());
+			List<Edu300> edu300s = edu300DAO.findAllNotInList(classIdList);
+			map.put("allclass",edu300s);
+		}
 //		if(edu300List.size() == 0) {
 //			resultVO = ResultVO.setFailed("暂未查到绑定班级");
 //		}else {
