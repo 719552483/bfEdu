@@ -179,6 +179,7 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				title: '年龄',
 				sortable: true,
 				align: 'left',
+				visible: false,
 				formatter: paramsMatter
 			},{
 				field: 'zc',
