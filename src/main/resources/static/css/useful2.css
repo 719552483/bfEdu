@@ -1,3 +1,21 @@
+/*body{*/
+/*	overflow: auto;*/
+/*}*/
+
+html{
+	/*overflow-y: auto;*/
+	/*overflow-x: hidden;*/
+}
+
+/*html::-webkit-scrollbar {*/
+/*	display: none;*/
+/*}*/
+
+
+
+
+
+
 input::-webkit-input-placeholder {
 	color: gray;
 }
@@ -204,6 +222,14 @@ padding:1.6em 0em 0.6em 31px !important
 	line-height: inherit !important;
 }
 
+.myTableStyle tbody > tr > td{
+	padding: 2px!important;
+}
+
+.myTableStyle .toolbar{
+	padding-left: 10px;
+}
+
 /*.fixed-table-container tbody .selected td {
   background-color: red !important;
 }*/
@@ -240,7 +266,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .tablelist>tbody>tr>td {
-	border-top: none !important;
+	border-top: dotted 1px #c7c7c7 !important;
 	border-bottom: none !important;
 	border-left: none !important;
 	border-right: dotted 1px #c7c7c7 !important;
@@ -252,7 +278,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 .tablelist>tbody>tr>td {
-	line-height: 3.5 !important;
+	line-height: 3 !important;
 }
 
 .culturePlanVerifyTableArea  .fixed-table-toolbar {
@@ -1098,17 +1124,17 @@ float: left;
 
 .greenTxt {
 	color: green;
-	    line-height: 42px;
+	    /*line-height: 42px;*/
 }
 
 .normalTxt {
 	color: rgba(49, 47, 47, 0.8705882352941177);
-	     line-height: 42px;
+	     /*line-height: 42px;*/
 }
 
 .redTxt {
 	color: #d70101;
-	       line-height: 42px;
+	       /*line-height: 42px;*/
 }
 
 
@@ -1698,6 +1724,7 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+.bindClassArea .bootstrap4 .search,
 .singleTeachTable .bootstrap4 .search,
 .tab6TableArea .bootstrap4 .search,
 .departmentTableArea .bootstrap4 .search,
@@ -2496,7 +2523,7 @@ input:focus{
 }
 
 #puttedInfoModal .PuttedKjArea{
-	width: 48%;
+	width:50%;
 	float: left;
 	min-width: 212px;
 }
@@ -2789,6 +2816,16 @@ input:focus{
 .modalInTable .fixed-table-body{
     border-left:1px solid rgb(221 221 221 / 68%);!important;
     border-right:1px solid rgb(221 221 221 / 68%);!important;
+}
+
+.bottomScroll .fixed-table-body{
+	margin-right: 90px;
+	margin-left: 40px;
+}
+
+
+.bottomScroll .fixed-table-footer {
+border-top: none;
 }
 
 .loadDetailsModalTipTxt,.loadDetailsModalRsTxt{
@@ -3111,6 +3148,18 @@ input:focus{
 	height: 300px;
 }
 
+.sinngleBindClass{
+	width: 45%!important;
+	float: left;
+}
+
+.dsad{
+	overflow-x: hidden!important;
+}
+
+
+
+
 @keyframes serachAnimation {
     10% {
         transform: translateX(-3px) rotate(-2deg);
@@ -3164,3 +3213,6 @@ input:focus{
 		-moz-transform: translateX(0px) rotate(1deg);
 	}
 }
+
+
+

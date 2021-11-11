@@ -2389,6 +2389,358 @@ function getApprovalobect(){
 	return approvalObject;
 }
 
+//预备培养计划绑定行政班
+function wantBindClass(){
+	getAllXzbInfo();
+}
+
+//获取行政班信息
+function getAllXzbInfo(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryCulturePlanClass",
+		data: {
+			"edu107Id":$(".edu107Id")[0].innerText
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				LinkageSelectPublic("#bindClass_level","#bindClass_department","#bindClass_grade","#");
+				$(".bindClass_currentMajorName").html($(".planName")[0].innerText);
+				bindClassBtnBind();
+				bindClassResearch();
+				stuffAllXzbTable(backjson.data.allclass);
+				stuffChoosendXzb(backjson.data.bindclass);
+				$(".bindClassArea").show();
+				$(".culturePlanArea").hide();
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
+
+var choosendXzb=new Array();
+// 填充所有班级表格
+function stuffAllXzbTable(tableInfo) {
+	choosendXzb=new Array();
+	$('#bindClassTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		clickToSelect : true,
+		onCheck : function(row) {
+			onCheckXzb(row);
+			var allChoosendXzb=new Array();
+			var sinngleBindClass=$('.sinngleBindClass');
+			for (var i = 0; i < sinngleBindClass.length; i++) {
+				allChoosendXzb.push(sinngleBindClass[i].attributes[1].nodeValue);
+			}
+
+			if(allChoosendXzb.indexOf(row.edu300_ID.toString())==-1){
+				drawSingleBindXzb(row);
+			}
+		},
+		onUncheck : function(row) {
+			onUncheckXzb(row);
+			removeSingleBindXzb(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllXzb(rows);
+			for (var i = 0; i < rows.length; i++) {
+				drawSingleBindXzb(rows[i]);
+			}
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllXzb(rows2);
+			for (var i = 0; i < rows2.length; i++) {
+				removeSingleBindXzb(rows2[i]);
+			}
+		},
+		onPageChange : function() {
+			drawPagination(".bindClassArea", "行政班");
+			for (var i = 0; i < choosendXzb.length; i++) {
+				$("#bindClassTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendXzb[i].edu300_ID]})
+			}
+		},
+		onPostBody: function() {
+			drawPagination(".bindClassArea", "行政班");
+			drawSearchInput(".bindClassArea");
+			toolTipUp(".myTooltip");
+			changeColumnsStyle(".bindClassArea", "行政班");
+		},
+		columns : [ {
+			field : 'check',
+			checkbox : true
+		},{
+			field : 'edu300_ID',
+			title: '唯一标识',
+			align : 'center',
+			visible : false
+		}, {
+			field : 'pyccmc',
+			title : '培养层次',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'xbmc',
+			title : '二级学院',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'njmc',
+			title : '年级',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'zymc',
+			title : '专业',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'batchName',
+			title : '批次',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'xzbmc',
+			title : '班级名称',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'localName',
+			title : '归属地',
+			align : 'left',
+			formatter : paramsMatter
+		}, {
+			field : 'zxrs',
+			title : '在校人数',
+			align : 'left',
+			formatter : paramsMatter
+		}]
+	});
+}
+
+//单选学生
+function onCheckXzb(row){
+	if(choosendXzb.length<=0){
+		choosendXzb.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(choosendXzb[i].edu300_ID===row.edu300_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendXzb.push(row);
+		}
+	}
+}
+
+//单反选学生
+function onUncheckXzb(row){
+	if(choosendXzb.length<=1){
+		choosendXzb.length=0;
+	}else{
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(choosendXzb[i].edu300_ID===row.edu300_ID){
+				choosendXzb.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选学生
+function onCheckAllXzb(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendXzb.push(row[i]);
+	}
+}
+
+//全反选学生
+function onUncheckAllXzb(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu300_ID);
+	}
+
+
+	for (var i = 0; i < choosendXzb.length; i++) {
+		if(a.indexOf(choosendXzb[i].edu300_ID)!==-1){
+			choosendXzb.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//填充已选行政班
+function stuffChoosendXzb(bindClasses){
+	if(bindClasses.length<=0){
+		$('.sinngleBindClass').remove();
+		$('.bindClassArea').find('.cannottxt').show();
+		$('.bindClassArea').find('.comfirmBindClass').hide();
+	}else{
+		$('.sinngleBindClass').remove();
+		$('.bindClassArea').find('.cannottxt').hide();
+		$('.bindClassArea').find('.comfirmBindClass').show();
+		for (var i = 0; i < bindClasses.length; i++) {
+			drawSingleBindXzb(bindClasses[i]);
+		}
+	}
+}
+
+//渲染单个班级至已绑定区域
+function drawSingleBindXzb(classInfo){
+	var str='<div class="PuttedKjArea sinngleBindClass sinngleBindClass'+classInfo.edu300_ID+'" edu300_ID="'+classInfo.edu300_ID+'">'+classInfo.pyccmc+'/'+classInfo.xbmc+'/'+classInfo.njmc+'/'+classInfo.zymc+'/'+classInfo.batchName+'-'+classInfo.xzbmc+'' +
+		'<img class="choosendKjImg choosendXzbInfoImg'+classInfo.edu300_ID+'" src="images/close1.png" choosendXzbInfo="'+classInfo.toString()+'">' +
+		'</div>';
+	$('.choosendBindClass').append(str);
+	$('.bindClassArea').find('.cannottxt').hide();
+	$('.bindClassArea').find('.comfirmBindClass').show();
+
+	// 删除单个绑定班级
+	$('.choosendXzbInfoImg'+classInfo.edu300_ID).unbind('click');
+	$('.choosendXzbInfoImg'+classInfo.edu300_ID).bind('click', function(e) {
+		removeSingleBindXzb(classInfo);
+		$('#bindClassTable').bootstrapTable("prepend", classInfo);
+		$("#bindClassTable").bootstrapTable("uncheckBy", {field:"edu300_ID", values:[classInfo.edu300_ID]});
+		e.stopPropagation();
+	});
+}
+
+//删除单个绑定班级
+function removeSingleBindXzb(choosendXzbInfo){
+	$('.sinngleBindClass'+choosendXzbInfo.edu300_ID).remove();
+	if($('.sinngleBindClass').length<=0){
+		$('.bindClassArea').find('.cannottxt').show();
+		$('.bindClassArea').find('.comfirmBindClass').hide();
+	}
+}
+
+//预备确认绑定班级
+function comfirmBindClass(){
+	var allChoosendXzb=new Array();
+	var sinngleBindClass=$('.sinngleBindClass');
+	for (var i = 0; i < sinngleBindClass.length; i++) {
+		allChoosendXzb.push(sinngleBindClass[i].attributes[1].nodeValue);
+	}
+	if(allChoosendXzb.length<=0){
+		toastr.warning('暂未选择行政班');
+		return;
+	}
+	$.showModal("#remindModal",true);
+	$(".remindType").html("培养计划");
+	$(".remindActionType").html("行政班绑定");
+	//确认绑定行政班
+	$('.confirmRemind').unbind('click');
+	$('.confirmRemind').bind('click', function(e) {
+		sendBindClassInfo(allChoosendXzb);
+		e.stopPropagation();
+	});
+}
+
+//发送确认绑定行政班请求
+function sendBindClassInfo(allChoosendXzb){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/culturePlanAddClass",
+		data:{
+			"edu107Id":$(".edu107Id")[0].innerText,
+			"edu300Ids":JSON.stringify(allChoosendXzb)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$(".bindClassArea").hide();
+				$(".culturePlanArea").show();
+				toastr.success(backjson.msg);
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//绑定班级开始检索
+function bindClassSearch() {
+
+}
+
+//绑定班级按钮时间绑定
+function bindClassBtnBind(){
+	// 返回培养计划
+	$('#bindClassReturnCulturePlan').unbind('click');
+	$('#bindClassReturnCulturePlan').bind('click', function(e) {
+		$(".bindClassArea").hide();
+		$(".culturePlanArea").show();
+		e.stopPropagation();
+	});
+
+	// 开始检索
+	$('#bindClassSearch').unbind('click');
+	$('#bindClassSearch').bind('click', function(e) {
+		bindClassSearch();
+		e.stopPropagation();
+	});
+
+	// 重置检索
+	$('#bindClassResearch').unbind('click');
+	$('#bindClassResearch').bind('click', function(e) {
+		bindClassResearch();
+		// stuffAllXzbTable({});
+		e.stopPropagation();
+	});
+
+	// 确认绑定
+	$('#comfirmBindClass').unbind('click');
+	$('#comfirmBindClass').bind('click', function(e) {
+		comfirmBindClass();
+		e.stopPropagation();
+	});
+}
+
+//重置绑定班级检索框
+function bindClassResearch(){
+	var reObject = new Object();
+	reObject.InputIds = "#bindClass_className";
+	reObject.normalSelectIds = "#bindClass_level,#bindClass_department,#bindClass_grade,#bindClass_major";
+	reReloadSearchsWithSelect(reObject);
+}
+
 // 初始化页面按钮绑定事件
 function binBind() {
 	// 重置按钮
@@ -2423,6 +2775,13 @@ function binBind() {
 	$('#wantGeneratCoursePaln').unbind('click');
 	$('#wantGeneratCoursePaln').bind('click', function(e) {
 		wantGeneratCoursePaln();
+		e.stopPropagation();
+	});
+
+	// 培养计划绑定行政班
+	$('#wantBindClass').unbind('click');
+	$('#wantBindClass').bind('click', function(e) {
+		wantBindClass();
 		e.stopPropagation();
 	});
 

@@ -119,12 +119,14 @@
 							src="img/back.png" style="width: 24px;" /></span>返回</li>
 					<li class="click insertBtn" id="wantAddClass"><span><img
 							src="images/t01.png" style="width: 24px;" /></span>添加专业课程</li>
-					<li class="click insertBtn" id="startPlanApproval"><span><img
-							src="img/businessApproval.png" style="width: 24px;" /></span>发起培养计划申请</li>
 					<li class="click insertBtn" id="wantGeneratCoursePaln"><span><img
 							src="images/t01.png" style="width: 24px;" /></span>生成班级开课计划</li>
+					<li class="click insertBtn" id="wantBindClass"><span><img
+							src="images/t01.png" style="width: 24px;" /></span>绑定行政班</li>
 					<li class="click deleteBtn" id="removeRows"><span><img
 							src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
+					<li class="click insertBtn" id="startPlanApproval"><span><img
+							src="img/businessApproval.png" style="width: 24px;" /></span>发起培养计划申请</li>
 					<li class="click" id="startSearch"><span><img
 							src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
 				</ul>
@@ -648,6 +650,104 @@
 				<table class="tablelist myTableStyle" id="generatCourseTable" data-unique-id="edu108_ID" style="margin-top: 10px;"></table>
 			</div>
 
+		</div>
+
+		<div class="bindClassArea noneStart">
+			<div class="formtext myformtext">
+				当前专业 - <b class="bindClass_currentMajorName"></b>
+			</div>
+			<div class="tools">
+				<ul class="toolbar">
+					<li class="click" id="bindClassReturnCulturePlan"><span><img
+							src="img/back.png" style="width: 24px;" /></span>取消返回</li>
+				</ul>
+			</div>
+
+			<div class="formtitle" style="margin-bottom: 6px;">
+				<span>可选班级库</span>
+			</div>
+			<div class="tools">
+				<ul class="toolbar">
+					<li class="click" id="bindClassSearch"><span><img
+							src="images/ico06.png" style="width: 24px;" /></span>开始检索</li>
+				</ul>
+				<ul class="toolbar1">
+					<li class="click" id="bindClassResearch"><span><img
+							src="img/reback.png" style="width: 24px;" /></span>重置检索</li>
+				</ul>
+			</div>
+
+			<div class="searchArea searchAreaWitheSelect">
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">层&#12288;&#12288;次<b>*</b></label>
+							<select id="bindClass_level">
+							</select>
+						</div>
+					</ul>
+				</div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">系&#12288;&#8197;部<b>*</b></label>
+							<select class="isSowIndex" id="bindClass_department">
+								<option value="seleceConfigTip">暂不可选</option>
+							</select>
+						</div>
+					</ul>
+				</div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级<b>*</b></label>
+							<select class="isSowIndex" id="bindClass_grade">
+								<option value="seleceConfigTip">暂不可选</option>
+							</select>
+						</div>
+					</ul>
+				</div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业<b>*</b></label>
+							<select class="isSowIndex" id="bindClass_major">
+								<option value="seleceConfigTip">暂不可选</option>
+							</select>
+
+						</div>
+					</ul>
+				</div>
+				<div class="clear"></div>
+
+				<div class="col4 giveBottom">
+					<ul class="forminfo">
+						<div class="">
+							<label class="selectName" style="margin-top: 14px;width: 18%;margin-right: 9px;">班级名称</label>
+							<input name="" type="text" class="myInput searchInput" id="bindClass_className" placeholder="请填写班级名称..."/>
+						</div>
+					</ul>
+				</div>
+			</div>
+
+			<div class="bindClassArea searchGivePaddingR columnsStyle">
+				<table class="tablelist myTableStyle" id="bindClassTable" data-unique-id="edu300_ID" style="margin-top: 10px;"></table>
+			</div>
+			<div class="clear"></div>
+
+			<div class="formtitle" style="margin-bottom: 6px;">
+				<span>已选绑定班级</span>
+			</div>
+			<div class="choosendBindClass">
+				<div class="cannottxt" style="margin-bottom: 25px;letter-spacing: 7px;font-size: 15px;">-暂未绑定行政班-</div>
+			</div>
+
+			<div class="clear"></div>
+			<input name="" id="comfirmBindClass" type="button" class="sure comfirmBindClass"
+				   value="确认绑定" style="margin-top: 25px;"/>
 		</div>
 	</div>
 
