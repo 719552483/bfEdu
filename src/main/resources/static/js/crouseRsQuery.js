@@ -2837,12 +2837,22 @@ function judgmentIsFristTimeLoadTab6(){
 
 //获取教师授课情况概貌主Table数据
 function getTeachTableInfo(year){
+	var SearchCriteria=new Object();
+	var classInfoObject=new Object();
+	classInfoObject.pyccbm='';
+	classInfoObject.xbbm='';
+	classInfoObject.njbm='';
+	classInfoObject.zybm='';
+	classInfoObject.batch='';
+	SearchCriteria.classInfo=classInfoObject;
+	SearchCriteria.xnid=year;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
 		url : "/queryAllClassTeachers",
 		data: {
-			"xnid":year
+			"SearchCriteria":JSON.stringify(SearchCriteria)
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
