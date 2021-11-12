@@ -144,8 +144,8 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select edu300_Id from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3",nativeQuery = true)
 	List<String> findAllids(String zy,String nj,String pc);
 
-	@Query(value = "select edu300_Id from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3",nativeQuery = true)
-	List<Long> findAllidss(String zy,String nj,String pc);
+	@Query(value = "select edu300_Id from edu300 where zybm = ?2 and njbm = ?1 and batch = ?3",nativeQuery = true)
+	List<Long> findAllidss(String nj,String zy,String pc);
 
 	@Query(value = "select edu300_Id from edu300 where zybm = ?1 and njbm = ?2",nativeQuery = true)
 	List<String> findAllids(String zy,String nj);
