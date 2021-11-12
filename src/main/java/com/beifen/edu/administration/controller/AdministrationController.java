@@ -1120,8 +1120,8 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryCulturePlanClass")
 	@ResponseBody
-	public ResultVO queryCulturePlanClass(@RequestParam("edu107Id") String edu107Id) {
-		ResultVO result = administrationPageService.queryCulturePlanClass(edu107Id);
+	public ResultVO queryCulturePlanClass(@RequestParam("edu107Id") String edu107Id,@RequestParam("className")String className) {
+		ResultVO result = administrationPageService.queryCulturePlanClass(edu107Id,className);
 		return result;
 	}
 
@@ -2242,7 +2242,7 @@ public class AdministrationController {
 		String sszt = searchObject.getString("sszt");
 //		String departmentCode = searchObject.getString("departmentCode");
 
-		String batch = searchObject.getString("batch");
+//		String batch = searchObject.getString("batch");
 
 		String levelCode = searchObject.getString("level");
 		String departmentCode = searchObject.getString("department");
@@ -2254,7 +2254,7 @@ public class AdministrationController {
 		edu107.setEdu104(departmentCode);
 		edu107.setEdu105(gradeCode);
 		edu107.setEdu106(majorCode);
-		edu107.setBatch(batch);
+//		edu107.setBatch(batch);
 
 		Edu201 edu201=new Edu201();
 //		edu201.setPyjhmc(pyjhmc);

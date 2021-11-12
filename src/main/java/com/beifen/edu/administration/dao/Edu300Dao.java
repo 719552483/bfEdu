@@ -156,6 +156,12 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select * from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3 and EDU300_ID not in ?4",nativeQuery = true)
 	List<Edu300> findAllNotInList(String zybm,String njbm,String batch,List<Long> classIdList);
 
+	@Query(value = "select * from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3 and EDU300_ID not in ?4 and xzbmc like %?5%",nativeQuery = true)
+	List<Edu300> findAllNotInList(String zybm,String njbm,String batch,List<Long> classIdList,String name);
+
 	@Query(value = "select * from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3",nativeQuery = true)
 	List<Edu300> findAllList(String zybm,String njbm,String batch);
+
+	@Query(value = "select * from edu300 where zybm = ?1 and njbm = ?2 and batch = ?3 and xzbmc like %?4%",nativeQuery = true)
+	List<Edu300> findAllList(String zybm,String njbm,String batch,String name);
 }

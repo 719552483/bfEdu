@@ -3251,18 +3251,28 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
-	public ResultVO queryCulturePlanClass(String edu107Id) {
+	public ResultVO queryCulturePlanClass(String edu107Id,String className) {
 		ResultVO resultVO;
 		Map map = new HashMap();
 		List<Edu300> edu300List = edu300DAO.queryCulturePlanClass(Long.parseLong(edu107Id));
 		map.put("bindclass",edu300List);
 		Edu107 edu107 = edu107DAO.findOne(Long.parseLong(edu107Id));
 		if(edu300List.size() == 0){
-			List<Edu300> edu300s = edu300DAO.findAllList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch());
+			List<Edu300> edu300s = new ArrayList<>();
+			if(className != null && !"".equals(className)){
+				edu300s = edu300DAO.findAllList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),className);
+			}else{
+				edu300s = edu300DAO.findAllList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch());
+			}
 			map.put("allclass",edu300s);
 		}else{
 			List<Long> classIdList = edu300List.stream().map(ee -> ee.getEdu300_ID()).distinct().collect(Collectors.toList());
-			List<Edu300> edu300s = edu300DAO.findAllNotInList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),classIdList);
+			List<Edu300> edu300s = new ArrayList<>();
+			if(className != null && !"".equals(className)){
+				edu300s = edu300DAO.findAllNotInList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),classIdList,className);
+			}else{
+				edu300s = edu300DAO.findAllNotInList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),classIdList);
+			}
 			map.put("allclass",edu300s);
 		}
 //		if(edu300List.size() == 0) {
