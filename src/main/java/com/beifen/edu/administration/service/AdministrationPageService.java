@@ -3256,12 +3256,13 @@ public class AdministrationPageService {
 		Map map = new HashMap();
 		List<Edu300> edu300List = edu300DAO.queryCulturePlanClass(Long.parseLong(edu107Id));
 		map.put("bindclass",edu300List);
+		Edu107 edu107 = edu107DAO.findOne(Long.parseLong(edu107Id));
 		if(edu300List.size() == 0){
-			List<Edu300> edu300s = edu300DAO.findAll();
+			List<Edu300> edu300s = edu300DAO.findAllList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch());
 			map.put("allclass",edu300s);
 		}else{
 			List<Long> classIdList = edu300List.stream().map(ee -> ee.getEdu300_ID()).distinct().collect(Collectors.toList());
-			List<Edu300> edu300s = edu300DAO.findAllNotInList(classIdList);
+			List<Edu300> edu300s = edu300DAO.findAllNotInList(edu107.getEdu106(),edu107.getEdu105(),edu107.getBatch(),classIdList);
 			map.put("allclass",edu300s);
 		}
 //		if(edu300List.size() == 0) {
@@ -3325,6 +3326,11 @@ public class AdministrationPageService {
 
 	public ResultVO confirmStartPlan(Edu600 edu600) {
 		ResultVO resultVO;
+		List<Edu1071> edu1071List = edu1071DAO.findByEdu107Id(edu600.getBusinessKey().toString());
+		if(edu1071List.size() == 0){
+			resultVO = ResultVO.setFailed("该培养计划未绑定班级，请绑定班级后重新发起审批！");
+			return resultVO;
+		}
 		boolean isSuccess = approvalProcessService.initiationProcess(edu600);
 		if (isSuccess) {
 			edu107DAO.changeProcessState("passing",edu600.getBusinessKey().toString());
