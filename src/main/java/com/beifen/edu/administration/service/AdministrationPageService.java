@@ -3114,6 +3114,7 @@ public class AdministrationPageService {
 							}catch (Exception exception){
 								exception.printStackTrace();
 							}
+							edu206New.setEdu206_ID(Long.parseLong(edu206New.getEdu206_ID()+""+edu300.getEdu300_ID()));
 							edu206New.setClassId(edu300.getEdu300_ID());
 							edu206New.setClassName(edu300.getXzbmc());
 							edu206New.setClassType("01");
