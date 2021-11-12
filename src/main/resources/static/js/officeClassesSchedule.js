@@ -1573,7 +1573,7 @@ function changsfxylcj(tableid,inputid,index){
 function putOut(row,index){
 	var putOutArray=new Array();
 	putOutArray.push(row);
-	checkPutOutInfo(putOutArray,putOutArray);
+	checkPutOutInfo(putOutArray,'scheduleClassesTable');
 }
 
 //批量发布任务书
@@ -1583,11 +1583,11 @@ function putOutTasks(){
 		toastr.warning('暂未选择任务书');
 		return;
 	}
-	checkPutOutInfo(choosedTasks);
+	checkPutOutInfo(choosedTasks,'scheduleClassesTable');
 }
 
 //检查任务书信息
-function checkPutOutInfo(putOutArray,Tasks){
+function checkPutOutInfo(putOutArray,tableID){
 	for (var i = 0; i < putOutArray.length; i++) {
 		if(putOutArray[i].ls===""||putOutArray[i].ls==null){
 			toastr.warning('有任务书暂未指定任课老师');
@@ -1611,13 +1611,13 @@ function checkPutOutInfo(putOutArray,Tasks){
 	//确认发布任务书
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
-		sendPutOutInfo(putOutArray);
+		sendPutOutInfo(putOutArray,tableID);
 		e.stopPropagation();
 	});
 }
 
 //发送发布任务书的请求
-function sendPutOutInfo(putOutArray){
+function sendPutOutInfo(putOutArray,tableID){
 	var sendArray=new Array();
 	for (var i = 0; i < putOutArray.length; i++) {
 		if(putOutArray[i].classLittleName===''){
@@ -1658,9 +1658,16 @@ function sendPutOutInfo(putOutArray){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				for (var i = 0; i < putOutArray.length; i++) {
-					$("#scheduleClassesTable").bootstrapTable('removeByUniqueId', putOutArray[i].edu201_ID);
+				if(tableID==='scheduleClassesTable'){
+					for (var i = 0; i < putOutArray.length; i++) {
+						$("#"+tableID).bootstrapTable('removeByUniqueId', putOutArray[i].edu201_ID);
+					}
+				}else{
+					for (var i = 0; i < putOutArray.length; i++) {
+						$("#"+tableID).bootstrapTable('removeByUniqueId', putOutArray[i].edu206_ID);
+					}
 				}
+
 				$.hideModal("#remindModal");
 				toastr.success(backjson.msg);
 			} else {
@@ -2538,7 +2545,7 @@ function onDblClickNotIncludeTable(row, $element, field){
 function rePuttedNotInclude(row){
 	var putOutNotIncludeArray=new Array();
 	putOutNotIncludeArray.push(row);
-	checkPutOutInfo(putOutNotIncludeArray,putOutNotIncludeArray);
+	checkPutOutInfo(putOutNotIncludeArray,'notIncludeTable');
 }
 
 //批量补发
@@ -2548,7 +2555,7 @@ function rePuttedNotIncludes(){
 		toastr.warning('暂未选择任务书');
 		return;
 	}
-	checkPutOutInfo(choosedNotIncludeTasks);
+	checkPutOutInfo(choosedNotIncludeTasks,'notIncludeTable');
 }
 
 //获取任务书漏发查询检索信息
