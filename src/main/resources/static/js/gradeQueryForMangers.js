@@ -89,6 +89,11 @@ function stuffStudentGradeTable(tableInfo) {
 				sortable: true,
 				visible: false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'className',
 				title: '行政班',
 				align: 'left',
@@ -474,6 +479,13 @@ function stuffStudentTable(cheeckType){
 					align: 'center',
 					sortable: true,
 					visible: false
+				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter:  function (value, row, index) {
+						return tableNumberMatterAfter(value, row, index,'chooseStudentTable');
+					}
 				},
 				 {
 					field: 'xzbname',
@@ -864,6 +876,11 @@ function stuffAdministrationClassTable(tableInfo){
 			sortable: true,
 			visible : false
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'xzbmc',
 			title : '行政班名称',
 			align : 'left',
@@ -1144,6 +1161,11 @@ function stuffCrouseClassTable(tableInfo,type){
 			sortable: true,
 			visible : false
 		},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 			field : 'kcmc',
 			title : '课程名称',
 			align : 'left',
@@ -1411,6 +1433,11 @@ function stuffExportGradeLookTable(tableInfo,crouseName){
 				sortable: true,
 				visible: false
 			}, {
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'studentName',
 				title: '学生姓名',
 				align: 'left',
@@ -1602,6 +1629,11 @@ function stuffExportNoPassGradeLookTable(tableInfo,crouseName){
 				sortable: true,
 				visible: false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'xn',
 				title: '学年',
 				align: 'left',
@@ -1745,6 +1777,11 @@ function stuffSituationTable(tableInfo){
 		},
 		columns: [
 			{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'xbmc',
 				title: '学院名称',
 				align: 'left',
@@ -1973,6 +2010,11 @@ function stuffSituationNotPassTable(tableInfo){
 		},
 		columns: [
 			{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'courseName',
 				title: '课程名称',
 				align: 'left',

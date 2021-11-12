@@ -118,6 +118,11 @@ function stuffAllCrouse(tableInfo){
 			{
 				field : 'radio',
 				radio : true
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field : 'edu108_ID',
@@ -319,6 +324,11 @@ function stuffAdministrationClassTable(tableInfo){
 		columns: [ {
 			field : 'radio',
 			radio : true
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
 		},  {
 			field : 'edu300_ID',
 			title: '唯一标识',
@@ -476,6 +486,11 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 				align : 'center',
 				visible : false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'studentName',
 				title : '学生姓名',
 				align : 'left',
@@ -521,6 +536,11 @@ function stuffSingleStudentGradeTable(tableInfo,type){
 				title: '唯一标识',
 				align : 'center',
 				visible : false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 				field : 'studentName',
 				title : '学生姓名',
@@ -1176,6 +1196,11 @@ function stuffTab4Table(tableInfo,type){
 			sortable: true,
 			visible : false
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field :'xm',
 			title : '姓名',
 			align : 'left',
@@ -1244,6 +1269,11 @@ function stuffTab4Table(tableInfo,type){
 			sortable: true,
             visible : false
         },{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
             field : 'pyccmc',
             title : '培养层次',
             align : 'left',
@@ -1427,6 +1457,11 @@ function stuffGraduateDeatilsTable(tableInfo){
             sortable: true,
             visible : false
         },{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
             field :'xm',
             title : '姓名',
             align : 'left',
@@ -1739,6 +1774,11 @@ function stuffDownLoadStudentFileXnTable(tableInfo){
 			field: 'check',
 			align : 'center',
 			checkbox: true
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
 		}, {
 			field : 'xnmc',
 			title : '学年',

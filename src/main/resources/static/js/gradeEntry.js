@@ -169,6 +169,11 @@ function stuffGradeOverviewTable(Info){
 			field: 'check',
 			checkbox: true
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field: 'className',
 			title: '行政班名称',
 			align: 'left',
@@ -801,6 +806,11 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				visible: false
 			}, {
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'className',
 				title: '行政班',
 				align: 'left',
@@ -1651,6 +1661,11 @@ function stuffCrouseClassTable(tableInfo,isCheck){
 				sortable: true,
 				visible : false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'kcmc',
 				title : '课程名称',
 				align : 'left',
@@ -2358,6 +2373,11 @@ function stuffMakeUpGradeOverviewTable(Info){
 			field: 'check',
 			checkbox: true
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field: 'className',
 			title: '行政班名称',
 			align: 'left',
@@ -2620,6 +2640,11 @@ function stuffMakeStudentBaseInfoTable(tableInfo) {
 				align: 'center',
 				sortable: true,
 				visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field: 'className',
@@ -4057,6 +4082,11 @@ function stuffAdministrationClassTable(tableInfo,isCheck){
 			align : 'center',
 			sortable: true,
 			visible : false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 			field : 'xzbmc',
 			title : '行政班名称',

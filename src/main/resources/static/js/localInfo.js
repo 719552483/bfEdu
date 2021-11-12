@@ -84,6 +84,11 @@ function stufflocalInfoTable(tableInfo) {
                 field: 'check',
                 checkbox: true,
             },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            },{
                 field: 'edu500Id',
                 title: '唯一标识',
                 align: 'center',
@@ -735,6 +740,11 @@ function stuffPointInfoTable(tableInfo) {
             {
                 field: 'check',
                 checkbox: true,
+            },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
             },{
                 field: 'edu501Id',
                 title: '唯一标识',

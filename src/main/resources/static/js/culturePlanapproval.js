@@ -121,6 +121,11 @@ function stuffMajorTrainingVerifyTable(tableInfo) {
 			field : 'check',
 			checkbox : true
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'edu108_ID',
 			title: '唯一标识',
 			align : 'center',

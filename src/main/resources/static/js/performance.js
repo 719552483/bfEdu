@@ -111,6 +111,11 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 align: 'center',
                 sortable: true,
                 visible: false
+            },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
             },
             {
                 field: 'pyccmc',
@@ -744,6 +749,11 @@ function stuffStudentTable(tableInfo){
             field: 'check',
             checkbox: true
         }, {
+            title: '序号',
+            align: 'center',
+            class:'tableNumberTd',
+            formatter: tableNumberMatter
+        },{
             field : 'xm',
             title : '姓名',
             align : 'left',

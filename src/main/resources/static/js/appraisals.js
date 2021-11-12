@@ -113,6 +113,12 @@ function stuffAppraisalsTable(tableInfo) {
             //     formatter: paramsMatter
             // },
             {
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            },
+            {
                 field: 'teacherName',
                 title: '评价人',
                 align: 'left',

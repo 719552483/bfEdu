@@ -153,7 +153,7 @@ function stuffAllRelationInfoTable(allRelationInfo){
 			align: 'center',
 			sortable: true,
 			visible: false
-		}, {
+		},{
 			field: 'yxbz',
 			title: '有效标志',
 			align: 'left',
@@ -162,6 +162,12 @@ function stuffAllRelationInfoTable(allRelationInfo){
 		}, {
 				field: 'check',
 				checkbox: true
+			},
+			{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 				field: 'xbsp',
 				title: '二级学院审批',
@@ -890,6 +896,11 @@ function stuffMajorTrainingTable(tableInfo) {
 			align : 'center',
 			visible : false
 		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'sfsckkjh',
 			title : '是否生成开课计划',
 			align : 'center',
@@ -1619,6 +1630,11 @@ function stuffAllClassTable(tableInfo) {
 			field : 'radio',
 			radio : true
 		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'kcdm',
 			title : '课程代码',
 			align : 'left',
@@ -1927,6 +1943,11 @@ function stuffGeneratCoursePalnTable(tableInfo) {
 			align : 'center',
 			visible : false
 		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'kcmc',
 			title : '课程名称',
 			align : 'left',
@@ -2352,8 +2373,8 @@ function confirmStartPlan() {
 			requestComplete();
 		},
 		success : function(backjson) {
+			hideloding();
 			if (backjson.code === 200) {
-				hideloding();
 				$.hideModal("#remindModal");
 				if(backjson.crouseInfo.length===0){
 					toastr.warning('该专业下暂无可生成课程');
@@ -2373,7 +2394,7 @@ function confirmStartPlan() {
 				toastr.success(backjson.msg);
 				drawPagination(".majorTrainingTableArea", "培养计划");
 			} else {
-				toastr.warning('操作失败，请重试');
+				toastr.warning(backjson.msg);
 			}
 		}
 	});
@@ -2498,6 +2519,11 @@ function stuffAllXzbTable(tableInfo) {
 			align : 'center',
 			visible : false
 		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'pyccmc',
 			title : '培养层次',
 			align : 'left',

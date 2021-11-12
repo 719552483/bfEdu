@@ -120,6 +120,11 @@ function stuffAllLevelTable(allLevel){
 				{
 					field: 'check',
 					checkbox: true
+				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter: tableNumberMatter
 				},
 				{
 					field: 'pyccmc',
@@ -310,6 +315,11 @@ function stuffAllDepartmentTable(allDepartment){
 				{
 					field: 'check',
 					checkbox: true
+				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter: tableNumberMatter
 				},
 				{
 					field: 'xbmc',
@@ -467,6 +477,11 @@ function stuffAllGradeTable(allGrade){
 				{
 					field: 'check',
 					checkbox: true
+				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter: tableNumberMatter
 				},
 				{
 					field: 'njmc',
@@ -624,6 +639,11 @@ function stuffAllMajorTable(allMajor){
 				{
 					field: 'check',
 					checkbox: true
+				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter: tableNumberMatter
 				},
 				{
 					field: 'zymc',
@@ -1789,6 +1809,11 @@ function stuffAllApproveTable(allApprove){
 			align: 'center',
 			sortable: true,
 			visible: false
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
 		}, {
 			field: 'businessName',
 			title: '审批类型',
@@ -2598,7 +2623,12 @@ function stuffAllXnTable(allRelationInfo){
 					align: 'center',
 					sortable: true,
 					visible: false
-				}, 
+				},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},
 				{
 					field: 'xnmc',
 					title: '学年名称',
@@ -3075,6 +3105,11 @@ function stuffChangeCrouseRoleTable(tableInfo){
 			sortable: true,
 			visible: false
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field: '角色id',
 			title: 'jsid',
 			align: 'center',
@@ -3267,7 +3302,12 @@ function stuffAllkjLimitTable(allKssxInfo){
 				align: 'center',
 				sortable: true,
 				visible: false
-			},
+			},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},
 			{
 				field: 'xn',
 				title: '学年',
@@ -3808,6 +3848,11 @@ function stuffAllbksjLimitTable(allMUxz){
 			align: 'center',
 			sortable: true,
 			visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field: 'xnmc',

@@ -57,6 +57,11 @@ function stufflocalInfoTable(tableInfo) {
         },
         columns: [
             {
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            },{
                 field: 'edu500Id',
                 title: '唯一标识',
                 align: 'center',
@@ -350,6 +355,11 @@ function stuffPointInfoTable(tableInfo) {
                 align: 'center',
                 sortable: true,
                 visible: false
+            },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
             },{
                 field: 'pointName',
                 title: '教学任务点名称',

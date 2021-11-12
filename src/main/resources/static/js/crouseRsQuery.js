@@ -106,6 +106,13 @@ function stuffCrouseRsForPresentQueryTable(){
 					title: '唯一标识',
 					align : 'center',
 					visible : false
+				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter:  function (value, row, index) {
+						return tableNumberMatterAfter(value, row, index,'crouseRsForPresentQueryTable');
+					}
 				}, {
 					field : 'className',
 					title : '班级名称',
@@ -297,7 +304,12 @@ function stuffCheckOnTable(tableInfo,row){
 			drawPagination(".checkOnForCourseRsTableArea", "出勤信息");
 		},
 		columns: [
-			 {
+			{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'xn',
 				title: '学年',
 				align: 'left',
@@ -447,6 +459,11 @@ function stuffCrouseRsForDeatilsTable1(tableInfo){
 				align : 'center',
 				visible : false
 			}, {
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'className',
 				title : '班级名称',
 				align : 'left',
@@ -568,6 +585,11 @@ function stuffCrouseRsForDeatilsTable(tableInfo){
 				align: 'center',
 				sortable: true,
 				visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 				field: 'className',
 				title: '行政班',
@@ -884,6 +906,11 @@ function stuffAllClassMangersTable(tableInfo){
 			field: 'check',
 			checkbox: true
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'szxbmc',
 			title : '二级学院',
 			align : 'left',
@@ -1107,6 +1134,11 @@ function stuffAllCrouse(tableInfo){
 			{
 				field : 'radio',
 				radio : true
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field : 'edu108_ID',
@@ -1315,6 +1347,11 @@ function stuffAdministrationClassTable(tableInfo){
 			sortable: true,
 			visible : false
 		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'xzbmc',
 			title : '行政班名称',
 			align : 'left',
@@ -2359,6 +2396,11 @@ function stuffGraduateDeatilsTable(tableInfo){
             sortable: true,
             visible : false
         },{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
             field :'xm',
             title : '姓名',
             align : 'left',
@@ -2703,6 +2745,11 @@ function stuffProgressTable(tableInfo){
 			drawPagination(".tab5TableArea", "授课进度信息");
 		},
 		columns: [{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field :'xbmc',
 			title : '二级学院名称',
 			align : 'left',
@@ -2851,6 +2898,11 @@ function stuffTeachTable(tableInfo){
 			drawPagination(".tab6TableArea", "教师授课信息");
 		},
 		columns: [{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field :'xm',
 			title : '姓名',
 			align : 'left',
@@ -2966,6 +3018,11 @@ function stuffSingleTeachTable(tableInfo){
 			drawPagination(".singleTeachTable", "教师个人授课信息");
 		},
 		columns: [{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field :'xn',
 			title : '学年',
 			align : 'left',

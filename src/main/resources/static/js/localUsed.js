@@ -101,6 +101,11 @@ function stufflocalInfoTable(tableInfo) {
                 sortable: true,
                 visible: false
             }, {
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            },{
                 field: 'city',
                 title: '地级市',
                 align: 'left',
@@ -239,6 +244,11 @@ function stuffPkInfoTable(tableInfo,row) {
         },
         columns: [
             {
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            }, {
                 field: 'classRoom',
                 title: '教学点',
                 align: 'left',

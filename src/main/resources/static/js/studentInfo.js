@@ -197,6 +197,13 @@ function stuffStudentBaseInfoTable() {
 					field: 'check',
 					checkbox: true
 				},{
+					title: '序号',
+					align: 'center',
+					class:'tableNumberTd',
+					formatter:  function (value, row, index) {
+						return tableNumberMatterAfter(value, row, index,'studentBaseInfoTable');
+					}
+				},{
 					field: 'edu001_ID',
 					title: '唯一标识',
 					align: 'center',

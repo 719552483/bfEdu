@@ -137,6 +137,11 @@ function stuffTeacherBaseInfoTable(tableInfo) {
 				align: 'center',
 				sortable: true,
 				visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			 {
 				field: 'szxbmc',
@@ -588,6 +593,11 @@ function stuffRecordsTable(tableInfo){
 				align: 'center',
 				sortable: true,
 				visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field: 'userName',
@@ -822,6 +832,11 @@ function stuffAddTeacherTable(tableInfo) {
 				align : 'center',
 				sortable: true,
 				visible : false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 				field: 'szxbmc',
 				title: '二级学院',

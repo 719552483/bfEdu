@@ -82,6 +82,12 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 visible: false
             },
             {
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            },
+            {
                 field: 'studentName',
                 title: '姓名',
                 align: 'left',

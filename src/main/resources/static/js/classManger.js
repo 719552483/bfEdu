@@ -191,6 +191,11 @@ function stuffAdministrationClassTable(tableInfo){
 				sortable: true,
 				visible : false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'pyccmc',
 				title : '培养层次',
 				align : 'left',
@@ -1175,6 +1180,11 @@ function stuffTeachingClassTable(tableInfo) {
 			align: 'center',
 			sortable: true,
 			visible: false
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
 		},{
 			field : 'bhxzbmc',
 			title : '教学班名称',

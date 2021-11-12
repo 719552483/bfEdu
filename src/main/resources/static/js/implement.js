@@ -1436,6 +1436,22 @@ function paramsMatter(value, row, index) {
 	}
 }
 
+// table增加序号 前端分页
+function tableNumberMatter(value, row, index) {
+    var number=parseInt(index);
+    return [ '<div class="myTooltip" title="'+(number+1)+'">'+(number+1)+'</div>' ]
+        .join('');
+}
+
+// table增加序号 后端分页
+function tableNumberMatterAfter(value, row, index,tableid) {
+	var pageSize=$('#'+tableid).bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+	var pageNumber=$('#'+tableid).bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+	var number= pageSize * (pageNumber - 1) + index + 1;//返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+	return [ '<div class="myTooltip" title="'+number+'">'+number+'</div>' ]
+		.join('');
+}
+
 // 根据课程类型改变背景颜色
 function changeClassAreaBg(classType) {
 	if (classType == 1) {

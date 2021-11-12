@@ -132,6 +132,11 @@ function stuffCheckOnEntryTable(tableInfo){
                 title: '唯一标识',
                 align : 'center',
                 visible : false
+            },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
             },
             {
                 field : 'xn',

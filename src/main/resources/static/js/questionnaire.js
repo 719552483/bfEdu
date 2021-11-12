@@ -89,6 +89,11 @@ function stuffAllQuestionTable(tableInfo,isStudent){
 			sortable: true,
 			visible : false
 		},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 			field : 'title',
 			title : '问卷标题',
 			align : 'left',

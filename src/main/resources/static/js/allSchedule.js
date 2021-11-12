@@ -154,6 +154,11 @@ function stuffYearFsSchedule(tableInfo){
 				align : 'center',
 				visible : false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'courseName',
 				title : '课程名称',
 				align : 'left',
@@ -873,6 +878,11 @@ function stuffFsSchedule(tableInfo){
 				align : 'center',
 				visible : false
 				},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'courseName',
 				title : '课程名称',
 				align : 'left',
@@ -1294,6 +1304,11 @@ function stuffAdministrationClassTable(tableInfo){
 			field: 'check',
 			checkbox: true
 		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 				field : 'pyccmc',
 				title : '层次',
 				align : 'left',
@@ -1491,6 +1506,11 @@ function stuffAllClassMangersTable(tableInfo){
 		},{
 			field: 'check',
 			checkbox: true
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
 		},{
 			field : 'szxbmc',
 			title : '二级学院',

@@ -136,6 +136,11 @@ function stuffApprovalMangerTable(tableInfo){
 			sortable: true,
 			visible : false
 		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
 			field : 'businessName',
 			title : '审批业务类型',
 			align : 'left',

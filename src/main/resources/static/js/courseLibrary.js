@@ -159,6 +159,11 @@ function stuffCourseLibraryTable(tableInfo){
 				align : 'center',
 				sortable: true,
 				visible : false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			}, {
 				field : 'kcmc',
 				title : '课程名称',
@@ -691,6 +696,11 @@ function stuffAllClassMangersTable(tableInfo){
 			},{
 				field: 'check',
 				checkbox: true
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 				field : 'szxbmc',
 				title : '二级学院',

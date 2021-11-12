@@ -47,6 +47,11 @@ function stuffCourseLibraryTable(tableInfo){
 				title: '唯一标识',
 				align : 'center',
 				visible : false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			}, {
 				field : 'kcdm',
 				title : '课程代码',

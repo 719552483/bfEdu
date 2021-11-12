@@ -333,7 +333,14 @@ function stuffTable() {
 							align: 'center',
 							sortable: true,
 							visible: false
-						},
+						},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter:  function (value, row, index) {
+					return tableNumberMatterAfter(value, row, index,'allUserTable');
+				}
+			},
 						{
 							field: 'yhm',
 							title: '账号',

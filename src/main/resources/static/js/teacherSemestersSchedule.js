@@ -191,6 +191,11 @@ function stuffFsSchedule(tableInfo){
 				align : 'center',
 				visible : false
 				},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'courseName',
 				title : '课程名称',
 				align : 'left',
@@ -855,6 +860,11 @@ function stuffFsScheduleTable2(tableInfo){
 				title: '唯一标识',
 				align : 'center',
 				visible : false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},{
 				field : 'courseName',
 				title : '课程名称',

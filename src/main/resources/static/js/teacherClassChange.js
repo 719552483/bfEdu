@@ -1383,6 +1383,11 @@ function stuffFsSchedule(tableInfo){
 				align : 'center',
 				visible : false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'courseName',
 				title : '课程名称',
 				sortable: true,

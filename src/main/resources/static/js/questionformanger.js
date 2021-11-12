@@ -84,7 +84,12 @@ function stuffAllQuestionTable(tableInfo){
             columns: [ {
                 field : 'check',
                 checkbox : true
-            },  {
+            }, {
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
+            }, {
                 field : 'edu801_ID',
                 title: '唯一标识',
                 align : 'center',
@@ -525,6 +530,11 @@ function stuffRadioAndCheckTable(tableInfo) {
                 align: 'center',
                 sortable: true,
                 visible: false
+            },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
             },{
                 field: 'answerTxt',
                 title: '选项',

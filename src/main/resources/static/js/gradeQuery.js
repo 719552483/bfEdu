@@ -87,6 +87,11 @@ function stuffStudentGradeTable(tableInfo) {
 				sortable: true,
 				visible: false
 			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field: 'className',
 				title: '行政班',
 				align: 'left',

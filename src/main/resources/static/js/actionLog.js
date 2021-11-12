@@ -54,6 +54,13 @@ function stuffLogInfoTable() {
                     align: 'center',
                     sortable: true,
                     visible: false
+                },{
+                    title: '序号',
+                    align: 'center',
+                    class:'tableNumberTd',
+                    formatter:  function (value, row, index) {
+                        return tableNumberMatterAfter(value, row, index,'actionLogTable');
+                    }
                 }, {
                     field: 'actionValue',
                     title: '业务类型',

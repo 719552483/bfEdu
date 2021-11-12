@@ -138,6 +138,11 @@ function stuffStudentBaseInfoTable(tableInfo) {
                 align: 'center',
                 sortable: true,
                 visible: false
+            },{
+                title: '序号',
+                align: 'center',
+                class:'tableNumberTd',
+                formatter: tableNumberMatter
             },
             {
                 field: 'pyccmc',
