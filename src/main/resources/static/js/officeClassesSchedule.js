@@ -8,7 +8,42 @@ $(function() {
 	stuffDepartmnet();
 	deafultSearch();
 	getSemesterInfo();
+
+	// $(window).resize(function () {
+	// 	setScroll();
+	// });
+
+
 });
+
+//
+// function setScroll(){
+// 	$(".formbody").css({"width":document.documentElement.clientWidth});
+//
+// 	var formbodyActinArea=$('.formtext').height()+$('.tools').height()+$('.col4Height').height();
+// 	var height=document.documentElement.clientHeight-formbodyActinArea;
+//
+//
+// 	$('.scheduleClassesTableArea').find('.fixed-table-body').css({"height":height-143});
+//
+//
+// 	// $('#scheduleClassesTable').css({'width':document.documentElement.clientWidth-20});
+// 	//
+// 	// $('#scheduleClassesTable thead').css({"display":'block','width':document.documentElement.clientWidth-20});
+// 	//
+// 	//
+// 	// $('#scheduleClassesTable tbody').css({"display":'block',"overflow-y":'scroll','height':height-143,'width':document.documentElement.clientWidth-20});
+//
+// 	// var height=parseInt($(window).height())+"px";
+// 	// var width=parseInt($(window).width())+"px";
+// 	//
+// 	// $(".bottomScroll").css({
+// 	// 	// "height":height,
+// 	// 	"width":width,
+// 	// 	'overflow-y': 'hidden',
+// 	// 	'overflow-x': 'scroll',
+// 	// 	'display': 'inline-grid'});
+// }
 
 //查询可选二级学院
 function stuffDepartmnet(){
@@ -155,6 +190,7 @@ function stuffTaskInfoTable(tableInfo) {
 		},
 		onPostBody : function() {
 			sfxylcjControlBind();
+			// setScroll();
 			toolTipUp(".myTooltip");
 		},
 		onDblClickRow : function(row, $element, field) {
@@ -172,6 +208,11 @@ function stuffTaskInfoTable(tableInfo) {
 				align: 'center',
 				sortable: true,
 				visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field: 'className',
@@ -372,11 +413,11 @@ function onDblClickScheduleClassesTable(row, $element, field,ischeck){
 	}else if(field==="className"){
 		wantChooseClass(row,"#scheduleClassesTable",ischeck);
 	}else if(field==="xn"){
-		if(row.xn===''||row.xn==null){
-			wantChooseXn(row,"#scheduleClassesTable");
-		}else{
+		if(row.isNew==='T'){
 			toastr.warning('学年已绑定');
+			return;
 		}
+		wantChooseXn(row,"#scheduleClassesTable");
 	}else{
 		return;
 	}
@@ -544,7 +585,7 @@ function classModalBtnbind(row,tableID){
 		reObject.normalSelectIds = "#batch,#grade";
 		reObject.InputIds = "#xzbmc";
 		reReloadSearchsWithSelect(reObject);
-		getAllXzb();
+		getAllXzb(true);
 		e.stopPropagation();
 	});
 
@@ -608,7 +649,7 @@ function xzbStartSearch(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				stuffXzbTable(backjson.data);
+				stuffXzbTable(backjson.data,true);
 			} else {
 				stuffXzbTable({});
 				toastr.warning(backjson.msg);
@@ -705,8 +746,10 @@ function reloadClassModalSearchArea(){
 	reReloadSearchsWithSelect(reObject);
 }
 
+var choosendXzb=new Array();
 //渲染行政班表
 function stuffXzbTable(tableInfo,isCheck){
+	choosendXzb=new Array();
 	var cheeckObject=new Object();
 	if(typeof isCheck==='undefined'){
 		cheeckObject={
@@ -736,6 +779,21 @@ function stuffXzbTable(tableInfo,isCheck){
 		showColumns : false,
 		onPageChange : function() {
 			drawPagination(".xzbTableArea", "行政班信息");
+			for (var i = 0; i < choosendXzb.length; i++) {
+				$("#xzbTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendXzb[i].edu300_ID]})
+			}
+		},
+		onCheck : function(row) {
+			onCheckXzb(row);
+		},
+		onUncheck : function(row) {
+			onUncheckXzb(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllXzb(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllXzb(rows2);
 		},
 		columns : [
 		{
@@ -745,6 +803,12 @@ function stuffXzbTable(tableInfo,isCheck){
 			visible : false
 		},
 		cheeckObject,
+			{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},
 		{
 		field : 'batchName',
 		title : '批次',
@@ -771,6 +835,60 @@ function stuffXzbTable(tableInfo,isCheck){
 	drawSearchInput(".xzbTableArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+}
+
+//单选
+function onCheckXzb(row){
+	if(choosendXzb.length<=0){
+		choosendXzb.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(choosendXzb[i].edu300_ID===row.edu300_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendXzb.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheckXzb(row){
+	if(choosendXzb.length<=1){
+		choosendXzb.length=0;
+	}else{
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(choosendXzb[i].edu300_ID===row.edu300_ID){
+				choosendXzb.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllXzb(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendXzb.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllXzb(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu300_ID);
+	}
+
+
+	for (var i = 0; i < choosendXzb.length; i++) {
+		if(a.indexOf(choosendXzb[i].edu300_ID)!==-1){
+			choosendXzb.splice(i,1);
+			i--;
+		}
+	}
 }
 
 //渲染教学班表
@@ -800,7 +918,12 @@ function stuffJxbTable(tableInfo){
 		},{
 			field : 'radio',
 			radio : true
-		},  {
+		}, {
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		}, {
 			field : 'bhxzbmc',
 			title : '教学班名称',
 			align : 'left',
@@ -989,6 +1112,11 @@ function stuffTaecherTable(tableInfo){
 				field: 'check',
 				checkbox: true
 			}, {
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
 				field : 'szxbmc',
 				title : '二级学院',
 				align : 'left',
@@ -1160,6 +1288,21 @@ function putOutTasksfxylcjMatter(value, row, index) {
 		return [
 				'<span class="noneStart">否</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="putOutTaskssfxylcjControl" id="putOutTasksfxylcjControl'+index+'" type="checkbox"><label></label></div></section>'
 			]
+			.join('');
+	}
+}
+
+//是否需要录入成绩格式化2
+function notIncludesfxylcjMatter(value, row, index) {
+	if (row.sfxylcj==="T") {
+		return [
+			'<span class="noneStart">是</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="putOutTaskssfxylcjControl" id="notIncludefxylcjControl'+index+'" type="checkbox" checked="checked"><label></label></div></section>'
+		]
+			.join('');
+	} else {
+		return [
+			'<span class="noneStart">否</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="putOutTaskssfxylcjControl" id="notIncludefxylcjControl'+index+'" type="checkbox"><label></label></div></section>'
+		]
 			.join('');
 	}
 }
@@ -1633,6 +1776,11 @@ function stuffPutOutTaskTable(tableInfo) {
 				align: 'center',
 				sortable: true,
 				visible: false
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
 			},
 			{
 				field: 'className',
@@ -1652,7 +1800,7 @@ function stuffPutOutTaskTable(tableInfo) {
 			},
 			{
 				field: 'xn',
-				title: '学年-(双击选择)',
+				title: '学年',
 				align: 'left',
 				clickToSelect: false,
 				sortable: true,
@@ -1707,6 +1855,18 @@ function stuffPutOutTaskTable(tableInfo) {
 			},{
 				field: 'zxs',
 				title: '总学时',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'jzxs',
+				title: '集中学时',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			},{
+				field: 'fsxs',
+				title: '分散学时',
 				align: 'left',
 				sortable: true,
 				formatter: paramsMatter
@@ -1898,8 +2058,10 @@ function onDblClickputOutTaskTable(row, $element, field){
 	}else if(field==="className"){
 		wantChooseClass(row,"#putOutTaskTable");
 	}else if(field==="xn"){
-		wantChooseXn(row,"#putOutTaskTable");
-	}else{
+		toastr.warning('不允许修改任务书的学年');
+		// wantChooseXn(row,"#putOutTaskTable");
+	}
+	else{
 		return;
 	}
 }
@@ -2088,6 +2250,361 @@ function comfirmModifyTask(row,index){
 	});
 }
 
+//任务书漏发查询
+function getNotInclude() {
+	LinkageSelectPublic("#notInclude_Level","#notInclude_departmentName","#notInclude_Grade","#notInclude_Major");
+	notIncludeReSearch();
+	$(".notIncludeHideArea").show();
+	$(".scheduleClassesMainArea").hide();
+
+	// 开始检索
+	$('#notInclude_StartSearch').unbind('click');
+	$('#notInclude_StartSearch').bind('click', function(e) {
+		notIncludeStartSearch();
+		e.stopPropagation();
+	});
+
+	// 批量补发
+	$('#rePuttedNotIncludes').unbind('click');
+	$('#rePuttedNotIncludes').bind('click', function(e) {
+		rePuttedNotIncludes();
+		e.stopPropagation();
+	});
+
+	// 重置检索
+	$('#notInclude_ReSearch').unbind('click');
+	$('#notInclude_ReSearch').bind('click', function(e) {
+		notIncludeReSearch();
+		e.stopPropagation();
+	});
+
+	// 返回
+	$('#rebackScheduleClassesMainArea').unbind('click');
+	$('#rebackScheduleClassesMainArea').bind('click', function(e) {
+		$(".notIncludeHideArea").hide();
+		$(".scheduleClassesMainArea").show();
+		e.stopPropagation();
+	});
+}
+
+//任务书漏发查询开始检索
+function notIncludeStartSearch(){
+	var notIncludeStartSearchInfo=getNotIncludeStartSearch();
+	if(typeof notIncludeStartSearchInfo==='undefined'){
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryNotPutedTasksClass",
+		data: {
+			"SearchCriteria":JSON.stringify(notIncludeStartSearchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffNotIncludeTable(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+var choosendnotIncludeArray=new Array();
+//渲染课程库表格
+function stuffNotIncludeTable(tableInfo){
+	choosendnotIncludeArray=new Array();
+	window.releaseNewsEvents = {
+		'click #rePuttedNotInclude' : function(e, value, row, index) {
+			rePuttedNotInclude(row);
+		}
+	};
+
+	$('#notIncludeTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onCheck : function(row) {
+			onChecknotInclude(row);
+		},
+		onUncheck : function(row) {
+			onUnchecknotInclude(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllnotInclude(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllnotInclude(rows2);
+		},
+		onPageChange : function() {
+			drawPagination(".notIncludeArea", "漏发任务书");
+			for (var i = 0; i < choosendnotIncludeArray.length; i++) {
+				$("#notIncludeTable").bootstrapTable("checkBy", {field:"edu206_ID", values:[choosendnotIncludeArray[i].edu206_ID]})
+			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		onDblClickRow : function(row, $element, field) {
+			choosendTeachers.length=0;
+			onDblClickNotIncludeTable(row, $element, field);
+		},
+		columns : [ {
+			field : 'check',
+			checkbox : true
+		},{
+			field : 'edu206_ID',
+			title: '唯一标识',
+			align : 'center',
+			sortable: true,
+			visible : false
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},{
+			field : 'className',
+			title : '班级名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field : 'kcmc',
+			title : '课程名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field : 'xn',
+			title : '学年',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field : 'zxs',
+			title : '总学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field : 'jzxs',
+			title : '集中学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field : 'fsxs',
+			title : '分散学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field : 'xf',
+			title : '学分',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		}, {
+			field: 'lsmc',
+			title: '任课老师-(双击选择)',
+			clickToSelect: false,
+			align: 'left',
+			formatter: pointTeacherMatter
+		},{
+			field: 'zylsmc',
+			title: '助教-(双击选择)',
+			clickToSelect: false,
+			align: 'left',
+			formatter: pointTeacherMatter
+		}, {
+			field : 'bzzymc',
+			title : '是否需要录成绩',
+			align : 'left',
+			sortable: true,
+			clickToSelect: false,
+			formatter : notIncludesfxylcjMatter
+		}, {
+			field : 'action',
+			title : '操作',
+			align : 'center',
+			clickToSelect : false,
+			formatter : releaseNewsFormatter,
+			events : releaseNewsEvents,
+		} ]
+	});
+
+	function releaseNewsFormatter(value, row, index) {
+		return [ '<ul class="toolbar tabletoolbar">'
+		+ '<li class="modifyBtn" id="rePuttedNotInclude"><span><img src="images/t02.png" style="width:24px"></span>补发</li>'
+		+ '</ul>' ].join('');
+	}
+
+	drawPagination(".notIncludeArea", "漏发任务书");
+	changeColumnsStyle(".notIncludeArea", "漏发任务书");
+	drawSearchInput(".notIncludeArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//单选
+function onChecknotInclude(row){
+	if(choosendnotIncludeArray.length<=0){
+		choosendnotIncludeArray.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendnotIncludeArray.length; i++) {
+			if(choosendnotIncludeArray[i].edu206_ID===row.edu206_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendnotIncludeArray.push(row);
+		}
+	}
+}
+
+//单反选
+function onUnchecknotInclude(row){
+	if(choosendnotIncludeArray.length<=1){
+		choosendnotIncludeArray.length=0;
+	}else{
+		for (var i = 0; i < choosendnotIncludeArray.length; i++) {
+			if(choosendnotIncludeArray[i].edu206_ID===row.edu206_ID){
+				choosendnotIncludeArray.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllnotInclude(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendnotIncludeArray.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllnotInclude(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu206_ID);
+	}
+
+
+	for (var i = 0; i < choosendnotIncludeArray.length; i++) {
+		if(a.indexOf(choosendnotIncludeArray[i].edu206_ID)!==-1){
+			choosendnotIncludeArray.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//漏发任务书表双击事件绑定
+function onDblClickNotIncludeTable(row, $element, field){
+	var index =parseInt($element[0].dataset.index);
+	if(field==="lsmc"){
+		getLsInfo('#notIncludeTable',index,"ls");
+	}else if(field==="zylsmc"){
+		getLsInfo('#notIncludeTable',index,"zyls");
+	}else{
+		return;
+	}
+}
+
+//单个补发
+function rePuttedNotInclude(row){
+	var putOutNotIncludeArray=new Array();
+	putOutNotIncludeArray.push(row);
+	checkPutOutInfo(putOutNotIncludeArray,putOutNotIncludeArray);
+}
+
+//批量补发
+function rePuttedNotIncludes(){
+	var choosedNotIncludeTasks = choosendnotIncludeArray;
+	if (choosedNotIncludeTasks.length === 0) {
+		toastr.warning('暂未选择任务书');
+		return;
+	}
+	checkPutOutInfo(choosedNotIncludeTasks);
+}
+
+//获取任务书漏发查询检索信息
+function getNotIncludeStartSearch(){
+	var edu103=getNormalSelectValue("notInclude_Level");
+	var edu104=getNormalSelectValue("notInclude_departmentName");
+	var edu105=getNormalSelectValue("notInclude_Grade");
+	var edu106=getNormalSelectValue("notInclude_Major");
+	var batch=getNormalSelectValue("notInclude_Batch");
+
+	if(edu103===""){
+		toastr.warning('层次不能为空');
+		return;
+	}
+
+	if(edu104===""){
+		toastr.warning('二级学院不能为空');
+		return;
+	}
+
+	if(edu105===""){
+		toastr.warning('年级不能为空');
+		return;
+	}
+
+	if(edu106===""){
+		toastr.warning('专业次不能为空');
+		return;
+	}
+
+	if(batch===""){
+		toastr.warning('批次不能为空');
+		return;
+	}
+
+	var serachObject=new Object();
+	serachObject.edu103=edu103;
+	serachObject.edu104=edu104;
+	serachObject.edu105=edu105;
+	serachObject.edu106=edu106;
+	serachObject.batch=batch;
+	return serachObject;
+}
+
+//任务书漏发查询重置检索
+function notIncludeReSearch(){
+	var reObject = new Object();
+	reObject.fristSelectId = "#notInclude_Level";
+	reObject.actionSelectIds = "#notInclude_departmentName,#notInclude_Grade,#notInclude_Major";
+	reObject.normalSelectIds = "#notInclude_Batch";
+	reReloadSearchsWithSelect(reObject);
+	stuffNotIncludeTable({});
+}
+
+
+
 //检索已发布任务书
 function startSearchPutOutTasks(){
 	var kcmc=$("#putOutTaskKcmc").val();
@@ -2096,9 +2613,10 @@ function startSearchPutOutTasks(){
 	var putOutTaskGrade=getNormalSelectValue("putOutTaskGrade");
 	var putOutTaskMajor=getNormalSelectValue("putOutTaskMajor");
 	var putOutTaskYear=getNormalSelectValue("putOutTaskYear");
+	var putOutTaskBath=getNormalSelectValue("putOutTaskBath");
 
 	if(kcmc===""&&putOutTaskLevel==""&&putOutTaskDepartment==""&&putOutTaskGrade==""
-		&&putOutTaskMajor===""&&putOutTaskYear===""
+		&&putOutTaskMajor===""&&putOutTaskYear===""&&putOutTaskBath===""
 	){
 		toastr.warning('检索条件为空');
 		return;
@@ -2108,6 +2626,8 @@ function startSearchPutOutTasks(){
 	serachObject.department=putOutTaskDepartment;
 	serachObject.grade=putOutTaskGrade;
 	serachObject.major=putOutTaskMajor;
+	serachObject.batch=putOutTaskBath;
+	serachObject.xn=putOutTaskYear;
 	kcmc===""?serachObject.kcmc="":serachObject.kcmc=kcmc;
 	serachObject.sszt="";
 	$.ajax({
@@ -2141,7 +2661,7 @@ function startSearchPutOutTasks(){
 
 //页面展示区域控制
 function mainAreaControl(){
-	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#showputedTask,#startSearch,#reback,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
+	$(".formtext,.scheduleClassesTableArea,.putOutTaskTableArea,#showputedTask,#startSearch,#reback,#getNotInclude,#removePutOutTasks,#startSearchPutOutTasks,#research1,#research2,.controlArea").toggle();
 	var reObject = new Object();
 	reObject.InputIds = "#putOutTaskKcmc";
 	reObject.normalSelectIds = "#putOutTaskLevel,#putOutTaskDepartment,#putOutTaskGrade,#putOutTaskMajor,#putOutTaskYear";
@@ -2196,9 +2716,16 @@ function putOutTaskAreabtnBind() {
 	$('#research2').bind('click', function(e) {
 		var reObject = new Object();
 		reObject.InputIds = "#kcmc";
-		reObject.normalSelectIds = "#putOutTaskLevel,#putOutTaskDepartment,#putOutTaskGrade,#putOutTaskMajor,#putOutTaskYear";
+		reObject.normalSelectIds = "#putOutTaskLevel,#putOutTaskDepartment,#putOutTaskGrade,#putOutTaskMajor,#putOutTaskYear,#putOutTaskBath";
 		reReloadSearchsWithSelect(reObject);
 		showputedTask(false);
+		e.stopPropagation();
+	});
+
+	//任务书漏发查询
+	$('#getNotInclude').unbind('click');
+	$('#getNotInclude').bind('click', function(e) {
+		getNotInclude();
 		e.stopPropagation();
 	});
 
@@ -2236,6 +2763,7 @@ function getSemesterInfo() {
 	});
 }
 
+var EJDMElementInfo;
 //初始化页面按钮绑定事件
 function binBind() {
 	//提示框取消按钮
@@ -2264,6 +2792,8 @@ function binBind() {
 	$('#showputedTask').bind('click', function(e) {
 		showputedTask();
 		putOutTaskAreabtnBind();
+		EJDMElementInfo=queryEJDMElementInfo();
+		stuffEJDElement(EJDMElementInfo);
 		$(".scheduleClassesSearchArea").hide();
 		$(".putOutTaskSearchArea").show();
 		e.stopPropagation();
