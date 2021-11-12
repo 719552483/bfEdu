@@ -1292,16 +1292,16 @@ function putOutTasksfxylcjMatter(value, row, index) {
 	}
 }
 
-//是否需要录入成绩格式化2
+//是否需要录入成绩格式化3
 function notIncludesfxylcjMatter(value, row, index) {
 	if (row.sfxylcj==="T") {
 		return [
-			'<span class="noneStart">是</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="putOutTaskssfxylcjControl" id="notIncludefxylcjControl'+index+'" type="checkbox" checked="checked"><label></label></div></section>'
+			'<span class="noneStart">是</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="notIncludefxylcjControl" id="notIncludefxylcjControl'+index+'" type="checkbox" checked="checked"><label></label></div></section>'
 		]
 			.join('');
 	} else {
 		return [
-			'<span class="noneStart">否</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="putOutTaskssfxylcjControl" id="notIncludefxylcjControl'+index+'" type="checkbox"><label></label></div></section>'
+			'<span class="noneStart">否</span><section class="model-1"><div class="checkbox mycheckbox"><input index="'+index+'" class="notIncludefxylcjControl" id="notIncludefxylcjControl'+index+'" type="checkbox"><label></label></div></section>'
 		]
 			.join('');
 	}
@@ -1553,6 +1553,16 @@ function putOutTasksfxylcjControlBind() {
 	});
 }
 
+//switch事件绑定3
+function notIncludefxylcjControlControlBind() {
+	$('.notIncludefxylcjControl').unbind('click');
+	$('.notIncludefxylcjControl').bind('click', function(e) {
+		var index=parseInt(e.currentTarget.attributes[0].nodeValue);
+		changsfxylcj('#notIncludeTable',"#notIncludefxylcjControl"+index,index);
+		e.stopPropagation();
+	});
+}
+
 //改变是否需要录成绩
 function changsfxylcj(tableid,inputid,index){
 	var currentStatu=$(inputid)[0].checked;
@@ -1564,6 +1574,8 @@ function changsfxylcj(tableid,inputid,index){
 	});
 	if(tableid==="#scheduleClassesTable"){
 		sfxylcjControlBind();
+	}else if(tableid==="#notIncludeTable"){
+		notIncludefxylcjControlControlBind();
 	}else{
 		putOutTasksfxylcjControlBind();
 	}
@@ -1662,14 +1674,14 @@ function sendPutOutInfo(putOutArray,tableID){
 					for (var i = 0; i < putOutArray.length; i++) {
 						$("#"+tableID).bootstrapTable('removeByUniqueId', putOutArray[i].edu201_ID);
 					}
+					toastr.success(backjson.msg);
 				}else{
 					for (var i = 0; i < putOutArray.length; i++) {
 						$("#"+tableID).bootstrapTable('removeByUniqueId', putOutArray[i].edu206_ID);
 					}
+					toastr.info('任务书补发申请流转成功，返回已发布任务书时重置检索即可刷新数据');
 				}
-
 				$.hideModal("#remindModal");
-				toastr.success(backjson.msg);
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -2371,6 +2383,7 @@ function stuffNotIncludeTable(tableInfo){
 			}
 		},
 		onPostBody: function() {
+			notIncludefxylcjControlControlBind();
 			toolTipUp(".myTooltip");
 		},
 		onDblClickRow : function(row, $element, field) {
