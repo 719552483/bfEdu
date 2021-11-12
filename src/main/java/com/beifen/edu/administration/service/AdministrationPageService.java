@@ -3136,6 +3136,7 @@ public class AdministrationPageService {
 						}catch (Exception exception){
 							exception.printStackTrace();
 						}
+						edu206New.setEdu206_ID(Long.parseLong(edu206New.getEdu206_ID()+""+edu300.getEdu300_ID()));
 						edu206New.setClassId(edu300.getEdu300_ID());
 						edu206New.setClassName(edu300.getXzbmc());
 						edu206New.setClassType("01");
@@ -4710,7 +4711,12 @@ public class AdministrationPageService {
 			}
 		};
 		List<Edu301> edu301List = edu301DAO.findAll(specification);
-		edu301List.addAll(edu301DAO.findAllInDepartment2());
+		if (teachingClassName != null && !"".equals(teachingClassName)) {
+			edu301List.addAll(edu301DAO.findAllInDepartment2(teachingClassName));
+		}else{
+			edu301List.addAll(edu301DAO.findAllInDepartment2());
+		}
+
 		if (edu301List.size() != 0) {
 			resultVO = ResultVO.setSuccess("共找到"+edu301List.size()+"个教学班",edu301List);
 		} else {

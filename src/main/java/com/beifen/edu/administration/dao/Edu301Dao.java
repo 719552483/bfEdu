@@ -77,4 +77,10 @@ public interface Edu301Dao extends JpaRepository<Edu301, Long>, JpaSpecification
 	//根据权限查找行政班
 	@Query(value = "select * from edu301 where user_key is null",nativeQuery = true)
 	List<Edu301> findAllInDepartment2();
+
+	//根据权限查找行政班
+	@Query(value = "select * from edu301 where user_key is null and jxbmc like %?1%",nativeQuery = true)
+	List<Edu301> findAllInDepartment2(String teachingClassName);
+
+
 }
