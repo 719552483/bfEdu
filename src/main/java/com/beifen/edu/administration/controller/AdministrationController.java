@@ -2243,7 +2243,7 @@ public class AdministrationController {
 //		String departmentCode = searchObject.getString("departmentCode");
 
 //		String batch = searchObject.getString("batch");
-
+		String xnid = searchObject.getString("xn");
 		String levelCode = searchObject.getString("level");
 		String departmentCode = searchObject.getString("department");
 		String gradeCode = searchObject.getString("grade");
@@ -2260,6 +2260,7 @@ public class AdministrationController {
 //		edu201.setPyjhmc(pyjhmc);
 		edu201.setKcmc(kcmc);
 		edu201.setSszt(sszt);
+		edu201.setXnid(xnid);
 		List<Edu201> taskInfo = administrationPageService.searchPutOutTasks(edu107,edu201,userId);
 		returnMap.put("taskInfo", taskInfo);
 		returnMap.put("result", true);
