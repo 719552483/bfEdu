@@ -447,7 +447,7 @@ function stuffScheduleClassesTable(tableInfo) {
 			{
 				field: 'classPeriod',
 				title: '课节数',
-				align: 'left',
+				align: 'center',
 				width: 100
 			}, {
 				field: 'monday',
@@ -723,7 +723,7 @@ function stuffScheduleClassesTable2(tableInfo) {
 			{
 				field: 'classPeriod',
 				title: '课节数',
-				align: 'left',
+				align: 'center',
 				width:100
 			}, {
 				field: 'monday',
