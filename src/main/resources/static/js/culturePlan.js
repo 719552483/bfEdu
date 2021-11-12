@@ -2422,7 +2422,8 @@ function getAllXzbInfo(){
 		cache : false,
 		url : "/queryCulturePlanClass",
 		data: {
-			"edu107Id":$(".edu107Id")[0].innerText
+			"edu107Id":$(".edu107Id")[0].innerText,
+			"className":''
 		},
 		dataType : 'json',
 		beforeSend: function(xhr) {
@@ -2437,7 +2438,6 @@ function getAllXzbInfo(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
-				LinkageSelectPublic("#bindClass_level","#bindClass_department","#bindClass_grade","#");
 				$(".bindClass_currentMajorName").html($(".planName")[0].innerText);
 				bindClassBtnBind();
 				bindClassResearch();
@@ -2506,7 +2506,6 @@ function stuffAllXzbTable(tableInfo) {
 		},
 		onPostBody: function() {
 			drawPagination(".bindClassArea", "行政班");
-			drawSearchInput(".bindClassArea");
 			toolTipUp(".myTooltip");
 			changeColumnsStyle(".bindClassArea", "行政班");
 		},
@@ -2565,6 +2564,7 @@ function stuffAllXzbTable(tableInfo) {
 			formatter : paramsMatter
 		}]
 	});
+	drawSearchInput(".bindClassArea");
 }
 
 //单选学生
@@ -2639,7 +2639,14 @@ function stuffChoosendXzb(bindClasses){
 
 //渲染单个班级至已绑定区域
 function drawSingleBindXzb(classInfo){
-	var str='<div class="PuttedKjArea sinngleBindClass sinngleBindClass'+classInfo.edu300_ID+'" edu300_ID="'+classInfo.edu300_ID+'">'+classInfo.pyccmc+'/'+classInfo.xbmc+'/'+classInfo.njmc+'/'+classInfo.zymc+'/'+classInfo.batchName+'-'+classInfo.xzbmc+'' +
+	var sinngleBindClass=$(".sinngleBindClass");
+	for (var i = 0; i < sinngleBindClass.length; i++) {
+		if(parseInt(sinngleBindClass[i].id)==classInfo.edu300_ID){
+			return;
+		}
+	}
+
+	var str='<div class="PuttedKjArea sinngleBindClass sinngleBindClass'+classInfo.edu300_ID+'" edu300_ID="'+classInfo.edu300_ID+'" id="'+classInfo.edu300_ID+'">'+classInfo.pyccmc+'/'+classInfo.xbmc+'/'+classInfo.njmc+'/'+classInfo.zymc+'/'+classInfo.batchName+'-'+classInfo.xzbmc+'' +
 		'<img class="choosendKjImg choosendXzbInfoImg'+classInfo.edu300_ID+'" src="images/close1.png" choosendXzbInfo="'+classInfo.toString()+'">' +
 		'</div>';
 	$('.choosendBindClass').append(str);
@@ -2650,8 +2657,14 @@ function drawSingleBindXzb(classInfo){
 	$('.choosendXzbInfoImg'+classInfo.edu300_ID).unbind('click');
 	$('.choosendXzbInfoImg'+classInfo.edu300_ID).bind('click', function(e) {
 		removeSingleBindXzb(classInfo);
-		$('#bindClassTable').bootstrapTable("prepend", classInfo);
 		$("#bindClassTable").bootstrapTable("uncheckBy", {field:"edu300_ID", values:[classInfo.edu300_ID]});
+		for (var i = 0; i < choosendXzb.length; i++) {
+			if(classInfo.edu300_ID==choosendXzb[i].edu300_ID){
+				choosendXzb.splice(i,1);
+			}
+		}
+
+		$('#bindClassTable').bootstrapTable("prepend", classInfo);
 		e.stopPropagation();
 	});
 }
@@ -2721,9 +2734,48 @@ function sendBindClassInfo(allChoosendXzb){
 	});
 }
 
-//绑定班级开始检索
-function bindClassSearch() {
+//绑定班级检索
+function bindClassSearch(className) {
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryCulturePlanClass",
+		data: {
+			"edu107Id":$(".edu107Id")[0].innerText,
+			"className":className
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllXzbTable(backjson.data.allclass);
+			} else {
+				toastr.warning('操作失败，请重试');
+			}
+		}
+	});
+}
 
+//获得绑定昂及检索对象
+function getBindClassSearchInfo(){
+	var className=$("#bindClass_className").val();
+	if(className===""){
+		toastr.warning('请输入检索条件');
+		return;
+	}
+
+	var retrunObject=new Object();
+	retrunObject.className=className;
+	return retrunObject;
 }
 
 //绑定班级按钮时间绑定
@@ -2739,7 +2791,11 @@ function bindClassBtnBind(){
 	// 开始检索
 	$('#bindClassSearch').unbind('click');
 	$('#bindClassSearch').bind('click', function(e) {
-		bindClassSearch();
+		var bindClassSearchInfo=getBindClassSearchInfo();
+		if(typeof bindClassSearchInfo==='undefined'){
+			return;
+		}
+		bindClassSearch(bindClassSearchInfo.className);
 		e.stopPropagation();
 	});
 
@@ -2747,7 +2803,7 @@ function bindClassBtnBind(){
 	$('#bindClassResearch').unbind('click');
 	$('#bindClassResearch').bind('click', function(e) {
 		bindClassResearch();
-		// stuffAllXzbTable({});
+		bindClassSearch('');
 		e.stopPropagation();
 	});
 
@@ -2763,7 +2819,6 @@ function bindClassBtnBind(){
 function bindClassResearch(){
 	var reObject = new Object();
 	reObject.InputIds = "#bindClass_className";
-	reObject.normalSelectIds = "#bindClass_level,#bindClass_department,#bindClass_grade,#bindClass_major";
 	reReloadSearchsWithSelect(reObject);
 }
 
