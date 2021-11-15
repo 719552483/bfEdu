@@ -1405,6 +1405,11 @@ function stuffFsSchedule(tableInfo){
 				align : 'left',
 				formatter : paramsMatter
 			},{
+				field : 'teacherName',
+				title : '任课教师',
+				align : 'left',
+				formatter : paramsMatter
+			},{
 				field : 'courseContent',
 				title : '课程内容',
 				sortable: true,

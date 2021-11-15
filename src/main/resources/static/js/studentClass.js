@@ -202,6 +202,11 @@ function stuffFsSchedule(tableInfo){
 				align : 'left',
 				formatter : paramsMatter
 			},{
+				field : 'teacherName',
+				title : '任课教师',
+				align : 'left',
+				formatter : paramsMatter
+			},{
 				field : 'teachingPlatform',
 				title : '授课平台',
 				align : 'left',
@@ -717,6 +722,11 @@ function stuffFsScheduleTable2(tableInfo){
 			},{
 				field : 'classHours',
 				title : '学时',
+				align : 'left',
+				formatter : paramsMatter
+			},{
+				field : 'teacherName',
+				title : '任课教师',
 				align : 'left',
 				formatter : paramsMatter
 			},{
