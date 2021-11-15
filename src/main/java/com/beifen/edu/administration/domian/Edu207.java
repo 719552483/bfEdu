@@ -18,6 +18,8 @@ public class Edu207 {
     private String className;//班级名称
     private String Edu108_ID;//授课平台
     private String courseType;//授课平台
+    private String edu101_ID;//教师id
+    private String teacherName;//教师名称
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -110,5 +112,21 @@ public class Edu207 {
 
     public void setCourseType(String courseType) {
         this.courseType = courseType;
+    }
+
+    public String getEdu101_ID() {
+        return edu101_ID;
+    }
+
+    public void setEdu101_ID(String edu101_ID) {
+        this.edu101_ID = edu101_ID;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 }
