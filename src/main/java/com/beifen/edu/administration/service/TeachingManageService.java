@@ -2375,16 +2375,23 @@ public class TeachingManageService {
         String edu101Id = timeTablePO.getCurrentUserId();
        
         //根据信息查询所有课表信息
-        List<String> edu201Ids = teachingScheduleViewDao.findEdu201IdsByEdu101Id(edu101Id,timeTablePO.getSemester());
-        if(edu201Ids.size() == 0) {
-            resultVO = ResultVO.setFailed("当前学年未找到您的课程");
-        } else {
-            List<Edu207> edu207List = edu207Dao.findAllByEdu201IdsWithoutWeek(edu201Ids);
-            if (edu207List.size() == 0) {
-                resultVO = ResultVO.setFailed("当前学年课程暂无分散学时安排");
-            } else {
-                resultVO = ResultVO.setSuccess("当前学年共找到"+edu207List.size()+"条分散学时安排",edu207List);
-            }
+//        List<String> edu201Ids = teachingScheduleViewDao.findEdu201IdsByEdu101Id(edu101Id,timeTablePO.getSemester());
+//        if(edu201Ids.size() == 0) {
+//            resultVO = ResultVO.setFailed("当前学年未找到您的课程");
+//        } else {
+//            List<Edu207> edu207List = edu207Dao.findAllByEdu201IdsWithoutWeek(edu201Ids);
+//            if (edu207List.size() == 0) {
+//                resultVO = ResultVO.setFailed("当前学年课程暂无分散学时安排");
+//            } else {
+//                resultVO = ResultVO.setSuccess("当前学年共找到"+edu207List.size()+"条分散学时安排",edu207List);
+//            }
+//        }
+
+        List<Edu207> edu207List = edu207Dao.findAllByEdu101IdWithoutWeek(edu101Id,timeTablePO.getSemester());
+        if(edu207List.size() == 0) {
+            resultVO = ResultVO.setFailed("当前学年课程暂无分散学时安排");
+        }else{
+            resultVO = ResultVO.setSuccess("当前学年共找到"+edu207List.size()+"条分散学时安排",edu207List);
         }
         return resultVO;
     }
