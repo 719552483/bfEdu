@@ -426,6 +426,18 @@ public class TeachingManageController {
     }
 
     /**
+     * 教师调课-分散学时-只调教师
+     * @param
+     * @return
+     */
+    @RequestMapping("/changeScheduleScatteredTeacher")
+    @ResponseBody
+    public ResultVO changeScheduleScatteredTeacher(@RequestParam("edu207Id") String edu207Id,@RequestParam("edu101Id") String edu101Id) {
+        ResultVO result = teachingManageService.changeScheduleScatteredTeacher(edu207Id,edu101Id);
+        return result;
+    }
+
+    /**
      * 老师检索分散学时课表
      * @param searchObject
      * @return

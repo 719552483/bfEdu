@@ -1190,6 +1190,23 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    public ResultVO changeScheduleScatteredTeacher(String edu207Id,String edu101Id){
+        ResultVO resultVO;
+        Edu207 edu207 = edu207Dao.findOne(Long.parseLong(edu207Id));
+        Edu101 edu101 = edu101Dao.findOne(Long.parseLong(edu101Id));
+        if(edu207 == null){
+            resultVO = ResultVO.setFailed("选择分散课时暂无，请刷新后重试！");
+            return resultVO;
+        }else{
+            edu207.setEdu101_ID(edu101Id);
+            edu207.setTeacherName(edu101.getXm());
+            edu207Dao.save(edu207);
+        }
+        resultVO = ResultVO.setSuccess("调课成功",edu207);
+        return resultVO;
+    }
+
+
     //老师检索分散学时课表
     public ResultVO searchScatteredClassByTeacher(TimeTablePO timeTablePO) {
         ResultVO resultVO;
