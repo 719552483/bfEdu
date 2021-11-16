@@ -542,7 +542,7 @@ function allClassMangersReSearch(){
 	var reObject = new Object();
 	reObject.InputIds = "#departmentName,#mangerName,#mangerNumber";
 	reReloadSearchsWithSelect(reObject);
-	getTeacherInfo();
+	getTeacherInfoReSearch();
 }
 
 //调课确认选择教师
@@ -572,7 +572,7 @@ function confirmChoosedTeacher2(){
 }
 
 //获取所有教师
-function getTeacherInfo(actionModal){
+function getTeacherInfo(actionModal,changeFsInfo){
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -608,6 +608,21 @@ function getTeacherInfo(actionModal){
 						confirmChoosedTeacher();
 						e.stopPropagation();
 					});
+				}else if(actionModal==='fsChooseTeacher'){
+					$.showModal("#allClassMangersModal",true);
+					//二级模态框返回按钮事件
+					$('.specialCanle').unbind('click');
+					$('.specialCanle').bind('click', function(e) {
+						$.hideModal();
+						e.stopPropagation();
+					});
+
+					//确认选择
+					$('#confirmChoosedTeacher').unbind('click');
+					$('#confirmChoosedTeacher').bind('click', function(e) {
+						fsConfirmChoosedTeacher(changeFsInfo);
+						e.stopPropagation();
+					});
 				}else{
 					$.hideModal("#PuttedDetailsModal",false);
 					$.showModal("#allClassMangersModal",true);
@@ -627,6 +642,33 @@ function getTeacherInfo(actionModal){
 					});
 				}
 				teacherModalBtnBind();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//获取所有教师  重置检索
+function getTeacherInfoReSearch(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryAllTeachers",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code === 200) {
+				stuffAllClassMangersTable(backjson.data);
 			} else {
 				toastr.warning(backjson.msg);
 			}
@@ -1351,6 +1393,9 @@ function stuffFsSchedule(tableInfo){
 	window.releaseNewsEvents = {
 		'click #chooseNewInfo' : function(e, value, row, index) {
 			chooseNewInfo(row);
+		},
+		'click #changeTeacher' : function(e, value, row, index) {
+			changeTeacher(row);
 		}
 	};
 
@@ -1433,7 +1478,8 @@ function stuffFsSchedule(tableInfo){
 
 	function releaseNewsFormatter(value, row, index) {
 		return [ '<ul class="toolbar tabletoolbar">'
-		+ '<li class="queryBtn" id="chooseNewInfo"><span><img src="img/info.png" style="width:24px"></span>选择调整目标</li>'
+		+ '<li class="queryBtn" id="chooseNewInfo"><span><img src="img/info.png" style="width:24px"></span>授课安排调整</li>'
+		+ '<li class="queryBtn" id="changeTeacher"><span><img src="images/i07.png" style="width:24px"></span>任课教师调整</li>'
 		+ '</ul>' ].join('');
 	}
 
@@ -1443,6 +1489,73 @@ function stuffFsSchedule(tableInfo){
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
 	changeColumnsStyle(".fsScheduleAreaTableArea", "已排分散授课课表");
+}
+
+//预备分散调整老师
+function changeTeacher(row){
+	getTeacherInfo('fsChooseTeacher',row);
+}
+
+//分散确认调整老师
+function fsConfirmChoosedTeacher(changeFsInfo){
+	var choosed=$("#allClassMangersTable").bootstrapTable("getSelections");
+	if(choosed.length==0){
+		toastr.warning('请选择教师');
+		return;
+	}
+
+	$.hideModal("#allClassMangersModal",false);
+	$.showModal("#remindModal2",true);
+	$(".remindType2").html('分散教学课程 -'+changeFsInfo.courseName);
+	$(".remindActionType2").html("授课教师调整");
+
+	// 确认调整老师二次确认
+	$('.confirmRemind2').unbind('click');
+	$('.confirmRemind2').bind('click', function(e) {
+		sendfsChangeTeacher(changeFsInfo,choosed);
+		e.stopPropagation();
+	});
+}
+
+//发送分散确认调整老师请求
+function sendfsChangeTeacher(changeFsInfo,choosed) {
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/changeScheduleScatteredTeacher",
+		data:{
+			"edu207Id":changeFsInfo.edu207_ID,
+			"edu101Id":choosed[0].edu101_ID
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			requestComplete();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code==200) {
+				var fsObject=$("#fsScheduleTable").bootstrapTable('getRowByUniqueId',changeFsInfo.edu207_ID);
+				fsObject.edu101_ID=choosed[0].edu101_ID;
+				fsObject.teacherName=choosed[0].xm;
+
+				$("#fsScheduleTable").bootstrapTable('updateByUniqueId', {
+					id: changeFsInfo.edu207_ID,
+					row: fsObject
+				});
+				$.hideModal();
+				toastr.success(backjson.msg);
+				toolTipUp(".myTooltip");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
 }
 
 //预备调整分散学时
