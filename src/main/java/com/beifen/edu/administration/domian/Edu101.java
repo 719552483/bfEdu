@@ -37,6 +37,8 @@ public class Edu101 {
 	private String jzglx;// 教职工类型 专任教师 兼职教师 教辅人员 外聘教师
 	private String jzglxbm;// 教职工类型编码
 	private String wpjzgspzt;// 外聘教职工审批状态
+	private String jsxs;//教师的学时
+	private String ysxs;//已上的学时
 
 
 
@@ -241,5 +243,21 @@ public class Edu101 {
 	}
 	public String getWpjzgspzt() {
 		return wpjzgspzt;
+	}
+
+	public String getJsxs() {
+		return jsxs;
+	}
+
+	public void setJsxs(String jsxs) {
+		this.jsxs = jsxs;
+	}
+
+	public String getYsxs() {
+		return ysxs;
+	}
+
+	public void setYsxs(String ysxs) {
+		this.ysxs = ysxs;
 	}
 }

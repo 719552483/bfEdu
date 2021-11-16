@@ -210,4 +210,16 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     @Query(value = "select count(0)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.EDU201_ID = ?1 and EDU101_ID = ?2 and  (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
     String findYsxsByTeacher(String edu201Id,String edu101Id,String week,String xqid);
 
+
+    @Query(value = "select count(0)*2 from edu203 e  where EDU101_ID = ?1 ", nativeQuery = true)
+    String findAllYsxsByTeacher(String edu101Id);
+
+    @Query(value = "select count(0)*2 from YEAR_SCHEDULE_VIEW where edu101_id = ?1 and xnid = ?2", nativeQuery = true)
+    String findAllYsxsByTeacher1(String edu101Id,String xnid);
+
+    @Query(value = "select count(0)*2 from YEAR_SCHEDULE_VIEW e where EDU101_ID = ?1 and xnid in (select EDU400_ID from edu400 where to_date(JSSJ,'yyyy-MM-dd HH24:mi:ss') < (select sysdate from dual))", nativeQuery = true)
+    String findAllYsxsByTeacher2(String edu101Id);
+
+    @Query(value = "select count(0)*2 from YEAR_SCHEDULE_VIEW e where EDU101_ID = ?1 and xnid = ?2 and  (week < ?3 or (week = ?3 and xqid < ?4))", nativeQuery = true)
+    String findAllYsxsByTeacher3(String edu101Id,String xnid,String week,String xqid);
 }
