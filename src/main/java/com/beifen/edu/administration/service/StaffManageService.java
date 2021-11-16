@@ -1068,6 +1068,10 @@ public class StaffManageService {
             }
         };
         List<Edu300> classEntities = edu300Dao.findAll(specification);
+        if(classEntities.size() == 0){
+            resultVO = ResultVO.setFailed("该学院暂无数据！");
+            return resultVO;
+        }
         List<Long> edu300Ids = classEntities.stream().map(Edu300::getEdu300_ID).collect(Collectors.toList());
 
         List<Edu101> edu101List = new ArrayList<>();
@@ -1194,6 +1198,7 @@ public class StaffManageService {
         return resultVO;
     }
 
+    //设置教师完成学时情况
     public List<Edu101> setwwxs(List<Edu101> edu101List,String xnid){
         try {
             if(xnid == null || "".equals(xnid)){
