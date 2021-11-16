@@ -1080,6 +1080,8 @@ public class StaffManageService {
             resultVO = ResultVO.setFailed("暂无授课老师");
         } else {
             Map map = new HashMap();
+            //查询总学时和已上学时
+            edu101List = setwwxs(edu101List,xnid);
             map.put("tableInfo",edu101List);
             List<Edu000> edu000List = edu000Dao.queryejdm("jzglx");
             if(xnid == null || "".equals(xnid)){
@@ -1190,6 +1192,56 @@ public class StaffManageService {
             resultVO = ResultVO.setSuccess("查询成功",map);
         }
         return resultVO;
+    }
+
+    public List<Edu101> setwwxs(List<Edu101> edu101List,String xnid){
+        try {
+            if(xnid == null || "".equals(xnid)){
+                for(Edu101 e:edu101List){
+                    //全部的学时
+                    e.setJsxs(edu203Dao.findAllYsxsByTeacher(e.getEdu101_ID()+""));
+                    //已上的学时
+                    int i = Integer.parseInt(edu203Dao.findAllYsxsByTeacher2(e.getEdu101_ID()+""));
+
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String str=sdf.format(now);
+                    xnid = edu400Dao.findXnidByNow(str);
+                    Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                    int week = DateUtils.calcWeekOffset(sdf.parse(edu400.getKssj()), now) + 1;
+                    String xqid = DateUtils.dateToWeek(now);
+                    int ii = Integer.parseInt(edu203Dao.findAllYsxsByTeacher3(e.getEdu101_ID()+"",xnid, week+"", xqid));
+                    e.setYsxs((i+ii)+"");
+                }
+            }else{
+                for(Edu101 e:edu101List){
+                    //全部的学时
+                    String all = edu203Dao.findAllYsxsByTeacher1(e.getEdu101_ID()+"",xnid);
+                    e.setJsxs(all);
+                    //已上的学时
+                    Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String kssj = edu400.getKssj();
+                    Date startDate = sdf.parse(kssj);
+                    String jssj = edu400.getJssj();
+                    Date endDate = sdf.parse(jssj);
+                    if (now.getTime() < startDate.getTime()) {
+                        e.setYsxs("0");
+                    }else if (now.getTime() > endDate.getTime()) {
+                        e.setYsxs(all);
+                    }else{
+                        int week = DateUtils.calcWeekOffset(sdf.parse(edu400.getKssj()), now) + 1;
+                        String xqid = DateUtils.dateToWeek(now);
+                        String pass = edu203Dao.findAllYsxsByTeacher3(e.getEdu101_ID()+"",xnid, week+"", xqid);
+                        e.setYsxs(pass);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  edu101List;
     }
 
     public Edu201 setXs(Edu201 e,String edu101Id){
