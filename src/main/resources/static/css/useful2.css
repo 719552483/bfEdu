@@ -2985,7 +2985,7 @@ border-top: none;
 
 .rsArea{text-align: center}
 
-.departmentConfigArea{
+.tab6ConfigArea, .departmentConfigArea{
 	padding: 30px;
 	color: rgb(9, 127, 162);
 	text-align: center;
@@ -3168,7 +3168,7 @@ border-top: none;
 }
 
 .tab6ChartSingleArea{
-	height: 500px;
+	height: 470px;
 	margin-bottom: 25px;
 }
 

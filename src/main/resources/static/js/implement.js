@@ -743,9 +743,11 @@ function checkTableHaveData(tableAreaClass,serverPage,tableType){
 	if(typeof serverPage!=="undefined"){
 		$(tableAreaClass).find(".export ").find(".dropdown-menu").find("a:last").unbind('click');
 		$(tableAreaClass).find(".export ").find(".dropdown-menu").find("a:last").bind('click', function(e) {
-			if(tableType==1){
+			if(tableType==1){ //学生档案导出
 				exportStudent();
-			}
+			}else if(tableType==2){ //授课成果 教师授课情况分析导出
+                exportCrouseRsQueryForTeacherMainTable();
+            }
 			e.stopPropagation();
 		});
 	}

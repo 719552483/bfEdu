@@ -2828,24 +2828,19 @@ function tab5BtnBind(){
 function judgmentIsFristTimeLoadTab6(){
 	var isFirstShowTab6 = $(".isFirstShowTab6")[0].innerText;
 	if (isFirstShowTab6 === "T") {
+		LinkageSelectPublic("#teacher_level","#teacher_department","#teacher_grade","#teacher_major"); //tab6接口加载时间过长 只能在此舒适化下拉框
 		$(".isFirstShowTab6").html("F");
-		getTeachTableInfo('');
 		tab6BtnBind();
-		tab6ChartListener();
+		stuffEJDElement(EJDMElementInfo);
 	}
 }
 
 //获取教师授课情况概貌主Table数据
-function getTeachTableInfo(year){
-	var SearchCriteria=new Object();
-	var classInfoObject=new Object();
-	classInfoObject.pyccbm='';
-	classInfoObject.xbbm='';
-	classInfoObject.njbm='';
-	classInfoObject.zybm='';
-	classInfoObject.batch='';
-	SearchCriteria.classInfo=classInfoObject;
-	SearchCriteria.xnid=year;
+function getTeachTableInfo(canEmpty){
+	var SearchCriteria=getTeachSearchInfo(canEmpty);
+	if(typeof SearchCriteria==='undefined'){
+		return;
+	}
 
 	$.ajax({
 		method : 'get',
@@ -2867,10 +2862,23 @@ function getTeachTableInfo(year){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code === 200) {
+				$('.tab6ConfigArea').hide();
+				$('.tab6DataArea ').show();
+				$('.tab6ChartArea ').empty();
 				stuffTeachTable(backjson.data.tableInfo);
 				stuffTeachChart(backjson.data);
+				tab6ChartListener();
+
+				$('.tab6SearchText').html(SearchCriteria.levelText
+					+SearchCriteria.departmentText
+					+SearchCriteria.gradeText
+					+SearchCriteria.majorText
+					+SearchCriteria.bathText
+					+SearchCriteria.yearText
+				);
 			} else {
-				stuffTeachTable({});
+				$('.tab6ConfigArea').show();
+				$('.tab6DataArea').hide();
 				toastr.warning(backjson.msg);
 			}
 		}
@@ -2904,8 +2912,15 @@ function stuffTeachTable(tableInfo){
 		},
 		toolbar : '#toolbar',
 		showColumns : true,
+		onPostBody: function() {
+			drawPagination(".tab6TableArea", "教师授课信息","serverPage",2);
+			drawSearchInput(".tab6TableArea");
+			changeTableNoRsTip();
+			toolTipUp(".myTooltip");
+			changeColumnsStyle(".tab6TableArea", "教师授课信息");
+		},
 		onPageChange : function() {
-			drawPagination(".tab6TableArea", "教师授课信息");
+			drawPagination(".tab6TableArea", "教师授课信息","serverPage",2);
 		},
 		columns: [{
 			title: '序号',
@@ -2919,12 +2934,24 @@ function stuffTeachTable(tableInfo){
 			sortable: true,
 			formatter : paramsMatter
 		},{
+			field :'ysxs',
+			title : '已完成的学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'jsxs',
+			title : '全部学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
 			field :'jzgh',
 			title : '教职工号',
 			align : 'left',
 			sortable: true,
 			formatter : paramsMatter
-		},{
+		}, {
 			field :'jzglx',
 			title : '教职工类型',
 			align : 'left',
@@ -2964,12 +2991,6 @@ function stuffTeachTable(tableInfo){
 		+ '<li class="queryBtn" id="teachSingleDeatils"><span><img src="img/info.png" style="width:24px"></span>个人授课情况分析</li>'
 		+ '</ul>' ].join('');
 	}
-
-	drawPagination(".tab6TableArea", "教师授课信息");
-	drawSearchInput(".tab6TableArea");
-	changeTableNoRsTip();
-	toolTipUp(".myTooltip");
-	changeColumnsStyle(".tab6TableArea", "教师授课信息");
 }
 
 //个人授课情况分析
@@ -3047,6 +3068,18 @@ function stuffSingleTeachTable(tableInfo){
 		},{
 			field :'className',
 			title : '班级名称',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'ysxs',
+			title : '已完成的学时',
+			align : 'left',
+			sortable: true,
+			formatter : paramsMatter
+		},{
+			field :'jsxs',
+			title : '全部学时',
 			align : 'left',
 			sortable: true,
 			formatter : paramsMatter
@@ -3157,7 +3190,8 @@ function stuffSingleTeachChart(chartInfo,xm) {
 
 //教师授课情况概貌 主Chart
 function stuffTeachChart(chartInfo){
-	var xnmc=getNormalSelectText('teacher_year');
+	$('.tab6ChartArea').append('<div class="col2 tab6ChartSingleArea" id="tab6Chart1"></div><div class="col2 tab6ChartSingleArea" id="tab6Chart2"></div>');
+
 	var legend1=new Array();
 	var legend2=new Array();
 	for (var i = 0; i < chartInfo.data.length; i++) {
@@ -3174,12 +3208,12 @@ function stuffTeachChart(chartInfo){
 
 	var option1 = {
 		title: {
-			text: xnmc+'教师类型分布',
+			text: '教师类型分布',
 			left: "center",
 			textStyle: {
 				color: 'rgba(96,173,197,0.96)',
 				fontWeight: '800', //粗细
-				fontSize: '20',
+				fontSize: '17',
 			},
 		},
 		tooltip: {},
@@ -3216,12 +3250,12 @@ function stuffTeachChart(chartInfo){
 
 	var option2 = {
 		title: {
-			text: xnmc+'学时分布',
+			text: '学时分布',
 			left: "center",
 			textStyle: {
 				color: 'rgba(96,173,197,0.96)',
 				fontWeight: '800', //粗细
-				fontSize: '20',
+				fontSize: '17',
 			},
 		},
 		tooltip: {},
@@ -3265,16 +3299,111 @@ function tab6ChartListener(){
 	});
 }
 
+//后端导出教师授授课情况猪table
+function exportCrouseRsQueryForTeacherMainTable(){
+	var url = "/exportAllClassTeachersDetail";
+	var  teachSearchInfo=getTeachSearchInfo(false);
+	var form = $("<form></form>").attr("action", url).attr("method", "post");
+	form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value", JSON.stringify(teachSearchInfo)));
+	form.on("submit",function() {
+		requestErrorbeforeSend();
+		//做ajax
+		$.ajax({
+			url: url,
+			method: "POST",
+			data:{
+				"searchInfo":JSON.stringify(teachSearchInfo)
+			},
+			success: function () {
+				hideloding()
+			}
+		})
+	});
+	form.appendTo('body').submit().remove();
+}
+
+//获得tab6的检索对象
+function getTeachSearchInfo(canEmpty){
+	var level=getNormalSelectValue('teacher_level');
+	var department=getNormalSelectValue('teacher_department');
+	var grade=getNormalSelectValue('teacher_grade');
+	var major=getNormalSelectValue('teacher_major');
+	var bath=getNormalSelectValue('teacher_bath');
+	var year=getNormalSelectValue('teacher_year');
+	var levelText=getNormalSelectText('teacher_level');
+	var departmentText=getNormalSelectText('teacher_department');
+	var gradeText=getNormalSelectText('teacher_grade');
+	var majorText=getNormalSelectText('teacher_major');
+	var bathText=getNormalSelectText('teacher_bath');
+	var yearText=getNormalSelectText('teacher_year');
+	if(level===''&&department===''&&grade===''&&major===''&&bath===''&&year===''&&!canEmpty){
+		toastr.warning('检索条件不能为空');
+		return ;
+	}
+
+	if(level===''&&!canEmpty){
+		toastr.warning('层次不能为空');
+		return ;
+	}
+	if(department===''&&!canEmpty){
+		toastr.warning('二级学院不能为空');
+		return ;
+	}
+
+	if(year===''&&!canEmpty){
+		toastr.warning('学年不能为空');
+		return ;
+	}
+
+	var classInfoObject=new Object();
+	classInfoObject.pyccbm=getNormalSelectValue('teacher_level');
+	classInfoObject.xbbm=getNormalSelectValue('teacher_department');
+	classInfoObject.njbm=getNormalSelectValue('teacher_grade');
+	classInfoObject.zybm=getNormalSelectValue('teacher_major');
+	classInfoObject.batch=getNormalSelectValue('teacher_bath');;
+
+	var SearchCriteria=new Object();
+	SearchCriteria.classInfo=classInfoObject;
+	SearchCriteria.xnid=getNormalSelectValue('teacher_year');
+	SearchCriteria.levelText=levelText;
+	SearchCriteria.departmentText=departmentText;
+	SearchCriteria.gradeText=gradeText;
+	SearchCriteria.majorText=majorText;
+	SearchCriteria.bathText=bathText;
+	SearchCriteria.yearText=yearText;
+	return SearchCriteria;
+}
+
 //tab5事件绑定
 function tab6BtnBind(){
-	//学年change事件
-	$("#teacher_year").change(function() {
-		var year=getNormalSelectValue('teacher_year');
-		if(year===''){
-			getTeachTableInfo('');
-		}else{
-			getTeachTableInfo(year);
-		}
+	// //学年change事件
+	// $("#teacher_year").change(function() {
+	// 	var year=getNormalSelectValue('teacher_year');
+	// 	if(year===''){
+	// 		getTeachTableInfo();
+	// 	}else{
+	// 		getTeachTableInfo();
+	// 	}
+	// });
+
+	//开始检索
+	$('#teacher_startSearch').unbind('click');
+	$('#teacher_startSearch').bind('click', function(e) {
+		getTeachTableInfo(false);
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#teacher_reReloadSearchs').unbind('click');
+	$('#teacher_reReloadSearchs').bind('click', function(e) {
+		var reObject = new Object();
+		reObject.fristSelectId = "#teacher_level";
+		reObject.actionSelectIds = "#teacher_department,#teacher_grade,#teacher_major,#teacher_bath";
+		reObject.normalSelectIds = "#teacher_year";
+		reReloadSearchsWithSelect(reObject);
+		$('.tab6ConfigArea').show();
+		$('.tab6DataArea ').hide();
+		e.stopPropagation();
 	});
 }
 /**

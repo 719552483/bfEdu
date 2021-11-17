@@ -584,14 +584,79 @@
 
 				<div id="tab6" class="tabson myTabson">
 					<span class="isFirstShowTab6 noneStart">T</span>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="teacher_startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+						</ul>
+						<ul class="toolbar1">
+							<li class="click" id="teacher_reReloadSearchs"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
 
 					<div class="searchArea searchAreaWitheSelect">
 						<div class="col4 giveBottom">
 							<ul class="forminfo">
 								<div class="">
-									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年</label>
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次<b>*</b></label>
+									<select class="isSowIndex" id="teacher_level" >
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院<b>*</b></label>
+									<select class="isSowIndex" id="teacher_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+									<select class="isSowIndex" id="teacher_grade">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+									<select class="isSowIndex" id="teacher_major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+
+								</div>
+							</ul>
+						</div>
+						<div class="clear"></div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">学&#12288;&#8197;年<b>*</b></label>
 									<select class="isSowIndex" id="teacher_year">
 										<option value="seleceConfigTip">暂无学年</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">批次类型</label>
+									<select class="isSowIndex" id="teacher_bath">
+										<option value="seleceConfigTip">暂无批次</option>
 									</select>
 								</div>
 							</ul>
@@ -599,20 +664,24 @@
 					</div>
 					<div class="clear"></div>
 
-					<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
-						<span>教师授课概貌</span>
-					</div>
-					<div class="tab6ChartArea">
-						<div class="col2 tab6ChartSingleArea" id="tab6Chart1"></div>
-						<div class="col2 tab6ChartSingleArea" id="tab6Chart2"></div>
-					</div>
-					<div class="clear"></div>
+					<div class="tab6ConfigArea">暂无数据,请选择有效的检索条件......</div>
 
-					<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
-						<span>参与授课教师情况</span>
-					</div>
-					<div class="tab6TableArea searchGivePaddingR">
-						<table class="tablelist myTableStyle" id="tab6Table" style="margin-top: 10px;"></table>
+					<div class="tab6DataArea noneStart">
+						<div class="formtitle" style="margin-bottom: 5px;margin-top: -15px">
+							<span><cite class="tab6SearchText"></cite>&#12288;教师授课概貌</span>
+						</div>
+						<div class="tab6ChartArea">
+<!--							<div class="col2 tab6ChartSingleArea" id="tab6Chart1"></div>-->
+<!--							<div class="col2 tab6ChartSingleArea" id="tab6Chart2"></div>-->
+						</div>
+						<div class="clear"></div>
+
+						<div class="formtitle" style="margin-bottom: 15px;margin-top: -15px">
+							<span><cite class="tab6SearchText"></cite>&#12288;参与授课教师情况</span>
+						</div>
+						<div class="tab6TableArea searchGivePaddingR">
+							<table class="tablelist myTableStyle" id="tab6Table" style="margin-top: 10px;"></table>
+						</div>
 					</div>
 				</div>
 
