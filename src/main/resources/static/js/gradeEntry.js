@@ -346,10 +346,10 @@ function gradeComfirm(row){
 		return;
 	}
 
-	if(row.business_state==='nopass'){
-		toastr.warning('该课程已发起二次确认成绩的审批');
-		return;
-	}
+	// if(row.business_state==='nopass'){
+	// 	toastr.warning('该课程已发起二次确认成绩的审批');
+	// 	return;
+	// }
 
 	$.showModal("#remindModal",true);
 	$(".remindType").html(row.xn+' -'+row.className+"- 的"+row.courseName);
@@ -377,10 +377,10 @@ function gradeComfirms(){
 			return;
 		}
 
-		if(choosendGradeOverview[i].business_state==='nopass'){
-			toastr.warning('包含已发起二次确认成绩审批的课程');
-			return;
-		}
+		// if(choosendGradeOverview[i].business_state==='nopass'){
+		// 	toastr.warning('包含已发起二次确认成绩审批的课程');
+		// 	return;
+		// }
 	}
 
 	$.showModal("#remindModal",true);
