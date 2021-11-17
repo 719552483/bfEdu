@@ -109,4 +109,10 @@ public interface Edu207Dao extends JpaRepository<Edu207, Long>, JpaSpecification
 
     @Query(value = "select sum(CLASS_HOURS) from EDU207 where Edu201_ID in (select edu201_id from edu201 where EDU201_ID in (select e.Edu201_ID from edu204 e where e.Edu300_ID =?1) and xnid = ?2)  and week = ?3 ", nativeQuery = true)
     Integer comfirmScheduleFSCheck(String classId,String xnid,String week);
+
+    @Query(value = "select case when sum(CLASS_HOURS) is null then 0 else sum(CLASS_HOURS) end from edu207 where edu201_id = ?1 and edu101_id = ?2",nativeQuery = true)
+    Integer findXsByTeacher(String edu201,String edu101Id);
+
+    @Query(value = "select case when sum(CLASS_HOURS) is null then 0 else sum(CLASS_HOURS) end from edu207 where edu201_id = ?1 and edu101_id = ?2 and to_number(week) < ?3",nativeQuery = true)
+    Integer findXsByTeacher(String edu201,String edu101Id,int week);
 }

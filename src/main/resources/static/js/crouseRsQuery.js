@@ -3312,7 +3312,7 @@ function exportCrouseRsQueryForTeacherMainTable(){
 			url: url,
 			method: "POST",
 			data:{
-				"searchInfo":JSON.stringify(teachSearchInfo)
+				"SearchCriteria":JSON.stringify(teachSearchInfo)
 			},
 			success: function () {
 				hideloding()

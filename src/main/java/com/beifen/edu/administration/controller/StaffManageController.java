@@ -477,6 +477,43 @@ public class StaffManageController {
     }
 
     /**
+     * 导出所有上课老师授课情况
+     *
+     * @return returnMap
+     */
+    @RequestMapping("exportAllClassTeachersDetail")
+    @ResponseBody
+    public ResultVO exportAllClassTeachersDetail(HttpServletRequest request, HttpServletResponse response, @RequestParam("SearchCriteria") String SearchCriteria) {
+        ResultVO result;
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(SearchCriteria);
+        Edu300 edu300 = JSON.parseObject(jsonObject.getString("classInfo"), Edu300.class);
+        String xnid = jsonObject.getString("xnid");
+        List<Edu101> edu101List = staffManageService.findTeacher(xnid,edu300);
+        if(edu101List == null){
+            return ResultVO.setFailed("该学院暂无数据");
+        }
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName="教师授课详情";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = staffManageService.exportAllClassTeachersDetail(edu101List,xnid);
+        try {
+            utils.loadModal(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+//        }
+        return result;
+    }
+
+    /**
      * 搜索教师
      *
      * @param SearchCriteria

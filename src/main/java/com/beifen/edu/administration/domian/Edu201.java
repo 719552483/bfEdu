@@ -52,6 +52,8 @@ public class Edu201 {
 	private String bjsl;//班级数量
 	private String jsxs;//教师的学时
 	private String ysxs;//已上的学时
+	private String jz;
+	private String fs;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -342,5 +344,21 @@ public class Edu201 {
 
 	public void setYsxs(String ysxs) {
 		this.ysxs = ysxs;
+	}
+
+	public String getJz() {
+		return jz;
+	}
+
+	public void setJz(String jz) {
+		this.jz = jz;
+	}
+
+	public String getFs() {
+		return fs;
+	}
+
+	public void setFs(String fs) {
+		this.fs = fs;
 	}
 }
