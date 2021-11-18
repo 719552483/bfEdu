@@ -84,6 +84,30 @@ public class BigDataService {
         resultVO = ResultVO.setSuccess("操作成功",edu8001);
         return resultVO;
     }
+
+    public ResultVO searchFinanceInfoDetail(Edu8001 edu8001) {
+        ResultVO resultVO;
+        Specification<Edu8001> specification = new Specification<Edu8001>() {
+            public Predicate toPredicate(Root<Edu8001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu8001.getName() != null && !"".equals(edu8001.getName())) {
+                    predicates.add(cb.like(root.<String>get("name"), "%" + edu8001.getName() + "%"));
+                }
+                if (edu8001.getLbbm() != null && !"".equals(edu8001.getLbbm())) {
+                    predicates.add(cb.equal(root.<String>get("lbbm"),edu8001.getLbbm()));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu8001> edu8001List = edu8001Dao.findAll(specification);
+        if(edu8001List.size() == 0){
+            resultVO = ResultVO.setFailed("暂无数据");
+        }else{
+            resultVO = ResultVO.setSuccess("共查询到"+edu8001List.size()+"条数据",edu8001List);
+        }
+        return resultVO;
+    }
+
     //批量删除财务信息详情
     public ResultVO deleteFinanceInfodetail(List<String> edu8001IdList) {
         ResultVO resultVO;
@@ -91,6 +115,8 @@ public class BigDataService {
         resultVO = ResultVO.setSuccess("删除了"+edu8001IdList.size()+"条信息");
         return resultVO;
     }
+
+
 
     //删除大数据财务信息
     public ResultVO deleteFinanceInfo(List<String> edu108IdList) {
