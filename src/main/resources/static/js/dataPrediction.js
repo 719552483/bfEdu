@@ -527,49 +527,49 @@ function stuffDepartmentPredictionTableEmptyTable(tableInfo){
 			title : '教师课时费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'wlkczy',
 			title : '网络课程资源',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'yyglf',
 			title : '人员管理费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'cdzlf',
 			title : '场地租赁费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'jxyxsbf',
 			title : '教学运行设备费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'pyfalzf',
 			title : '培养方案论证费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'sxsbf',
 			title : '实训设备费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'clf',
 			title : '差旅费',
 			align : 'left',
 			sortable: true,
-			formatter :paramsMatter
+			formatter :dealNumberMoneyMatter
 		},{
 			field : 'personName',
 			title : '录入人',

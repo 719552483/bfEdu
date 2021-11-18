@@ -9,7 +9,7 @@ $(function() {
 });
 
 var choosend=new Array();
-//渲染教师表
+//渲染经费表
 function stuffSchoolMoneyInfoTable(tableInfo) {
     choosend=new Array();
     window.releaseNewsEvents = {
@@ -77,51 +77,46 @@ function stuffSchoolMoneyInfoTable(tableInfo) {
                 formatter: tableNumberMatter
             },
             {
-                field: 'szxbmc',
-                title: '二级学院',
-                sortable: true,
-                align: 'left',
-                formatter: paramsMatter
-            }, {
-                field: 'zymc',
-                title: '专业',
-                sortable: true,
-                align: 'left',
-                formatter: paramsMatter
-            }, {
-                field: 'jzglx',
-                title: '教职工类型',
-                sortable: true,
-                align: 'left',
-                formatter: paramsMatter
-            }, {
-                field: 'xm',
+                field: 'name',
                 title: '姓名',
                 sortable: true,
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'xb',
-                title: '性别',
-                sortable: true,
-                align: 'left',
-                formatter: sexFormatter
-            },{
-                field: 'jzgh',
-                title: '教职工号',
+                field: 'lb',
+                title: '支出类型',
                 sortable: true,
                 align: 'left',
                 formatter: paramsMatter
             }, {
-                field: 'nl',
-                title: '年龄',
+                field: 'fy',
+                title: '支出金额',
                 sortable: true,
                 align: 'left',
-                visible: false,
+                formatter: undoNubmerMoneyMatter
+            }, {
+                field: 'reason',
+                title: '支出事由',
+                sortable: true,
+                align: 'left',
                 formatter: paramsMatter
-            },{
-                field: 'zc',
-                title: '职称',
+            },
+            {
+                field: 'payTime',
+                title: '支出时间',
+                sortable: true,
+                align: 'left',
+                formatter: paramsMatter
+            },
+            {
+                field: 'bz',
+                title: '支出备注',
+                sortable: true,
+                align: 'left',
+                formatter: paramsMatter
+            },  {
+                field: 'createDate',
+                title: '录入时间',
                 sortable: true,
                 align: 'left',
                 formatter: paramsMatter
@@ -208,16 +203,16 @@ function onUncheckAll(row){
 }
 
 //检索经费管理数据
-function searchFinanceInfoDetail(searchInfo){
-    var payTypeSearch=getNormalSelectValue('payTypeSearch');
-    var nameSearch=$('#nameSearch').val();
+function searchFinanceInfoDetail(){
+    var searchObject=new Object();
+    searchObject.lbbm=getNormalSelectValue('payTypeSearch');
+    searchObject.name=$('#nameSearch').val();
     $.ajax({
         method : 'get',
         cache : false,
         url : "/searchFinanceInfoDetail",
         data: {
-            "lbbm":payTypeSearch,
-            "name":nameSearch
+            "SearchCriteria":JSON.stringify(searchObject)
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -512,6 +507,8 @@ function confirmAddMoney(){
         success : function(backjson) {
             hideloding();
             if (backjson.code===200) {
+                $('#schoolMoneyTable').bootstrapTable('prepend', backjson.data);
+                toolTipUp(".myTooltip");
                 toastr.success(backjson.msg);
                 $.hideModal();
             } else {
@@ -645,6 +642,24 @@ function btnBind() {
     $('.cancelTipBtn,.cancel').unbind('click');
     $('.cancelTipBtn,.cancel').bind('click', function(e) {
         $.hideModal();
+        e.stopPropagation();
+    });
+
+    //开始检索
+    $('#startSearch').unbind('click');
+    $('#startSearch').bind('click', function(e) {
+        searchFinanceInfoDetail();
+        e.stopPropagation();
+    });
+
+    //重置检索
+    $('#reReloadSearchs').unbind('click');
+    $('#reReloadSearchs').bind('click', function(e) {
+        var reObject = new Object();
+        reObject.InputIds = "#nameSearch";
+        reObject.normalSelectIds = "#payTypeSearch";
+        reReloadSearchsWithSelect(reObject);
+        searchFinanceInfoDetail();
         e.stopPropagation();
     });
 
