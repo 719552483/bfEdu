@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.BigDataSearchPO;
 import com.beifen.edu.administration.VO.ResultVO;
+import com.beifen.edu.administration.domian.Edu200;
 import com.beifen.edu.administration.domian.Edu800;
 import com.beifen.edu.administration.domian.Edu8001;
 import com.beifen.edu.administration.service.BigDataService;
@@ -35,6 +36,20 @@ public class BigDataContoller {
     public ResultVO saveFinanceInfo(@RequestParam("financeInfo") String financeInfo) {
         Edu800 edu800 = JSON.parseObject(financeInfo, Edu800.class);
         ResultVO result = bigDataService.saveFinanceInfo(edu800);
+        return result;
+    }
+
+    /**
+     * 查询财务信息详情
+     * @param SearchCriteria
+     * @return
+     */
+    @RequestMapping("searchFinanceInfoDetail")
+    @ResponseBody
+    public ResultVO searchFinanceInfoDetail(@RequestParam("SearchCriteria") String SearchCriteria) {
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+        Edu8001 edu8001 = JSON.toJavaObject(jsonObject, Edu8001.class);
+        ResultVO result = bigDataService.searchFinanceInfoDetail(edu8001);
         return result;
     }
 
