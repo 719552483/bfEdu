@@ -307,6 +307,7 @@ padding:1.6em 0em 0.6em 31px !important
 }
 
 /*表格单个操作*/
+#schoolMoneyTable td:last-child,
 #notIncludeTable td:last-child,
 #changeCrouseRoleTable td:last-child,
 #gzhRoleTable td:last-child,
@@ -2263,7 +2264,7 @@ top角色切换滚动体样式
 	padding-bottom: 5px;
 }
 
-.appraiseTextArea,.breakOptionTextArea{
+.appraiseTextArea,.breakOptionTextArea,.schoolMoneyTextArea{
 	width: 100%;
 	min-height: 200px;
 	background-color: rgba(183, 215, 232, 0.050980392156862744);
@@ -2662,7 +2663,7 @@ input:focus{
 }
 
 .allUserTableArea .multi-select-container {
-	margin-top: -20px;
+	margin-top: -14px;
 }
 
 .radioAndCheckTableArea .search,

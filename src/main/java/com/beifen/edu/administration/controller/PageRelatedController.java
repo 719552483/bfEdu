@@ -327,5 +327,10 @@ public class PageRelatedController {
 		return "reportFormMoney";
 	}
 
+	@RequestMapping("schoolMoney")
+	public String schoolMoneyPage() {
+		return "schoolMoney";
+	}
+
 
 }
