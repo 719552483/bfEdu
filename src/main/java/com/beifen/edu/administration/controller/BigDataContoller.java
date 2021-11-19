@@ -46,10 +46,10 @@ public class BigDataContoller {
      */
     @RequestMapping("searchFinanceInfoDetail")
     @ResponseBody
-    public ResultVO searchFinanceInfoDetail(@RequestParam("SearchCriteria") String SearchCriteria) {
+    public ResultVO searchFinanceInfoDetail(@RequestParam("SearchCriteria") String SearchCriteria,@RequestParam("startTime") String startTime,@RequestParam("endTime") String endTime) {
         com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
         Edu8001 edu8001 = JSON.toJavaObject(jsonObject, Edu8001.class);
-        ResultVO result = bigDataService.searchFinanceInfoDetail(edu8001);
+        ResultVO result = bigDataService.searchFinanceInfoDetail(edu8001,startTime,endTime);
         return result;
     }
 

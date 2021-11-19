@@ -85,7 +85,7 @@ public class BigDataService {
         return resultVO;
     }
 
-    public ResultVO searchFinanceInfoDetail(Edu8001 edu8001) {
+    public ResultVO searchFinanceInfoDetail(Edu8001 edu8001,String startTime,String endTime) {
         ResultVO resultVO;
         Specification<Edu8001> specification = new Specification<Edu8001>() {
             public Predicate toPredicate(Root<Edu8001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -96,7 +96,15 @@ public class BigDataService {
                 if (edu8001.getLbbm() != null && !"".equals(edu8001.getLbbm())) {
                     predicates.add(cb.equal(root.<String>get("lbbm"),edu8001.getLbbm()));
                 }
-                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                if(startTime != null && !"".equals(startTime)){
+                    predicates.add(cb.greaterThanOrEqualTo(root.<String>get("payTime"), startTime));
+                }
+                if(endTime != null && !"".equals(endTime)){
+                    predicates.add(cb.lessThanOrEqualTo(root.<String>get("payTime"),endTime));
+                }
+                query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+                query.orderBy(cb.desc(root.get("time")));
+                return query.getRestriction();
             }
         };
         List<Edu8001> edu8001List = edu8001Dao.findAll(specification);
