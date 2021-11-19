@@ -2,9 +2,10 @@ var EJDMElementInfo;
 $(function() {
     judgementPWDisModifyFromImplements();
     $('.isSowIndex').selectMania(); //初始化下拉框
+    drawCalenrRange("#startDate","#endDate");
     EJDMElementInfo=queryEJDMElementInfo();
     stuffEJDElement(EJDMElementInfo);
-    searchFinanceInfoDetail();
+    searchFinanceInfoDetail(true);
     btnBind();
 });
 
@@ -14,7 +15,7 @@ function stuffSchoolMoneyInfoTable(tableInfo) {
     choosend=new Array();
     window.releaseNewsEvents = {
         'click #removeMoney': function(e, value, row, index) {
-            // removeMoney(row,index);
+            removeMoney(row);
         }
     };
 
@@ -202,17 +203,91 @@ function onUncheckAll(row){
     }
 }
 
+//单条删除经费
+function removeMoney(row){
+    $.showModal("#remindModal",true);
+    $(".remindType").html("经费信息");
+    $(".remindActionType").html("删除");
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeArray=new Array();
+        removeArray.push(row.edu8001_ID);
+        sendRemoveMoneysInfo(removeArray);
+    });
+}
+
+//批量删除经费
+function removeMoneys(){
+    var choosend=$('#schoolMoneyTable').bootstrapTable('getSelections');
+    if(choosend.length==0){
+        toastr.warning('请选择经费信息');
+        return;
+    }
+    $.showModal("#remindModal",true);
+    $(".remindType").html("选择的经费信息");
+    $(".remindActionType").html("删除");
+    $('.confirmRemind').unbind('click');
+    $('.confirmRemind').bind('click', function(e) {
+        var removeArray=new Array();
+        for (var i = 0; i < choosend.length; i++) {
+            removeArray.push(choosend[i].edu8001_ID);
+        }
+        sendRemoveMoneysInfo(removeArray);
+    });
+}
+
+//发送删除经费请求
+function sendRemoveMoneysInfo(removeArray){
+    $.ajax({
+        method : 'get',
+        cache : false,
+        url : "/deleteFinanceInfodetail",
+        data: {
+            "deleteIds":JSON.stringify(removeArray)
+        },
+        dataType : 'json',
+        beforeSend: function(xhr) {
+            requestErrorbeforeSend();
+        },
+        error: function(textStatus) {
+            requestError();
+        },
+        complete: function(xhr, status) {
+            requestComplete();
+        },
+        success : function(backjson) {
+            hideloding();
+            if (backjson.code===200) {
+                tableRemoveAction("#schoolMoneyTable", removeArray, ".schoolMoneyTableArea", "经费信息");
+                $.hideModal();
+            } else {
+                toastr.warning(backjson.msg);
+            }
+        }
+    });
+}
+
 //检索经费管理数据
-function searchFinanceInfoDetail(){
+function searchFinanceInfoDetail(canEmpty){
     var searchObject=new Object();
     searchObject.lbbm=getNormalSelectValue('payTypeSearch');
     searchObject.name=$('#nameSearch').val();
+
+    var startDate=$('#startDate').val();
+    var endDate=$('#endDate').val();
+    if(!canEmpty&&searchObject.lbbm===''&&searchObject.name===''&&endDate===''&&startDate===''){
+        toastr.warning('检索条件不能为空');
+        return;
+    }
+
     $.ajax({
         method : 'get',
         cache : false,
         url : "/searchFinanceInfoDetail",
         data: {
-            "SearchCriteria":JSON.stringify(searchObject)
+            "SearchCriteria":JSON.stringify(searchObject),
+            "startTime":startDate,
+            "endTime":endDate
         },
         dataType : 'json',
         beforeSend: function(xhr) {
@@ -648,7 +723,7 @@ function btnBind() {
     //开始检索
     $('#startSearch').unbind('click');
     $('#startSearch').bind('click', function(e) {
-        searchFinanceInfoDetail();
+        searchFinanceInfoDetail(false);
         e.stopPropagation();
     });
 
@@ -656,10 +731,10 @@ function btnBind() {
     $('#reReloadSearchs').unbind('click');
     $('#reReloadSearchs').bind('click', function(e) {
         var reObject = new Object();
-        reObject.InputIds = "#nameSearch";
+        reObject.InputIds = "#nameSearch,#startDate,#endDate";
         reObject.normalSelectIds = "#payTypeSearch";
         reReloadSearchsWithSelect(reObject);
-        searchFinanceInfoDetail();
+        searchFinanceInfoDetail(true);
         e.stopPropagation();
     });
 
@@ -667,6 +742,13 @@ function btnBind() {
     $('#wantAddMoney').unbind('click');
     $('#wantAddMoney').bind('click', function(e) {
         wantAddMoney();
+        e.stopPropagation();
+    });
+
+    //批量删除经费
+    $('#removeMoneys').unbind('click');
+    $('#removeMoneys').bind('click', function(e) {
+        removeMoneys();
         e.stopPropagation();
     });
 

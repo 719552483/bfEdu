@@ -103,7 +103,7 @@ public class BigDataService {
                     predicates.add(cb.lessThanOrEqualTo(root.<String>get("payTime"),endTime));
                 }
                 query.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
-                query.orderBy(cb.desc(root.get("time")));
+                query.orderBy(cb.desc(root.get("payTime")));
                 return query.getRestriction();
             }
         };

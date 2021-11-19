@@ -1611,7 +1611,7 @@ function drawCalenrRange(beginSelector,endSelector){
 			minView :2,
 			todayHighlight:true,
 			startView:2,
-			endDate:new Date(),
+			// endDate:new Date(),
 			todayBtn: "linked",
 			clearBtn:true
 		}).on('changeDate', function(ev){
@@ -1632,7 +1632,7 @@ function drawCalenrRange(beginSelector,endSelector){
 			minView :2,
 			todayHighlight:true,
 			startView:2,
-			startDate:new Date(),
+			// startDate:new Date(),
 			todayBtn: "linked",
 			clearBtn:true
 		}).on('changeDate', function(ev){
