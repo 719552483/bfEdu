@@ -3187,6 +3187,84 @@ border-top: none;
 	overflow-x: hidden!important;
 }
 
+.moneyChartArea{
+	padding: 10px 0px 0px 80px;
+}
+
+.moneyCharts{
+	height: 230px;
+	background-color: #fff;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	box-shadow:rgb(0 0 0 / 56%) 0px 1px 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 30%;
+	float: left;
+}
+
+.moneyCharts,.small-box{
+	/*border: 1px red solid;*/
+}
+
+.small-box{
+	height: calc(100%);
+	/*padding-top: 20px;*/
+	/*padding-bottom: 20px;*/
+}
+
+.small-box-icon,.small-box-inner{
+	height: calc(100%);
+	float: left;
+}
+
+.small-box-icon{
+	text-align: center;
+	margin: 0 auto;
+	width: 20%;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 210px;
+	background-color: #87cefa;
+}
+
+.small-box-icon .icon-data{
+	font-size: 45px;
+	color: white;
+	font-weight: 800;
+}
+
+
+.small-box-inner{
+	width: 80%;
+	text-align: center;
+	/*padding-top: 4%;*/
+	padding-top: 35px;
+	/*padding-bottom: 20px;*/
+}
+
+.small-box-inner .data{
+	color: rgb(118 174 209);
+	font-weight: 600;
+}
+
+.small-box-inner .data cite{
+	font-size: 40px;
+}
+
+.status{
+	text-align: right;
+	padding-right: 5px;
+	padding-top: 5px;
+}
+
+.small-box-inner p{
+	margin: 0px!important;
+}
+
+
+
+
 
 
 

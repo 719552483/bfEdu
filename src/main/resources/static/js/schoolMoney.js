@@ -7,6 +7,7 @@ $(function() {
     stuffEJDElement(EJDMElementInfo);
     searchFinanceInfoDetail(true);
     btnBind();
+    chartListener();
 });
 
 var choosend=new Array();
@@ -302,13 +303,151 @@ function searchFinanceInfoDetail(canEmpty){
         success : function(backjson) {
             hideloding();
             if (backjson.code===200) {
-                stuffSchoolMoneyInfoTable(backjson.data);
+                stuffSchoolMoneyInfoTable(backjson.data.tableInfo);
+                stuffSchoolMoneyCbartArea(backjson.data);
             } else {
                 stuffSchoolMoneyInfoTable({});
                 toastr.warning(backjson.msg);
             }
         }
     });
+}
+
+//渲染图形区域
+function stuffSchoolMoneyCbartArea(data){
+    draw1Area(data.histogram);
+    draw2Area(data);
+    draw3Area(data.pieChart);
+}
+
+//图形1
+function draw1Area(histogramInfo){
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById("chart1"));
+
+    var option = {
+        title: {
+            text: '支出金额统计(总)',
+            left: 'center',
+            textStyle: {
+                color: 'rgb(118, 174, 209)',
+            }
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            formatter: function (params) {
+                var tar = params[1];
+                return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value+'(元)';
+            }
+        },
+        color: '#CC6666',
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            splitLine: { show: false },
+            data:histogramInfo.dataName
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Placeholder',
+                type: 'bar',
+                stack: 'Total',
+                itemStyle: {
+                    borderColor: 'transparent',
+                    color: 'transparent'
+                },
+                emphasis: {
+                    itemStyle: {
+                        borderColor: 'transparent',
+                        color: 'transparent'
+                    }
+                },
+                data: histogramInfo.data1
+            },
+            {
+                name: '支出金额',
+                type: 'bar',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'inside'
+                },
+                data: histogramInfo.data2
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表
+    myChart.setOption(option);
+}
+
+//图形2
+function draw2Area(dataInfo){
+    $('#chart2').find('.data').find('cite:eq(1)').html(dealNumber(dataInfo.amount.now));
+
+    if(dataInfo.amount.status==='up'){
+        $('#chart2').find('.small-box-inner').find('.status').find('i').addClass('icon-cujiantou1');
+        $('#chart2').find('.small-box-inner').find('.status').find('cite').html('较去年上升'+dealNumber(dataInfo.amount.count)+'(元)').addClass('greenTxt');
+    }else if(dataInfo.amount.status==='down'){
+        $('#chart2').find('.small-box-inner').find('.status').find('i').addClass('icon-cujiantou');
+        $('#chart2').find('.small-box-inner').find('.status').find('cite').html('较去年下降'+dealNumber(dataInfo.amount.count)+'(元)').addClass('redTxt');
+    }else{
+        $('#chart2').find('.small-box-inner').find('.status').find('i').addClass('icon-zanwu');
+        $('#chart2').find('.small-box-inner').find('.status').find('cite').html('与上一年持平').addClass('normalTxt');
+    }
+}
+
+//图形3
+function draw3Area(pieChartInfo){
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById("chart3"));
+
+    var option = {
+        title: {
+            text: '支出数量统计(总)',
+            textStyle: {
+                color: 'rgb(118, 174, 209)',
+            },
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter:function(param){
+                return param.seriesName+'<br/>'+ param.marker +param.data.name+':'+param.data.value+'(笔)'; //param.marker为提示的小圆圈
+            }
+        },
+        color:['rgba(22,178,209,0.66)','rgba(210,14,13,0.61)' ,'rgba(207,125,101,0.85)','rgba(112,144,162,0.87)', 'rgba(97,160,168,0.87)',  '#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+        series: [
+            {
+                name: '支出数量',
+                type: 'pie',
+                radius: ['40%', '70%'], //图的大小
+                center: ['50%', '55%'], //图的位置，距离左跟上的位置
+                data: pieChartInfo,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表
+    myChart.setOption(option);
 }
 
 //预备经费使用录入
@@ -708,6 +847,17 @@ function allTaecherAreabtnBind() {
     $('#confirmChoosedTeacher').bind('click', function(e) {
         confirmChoosedTeacher();
         e.stopPropagation();
+    });
+}
+
+// chart自适应
+function chartListener(){
+    // chart自适应
+    window.addEventListener("resize", function() {
+        var myChart = echarts.init(document.getElementById('chart1'));
+        myChart.resize();
+        var myChart = echarts.init(document.getElementById('chart3'));
+        myChart.resize();
     });
 }
 

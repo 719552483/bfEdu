@@ -37,6 +37,7 @@
 <script type="text/javascript" src="sripts/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript" src="sripts/tableExport.js"></script>
 <script type="text/javascript" src="sripts/bootstrap-table-export.js"></script>
+<script src='sripts/echarts.min.js' type='text/javascript'></script>
 </head>
 
 <body>
@@ -51,7 +52,30 @@
 	</div>
 
 	<div class="formbody">
-			<div class="tools">
+			<div class="moneyChartArea">
+				<div class="moneyCharts" id="chart1"></div>
+
+				<div class="moneyCharts" id="chart2">
+					<div class="small-box">
+						<div class="small-box-icon">
+							<i class="iconfont icon-data"></i>
+						</div>
+						<div class="small-box-inner">
+							<h1 class="data"><cite>￥</cite><cite></cite></h1>
+							<h2>
+								支出对比
+							</h2>
+							<p class="text-muted">与上一年对比</p>
+							<span class="status arrow-up"><i class="iconfont"></i><cite></cite></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="moneyCharts" id="chart3"></div>
+			</div>
+			<div class="clear"></div>
+
+			<div class="tools" style="margin-top: 15px;">
 				<ul class="toolbar">
 					<li class="click insertBtn" id="wantAddMoney"><span><img src="images/t01.png" style="width: 24px;" /></span>经费使用录入</li>
 					<li class="click insertBtn" id="removeMoneys"><span><img src="images/t03.png" style="width: 24px;" /></span>批量删除</li>
@@ -93,7 +117,7 @@
 					</ul>
 				</div>
 			</div>
-		<div class="clear"></div>
+			<div class="clear"></div>
 
 		<div class="schoolMoneyTableArea columnsStyle searchGivePaddingR">
 			<table class="tablelist myTableStyle" id="schoolMoneyTable" data-unique-id="edu8001_ID" style="margin-top: 10px;"></table>
@@ -276,9 +300,5 @@
 			<div class="loadingtxt">数据加载中，请稍后...</div>
 		</div>
 	</div>
-
-	<script type="text/javascript">
-		$("#usual1 ul").idTabs();
-	</script>
 </body>
 </html>

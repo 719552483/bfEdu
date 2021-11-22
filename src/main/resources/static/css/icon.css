@@ -44,7 +44,8 @@
   content: "\e608";
 }
 
-.icon-jiaoshiguanli:before {
+.icon-jiaoshiguanli:be
+fore {
   content: "\e605";
 }
 
@@ -276,6 +277,48 @@
 
 .icon-baobiaofenxi:before {
   content: "\e606";
+}
+
+@font-face {
+  font-family: "iconfont"; /* Project id 2956373 */
+  src: url('//at.alicdn.com/t/font_2956373_2cxakp56dfv.woff2?t=1637574604108') format('woff2'),
+  url('//at.alicdn.com/t/font_2956373_2cxakp56dfv.woff?t=1637574604108') format('woff'),
+  url('//at.alicdn.com/t/font_2956373_2cxakp56dfv.ttf?t=1637574604108') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-zanwu:before {
+  content: "\e678";
+  color: rgba(49, 47, 47, 0.8705882352941177);
+  font-weight: 800;
+  margin-right: 5px;
+}
+
+.icon-zanwu {
+  font-weight: 800;
+}
+
+.icon-cujiantou:before {
+  content: "\e6a2";
+  color: #d70101;
+  margin-right: 5px;
+}
+
+.icon-cujiantou1:before {
+  content: "\e1008";
+  color: rgb(13 98 56);
+  margin-right: 5px;
+}
+
+.icon-data:before {
+  content: "\e673";
 }
 
 
