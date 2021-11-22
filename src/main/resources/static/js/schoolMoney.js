@@ -5,7 +5,7 @@ $(function() {
     drawCalenrRange("#startDate","#endDate");
     EJDMElementInfo=queryEJDMElementInfo();
     stuffEJDElement(EJDMElementInfo);
-    searchFinanceInfoDetail(true);
+    searchFinanceInfoDetail(true,true);
     btnBind();
     chartListener();
 });
@@ -269,7 +269,7 @@ function sendRemoveMoneysInfo(removeArray){
 }
 
 //检索经费管理数据
-function searchFinanceInfoDetail(canEmpty){
+function searchFinanceInfoDetail(canEmpty,showChart){
     var searchObject=new Object();
     searchObject.lbbm=getNormalSelectValue('payTypeSearch');
     searchObject.name=$('#nameSearch').val();
@@ -304,8 +304,11 @@ function searchFinanceInfoDetail(canEmpty){
             hideloding();
             if (backjson.code===200) {
                 stuffSchoolMoneyInfoTable(backjson.data.tableInfo);
-                stuffSchoolMoneyCbartArea(backjson.data);
+                if(showChart){
+                    stuffSchoolMoneyCbartArea(backjson.data);
+                }
             } else {
+                $('.moneyChartArea').hide();
                 stuffSchoolMoneyInfoTable({});
                 toastr.warning(backjson.msg);
             }
@@ -873,7 +876,7 @@ function btnBind() {
     //开始检索
     $('#startSearch').unbind('click');
     $('#startSearch').bind('click', function(e) {
-        searchFinanceInfoDetail(false);
+        searchFinanceInfoDetail(false,false);
         e.stopPropagation();
     });
 
@@ -884,7 +887,7 @@ function btnBind() {
         reObject.InputIds = "#nameSearch,#startDate,#endDate";
         reObject.normalSelectIds = "#payTypeSearch";
         reReloadSearchsWithSelect(reObject);
-        searchFinanceInfoDetail(true);
+        searchFinanceInfoDetail(true,false);
         e.stopPropagation();
     });
 
