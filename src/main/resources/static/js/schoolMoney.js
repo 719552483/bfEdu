@@ -308,7 +308,9 @@ function searchFinanceInfoDetail(canEmpty,showChart){
                     stuffSchoolMoneyCbartArea(backjson.data);
                 }
             } else {
-                $('.moneyChartArea').hide();
+                if(showChart){
+                    $('.moneyChartArea').hide();
+                }
                 stuffSchoolMoneyInfoTable({});
                 toastr.warning(backjson.msg);
             }
@@ -384,7 +386,10 @@ function draw1Area(histogramInfo){
                 stack: 'Total',
                 label: {
                     show: true,
-                    position: 'inside'
+                    position: 'inside',
+                    formatter: function (params) {
+                        return '￥'+params.value;
+                    }
                 },
                 data: histogramInfo.data2
             }

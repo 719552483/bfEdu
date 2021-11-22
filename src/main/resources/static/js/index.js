@@ -890,6 +890,9 @@ function  stuffChart1(source){
 							textStyle: { //数值样式
 								color: 'rgb(22,178,209)',
 								fontSize: 12
+							},
+							formatter: function (params) {
+								return params.data[1]+'人';
 							}
 						}
 					}
@@ -906,6 +909,9 @@ function  stuffChart1(source){
 							textStyle: { //数值样式
 								color: 'rgb(248,89,12)',
 								fontSize: 12
+							},
+							formatter: function (params) {
+								return params.data[2]+'人';
 							}
 						}
 					}
@@ -922,6 +928,9 @@ function  stuffChart1(source){
 							textStyle: { //数值样式
 								color: 'rgb(143,201,22)',
 								fontSize: 12
+							},
+							formatter: function (params) {
+								return params.data[3]+'人';
 							}
 						}
 					}
@@ -1001,7 +1010,10 @@ function  stuffChart2(dataOne,dataTwo){
 				stack: '总量',
 				label: {
 					show: true,
-					position: 'inside'
+					position: 'inside',
+					formatter: function (params) {
+						return params.value+'(学时)';
+					}
 				},
 				data: dataTwo
 			}
