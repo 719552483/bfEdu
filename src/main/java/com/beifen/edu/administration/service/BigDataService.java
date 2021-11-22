@@ -87,6 +87,7 @@ public class BigDataService {
 
     public ResultVO searchFinanceInfoDetail(Edu8001 edu8001,String startTime,String endTime) {
         ResultVO resultVO;
+        Map map = new HashMap();
         Specification<Edu8001> specification = new Specification<Edu8001>() {
             public Predicate toPredicate(Root<Edu8001> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -108,11 +109,59 @@ public class BigDataService {
             }
         };
         List<Edu8001> edu8001List = edu8001Dao.findAll(specification);
-        if(edu8001List.size() == 0){
+        if(edu8001List.size() == 0) {
             resultVO = ResultVO.setFailed("暂无数据");
-        }else{
-            resultVO = ResultVO.setSuccess("共查询到"+edu8001List.size()+"条数据",edu8001List);
+            return resultVO;
         }
+        map.put("tableInfo",edu8001List);
+        //年度支出
+        SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyy");
+        Date date = new Date();
+        String year = SimpleDateFormat.format(date);
+        Integer nowM = edu8001Dao.findByYear(year);
+        Integer lastM = edu8001Dao.findByYear((Integer.parseInt(year)-1)+"");
+        Map mapAll = new HashMap();
+        mapAll.put("now",nowM);
+        if(nowM-lastM > 0){
+            mapAll.put("status","up");
+            mapAll.put("count",nowM-lastM);
+        }else if(nowM-lastM < 0){
+            mapAll.put("status","down");
+            mapAll.put("count",lastM-nowM);
+        }else{
+            mapAll.put("status","equal");
+            mapAll.put("count",0);
+        }
+        map.put("amount",mapAll);
+        //条数
+        List<Edu000> edu000List = edu000Dao.queryejdm("zclx");
+        List<Map> mapList = new ArrayList<>();
+        List<String> data = new ArrayList<>();
+        Integer count = edu8001Dao.findMoney();
+        List<Integer> data1 = new ArrayList<>();
+        List<Integer> data2 = new ArrayList<>();
+        data.add("总数");
+        data1.add(0);
+        data2.add(count);
+        for(Edu000 edu000:edu000List){
+            data.add(edu000.getEjdmz());
+            Integer countL = edu8001Dao.findMoneyByLx(edu000.getEjdm());
+            data1.add(count-countL);
+            data2.add(countL);
+            count = countL;
+            Map map0 = new HashMap();
+            map0.put("name",edu000.getEjdmz());
+            map0.put("value",edu8001Dao.findCountByLx(edu000.getEjdm()));
+            mapList.add(map0);
+        }
+        map.put("pieChart",mapList);
+        mapAll = new HashMap();
+        mapAll.put("dataName",data);
+        mapAll.put("data1",data1);
+        mapAll.put("data2",data2);
+        map.put("histogram",mapAll);
+
+        resultVO = ResultVO.setSuccess("共查询到"+edu8001List.size()+"条数据",map);
         return resultVO;
     }
 

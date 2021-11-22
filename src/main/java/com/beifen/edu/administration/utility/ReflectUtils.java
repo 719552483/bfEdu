@@ -1325,6 +1325,14 @@ public class ReflectUtils {
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
+
+			if(isNull(edu001.getXh())){
+				chaeckPass=false;
+				checkTxt= "第"+(i+1)+"行-学号不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt",checkTxt);
+				break;
+			}
 			
 			if(!edu001.getXb().equals("男")&&!edu001.getXb().equals("女")){
 				chaeckPass=false;
@@ -1347,13 +1355,13 @@ public class ReflectUtils {
 				returnMap.put("checkTxt",checkTxt);
 				break;
 			}
-			if(isNull(edu001.getCsrq())){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-出生日期不能为空";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}
+//			if(isNull(edu001.getCsrq())){
+//				chaeckPass=false;
+//				checkTxt="第"+(i+1)+"行-出生日期不能为空";
+//				returnMap.put("chaeckPass", chaeckPass);
+//				returnMap.put("checkTxt", checkTxt);
+//				break;
+//			}
 			if(isNull(edu001.getPyccmc())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-培养层次不能为空";
@@ -1396,13 +1404,13 @@ public class ReflectUtils {
 //				returnMap.put("checkTxt", checkTxt);
 //				break;
 //			}
-			if(isNull(edu001.getMz())){
-				chaeckPass=false;
-				checkTxt="第"+(i+1)+"行-民族不能为空";
-				returnMap.put("chaeckPass", chaeckPass);
-				returnMap.put("checkTxt", checkTxt);
-				break;
-			}
+//			if(isNull(edu001.getMz())){
+//				chaeckPass=false;
+//				checkTxt="第"+(i+1)+"行-民族不能为空";
+//				returnMap.put("chaeckPass", chaeckPass);
+//				returnMap.put("checkTxt", checkTxt);
+//				break;
+//			}
 			
 			//入学时间不为空则验证格式
 			if(!isNull(edu001.getRxsj())){
@@ -1702,11 +1710,11 @@ public class ReflectUtils {
 				//民族编码是否存在
 				String currentMzbmCode= reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu001.getMz(),"mz");
 				if(currentMzbmCode==null){
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-民族编码不存在";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
+//					chaeckPass=false;
+//					checkTxt="第"+(i+1)+"行-民族编码不存在";
+//					returnMap.put("chaeckPass", chaeckPass);
+//					returnMap.put("checkTxt", checkTxt);
+//					break;
 				}else{
 					edu001.setMzbm(currentMzbmCode);
 				}
@@ -1761,36 +1769,36 @@ public class ReflectUtils {
 			
 			List<Edu001> databaseAllStudent=reflectUtils.studentManageService.queryAllStudent();
 			//判断身份证号在数据库是否存在
-			if(!chaeckPass){
-				break;
-			}else{
-				if(isModify){
-					for (int d = 0; d < databaseAllStudent.size(); d++) {
-						if (databaseAllStudent.get(d).getEdu001_ID().equals(edu001.getEdu001_ID())) {
-							databaseAllStudent.remove(d);
-						}
-					}
-					
-//					for (int d = 0;d < databaseAllStudent.size(); d++) {
-//						if(databaseAllStudent.get(d).getSfzh().equals(edu001.getSfzh())){
-//							chaeckPass=false;
-//							checkTxt="第"+(i+1)+"行- 身份证号已存在";
-//							returnMap.put("chaeckPass", chaeckPass);
-//							returnMap.put("checkTxt", checkTxt);
-//							break;
+//			if(!chaeckPass){
+//				break;
+//			}else{
+//				if(isModify){
+//					for (int d = 0; d < databaseAllStudent.size(); d++) {
+//						if (databaseAllStudent.get(d).getEdu001_ID().equals(edu001.getEdu001_ID())) {
+//							databaseAllStudent.remove(d);
 //						}
 //					}
-				}else{
-//					boolean IDcardIshave = reflectUtils.studentManageService.IDcardIshave(importStudent.get(i).getSfzh());
-//					if(IDcardIshave){
-//						chaeckPass=false;
-//						checkTxt="第"+(i+1)+"行- 身份证号已存在";
-//						returnMap.put("chaeckPass", chaeckPass);
-//						returnMap.put("checkTxt", checkTxt);
-//						break;
-//					}
-				}
-			}
+//
+////					for (int d = 0;d < databaseAllStudent.size(); d++) {
+////						if(databaseAllStudent.get(d).getSfzh().equals(edu001.getSfzh())){
+////							chaeckPass=false;
+////							checkTxt="第"+(i+1)+"行- 身份证号已存在";
+////							returnMap.put("chaeckPass", chaeckPass);
+////							returnMap.put("checkTxt", checkTxt);
+////							break;
+////						}
+////					}
+//				}else{
+////					boolean IDcardIshave = reflectUtils.studentManageService.IDcardIshave(importStudent.get(i).getSfzh());
+////					if(IDcardIshave){
+////						chaeckPass=false;
+////						checkTxt="第"+(i+1)+"行- 身份证号已存在";
+////						returnMap.put("chaeckPass", chaeckPass);
+////						returnMap.put("checkTxt", checkTxt);
+////						break;
+////					}
+//				}
+//			}
 			
 			// 判断新增学生是否会超过行政班容纳人数
 			if(!chaeckPass){
@@ -2076,7 +2084,7 @@ public class ReflectUtils {
             result="xm";
             break;
         case 7:
-            result="zym";
+            result="xh";
             break;
         case 8:
             result="xb";
@@ -2862,7 +2870,7 @@ public class ReflectUtils {
 		
 		// 所有标题数组
 		String[] titles = new String[] {"*生源类型","*培养层次", "*二级学院", "*年级", "*专业", "*行政班","*学生姓名",
-				"曾用名", "*性别", "*状态", "*出生日期", "*身份证号 ", "*民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
+				"*学号", "*性别", "*状态", "出生日期", "身份证号 ", "民族", "是否有学籍 ", "学籍号", "政治面貌", "生源地 ",
 				"文化程度", "考生号", "入学总分", "*入学时间", "毕业证号 ", "准考证号", "手机号码 ", "email", "籍贯", "职业 ",
 				"身高", "体重", "婚否 ", "招生方式 ", "定向培养", "贫困家庭 ", "家庭住址", "宗教信仰", "备注 " };
 		

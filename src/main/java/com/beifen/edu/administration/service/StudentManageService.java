@@ -162,7 +162,7 @@ public class StudentManageService {
 
         Edu990 edu990 = new Edu990();
         edu990.setYhm(edu001.getXh());
-        edu990.setMm("123456");
+        edu990.setMm("eduApp123456");
         edu990.setJs("学生");
         edu990.setJsId("8050");
         edu990.setUserKey(edu001.getEdu001_ID().toString());
@@ -413,7 +413,7 @@ public class StudentManageService {
             for (int i = 0; i < importStudent.size(); i++) {
                 Edu001 edu001 = importStudent.get(i);
                 edu001.setYxbz(yxbz);
-                edu001.setXh(getNewStudentXh(edu001)); //新生的学号
+//                edu001.setXh(getNewStudentXh(edu001)); //新生的学号
                 addStudent(edu001); // 新增学生
                 count++;
             }
