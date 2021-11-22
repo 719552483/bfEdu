@@ -118,8 +118,8 @@ public class BigDataService {
         SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyy");
         Date date = new Date();
         String year = SimpleDateFormat.format(date);
-        Integer nowM = edu8001Dao.findByYear(year);
-        Integer lastM = edu8001Dao.findByYear((Integer.parseInt(year)-1)+"");
+        Double nowM = edu8001Dao.findByYear(year);
+        Double lastM = edu8001Dao.findByYear((Integer.parseInt(year)-1)+"");
         Map mapAll = new HashMap();
         mapAll.put("now",nowM);
         if(nowM-lastM > 0){
@@ -137,18 +137,18 @@ public class BigDataService {
         List<Edu000> edu000List = edu000Dao.queryejdm("zclx");
         List<Map> mapList = new ArrayList<>();
         List<String> data = new ArrayList<>();
-        Integer count = edu8001Dao.findMoney();
-        List<Integer> data1 = new ArrayList<>();
-        List<Integer> data2 = new ArrayList<>();
+        Double count = edu8001Dao.findMoney();
+        List<Double> data1 = new ArrayList<>();
+        List<Double> data2 = new ArrayList<>();
         data.add("总数");
-        data1.add(0);
+        data1.add(0.0);
         data2.add(count);
         for(Edu000 edu000:edu000List){
             data.add(edu000.getEjdmz());
-            Integer countL = edu8001Dao.findMoneyByLx(edu000.getEjdm());
+            Double countL = edu8001Dao.findMoneyByLx(edu000.getEjdm());
             data1.add(count-countL);
             data2.add(countL);
-            count = countL;
+            count = count-countL;
             Map map0 = new HashMap();
             map0.put("name",edu000.getEjdmz());
             map0.put("value",edu8001Dao.findCountByLx(edu000.getEjdm()));
