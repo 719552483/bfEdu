@@ -217,15 +217,24 @@ public class StudentManageController {
      * @param choosendStudents
      * @return
      */
+//    @RequestMapping("/graduationStudents")
+//    @ResponseBody
+//    public ResultVO graduationStudents(@RequestParam String choosendStudents) {
+//        ResultVO result;
+//        com.alibaba.fastjson.JSONArray graduationArray = JSON.parseArray(choosendStudents);
+//        result =studentManageService.graduationStudents(graduationArray);
+//        return result;
+//    }
+
     @RequestMapping("/graduationStudents")
     @ResponseBody
-    public ResultVO graduationStudents(@RequestParam String choosendStudents) {
+    public ResultVO graduationStudents(@RequestParam("studentInfo") String studentInfo) {
         ResultVO result;
-        com.alibaba.fastjson.JSONArray graduationArray = JSON.parseArray(choosendStudents);
-        result =studentManageService.graduationStudents(graduationArray);
+        JSONObject jsonObject = JSONObject.fromObject(studentInfo);
+        Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
+        result =studentManageService.graduationStudents(edu001);
         return result;
     }
-
 
     /**
      * 学生管理搜索学生
