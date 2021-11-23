@@ -220,16 +220,37 @@ public class StudentManageService {
     }
 
     // 批量发放毕业证
-    public ResultVO graduationStudents(com.alibaba.fastjson.JSONArray graduationArray) {
+//    public ResultVO graduationStudents(com.alibaba.fastjson.JSONArray graduationArray) {
+//        ResultVO resultVO;
+//        Integer count = 0;
+//        for (int i = 0; i < graduationArray.size(); i++) {
+//            edu001Dao.graduationStudents(graduationArray.get(i).toString());
+//            count++;
+//        }
+//        resultVO = ResultVO.setSuccess("成功发放了"+count+"个毕业证");
+//        return resultVO;
+//    }
+    public ResultVO graduationStudents(Edu001 edu001) {
         ResultVO resultVO;
-        Integer count = 0;
-        for (int i = 0; i < graduationArray.size(); i++) {
-            edu001Dao.graduationStudents(graduationArray.get(i).toString());
-            count++;
+        List<Edu001> edu001List;
+        if(edu001.getEdu300_ID() != null && !"".equals(edu001.getEdu300_ID())){
+            List<String> edu300ids = Arrays.asList(edu001.getEdu300_ID().split(","));
+            edu001List = edu001Dao.findGraduationStudents(edu300ids);
+        }else{
+            edu001List = edu001Dao.findGraduationStudents(edu001.getSzxb(),edu001.getNj(),edu001.getZy());
         }
-        resultVO = ResultVO.setSuccess("成功发放了"+count+"个毕业证");
+        if(edu001List.size() == 0){
+            resultVO = ResultVO.setFailed("暂无可毕业学生！");
+            return resultVO;
+        }
+        List<Long> edu001ids = edu001List.stream().map(Edu001::getEdu001_ID).collect(Collectors.toList());
+        for (int i = 0; i < edu001ids.size(); i++) {
+            edu001Dao.graduationStudents(edu001ids.get(i)+"");
+        }
+        resultVO = ResultVO.setSuccess("成功发放了"+edu001ids.size()+"个毕业证",edu001ids);
         return resultVO;
     }
+
 
     // 学生管理搜索学生
     public ResultVO studentMangerSearchStudent(Edu001 edu001,String userId,Integer pageNumber,Integer pageSize) {

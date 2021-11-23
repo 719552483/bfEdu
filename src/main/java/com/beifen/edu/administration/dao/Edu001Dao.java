@@ -53,7 +53,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//批量发放毕业证
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE edu001 set zt_code ='graduation',zt='毕业' WHERE Edu001_ID =?1", nativeQuery = true)
+	@Query(value = "UPDATE edu001 set zt_code ='004',zt='毕业' WHERE Edu001_ID =?1", nativeQuery = true)
 	public void graduationStudents(String edu001Id);
 
 	//根据id查学生学号
@@ -122,4 +122,12 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 
 	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2 and (zt_code = '002' or zt_code = '003')",nativeQuery = true)
 	String queryStudentCode(List<Long> edu300ids,String xb);
+
+	//查询可毕业学生
+	@Query(value = " select * from edu001 e where edu300_id in ?1 and ZT_CODE = '001' and (select count(*) from edu005 where STUDENT_CODE = e.xh and (IS_PASSED = 'F' or IS_PASSED is null)) = 0",nativeQuery = true)
+	List<Edu001> findGraduationStudents(List<String> edu300ids);
+
+	//查询可毕业学生
+	@Query(value = " select * from edu001 e where szxb = ?1 and nj = ?2 and zybm = ?3 and ZT_CODE = '001' and (select count(*) from edu005 where STUDENT_CODE = e.xh and (IS_PASSED = 'F' or IS_PASSED is null)) = 0",nativeQuery = true)
+	List<Edu001> findGraduationStudents(String xb,String nj,String zy);
 }
