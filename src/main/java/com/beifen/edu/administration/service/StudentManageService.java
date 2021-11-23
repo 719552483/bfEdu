@@ -237,7 +237,7 @@ public class StudentManageService {
             List<String> edu300ids = Arrays.asList(edu001.getEdu300_ID().split(","));
             edu001List = edu001Dao.findGraduationStudents(edu300ids);
         }else{
-            edu001List = edu001Dao.findGraduationStudents(edu001.getSzxb(),edu001.getNj(),edu001.getZy());
+            edu001List = edu001Dao.findGraduationStudents(edu001.getSzxb(),edu001.getNj(),edu001.getZybm());
         }
         if(edu001List.size() == 0){
             resultVO = ResultVO.setFailed("暂无可毕业学生！");

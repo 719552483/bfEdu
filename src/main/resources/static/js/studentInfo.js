@@ -1337,31 +1337,289 @@ function modifyStudents(){
 
 //预备批量发放毕业证
 function graduationStudents(){
-	var choosendStudents = choosendStudent;
-	for (var i = 0; i < choosendStudents.length; i++) {
-		if(choosendStudents[i].zt==="007"){
-			toastr.warning('有学生暂不可进行此操作');
+	// var reObject = new Object();
+	// reObject.InputIds = "#localName,#country";
+	// reObject.normalSelectIds = "#city";
+	// reReloadSearchsWithSelect(reObject);
+	// stuffGraduationStudentsClassTable({});
+
+	$.showModal("#graduationStudentsModal",true);
+	LinkageSelectPublic("#graduationStudents_level","#graduationStudents_department","#graduationStudents_grade","#graduationStudents_major");
+	stuffGraduationStudentsClassTable({});
+	$("#graduationStudents_major").change(function() {
+		if(typeof getGraduationStudentsNotNullSearchs()==="undefined"){
 			return;
 		}
-	}
-	if(choosendStudents.length===0){
-		toastr.warning('暂未选择学生');
-		return;
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryCulturePlanStudent",
+			data: {
+				"culturePlanInfo":JSON.stringify(getGraduationStudentsNotNullSearchs())
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.result) {
+					if (backjson.classInfo.length===0) {
+						stuffGraduationStudentsClassTable({});
+					}else{
+						stuffGraduationStudentsClassTable(backjson.classInfo);
+					}
+				} else {
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+
+	//确认发放毕业证按钮
+	$('.confirmGraduationStudents').unbind('click');
+	$('.confirmGraduationStudents').bind('click', function(e) {
+		confirmGraduationStudents();
+		e.stopPropagation();
+	});
+}
+
+var choosendGraduationClass=new Array();
+//渲染教学点表
+function stuffGraduationStudentsClassTable(tableInfo) {
+	choosendGraduationClass=new Array();
+	$('#graduationStudentsClassTable').bootstrapTable('destroy').bootstrapTable({
+		data: tableInfo,
+		pagination: true,
+		pageNumber: 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle: false,
+		showFooter: false,
+		clickToSelect: true,
+		search: true,
+		editable: false,
+		showExport: false,      //是否显示导出
+		striped: true,
+		sidePagination: "client",
+		toolbar: '#toolbar',
+		showColumns: true,
+		onCheck : function(row) {
+			onCheckGraduationClass(row);
+		},
+		onUncheck : function(row) {
+			onUncheckGraduationClass(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllGraduationClass(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllGraduationClass(rows2);
+		},
+		onPageChange: function() {
+			drawPagination(".graduationStudentsClassTableArea", "行政班信息");
+			for (var i = 0; i < choosendGraduationClass.length; i++) {
+				$("#graduationStudentsClassTable").bootstrapTable("checkBy", {field:"edu300_ID", values:[choosendGraduationClass[i].edu300_ID]})
+			}
+		},
+		onPostBody: function() {
+			toolTipUp(".myTooltip");
+		},
+		columns: [
+			{
+				field: 'check',
+				checkbox: true,
+			},{
+				title: '序号',
+				align: 'center',
+				class:'tableNumberTd',
+				formatter: tableNumberMatter
+			},{
+				field: 'edu300_ID',
+				title: '唯一标识',
+				align: 'center',
+				sortable: true,
+				visible: false
+			}, {
+				field: 'xzbmc',
+				title: '行政班名称',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'batchName',
+				title: '批次',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}, {
+				field: 'zxrs',
+				title: '在校人数',
+				align: 'left',
+				sortable: true,
+				formatter: paramsMatter
+			}
+		]
+	});
+
+	drawPagination(".graduationStudentsClassTableArea", "行政班信息");
+	drawSearchInput(".graduationStudentsClassTableArea");
+	changeTableNoRsTip();
+	changeColumnsStyle(".graduationStudentsClassTableArea", "行政班信息");
+	toolTipUp(".myTooltip");
+}
+
+//单选
+function onCheckGraduationClass(row){
+	if(choosendGraduationClass.length<=0){
+		choosendGraduationClass.push(row);
 	}else{
-		var choosendStudentArray=new Array();
-		for (var i = 0; i < choosendStudents.length; i++) {
-			choosendStudentArray.push(choosendStudents[i].edu001_ID);
+		var add=true;
+		for (var i = 0; i < choosendGraduationClass.length; i++) {
+			if(choosendGraduationClass[i].edu300_ID===row.edu300_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendGraduationClass.push(row);
 		}
 	}
-	$.showModal("#remindModal",true);
-	$(".remindType").html("已选学生");
-	$(".remindActionType").html("毕业证发放");
-	
-	//确认发放毕业证按钮
-	$('.confirmRemind').unbind('click');
-	$('.confirmRemind').bind('click', function(e) {
-		confirmGraduationStudents(choosendStudentArray);
-		e.stopPropagation();
+}
+
+//单反选
+function onUncheckGraduationClass(row){
+	if(choosendGraduationClass.length<=1){
+		choosendGraduationClass.length=0;
+	}else{
+		for (var i = 0; i < choosendGraduationClass.length; i++) {
+			if(choosendGraduationClass[i].edu300_ID===row.edu300_ID){
+				choosendGraduationClass.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllGraduationClass(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendGraduationClass.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllGraduationClass(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu300_ID);
+	}
+
+
+	for (var i = 0; i < choosendGraduationClass.length; i++) {
+		if(a.indexOf(choosendGraduationClass[i].edu300_ID)!==-1){
+			choosendGraduationClass.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//获取批量发送毕业证培养计划信息
+function getGraduationStudentsNotNullSearchs(){
+	var levelValue = getNormalSelectValue("graduationStudents_level");
+	var departmentValue = getNormalSelectValue("graduationStudents_department");
+	var gradeValue =getNormalSelectValue("graduationStudents_grade");
+	var majorValue =getNormalSelectValue("graduationStudents_major");
+
+	if(levelValue===''){
+		toastr.warning('培养层次不能为空');
+		return ;
+	}
+
+	if(departmentValue===''){
+		toastr.warning('二级学院不能为空');
+		return ;
+	}
+
+	if(gradeValue===''){
+		toastr.warning('年级不能为空');
+		return ;
+	}
+
+	if(majorValue===''){
+		toastr.warning('专业不能为空');
+		return ;
+	}
+
+	var returnObject = new Object();
+	returnObject.level = levelValue;
+	returnObject.department = departmentValue;
+	returnObject.grade = gradeValue;
+	returnObject.major = majorValue;
+	return returnObject;
+}
+
+//确认发放毕业证
+function confirmGraduationStudents(){
+	if(typeof getGraduationStudentsNotNullSearchs()==="undefined"){
+		return;
+	}
+
+	var Edu300_IDArray=new Array();
+	for (var i = 0; i < choosendGraduationClass.length; i++) {
+		Edu300_IDArray.push(choosendGraduationClass[i].edu300_ID);
+	}
+
+	var sendObject=new Object();
+	sendObject.pycc=getGraduationStudentsNotNullSearchs().level;//培养层次编码
+	sendObject.szxb=getGraduationStudentsNotNullSearchs().department;//所在系部编码
+	sendObject.nj=getGraduationStudentsNotNullSearchs().grade; //年级编码
+	sendObject.zybm=getGraduationStudentsNotNullSearchs().major; //专业编码
+	sendObject.Edu300_ID=JSON.stringify(Edu300_IDArray); //行政班ID（逗号分割）
+
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/graduationStudents",
+		data: {
+			"studentInfo":JSON.stringify(sendObject)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var currentPageStudent=$('#studentBaseInfoTable').bootstrapTable('getData',{'useCurrentPage':true});
+				for (var i = 0; i < backjson.data.length; i++) {
+					for (var c = 0; c< currentPageStudent.length; c++) {
+						if(parseInt(backjson.data[i])==parseInt(currentPageStudent[c].edu001_ID)){
+							var thisStudentInfo=$("#studentBaseInfoTable").bootstrapTable('getRowByUniqueId',backjson.data[i]);
+							thisStudentInfo.zt="毕业";
+							thisStudentInfo.ztCode="004";
+							$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: backjson.data[i], row: thisStudentInfo});
+						}
+					}
+				}
+				toastr.success(backjson.msg);
+				$.hideModal("#graduationStudentsModal");
+				toolTipUp(".myTooltip");
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
 	});
 }
 
@@ -1642,44 +1900,6 @@ function loadModifyStudentsModal(choosendStudents){
      form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyStudentIDs").attr("value", modifyStudentIDs));
      form.appendTo('body').submit().remove();
 
-}
-
-//确认发放毕业证
-function confirmGraduationStudents(choosendStudents){
-	$.ajax({
-		method : 'get',
-		cache : false,
-		url : "/graduationStudents",
-		data: {
-             "choosendStudents":JSON.stringify(choosendStudents) 
-        },
-		dataType : 'json',
-		beforeSend: function(xhr) {
-			requestErrorbeforeSend();
-		},
-		error: function(textStatus) {
-			requestError();
-		},
-		complete: function(xhr, status) {
-			requestComplete();
-		},
-		success : function(backjson) {
-			hideloding();
-			if (backjson.code===200) {
-				var choosendStudents = choosendStudent;
-				for (var i = 0; i < choosendStudents.length; i++) {
-					choosendStudents[i].zt="毕业";
-					choosendStudents[i].ztCode="graduation";
-					$("#studentBaseInfoTable").bootstrapTable("updateByUniqueId", {id: choosendStudents[i].edu001_ID, row: choosendStudents[i]});
-				}
-				toastr.success(backjson.msg);
-				 $.hideModal("#remindModal");
-				 toolTipUp(".myTooltip");
-			} else {
-				toastr.warning(backjson.msg);
-			}
-		}
-	});
 }
 
 //得到检索对象

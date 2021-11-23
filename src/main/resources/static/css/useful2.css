@@ -1752,6 +1752,8 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+
+.graduationStudentsClassTableArea .bootstrap4 .search,
 .schoolMoneyTableArea .bootstrap4 .search,
 .notIncludeArea .bootstrap4 .search,
 .bindClassArea .bootstrap4 .search,
@@ -3262,7 +3264,9 @@ border-top: none;
 	margin: 0px!important;
 }
 
-
+table .multi-select-menuitem input[type="checkbox"]{
+	margin: 6px 0px 0px -20px!important;
+}
 
 
 
