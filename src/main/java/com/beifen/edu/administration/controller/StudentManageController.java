@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //学生管理控制层
 @Controller
@@ -212,11 +213,7 @@ public class StudentManageController {
     }
 
 
-    /**
-     * 批量发放毕业证
-     * @param choosendStudents
-     * @return
-     */
+
 //    @RequestMapping("/graduationStudents")
 //    @ResponseBody
 //    public ResultVO graduationStudents(@RequestParam String choosendStudents) {
@@ -225,16 +222,41 @@ public class StudentManageController {
 //        result =studentManageService.graduationStudents(graduationArray);
 //        return result;
 //    }
-
+    /**
+     * 批量发放毕业证
+     * @param
+     * @return
+     */
     @RequestMapping("/graduationStudents")
     @ResponseBody
     public ResultVO graduationStudents(@RequestParam("studentInfo") String studentInfo) {
         ResultVO result;
         JSONObject jsonObject = JSONObject.fromObject(studentInfo);
+        List<String> list = com.alibaba.fastjson.JSONObject.parseArray(jsonObject.getString("Edu300_ID"),String.class);
+        String edu300ids = list.stream().map(String::valueOf).collect(Collectors.joining(","));
         Edu001 edu001 = (Edu001) JSONObject.toBean(jsonObject, Edu001.class);
+        edu001.setEdu300_ID(edu300ids);
         result =studentManageService.graduationStudents(edu001);
         return result;
     }
+
+    /**
+     * 查询就业信息
+     * @param
+     * @return
+     */
+    @RequestMapping("/employmentStudents")
+    @ResponseBody
+    public ResultVO employmentStudents(@RequestParam("studentInfo") String studentInfo) {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(studentInfo);
+        Edu0011 edu0011= (Edu0011) JSONObject.toBean(jsonObject, Edu0011.class);
+        result =studentManageService.employmentStudents(edu0011);
+        return result;
+    }
+
+
+
 
     /**
      * 学生管理搜索学生

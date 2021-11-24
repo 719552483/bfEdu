@@ -45,6 +45,8 @@ public class StudentManageService {
     @Autowired
     private Edu001Dao edu001Dao;
     @Autowired
+    private Edu0011Dao edu0011Dao;
+    @Autowired
     private Edu101Dao edu101Dao;
     @Autowired
     private Edu105Dao edu105Dao;
@@ -159,7 +161,9 @@ public class StudentManageService {
     // 新增学生
     public void addStudent(Edu001 edu001) {
         edu001Dao.save(edu001);
-
+        Edu300 edu300 = edu300Dao.findOne(Long.parseLong(edu001.getEdu300_ID()));
+        edu300.setZxrs(edu300.getZxrs()+1);
+        edu300Dao.save(edu300);
         Edu990 edu990 = new Edu990();
         edu990.setYhm(edu001.getXh());
         edu990.setMm("eduApp123456");
@@ -244,10 +248,62 @@ public class StudentManageService {
             return resultVO;
         }
         List<Long> edu001ids = edu001List.stream().map(Edu001::getEdu001_ID).collect(Collectors.toList());
-        for (int i = 0; i < edu001ids.size(); i++) {
-            edu001Dao.graduationStudents(edu001ids.get(i)+"");
+        for (int i = 0; i < edu001List.size(); i++) {
+            edu001Dao.graduationStudents(edu001List.get(i).getEdu001_ID()+"");
+            Edu0011 edu0011 = new Edu0011();
+            try {
+                BeanUtils.copyProperties(edu0011, edu001List.get(i));
+                edu0011.setSclr("T");
+                edu0011Dao.save(edu0011);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         resultVO = ResultVO.setSuccess("成功发放了"+edu001ids.size()+"个毕业证",edu001ids);
+        return resultVO;
+    }
+
+    //查询就业信息
+    public ResultVO employmentStudents(Edu0011 edu0011) {
+        ResultVO resultVO;
+
+        Specification<Edu0011> specification = new Specification<Edu0011>() {
+            public Predicate toPredicate(Root<Edu0011> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (edu0011.getPycc() != null && !"".equals(edu0011.getPycc())) {
+                    predicates.add(cb.equal(root.<String> get("pycc"), edu0011.getPycc()));
+                }
+                if (edu0011.getSzxb() != null && !"".equals(edu0011.getSzxb())) {
+                    predicates.add(cb.equal(root.<String> get("szxb"), edu0011.getSzxb()));
+                }
+                if (edu0011.getNj() != null && !"".equals(edu0011.getNj())) {
+                    predicates.add(cb.equal(root.<String> get("nj"), edu0011.getNj()));
+                }
+                if (edu0011.getZybm() != null && !"".equals(edu0011.getZybm())) {
+                    predicates.add(cb.equal(root.<String> get("zybm"), edu0011.getZybm()));
+                }
+//                if (edu0011.getEdu300_ID() != null && !"".equals(edu0011.getEdu300_ID())) {
+//                    predicates.add(cb.equal(root.<String> get("edu300_ID"), edu0011.getEdu300_ID()));
+//                }
+                if (edu0011.getXzbname() != null && !"".equals(edu0011.getXzbname())) {
+                    predicates.add(cb.like(root.<String> get("xzbname"), '%' + edu0011.getXzbname() + '%'));
+                }
+                if (edu0011.getXm() != null && !"".equals(edu0011.getXm())) {
+                    predicates.add(cb.like(root.<String> get("xm"), '%' + edu0011.getXm() + '%'));
+                }
+                if (edu0011.getJyxsbm() != null && !"".equals(edu0011.getJyxsbm())) {
+                    predicates.add(cb.like(root.<String> get("jyxsbm"), '%' + edu0011.getJyxsbm() + '%'));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu0011> edu0011List = edu0011Dao.findAll(specification);
+        if(edu0011List.size() == 0){
+            resultVO = ResultVO.setFailed("暂无学生信息");
+        }else{
+            resultVO = ResultVO.setSuccess("共找到"+edu0011List.size()+"个学生",edu0011List);
+        }
+
         return resultVO;
     }
 
@@ -347,6 +403,22 @@ public class StudentManageService {
 //            resultVO = ResultVO.setFailed("身份证号重复，请确认后重新输入");
 //            return resultVO;
 //        }
+        //判断是否修改学生状态
+        if(!oldEdu001.getZtCode().equals(edu001.getZtCode())){
+            if("004".equals(oldEdu001.getZtCode())){
+                edu0011Dao.removeStudentByEdu001ID(oldEdu001.getEdu001_ID());
+            }else if("004".equals(edu001.getZtCode())){
+                Edu0011 edu0011 = new Edu0011();
+                try {
+                    BeanUtils.copyProperties(edu0011, edu001);
+                    edu0011.setSclr("T");
+                    edu0011Dao.save(edu0011);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
         //如果修改操作为修改学生状态为休学 发送审批流对象
         if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
