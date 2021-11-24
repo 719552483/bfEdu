@@ -1337,13 +1337,11 @@ function modifyStudents(){
 
 //预备批量发放毕业证
 function graduationStudents(){
-
 	var reObject = new Object();
 	reObject.fristSelectId = "#graduationStudents_level";
 	reObject.actionSelectIds = "#graduationStudents_department,#graduationStudents_grade,#graduationStudents_major";
 	reReloadSearchsWithSelect(reObject);
 	stuffGraduationStudentsClassTable({});
-
 
 	$.showModal("#graduationStudentsModal",true);
 	LinkageSelectPublic("#graduationStudents_level","#graduationStudents_department","#graduationStudents_grade","#graduationStudents_major");
