@@ -332,5 +332,10 @@ public class PageRelatedController {
 		return "schoolMoney";
 	}
 
+	@RequestMapping("studentWorkEntry")
+	public String studentWorkEntryPage() {
+		return "studentWorkEntry";
+	}
+
 
 }

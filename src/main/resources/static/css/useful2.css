@@ -2280,7 +2280,7 @@ top角色切换滚动体样式
 	-moz-border-radius: 4px;
 	box-shadow: inset -1px -1px 3px 0px rgba(27, 96, 130, 0.31);
 	text-align:left;
-	text-indent:2em;
+	/*text-indent:2em;*/
 }
 
 .breakOptionTextArea{
@@ -2288,7 +2288,7 @@ top角色切换滚动体样式
 	margin-top: 10px;
 	color: rgb(6 6 6 / 65%);
 	text-align: left;
-	text-indent: 2em;
+	/*text-indent: 2em;*/
 	padding-bottom: 10px;
 	font-weight: 600;
 	font-size: 13px;

@@ -441,7 +441,7 @@ function draw3Area(pieChartInfo){
                 name: '支出数量',
                 type: 'pie',
                 radius: ['40%', '70%'], //图的大小
-                center: ['50%', '55%'], //图的位置，距离左跟上的位置
+                center: ['50%', '60%'], //图的位置，距离左跟上的位置
                 data: pieChartInfo,
                 emphasis: {
                     itemStyle: {
