@@ -255,7 +255,19 @@ public class StudentManageController {
         return result;
     }
 
-
+    /**
+     * 修改学生就业信息
+     */
+    @RequestMapping("/updateEmploymentStudents")
+    @ResponseBody
+    public ResultVO updateEmploymentStudents(@RequestParam("studentInfo") String studentInfo) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        JSONObject jsonObject = JSONObject.fromObject(studentInfo);
+        Edu0011 edu0011= (Edu0011) JSONObject.toBean(jsonObject, Edu0011.class);
+        result = studentManageService.updateEmploymentStudents(edu0011);
+        return result;
+    }
 
 
     /**
