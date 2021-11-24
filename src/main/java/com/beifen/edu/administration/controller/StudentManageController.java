@@ -269,6 +269,19 @@ public class StudentManageController {
         return result;
     }
 
+    /**
+     * 清空学生就业信息
+     */
+    @RequestMapping("/clearEmploymentStudents")
+    @ResponseBody
+    public ResultVO clearEmploymentStudents(@RequestParam("deleteIds") String deleteIds) {
+        ResultVO result;
+        // 将收到的jsonObject转为javabean 关系管理实体类
+        List<String> deleteIdList = JSON.parseArray(deleteIds, String.class);
+        result = studentManageService.clearEmploymentStudents(deleteIdList);
+        return result;
+    }
+
 
     /**
      * 学生管理搜索学生

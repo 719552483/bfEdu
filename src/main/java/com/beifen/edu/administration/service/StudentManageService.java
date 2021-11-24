@@ -315,6 +315,15 @@ public class StudentManageService {
         return resultVO;
     }
 
+    //清空学生就业信息
+    public ResultVO clearEmploymentStudents(List<String> deleteIdList) {
+        ResultVO resultVO;
+        edu0011Dao.clearEmploymentStudents(deleteIdList);
+        resultVO = ResultVO.setSuccess("清空了"+deleteIdList.size()+"条信息");
+        return resultVO;
+    }
+
+
 
     // 学生管理搜索学生
     public ResultVO studentMangerSearchStudent(Edu001 edu001,String userId,Integer pageNumber,Integer pageSize) {
