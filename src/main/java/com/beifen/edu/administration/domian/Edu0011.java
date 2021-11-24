@@ -28,6 +28,7 @@ public class Edu0011 {
 	private  String dwdz;//单位地址
 	private  String bz;//备注
 	private  String sclr;//首次录入
+	private  String xh; //学号
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BF_SEQUENCE")
@@ -198,5 +199,13 @@ public class Edu0011 {
 
 	public void setSclr(String sclr) {
 		this.sclr = sclr;
+	}
+
+	public String getXh() {
+		return xh;
+	}
+
+	public void setXh(String xh) {
+		this.xh = xh;
 	}
 }
