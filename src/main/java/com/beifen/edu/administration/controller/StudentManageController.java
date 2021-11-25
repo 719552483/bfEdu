@@ -284,6 +284,56 @@ public class StudentManageController {
 
 
     /**
+     * 下载学生就业信息模板-check
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+        @RequestMapping("downloadEmploymentStudentsModalCheck")
+    @ResponseBody
+    public ResultVO downloadEmploymentStudentsModalCheck(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "studentInfo") String studentInfo) throws IOException, ParseException {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(studentInfo);
+        Edu0011 edu0011= (Edu0011) JSONObject.toBean(jsonObject, Edu0011.class);
+        result =studentManageService.employmentStudents(edu0011);
+        return result;
+    }
+
+    /**
+     * 下载学生就业信息模板
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("downloadEmploymentStudentsModal")
+    @ResponseBody
+    public ResultVO downloadEmploymentStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "studentInfo") String studentInfo) throws IOException, ParseException {
+        ResultVO result;
+        JSONObject jsonObject = JSONObject.fromObject(studentInfo);
+        Edu0011 edu0011= (Edu0011) JSONObject.toBean(jsonObject, Edu0011.class);
+        result =studentManageService.employmentStudents(edu0011);
+        if(result.getCode() != 200){
+            return result;
+        }
+        List<Edu0011> edu0011List = (List<Edu0011>) result.getData();
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName="";
+        if(isIE){
+            fileName="employmentStudentsInfo";
+        }else{
+            fileName="学生就业信息模板";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook  = new XSSFWorkbook();
+        utils.createEmploymentStudentsModal(workbook,edu0011List);
+        utils.loadModal(response,fileName, workbook);
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
+    /**
      * 学生管理搜索学生
      *
      * @param studentSearchPO

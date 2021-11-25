@@ -294,6 +294,7 @@ public class StudentManageService {
                 if (edu0011.getJyxsbm() != null && !"".equals(edu0011.getJyxsbm())) {
                     predicates.add(cb.like(root.<String> get("jyxsbm"), '%' + edu0011.getJyxsbm() + '%'));
                 }
+                query.orderBy(cb.desc(root.get("xh")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
