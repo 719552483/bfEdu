@@ -303,9 +303,26 @@ public class StudentManageService {
         }else{
             resultVO = ResultVO.setSuccess("共找到"+edu0011List.size()+"个学生",edu0011List);
         }
-
         return resultVO;
     }
+
+    //修改学生就业信息
+    public ResultVO updateEmploymentStudents(Edu0011 edu0011) {
+        ResultVO resultVO;
+        edu0011.setSclr("F");
+        edu0011Dao.save(edu0011);
+        resultVO = ResultVO.setSuccess("修改成功",edu0011);
+        return resultVO;
+    }
+
+    //清空学生就业信息
+    public ResultVO clearEmploymentStudents(List<String> deleteIdList) {
+        ResultVO resultVO;
+        edu0011Dao.clearEmploymentStudents(deleteIdList);
+        resultVO = ResultVO.setSuccess("清空了"+deleteIdList.size()+"条信息");
+        return resultVO;
+    }
+
 
 
     // 学生管理搜索学生

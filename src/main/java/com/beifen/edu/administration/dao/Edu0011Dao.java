@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificationExecutor<Edu0011> {
 
@@ -15,4 +17,11 @@ public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificati
     @Modifying
     @Query(value = "delete from edu0011 where edu001_id =?1", nativeQuery = true)
     void removeStudentByEdu001ID(long studentId);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "update edu0011 set jyxs = null,jyxsbm = null,dwmc = null,dwlxr = null,dwlxdh = null,dwdz = null,bz = null where edu0011_id in ?1", nativeQuery = true)
+    void clearEmploymentStudents(List<String> ids);
+
 }
