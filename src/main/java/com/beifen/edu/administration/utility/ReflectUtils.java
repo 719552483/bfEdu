@@ -2523,6 +2523,13 @@ public class ReflectUtils {
 		XSSFSheet sheet1 = workbook.createSheet("已选课程信息");
 		this.stuffNewClassSheet1(sheet1, chosedClasses);
 	}
+
+	// 下载学生就业信息模板
+	public void createEmploymentStudentsModal(XSSFWorkbook workbook, List<Edu0011> edu0011List) {
+		// 创建创建sheet1
+		XSSFSheet sheet1 = workbook.createSheet("已选学生就业信息");
+		this.stuffEmploymentStudentsSheet1(sheet1, edu0011List);
+	}
 	
 	//填充更新学生模板的Sheet1
     private void stuffStudentInfoSheet1(XSSFSheet sheet,List<Edu001> chosedStudents) {
@@ -2861,7 +2868,40 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",chosedClasses.get(i).getBz(),-1,30,false);
 		}
 	}
-    
+
+	//填充更新课程模板的Sheet1
+	private void stuffEmploymentStudentsSheet1(XSSFSheet sheet,List<Edu0011> edu0011List) {
+		// 设置标题
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"序号","分院名称","专业名称","班级", "学号", "姓名", "*就业形式", "单位名称","单位联系人",
+				"单位联系电话", "单位地址", "备注"};
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+
+		for (int i = 0; i < edu0011List.size(); i++) {
+			Edu0011 edu0011=edu0011List.get(i);
+			appendCell(sheet,i,"",(i+1)+"",-1,0,false);
+			appendCell(sheet,i,"",edu0011.getSzxbmc(),-1,1,false);
+			appendCell(sheet,i,"",edu0011.getZymc(),-1,2,false);
+			appendCell(sheet,i,"",edu0011.getXzbname(),-1,3,false);
+			appendCell(sheet,i,"",edu0011.getXh(),-1,4,false);
+			appendCell(sheet,i,"",edu0011.getXm(),-1,5,false);
+			appendCell(sheet,i,"",edu0011.getJyxs(),-1,6,false);
+			appendCell(sheet,i,"",edu0011.getDwmc(),-1,7,false);
+			appendCell(sheet,i,"",edu0011.getDwlxr(),-1,8,false);
+			appendCell(sheet,i,"",edu0011.getDwlxdh(),-1,9,false);
+			appendCell(sheet,i,"",edu0011.getDwdz(),-1,10,false);
+			appendCell(sheet,i,"",edu0011.getBz(),-1,11,false);
+		}
+	}
+
+
     //填充导入学生模板的Sheet1
     private void stuffStudentInfoSheet1(XSSFSheet sheet) {
 		// 设置标题
@@ -3079,6 +3119,8 @@ public class ReflectUtils {
 			ModifyGradeSeclect(hiddenSheetName,workbook);
 		}else if(filename.equals("补考成绩录入单")){
 			ModifyGradeSeclectMakeUp(hiddenSheetName,workbook);
+		}else if(filename.equals("employmentStudentsInfo")|| filename.equals("学生就业信息模板")){
+			ModifyGradeSeclectEmploymentStudentsInfo(hiddenSheetName,workbook);
 		}
 	}
 
@@ -3905,6 +3947,22 @@ public class ReflectUtils {
 		int[] mxIndex={5};
 		cell2Select(workbook,hiddenSheetName,mx,mxIndex,false);
 	}
+
+	//为导入学生就业信息文件填充需要的下拉框
+	public static void ModifyGradeSeclectEmploymentStudentsInfo(String hiddenSheetName,XSSFWorkbook workbook){
+		List < String > mxlxlist = new ArrayList < String > ();
+		List<Edu000> mxlx = reflectUtils.administrationPageService.queryEjdm("jyxs");
+		for (int i = 0; i < mxlx.size(); i++) {
+			mxlxlist.add(mxlx.get(i).getEjdmz());
+		}
+		String[]mx = mxlxlist.toArray(new String[mxlxlist.size()]);
+		hiddenSheetName = hiddenSheetName+(1);
+
+		int[] mxIndex={6};
+		cell2Select(workbook,hiddenSheetName,mx,mxIndex,false);
+	}
+
+
 
 	public static void ModifyGradeSeclect(String hiddenSheetName,XSSFWorkbook workbook){
 		List < String > mxlxlist = new ArrayList < String > ();
