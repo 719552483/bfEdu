@@ -318,8 +318,13 @@ public class StudentManageService {
     //清空学生就业信息
     public ResultVO clearEmploymentStudents(List<String> deleteIdList) {
         ResultVO resultVO;
-        edu0011Dao.clearEmploymentStudents(deleteIdList);
-        resultVO = ResultVO.setSuccess("清空了"+deleteIdList.size()+"条信息");
+        List<Edu0011> edu0011List = new ArrayList<>();
+        for(String id:deleteIdList){
+            edu0011Dao.clearEmploymentStudents(id);
+            edu0011List.add(edu0011Dao.findOne(Long.parseLong(id)));
+        }
+
+        resultVO = ResultVO.setSuccess("清空了"+edu0011List.size()+"条信息",edu0011List);
         return resultVO;
     }
 
@@ -1245,6 +1250,10 @@ public class StudentManageService {
                         String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F",edu000List.get(j).getEjdm());
                         map.put("woman"+(j+1),lxF);
                     }
+                    String xtxm = edu001Dao.queryStudentCode(edu300IdsAll,"M");
+                    String xtxf = edu001Dao.queryStudentCode(edu300IdsAll,"F");
+                    map.put("xtxm",xtxm);
+                    map.put("xtxf",xtxf);
                     String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M"); //合计男
                     String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F"); //合计女
                     map.put("hjM",lxM);
@@ -1268,6 +1277,10 @@ public class StudentManageService {
                 map.put("man"+(j+1),lxM);
                 map.put("woman"+(j+1),lxF);
             }
+            String xtxm = edu001Dao.queryStudentCode(edu300Ids,"M");
+            String xtxf = edu001Dao.queryStudentCode(edu300Ids,"F");
+            map.put("xtxm",xtxm);
+            map.put("xtxf",xtxf);
             String lxM = edu001Dao.queryStudentCount(edu300Ids,"M");
             String lxF = edu001Dao.queryStudentCount(edu300Ids,"F");
             map.put("hjM",lxM);
@@ -1285,6 +1298,10 @@ public class StudentManageService {
             String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F",edu000List.get(j).getEjdm());
             map.put("woman"+(j+1),lxF);
         }
+        String xtxm = edu001Dao.queryStudentCode(edu300IdsAll,"M");
+        String xtxf = edu001Dao.queryStudentCode(edu300IdsAll,"F");
+        map.put("xtxm",xtxm);
+        map.put("xtxf",xtxf);
         String lxM = edu001Dao.queryStudentCount(edu300IdsAll,"M"); //合计男
         String lxF = edu001Dao.queryStudentCount(edu300IdsAll,"F"); //合计女
         map.put("hjM",lxM);
@@ -1299,7 +1316,7 @@ public class StudentManageService {
         //标题
         map = new HashMap();
         map.put("title",edu300List.get(0).getXbmc()+"扩招汇总表");
-        map.put("colspan",edu000List.size()*2+6);
+        map.put("colspan",edu000List.size()*2+8);
         l.add(map);
         objects[0] = l;
         //第二行
@@ -1319,8 +1336,14 @@ public class StudentManageService {
             l2.add(studentPO3);
             l.add(studentPO2);
         }
-        StudentPO2 studentPO2 = new StudentPO2("合计","middle","center",2,1,"paramsMatter");
-        StudentPO3 studentPO3 = new StudentPO3("hjM","男","middle","center","peopleNumMatter");
+        StudentPO2 studentPO2 = new StudentPO2("休退学","middle","center",2,1,"paramsMatter");
+        StudentPO3 studentPO3 = new StudentPO3("xtxm","男","middle","center","peopleNumMatter");
+        l2.add(studentPO3);
+        studentPO3 = new StudentPO3("xtxf","女","middle","center","peopleNumMatter");
+        l2.add(studentPO3);
+        l.add(studentPO2);
+        studentPO2 = new StudentPO2("合计","middle","center",2,1,"paramsMatter");
+        studentPO3 = new StudentPO3("hjM","男","middle","center","peopleNumMatter");
         l2.add(studentPO3);
         studentPO3 = new StudentPO3("hjF","女","middle","center","peopleNumMatter");
         l2.add(studentPO3);
@@ -1507,21 +1530,29 @@ public class StudentManageService {
             sheet.addMergedRegion(region);
         }
         cells[1] = firstRow2.createCell(edu000List.size()*2+4);
-        cells[1].setCellValue("合计");
+        cells[1].setCellValue("休退学");
         cells[2] = firstRow3.createCell(edu000List.size()*2+4);
         cells[2].setCellValue("男");
         cells[2] = firstRow3.createCell(edu000List.size()*2+5);
         cells[2].setCellValue("女");
+        cells[1] = firstRow2.createCell(edu000List.size()*2+6);
         CellRangeAddress region = new CellRangeAddress(1, 1, edu000List.size()*2+4, edu000List.size()*2+5);
         sheet.addMergedRegion(region);
-        cells[1] = firstRow2.createCell(edu000List.size()*2+6);
+        cells[1].setCellValue("合计");
+        cells[2] = firstRow3.createCell(edu000List.size()*2+6);
+        cells[2].setCellValue("男");
+        cells[2] = firstRow3.createCell(edu000List.size()*2+7);
+        cells[2].setCellValue("女");
+        CellRangeAddress region2 = new CellRangeAddress(1, 1, edu000List.size()*2+6, edu000List.size()*2+7);
+        sheet.addMergedRegion(region2);
+        cells[1] = firstRow2.createCell(edu000List.size()*2+8);
         cells[1].setCellValue("总计");
-        sheet.addMergedRegion(new CellRangeAddress(1, 2, edu000List.size()*2+6, edu000List.size()*2+6));
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, edu000List.size()*2+8, edu000List.size()*2+8));
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));//序号
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));//年级批次
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));//分院
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 3, 3));//专业
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, edu000List.size()*2+6));//辽宁职业学院高职扩招学生汇总表
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, edu000List.size()*2+8));//辽宁职业学院高职扩招学生汇总表
 
         //上面都是标题 呕~
 //        List<Edu300> edu300List = edu300Dao.findAllGroupByZybm();
@@ -1539,12 +1570,16 @@ public class StudentManageService {
                 utils.appendCell(sheet,i,"",lxM,-1,4+j*2,false);
                 utils.appendCell(sheet,i,"",lxF,-1,5+j*2,false);
             }
+            String xtxm = edu001Dao.queryStudentCode(edu300Ids,"M");
+            String xtxf = edu001Dao.queryStudentCode(edu300Ids,"F");
+            utils.appendCell(sheet,i,"",xtxm,-1,4+edu000List.size()*2,false);
+            utils.appendCell(sheet,i,"",xtxf,-1,5+edu000List.size()*2,false);
             String lxM = edu001Dao.queryStudentCount(edu300Ids,"M");
             String lxF = edu001Dao.queryStudentCount(edu300Ids,"F");
-            utils.appendCell(sheet,i,"",lxM,-1,4+edu000List.size()*2,false);
-            utils.appendCell(sheet,i,"",lxF,-1,5+edu000List.size()*2,false);
+            utils.appendCell(sheet,i,"",lxM,-1,6+edu000List.size()*2,false);
+            utils.appendCell(sheet,i,"",lxF,-1,7+edu000List.size()*2,false);
             String all = edu001Dao.queryStudentCount(edu300Ids);
-            utils.appendCell(sheet,i,"",all,-1,6+edu000List.size()*2,false);
+            utils.appendCell(sheet,i,"",all,-1,8+edu000List.size()*2,false);
         }
 
         sheet.setColumnWidth(0, 5*256);
