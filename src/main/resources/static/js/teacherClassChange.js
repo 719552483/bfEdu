@@ -68,9 +68,9 @@ function getAllWeeks(){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getTermInfoById",
+		url: "/getYearWeek",
 		data:{
-			"termId":semester
+			"yearId":semester
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -84,10 +84,10 @@ function getAllWeeks(){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				var configStr='<option value="seleceConfigTip">请选择</option>';
-				for (var i = 0; i < backjson.termInfo.zzs; i++) {
-					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					configStr += '<option value="' +backjson.data[i].id + '">'+backjson.data[i].value+'</option>';
 				}
 				stuffManiaSelect("#weekTime", configStr);
 				stuffManiaSelect("#choose_weekTime", configStr);
@@ -1568,9 +1568,9 @@ function chooseNewInfo(row){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getTermInfoById",
+		url: "/getYearWeek",
 		data:{
-			"termId":semester
+			"yearId":semester
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -1584,7 +1584,7 @@ function chooseNewInfo(row){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				var type=getNormalSelectValue('fsClassActionType');
 				if(type==='1'){
 					$("#fsChooseModal").find('.moadalTitle').html(row.courseName+' 选择调课信息');
@@ -1597,8 +1597,8 @@ function chooseNewInfo(row){
 				stuffManiaSelect("#fsOldweekTime", str);
 
 				var configStr='<option value="seleceConfigTip">请选择</option>';
-				for (var i = 0; i < backjson.termInfo.zzs; i++) {
-					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					configStr += '<option value="' + backjson.data[i].id + '">'+backjson.data[i].value+'</option>';
 				}
 				stuffManiaSelect("#fsNewWeekTime", configStr);
 
@@ -1745,9 +1745,9 @@ function tab2getAllWeeks(){
 	$.ajax({
 		method: 'get',
 		cache: false,
-		url: "/getTermInfoById",
+		url: "/getYearWeek",
 		data:{
-			"termId":semester
+			"yearId":semester
 		},
 		dataType: 'json',
 		beforeSend: function (xhr) {
@@ -1761,10 +1761,10 @@ function tab2getAllWeeks(){
 		},
 		success: function (backjson) {
 			hideloding();
-			if (backjson.result) {
+			if (backjson.code===200) {
 				var configStr='<option value="seleceConfigTip">请选择</option>';
-				for (var i = 0; i < backjson.termInfo.zzs; i++) {
-					configStr += '<option value="' + (i+1) + '">第'+(i+1)+'周</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					configStr += '<option value="' + backjson.data[i].id+ '">'+backjson.data[i].value+'</option>';
 				}
 				stuffManiaSelect("#fsWeekTime", configStr);
 				//changge事件
