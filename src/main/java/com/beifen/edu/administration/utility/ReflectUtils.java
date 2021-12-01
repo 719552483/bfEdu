@@ -920,7 +920,7 @@ public class ReflectUtils {
 				returnMap.put("checkTxt", checkTxt);
 				break;
 			}else{
-				Edu001 e = studentManageService.selectStudentByXh(edu0011.getXh());
+				Edu001 e = reflectUtils.studentManageService.selectStudentByXh(edu0011.getXh());
 				if(e == null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-学号不存在";

@@ -264,7 +264,8 @@ public class StudentManageService {
     }
 
     public Edu001 selectStudentByXh(String xh){
-        return edu001Dao.query001ByXh(xh);
+        Edu001 e = edu001Dao.query001ByXh(xh);
+        return e;
     }
 
     //查询就业信息
