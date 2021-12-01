@@ -24,4 +24,8 @@ public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificati
     @Query(value = "update edu0011 set jyxs = null,jyxsbm = null,dwmc = null,dwlxr = null,dwlxdh = null,dwdz = null,bz = null where edu0011_id = ?1", nativeQuery = true)
     void clearEmploymentStudents(String id);
 
+    //根据id查学生学号
+    @Query(value = "select e.* from edu0011 e where e.xh =?1", nativeQuery = true)
+    public Edu0011 query001ByXh2(String xh);
+
 }

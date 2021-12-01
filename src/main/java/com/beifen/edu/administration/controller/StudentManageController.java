@@ -349,6 +349,21 @@ public class StudentManageController {
     }
 
     /**
+     * 导入学生就业信息的文件
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     * @throws ServletException
+     */
+    @RequestMapping("importStudentWorkInfo")
+    @ResponseBody
+    public ResultVO importStudentWorkInfo(@RequestParam("file") MultipartFile file){
+        ResultVO result;
+        result = studentManageService.importStudentWorkInfo(file);
+        return result;
+    }
+
+    /**
      * 学生管理搜索学生
      *
      * @param studentSearchPO

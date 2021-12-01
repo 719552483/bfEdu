@@ -921,9 +921,17 @@ public class ReflectUtils {
 				break;
 			}else{
 				Edu001 e = reflectUtils.studentManageService.selectStudentByXh(edu0011.getXh());
+				Edu0011 edu00111 = reflectUtils.studentManageService.selectStudentByXh2(edu0011.getXh());
 				if(e == null){
 					chaeckPass=false;
 					checkTxt="第"+(i+1)+"行-学号不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+				if(edu00111 == null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-该学生尚未毕业";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;

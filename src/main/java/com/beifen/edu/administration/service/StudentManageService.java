@@ -268,6 +268,11 @@ public class StudentManageService {
         return e;
     }
 
+    public Edu0011 selectStudentByXh2(String xh){
+        Edu0011 e = edu0011Dao.query001ByXh2(xh);
+        return e;
+    }
+
     //查询就业信息
     public ResultVO employmentStudents(Edu0011 edu0011) {
         ResultVO resultVO;
@@ -334,7 +339,62 @@ public class StudentManageService {
         return resultVO;
     }
 
+    /**
+     * 批量导入学生
+     * @param file
+     * @return
+     */
+    public ResultVO importStudentWorkInfo(MultipartFile file){
+        ResultVO resultVO = new ResultVO();
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = utils.verifiyImportEmploymentStudentsFile(file, "ImportEdu0011", "已选学生就业信息");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultVO = ResultVO.setFailed("导入失败");
+            return resultVO;
+        }
 
+        boolean modalPass = (boolean) returnMap.get("modalPass");
+        if (!modalPass) {
+            resultVO = ResultVO.setFailed("模版错误，导入失败",returnMap);
+            return resultVO;
+        }
+
+        if(!returnMap.get("dataCheck").equals("")){
+            boolean dataCheck = (boolean) returnMap.get("dataCheck");
+            if (!dataCheck) {
+                resultVO = ResultVO.setFailed("数据格式有误，请修改后重试",returnMap);
+                return resultVO;
+            }
+        }
+
+        Integer count = 0;
+        if(!returnMap.get("importStudentInfo").equals("")){
+            List<Edu0011> importStudentWork = (List<Edu0011>) returnMap.get("importStudentInfo");
+            List<Edu0011> info = new ArrayList<>();
+            for (int i = 0; i < importStudentWork.size(); i++) {
+                Edu0011 edu0011 = importStudentWork.get(i);
+                if(edu0011.getJyxs() != null && !"".equals(edu0011.getJyxs())){
+                    count++;
+                    Edu0011 importEdu0011 = edu0011Dao.query001ByXh2(edu0011.getXh());
+                    importEdu0011.setJyxs(edu0011.getJyxs());
+                    importEdu0011.setJyxsbm(administrationPageService.queryEjdmByEjdmZ(edu0011.getJyxs(),"jyxs"));
+                    importEdu0011.setDwdz(edu0011.getDwdz());
+                    importEdu0011.setDwlxdh(edu0011.getDwlxdh());
+                    importEdu0011.setDwlxr(edu0011.getDwlxr());
+                    importEdu0011.setDwmc(edu0011.getDwmc());
+                    importEdu0011.setBz(edu0011.getBz());
+                    importEdu0011.setSclr("F");
+                    edu0011Dao.save(importEdu0011);
+                    info.add(importEdu0011);
+                }
+            }
+            resultVO = ResultVO.setSuccess("成功导入了"+count+"个学生",info);
+        }
+
+        return resultVO;
+    }
 
     // 学生管理搜索学生
     public ResultVO studentMangerSearchStudent(Edu001 edu001,String userId,Integer pageNumber,Integer pageSize) {
