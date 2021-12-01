@@ -334,6 +334,21 @@ public class StudentManageController {
     }
 
     /**
+     * 检验导入学生就业信息的文件
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     * @throws ServletException
+     */
+    @RequestMapping("verifiyImportEmploymentStudentsFile")
+    @ResponseBody
+    public Object verifiyImportEmploymentStudentsFile(@RequestParam("file") MultipartFile file) throws ParseException, Exception {
+        Map<String, Object> checkRS= utils.verifiyImportEmploymentStudentsFile(file, "ImportEdu0011", "学生就业信息模板");
+        checkRS.put("result", true);
+        return checkRS;
+    }
+
+    /**
      * 学生管理搜索学生
      *
      * @param studentSearchPO

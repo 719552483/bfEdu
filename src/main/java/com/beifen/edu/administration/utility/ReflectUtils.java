@@ -818,6 +818,149 @@ public class ReflectUtils {
 		return returnMap;
 	}
 
+	/**
+	 * 检验导入学生就业信息的文件
+	 * @param file
+	 * @param checkType
+	 * @param hopeSheetName
+	 * @return
+	 * @throws java.text.ParseException
+	 * @throws Exception
+	 */
+	public Map<String, Object> verifiyImportEmploymentStudentsFile(MultipartFile file,String checkType,String hopeSheetName) throws java.text.ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		boolean isExcel=false;
+		boolean sheetCountPass=false;
+		boolean modalPass=false;
+		boolean haveData=false;
+		Object dataCheck="";
+		Object checkTxt="";
+		Object importStudentInfo="";
+		// 判断读取的文件是否为Excel文件
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xlsx".equals(suffix) || "xls".equals(suffix)) {
+			isExcel = true;
+		}
+
+		if(isExcel){
+			//获取Excel工作簿
+			InputStream in=file.getInputStream();
+			Workbook workBook = WorkbookFactory.create(in);
+			int sheetCount = workBook.getNumberOfSheets();// 获取sheet个数
+
+			//验证sheet个数
+			if(sheetCount > 0){
+				sheetCountPass=true;
+			}
+
+			//验证sheet名字
+			String sheetName = workBook.getSheetAt(0).getSheetName();//sheet名称
+			if (sheetCountPass&&checkType.equals("ImportEdu0011")&&sheetName.equals(hopeSheetName)) {
+				modalPass=true;
+			}
+
+			//验证是否有数据
+			List<Map<String,Object>> importStudents = this.getImportData(file.getInputStream(),checkType);
+			if(sheetCountPass&&modalPass&&importStudents.size()>0){
+				haveData=true;
+			}
+
+			//验证数据正确性
+			if(sheetCountPass&&modalPass&&haveData){
+				if(checkType.equals("ImportEdu0011")){
+					Map<String, Object> datacheckInfo=this.checkEmploymentStudents(importStudents);
+					dataCheck=datacheckInfo.get("chaeckPass");
+					checkTxt=datacheckInfo.get("checkTxt");
+					importStudentInfo=datacheckInfo.get("importStudentInfo");
+				}
+			}
+		}
+		returnMap.put("isExcel",isExcel);
+		returnMap.put("sheetCountPass",sheetCountPass);
+		returnMap.put("modalPass",modalPass);
+		returnMap.put("haveData",haveData);
+		returnMap.put("dataCheck",dataCheck );
+		returnMap.put("checkTxt", checkTxt);
+		returnMap.put("importStudentInfo",importStudentInfo);
+		return returnMap;
+	}
+
+	/**
+	 * 验证导入的教师数据
+	 * @throws Exception
+	 * @throws java.text.ParseException
+	 * */
+	private Map<String, Object> checkEmploymentStudents(List<Map<String, Object>> importTeachers) throws ParseException, Exception {
+		Map<String, Object> returnMap = new HashMap();
+		List<Edu0011> importTeacher=new ArrayList<Edu0011>();
+		boolean chaeckPass=true;
+		String checkTxt="";
+		//组装上传教师对象
+		for (int i = 0; i < importTeachers.size(); i++) {
+			Edu0011 edu0011 = JSON.parseObject(JSON.toJSONString(importTeachers.get(i)), Edu0011.class); // mapToBean
+			//生成年龄
+			importTeacher.add(edu0011);
+		}
+
+
+		for (int i = 0; i < importTeacher.size(); i++) {
+			Edu0011 edu0011 = importTeacher.get(i);
+			if(isNull(edu0011.getSzxbmc())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-所属二级学院不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}
+			if(isNull(edu0011.getXh())){
+				chaeckPass=false;
+				checkTxt="第"+(i+1)+"行-学号不能为空";
+				returnMap.put("chaeckPass", chaeckPass);
+				returnMap.put("checkTxt", checkTxt);
+				break;
+			}else{
+				Edu001 e = studentManageService.selectStudentByXh(edu0011.getXh());
+				if(e == null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-学号不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+			//就业类型是否存在
+			if(edu0011.getJyxs()!=null&&!edu0011.getJyxs().equals("")){
+				String currentZcbmCode = reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu0011.getJyxs(),"jyxs");
+				if(currentZcbmCode==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-就业形式不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}else{
+				boolean jyInfo = false;
+				if(isNull(edu0011.getDwmc()) && isNull(edu0011.getDwdz()) && isNull(edu0011.getDwlxdh()) && isNull(edu0011.getDwlxr()) && isNull(edu0011.getBz())){
+					continue;
+				}else{
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-若要填写就业信息则必须填写就业形式";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
+		}
+		if(chaeckPass){
+			checkTxt="上传文件格式/数据正确";
+		}
+		returnMap.put("chaeckPass", chaeckPass);
+		returnMap.put("checkTxt", checkTxt);
+		returnMap.put("importStudentInfo", importTeacher);
+		return returnMap;
+	}
+
 
 	/**
 	 * 检验教师文件
@@ -1874,6 +2017,9 @@ public class ReflectUtils {
 							if(keyType.equals("ImportEdu001")){
 							    keyName = getImportantEdu001KeyName(cell.getColumnIndex()); //获取列名
 							}
+							if(keyType.equals("ImportEdu0011")){
+								keyName = getImportantEdu0011KeyName(cell.getColumnIndex()); //获取列名
+							}
 							if(keyType.equals("ModifyEdu001")){
 							    keyName = getModifyEdu001KeyName(cell.getColumnIndex()); //获取列名
 							}
@@ -2176,7 +2322,53 @@ public class ReflectUtils {
         }
 		return result;
 	}
-	
+	//获取导入学生Excel的Key值
+	private String getImportantEdu0011KeyName(int columnIndex) {
+		String result = null;
+		switch (columnIndex) {
+			case 0:
+				result="num";
+				break;
+			case 1:
+				result="szxbmc";
+				break;
+			case 2:
+				result="zymc";
+				break;
+			case 3:
+				result="zxbname";
+				break;
+			case 4:
+				result="xh";
+				break;
+			case 5:
+				result="xm";
+				break;
+			case 6:
+				result="jyxs";
+				break;
+			case 7:
+				result="dwmc";
+				break;
+			case 8:
+				result="dwlxr";
+				break;
+			case 9:
+				result="dwlxdh";
+				break;
+			case 10:
+				result="dwdz";
+				break;
+			case 11:
+				result="bz";
+				break;
+			default:
+				result="ycTxt";
+				break;
+		}
+		return result;
+	}
+
 	//获取修改课程Excel的Key值
 	private String getModifyEdu200KeyName(int columnIndex) {
 		String result = null;
