@@ -2252,7 +2252,7 @@ public class StudentManageService {
                         int week = DateUtils.calcWeekOffset(startDate,now)+1;
                         //获取当前星期id
                         String xqid = DateUtils.dateToWeek(now);
-                        String countPass = edu203Dao.getPKcount3(xnid,week,xqid);
+                        String countPass = edu203Dao.getPKcount3(edu400.getEdu400_ID()+"",week,xqid);
                         map.put("sjskxs",countPass);
                     }
                 }catch (Exception e){
