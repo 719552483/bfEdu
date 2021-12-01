@@ -934,7 +934,7 @@ public class ReflectUtils {
 				String currentZcbmCode = reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu0011.getJyxs(),"jyxs");
 				if(currentZcbmCode==null){
 					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-职称不存在";
+					checkTxt="第"+(i+1)+"行-就业形式不存在";
 					returnMap.put("chaeckPass", chaeckPass);
 					returnMap.put("checkTxt", checkTxt);
 					break;
