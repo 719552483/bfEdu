@@ -263,6 +263,10 @@ public class StudentManageService {
         return resultVO;
     }
 
+    public Edu001 selectStudentByXh(String xh){
+        return edu001Dao.query001ByXh(xh);
+    }
+
     //查询就业信息
     public ResultVO employmentStudents(Edu0011 edu0011) {
         ResultVO resultVO;

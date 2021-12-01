@@ -1148,6 +1148,18 @@ public class AdministrationController {
 		return result;
 	}
 
+	/**
+	 * 导出未排完课程的班级
+	 */
+	@RequestMapping("/queryNotPutedCourseClass")
+	@ResponseBody
+	public ResultVO queryNotPutedCourseClass(@RequestParam("edu104") String edu104) {
+		ResultVO result = administrationPageService.queryNotPutedCourseClassCheck(edu104);
+		return result;
+	}
+
+
+
 
 	/**
 	 * 修改培养计划下的专业课程

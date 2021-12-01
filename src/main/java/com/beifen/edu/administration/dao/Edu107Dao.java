@@ -74,4 +74,8 @@ public interface Edu107Dao extends JpaRepository<Edu107, Long>, JpaSpecification
 	//查询专业年级下的批次
 	@Query(value = "select * from edu107 where  edu105 = ?1 and edu106 = ?2 and xbsp = 'pass' order by batch", nativeQuery = true)
 	List<Edu107> searchBatch(String edu105,String edu106);
+
+	@Query(value = "select * from edu107 where  edu105 = ?1 and edu106 = ?2 and batch = ?3 and xbsp = 'pass'", nativeQuery = true)
+	List<Edu107> searchAllEdu107(String edu105,String edu106,String batch);
+
 }

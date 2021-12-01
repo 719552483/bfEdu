@@ -515,7 +515,7 @@ public class AdministrationPageService {
 		edu108DAO.save(edu108);
 	}
 
-	// 删除培养计划下的专业课程
+	// 删除培养计划下的专业课程 
 	public void removeCultureCrose(String edu108ID) {
 		edu108DAO.removeCultureCrose(edu108ID);
 	}
@@ -3151,6 +3151,29 @@ public class AdministrationPageService {
 		}else{
 			resultVO = ResultVO.setSuccess("查询成功",edu206s);
 		}
+		return resultVO;
+	}
+
+	//查询未发布任务书的班级
+	public ResultVO queryNotPutedCourseClassCheck(String edu104){
+		ResultVO resultVO;
+		List<Edu300> edu300List = edu300DAO.queryStudentReport(edu104);
+		for(Edu300 edu300:edu300List){
+			List<Edu107> edu107List = edu107DAO.searchAllEdu107(edu300.getNjbm(),edu300.getZybm(),edu300.getBatch());
+			if(edu107List.size() == 0){
+				resultVO = ResultVO.setFailed(edu300.getXzbmc()+"暂无培养计划");
+				return resultVO;
+			}else if(edu107List.size() > 1){
+				for(Edu107 e:edu107List){
+					List<Edu1071> edu1071List = edu1071DAO.findByEdu107Id(e.getEdu107_ID()+"");
+					if(edu1071List.size() == 0){
+						resultVO = ResultVO.setFailed("【"+e.getPyjhmc()+"】该培养计划未绑定班级");
+						return resultVO;
+					}
+				}
+			}
+		}
+		resultVO = ResultVO.setSuccess("可以下载");
 		return resultVO;
 	}
 

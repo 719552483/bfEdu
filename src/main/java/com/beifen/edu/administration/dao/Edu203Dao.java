@@ -152,7 +152,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
     String getPKcount2(String xnid,String xbbm,int week,String xqid);
 
     //根据学年查询已上课总数量
-    @Query(value = "select count(*)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where  week < ?2 or (week = ?2 and xqid < ?3) and ee.xnid = ?1", nativeQuery = true)
+    @Query(value = "select count(*)*2 from edu203 e LEFT JOIN edu202 ee on e.EDU202_ID = ee.EDU202_ID where ee.xnid = ?1 and (week < ?2 or (week = ?2 and xqid < ?3)", nativeQuery = true)
     String getPKcount3(String xnid,int week,String xqid);
 
     //根据学年查询已上课总数量
@@ -178,7 +178,7 @@ public interface Edu203Dao extends JpaRepository<Edu203, Long>, JpaSpecification
             ")", nativeQuery = true)
     String getjsslByXnAndLx2(String zybm,String xnid,String lx);
 
-    @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
+    @Query(value = "select count(0)*2 from (select * from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?1))", nativeQuery = true)
     String getzxsByXnid(String xnid);
 
     @Query(value = "select count(0)*2 from (select edu101_id,week,xqid,kjid from edu203 where edu202_id in (select edu202_id from edu202 where xnid = ?2 and EDU201_ID in (select DISTINCT EDU201_ID from edu204 where edu300_id in  (select edu300_id from edu300 where zybm = ?1))) group by edu101_id,week,xqid,kjid)", nativeQuery = true)
