@@ -896,11 +896,23 @@ public class ReflectUtils {
 		List<Edu0011> importTeacher=new ArrayList<Edu0011>();
 		boolean chaeckPass=true;
 		String checkTxt="";
+		int count = 0;
 		//组装上传教师对象
 		for (int i = 0; i < importTeachers.size(); i++) {
 			Edu0011 edu0011 = JSON.parseObject(JSON.toJSONString(importTeachers.get(i)), Edu0011.class); // mapToBean
 			//生成年龄
 			importTeacher.add(edu0011);
+			if(edu0011.getJyxs() != null && !"".equals(edu0011.getJyxs())){
+				count++;
+			}
+		}
+
+		if(count == 0){
+			chaeckPass=false;
+			checkTxt="没有导入有效数据";
+			returnMap.put("chaeckPass", chaeckPass);
+			returnMap.put("checkTxt", checkTxt);
+			return returnMap;
 		}
 
 
