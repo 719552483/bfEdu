@@ -169,6 +169,7 @@ function stuffStudentWorkTable(tableInfo) {
                 title: '当前录入是否首次',
                 align: 'center',
                 sortable: true,
+                visible: false,
                 formatter: sclrMatter
             },{
                 field: 'action',
@@ -976,7 +977,7 @@ function confirmImportStudentWork(){
     }
 
     var formData = new FormData();
-    formData.append("file",$('#studentInfoFile')[0].files[0]);
+    formData.append("file",$('#studentWorkFile')[0].files[0]);
 
     $.ajax({
         url:'/importStudentWorkInfo',
