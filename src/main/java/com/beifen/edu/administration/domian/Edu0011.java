@@ -26,7 +26,7 @@ public class Edu0011 {
 	private  String dwlxr;//单位联系人
 	private  String dwlxdh;//单位联系电话
 	private  String dwdz;//单位地址
-	private  String bz;//备注
+	private  String bzxx;//备注
 	private  String sclr;//首次录入
 	private  String xh; //学号
 	
@@ -185,12 +185,12 @@ public class Edu0011 {
 		this.dwdz = dwdz;
 	}
 
-	public String getBz() {
-		return bz;
+	public String getBzxx() {
+		return bzxx;
 	}
 
-	public void setBz(String bz) {
-		this.bz = bz;
+	public void setBzxx(String bzxx) {
+		this.bzxx = bzxx;
 	}
 
 	public String getSclr() {

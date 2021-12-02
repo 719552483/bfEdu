@@ -91,6 +91,19 @@ public class StudentManageController {
     }
 
     /**
+     * 重置学生就业信息表
+     * @return
+     */
+    @RequestMapping("updateWork")
+    @ResponseBody
+    public ResultVO updateWork() {
+        ResultVO result;
+        result = studentManageService.updateWork();
+        return result;
+    }
+
+
+    /**
      * 下载学生导入模板
      *
      * @return returnMap

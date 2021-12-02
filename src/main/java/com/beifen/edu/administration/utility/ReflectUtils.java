@@ -918,6 +918,28 @@ public class ReflectUtils {
 
 		for (int i = 0; i < importTeacher.size(); i++) {
 			Edu0011 edu0011 = importTeacher.get(i);
+			//就业类型是否存在
+			if(edu0011.getJyxs()!=null&&!edu0011.getJyxs().equals("")){
+				String currentZcbmCode = reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu0011.getJyxs(),"jyxs");
+				if(currentZcbmCode==null){
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-就业形式不存在";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}else{
+				boolean jyInfo = false;
+				if(isNull(edu0011.getDwmc()) && isNull(edu0011.getDwdz()) && isNull(edu0011.getDwlxdh()) && isNull(edu0011.getDwlxr()) && isNull(edu0011.getBzxx())){
+					continue;
+				}else{
+					chaeckPass=false;
+					checkTxt="第"+(i+1)+"行-若要填写就业信息则必须填写就业形式";
+					returnMap.put("chaeckPass", chaeckPass);
+					returnMap.put("checkTxt", checkTxt);
+					break;
+				}
+			}
 			if(isNull(edu0011.getSzxbmc())){
 				chaeckPass=false;
 				checkTxt="第"+(i+1)+"行-所属二级学院不能为空";
@@ -949,28 +971,7 @@ public class ReflectUtils {
 					break;
 				}
 			}
-			//就业类型是否存在
-			if(edu0011.getJyxs()!=null&&!edu0011.getJyxs().equals("")){
-				String currentZcbmCode = reflectUtils.administrationPageService.queryEjdmByEjdmZ(edu0011.getJyxs(),"jyxs");
-				if(currentZcbmCode==null){
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-就业形式不存在";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
-				}
-			}else{
-				boolean jyInfo = false;
-				if(isNull(edu0011.getDwmc()) && isNull(edu0011.getDwdz()) && isNull(edu0011.getDwlxdh()) && isNull(edu0011.getDwlxr()) && isNull(edu0011.getBz())){
-					continue;
-				}else{
-					chaeckPass=false;
-					checkTxt="第"+(i+1)+"行-若要填写就业信息则必须填写就业形式";
-					returnMap.put("chaeckPass", chaeckPass);
-					returnMap.put("checkTxt", checkTxt);
-					break;
-				}
-			}
+
 		}
 		if(chaeckPass){
 			checkTxt="上传文件格式/数据正确";
@@ -2380,7 +2381,7 @@ public class ReflectUtils {
 				result="dwdz";
 				break;
 			case 11:
-				result="bz";
+				result="bzxx";
 				break;
 			default:
 				result="ycTxt";
@@ -3109,7 +3110,7 @@ public class ReflectUtils {
 			appendCell(sheet,i,"",edu0011.getDwlxr(),-1,8,false);
 			appendCell(sheet,i,"",edu0011.getDwlxdh(),-1,9,false);
 			appendCell(sheet,i,"",edu0011.getDwdz(),-1,10,false);
-			appendCell(sheet,i,"",edu0011.getBz(),-1,11,false);
+			appendCell(sheet,i,"",edu0011.getBzxx(),-1,11,false);
 		}
 	}
 

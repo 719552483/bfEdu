@@ -153,6 +153,14 @@ public class StudentManageService {
         edu001.setXh(newXh);
         addStudent(edu001); // 新增学生
         administrationPageService.addAdministrationClassesZXRS(edu001.getEdu300_ID());
+        Edu0011 edu0011 = new Edu0011();
+        try {
+            BeanUtils.copyProperties(edu0011, edu001);
+            edu0011.setSclr("T");
+            edu0011Dao.save(edu0011);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         resultVO = ResultVO.setSuccess("新增学生成功",edu001);
 
         return resultVO;
@@ -161,9 +169,9 @@ public class StudentManageService {
     // 新增学生
     public void addStudent(Edu001 edu001) {
         edu001Dao.save(edu001);
-        Edu300 edu300 = edu300Dao.findOne(Long.parseLong(edu001.getEdu300_ID()));
-        edu300.setZxrs(edu300.getZxrs()+1);
-        edu300Dao.save(edu300);
+//        Edu300 edu300 = edu300Dao.findOne(Long.parseLong(edu001.getEdu300_ID()));
+//        edu300.setZxrs(edu300.getZxrs()+1);
+//        edu300Dao.save(edu300);
         Edu990 edu990 = new Edu990();
         edu990.setYhm(edu001.getXh());
         edu990.setMm("eduApp123456");
@@ -189,6 +197,7 @@ public class StudentManageService {
             String edu300_ID = jsonObject.getString("edu300_ID");
             Long studentId = jsonObject.getLong("studentId");
             edu001Dao.removeStudentByID(studentId);
+            edu0011Dao.removeStudentByEdu001ID(studentId);
             edu300Dao.ZxrsMinusOne(edu300_ID);
             count++;
         }
@@ -210,6 +219,17 @@ public class StudentManageService {
         administrationPageService.changeStudentClass(oldStudentInfo,newStudentInfo);
 
         // 修改学生
+        Edu0011 edu0011 = edu0011Dao.query001ByXh2(oldStudentInfo.getXh());
+        edu0011.setXh(newStudentInfo.getXh());
+        edu0011.setEdu300_ID(newStudentInfo.getEdu300_ID());
+        edu0011.setNj(newStudentInfo.getNj());
+        edu0011.setNjmc(newStudentInfo.getNjmc());
+        edu0011.setSzxb(newStudentInfo.getSzxb());
+        edu0011.setSzxbmc(newStudentInfo.getSzxbmc());
+        edu0011.setXzbname(newStudentInfo.getXzbname());
+        edu0011.setZybm(newStudentInfo.getZybm());
+        edu0011.setZymc(newStudentInfo.getZymc());
+        edu0011Dao.save(edu0011);
         edu001Dao.save(newStudentInfo);
     }
 
@@ -250,14 +270,14 @@ public class StudentManageService {
         List<Long> edu001ids = edu001List.stream().map(Edu001::getEdu001_ID).collect(Collectors.toList());
         for (int i = 0; i < edu001List.size(); i++) {
             edu001Dao.graduationStudents(edu001List.get(i).getEdu001_ID()+"");
-            Edu0011 edu0011 = new Edu0011();
-            try {
-                BeanUtils.copyProperties(edu0011, edu001List.get(i));
-                edu0011.setSclr("T");
-                edu0011Dao.save(edu0011);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            Edu0011 edu0011 = new Edu0011();
+//            try {
+//                BeanUtils.copyProperties(edu0011, edu001List.get(i));
+//                edu0011.setSclr("T");
+//                edu0011Dao.save(edu0011);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
         }
         resultVO = ResultVO.setSuccess("成功发放了"+edu001ids.size()+"个毕业证",edu001ids);
         return resultVO;
@@ -384,7 +404,7 @@ public class StudentManageService {
                     importEdu0011.setDwlxdh(edu0011.getDwlxdh());
                     importEdu0011.setDwlxr(edu0011.getDwlxr());
                     importEdu0011.setDwmc(edu0011.getDwmc());
-                    importEdu0011.setBz(edu0011.getBz());
+                    importEdu0011.setBzxx(edu0011.getBzxx());
                     importEdu0011.setSclr("F");
                     edu0011Dao.save(importEdu0011);
                     info.add(importEdu0011);
@@ -482,6 +502,23 @@ public class StudentManageService {
     }
 
 
+    public ResultVO updateWork(){
+        ResultVO resultVO;
+        List<Edu001> edu001List = edu001Dao.findAll();
+        for(Edu001 edu001:edu001List){
+            Edu0011 edu0011 = new Edu0011();
+            try {
+                BeanUtils.copyProperties(edu0011, edu001);
+                edu0011.setSclr("T");
+                edu0011Dao.save(edu0011);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        resultVO = ResultVO.setSuccess("学生信息修改成功");
+        return resultVO;
+    }
+
     public ResultVO modifyStudent(Edu001 edu001, Edu600 edu600) {
         ResultVO resultVO;
         Edu001 oldEdu001 = queryStudentBy001ID(edu001.getEdu001_ID().toString());
@@ -492,21 +529,26 @@ public class StudentManageService {
 //            return resultVO;
 //        }
         //判断是否修改学生状态
-        if(!oldEdu001.getZtCode().equals(edu001.getZtCode())){
-            if("004".equals(oldEdu001.getZtCode())){
-                edu0011Dao.removeStudentByEdu001ID(oldEdu001.getEdu001_ID());
-            }else if("004".equals(edu001.getZtCode())){
-                Edu0011 edu0011 = new Edu0011();
-                try {
-                    BeanUtils.copyProperties(edu0011, edu001);
-                    edu0011.setSclr("T");
-                    edu0011Dao.save(edu0011);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
+//        if(!oldEdu001.getZtCode().equals(edu001.getZtCode())){
+//            if("004".equals(oldEdu001.getZtCode())){
+//                edu0011Dao.removeStudentByEdu001ID(oldEdu001.getEdu001_ID());
+//            }else if("004".equals(edu001.getZtCode())){
+//                Edu0011 edu0011 = new Edu0011();
+//                try {
+//                    BeanUtils.copyProperties(edu0011, edu001);
+//                    edu0011.setSclr("T");
+//                    edu0011Dao.save(edu0011);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
 
+        if(!oldEdu001.getXh().equals(edu001.getXh())){
+            Edu0011 edu0011 = edu0011Dao.query001ByXh2(oldEdu001.getXh());
+            edu0011.setXh(edu001.getXh());
+            edu0011Dao.save(edu0011);
+        }
 
         //如果修改操作为修改学生状态为休学 发送审批流对象
         if(edu001.getZtCode().equals("002") && !"002".equals(oldEdu001.getZtCode())){
@@ -596,6 +638,14 @@ public class StudentManageService {
                 edu001.setYxbz(yxbz);
 //                edu001.setXh(getNewStudentXh(edu001)); //新生的学号
                 addStudent(edu001); // 新增学生
+                Edu0011 edu0011 = new Edu0011();
+                try {
+                    BeanUtils.copyProperties(edu0011, edu001);
+                    edu0011.setSclr("T");
+                    edu0011Dao.save(edu0011);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 count++;
             }
             resultVO = ResultVO.setSuccess("成功导入了"+count+"个学生",importStudent);
@@ -1834,15 +1884,92 @@ public class StudentManageService {
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));//
         sheet.addMergedRegion(new CellRangeAddress(1, 2, 9, 9));//
 
+        if (xnid != null && !"".equals(xnid)) {
+            for (int i = 0;i<edu106List.size();i++) {
+                Edu106 edu106 = edu106List.get(i);
+                Edu400 edu400 = edu400Dao.findOne(Long.parseLong(xnid));
+                utils.appendCell(sheet,2+i,"",(1+i)+"",-1,0,false);
+                utils.appendCell(sheet,2+i,"",edu106.getZymc(),-1,1,false);
+                utils.appendCell(sheet,2+i,"",edu400.getXnmc(),-1,2,false);
+                String zrjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "001");
+                utils.appendCell(sheet,2+i,"",zrjs,-1,3,false);
+                String jzjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "003");
+                utils.appendCell(sheet,2+i,"",jzjs,-1,4,false);
+                String wpjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "004");
+                utils.appendCell(sheet,2+i,"",wpjs,-1,5,false);
+                String skms = edu201Dao.findskmsByxnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                utils.appendCell(sheet,2+i,"",skms,-1,6,false);
+                String zxs = edu203Dao.getzxsByXnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                utils.appendCell(sheet,2+i,"",zxs,-1,7,false);
+                utils.appendCell(sheet,2+i,"",zxs,-1,8,false);
+                try {
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String kssj = edu400.getKssj();
+                    Date startDate = sdf.parse(kssj);
+                    String jssj = edu400.getJssj();
+                    Date endDate = sdf.parse(jssj);
 
-        if(xnid != null && !"".equals(xnid)){
+                    if (now.getTime() < startDate.getTime()) {
+                        utils.appendCell(sheet,2+i,"","0",-1,9,false);
+                    } else if (now.getTime() > endDate.getTime()) {
+                        utils.appendCell(sheet,2+i,"",zxs,-1,9,false);
+                    } else {
+                        //获取当前教学周
+                        int week = DateUtils.calcWeekOffset(startDate, now) + 1;
+                        //获取当前星期id
+                        String xqid = DateUtils.dateToWeek(now);
+                        String countPass = edu203Dao.getPKcount4(xnid, week, xqid, edu106.getEdu106_ID() + "");
+                        utils.appendCell(sheet,2+i,"",countPass,-1,9,false);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-        }else{
+        } else {
             List<Edu400> edu400List = edu400Dao.findAllXn();
-            for(int i = 0;i<edu106List.size();i++){
-                for(int j = 0;j<edu400List.size();j++){
-                    utils.appendCell(sheet,i*j+j+2,"",(i*j+j+1)+"",-1,0,false);
-                    utils.appendCell(sheet,i*j+j+2,"",(i*j+j+1)+"",-1,0,false);
+            for (int i = 0;i<edu106List.size();i++) {
+                for (int j = 0;j<edu400List.size();j++) {
+                    Edu106 edu106 = edu106List.get(i);
+                    Edu400 edu400 = edu400List.get(j);
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",(1+i*edu400List.size()+j)+"",-1,0,false);
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",edu106.getZymc(),-1,1,false);
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",edu400.getXnmc(),-1,2,false);
+                    String zrjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "001");
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",zrjs,-1,3,false);
+                    String jzjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "003");
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",jzjs,-1,4,false);
+                    String wpjs = edu203Dao.getjsslByXnAndLx2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "", "004");
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",wpjs,-1,5,false);
+                    String skms = edu201Dao.findskmsByxnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",skms,-1,6,false);
+                    String zxs = edu203Dao.getzxsByXnid2(edu106.getEdu106_ID() + "", edu400.getEdu400_ID() + "");
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",zxs,-1,7,false);
+                    utils.appendCell(sheet,2+i*edu400List.size()+j,"",zxs,-1,8,false);
+                    try {
+                        Date now = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String kssj = edu400.getKssj();
+                        Date startDate = sdf.parse(kssj);
+                        String jssj = edu400.getJssj();
+                        Date endDate = sdf.parse(jssj);
+
+                        if (now.getTime() < startDate.getTime()) {
+                            utils.appendCell(sheet,2+i*edu400List.size()+j,"","0",-1,9,false);
+                        } else if (now.getTime() > endDate.getTime()) {
+                            utils.appendCell(sheet,2+i*edu400List.size()+j,"",zxs,-1,9,false);
+                        } else {
+                            //获取当前教学周
+                            int week = DateUtils.calcWeekOffset(startDate, now) + 1;
+                            //获取当前星期id
+                            String xqid = DateUtils.dateToWeek(now);
+                            String countPass = edu203Dao.getPKcount4(edu400.getEdu400_ID() + "", week, xqid, edu106.getEdu106_ID() + "");
+                            utils.appendCell(sheet,2+i*edu400List.size()+j,"",countPass,-1,9,false);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
