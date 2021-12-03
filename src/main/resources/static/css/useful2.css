@@ -3148,7 +3148,7 @@ border-top: none;
 }
 
 .localInfoTableAreawithNoAction .table td{
-	vertical-align: top;
+	vertical-align: inherit;
 	text-indent: 11px;
 }
 

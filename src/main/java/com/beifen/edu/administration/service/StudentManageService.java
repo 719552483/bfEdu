@@ -1242,27 +1242,27 @@ public class StudentManageService {
         for(StudentWorkViewPO studentWorkViewPO:studentWorkViewPOList){
             Map map = new HashMap();
             map.put("nj",studentWorkViewPO.getNjmc());
-            map.put("xb",studentWorkViewPO.getSzxb());
-            int xbrs = edu0011Dao.findXbrs(studentWorkViewPO.getSzxb());
+            map.put("xb",studentWorkViewPO.getSzxbmc());
+            int xbrs = edu0011Dao.findXbrs(studentWorkViewPO.getSzxb(),studentWorkViewPO.getNj());
             map.put("xbrs",xbrs+"");
-            int jyrs = edu0011Dao.findXbjyrs(studentWorkViewPO.getSzxb());
+            int jyrs = edu0011Dao.findXbjyrs(studentWorkViewPO.getSzxb(),studentWorkViewPO.getNj());
             if(jyrs == 0){
                 map.put("xbjyl","0.00%");
             }else{
-                double v = jyrs/xbrs;
+                double v = Double.valueOf(jyrs)/ Double.valueOf(xbrs);
                 NumberFormat nf = NumberFormat.getPercentInstance();
                 nf.setMinimumFractionDigits(2);//设置保留小数位
                 String usedPercent = nf.format(v);
                 map.put("xbjyl",usedPercent);
             }
             map.put("zymc",studentWorkViewPO.getZymc());
-            int zyrs = edu0011Dao.findZyrs(studentWorkViewPO.getZybm());
+            int zyrs = edu0011Dao.findZyrs(studentWorkViewPO.getZybm(),studentWorkViewPO.getNj());
             map.put("zyrs",zyrs+"");
-            int zyjyrs = edu0011Dao.findZyjyrs(studentWorkViewPO.getZybm());
+            int zyjyrs = edu0011Dao.findZyjyrs(studentWorkViewPO.getZybm(),studentWorkViewPO.getNj());
             if(zyjyrs == 0){
                 map.put("zyjyl","0.00%");
             }else{
-                double v = zyrs/zyjyrs;
+                double v = Double.valueOf(zyjyrs)/ Double.valueOf(zyrs);
                 NumberFormat nf = NumberFormat.getPercentInstance();
                 nf.setMinimumFractionDigits(2);//设置保留小数位
                 String usedPercent = nf.format(v);
@@ -1270,7 +1270,7 @@ public class StudentManageService {
             }
             for(int i = 0;i<edu000List.size();i++){
                 Edu000 edu000 = edu000List.get(i);
-                int jyxs = edu0011Dao.findJyxsrs(studentWorkViewPO.getZybm(),edu000.getEjdm());
+                int jyxs = edu0011Dao.findJyxsrs(studentWorkViewPO.getZybm(),edu000.getEjdm(),studentWorkViewPO.getNj());
                 map.put("jyxs"+i,jyxs+"");
             }
             list.add(map);

@@ -2135,7 +2135,8 @@ function judgmentIsFristTimeLoadTab5(){
 	var isFirstShowTab5 = $(".isFirstShowTab5")[0].innerText;
 	if (isFirstShowTab5 === "T") {
 		$(".isFirstShowTab5").html("F");
-		getTab5TableInfo(1);
+		// getTab5TableInfo(1);
+		drawAllTable({});
 		tab5BtnBind();
 	}
 }
@@ -2459,10 +2460,10 @@ function getTab5SearchInfo(canEmpty){
 
 //开始检索
 function startSearchTab5(){
-	var tab5SearchInfo=getTab5SearchInfo(false);
-	if(typeof tab5SearchInfo==='undefined'){
-		return;
-	}
+	var tab5SearchInfo=getTab5SearchInfo(true);
+	// if(typeof tab5SearchInfo==='undefined'){
+	// 	return;
+	// }
 	var type=0;
 	if(tab5SearchInfo.xb!==''){
 		type=2;
@@ -2598,6 +2599,181 @@ function tab5BtnBind(){
 }
 /**
  * tab5 end
+ * */
+
+
+/**
+ * tab6 start
+ * */
+function judgmentIsFristTimeLoadTab6(){
+	var isFirstShowTab6 = $(".isFirstShowTab6")[0].innerText;
+	if (isFirstShowTab6 === "T") {
+		stuffTab6Select();
+		$(".isFirstShowTab6").html("F");
+		getTab6TableInfo();
+		tab6BtnBind();
+	}
+}
+
+//渲染tab6非联动的培养计划下拉框
+function stuffTab6Select(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getJwPublicCodes",
+		data: {
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType : 'json',
+		success : function(backjson) {
+			if (backjson.result) {
+				var str='<option value="seleceConfigTip">请选择</option>';
+				//层次
+				var allLevel=backjson.allLevel;
+				for (var i = 0; i < allLevel.length; i++) {
+					str += '<option value="' + allLevel[i].edu103_ID + '">' + allLevel[i].pyccmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#studentWork_level", str);
+
+				//系部
+				str='<option value="seleceConfigTip">请选择</option>';
+				var allDepartment=backjson.allDepartment;
+				for (var i = 0; i < allDepartment.length; i++) {
+					str += '<option value="' + allDepartment[i].edu104_ID + '">' + allDepartment[i].xbmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#studentWork_department", str);
+
+				//年级
+				str='<option value="seleceConfigTip">请选择</option>';
+				var allGrade=backjson.allGrade;
+				for (var i = 0; i < allGrade.length; i++) {
+					str += '<option value="' + allGrade[i].edu105_ID + '">' + allGrade[i].njmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#studentWork_grade", str);
+
+				//专业
+				str='<option value="seleceConfigTip">请选择</option>';
+				var allMajor=backjson.allMajor;
+				for (var i = 0; i < allMajor.length; i++) {
+					str += '<option value="' + allMajor[i].edu106_ID + '">' + allMajor[i].zymc
+						+ '</option>';
+				}
+				stuffManiaSelect("#studentWork_major", str);
+			} else {
+				toastr.warning('暂无可选检索条件');
+			}
+		}
+	});
+}
+
+//获取tab6报表信息
+function getTab6TableInfo(){
+	var tab6SearchInfo=getTab6SearchInfo();
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/studentWorkReportData",
+		data: {
+			"SearchCriteria":JSON.stringify(tab6SearchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				stufftab6Table(backjson.data);
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+
+}
+
+//渲染就业报表
+function stufftab6Table(backjsonData) {
+	var tableInfo=backjsonData.tableInfo;
+
+	$('#tab6ReportAreaTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 10,
+		pageList : [ 10 ],
+		showToggle : false,
+		showFooter : false,
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : false,
+		onPageChange : function() {
+			drawPagination(".tab6ReportArea", "就业情况信息");
+		},
+		columns:backjsonData.columns
+	});
+
+	drawPagination(".tab6ReportArea", "就业情况信息");
+	drawSearchInput(".tab6ReportArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+}
+
+//获得tab6检索条件
+function getTab6SearchInfo(){
+	var level = getNormalSelectValue("studentWork_level");
+	var department = getNormalSelectValue("studentWork_department");
+	var grade = getNormalSelectValue("studentWork_grade");
+	var major = getNormalSelectValue("studentWork_major");
+	var levelTxt = getNormalSelectText("studentWork_level");
+	var departmentTxt  = getNormalSelectText("studentWork_department");
+	var gradeTxt  = getNormalSelectText("studentWork_grade");
+	var majorTxt  = getNormalSelectText("studentWork_major");
+
+	var returnObject = new Object();
+	returnObject.pycc = level;
+	returnObject.xbbm = department;
+	returnObject.njbm = grade;
+	returnObject.zybm = major;
+	returnObject.levelTxt = levelTxt;
+	returnObject.departmentTxt = departmentTxt;
+	returnObject.gradeTxt = gradeTxt;
+	returnObject.majorTxt = majorTxt;
+	return returnObject;
+}
+
+//tab6事件绑定
+function tab6BtnBind(){
+	//开始检索
+	$('#startSearchTab6').unbind('click');
+	$('#startSearchTab6').bind('click', function(e) {
+		// startSearchTab6();
+		e.stopPropagation();
+	});
+
+	//重置检索
+	$('#reReloadSearchsTab6').unbind('click');
+	$('#reReloadSearchsTab6').bind('click', function(e) {
+		// reReloadSearchsTab6();
+		e.stopPropagation();
+	});
+}
+
+
+/**
+ * tab6 end
  * */
 
 //人数格式化

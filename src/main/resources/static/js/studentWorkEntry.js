@@ -159,7 +159,7 @@ function stuffStudentWorkTable(tableInfo) {
                 sortable: true,
                 formatter: paramsMatter
             },{
-                field: 'bz',
+                field: 'bzxx',
                 title: '备注',
                 align: 'left',
                 sortable: true,
@@ -412,7 +412,7 @@ function confirmAddStudentWork(choosendStudentInfo){
     choosendStudentInfo.dwlxr=addStudentWork_unitPeople;//单位联系人
     choosendStudentInfo.dwlxdh=addStudentWork_unitPhone;//单位联系电话
     choosendStudentInfo.dwdz=addStudentWork_unitLocation;//单位地址
-    choosendStudentInfo.bz=addStudentWork_mark;//备注
+    choosendStudentInfo.bzxx=addStudentWork_mark;//备注
     sendNewStudentWorkInfo(choosendStudentInfo);
 }
 
@@ -484,7 +484,7 @@ function stuffStudentWorkModalInfo(studentWorkInfo,isShowDetails){
         studentWorkInfo.dwlxr==null||studentWorkInfo.dwlxr===''?$('#addStudentWork_unitPeople').val(''):$('#addStudentWork_unitPeople').val(studentWorkInfo.dwlxr);
         studentWorkInfo.dwlxdh==null||studentWorkInfo.dwlxdh===''?$('#addStudentWork_unitPhone').val(''):$('#addStudentWork_unitPhone').val(studentWorkInfo.dwlxdh);
         studentWorkInfo.dwdz==null||studentWorkInfo.dwdz===''?$('#addStudentWork_unitLocation').val(''): $('#addStudentWork_unitLocation').val(studentWorkInfo.dwdz);
-        studentWorkInfo.bz==null||studentWorkInfo.bz===''?$('#addStudentWork_mark').val(''):$('#addStudentWork_mark').val(studentWorkInfo.bz);
+        studentWorkInfo.bzxx==null||studentWorkInfo.bzxx===''?$('#addStudentWork_mark').val(''):$('#addStudentWork_mark').val(studentWorkInfo.bzxx);
     }
 }
 

@@ -54,6 +54,7 @@
 						<li><a href="#tab4" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab4()">学生及格率/毕业率</a></li>
 						<li><a href="#tab2" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab2()">学生个人成绩排名</a></li>
 						<li><a href="#tab5" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab5()">授课进度</a></li>
+						<li><a href="#tab6" onclick="drawBreadPilot(this),judgmentIsFristTimeLoadTab6()">就业情况分析</a></li>
 					</ul>
 				</div>
 
@@ -484,9 +485,6 @@
 							<table class="tablelist myTableStyle reportTable" id="tab4ReportAreaTable" style="margin-top: 10px;"></table>
 						</div>
 					</div>
-
-
-
 				</div>
 
 				<div id="tab5" class="tabson myTabson">
@@ -531,6 +529,68 @@
 					</div>
 				</div>
 
+				<div id="tab6" class="tabson myTabson">
+					<span class="isFirstShowTab6 noneStart">T</span>
+					<div class="tools">
+						<ul class="toolbar">
+							<li class="click" id="startSearchTab6"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
+
+						</ul>
+						<ul class="toolbar1">
+							<li class="click" id="reReloadSearchsTab6"><span><img src="img/reback.png" style="width: 24px;"/></span>重置检索</li>
+						</ul>
+					</div>
+
+					<div class="searchArea searchAreaWitheSelect">
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次</label>
+									<select class="isSowIndex" id="studentWork_level" >
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">二级学院</label>
+									<select class="isSowIndex" id="studentWork_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级</label>
+									<select class="isSowIndex" id="studentWork_grade">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+
+						<div class="col4 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业</label>
+									<select class="isSowIndex" id="studentWork_major">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+
+					<div class="tab6ReportArea searchGivePaddingR">
+						<table class="tablelist myTableStyle reportTable" id="tab6ReportAreaTable" style="margin-top: 10px;"></table>
+					</div>
+				</div>
 			</div>
 		</div>
 

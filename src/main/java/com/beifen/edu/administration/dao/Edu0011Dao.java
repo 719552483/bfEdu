@@ -28,19 +28,19 @@ public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificati
     @Query(value = "select e.* from edu0011 e where e.xh =?1", nativeQuery = true)
     Edu0011 query001ByXh2(String xh);
 
-    @Query(value = "select count(0) from edu0011 where szxb = ?1", nativeQuery = true)
-    int findXbrs(String szxb);
+    @Query(value = "select count(0) from edu0011 where szxb = ?1 and nj = ?2", nativeQuery = true)
+    int findXbrs(String szxb,String nj);
 
-    @Query(value = "select count(0) from edu0011 where szxb = ?1 and jyxsbm is not null", nativeQuery = true)
-    int findXbjyrs(String szxb);
+    @Query(value = "select count(0) from edu0011 where szxb = ?1 and nj = ?2 and jyxsbm is not null", nativeQuery = true)
+    int findXbjyrs(String szxb,String nj);
 
-    @Query(value = "select count(0) from edu0011 where zybm = ?1", nativeQuery = true)
-    int findZyrs(String zybm);
+    @Query(value = "select count(0) from edu0011 where zybm = ?1 and nj = ?2", nativeQuery = true)
+    int findZyrs(String zybm,String nj);
 
-    @Query(value = "select count(0) from edu0011 where zybm = ?1 and jyxsbm is not null", nativeQuery = true)
-    int findZyjyrs(String zybm);
+    @Query(value = "select count(0) from edu0011 where zybm = ?1 and nj = ?2 and jyxsbm is not null", nativeQuery = true)
+    int findZyjyrs(String zybm,String nj);
 
-    @Query(value = "select count(0) from edu0011 where zybm = ?1 and jyxsbm =?2", nativeQuery = true)
-    int findJyxsrs(String zybm,String jyxsbm);
+    @Query(value = "select count(0) from edu0011 where zybm = ?1 and jyxsbm =?2 and nj = ?3", nativeQuery = true)
+    int findJyxsrs(String zybm,String jyxsbm,String nj);
 
 }
