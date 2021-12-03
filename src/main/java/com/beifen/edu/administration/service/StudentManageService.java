@@ -1239,7 +1239,25 @@ public class StudentManageService {
         }
         List<Map> list = new ArrayList<>();
         List<Edu000> edu000List = edu000Dao.queryejdm("jyxs");
-        for(StudentWorkViewPO studentWorkViewPO:studentWorkViewPOList){
+        for(int k = 0;k<studentWorkViewPOList.size();k++){
+            StudentWorkViewPO studentWorkViewPO = studentWorkViewPOList.get(k);
+            if(k !=0 && !studentWorkViewPO.getNj().equals(studentWorkViewPOList.get(k-1).getNj())){
+                Map map2 = new HashMap();
+                map2.put("nj","合计");
+                int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+                map2.put("xb",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生总数："+njrs);
+                int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+                if(jyrs == 0){
+                    map2.put("xbrs",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率：0.00%");
+                }else{
+                    double v = Double.valueOf(jyrs)/ Double.valueOf(njrs);
+                    NumberFormat nf = NumberFormat.getPercentInstance();
+                    nf.setMinimumFractionDigits(2);//设置保留小数位
+                    String usedPercent = nf.format(v);
+                    map2.put("xbrs",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率："+usedPercent);
+                }
+                list.add(map2);
+            }
             Map map = new HashMap();
             map.put("nj",studentWorkViewPO.getNjmc());
             map.put("xb",studentWorkViewPO.getSzxbmc());
@@ -1275,6 +1293,25 @@ public class StudentManageService {
             }
             list.add(map);
         }
+
+        Map map2 = new HashMap();
+        map2.put("nj","合计");
+        int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+        map2.put("xb",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生总数："+njrs);
+        int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+        if(jyrs == 0){
+            map2.put("xbrs",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率：0.00%");
+        }else{
+            double v = Double.valueOf(jyrs)/ Double.valueOf(njrs);
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            String usedPercent = nf.format(v);
+            map2.put("xbrs",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率："+usedPercent);
+        }
+        list.add(map2);
+
+
+
         //columns
         Object[] objects = new Object[3];
         List l = new ArrayList();
