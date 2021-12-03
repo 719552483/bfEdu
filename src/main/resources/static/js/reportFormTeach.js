@@ -2721,6 +2721,20 @@ function stufftab6Table(backjsonData) {
 		showColumns : false,
 		onPageChange : function() {
 			drawPagination(".tab6ReportArea", "就业情况信息");
+
+			var currentPage=$('#tab6ReportAreaTable').bootstrapTable('getData',{'useCurrentPage':true});
+			for (var i = 0; i < currentPage.length; i++) {
+				if(currentPage[i].nj==='合计'){
+					mergeCountCells('tab6ReportAreaTable',i,'nj',backjsonData.columns[0][0].colspan,1);
+				}
+			}
+
+			var rowsObject=new Object();
+			rowsObject.rows=currentPage;
+			mergeRowCells(rowsObject, "nj", $("#tab6ReportAreaTable"),tableInfo);
+			mergeRowCells(rowsObject, "xb", $("#tab6ReportAreaTable"),tableInfo);
+			mergeRowCells(rowsObject, "xbrs", $("#tab6ReportAreaTable"),tableInfo);
+			mergeRowCells(rowsObject, "xbjyl", $("#tab6ReportAreaTable"),tableInfo);
 		},
 		columns:backjsonData.columns
 	});
@@ -2729,6 +2743,69 @@ function stufftab6Table(backjsonData) {
 	drawSearchInput(".tab6ReportArea");
 	changeTableNoRsTip();
 	toolTipUp(".myTooltip");
+
+	var currentPage=$('#tab6ReportAreaTable').bootstrapTable('getData',{'useCurrentPage':true});
+	for (var i = 0; i < currentPage.length; i++) {
+		if(currentPage[i].nj==='合计'){
+			mergeCountCells('tab6ReportAreaTable',i,'nj',backjsonData.columns[0][0].colspan,1);
+		}
+	}
+
+	var rowsObject=new Object();
+	rowsObject.rows=currentPage;
+	mergeRowCells(rowsObject, "nj", $("#tab6ReportAreaTable"),tableInfo);
+	mergeRowCells(rowsObject, "xb", $("#tab6ReportAreaTable"),tableInfo);
+	mergeRowCells(rowsObject, "xbrs", $("#tab6ReportAreaTable"),tableInfo);
+	mergeRowCells(rowsObject, "xbjyl", $("#tab6ReportAreaTable"),tableInfo);
+}
+
+//合并行
+function mergeRowCells(data, fieldName, target,tableInfo) {
+	if (data.rows.length == 0) {
+		return;
+	}
+	var numArr = [];
+	var number=0;
+	if( data.rows.length>1){
+		for (let i = 0; i < data.rows.length; i++) {
+			if(data.rows[i][fieldName]!='' && data.rows[i][fieldName]!='-'){
+				if(data.rows[i-1]){
+					if(data.rows[i-1][fieldName]!='' && data.rows[i-1][fieldName]!='-'){
+						if(data.rows[i-1][fieldName]==data.rows[i][fieldName]){
+							number++
+						}
+						else{
+							number=number+1
+							numArr.push({index:i-number,number:number,pan:'1'})
+							number=0
+						}
+					}
+				}
+				if(!data.rows[i+1]){
+					number=number
+					numArr.push({index:i-number,number:number+1,pan:'2'})
+					number=0
+				}else{
+					if(data.rows[i+1][fieldName]=='' || data.rows[i+1][fieldName]=='-'){
+						number=number
+						numArr.push({index:i-number,number:number+1,pan:'3'})
+						number=0
+					}
+				}
+			}else{
+				numArr.push({index:i,number:1,pan:'4'})
+			}
+		}
+	}else{
+		numArr.push({index:0,number:1,pan:'5'})
+	}
+	// console.log(numArr);
+	for (let x = 0; x < numArr.length; x++) {
+		var index= numArr[x]['index'];
+		if(data.rows[index].nj!=='合计'){
+			$(target).bootstrapTable('mergeCells', { index: index, field: fieldName, colspan: 1, rowspan: numArr[x]['number']});
+		}
+	}
 }
 
 //获得tab6检索条件
@@ -2813,6 +2890,57 @@ function sjskxsMatter(value, row, index) {
 		return [
 			'<div class="myTooltip normalTxt" title="'+value+'学时" style="margin-left: -35px;">'+value+'学时</div>'
 		]
+			.join('');
+	}
+}
+
+//学生就业率合计Matter
+function studentWorkCountMatter(value, row, index) {
+	if(row.nj==='合计'){
+		return [
+			'<div class="myTooltip">' +
+			'<cite>'+row.nj+':</cite><cite>'+row.xb+'</cite><cite>'+row.xbrs+'</cite>' +
+			'</div>'
+		]
+			.join('');
+	}else{
+		return [ '<div class="myTooltip" title="' + row.nj + '">' + row.nj + '</div>' ]
+			.join('');
+	}
+}
+
+//学生分院名称Matter
+function studentWorkfymcMatter(value, row, index) {
+	if(typeof value!=='undefined'){
+		var stuffTxt=value.split('_');
+		return [ '<div class="myTooltip" title="' + stuffTxt[0] + '">' + stuffTxt[0] + '</div>' ]
+			.join('');
+	}else{
+		return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]
+			.join('');
+	}
+}
+
+//学生分院人数Matter
+function studentWorkfyrsMatter(value, row, index) {
+	if(typeof value!=='undefined'){
+		var stuffTxt=value.split('_');
+		return [ '<div class="myTooltip" title="' + stuffTxt[1] + '">' + stuffTxt[1] + '</div>' ]
+			.join('');
+	}else{
+		return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]
+			.join('');
+	}
+}
+
+//学生分院就业率Matter
+function studentWorkjylMatter(value, row, index) {
+	if(typeof value!=='undefined'){
+		var stuffTxt=value.split('_');
+		return [ '<div class="myTooltip" title="' + stuffTxt[2] + '">' + stuffTxt[2] + '</div>' ]
+			.join('');
+	}else{
+		return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]
 			.join('');
 	}
 }

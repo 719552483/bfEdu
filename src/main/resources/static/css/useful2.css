@@ -3121,6 +3121,7 @@ border-top: none;
 	font-size: 15px;
 	font-weight: bolder;
 	letter-spacing: 5px;
+	padding: 3px 0px 3px 0px;
 }
 
 .reportTable thead tr:not(:first-child) th{

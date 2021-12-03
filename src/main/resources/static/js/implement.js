@@ -1933,7 +1933,6 @@ function newUuid() {
 function mergeCountCells(tableID,index,fieldName,colspanNum,rowspanNum){
 	$('#'+tableID).bootstrapTable('mergeCells', {index: index, field:fieldName, colspan: colspanNum, rowspan: rowspanNum});
 }
-
 //合并行
 function mergeRowCells(data, fieldName, target,tableInfo) {
     if (data.rows.length == 0) {

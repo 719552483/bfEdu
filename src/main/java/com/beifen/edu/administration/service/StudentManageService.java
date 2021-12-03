@@ -1244,34 +1244,38 @@ public class StudentManageService {
             if(k !=0 && !studentWorkViewPO.getNj().equals(studentWorkViewPOList.get(k-1).getNj())){
                 Map map2 = new HashMap();
                 map2.put("nj","合计");
-                int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+                int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(k-1).getNj());
                 map2.put("xb",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生总数："+njrs);
-                int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+                int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(k-1).getNj());
                 if(jyrs == 0){
-                    map2.put("xbrs",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率：0.00%");
+                    map2.put("xbrs",studentWorkViewPOList.get(k-1).getNjmc()+"级学生就业率：0.00%");
                 }else{
                     double v = Double.valueOf(jyrs)/ Double.valueOf(njrs);
                     NumberFormat nf = NumberFormat.getPercentInstance();
                     nf.setMinimumFractionDigits(2);//设置保留小数位
                     String usedPercent = nf.format(v);
-                    map2.put("xbrs",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率："+usedPercent);
+                    map2.put("xbrs",studentWorkViewPOList.get(k-1).getNjmc()+"级学生就业率："+usedPercent);
                 }
                 list.add(map2);
             }
             Map map = new HashMap();
             map.put("nj",studentWorkViewPO.getNjmc());
-            map.put("xb",studentWorkViewPO.getSzxbmc());
+
             int xbrs = edu0011Dao.findXbrs(studentWorkViewPO.getSzxb(),studentWorkViewPO.getNj());
-            map.put("xbrs",xbrs+"");
+
             int jyrs = edu0011Dao.findXbjyrs(studentWorkViewPO.getSzxb(),studentWorkViewPO.getNj());
             if(jyrs == 0){
-                map.put("xbjyl","0.00%");
+                map.put("xb",studentWorkViewPO.getSzxbmc()+"_"+xbrs+"_"+"0.00%");
+                map.put("xbrs",studentWorkViewPO.getSzxbmc()+"_"+xbrs+"_"+"0.00%");
+                map.put("xbjyl",studentWorkViewPO.getSzxbmc()+"_"+xbrs+"_"+"0.00%");
             }else{
                 double v = Double.valueOf(jyrs)/ Double.valueOf(xbrs);
                 NumberFormat nf = NumberFormat.getPercentInstance();
                 nf.setMinimumFractionDigits(2);//设置保留小数位
                 String usedPercent = nf.format(v);
-                map.put("xbjyl",usedPercent);
+                map.put("xb",studentWorkViewPO.getSzxbmc()+"_"+xbrs+"_"+usedPercent);
+                map.put("xbrs",studentWorkViewPO.getSzxbmc()+"_"+xbrs+"_"+usedPercent);
+                map.put("xbjyl",studentWorkViewPO.getSzxbmc()+"_"+xbrs+"_"+usedPercent);
             }
             map.put("zymc",studentWorkViewPO.getZymc());
             int zyrs = edu0011Dao.findZyrs(studentWorkViewPO.getZybm(),studentWorkViewPO.getNj());
@@ -1323,13 +1327,13 @@ public class StudentManageService {
         objects[0] = l;
         //第二行
         l = new ArrayList();
-        StudentPO studentPO = new StudentPO("nj","年级","middle","center",1,2,"paramsMatter");
+        StudentPO studentPO = new StudentPO("nj","年级","middle","center",1,2,"studentWorkCountMatter");
         l.add(studentPO);
-        studentPO = new StudentPO("xb","分院名称","middle","center",1,2,"paramsMatter");
+        studentPO = new StudentPO("xb","分院名称","middle","center",1,2,"studentWorkfymcMatter");
         l.add(studentPO);
-        studentPO = new StudentPO("xbrs","分院学生人数","middle","center",1,2,"paramsMatter");
+        studentPO = new StudentPO("xbrs","分院学生人数","middle","center",1,2,"studentWorkfyrsMatter");
         l.add(studentPO);
-        studentPO = new StudentPO("xbjyl","分院就业率","middle","center",1,2,"paramsMatter");
+        studentPO = new StudentPO("xbjyl","分院就业率","middle","center",1,2,"studentWorkjylMatter");
         l.add(studentPO);
         studentPO = new StudentPO("zymc","专业名称","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
