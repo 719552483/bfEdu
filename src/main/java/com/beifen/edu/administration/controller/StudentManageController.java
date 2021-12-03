@@ -984,6 +984,22 @@ public class StudentManageController {
     }
 
     /**
+     * 学生就业报表数据-报表
+     * @return
+     */
+    @RequestMapping("/studentWorkReportData")
+    @ResponseBody
+    public ResultVO studentWorkReportData(@RequestParam String SearchCriteria){
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String zybm = jsonObject.getString("zybm");
+        result = studentManageService.studentWorkReportData(xbbm,njbm,zybm);
+        return result;
+    }
+
+    /**
      * 教学点报表数据-报表
      * @return
      */

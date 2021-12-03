@@ -1149,16 +1149,46 @@ public class AdministrationController {
 	}
 
 	/**
-	 * 导出未排完课程的班级
+	 * 导出未排完课程的班级-校验
 	 */
-	@RequestMapping("/queryNotPutedCourseClass")
+	@RequestMapping("/queryNotPutedCourseClassCheck")
 	@ResponseBody
-	public ResultVO queryNotPutedCourseClass(@RequestParam("edu104") String edu104) {
+	public ResultVO queryNotPutedCourseClassCheck(@RequestParam("edu104") String edu104) {
 		ResultVO result = administrationPageService.queryNotPutedCourseClassCheck(edu104);
 		return result;
 	}
 
 
+	/**
+	 * 导出未排完课程的班级
+	 */
+	@RequestMapping("/queryNotPutedCourseClass")
+	@ResponseBody
+	public ResultVO downloadEmploymentStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "edu104") String edu104) throws IOException, ParseException {
+		ResultVO result;
+		result = administrationPageService.queryNotPutedCourseClassCheck(edu104);
+		if(result.getCode() != 200){
+			return result;
+		}
+		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+		String fileName="";
+		if(isIE){
+			fileName="notPutedCourseClass";
+		}else{
+			fileName="未排完课程的班级";
+		}
+		//创建Excel文件
+		XSSFWorkbook workbook = administrationPageService.queryNotPutedCourseClass(edu104);
+		try {
+			utils.loadModal(response,fileName, workbook);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		result = ResultVO.setSuccess("下载成功");
+		return result;
+	}
 
 
 	/**

@@ -29,6 +29,9 @@ import com.beifen.edu.administration.utility.RedisUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -3175,6 +3178,98 @@ public class AdministrationPageService {
 		}
 		resultVO = ResultVO.setSuccess("可以下载");
 		return resultVO;
+	}
+
+	public XSSFWorkbook queryNotPutedCourseClass(String edu104id) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Edu104 edu104 = edu104DAO.findOne(Long.parseLong(edu104id));
+		XSSFSheet sheet = workbook.createSheet(edu104.getXbmc()+"各班级任务书排课详情");
+
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"学院","年级","专业","批次", "班级名称","课程","学年","学时","原由"};
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+		int rows = 0;
+		List<Edu300> edu300List = edu300DAO.queryStudentReport(edu104id);
+		//任务书审核的.
+		for(Edu300 edu300:edu300List){
+			List<Edu201> edu201ListPassing = edu201DAO.passing(edu300.getEdu300_ID()+"");
+			for(Edu201 edu201:edu201ListPassing){
+				utils.appendCell(sheet,rows,"",edu300.getXbmc(),-1,0,false);
+				utils.appendCell(sheet,rows,"",edu300.getNjmc(),-1,1,false);
+				utils.appendCell(sheet,rows,"",edu300.getZymc(),-1,2,false);
+				utils.appendCell(sheet,rows,"",edu300.getBatchName(),-1,3,false);
+				utils.appendCell(sheet,rows,"",edu300.getXzbmc(),-1,4,false);
+				utils.appendCell(sheet,rows,"",edu201.getKcmc(),-1,5,false);
+				utils.appendCell(sheet,rows,"",edu201.getXn(),-1,6,false);
+				utils.appendCell(sheet,rows,"",edu201.getZxs(),-1,7,false);
+				utils.appendCell(sheet,rows,"","任务书审核中",-1,8,false);
+				rows++;
+			}
+		}
+		//任务书未排课的
+		for(Edu300 edu300:edu300List){
+			List<Edu201> edu201ListPassing = edu201DAO.sfypk(edu300.getEdu300_ID()+"");
+			for(Edu201 edu201:edu201ListPassing){
+				utils.appendCell(sheet,rows,"",edu300.getXbmc(),-1,0,false);
+				utils.appendCell(sheet,rows,"",edu300.getNjmc(),-1,1,false);
+				utils.appendCell(sheet,rows,"",edu300.getZymc(),-1,2,false);
+				utils.appendCell(sheet,rows,"",edu300.getBatchName(),-1,3,false);
+				utils.appendCell(sheet,rows,"",edu300.getXzbmc(),-1,4,false);
+				utils.appendCell(sheet,rows,"",edu201.getKcmc(),-1,5,false);
+				utils.appendCell(sheet,rows,"",edu201.getXn(),-1,6,false);
+				utils.appendCell(sheet,rows,"",edu201.getZxs(),-1,7,false);
+				utils.appendCell(sheet,rows,"","课程未排课",-1,8,false);
+				rows++;
+			}
+		}
+		//未排完的
+		for(Edu300 edu300:edu300List){
+			List<Edu201> edu201ListPassing = edu201DAO.sfypw(edu300.getEdu300_ID()+"");
+			for(Edu201 edu201:edu201ListPassing){
+				utils.appendCell(sheet,rows,"",edu300.getXbmc(),-1,0,false);
+				utils.appendCell(sheet,rows,"",edu300.getNjmc(),-1,1,false);
+				utils.appendCell(sheet,rows,"",edu300.getZymc(),-1,2,false);
+				utils.appendCell(sheet,rows,"",edu300.getBatchName(),-1,3,false);
+				utils.appendCell(sheet,rows,"",edu300.getXzbmc(),-1,4,false);
+				utils.appendCell(sheet,rows,"",edu201.getKcmc(),-1,5,false);
+				utils.appendCell(sheet,rows,"",edu201.getXn(),-1,6,false);
+				utils.appendCell(sheet,rows,"",edu201.getZxs(),-1,7,false);
+				utils.appendCell(sheet,rows,"","课程未排完",-1,8,false);
+				rows++;
+			}
+		}
+		//未发布任务书的
+		for(Edu300 edu300:edu300List){
+			List<Edu107> edu107List = edu107DAO.searchAllEdu107(edu300.getNjbm(),edu300.getZybm(),edu300.getBatch());
+			for(Edu107 edu107:edu107List){
+				List<Edu206> edu206List = edu206Dao.notPuted(edu107.getEdu107_ID()+"",edu300.getEdu300_ID()+"");
+				for(Edu206 edu206:edu206List){
+					utils.appendCell(sheet,rows,"",edu300.getXbmc(),-1,0,false);
+					utils.appendCell(sheet,rows,"",edu300.getNjmc(),-1,1,false);
+					utils.appendCell(sheet,rows,"",edu300.getZymc(),-1,2,false);
+					utils.appendCell(sheet,rows,"",edu300.getBatchName(),-1,3,false);
+					utils.appendCell(sheet,rows,"",edu300.getXzbmc(),-1,4,false);
+					utils.appendCell(sheet,rows,"",edu206.getKcmc(),-1,5,false);
+					utils.appendCell(sheet,rows,"",edu206.getXn(),-1,6,false);
+					utils.appendCell(sheet,rows,"",edu206.getZxs(),-1,7,false);
+					utils.appendCell(sheet,rows,"","未发布教学任务书",-1,8,false);
+					rows++;
+				}
+			}
+		}
+		sheet.setColumnWidth(0, 12*256);
+		sheet.setColumnWidth(1, 16*256);
+		sheet.setColumnWidth(2, 30*256);
+		sheet.setColumnWidth(3, 10*256);
+		sheet.setColumnWidth(4, 20*256);
+		return workbook;
 	}
 
 	//绑定培养计划对应班级

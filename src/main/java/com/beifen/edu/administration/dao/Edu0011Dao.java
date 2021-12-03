@@ -28,4 +28,19 @@ public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificati
     @Query(value = "select e.* from edu0011 e where e.xh =?1", nativeQuery = true)
     Edu0011 query001ByXh2(String xh);
 
+    @Query(value = "select count(0) from edu0011 where szxb = ?1", nativeQuery = true)
+    int findXbrs(String szxb);
+
+    @Query(value = "select count(0) from edu0011 where szxb = ?1 and jyxsbm is not null", nativeQuery = true)
+    int findXbjyrs(String szxb);
+
+    @Query(value = "select count(0) from edu0011 where zybm = ?1", nativeQuery = true)
+    int findZyrs(String zybm);
+
+    @Query(value = "select count(0) from edu0011 where zybm = ?1 and jyxsbm is not null", nativeQuery = true)
+    int findZyjyrs(String zybm);
+
+    @Query(value = "select count(0) from edu0011 where zybm = ?1 and jyxsbm =?2", nativeQuery = true)
+    int findJyxsrs(String zybm,String jyxsbm);
+
 }

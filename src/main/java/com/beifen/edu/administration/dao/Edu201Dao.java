@@ -235,5 +235,12 @@ public interface Edu201Dao extends JpaRepository<Edu201, Long>, JpaSpecification
 			"GROUP BY kjid,xqid,week)\n", nativeQuery = true)
 	Integer queryAllClassTeachersDetailKCLX(String edu101Id,String kclx);
 
+	@Query(value = "select * from edu201 where edu201_id in (select edu201_id from edu204 where EDU300_ID = ?1) and sfypk is null and sszt = 'passing'", nativeQuery = true)
+	List<Edu201> passing(String edu300Id);
 
+	@Query(value = "select * from edu201 where edu201_id in (select edu201_id from edu204 where EDU300_ID = ?1) and sfypk is null and sszt = 'pass'", nativeQuery = true)
+	List<Edu201> sfypk(String edu300Id);
+
+	@Query(value = "select * from edu201 e LEFT JOIN edu202 ee on e.EDU201_ID = ee.EDU201_ID where e.edu201_id in (select edu201_id from edu204 where EDU300_ID = ?1) and sfypw = '2'", nativeQuery = true)
+	List<Edu201> sfypw(String edu300Id);
 }

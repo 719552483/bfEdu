@@ -87,6 +87,8 @@ public class StudentManageService {
     @Autowired
     private Edu000Dao edu000Dao;
     @Autowired
+    private StudentWorkViewDao studentWorkViewDao;
+    @Autowired
     private RedisUtils redisUtils;
 
 
@@ -1209,6 +1211,114 @@ public class StudentManageService {
         List<Edu106> edu106List = edu106Dao.findAllByDepartmentCode(xbbm);
         return edu106List;
     }
+
+    public ResultVO studentWorkReportData(String xbbm,String njbm,String zybm){
+        ResultVO resultVO;
+        Specification<StudentWorkViewPO> specification = new Specification<StudentWorkViewPO>() {
+            public Predicate toPredicate(Root<StudentWorkViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (xbbm != null && !"".equals(xbbm)) {
+                    predicates.add(cb.equal(root.<String> get("xbbm"), xbbm));
+                }
+                if (njbm != null && !"".equals(njbm)) {
+                    predicates.add(cb.equal(root.<String> get("nj"), njbm));
+                }
+                if (zybm != null && !"".equals(zybm)) {
+                    predicates.add(cb.equal(root.<String> get("szxb"), njbm));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<StudentWorkViewPO> studentWorkViewPOList = studentWorkViewDao.findAll(specification);
+        if(studentWorkViewPOList.size() == 0){
+            resultVO = ResultVO.setFailed("该检索条件未查询到对应的数据");
+            return resultVO;
+        }
+        List<Map> list = new ArrayList<>();
+        List<Edu000> edu000List = edu000Dao.queryejdm("jyxs");
+        for(StudentWorkViewPO studentWorkViewPO:studentWorkViewPOList){
+            Map map = new HashMap();
+            map.put("nj",studentWorkViewPO.getNjmc());
+            map.put("xb",studentWorkViewPO.getSzxb());
+            int xbrs = edu0011Dao.findXbrs(studentWorkViewPO.getSzxb());
+            map.put("xbrs",xbrs+"");
+            int jyrs = edu0011Dao.findXbjyrs(studentWorkViewPO.getSzxb());
+            if(jyrs == 0){
+                map.put("xbjyl","0.00%");
+            }else{
+                double v = jyrs/xbrs;
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                map.put("xbjyl",usedPercent);
+            }
+            map.put("zymc",studentWorkViewPO.getZymc());
+            int zyrs = edu0011Dao.findZyrs(studentWorkViewPO.getZybm());
+            map.put("zyrs",zyrs+"");
+            int zyjyrs = edu0011Dao.findZyjyrs(studentWorkViewPO.getZybm());
+            if(zyjyrs == 0){
+                map.put("zyjyl","0.00%");
+            }else{
+                double v = zyrs/zyjyrs;
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                map.put("zyjyl",usedPercent);
+            }
+            for(int i = 0;i<edu000List.size();i++){
+                Edu000 edu000 = edu000List.get(i);
+                int jyxs = edu0011Dao.findJyxsrs(studentWorkViewPO.getZybm(),edu000.getEjdm());
+                map.put("jyxs"+i,jyxs+"");
+            }
+            list.add(map);
+        }
+        //columns
+        Object[] objects = new Object[3];
+        List l = new ArrayList();
+        //标题
+        Map map = new HashMap();
+        map.put("title","辽宁职业学院高职扩招学生就业情况分析表");
+        map.put("colspan",edu000List.size()+7);
+        l.add(map);
+        objects[0] = l;
+        //第二行
+        l = new ArrayList();
+        StudentPO studentPO = new StudentPO("nj","年级","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        studentPO = new StudentPO("xb","分院名称","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        studentPO = new StudentPO("xbrs","分院学生人数","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        studentPO = new StudentPO("xbjyl","分院就业率","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        studentPO = new StudentPO("zymc","专业名称","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        studentPO = new StudentPO("zyrs","专业学生人数","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        studentPO = new StudentPO("zyjyl","专业就业率","middle","center",1,2,"paramsMatter");
+        l.add(studentPO);
+        StudentPO2 studentPO2 = new StudentPO2("就业形式","middle","center",edu000List.size(),1,"paramsMatter");
+        l.add(studentPO2);
+        List l2 = new ArrayList();
+        for(int j =0;j<edu000List.size();j++){
+            StudentPO3 studentPO3 = new StudentPO3("jyxs"+j,edu000List.get(j).getEjdmz(),"middle","center","peopleNumMatter");
+            l2.add(studentPO3);
+        }
+        objects[2] = l2;
+        Map re = new HashMap();
+        re.put("tableInfo",list);
+        re.put("columns",objects);
+        resultVO = ResultVO.setSuccess("查询成功",re);
+        return resultVO;
+    }
+
+    //非空验证
+//    private boolean isNotNull(String notNullCell) {
+//        if(notNullCell != null && !"".equals(notNullCell)){
+//            return true;
+//        }
+//        return false;
+//    }
 
     //学生报表数据-页面-全部
     public ResultVO studentReportDataAll(){
