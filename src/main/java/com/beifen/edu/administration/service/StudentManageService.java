@@ -1212,13 +1212,16 @@ public class StudentManageService {
         return edu106List;
     }
 
-    public ResultVO studentWorkReportData(String xbbm,String njbm,String zybm){
+    public ResultVO studentWorkReportData(String xbbm,String njbm,String zybm,String pycc){
         ResultVO resultVO;
         Specification<StudentWorkViewPO> specification = new Specification<StudentWorkViewPO>() {
             public Predicate toPredicate(Root<StudentWorkViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (xbbm != null && !"".equals(xbbm)) {
                     predicates.add(cb.equal(root.<String> get("xbbm"), xbbm));
+                }
+                if (pycc != null && !"".equals(pycc)) {
+                    predicates.add(cb.equal(root.<String> get("pycc"), pycc));
                 }
                 if (njbm != null && !"".equals(njbm)) {
                     predicates.add(cb.equal(root.<String> get("nj"), njbm));
@@ -1291,20 +1294,22 @@ public class StudentManageService {
         l.add(studentPO);
         studentPO = new StudentPO("xbjyl","分院就业率","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
+
         studentPO = new StudentPO("zymc","专业名称","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
-        studentPO = new StudentPO("zyrs","专业学生人数","middle","center",1,2,"paramsMatter");
+        studentPO = new StudentPO("xbjyl","专业学生人数","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
         studentPO = new StudentPO("zyjyl","专业就业率","middle","center",1,2,"paramsMatter");
         l.add(studentPO);
-        StudentPO2 studentPO2 = new StudentPO2("就业形式","middle","center",edu000List.size(),1,"paramsMatter");
-        l.add(studentPO2);
-        List l2 = new ArrayList();
-        for(int j =0;j<edu000List.size();j++){
-            StudentPO3 studentPO3 = new StudentPO3("jyxs"+j,edu000List.get(j).getEjdmz(),"middle","center","peopleNumMatter");
-            l2.add(studentPO3);
-        }
-        objects[2] = l2;
+
+
+        
+
+
+
+
+
+
         Map re = new HashMap();
         re.put("tableInfo",list);
         re.put("columns",objects);

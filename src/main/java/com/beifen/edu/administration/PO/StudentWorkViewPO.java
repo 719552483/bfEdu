@@ -10,6 +10,8 @@ import javax.persistence.Table;
 @Table(name = "STUDENT_WROK_VIEW")
 public class StudentWorkViewPO {
 	private  Long Edu0011_ID;
+	private  String pycc;//培养层次编码
+	private  String pyccmc;//培养层次名称
 	private  String szxb;//所在系部编码
 	private  String szxbmc;//所在系部名称
 	private  String nj; //年级编码
@@ -71,5 +73,21 @@ public class StudentWorkViewPO {
 
 	public void setZymc(String zymc) {
 		this.zymc = zymc;
+	}
+
+	public String getPycc() {
+		return pycc;
+	}
+
+	public void setPycc(String pycc) {
+		this.pycc = pycc;
+	}
+
+	public String getPyccmc() {
+		return pyccmc;
+	}
+
+	public void setPyccmc(String pyccmc) {
+		this.pyccmc = pyccmc;
 	}
 }

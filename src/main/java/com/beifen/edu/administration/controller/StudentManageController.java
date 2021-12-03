@@ -995,7 +995,8 @@ public class StudentManageController {
         String xbbm = jsonObject.getString("xbbm");
         String njbm = jsonObject.getString("njbm");
         String zybm = jsonObject.getString("zybm");
-        result = studentManageService.studentWorkReportData(xbbm,njbm,zybm);
+        String pycc = jsonObject.getString("pycc");
+        result = studentManageService.studentWorkReportData(xbbm,njbm,zybm,pycc);
         return result;
     }
 
