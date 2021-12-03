@@ -2925,10 +2925,10 @@ function studentWorkfymcMatter(value, row, index) {
 function studentWorkfyrsMatter(value, row, index) {
 	if(typeof value!=='undefined'){
 		var stuffTxt=value.split('_');
-		return [ '<div class="myTooltip" title="' + stuffTxt[1] + '">' + stuffTxt[1] + '</div>' ]
+		return [ '<div class="myTooltip" title="' + stuffTxt[1] + '人">' + stuffTxt[1] + '人</div>' ]
 			.join('');
 	}else{
-		return [ '<div class="myTooltip" title="' + value + '">' + value + '</div>' ]
+		return [ '<div class="myTooltip" title="' + value + '"人>' + value + '人</div>' ]
 			.join('');
 	}
 }
