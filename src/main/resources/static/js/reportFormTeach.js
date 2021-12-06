@@ -2842,6 +2842,41 @@ function reReloadSearchsTab6(){
 	$('.studentWorkConfigArea').show();
 }
 
+//就业报表下载
+function studentWorkDownLoad(){
+	var searchInfo=getTab6SearchInfo();
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/reportStudentWorkReportCheck",
+		data: {
+			"SearchCriteria":JSON.stringify(searchInfo)
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/reportStudentWorkReport";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(searchInfo)));
+				form.appendTo('body').submit().remove();
+				toastr.info('文件下载中，请稍候...');
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //tab6事件绑定
 function tab6BtnBind(){
 	//开始检索
@@ -2861,7 +2896,7 @@ function tab6BtnBind(){
 	//报表下载
 	$('#studentWorkDownLoad').unbind('click');
 	$('#studentWorkDownLoad').bind('click', function(e) {
-		// studentWorkDownLoad();
+		studentWorkDownLoad();
 		e.stopPropagation();
 	});
 }
