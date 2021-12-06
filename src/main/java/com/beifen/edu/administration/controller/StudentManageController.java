@@ -3,6 +3,7 @@ package com.beifen.edu.administration.controller;
 import com.alibaba.fastjson.JSON;
 import com.beifen.edu.administration.PO.StudentBreakPO;
 import com.beifen.edu.administration.PO.StudentSearchPO;
+import com.beifen.edu.administration.PO.StudentWorkViewPO;
 import com.beifen.edu.administration.VO.ResultVO;
 import com.beifen.edu.administration.domian.*;
 import com.beifen.edu.administration.service.StaffManageService;
@@ -999,6 +1000,63 @@ public class StudentManageController {
         result = studentManageService.studentWorkReportData(xbbm,njbm,zybm,pycc);
         return result;
     }
+
+    /**
+     * 学生就业报表数据-excel-check
+     * @return
+     */
+    @RequestMapping("/reportStudentWorkReportCheck")
+    @ResponseBody
+        public ResultVO reportStudentWorkReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String zybm = jsonObject.getString("zybm");
+        String pycc = jsonObject.getString("pycc");
+        List<StudentWorkViewPO> list = studentManageService.reportStudentWorkReportData(xbbm,njbm,zybm,pycc);
+        if(list.size() == 0){
+            result = ResultVO.setFailed("该检索条件未查询到对应的数据");
+            return result;
+        }
+        result = ResultVO.setSuccess("查询成功!");
+        return result;
+    }
+
+    /**
+     * 学生就业报表数据-excel
+     * @return
+     */
+    @RequestMapping("/reportStudentWorkReport")
+    @ResponseBody
+    public ResultVO reportStudentWorkReport(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        ResultVO result;
+        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
+        String xbbm = jsonObject.getString("xbbm");
+        String njbm = jsonObject.getString("njbm");
+        String zybm = jsonObject.getString("zybm");
+        String pycc = jsonObject.getString("pycc");
+        List<StudentWorkViewPO> list = studentManageService.reportStudentWorkReportData(xbbm,njbm,zybm,pycc);
+        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+        String fileName;
+        if(isIE){
+            fileName="PointDetail";
+        }else{
+            fileName="学生就业信息报表";
+        }
+        //创建Excel文件
+        XSSFWorkbook workbook = studentManageService.reportStudentWorkReport(list);
+        try {
+            utils.loadModal3(response,fileName, workbook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        result = ResultVO.setSuccess("下载成功");
+        return result;
+    }
+
 
     /**
      * 教学点报表数据-报表
