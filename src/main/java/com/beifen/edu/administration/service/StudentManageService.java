@@ -1218,11 +1218,15 @@ public class StudentManageService {
 
         XSSFSheet sheet = workbook.createSheet("学生就业信息报表");
 
-//        XSSFRow firstRow = sheet.createRow(0);// 第一行
-//        XSSFRow twoRow = sheet.createRow(1);// 第2行
-//        XSSFCell cells[] = new XSSFCell[3];
+
+        List<Edu000> edu000List = edu000Dao.queryejdm("jyxs");
+        XSSFRow firstRow = sheet.createRow(0);// 第一行
+        XSSFRow twoRow = sheet.createRow(1);// 第2行
+        XSSFCell cells[] = new XSSFCell[3];
 //        // 所有标题数组
-//        String[] titles = new String[] {"序号","年级","专业","人数"};
+        cells[0] = firstRow.createCell(0);
+        cells[0].setCellValue("辽宁职业学院高职扩招学生就业情况分析表");
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,edu000List.size()+6));
 //        for (int i = 0; i < titles.length; i++) {
 //            cells[0] = firstRow.createCell(i);
 //            cells[0].setCellValue(titles[i]);

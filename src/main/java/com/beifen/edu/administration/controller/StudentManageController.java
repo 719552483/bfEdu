@@ -1007,7 +1007,7 @@ public class StudentManageController {
      */
     @RequestMapping("/reportStudentWorkReportCheck")
     @ResponseBody
-    public ResultVO reportStudentWorkReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
+        public ResultVO reportStudentWorkReportCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam String SearchCriteria) throws IOException, ParseException {
         ResultVO result;
         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(SearchCriteria);
         String xbbm = jsonObject.getString("xbbm");
