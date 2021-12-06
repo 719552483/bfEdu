@@ -2610,7 +2610,7 @@ function judgmentIsFristTimeLoadTab6(){
 	if (isFirstShowTab6 === "T") {
 		stuffTab6Select();
 		$(".isFirstShowTab6").html("F");
-		getTab6TableInfo();
+		$('.studentWorkReportTableArea').hide();
 		tab6BtnBind();
 	}
 }
@@ -2692,6 +2692,8 @@ function getTab6TableInfo(){
 		success : function(backjson) {
 			hideloding();
 			if (backjson.code===200) {
+				$('.studentWorkReportTableArea').show();
+				$('.studentWorkConfigArea').hide();
 				stufftab6Table(backjson.data);
 			} else {
 				toastr.warning(backjson.msg);
@@ -2831,19 +2833,35 @@ function getTab6SearchInfo(){
 	return returnObject;
 }
 
+//重置检索
+function reReloadSearchsTab6(){
+	var reObject = new Object();
+	reObject.normalSelectIds = "#studentWork_level,#studentWork_department,#studentWork_grade,#studentWork_major";
+	reReloadSearchsWithSelect(reObject);
+	$('.studentWorkReportTableArea').hide();
+	$('.studentWorkConfigArea').show();
+}
+
 //tab6事件绑定
 function tab6BtnBind(){
 	//开始检索
 	$('#startSearchTab6').unbind('click');
 	$('#startSearchTab6').bind('click', function(e) {
-		// startSearchTab6();
+		getTab6TableInfo();
 		e.stopPropagation();
 	});
 
 	//重置检索
 	$('#reReloadSearchsTab6').unbind('click');
 	$('#reReloadSearchsTab6').bind('click', function(e) {
-		// reReloadSearchsTab6();
+		reReloadSearchsTab6();
+		e.stopPropagation();
+	});
+
+	//报表下载
+	$('#studentWorkDownLoad').unbind('click');
+	$('#studentWorkDownLoad').bind('click', function(e) {
+		// studentWorkDownLoad();
 		e.stopPropagation();
 	});
 }
@@ -2898,8 +2916,8 @@ function sjskxsMatter(value, row, index) {
 function studentWorkCountMatter(value, row, index) {
 	if(row.nj==='合计'){
 		return [
-			'<div class="myTooltip">' +
-			'<cite>'+row.nj+':</cite><cite>'+row.xb+'</cite><cite>'+row.xbrs+'</cite>' +
+			'<div>' +
+			'<cite style="margin-right: 5px;padding-right: 10px" class="studentWorkCountMatterTxt">'+row.nj+'</cite><cite style="margin-right: 30px" class="studentWorkCountMatterTxt">'+row.xb+'人</cite><cite class="studentWorkCountMatterTxt">'+row.xbrs+'</cite>' +
 			'</div>'
 		]
 			.join('');

@@ -2990,7 +2990,7 @@ border-top: none;
 
 .rsArea{text-align: center}
 
-.tab6ConfigArea, .departmentConfigArea{
+.tab6ConfigArea, .departmentConfigArea,.studentWorkConfigArea{
 	padding: 30px;
 	color: rgb(9, 127, 162);
 	text-align: center;
@@ -3090,6 +3090,7 @@ border-top: none;
     text-align: center;
 }
 
+.studentWorkReportTableArea .pagination-detail,
 .reportFormStudentTableArea .pagination-detail{
 	display: none;
 }
@@ -3272,6 +3273,12 @@ table .multi-select-menuitem input[type="checkbox"]{
 
 .wantAddShortcut,.giveupAddShortcut{
     cursor: pointer;
+}
+
+.studentWorkCountMatterTxt{
+	color: #525151;
+	font-weight: bold;
+	font-size: 14px;
 }
 
 
