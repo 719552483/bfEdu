@@ -1212,13 +1212,118 @@ public class StudentManageService {
         return edu106List;
     }
 
-    public ResultVO studentWorkReportData(String xbbm,String njbm,String zybm,String pycc){
+    //学生就业报表数据-excel
+    public XSSFWorkbook reportStudentWorkReport(List<StudentWorkViewPO> list) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        XSSFSheet sheet = workbook.createSheet("学生就业信息报表");
+
+//        XSSFRow firstRow = sheet.createRow(0);// 第一行
+//        XSSFRow twoRow = sheet.createRow(1);// 第2行
+//        XSSFCell cells[] = new XSSFCell[3];
+//        // 所有标题数组
+//        String[] titles = new String[] {"序号","年级","专业","人数"};
+//        for (int i = 0; i < titles.length; i++) {
+//            cells[0] = firstRow.createCell(i);
+//            cells[0].setCellValue(titles[i]);
+//            sheet.addMergedRegion(new CellRangeAddress(0,2,i,i));//
+//        }
+//        //学年
+//        cells[0] = firstRow.createCell(4);
+//        cells[0].setCellValue(e.getXnmc());
+//        sheet.addMergedRegion(new CellRangeAddress(0,0,4,9));
+//        //及格率（%）
+//        cells[1] = twoRow.createCell(4);
+//        cells[1].setCellValue("及格率（%）");
+//        sheet.addMergedRegion(new CellRangeAddress(1,2,4,4));
+//        //学年专业学生不及格情况统计占比（%）
+//        cells[1] = twoRow.createCell(5);
+//        cells[1].setCellValue("学年专业学生不及格情况统计占比（%）");
+//        sheet.addMergedRegion(new CellRangeAddress(1,1,5,9));
+//
+//        //不及格人数占比
+//        String[] titles2 = new String[] {"1科不及格人数占比","2科不及格人数占比","3科不及格人数占比","4科不及格人数占比","5科及以上不及格人数占比"};
+//        XSSFRow threeRow = sheet.createRow(2);// 第3行
+//        for (int i = 0; i < titles2.length; i++) {
+//            cells[0] = threeRow.createCell(i+5);
+//            cells[0].setCellValue(titles2[i]);
+//        }
+//        List<Edu105> edu105List = edu105Dao.queryAllGrade();
+//        int index = 0;
+//        for(Edu105 edu105:edu105List){
+//            List<String> edu300List = edu300Dao.findAllZy(edu105.getEdu105_ID()+"");
+//            for(int i = 1;i<=edu300List.size();i++){
+//                Edu106 edu106 = edu106Dao.query106BYID(edu300List.get(i-1));
+//                utils.appendCell(sheet, index+i+1,"", (index+i)+"", -1, 0, false);
+//                utils.appendCell(sheet, index+i+1, "", edu105.getNjmc(), -1, 1, false);
+//                utils.appendCell(sheet, index+i+1, "", edu106.getZymc(), -1, 2, false);
+//                //人数
+//                String peopleNum = edu300Dao.findPeopleNum0(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
+//                utils.appendCell(sheet, index+i+1, "", peopleNum, -1, 3, false);
+//                Integer passNum = Integer.parseInt(peopleNum);
+//                //1-4科不及格
+//                for(int j = 1;j<5;j++){
+//                    String noPassPeopleNum = edu005Dao.findNoPassPeopleNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",j+"",xnid);
+//                    passNum = passNum-Integer.parseInt(noPassPeopleNum);
+//                    if("0".equals(noPassPeopleNum)){
+//                        utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 4+j, false);
+//                    }else{
+//                        double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
+//                        NumberFormat nf = NumberFormat.getPercentInstance();
+//                        nf.setMinimumFractionDigits(2);//设置保留小数位
+//                        String usedPercent = nf.format(v);
+//                        utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 4+j, false);
+//                    }
+//                }
+//                //5科+不及格
+//                String noPassPeopleNum = edu005Dao.findNoPassPeopleNum2(edu300List.get(i-1),edu105.getEdu105_ID()+"","5",xnid);
+//                passNum = passNum-Integer.parseInt(noPassPeopleNum);
+//                if("0".equals(noPassPeopleNum)){
+//                    utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 9, false);
+//                }else{
+//                    double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
+//                    NumberFormat nf = NumberFormat.getPercentInstance();
+//                    nf.setMinimumFractionDigits(2);//设置保留小数位
+//                    String usedPercent = nf.format(v);
+//                    utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 9, false);
+//                }
+//                //及格率
+//                String gradeListNum = edu005Dao.findGradeListNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
+//                if("0".equals(gradeListNum)){
+//                    utils.appendCell(sheet, index+i+1, "", "该专业暂无课程或未录成绩", -1, 4, false);
+//                }else{
+//                    double v = Double.parseDouble(passNum.toString()) / Double.parseDouble(peopleNum);
+////                        String passs = edu005Dao.findGradeListNumP(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
+//                    NumberFormat nf = NumberFormat.getPercentInstance();
+//                    nf.setMinimumFractionDigits(2);//设置保留小数位
+//                    String usedPercent = nf.format(v);
+//                    utils.appendCell(sheet, index+i+1, "", usedPercent, -1, 4, false);
+//                }
+//            }
+//            index = edu300List.size();
+//        }
+//        sheet.setColumnWidth(0, 4*256);
+//        sheet.setColumnWidth(1, 5*256);
+//        sheet.setColumnWidth(2, 20*256);
+//        sheet.setColumnWidth(3, 5*256);
+//        sheet.setColumnWidth(4, 22*256);
+//        sheet.setColumnWidth(5, 15*256);
+//        sheet.setColumnWidth(6, 15*256);
+//        sheet.setColumnWidth(7, 15*256);
+//        sheet.setColumnWidth(8, 15*256);
+//        sheet.setColumnWidth(9, 15*256);
+
+
+        return workbook;
+    }
+
+    public List<StudentWorkViewPO> reportStudentWorkReportData(String xbbm,String njbm,String zybm,String pycc){
         ResultVO resultVO;
         Specification<StudentWorkViewPO> specification = new Specification<StudentWorkViewPO>() {
             public Predicate toPredicate(Root<StudentWorkViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (xbbm != null && !"".equals(xbbm)) {
-                    predicates.add(cb.equal(root.<String> get("xbbm"), xbbm));
+                    predicates.add(cb.equal(root.<String> get("szxb"), xbbm));
                 }
                 if (pycc != null && !"".equals(pycc)) {
                     predicates.add(cb.equal(root.<String> get("pycc"), pycc));
@@ -1227,7 +1332,31 @@ public class StudentManageService {
                     predicates.add(cb.equal(root.<String> get("nj"), njbm));
                 }
                 if (zybm != null && !"".equals(zybm)) {
-                    predicates.add(cb.equal(root.<String> get("szxb"), njbm));
+                    predicates.add(cb.equal(root.<String> get("zybm"), njbm));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<StudentWorkViewPO> studentWorkViewPOList = studentWorkViewDao.findAll(specification);
+        return studentWorkViewPOList;
+    }
+
+    public ResultVO studentWorkReportData(String xbbm,String njbm,String zybm,String pycc){
+        ResultVO resultVO;
+        Specification<StudentWorkViewPO> specification = new Specification<StudentWorkViewPO>() {
+            public Predicate toPredicate(Root<StudentWorkViewPO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (xbbm != null && !"".equals(xbbm)) {
+                    predicates.add(cb.equal(root.<String> get("szxb"), xbbm));
+                }
+                if (pycc != null && !"".equals(pycc)) {
+                    predicates.add(cb.equal(root.<String> get("pycc"), pycc));
+                }
+                if (njbm != null && !"".equals(njbm)) {
+                    predicates.add(cb.equal(root.<String> get("nj"), njbm));
+                }
+                if (zybm != null && !"".equals(zybm)) {
+                    predicates.add(cb.equal(root.<String> get("zybm"), njbm));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
@@ -1245,7 +1374,7 @@ public class StudentManageService {
                 Map map2 = new HashMap();
                 map2.put("nj","合计");
                 int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(k-1).getNj());
-                map2.put("xb",studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生总数："+njrs);
+                map2.put("xb",studentWorkViewPOList.get(k-1).getNjmc()+"级学生总数："+njrs);
                 int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(k-1).getNj());
                 if(jyrs == 0){
                     map2.put("xbrs",studentWorkViewPOList.get(k-1).getNjmc()+"级学生就业率：0.00%");
