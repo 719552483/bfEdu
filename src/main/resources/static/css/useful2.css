@@ -3281,7 +3281,9 @@ table .multi-select-menuitem input[type="checkbox"]{
 	font-size: 14px;
 }
 
-
+#downLoadNotFinishFileModal .searchAreaWitheSelect .select-mania{
+	width: 80% !important;
+}
 
 @keyframes serachAnimation {
     10% {

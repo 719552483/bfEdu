@@ -2974,6 +2974,90 @@ function checkDone(jz,fs,currentJz,currentFs,isRe){
 	}
 }
 
+//预备未排完课表下载
+function downLoadNotFinishFile(){
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/getAllDepartment",
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				$.showModal('#downLoadNotFinishFileModal',true);
+				var reObject = new Object();
+				reObject.normalSelectIds = "#downLoadNotFinishFile_department";
+				reReloadSearchsWithSelect(reObject);
+
+				var str = '<option value="seleceConfigTip">请选择</option>';
+				for (var i = 0; i < backjson.data.length; i++) {
+					str += '<option value="' + backjson.data[i].edu104_ID + '">' + backjson.data[i].xbmc
+						+ '</option>';
+				}
+				stuffManiaSelect("#downLoadNotFinishFile_department", str);
+
+				//确认未排完课表下载
+				$('.confirmDownLoadNotFinishFile').unbind('click');
+				$('.confirmDownLoadNotFinishFile').bind('click', function(e) {
+					confirmDownLoadNotFinishFile();
+					e.stopPropagation();
+				});
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
+//确认未排完课表下载
+function confirmDownLoadNotFinishFile(){
+	var xb=getNormalSelectValue('downLoadNotFinishFile_department');
+	if(xb===''){
+		toastr.warning('请选择二级学院');
+		return;
+	}
+	$.ajax({
+		method : 'get',
+		cache : false,
+		url : "/queryNotPutedCourseClassCheck",
+		data: {
+			"edu104":xb
+		},
+		dataType : 'json',
+		beforeSend: function(xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function(textStatus) {
+			requestError();
+		},
+		complete: function(xhr, status) {
+			requestComplete();
+		},
+		success : function(backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				var url = "/queryNotPutedCourseClass";
+				var form = $("<form></form>").attr("action", url).attr("method", "post");
+				form.append($("<input></input>").attr("type", "hidden").attr("name", "edu104").attr("value",xb));
+				form.appendTo('body').submit().remove();
+				toastr.info('文件下载中，请稍后...');
+				$.hideModal();
+			} else {
+				toastr.warning(backjson.msg);
+			}
+		}
+	});
+}
+
 //初始化页面按钮绑定事件
 function binBind(){
 	//提示框取消按钮
@@ -3008,6 +3092,13 @@ function binBind(){
 	$('#research').unbind('click');
 	$('#research').bind('click', function(e) {
 		research();
+		e.stopPropagation();
+	});
+
+	//预备未排完课表下载
+	$('#downLoadNotFinishFile').unbind('click');
+	$('#downLoadNotFinishFile').bind('click', function(e) {
+		downLoadNotFinishFile();
 		e.stopPropagation();
 	});
 }
