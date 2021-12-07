@@ -125,11 +125,11 @@ function stuffTableInfo(testInfo){
 	$(".thisDate").html(timeStamp2String(thisDate));
 
 	var exportGradeType=JSON.parse($.session.get('exportGradeType'));
-	if(exportGradeType.type==='all'||exportGradeType.type===''||typeof exportGradeType==='undefined'||exportGradeType==null){
-		$(".stampArea").show();
-	}else{
-		$(".stampArea").hide();
-	}
+	// if(exportGradeType.type==='all'||exportGradeType.type===''||typeof exportGradeType==='undefined'||exportGradeType==null){
+	// 	$(".stampArea").show();
+	// }else{
+	// 	$(".stampArea").hide();
+	// }
 }
 
 
