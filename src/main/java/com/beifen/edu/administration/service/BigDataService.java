@@ -52,6 +52,8 @@ public class BigDataService {
     @Autowired
     private Edu101Dao edu101Dao;
     @Autowired
+    private Edu106Dao edu106Dao;
+    @Autowired
     private Edu500Dao edu500Dao;
     @Autowired
     private Edu300Dao edu300Dao;
@@ -408,6 +410,44 @@ public class BigDataService {
             }
 
         }
+
+        resultVO = ResultVO.setSuccess("查询成功",returnMap);
+        return resultVO;
+    }
+
+    //获取大屏展示数据
+    public ResultVO getBigScreenDataNew() {
+        ResultVO resultVO;
+        Map<String,Object> returnMap = new HashMap<>();
+        //--------------------------------------------
+        // 图1：各个年级批次专业学生数量
+        Map<String,Object> map1 = new HashMap<>();
+        //(获取学生年级和批次)
+        List<Edu300> edu300List = edu300Dao.findAllXSLX();
+        Object[] studentType = new Object[edu300List.size()];
+        //获取专业信息
+        List<Edu106> edu106List = edu106Dao.findAll();
+        Object[] zyType = new Object[edu106List.size()];
+        List<Object[]> countArray = new ArrayList<>();
+        for (int i = 0;i<edu300List.size();i++){
+            Edu300 edu300 = edu300List.get(i);
+            studentType[i] = edu300.getNjmc()+"级"+edu300.getBatchName();
+            Object[] studentCountArray = new Object[edu106List.size()];
+            for (int j = 0;j<edu106List.size();j++){
+                Edu106 edu106 = edu106List.get(j);
+                if(i == 0){
+                    zyType[j] = edu106.getZymc();
+                }
+                int studentCount = edu300Dao.findStudentCount(edu300.getNjbm(),edu300.getBatch(),edu106.getEdu106_ID()+"");
+                studentCountArray[j] = studentCount;
+            }
+            countArray.add(studentCountArray);
+        }
+        map1.put("studentType",studentType);
+        map1.put("zyType",zyType);
+        map1.put("countArray",countArray);
+        returnMap.put("echar1",map1);
+        //--------------------------------------------
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;

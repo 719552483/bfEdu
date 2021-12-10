@@ -1213,7 +1213,7 @@ public class StudentManageService {
     }
 
     //学生就业报表数据-excel
-    public XSSFWorkbook reportStudentWorkReport(List<StudentWorkViewPO> list) {
+    public XSSFWorkbook reportStudentWorkReport(List<StudentWorkViewPO> studentWorkViewPOList) {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         XSSFSheet sheet = workbook.createSheet("学生就业信息报表");
@@ -1222,102 +1222,115 @@ public class StudentManageService {
         List<Edu000> edu000List = edu000Dao.queryejdm("jyxs");
         XSSFRow firstRow = sheet.createRow(0);// 第一行
         XSSFRow twoRow = sheet.createRow(1);// 第2行
+        XSSFRow threeRow = sheet.createRow(2);// 第3行
         XSSFCell cells[] = new XSSFCell[3];
 //        // 所有标题数组
         cells[0] = firstRow.createCell(0);
         cells[0].setCellValue("辽宁职业学院高职扩招学生就业情况分析表");
         sheet.addMergedRegion(new CellRangeAddress(0,0,0,edu000List.size()+6));
-//        for (int i = 0; i < titles.length; i++) {
-//            cells[0] = firstRow.createCell(i);
-//            cells[0].setCellValue(titles[i]);
-//            sheet.addMergedRegion(new CellRangeAddress(0,2,i,i));//
-//        }
-//        //学年
-//        cells[0] = firstRow.createCell(4);
-//        cells[0].setCellValue(e.getXnmc());
-//        sheet.addMergedRegion(new CellRangeAddress(0,0,4,9));
-//        //及格率（%）
-//        cells[1] = twoRow.createCell(4);
-//        cells[1].setCellValue("及格率（%）");
-//        sheet.addMergedRegion(new CellRangeAddress(1,2,4,4));
-//        //学年专业学生不及格情况统计占比（%）
-//        cells[1] = twoRow.createCell(5);
-//        cells[1].setCellValue("学年专业学生不及格情况统计占比（%）");
-//        sheet.addMergedRegion(new CellRangeAddress(1,1,5,9));
-//
-//        //不及格人数占比
-//        String[] titles2 = new String[] {"1科不及格人数占比","2科不及格人数占比","3科不及格人数占比","4科不及格人数占比","5科及以上不及格人数占比"};
-//        XSSFRow threeRow = sheet.createRow(2);// 第3行
-//        for (int i = 0; i < titles2.length; i++) {
-//            cells[0] = threeRow.createCell(i+5);
-//            cells[0].setCellValue(titles2[i]);
-//        }
-//        List<Edu105> edu105List = edu105Dao.queryAllGrade();
-//        int index = 0;
-//        for(Edu105 edu105:edu105List){
-//            List<String> edu300List = edu300Dao.findAllZy(edu105.getEdu105_ID()+"");
-//            for(int i = 1;i<=edu300List.size();i++){
-//                Edu106 edu106 = edu106Dao.query106BYID(edu300List.get(i-1));
-//                utils.appendCell(sheet, index+i+1,"", (index+i)+"", -1, 0, false);
-//                utils.appendCell(sheet, index+i+1, "", edu105.getNjmc(), -1, 1, false);
-//                utils.appendCell(sheet, index+i+1, "", edu106.getZymc(), -1, 2, false);
-//                //人数
-//                String peopleNum = edu300Dao.findPeopleNum0(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
-//                utils.appendCell(sheet, index+i+1, "", peopleNum, -1, 3, false);
-//                Integer passNum = Integer.parseInt(peopleNum);
-//                //1-4科不及格
-//                for(int j = 1;j<5;j++){
-//                    String noPassPeopleNum = edu005Dao.findNoPassPeopleNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",j+"",xnid);
-//                    passNum = passNum-Integer.parseInt(noPassPeopleNum);
-//                    if("0".equals(noPassPeopleNum)){
-//                        utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 4+j, false);
-//                    }else{
-//                        double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
-//                        NumberFormat nf = NumberFormat.getPercentInstance();
-//                        nf.setMinimumFractionDigits(2);//设置保留小数位
-//                        String usedPercent = nf.format(v);
-//                        utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 4+j, false);
-//                    }
-//                }
-//                //5科+不及格
-//                String noPassPeopleNum = edu005Dao.findNoPassPeopleNum2(edu300List.get(i-1),edu105.getEdu105_ID()+"","5",xnid);
-//                passNum = passNum-Integer.parseInt(noPassPeopleNum);
-//                if("0".equals(noPassPeopleNum)){
-//                    utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 9, false);
-//                }else{
-//                    double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
-//                    NumberFormat nf = NumberFormat.getPercentInstance();
-//                    nf.setMinimumFractionDigits(2);//设置保留小数位
-//                    String usedPercent = nf.format(v);
-//                    utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 9, false);
-//                }
-//                //及格率
-//                String gradeListNum = edu005Dao.findGradeListNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
-//                if("0".equals(gradeListNum)){
-//                    utils.appendCell(sheet, index+i+1, "", "该专业暂无课程或未录成绩", -1, 4, false);
-//                }else{
-//                    double v = Double.parseDouble(passNum.toString()) / Double.parseDouble(peopleNum);
-////                        String passs = edu005Dao.findGradeListNumP(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
-//                    NumberFormat nf = NumberFormat.getPercentInstance();
-//                    nf.setMinimumFractionDigits(2);//设置保留小数位
-//                    String usedPercent = nf.format(v);
-//                    utils.appendCell(sheet, index+i+1, "", usedPercent, -1, 4, false);
-//                }
-//            }
-//            index = edu300List.size();
-//        }
-//        sheet.setColumnWidth(0, 4*256);
-//        sheet.setColumnWidth(1, 5*256);
-//        sheet.setColumnWidth(2, 20*256);
-//        sheet.setColumnWidth(3, 5*256);
-//        sheet.setColumnWidth(4, 22*256);
-//        sheet.setColumnWidth(5, 15*256);
-//        sheet.setColumnWidth(6, 15*256);
-//        sheet.setColumnWidth(7, 15*256);
-//        sheet.setColumnWidth(8, 15*256);
-//        sheet.setColumnWidth(9, 15*256);
+        String[] titles = new String[] {"年级","分院名称","分院学生人数","分院就业率","专业名称","专业学生人数","专业就业率"};
+        for (int i = 0; i < titles.length; i++) {
+            cells[1] = twoRow.createCell(i);
+            cells[1].setCellValue(titles[i]);
+            sheet.addMergedRegion(new CellRangeAddress(1,2,i,i));
+        }
+        cells[1] = twoRow.createCell(7);
+        cells[1].setCellValue("就业形式");
+        sheet.addMergedRegion(new CellRangeAddress(1,1,7,6+edu000List.size()));
+        for (int i = 0; i < edu000List.size(); i++) {
+            cells[2] = threeRow.createCell(7+i);
+            cells[2].setCellValue(edu000List.get(i).getEjdmz());
+        }
+        //上面是标题
+        int first = 0;
+        int end = 0;
+        int ii = 0;
+        for(int k = 0;k<studentWorkViewPOList.size();k++){
+            StudentWorkViewPO studentWorkViewPO = studentWorkViewPOList.get(k);
+            if(k !=0 && !studentWorkViewPO.getNj().equals(studentWorkViewPOList.get(k-1).getNj())){
+                int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(k-1).getNj());
+                String total = "合计："+studentWorkViewPOList.get(k-1).getNjmc()+"级学生总数："+njrs+"人";
+                int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(k-1).getNj());
+                if(jyrs == 0){
+                    utils.appendCell(sheet, k+2+ii, "", total+"/"+studentWorkViewPOList.get(k-1).getNjmc()+"级学生就业率：0.00%", -1, 0, false);
+                }else{
+                    double v = Double.valueOf(jyrs)/ Double.valueOf(njrs);
+                    NumberFormat nf = NumberFormat.getPercentInstance();
+                    nf.setMinimumFractionDigits(2);//设置保留小数位
+                    String usedPercent = nf.format(v);
+                    utils.appendCell(sheet, k+2+ii, "", total+"/"+studentWorkViewPOList.get(k-1).getNjmc()+"级学生就业率："+usedPercent, -1, 0, false);
+                }
+                sheet.addMergedRegion(new CellRangeAddress(k+3+ii,k+3+ii,0,6+edu000List.size()));
+                ii++;
+            }
+            utils.appendCell(sheet, k+2+ii, "", studentWorkViewPO.getNjmc(), -1, 0, false);
+            utils.appendCell(sheet, k+2+ii, "", studentWorkViewPO.getSzxbmc(), -1, 1, false);
+            int xbrs = edu0011Dao.findXbrs(studentWorkViewPO.getSzxb(),studentWorkViewPO.getNj());
+            utils.appendCell(sheet, k+2+ii, "", xbrs+"", -1, 2, false);
+            int jyrs = edu0011Dao.findXbjyrs(studentWorkViewPO.getSzxb(),studentWorkViewPO.getNj());
 
+            if(jyrs == 0){
+                utils.appendCell(sheet, k+2+ii, "", "0.00%", -1, 3, false);
+            }else{
+                double v = Double.valueOf(jyrs)/ Double.valueOf(xbrs);
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                utils.appendCell(sheet, k+2+ii, "", usedPercent, -1, 3, false);
+            }
+            utils.appendCell(sheet, k+2+ii, "", studentWorkViewPO.getZymc(), -1, 4, false);
+            int zyrs = edu0011Dao.findZyrs(studentWorkViewPO.getZybm(),studentWorkViewPO.getNj());
+            utils.appendCell(sheet, k+2+ii, "", zyrs+"", -1, 5, false);
+            int zyjyrs = edu0011Dao.findZyjyrs(studentWorkViewPO.getZybm(),studentWorkViewPO.getNj());
+            if(zyjyrs == 0){
+                utils.appendCell(sheet, k+2+ii, "", "0.00%", -1, 6, false);
+            }else{
+                double v = Double.valueOf(zyjyrs)/ Double.valueOf(zyrs);
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                utils.appendCell(sheet, k+2+ii, "", usedPercent, -1, 6, false);
+            }
+            for(int i = 0;i<edu000List.size();i++){
+                Edu000 edu000 = edu000List.get(i);
+                int jyxs = edu0011Dao.findJyxsrs(studentWorkViewPO.getZybm(),edu000.getEjdm(),studentWorkViewPO.getNj());
+                utils.appendCell(sheet, k+2+ii, "", jyxs+"", -1, 7+i, false);
+            }
+            if(k != 0){
+                if (!studentWorkViewPO.getSzxb().equals(studentWorkViewPOList.get(k-1).getSzxb())){
+                    first = k;
+                }else if(studentWorkViewPOList.size()-1 == k || !studentWorkViewPO.getSzxb().equals(studentWorkViewPOList.get(k+1).getSzxb())){
+                    end = k;
+                }
+                if(first < end){
+                    sheet.addMergedRegion(new CellRangeAddress(first+3+ii,end+3+ii,0,0));
+                    sheet.addMergedRegion(new CellRangeAddress(first+3+ii,end+3+ii,1,1));
+                    sheet.addMergedRegion(new CellRangeAddress(first+3+ii,end+3+ii,2,2));
+                    sheet.addMergedRegion(new CellRangeAddress(first+3+ii,end+3+ii,3,3));
+                }
+            }
+        }
+        int njrs = edu0011Dao.findNjrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+        String total = "合计："+studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生总数："+njrs+"人";
+        int jyrs = edu0011Dao.findNjjyrs(studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNj());
+        if(jyrs == 0){
+            utils.appendCell(sheet, studentWorkViewPOList.size()+2+ii, "", total+"/"+studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率：0.00%", -1, 0, false);
+        }else{
+            double v = Double.valueOf(jyrs)/ Double.valueOf(njrs);
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            String usedPercent = nf.format(v);
+            utils.appendCell(sheet, studentWorkViewPOList.size()+2+ii, "", total+"/"+studentWorkViewPOList.get(studentWorkViewPOList.size()-1).getNjmc()+"级学生就业率："+usedPercent, -1, 0, false);
+        }
+        sheet.addMergedRegion(new CellRangeAddress(studentWorkViewPOList.size()+3+ii,studentWorkViewPOList.size()+3+ii,0,6+edu000List.size()));
 
+        sheet.setColumnWidth(0, 20*256);
+        sheet.setColumnWidth(1, 20*256);
+        sheet.setColumnWidth(2, 20*256);
+        sheet.setColumnWidth(3, 20*256);
+        sheet.setColumnWidth(4, 20*256);
+        sheet.setColumnWidth(5, 20*256);
+        sheet.setColumnWidth(6, 20*256);
         return workbook;
     }
 

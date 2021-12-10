@@ -116,6 +116,17 @@ public class BigDataContoller {
     }
 
     /**
+     *获取大屏展示数据
+     * @return
+     */
+    @RequestMapping("/getBigScreenDataNew")
+    @ResponseBody
+    public ResultVO getBigScreenDataNew() {
+        ResultVO result = bigDataService.getBigScreenDataNew();
+        return result;
+    }
+
+    /**
      *获取大屏展示汇总数据
      * @return
      */

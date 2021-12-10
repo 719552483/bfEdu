@@ -1047,7 +1047,7 @@ public class StudentManageController {
         //创建Excel文件
         XSSFWorkbook workbook = studentManageService.reportStudentWorkReport(list);
         try {
-            utils.loadModal3(response,fileName, workbook);
+            utils.loadModal2(response,fileName, workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

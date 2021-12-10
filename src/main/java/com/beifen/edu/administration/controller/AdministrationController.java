@@ -1153,7 +1153,7 @@ public class AdministrationController {
 	 */
 	@RequestMapping("/queryNotPutedCourseClassCheck")
 	@ResponseBody
-	public ResultVO queryNotPutedCourseClassCheck(@RequestParam("edu104") String edu104) {
+		public ResultVO queryNotPutedCourseClassCheck(@RequestParam("edu104") String edu104) {
 		ResultVO result = administrationPageService.queryNotPutedCourseClassCheck(edu104);
 		return result;
 	}

@@ -3161,6 +3161,10 @@ public class AdministrationPageService {
 	public ResultVO queryNotPutedCourseClassCheck(String edu104){
 		ResultVO resultVO;
 		List<Edu300> edu300List = edu300DAO.queryStudentReport(edu104);
+		if(edu300List.size() == 0){
+			resultVO = ResultVO.setFailed("暂无可选班级");
+			return resultVO;
+		}
 		for(Edu300 edu300:edu300List){
 			List<Edu107> edu107List = edu107DAO.searchAllEdu107(edu300.getNjbm(),edu300.getZybm(),edu300.getBatch());
 			if(edu107List.size() == 0){
