@@ -52,6 +52,7 @@
 				<div class="tools">
 						<ul class="toolbar">
 							<li class="click" id="puttedSchedule"><span><img src="images/leaderSchedule.png" style="width: 24px;"/></span>已排课表</li>
+							<li class="click" id="downLoadNotFinishFile"><span><img src="images/ico04.png" style="width: 24px;"/></span>未排完课表下载</li>
 							<li class="click" id="startSearch"><span><img src="images/ico06.png" style="width: 24px;"/></span>开始检索</li>
 						</ul>
 						<ul class="toolbar1">
@@ -789,7 +790,37 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+	<!-- 未排完课表下载Modal -->
+	<div class="modal fade bs-example-modal-lg" id="downLoadNotFinishFileModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="tiptop"><span class="moadalTitle">未排完课表下载</span><a class="cancel" shape="rect"></a></div>
+				</div>
+				<div class="modal-body">
+					<div class="searchArea searchAreaWitheSelect" style="margin-top: 15px;">
+						<div class="col1 giveBottom">
+							<ul class="forminfo">
+								<div class="">
+									<label class="selectName" style="margin-top: 14px;width: 12%">二级学院<b>*</b></label>
+									<select class="isSowIndex" id="downLoadNotFinishFile_department">
+										<option value="seleceConfigTip">暂不可选</option>
+									</select>
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="modal-footer tipbtn">
+					<input name="" type="button" class="sure confirmDownLoadNotFinishFile" value="下载"/>&nbsp;
+					<input name="" type="button" class="cancel" value="取消"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<script type="text/javascript">
 			$("#usual1 ul").idTabs();
 		</script>
 	</body>
