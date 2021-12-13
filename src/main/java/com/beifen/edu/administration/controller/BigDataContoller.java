@@ -116,7 +116,7 @@ public class BigDataContoller {
     }
 
     /**
-     *获取大屏展示数据
+     *获取大屏展示数据-新
      * @return
      */
     @RequestMapping("/getBigScreenDataNew")

@@ -419,8 +419,28 @@ public class BigDataService {
     public ResultVO getBigScreenDataNew() {
         ResultVO resultVO;
         Map<String,Object> returnMap = new HashMap<>();
+        //title:总人数
+        //--------------------------------------------
+        List<Map> titleList = new ArrayList<>();
+        Map<String,Object> mapTitle = new HashMap<>();
+        mapTitle.put("name","辽宁职业学院扩招学生人数");
+        mapTitle.put("allStudent",edu001Dao.findAllStudent());
+        mapTitle.put("manStudent",edu001Dao.findAllStudentByXb("M"));
+        mapTitle.put("womanStudent",edu001Dao.findAllStudentByXb("F"));
+        titleList.add(mapTitle);
+        List<Edu105> edu105List = edu105Dao.findAll();
+        for(Edu105 edu105:edu105List){
+            mapTitle = new HashMap<>();
+            mapTitle.put("name",edu105.getNjmc());
+            mapTitle.put("allStudent",edu001Dao.findAllStudentByNj(edu105.getEdu105_ID()+""));
+            mapTitle.put("manStudent",edu001Dao.findAllStudentByNj(edu105.getEdu105_ID()+"","M"));
+            mapTitle.put("womanStudent",edu001Dao.findAllStudentByNj(edu105.getEdu105_ID()+"","F"));
+            titleList.add(mapTitle);
+        }
+        returnMap.put("title",titleList);
         //--------------------------------------------
         // 图1：各个年级批次专业学生数量
+        //--------------------------------------------
         Map<String,Object> map1 = new HashMap<>();
         //(获取学生年级和批次)
         List<Edu300> edu300List = edu300Dao.findAllXSLX();

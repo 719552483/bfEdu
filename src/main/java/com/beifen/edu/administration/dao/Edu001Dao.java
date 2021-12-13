@@ -135,4 +135,16 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//查询可毕业学生
 	@Query(value = " select * from edu001 e where szxb = ?1 and nj = ?2 and zybm = ?3 and ZT_CODE = '001' and (select count(*) from edu005 where STUDENT_CODE = e.xh and (IS_PASSED = 'F' or IS_PASSED is null)) = 0",nativeQuery = true)
 	List<Edu001> findGraduationStudents(String xb,String nj,String zy);
+
+	//根据性别查询总人数
+	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006') and xb = ?1",nativeQuery = true)
+	Long findAllStudentByXb(String xb);
+
+	//根据年级查询总数
+	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006') and nj = ?1",nativeQuery = true)
+	Long findAllStudentByNj(String nj);
+
+	//根据年级性别查询总数
+	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006') and nj = ?1 and xb = ?2",nativeQuery = true)
+	Long findAllStudentByNj(String nj,String xb);
 }
