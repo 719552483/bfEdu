@@ -628,7 +628,7 @@ function xzbStartSearch(){
 	var searchInfo=new Object();
 	searchInfo.xzbmc=xzbmc;
 	searchInfo.batch=batch;
-	searchInfo.grade=grade;
+	searchInfo.njbm=grade;
 	$.ajax({
 		method : 'get',
 		cache : false,
