@@ -1456,7 +1456,7 @@ function loadModifyStudentsModal(){
 			return;
 		}
 
-		if(choosendModifyStudents.length>0&&choosendModifyStudents.length>2){
+		if(choosendModifyStudents.length>0&&choosendModifyStudents.length>100){
 			toastr.warning('最多勾选100名学生');
 		}
 
