@@ -226,66 +226,6 @@ function hiddenBigVideo(){
 	}, 600);
 }
 
-//渲染授课教师人数表
-function stuffTeacherCountTable(tableInfo){
-	var screen=window.screen.width;
-	var pagelist=0;
-	if(screen<=1366){
-		pagelist=3;
-	}else{
-		pagelist=4;
-	}
-	$('#teacherCountTable').bootstrapTable('destroy').bootstrapTable({
-		data:tableInfo,
-		pagination: true,
-		pageNumber: 1,
-		pageSize:pagelist,
-		pageList: [pagelist],
-		showToggle: false,
-		showFooter: false,
-		search: true,
-		editable: false,
-		striped: false,
-		toolbar: '#toolbar',
-		showColumns: false,
-		// onClickRow : function(row, $element, field) {
-		// 	var index =parseInt($element[0].dataset.index);
-		// 	changePageData(row,index);
-		// },
-		onPostBody: function() {
-			changetableStyleByScreen(tableInfo);
-		},
-		columns: [{
-			field: 'edu104Id',
-			title: '唯一标志',
-			align: 'center',
-			visible: false
-		},
-			{
-				field: 'departmentName',
-				title: '二级学院名称',
-				align: 'center',
-				formatter: departmentNameMatter
-			},{
-				field: 'teacherCount',
-				title: '授课教师数',
-				align: 'center',
-				formatter: teacherCountMatter
-			}
-		]
-	});
-
-	function departmentNameMatter(value, row, index) {
-		return [ '<div class="changeLeft'+index+'"><img class="tableImgLeft" src="images/ulist.png"/><span>'+value+'</span></div>' ]
-			.join('');
-	}
-
-	function teacherCountMatter(value, row, index) {
-		return [ '<div class="changeRight'+index+'"><img class="tableImgRight" src="images/ulist.png"/><span>'+value+'</span></div>' ]
-			.join('');
-	}
-}
-
 // //点击切换页面数据源
 // function changePageData(row,index){
 // 	var returnObject=new Object();
@@ -367,6 +307,302 @@ function stuffTeacherCountTable(tableInfo){
 // 		}
 // 	});
 // }
+
+//渲染中间title
+function stuffTitle(titleInfo){
+	for (var i = 0; i < titleInfo.length; i++) {
+		$('#visual_conTop_webticker').append('<li style="margin-right: 20px">'+titleInfo[i].name+':<strong>'+titleInfo[i].allStudent+'</strong><cite>人</cite></li>'
+		+'<li style="margin-right: 20px">男学员人数:<strong>'+titleInfo[i].manStudent+'</strong><cite>人</cite></li>'
+		+'<li style="margin-right: 85px">女学员人数:<strong>'+titleInfo[i].womanStudent+'</strong><cite>人</cite></li>'
+		);
+	}
+
+	$("#visual_conTop_webticker").webTicker({
+		height:'60px',
+		duplicate:true, //必须为true 否则文字过长只轮播一遍
+		startEmpty:false,
+		hoverpause:false,
+		speed:40
+	});
+}
+
+//扩招学员基础数据chart
+function stuffTeacherCountTable(dataInfo){
+	// var screen=window.screen.width;
+	// var pagelist=0;
+	// if(screen<=1366){
+	// 	pagelist=3;
+	// }else{
+	// 	pagelist=4;
+	// }
+	// $('#teacherCountTable').bootstrapTable('destroy').bootstrapTable({
+	// 	data:tableInfo,
+	// 	pagination: true,
+	// 	pageNumber: 1,
+	// 	pageSize:pagelist,
+	// 	pageList: [pagelist],
+	// 	showToggle: false,
+	// 	showFooter: false,
+	// 	search: false,
+	// 	editable: false,
+	// 	striped: false,
+	// 	toolbar: '#toolbar',
+	// 	showColumns: false,
+	// 	// onClickRow : function(row, $element, field) {
+	// 	// 	var index =parseInt($element[0].dataset.index);
+	// 	// 	changePageData(row,index);
+	// 	// },
+	// 	onPostBody: function() {
+	// 		// changetableStyleByScreen(tableInfo);
+	// 	},
+	// 	columns: [{
+	// 		field: 'edu104Id',
+	// 		title: '唯一标志',
+	// 		align: 'center',
+	// 		visible: false
+	// 	},
+	// 		{
+	// 			field: 'departmentName',
+	// 			title: '二级学院名称',
+	// 			align: 'center',
+	// 			formatter: departmentNameMatter
+	// 		},{
+	// 			field: 'teacherCount',
+	// 			title: '授课教师数',
+	// 			align: 'center',
+	// 			formatter: teacherCountMatter
+	// 		}
+	// 	]
+	// });
+	//
+	// function departmentNameMatter(value, row, index) {
+	// 	return [ '<div class="changeLeft'+index+'"><img class="tableImgLeft" src="images/ulist.png"/><span>'+value+'</span></div>' ]
+	// 		.join('');
+	// }
+	//
+	// function teacherCountMatter(value, row, index) {
+	// 	return [ '<div class="changeRight'+index+'"><img class="tableImgRight" src="images/ulist.png"/><span>'+value+'</span></div>' ]
+	// 		.join('');
+	// }
+
+	var index =5;//下标 chart初始化渲染数
+	var zyTypeDate = dataInfo.zyType;
+	var zyTypeDateTop=zyTypeDate.slice(0,index);
+	var colorArray=['rgb(137,189,27)','rgb(0,136,212)','rgb(219,50,51)','rgb(251,180,61)']; //折线以及chart内文字颜色
+	var areaStyleColorArray1=['rgb(137,189,27,0.3)','rgb(0,136,212,0.3)','rgb(219,50,51,0.3)','rgb(251,180,61,0.3)'];//阴影颜色1
+	var areaStyleColorArray2=['rgb(137,189,27,0)','rgb(0,136,212,0)','rgb(219,50,51,0)','rgb(251,180,61,0)'];//阴影颜色2
+
+	//后台返回的人数 数组 ->dataInfo.countArray
+	var countArrayNum=dataInfo.countArray.length;
+	//定义一个轮播的数组
+	var countArrayTop = new Array();
+	//定义一个echar的series数组
+	 var ser = new Array();
+	 //循环处理后台返回数据
+	for (var i = 0; i < countArrayNum; i++) {
+		//获取单个数据
+		var dataSeri = dataInfo.countArray[i];
+		//将数据处理为轮播数据
+		countArrayTop[i] = dataSeri.slice(0,index);
+		//定义echar的ser...
+		var demo={
+			name: dataInfo.studentType[i],
+			type: 'line',
+			smooth: true,
+			lineStyle: {
+				normal: {
+					width: 2
+				}
+			},
+			areaStyle: {
+				normal: {
+					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						offset: 0,
+						color: areaStyleColorArray1[i]
+					}, {
+						offset: 0.8,
+						color: areaStyleColorArray2[i]
+					}], false),
+					shadowColor: 'rgba(0, 0, 0, 0.1)',
+					shadowBlur: 10
+				}
+			},
+			itemStyle: {
+				normal: {
+					color: colorArray[i],
+					label: {
+						show: true, //开启显示
+						position: 'top', //在上方显示
+						color: colorArray[i],
+						formatter: function (params) {
+							return params.data+'人';
+						}
+					}
+				}
+			},
+			data: countArrayTop[i]
+		};
+		ser[i] = demo;
+	}
+
+	var thisChart= echarts.init(document.getElementById('schoolStudentNumBaseInfoChart'));
+	var  thisChartOption = {
+		tooltip: {//鼠标指上时的标线
+			trigger: 'axis',
+			axisPointer: {
+				lineStyle: {
+					color: '#fff'
+				}
+			}
+		},
+		legend: {
+			icon: 'rect',
+			itemWidth: 14,
+			itemHeight: 5,
+			itemGap: 13,
+			data: dataInfo.studentType,
+			right: '10px',
+			top: '0px',
+			textStyle: {
+				fontSize: 12,
+				color: '#fff'
+			},
+			formatter: function (params) {
+				//超过十个字符就换行展示
+				var newParamsName = "";// 最终拼接成的字符串
+				var paramsNameNumber = params.length;// 实际标签的个数
+				var provideNumber = 5;// 每行能显示的字的个数
+				var rowNumber = Math.ceil(paramsNameNumber / provideNumber);// 换行的话，需要显示几行，向上取整
+
+				// 条件等同于rowNumber>1
+				if (paramsNameNumber > provideNumber) {
+					for (var p = 0; p < rowNumber; p++) {
+						var tempStr = "";// 表示每一次截取的字符串
+						var start = p * provideNumber;// 开始截取的位置
+						var end = start + provideNumber;// 结束截取的位置
+						// 此处特殊处理最后一行的索引值
+						if (p == rowNumber - 1) {
+							// 最后一次不换行
+							tempStr = params.substring(start, paramsNameNumber);
+						} else {
+							// 每一次拼接字符串并换行
+							tempStr = params.substring(start, end) + "\n";
+						}
+						newParamsName += tempStr;// 最终拼成的字符串
+					}
+				} else {
+					// 将旧标签的值赋给新标签
+					newParamsName = params;
+				}
+				//将最终的字符串返回
+				return newParamsName
+			}
+		},
+		// grid: {
+		// 	x: 35,
+		// 	y: 25,
+		// 	x2: 8,
+		// 	y2: 25,
+		// },
+		xAxis: [{
+			type: 'category',
+			boundaryGap: false,
+			axisLine: {
+				lineStyle: {
+					color: '#57617B'
+				}
+			},
+			axisLabel : {//坐标轴刻度标签的相关设置。
+				formatter : function(params){
+					var newParamsName = "";// 最终拼接成的字符串
+					var paramsNameNumber = params.length;// 实际标签的个数
+					var provideNumber = 4;// 每行能显示的字的个数
+					var rowNumber = Math.ceil(paramsNameNumber / provideNumber);// 换行的话，需要显示几行，向上取整
+					/**
+					 * 判断标签的个数是否大于规定的个数， 如果大于，则进行换行处理 如果不大于，即等于或小于，就返回原标签
+					 */
+					// 条件等同于rowNumber>1
+					if (paramsNameNumber > provideNumber) {
+						/** 循环每一行,p表示行 */
+						for (var p = 0; p < rowNumber; p++) {
+							var tempStr = "";// 表示每一次截取的字符串
+							var start = p * provideNumber;// 开始截取的位置
+							var end = start + provideNumber;// 结束截取的位置
+							// 此处特殊处理最后一行的索引值
+							if (p == rowNumber - 1) {
+								// 最后一次不换行
+								tempStr = params.substring(start, paramsNameNumber);
+							} else {
+								// 每一次拼接字符串并换行
+								tempStr = params.substring(start, end) + "\n";
+							}
+							newParamsName += tempStr;// 最终拼成的字符串
+						}
+
+					} else {
+						// 将旧标签的值赋给新标签
+						newParamsName = params;
+					}
+					//将最终的字符串返回
+					return newParamsName
+				},
+				textStyle: {
+					color:'#fff',
+				}
+			},
+			data: zyTypeDateTop
+		}],
+		yAxis: [{
+			type: 'value',
+			axisTick: {
+				show: false
+			},
+			axisLine: {
+				lineStyle: {
+					color: '#57617B',
+
+				}
+			},
+			axisLabel: {
+				// margin: 10,
+				textStyle: {
+					fontSize: 14
+				},
+				textStyle: {
+					color:'#fff',
+				},
+			},
+			splitLine: {
+				lineStyle: {
+					color: 'rgba(255,255,255,.2)',
+					type:'dotted',
+				}
+			}
+		}],
+		series: ser
+	};
+
+	setInterval(function (){
+		axisData = zyTypeDate[index];
+
+		//y轴 轮播
+		for (var i = 0; i < countArrayNum; i++) {
+			var thisData = thisChartOption.series[i].data;
+			thisData.shift();
+			thisData.push(dataInfo.countArray[i][index]);
+		}
+
+		//x轴
+		thisChartOption.xAxis[0].data.shift();
+		thisChartOption.xAxis[0].data.push(axisData);
+		thisChart.setOption(thisChartOption);
+		index+=1;
+
+		if (index>=zyTypeDate.length) {
+			index = 0;
+		}
+	}, 1500);
+}
 
 //渲染教师类型分布chart
 function stuffTeacherTypeCount(teacherTypeData,isSingle){
@@ -2208,36 +2444,36 @@ function loadChart(searchObject){
 	$.ajax({
 		method : 'get',
 		cache : false,
-		url : "/getBigScreenData",
-		data: {
-			"searchInfo":JSON.stringify(searchObject)
-		},
+		url : "/getBigScreenDataNew",
 		dataType : 'json',
 		success : function(backjson) {
 			if(backjson.code===200){
-				if(backjson.data.departmentData.length==0){
-					toastr.warning('暂无数据');
-					return;
-				}
+				// if(backjson.data.departmentData.length==0){
+				// 	toastr.warning('暂无数据');
+				// 	return;
+				// }
 				$(".currentShowPage").html(2);
 				$(".Screen1").hide();
 				$(".Screen2").show();
 				//中间地图
 				getMapInfo();
 
-				//授课教师人数
-				stuffTeacherCountTable(backjson.data.departmentData);
-				//教师类型分布
-				stuffTeacherTypeCount(backjson.data.teacherTypeData,false);
-				//课时类型分布
-				stuffclassHourTypeCount(backjson.data.periodTypeData,false);
+				//中间title
+				stuffTitle(backjson.data.title);
 
-				//学员概貌分析
-				stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData,false);
-				//授课情况统计
-				stuffoptenClassCount(backjson.data.courseData,false);
-				//学员统计人数
-				stuffStudentCount(backjson.data.studentsInLocal.seriesdata,backjson.data.studentsInLocal.yAxisData);
+				//扩招学员基础数据
+				stuffTeacherCountTable(backjson.data.echar1);
+				// //教师类型分布
+				// stuffTeacherTypeCount(backjson.data.teacherTypeData,false);
+				// //课时类型分布
+				// stuffclassHourTypeCount(backjson.data.periodTypeData,false);
+				//
+				// //学员概貌分析
+				// stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData,false);
+				// //授课情况统计
+				// stuffoptenClassCount(backjson.data.courseData,false);
+				// //学员统计人数
+				// stuffStudentCount(backjson.data.studentsInLocal.seriesdata,backjson.data.studentsInLocal.yAxisData);
 
 				//年级批次学年选择
 				// stuffChoosenArea(backjson.data);
@@ -2246,6 +2482,48 @@ function loadChart(searchObject){
 			}
 		}
 	});
+
+	// $.ajax({
+	// 	method : 'get',
+	// 	cache : false,
+	// 	url : "/getBigScreenData",
+	// 	data: {
+	// 		"searchInfo":JSON.stringify(searchObject)
+	// 	},
+	// 	dataType : 'json',
+	// 	success : function(backjson) {
+	// 		if(backjson.code===200){
+	// 			if(backjson.data.departmentData.length==0){
+	// 				toastr.warning('暂无数据');
+	// 				return;
+	// 			}
+	// 			$(".currentShowPage").html(2);
+	// 			$(".Screen1").hide();
+	// 			$(".Screen2").show();
+	// 			//中间地图
+	// 			getMapInfo();
+	//
+	// 			//授课教师人数
+	// 			stuffTeacherCountTable(backjson.data.departmentData);
+	// 			//教师类型分布
+	// 			stuffTeacherTypeCount(backjson.data.teacherTypeData,false);
+	// 			//课时类型分布
+	// 			stuffclassHourTypeCount(backjson.data.periodTypeData,false);
+	//
+	// 			//学员概貌分析
+	// 			stuffstudentFaceCount(backjson.data.studentAgeData,backjson.data.studentJobData,false);
+	// 			//授课情况统计
+	// 			stuffoptenClassCount(backjson.data.courseData,false);
+	// 			//学员统计人数
+	// 			stuffStudentCount(backjson.data.studentsInLocal.seriesdata,backjson.data.studentsInLocal.yAxisData);
+	//
+	// 			//年级批次学年选择
+	// 			// stuffChoosenArea(backjson.data);
+	//
+	// 			$('#load').hide();
+	// 		}
+	// 	}
+	// });
 }
 
 // //重新渲染chartDom

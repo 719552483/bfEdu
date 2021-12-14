@@ -527,3 +527,135 @@ border-bottom: 1px #ff000000 solid!important;
 .stopTransform{
     transform:translate3d(0px, 0px, 0px)!important;
 }
+
+@font-face {
+    font-family: 'tapeworm';
+    src: url('../fonts/tapeworm.eot');
+    src: url('../fonts/tapeworm.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/tapeworm.woff2') format('woff2'),
+    url('../fonts/tapeworm.woff') format('woff'),
+    url('../fonts/tapeworm.ttf') format('truetype'),
+    url('../fonts/tapeworm.svg#tapewormregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.webTickerArea {
+    background: linear-gradient(#0095d6, #0095d6) left top,
+    linear-gradient(#0095d6, #0095d6) left top,
+    linear-gradient(#0095d6, #0095d6) right top,
+    linear-gradient(#0095d6, #0095d6) right top,
+    linear-gradient(#0095d6, #0095d6) left bottom,
+    linear-gradient(#0095d6, #0095d6) left bottom,
+    linear-gradient(#0095d6, #0095d6) right bottom,
+    linear-gradient(#0095d6, #0095d6) right bottom;
+    background-repeat: no-repeat;
+    background-size: 4px 10px, 20px 4px;
+}
+
+.webTickerArea .last{
+    line-height: 55px!important;
+}
+
+.webTickerArea li{
+    font-size: 20px;
+    font-family: 'tapeworm';
+    color:white;
+    font-weight: bold;
+}
+
+.webTickerArea li strong{
+    font-size: 25px;
+    font-family: 'tapeworm';
+    color:#00deff;
+}
+
+.webTickerArea li cite{
+    font-size: 15px;
+    font-family: 'tapeworm';
+    /*color:#00deff;*/
+    color:white;
+}
+
+
+
+/*.visualSssf_right_box{*/
+/*    text-align: center;*/
+/*}*/
+
+/*.visualSssf_right_box strong{*/
+/*    padding-left: 25px;*/
+/*    padding-right: 25px;*/
+/*}*/
+
+/*.itembg {*/
+/*    background-image: url(../images/gz.png);*/
+/*    background-repeat: repeat;*/
+/*}*/
+
+/*.itemTit{*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    font-size: 20px;*/
+/*    text-align: center;*/
+/*}*/
+
+/*.border-blue{*/
+/*    border-left: 5px #00deff solid;*/
+/*    padding-left: 10px;*/
+/*    white-space: nowrap;*/
+/*}*/
+
+/*.border-green{*/
+/*    border-left: 5px #4fb69d solid;*/
+/*    padding-left: 10px;*/
+/*}*/
+
+/*.border-yellow{*/
+/*    padding-left: 10px;*/
+/*    border-left: 5px rgb(197,135,31) solid;*/
+/*}*/
+
+
+
+/*.total .totalNum{*/
+/*    color: #00deff;*/
+/*    font-family: 'tapeworm';*/
+/*    text-align: center;*/
+/*    font-size: 35px;*/
+/*}*/
+
+/*.totalNum cite{*/
+/*    font-size: 15px;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/* .totalNum strong{*/
+/*     word-break: break-all;*/
+/*}*/
+
+
+
+
+
+/*.totalNum,.allStudentNum{*/
+/*    color: #00deff;*/
+/*    font-family: 'tapeworm';*/
+/*}*/
+
+/*.visualSssf_right_box:first-child .totalNum strong{*/
+/*    border-left: 5px #00deff solid;*/
+/*}*/
+
+/*.totalNum strong{*/
+/*    padding-left: 5px;*/
+/*}*/
+
+/*.totalNum span,.allStudentNum{*/
+/*    padding-left: 10px;*/
+/*}*/
+
+/*.allStudentNum{*/
+/*    font-size: 40px;*/
+/*}*/
+

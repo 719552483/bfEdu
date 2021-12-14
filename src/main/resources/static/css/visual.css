@@ -92,8 +92,9 @@ html, body, form{overflow-y:auto;height:100%;}
 .visual_left .sfzcll .sfzcll_box .sfzcll_smallBk .ygl{color:#00ffc6;}
 .visual_left .sfzcll .sfzcll_box .sfzcll_smallBk .ygh{color:#ffe400;}
 
-.visual_con{width:50%;height:100%;float:left;padding:25px 20px 0 20px;}
-.visual_con .visual_conTop{height:35px;margin-bottom:10px;}
+/*.visual_con{width:50%;height:100%;float:left;padding:25px 20px 0 20px;}*/
+.visual_con{width:50%;height:100%;float:left;padding:0px 20px 0 20px;}
+.visual_con .visual_conTop{height:60px;margin-bottom:10px;}
 .visual_con .visual_conTop .visual_conTop_box{height:100%;padding:0 3px;}
 .visual_con .visual_conTop .visual_conTop1{width:20%;height:100%;float:left;}
 .visual_con .visual_conTop .visual_conTop1>div{background:url(../images/ksh40.png) no-repeat;background-size:100% 100%;}

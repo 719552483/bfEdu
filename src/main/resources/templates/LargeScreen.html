@@ -21,6 +21,7 @@
     <script src="sripts/swiper.min.js"></script>
     <script src="js/largerScreen.js"></script>
     <script src="sripts/toastr.min.js" type="text/javascript"></script>
+    <script src="sripts/jquery.webticker.min.js" type="text/javascript"></script>
 </head>
 <body class="ksh">
     <div class="noneStart currentShowPage">1</div>
@@ -110,12 +111,13 @@
             <div class="visual_left leftHideenArea">
                 <div class="visual_box">
                     <div class="visual_title">
-                        <span>授课教师人数</span>
+                        <span>基础信息展示</span>
                         <img src="images/ksh33.png"/>
                     </div>
-                    <div class="visual_chart tableArea rightTableArea">
-                        <table id='teacherCountTable'></table>
-                    </div>
+<!--                    <div class="visual_chart tableArea rightTableArea">-->
+<!--                        <table id='teacherCountTable'></table>-->
+<!--                    </div>-->
+                        <div class="visual_chart chartDom1" id="schoolStudentNumBaseInfoChart"></div>
                 </div>
 
                 <div class="visual_box">
@@ -143,57 +145,19 @@
             </div>
 
             <div class="visual_con topHideenArea">
-<!--               <div class="visual_conTop">-->
-<!--                   <div class="visual_conBot_bot" style="height: 180px;">-->
-<!--                       <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group with nested dropdown">-->
-<!--                           <a class="btn btn-default noneStartImportant" role="button" id="returnConfigPage">返回</a>-->
-<!--                           <div class="btn-group currentSchoolYear" choosend="" role="group">-->
-<!--                               <a  class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                   年级 <span class="caret"></span>-->
-<!--                               </a>-->
-<!--                               <ul class="dropdown-menu schoolYearArea">-->
-<!--                               </ul>-->
-<!--                           </div>-->
-
-<!--                           <div class="btn-group currentBatch" choosend="" role="group">-->
-<!--                               <a  class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                   批次 <span class="caret"></span>-->
-<!--                               </a>-->
-<!--                               <ul class="dropdown-menu batchArea">-->
-<!--                               </ul>-->
-<!--                           </div>-->
-
-<!--                           <div class="btn-group currentYear" choosend="" role="group">-->
-<!--                               <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                   学年 <span class="caret"></span>-->
-<!--                               </a>-->
-<!--                               <ul class="dropdown-menu yearArea">-->
-<!--                               </ul>-->
-<!--                           </div>-->
-
-<!--                           <div class="btn-group startSearch" role="group">-->
-<!--                               <a  style="padding: 4.5px 12px;" class="btn btn-default dropdown-toggle changeScreen2Info" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                    开始检索<i class="iconfont icon-seachfScreen2"></i>-->
-<!--                               </a>-->
-<!--                           </div>-->
-
-<!--                           <div class="btn-group startSearchFor3" role="group" style="display: none">-->
-<!--                               <a  style="padding:  4.5px 12px;" class="btn btn-default dropdown-toggle changeScreen3Info" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                   开始检索<i class="iconfont icon-seachfScreen2"></i>-->
-<!--                               </a>-->
-<!--                           </div>-->
-<!--                       </div>-->
-<!--                       <div class="clear"></div>-->
-<!--                   </div>-->
-<!--                </div>-->
+                <div class="visual_conTop webTickerArea">
+                    <div class="visual_conBot_bot">
+                        <ul id="visual_conTop_webticker"></ul>
+                        <div class="clear"></div>
+                    </div>
+                </div>
 
                 <div class="visual_conBot">
                     <img class="visual_conBot_l" src="images/ksh42.png"/>
                     <img class="visual_conBot_2" src="images/ksh43.png"/>
                     <img class="visual_conBot_3" src="images/ksh44.png"/>
                     <img class="visual_conBot_4" src="images/ksh45.png"/>
-                    <div class="visual_chart_text">
-                    </div>
+                    <div class="visual_chart_text"></div>
                     <div class="visual_chart chartDom1 centerMap" id="main8"></div>
 <!--                    <div class="smallBingtu noneStart">-->
 <!--                        <div class="visual_box2">-->
@@ -221,7 +185,7 @@
             <div class="visual_right rightHideenArea">
                 <div class="visual_box">
                     <div class="visual_title">
-                        <span>学员概貌分析</span>
+                        <span>学生成分信息</span>
                         <img src="images/ksh33.png"/>
                     </div>
                     <div class="swiper-container visual_swiper1 visual_chart">
