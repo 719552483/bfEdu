@@ -423,7 +423,7 @@ public class BigDataService {
         //--------------------------------------------
         List<Map> titleList = new ArrayList<>();
         Map<String,Object> mapTitle = new HashMap<>();
-        mapTitle.put("name","辽宁职业学院扩招学生人数");
+        mapTitle.put("name","辽宁职业学院扩招学生总人数");
         mapTitle.put("allStudent",edu001Dao.findAllStudent());
         mapTitle.put("manStudent",edu001Dao.findAllStudentByXb("M"));
         mapTitle.put("womanStudent",edu001Dao.findAllStudentByXb("F"));
@@ -431,7 +431,7 @@ public class BigDataService {
         List<Edu105> edu105List = edu105Dao.findAll();
         for(Edu105 edu105:edu105List){
             mapTitle = new HashMap<>();
-            mapTitle.put("name",edu105.getNjmc());
+            mapTitle.put("name",edu105.getNjmc()+"级总人数");
             mapTitle.put("allStudent",edu001Dao.findAllStudentByNj(edu105.getEdu105_ID()+""));
             mapTitle.put("manStudent",edu001Dao.findAllStudentByNj(edu105.getEdu105_ID()+"","M"));
             mapTitle.put("womanStudent",edu001Dao.findAllStudentByNj(edu105.getEdu105_ID()+"","F"));
