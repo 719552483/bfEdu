@@ -1300,17 +1300,17 @@ function importStudentInfo() {
 
 //预备批量更新学生
 function modifyStudents(){
-	var choosendStudents = choosendStudent;
-	if(choosendStudents.length===0){
-		toastr.warning('暂未选择学生');
-		return;
-	}
-	for (var i = 0; i < choosendStudents.length; i++) {
-		if(choosendStudents[i].zt==="007"){
-			toastr.warning('有学生暂不可进行此操作');
-			return;
-		}
-	}
+	// var choosendStudents = choosendStudent;
+	// if(choosendStudents.length===0){
+	// 	toastr.warning('暂未选择学生');
+	// 	return;
+	// }
+	// for (var i = 0; i < choosendStudents.length; i++) {
+	// 	if(choosendStudents[i].zt==="007"){
+	// 		toastr.warning('有学生暂不可进行此操作');
+	// 		return;
+	// 	}
+	// }
 	$.showModal("#modifyStudentsModal",true);
 	$("#ModifyStudentsFile,#showModifyFileName").val("");
 	$(".fileErrorTxTArea,.fileSuccessTxTArea,.fileLoadingArea").hide();
@@ -1330,9 +1330,371 @@ function modifyStudents(){
 	//下载更新模板
 	$('#loadModifyStudentsModal').unbind('click');
 	$('#loadModifyStudentsModal').bind('click', function(e) {
-		loadModifyStudentsModal(choosendStudents);
+		loadModifyStudentsModal();
 		e.stopPropagation();
 	});
+}
+
+//下载更新模板
+function loadModifyStudentsModal(){
+	LinkageSelectPublic("#modifyStudentsChooseFileModel_level","#modifyStudentsChooseFileModel_department","#modifyStudentsChooseFileModel_grade","#modifyStudentsChooseFileModel_major");
+	var reObject = new Object();
+	reObject.fristSelectId = "#modifyStudentsChooseFileModel_level";
+	reObject.normalSelectIds = "#modifyStudentsChooseFileModel_xzb";
+	reObject.actionSelectIds = "#modifyStudentsChooseFileModel_department,#modifyStudentsChooseFileModel_grade,#modifyStudentsChooseFileModel_major";
+	reReloadSearchsWithSelect(reObject);
+	stuffModifyStudentsChooseFileModelStudentInfoTable({});
+
+	$("#modifyStudentsChooseFileModel_major").change(function(e) {
+		if(typeof getModifyStudentsChooseFileModelSearchs(1)==="undefined"){
+			e.stopPropagation();
+			return;
+		}
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/queryCulturePlanStudent",
+			data: {
+				"culturePlanInfo":JSON.stringify(getModifyStudentsChooseFileModelSearchs(1))
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.result) {
+					if (backjson.classInfo.length===0&&backjson.studentInfo.length===0) {
+						toastr.warning('暂无信息');
+						return;
+					}
+
+					if (backjson.classInfo.length===0) {
+						toastr.warning('暂无班级信息');
+					}else{
+						var str = '<option value="seleceConfigTip">请选择</option>';
+						for (var i = 0; i < backjson.classInfo.length; i++) {
+							str += '<option value="' + backjson.classInfo[i].edu300_ID + '">' + backjson.classInfo[i].xzbmc
+								+ '</option>';
+						}
+						stuffManiaSelect("#modifyStudentsChooseFileModel_xzb", str);
+					}
+					if (backjson.studentInfo.length===0) {
+						toastr.warning('暂无学生信息');
+						stuffModifyStudentsChooseFileModelStudentInfoTable({});
+					}else{
+						stuffModifyStudentsChooseFileModelStudentInfoTable(backjson.studentInfo);
+					}
+				} else {
+					e.stopPropagation();
+					toastr.warning('操作失败，请重试');
+				}
+			}
+		});
+	});
+
+	$("#modifyStudentsChooseFileModel_xzb").change(function(e) {
+		if(typeof getModifyStudentsChooseFileModelSearchs(2)==="undefined"){
+			e.stopPropagation();
+			return;
+		}
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/studentMangerSearchStudentDownload",
+			data: {
+				"SearchCriteria":JSON.stringify(getModifyStudentsChooseFileModelSearchs(2))
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					if (backjson.data.length===0) {
+						toastr.warning('暂无学生信息');
+						stuffModifyStudentsChooseFileModelStudentInfoTable({});
+					}else{
+						stuffModifyStudentsChooseFileModelStudentInfoTable(backjson.data);
+					}
+				} else {
+					e.stopPropagation();
+					toastr.warning(backjson.msg);
+				}
+			}
+		});
+	});
+
+	$.showModal("#modifyStudentsChooseFileModelModal",true);
+	$.hideModal('#modifyStudentsModal',false);
+
+	//取消返回
+	$('.specialCanle').unbind('click');
+	$('.specialCanle').bind('click', function(e) {
+		$.showModal("#modifyStudentsModal",true);
+		$.hideModal('#modifyStudentsChooseFileModelModal',false);
+		e.stopPropagation();
+	});
+
+	//确认下载
+	$('.confirmChooseFileModelTable').unbind('click');
+	$('.confirmChooseFileModelTable').bind('click', function(e) {
+		if(typeof getModifyStudentsChooseFileModelSearchs(2)==="undefined"){
+			return;
+		}
+
+		if(choosendModifyStudents.length>0&&choosendModifyStudents.length>2){
+			toastr.warning('最多勾选100名学生');
+		}
+
+		var choosendStudentsId=new Array();
+		for (var i = 0; i < choosendModifyStudents.length; i++) {
+			choosendStudentsId.push(choosendModifyStudents[i].edu001_ID);
+		}
+
+		var SearchCriteria=new Object();
+		SearchCriteria.selectInfo=getModifyStudentsChooseFileModelSearchs(2);
+		SearchCriteria.studentList=choosendStudentsId;
+		SearchCriteria.type=choosendStudentsId.length<=0?1:2; //1为没选择学生  2为选择了学生
+
+		$.ajax({
+			method : 'get',
+			cache : false,
+			url : "/downloadModifyStudentsModalCheck",
+			data: {
+				"SearchCriteria":JSON.stringify(SearchCriteria)
+			},
+			dataType : 'json',
+			beforeSend: function(xhr) {
+				requestErrorbeforeSend();
+			},
+			error: function(textStatus) {
+				requestError();
+			},
+			complete: function(xhr, status) {
+				requestComplete();
+			},
+			success : function(backjson) {
+				hideloding();
+				if (backjson.code===200) {
+					var url = "/downloadModifyStudentsModal";
+					var form = $("<form></form>").attr("action", url).attr("method", "post");
+					form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value", JSON.stringify(SearchCriteria)));
+					form.appendTo('body').submit().remove();
+					toastr.info('文件下载中，请稍候...');
+					$.showModal("#modifyStudentsModal",true);
+					$.hideModal('#modifyStudentsChooseFileModelModal',false);
+				} else {
+					toastr.warning(backjson.msg);
+				}
+			}
+		});
+		e.stopPropagation();
+	});
+}
+
+var choosendModifyStudents=new Array();
+//渲染更新学生模板 学生表
+function stuffModifyStudentsChooseFileModelStudentInfoTable(tableInfo){
+	choosendModifyStudents=new Array();
+	$('#modifyStudentsChooseFileModelTable').bootstrapTable('destroy').bootstrapTable({
+		data : tableInfo,
+		pagination : true,
+		pageNumber : 1,
+		pageSize : 5,
+		pageList : [ 5 ],
+		showToggle : false,
+		showFooter : false,
+		showExport: false,      //是否显示导出
+		clickToSelect : true,
+		search : true,
+		editable : false,
+		striped : true,
+		toolbar : '#toolbar',
+		showColumns : true,
+		onCheck : function(row) {
+			onCheckChoosendModifyStudents(row);
+		},
+		onUncheck : function(row) {
+			onUncheckChoosendModifyStudents(row);
+		},
+		onCheckAll : function(rows) {
+			onCheckAllChoosendModifyStudents(rows);
+		},
+		onUncheckAll : function(rows,rows2) {
+			onUncheckAllChoosendModifyStudents(rows2);
+		},
+		onPageChange : function() {
+			drawPagination(".modifyStudentsChooseFileModelTableArea", "学生信息");
+			for (var i = 0; i < choosendModifyStudents.length; i++) {
+				$("#modifyStudentsChooseFileModelTable").bootstrapTable("checkBy", {field:"edu001_ID", values:[choosendModifyStudents[i].edu001_ID]})
+			}
+		},
+		columns : [ {
+			field : 'edu001_ID',
+			title: '唯一标识',
+			align : 'center',
+			sortable: true,
+			visible : false
+		},{
+			field: 'check',
+			checkbox: true
+		},{
+			title: '序号',
+			align: 'center',
+			class:'tableNumberTd',
+			formatter: tableNumberMatter
+		},  {
+			field : 'xzbname',
+			title : '行政班',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		},{
+			field : 'xm',
+			title : '姓名',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		} , {
+			field : 'zt',
+			title : '学生状态',
+			align : 'left',
+			sortable: true,
+			formatter :paramsMatter
+		}]
+	});
+
+	drawPagination(".modifyStudentsChooseFileModelTableArea", "学生信息");
+	drawSearchInput(".modifyStudentsChooseFileModelTableArea");
+	changeTableNoRsTip();
+	toolTipUp(".myTooltip");
+	changeColumnsStyle(".modifyStudentsChooseFileModelTableArea", "学生信息");
+}
+
+//单选
+function onCheckChoosendModifyStudents(row){
+	if(choosendModifyStudents.length<=0){
+		choosendModifyStudents.push(row);
+	}else{
+		var add=true;
+		for (var i = 0; i < choosendModifyStudents.length; i++) {
+			if(choosendModifyStudents[i].edu001_ID===row.edu001_ID){
+				add=false;
+				break;
+			}
+		}
+		if(add){
+			choosendModifyStudents.push(row);
+		}
+	}
+}
+
+//单反选
+function onUncheckChoosendModifyStudents(row){
+	if(choosendModifyStudents.length<=1){
+		choosendModifyStudents.length=0;
+	}else{
+		for (var i = 0; i < choosendModifyStudents.length; i++) {
+			if(choosendModifyStudents[i].edu001_ID===row.edu001_ID){
+				choosendModifyStudents.splice(i,1);
+			}
+		}
+	}
+}
+
+//全选
+function onCheckAllChoosendModifyStudents(row){
+	for (var i = 0; i < row.length; i++) {
+		choosendModifyStudents.push(row[i]);
+	}
+}
+
+//全反选
+function onUncheckAllChoosendModifyStudents(row){
+	var a=new Array();
+	for (var i = 0; i < row.length; i++) {
+		a.push(row[i].edu001_ID);
+	}
+
+
+	for (var i = 0; i < choosendModifyStudents.length; i++) {
+		if(a.indexOf(choosendModifyStudents[i].edu001_ID)!==-1){
+			choosendModifyStudents.splice(i,1);
+			i--;
+		}
+	}
+}
+
+//获得更新学生模板下载检索条件
+function getModifyStudentsChooseFileModelSearchs(type){
+	var returnObject = new Object();
+	var levelValue = getNormalSelectValue("modifyStudentsChooseFileModel_level");
+	var departmentValue = getNormalSelectValue("modifyStudentsChooseFileModel_department");
+	var gradeValue =getNormalSelectValue("modifyStudentsChooseFileModel_grade");
+	var majorValue =getNormalSelectValue("modifyStudentsChooseFileModel_major");
+	var xzbValue =getNormalSelectValue("modifyStudentsChooseFileModel_xzb");
+	var levelText = getNormalSelectText("modifyStudentsChooseFileModel_level");
+	var departmentText = getNormalSelectText("modifyStudentsChooseFileModel_department");
+	var gradeText =getNormalSelectText("modifyStudentsChooseFileModel_grade");
+	var majorText =getNormalSelectText("modifyStudentsChooseFileModel_major");
+	var xzbText =getNormalSelectText("modifyStudentsChooseFileModel_xzb");
+	if(type==1){
+		returnObject.level = levelValue;
+		returnObject.department = departmentValue;
+		returnObject.grade = gradeValue;
+		returnObject.major = majorValue;
+		returnObject.levelTxt = levelText;
+		returnObject.departmentTxt = departmentText;
+		returnObject.gradeTxt = gradeText;
+		returnObject.majorTxt = majorText;
+		return returnObject;
+	}else{
+		if(levelValue===''){
+			toastr.warning('请选择培养层次');
+			return ;
+		}
+
+		if(departmentValue===''){
+			toastr.warning('请选择二级学院');
+			return ;
+		}
+
+		if(gradeValue===''){
+			toastr.warning('请选择年级');
+			return ;
+		}
+
+		if(majorValue===''){
+			toastr.warning('请选择专业');
+			return ;
+		}
+
+		returnObject.pycc = levelValue;
+		returnObject.szxb = departmentValue;
+		returnObject.nj = gradeValue;
+		returnObject.zybm = majorValue;
+		returnObject.Edu300_ID = xzbValue;
+		returnObject.levelTxt = levelText;
+		returnObject.departmentTxt = departmentText;
+		returnObject.gradeTxt = gradeText;
+		returnObject.majorTxt = majorText;
+		returnObject.xzbText = xzbText;
+		return returnObject;
+	}
 }
 
 //预备批量发放毕业证
@@ -1885,21 +2247,6 @@ function loadStudentInfoModel() {
 	$(document.body).append($eleForm);
 	//提交表单，实现下载
 	$eleForm.submit();
-}
-
-//下载更新模板
-function loadModifyStudentsModal(choosendStudents){
-	var choosendStudentsId=new Array();
-	for (var i = 0; i < choosendStudents.length; i++) {
-		choosendStudentsId.push(choosendStudents[i].edu001_ID);
-	}
-
-	 var url = "/downloadModifyStudentsModal";
-     var modifyStudentIDs = JSON.stringify(choosendStudentsId) ;
-     var form = $("<form></form>").attr("action", url).attr("method", "post");
-     form.append($("<input></input>").attr("type", "hidden").attr("name", "modifyStudentIDs").attr("value", modifyStudentIDs));
-     form.appendTo('body').submit().remove();
-
 }
 
 //得到检索对象

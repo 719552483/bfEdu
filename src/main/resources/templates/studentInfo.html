@@ -707,6 +707,94 @@
 		</div>
 	</div>
 
+	<!-- 批量更新学生 下载模板Modal -->
+	<div class="modal fade bs-example-modal-lg" id="modifyStudentsChooseFileModelModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="tiptop"><span class="moadalTitle">批量更新学生-选择模板</span><a class="specialCanle" shape="rect"></a></div>
+					</div>
+					<div class="modal-body" style="padding: 0px 30px 0px 30px;">
+						<div class="formtitle" style="clear:both;margin-bottom: 25px;">
+							<span>培养计划定位(必选)</span>
+						</div>
+						<div class="searchArea searchAreaWitheSelect">
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">层&#12288;&#8197;次<b>*</b></label>
+										<select id="modifyStudentsChooseFileModel_level" class="isSowIndex">
+											<option value="seleceConfigTip">请选择</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">二级学院<b>*</b></label>
+										<select id="modifyStudentsChooseFileModel_department" class="isSowIndex">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">年&#12288;&#8197;级<b>*</b></label>
+										<select id="modifyStudentsChooseFileModel_grade" class="isSowIndex">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">专&#12288;&#8197;业<b>*</b></label>
+										<select id="modifyStudentsChooseFileModel_major" class="isSowIndex">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+
+							<div class="col1 giveBottom">
+								<ul class="forminfo">
+									<div class="">
+										<label class="selectName" style="margin-top: 14px;">行政班</label>
+										<select id="modifyStudentsChooseFileModel_xzb" class="isSowIndex">
+											<option value="seleceConfigTip">暂不可选</option>
+										</select>
+									</div>
+								</ul>
+							</div>
+						</div>
+
+						<div class="formtitle" style="clear:both;margin-bottom: 0px;">
+							<span>可选学生库(可选)</span>
+						</div>
+						<div class="formtext myformtext myformtextTipArea" style="margin-bottom: -20px;text-align: center">
+							<b>提示：若勾选学生库下载更新模板,则最多勾选100名学生</b>
+						</div>
+						<div class="modifyStudentsChooseFileModelTableArea columnsStyle searchGivePaddingR">
+							<table class="tablelist myTableStyle" id="modifyStudentsChooseFileModelTable" data-unique-id="edu001_ID" style="margin-top: 10px;"></table>
+						</div>
+
+						<div class="clear"></div>
+					</div>
+					<div class="modal-footer tipbtn">
+						<input name="" type="button" actionType="modify" class="sure confirmChooseFileModelTable" value="开始下载"/>&nbsp;
+						<input name="" type="button" class="specialCanle" value="取消下载"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	<!-- 批量发放毕业证Modal -->
 	<div class="modal fade bs-example-modal-lg" id="graduationStudentsModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg" role="document">
@@ -781,7 +869,7 @@
 			</div>
 		</div>
 
-	 <!-- ajax请求masking -->
+	<!-- ajax请求masking -->
 	<div class="modal-backdrop fade loadingMasking noneStart">
 		<div class="spinner-box">
 			<div class="pulse-container">

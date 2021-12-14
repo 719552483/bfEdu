@@ -1753,6 +1753,7 @@ background: rgba(36, 138, 187, 0.77);
 	margin-top: -50px;
 }
 
+.modifyStudentsChooseFileModelTableArea .bootstrap4 .search,
 .studentWorkTableArea .bootstrap4 .search,
 .graduationStudentsClassTableArea .bootstrap4 .search,
 .schoolMoneyTableArea .bootstrap4 .search,

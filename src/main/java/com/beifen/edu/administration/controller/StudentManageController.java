@@ -129,6 +129,38 @@ public class StudentManageController {
         return result;
     }
 
+//    /**
+//     * 下载学生更新模板
+//     *
+//     * @return returnMap
+//     * @throws ParseException
+//     * @throws Exception
+//     */
+//    @RequestMapping("downloadModifyStudentsModal")
+//    @ResponseBody
+//    public ResultVO downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException, ParseException {
+//        // 根据ID查询已选学生信息
+//        com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
+//        List<Edu001> chosedStudents=new ArrayList<Edu001>();
+//        for (int i = 0; i < modifyStudentArray.size(); i++) {
+//            Edu001 edu001=studentManageService.queryStudentBy001ID(modifyStudentArray.get(i).toString());
+//            chosedStudents.add(edu001);
+//        }
+//        boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+//        String fileName="";
+//        if(isIE){
+//            fileName="modifyStudents";
+//        }else{
+//            fileName="批量更新学生模板";
+//        }
+//        //创建Excel文件
+//        XSSFWorkbook workbook  = new XSSFWorkbook();
+//        utils.createModifyStudentModal(workbook,chosedStudents);
+//        utils.loadModal(response,fileName, workbook);
+//
+//        ResultVO result = ResultVO.setSuccess("模版下载成功");
+//        return result;
+//    }
     /**
      * 下载学生更新模板
      *
@@ -138,14 +170,25 @@ public class StudentManageController {
      */
     @RequestMapping("downloadModifyStudentsModal")
     @ResponseBody
-    public ResultVO downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "modifyStudentIDs") String modifyStudentIDs) throws IOException, ParseException {
-        // 根据ID查询已选学生信息
-        com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(modifyStudentIDs);
+    public ResultVO downloadModifyStudentsModal(HttpServletRequest request,HttpServletResponse response,@RequestParam(value = "SearchCriteria") String SearchCriteria) throws IOException, ParseException {
+
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+        String type = jsonObject.getString("type");
+        com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(jsonObject.getString("studentList"));
+        com.alibaba.fastjson.JSONObject jo = JSON.parseObject(jsonObject.getString("selectInfo"));
+        Edu001 edu001SearchCriteria = JSON.toJavaObject(jo, Edu001.class);
         List<Edu001> chosedStudents=new ArrayList<Edu001>();
-        for (int i = 0; i < modifyStudentArray.size(); i++) {
-            Edu001 edu001=studentManageService.queryStudentBy001ID(modifyStudentArray.get(i).toString());
-            chosedStudents.add(edu001);
+        if("2".equals(type)){
+            for (int i = 0; i < modifyStudentArray.size(); i++) {
+                Edu001 edu001=studentManageService.queryStudentBy001ID(modifyStudentArray.get(i).toString());
+                chosedStudents.add(edu001);
+            }
+        }else{
+            ResultVO result = studentManageService.studentMangerSearchStudentDownload(edu001SearchCriteria);
+            List<Edu001> edu001List = (List<Edu001>) result.getData();
+            chosedStudents.addAll(edu001List);
         }
+
         boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
         String fileName="";
         if(isIE){
@@ -159,6 +202,31 @@ public class StudentManageController {
         utils.loadModal(response,fileName, workbook);
 
         ResultVO result = ResultVO.setSuccess("模版下载成功");
+        return result;
+    }
+
+    /**
+     * 下载学生更新模板
+     *
+     * @return returnMap
+     * @throws ParseException
+     * @throws Exception
+     */
+    @RequestMapping("downloadModifyStudentsModalCheck")
+    @ResponseBody
+    public ResultVO downloadModifyStudentsModalCheck(@RequestParam(value = "SearchCriteria") String SearchCriteria){
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+        String type = jsonObject.getString("type");
+        com.alibaba.fastjson.JSONArray modifyStudentArray = JSON.parseArray(jsonObject.getString("studentList"));
+        com.alibaba.fastjson.JSONObject jo = JSON.parseObject(jsonObject.getString("selectInfo"));
+        Edu001 edu001 = JSON.toJavaObject(jo, Edu001.class);
+        if("1".equals(type)) {
+            ResultVO result = studentManageService.studentMangerSearchStudentDownload(edu001);
+            if(result.getCode() != 200){
+                return result;
+            }
+        }
+        ResultVO result = ResultVO.setSuccess("访问成功");
         return result;
     }
 
@@ -402,6 +470,25 @@ public class StudentManageController {
         edu001.setXzbname(studentSearchPO.getClassName());
 
         ResultVO result = studentManageService.studentMangerSearchStudent(edu001,studentSearchPO.getUserId(),studentSearchPO.getPageNum(),studentSearchPO.getPageSize());
+        return result;
+    }
+
+    /**
+     * 学生管理搜索学生-下载模板
+     *
+     * @param SearchCriteria
+     *
+     * @return returnMap
+     */
+    @RequestMapping("studentMangerSearchStudentDownload")
+    @ResponseBody
+    public ResultVO studentMangerSearchStudentDownload(@RequestParam("SearchCriteria") String SearchCriteria) {
+
+        // 填充搜索对象
+        com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(SearchCriteria);
+        Edu001 edu001 = JSON.toJavaObject(jsonObject, Edu001.class);
+
+        ResultVO result = studentManageService.studentMangerSearchStudentDownload(edu001);
         return result;
     }
 

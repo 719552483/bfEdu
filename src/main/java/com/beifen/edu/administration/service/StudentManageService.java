@@ -496,7 +496,44 @@ public class StudentManageService {
     }
 
 
+    // 学生管理搜索学生-下载模板
+    public ResultVO studentMangerSearchStudentDownload(Edu001 edu001) {
+        ResultVO resultVO;
 
+        Specification<Edu001> specification = new Specification<Edu001>() {
+            @Override
+            public Predicate toPredicate(Root<Edu001> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb)
+            {
+                List<Predicate> predicates = new ArrayList<>();
+                if (edu001.getPycc() != null && !"".equals(edu001.getPycc())) {
+                    predicates.add(cb.equal(root.<String> get("pycc"), edu001.getPycc()));
+                }
+                if (edu001.getSzxb() != null && !"".equals(edu001.getSzxb())) {
+                    predicates.add(cb.equal(root.<String> get("szxb"), edu001.getSzxb()));
+                }
+                if (edu001.getNj() != null && !"".equals(edu001.getNj())) {
+                    predicates.add(cb.equal(root.<String> get("nj"), edu001.getNj()));
+                }
+                if (edu001.getZybm() != null && !"".equals(edu001.getZybm())) {
+                    predicates.add(cb.equal(root.<String> get("zybm"), edu001.getZybm()));
+                }
+                if (edu001.getEdu300_ID() != null && !"".equals(edu001.getEdu300_ID())) {
+                    predicates.add(cb.equal(root.<String> get("edu300_ID"), edu001.getEdu300_ID()));
+                }
+
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        List<Edu001> edu001List = edu001Dao.findAll(specification);
+
+        if(edu001List.size() == 0) {
+            resultVO = ResultVO.setFailed("暂无学生信息");
+        } else {
+            resultVO = ResultVO.setSuccess("共找到"+edu001List.size()+"个学生",edu001List);
+        }
+        return resultVO;
+    }
 
     // 查询学生所在行政班ID
     public String queryStudentXzbCode(String edu001Id) {
