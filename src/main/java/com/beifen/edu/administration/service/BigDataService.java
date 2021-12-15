@@ -474,6 +474,13 @@ public class BigDataService {
         EchartPO echartPO = new EchartPO();
         List<EchartPO> echartPOS = utils.castEntity(dataList, EchartPO.class, echartPO);
         returnMap.put("echar2",echartPOS);
+        //--------------------------------------------
+        // 图3：教学点人数
+        //--------------------------------------------
+        Map<String, Object> studentsInLocal = getStudentsInLocal();
+        returnMap.put("echar3",studentsInLocal);
+        //--------------------------------------------
+
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
@@ -673,6 +680,25 @@ public class BigDataService {
         }
 
         return echartPOS;
+    }
+    //教学点学生人数查询
+    private Map<String,Object> getStudentsInLocal(){
+        Map<String,Object> returnMap = new HashMap<>();
+        List<Object[]> dataList  = edu202Dao.getStudentsInLocalByEdu300();
+
+        StudentInPointPO studentInPointPO = new StudentInPointPO();
+        List<StudentInPointPO> newStudentInPointPO = utils.castEntity(dataList, StudentInPointPO.class, studentInPointPO);;
+
+        List<String> yAxisData = newStudentInPointPO.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
+        List<Long> seriesdata = newStudentInPointPO.stream().map(a -> {
+            long studentCount = Long.parseLong(a.getStudentCount());
+            return studentCount;
+        }).collect(Collectors.toList());
+
+        returnMap.put("yAxisData",yAxisData);
+        returnMap.put("seriesdata",seriesdata);
+
+        return returnMap;
     }
 
     //教学点学生人数查询
