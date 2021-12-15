@@ -468,6 +468,12 @@ public class BigDataService {
         map1.put("countArray",countArray);
         returnMap.put("echar1",map1);
         //--------------------------------------------
+        // 图2：生源类型
+        //--------------------------------------------
+        List<Object[]> dataList = edu001Dao.getStudentByJob();
+        EchartPO echartPO = new EchartPO();
+        List<EchartPO> echartPOS = utils.castEntity(dataList, EchartPO.class, echartPO);
+        returnMap.put("echar2",echartPOS);
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;

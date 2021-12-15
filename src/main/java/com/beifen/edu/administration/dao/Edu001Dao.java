@@ -100,6 +100,10 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t, Edu300 m where t.edu300_ID = m.edu300_ID and m.njbm in ?1 and m.batch in ?2 group by t.sylx",nativeQuery = true)
 	List<Object[]> getStudentByJob(List<Long> schoolYearCodeList,List<String> batchCodeList);
 
+	//根据生源类型查询学生人数
+	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t group by t.sylx",nativeQuery = true)
+	List<Object[]> getStudentByJob();
+
 	//根据二级学院查询各生源类型学生人数
 	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t, Edu300 m where t.edu300_ID = m.edu300_ID and t.szxb = ?1 and m.njbm in ?2 and m.batch in ?3 group by t.sylx",nativeQuery = true)
 	List<Object[]> getStudentByJobWithDepatrment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);

@@ -520,7 +520,7 @@ public class StudentManageService {
                 if (edu001.getEdu300_ID() != null && !"".equals(edu001.getEdu300_ID())) {
                     predicates.add(cb.equal(root.<String> get("edu300_ID"), edu001.getEdu300_ID()));
                 }
-
+                criteriaQuery.orderBy(cb.asc(root.get("xh")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
