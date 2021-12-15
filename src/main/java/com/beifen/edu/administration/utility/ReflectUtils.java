@@ -1754,15 +1754,15 @@ public class ReflectUtils {
 			}else{
 				//如果是修改学生判断学生id是否存在   填充学生学号
 				if(isModify){
-					String correctXh=reflectUtils.studentManageService.queryXhBy001ID(edu001.getEdu001_ID().toString());
+					String correctXh=reflectUtils.studentManageService.queryXhBy001ID(edu001.getXh());
 					if(correctXh==null){
 						chaeckPass=false;
-						checkTxt="第"+(i+1)+"行-可能修改了学生ID(学生ID不允许更改)";
+						checkTxt="第"+(i+1)+"行-可能修改了学生学号(学生学号不允许更改)";
 						returnMap.put("chaeckPass", chaeckPass);
 						returnMap.put("checkTxt", checkTxt);
 						break;
 					}else{
-						edu001.setXh(correctXh);
+						edu001.setEdu001_ID(Long.parseLong(correctXh));
 					}
 				}
 				
@@ -2517,7 +2517,7 @@ public class ReflectUtils {
             result="xzbname";
             break;
         case 6:
-            result="Edu001_ID";
+            result="xh";
             break;
         case 7:
             result="xm";

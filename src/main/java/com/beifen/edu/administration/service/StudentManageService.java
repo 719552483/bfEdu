@@ -241,8 +241,8 @@ public class StudentManageService {
     }
 
     //根据id查学生学号
-    public String queryXhBy001ID(String edu001_ID) {
-        return edu001Dao.queryXhBy001ID(edu001_ID);
+    public String queryXhBy001ID(String xh) {
+        return edu001Dao.query001IDByXh(xh);
     }
 
     // 批量发放毕业证
