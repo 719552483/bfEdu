@@ -11,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -477,7 +475,7 @@ public class BigDataService {
         //--------------------------------------------
         // 图3：教学点人数
         //--------------------------------------------
-        Map<String, Object> studentsInLocal = getStudentsInLocal();
+        List<Map> studentsInLocal = getStudentsInLocalNew();
         returnMap.put("echar3",studentsInLocal);
         //--------------------------------------------
 
@@ -681,25 +679,58 @@ public class BigDataService {
 
         return echartPOS;
     }
+
+//    private Map<String,Object> getStudentsInLocal(){
+//        Map<String,Object> returnMap = new HashMap<>();
+//        List<Object[]> dataList  = edu202Dao.getStudentsInLocalByEdu300();
+//
+//        StudentInPointPO studentInPointPO = new StudentInPointPO();
+//        List<StudentInPointPO> newStudentInPointPO = utils.castEntity(dataList, StudentInPointPO.class, studentInPointPO);;
+//
+//        List<String> yAxisData = newStudentInPointPO.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
+//        List<Long> seriesdata = newStudentInPointPO.stream().map(a -> {
+//            long studentCount = Long.parseLong(a.getStudentCount());
+//            return studentCount;
+//        }).collect(Collectors.toList());
+//
+//        returnMap.put("yAxisData",yAxisData);
+//        returnMap.put("seriesdata",seriesdata);
+//
+//        return returnMap;
+//    }
     //教学点学生人数查询
-    private Map<String,Object> getStudentsInLocal(){
-        Map<String,Object> returnMap = new HashMap<>();
-        List<Object[]> dataList  = edu202Dao.getStudentsInLocalByEdu300();
-
-        StudentInPointPO studentInPointPO = new StudentInPointPO();
-        List<StudentInPointPO> newStudentInPointPO = utils.castEntity(dataList, StudentInPointPO.class, studentInPointPO);;
-
-        List<String> yAxisData = newStudentInPointPO.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
-        List<Long> seriesdata = newStudentInPointPO.stream().map(a -> {
-            long studentCount = Long.parseLong(a.getStudentCount());
-            return studentCount;
-        }).collect(Collectors.toList());
-
-        returnMap.put("yAxisData",yAxisData);
-        returnMap.put("seriesdata",seriesdata);
-
-        return returnMap;
+    private List<Map> getStudentsInLocalNew(){
+        List<Map> mapList = new ArrayList<>();
+        List<Object[]> dataList  = edu202Dao.getStudentsInLocalByEdu300New();
+        StudentInCityPO studentInCityPO = new StudentInCityPO();
+        List<StudentInCityPO> newStudentInCityPO = utils.castEntity(dataList, StudentInCityPO.class, studentInCityPO);;
+        for(StudentInCityPO s:newStudentInCityPO){
+            List<Object[]> aaa  = edu202Dao.getStudentsInLocalByEdu300NewByCity(s.getCity());
+            if(aaa.size() <= 5){
+                Map<String,Object> returnMap = new HashMap<>();
+                returnMap.put("title",s);
+                StudentInPointPO studentInPointPO = new StudentInPointPO();
+                List<StudentInPointPO> newStudentInPointPO = utils.castEntity(aaa, StudentInPointPO.class, studentInPointPO);
+                returnMap.put("detail",newStudentInPointPO);
+                mapList.add(returnMap);
+            }else{
+                List<List<Object[]>> bbb = utils.splitList2(aaa, 5);
+                for(List<Object[]> e:bbb){
+                    Map<String,Object> returnMap = new HashMap<>();
+                    returnMap.put("title",s);
+                    StudentInPointPO studentInPointPO = new StudentInPointPO();
+                    List<StudentInPointPO> newStudentInPointPO = utils.castEntity(e, StudentInPointPO.class, studentInPointPO);
+                    returnMap.put("detail",newStudentInPointPO);
+                    mapList.add(returnMap);
+                }
+            }
+        }
+        return mapList;
     }
+
+
+
+
 
     //教学点学生人数查询
     private Map<String,Object> getStudentsInLocal(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList) {

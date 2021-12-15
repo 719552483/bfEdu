@@ -116,6 +116,16 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 	@Query(value = "select t.local_code edu501_id,t.local_name local_name,to_char(sum(t.zxrs)) student_count  from Edu300 t  group by t.local_code,t.local_name",nativeQuery = true)
 	List<Object[]> getStudentsInLocalByEdu300();
 
+
+	//根据行政班查询教学点学生人数
+	@Query(value = "select city city,to_char(sum(t.zxrs)) student_count from edu300 t LEFT JOIN edu500 e on t.local_code =  e.edu500_id GROUP BY city",nativeQuery = true)
+	List<Object[]> getStudentsInLocalByEdu300New();
+
+	//根据行政班查询教学点学生人数
+	@Query(value = "select t.local_code edu501_id,t.local_name local_name,to_char(sum(t.zxrs)) student_count  from Edu300 t LEFT JOIN edu500 e on t.local_code =  e.edu500_id where e.city = ?1 group by t.local_code,t.local_name",nativeQuery = true)
+	List<Object[]> getStudentsInLocalByEdu300NewByCity(String city);
+
+
 	//根据二级学院获取教师类型
 	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name, to_char(count(t.xm)) teacher_count, to_char(t.JZGLX) teacher_type, to_char(t.JZGLXBM) teacher_type_name\n" +
 			"from (select distinct m.EDU104_ID, m.XBMC, s.XM, s.JZGLX, s.JZGLXBM\n" +
