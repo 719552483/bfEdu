@@ -483,6 +483,23 @@ public class BigDataService {
         List<EchartPO> studentAgeData = getStudentsByAge();
         returnMap.put("echar4",studentAgeData);
         //--------------------------------------------
+        // 图5：学生毕业人数
+        //--------------------------------------------
+        List<Map> echar5 = new ArrayList<>();
+        for (int i = 0;i<edu300List.size();i++){
+            Edu300 edu300 = edu300List.get(i);
+            Map map5 = new HashMap();
+            map5.put("name",edu300.getNjmc()+"级"+edu300.getBatchName());
+            List data = new ArrayList();
+            data.add(edu001Dao.findAllStudentByNjPc(edu300.getNjbm(),edu300.getBatch()));
+            data.add(edu001Dao.findAllStudentByNjPcTOBY(edu300.getNjbm(),edu300.getBatch()));
+            //查询预计毕业人数
+            data.add(edu001Dao.findYJBYStudent(edu300.getNjbm(),edu300.getBatch()));
+            map5.put("data",data);
+            echar5.add(map5);
+        }
+        returnMap.put("echar5",echar5);
+        //--------------------------------------------
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
     }

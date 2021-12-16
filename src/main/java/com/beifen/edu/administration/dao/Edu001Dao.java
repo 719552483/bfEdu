@@ -113,7 +113,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	List<Object[]> getStudentByJobWithDepatrment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//查询在校学生
-	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006')",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e",nativeQuery = true)
     Long findAllStudent();
 
 	//查询身份证号是否存在
@@ -145,14 +145,49 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	List<Edu001> findGraduationStudents(String xb,String nj,String zy);
 
 	//根据性别查询总人数
-	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006') and xb = ?1",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e where xb = ?1",nativeQuery = true)
 	Long findAllStudentByXb(String xb);
 
 	//根据年级查询总数
-	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006') and nj = ?1",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e where nj = ?1",nativeQuery = true)
 	Long findAllStudentByNj(String nj);
 
 	//根据年级性别查询总数
-	@Query(value = "select count(1) from edu001 e where e.zt_code in ('001','007','006') and nj = ?1 and xb = ?2",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e where nj = ?1 and xb = ?2",nativeQuery = true)
 	Long findAllStudentByNj(String nj,String xb);
+
+	@Query(value = "select count(0) from edu001 e left join edu300 ee on e.edu300_id = ee.edu300_id where e.nj = ?1 and ee.batch = ?2",nativeQuery = true)
+	String findAllStudentByNjPc(String nj,String batch);
+
+	@Query(value = "select count(0) from edu001 e left join edu300 ee on e.edu300_id = ee.edu300_id where e.nj = ?1 and ee.batch = ?2 and zt_code = '004'",nativeQuery = true)
+	String findAllStudentByNjPcTOBY(String nj,String batch);
+
+	@Query(value = "SELECT\n" +
+			"count( * ) \n" +
+			"FROM\n" +
+			"edu001 e\n" +
+			"LEFT JOIN edu300 ee ON e.edu300_id = ee.edu300_id\n" +
+			"LEFT JOIN (\n" +
+			"SELECT\n" +
+			"edu001_id,\n" +
+			"count( edu001_id ) noPass \n" +
+			"FROM\n" +
+			"(\n" +
+			"SELECT\n" +
+			"e.* \n" +
+			"FROM\n" +
+			"edu001 e\n" +
+			"LEFT JOIN edu005 ee ON e.edu001_id = ee.edu001_id \n" +
+			"WHERE\n" +
+			"is_passed != 'T' \n" +
+			"OR is_passed IS NULL \n" +
+			") \n" +
+			"GROUP BY\n" +
+			"edu001_id \n" +
+			") a ON a.edu001_id = e.edu001_id \n" +
+			"WHERE\n" +
+			"e.nj = ?1 \n" +
+			"AND ee.batch = ?2 \n" +
+			"AND a.noPass <= 5",nativeQuery = true)
+	String findYJBYStudent(String nj,String batch);
 }
