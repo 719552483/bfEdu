@@ -478,8 +478,11 @@ public class BigDataService {
         List<Map> studentsInLocal = getStudentsInLocalNew();
         returnMap.put("echar3",studentsInLocal);
         //--------------------------------------------
-
-
+        // 图4：年龄雷达图
+        //--------------------------------------------
+        List<EchartPO> studentAgeData = getStudentsByAge();
+        returnMap.put("echar4",studentAgeData);
+        //--------------------------------------------
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
     }
@@ -680,24 +683,58 @@ public class BigDataService {
         return echartPOS;
     }
 
-//    private Map<String,Object> getStudentsInLocal(){
-//        Map<String,Object> returnMap = new HashMap<>();
-//        List<Object[]> dataList  = edu202Dao.getStudentsInLocalByEdu300();
-//
-//        StudentInPointPO studentInPointPO = new StudentInPointPO();
-//        List<StudentInPointPO> newStudentInPointPO = utils.castEntity(dataList, StudentInPointPO.class, studentInPointPO);;
-//
-//        List<String> yAxisData = newStudentInPointPO.stream().map(StudentInPointPO::getLocalName).collect(Collectors.toList());
-//        List<Long> seriesdata = newStudentInPointPO.stream().map(a -> {
-//            long studentCount = Long.parseLong(a.getStudentCount());
-//            return studentCount;
-//        }).collect(Collectors.toList());
-//
-//        returnMap.put("yAxisData",yAxisData);
-//        returnMap.put("seriesdata",seriesdata);
-//
-//        return returnMap;
-//    }
+    //获取各年龄段学生人数
+    private List<EchartPO> getStudentsByAge() {
+        List<EchartPO> echartPOS = new ArrayList<>();
+
+        Integer count1 = edu001Dao.getStudentByAge("0","19");
+        Integer count2 = edu001Dao.getStudentByAge("20","29");
+        Integer count3 = edu001Dao.getStudentByAge("30","39");
+        Integer count4 = edu001Dao.getStudentByAge("40","49");
+        Integer count5 = edu001Dao.getStudentByAge("50","99");
+
+
+        String name1 = "20岁以下";
+        String name2 = "20-30岁";
+        String name3 = "30-40岁";
+        String name4= "40-50岁";
+        String name5 = "50岁以上";
+
+        for (int i = 0; i <5 ; i++) {
+            EchartPO echartPO = new EchartPO();
+            switch(i) {
+                case 0:
+                    echartPO.setName(name1);
+                    echartPO.setValue(count1.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 1:
+                    echartPO.setName(name2);
+                    echartPO.setValue(count2.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 2:
+                    echartPO.setName(name3);
+                    echartPO.setValue(count3.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 3:
+                    echartPO.setName(name4);
+                    echartPO.setValue(count4.toString());
+                    echartPOS.add(echartPO);
+                    break;
+                case 4:
+                    echartPO.setName(name5);
+                    echartPO.setValue(count5.toString());
+                    echartPOS.add(echartPO);
+                    break;
+            }
+
+        }
+
+        return echartPOS;
+    }
+
     //教学点学生人数查询
     private List<Map> getStudentsInLocalNew(){
         List<Map> mapList = new ArrayList<>();

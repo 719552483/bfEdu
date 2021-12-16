@@ -92,6 +92,10 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select count(e.Edu001_ID) from edu001 e,edu300 t where e.Edu300_ID = t.Edu300_ID and (e.nl between ?1 and ?2) and t.njbm in ?3 and t.batch in ?4  ",nativeQuery = true)
 	Integer getStudentByAge(String s, String s1,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
+	//根据年龄查找学生人数
+	@Query(value = "select count(e.Edu001_ID) from edu001 e where  e.nl between ?1 and ?2 ",nativeQuery = true)
+	Integer getStudentByAge(String s, String s1);
+
 	//根据二级学院查找各年龄段学生人数
 	@Query(value = "select count(e.Edu001_ID) from edu001 e, edu300 t where e.Edu300_ID = t.Edu300_ID and (e.nl between ?1 and ?2) and e.szxb = ?3 and t.njbm in ?4 and t.batch in ?5",nativeQuery = true)
 	Integer getStudentByAgeWithDepartment(String s, String s1, String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
