@@ -179,8 +179,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 			"edu001 e\n" +
 			"LEFT JOIN edu005 ee ON e.edu001_id = ee.edu001_id \n" +
 			"WHERE\n" +
-			"is_passed != 'T' \n" +
-			"OR is_passed IS NULL \n" +
+			"is_passed != 'T'\n" +
 			") \n" +
 			"GROUP BY\n" +
 			"edu001_id \n" +
@@ -188,6 +187,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 			"WHERE\n" +
 			"e.nj = ?1 \n" +
 			"AND ee.batch = ?2 \n" +
-			"AND a.noPass <= 5",nativeQuery = true)
+			"AND a.noPass <= 5\n" +
+			"and e.zt_code != '004'",nativeQuery = true)
 	String findYJBYStudent(String nj,String batch);
 }
