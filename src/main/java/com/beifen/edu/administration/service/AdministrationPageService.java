@@ -1753,36 +1753,47 @@ public class AdministrationPageService {
 					//检查该时间段行政班是否有别的课程安排
 					if(SecondaryCodeConstant.ADMINISTRATIVE_CLASS_TYPE.equals(edu201.getClassType())){
 						Long classId = edu201.getClassId();
-						List<Edu301> edu301List = edu301DAO.queryTeachingClassByXzbCode(classId+"");
-						List<String> list = new ArrayList<>();
-						for(int ii = 0;ii<edu301List.size();ii++){
-							list.add(edu301List.get(ii).getEdu301_ID()+"");
-						}
-						list.add(classId+"");
-						List<SchoolTimetablePO> list2 = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+						List<SchoolTimetablePO> list2 = teachingScheduleViewDao.findCountByClass(classId+"",j+"",edu203.getXqid(),edu203.getKjid(),xnid);
 						if(list2.size()>0){
 							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu201.getClassName()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
 							return resultVO;
 						}
-					}else{
+//						List<Edu301> edu301List = edu301DAO.queryTeachingClassByXzbCode(classId+"");
+//						List<String> list = new ArrayList<>();
+//						for(int ii = 0;ii<edu301List.size();ii++){
+//							list.add(edu301List.get(ii).getEdu301_ID()+"");
+//						}
+//						list.add(classId+"");
+//						List<SchoolTimetablePO> list2 = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+//						if(list2.size()>0){
+//							resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu201.getClassName()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
+//							return resultVO;
+//						}
+					}
+					else{
 						Long classId = edu201.getClassId();
 						Edu301 edu301 = edu301DAO.findOne(classId);
 						String classIds = edu301.getBhxzbid();
 						List<String> classIdss = Arrays.asList(classIds.split(","));
 						for (int k = 0;k<classIdss.size();k++){
 							String zxbid = classIdss.get(k);
-							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(zxbid);
-							List<Edu301> edu301List = edu301DAO.queryTeachingClassByXzbCode(zxbid+"");
-							List<String> list = new ArrayList<>();
-							for(int ii = 0;ii<edu301List.size();ii++){
-								list.add(edu301List.get(ii).getEdu301_ID()+"");
-							}
-							list.add(zxbid+"");
-							List<SchoolTimetablePO> list2  = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+							List<SchoolTimetablePO> list2 = teachingScheduleViewDao.findCountByClass(zxbid+"",j+"",edu203.getXqid(),edu203.getKjid(),xnid);
 							if(list2.size()>0){
-								resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu300.getXzbmc()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
+								resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu201.getClassName()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
 								return resultVO;
 							}
+//							Edu300 edu300 = edu300DAO.findXzbByEdu300ID(zxbid);
+//							List<Edu301> edu301List = edu301DAO.queryTeachingClassByXzbCode(zxbid+"");
+//							List<String> list = new ArrayList<>();
+//							for(int ii = 0;ii<edu301List.size();ii++){
+//								list.add(edu301List.get(ii).getEdu301_ID()+"");
+//							}
+//							list.add(zxbid+"");
+//							List<SchoolTimetablePO> list2  = teachingScheduleViewDao.findCountByClass(list,j+"",edu203.getXqid(),edu203.getKjid(),xnid);
+//							if(list2.size()>0){
+//								resultVO = ResultVO.setFailed("第"+j+"周"+edu203.getXqmc()+edu203.getKjmc()+",班级:'"+edu300.getXzbmc()+"'已有其他课程安排("+list2.get(0).getTeacherName()+"-"+list2.get(0).getClassName()+"-"+list2.get(0).getCourseName()+")");
+//								return resultVO;
+//							}
 						}
 					}
 				}
