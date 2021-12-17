@@ -1329,6 +1329,11 @@ function confirmExportGrade(){
 		return;
 	}
 
+	if(crouses===""){
+		toastr.warning("请选择课程");
+		return;
+	}
+
 	if(type===""){
 		toastr.warning("请选择导出类型");
 		return;
