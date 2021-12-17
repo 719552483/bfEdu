@@ -1347,6 +1347,8 @@ function confirmExportGrade(){
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
 	form.append($("<input></input>").attr("type", "hidden").attr("name", "queryInfo").attr("value",JSON.stringify(sendObject)));
 	form.appendTo('body').submit().remove();
+	toastr.info("文件下载中,请稍候...");
+	$.hideModal();
 }
 
 //确认成绩导出预览
