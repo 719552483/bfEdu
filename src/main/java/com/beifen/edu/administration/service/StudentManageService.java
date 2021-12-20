@@ -1653,7 +1653,7 @@ public class StudentManageService {
         lxF = edu001Dao.queryStudentCount("F"); //合计女
         map.put("hjM",lxM);
         map.put("hjF",lxF);
-        all = edu001Dao.queryStudentCount();
+        all = edu001Dao.queryStudentCount(edu300IdsAll);
         map.put("all",all);
         mapList.add(map);
 

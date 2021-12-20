@@ -529,6 +529,21 @@ public class BigDataService {
         returnMap6.put("other",echar6);
         returnMap.put("echar6",returnMap6);
         //--------------------------------------------
+        // 图7：学时信息
+        //--------------------------------------------
+        //获取课时类型数据
+        List<BigDataPeriodTypePO> periodTypeData= getBigDataPeriodType();
+        //按顺序整理课时格式
+        List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
+        //按顺序获取二级学院名称
+        List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
+        //组装课时类型Echart信息
+        Map<String,Object> newPeriodTypeData = new HashMap<>();
+        newPeriodTypeData.put("departmentNames",departmentNames);
+        newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
+        returnMap.put("echar7",newPeriodTypeData);
+        //--------------------------------------------
+
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
     }
@@ -596,6 +611,15 @@ public class BigDataService {
             periodTypeList = edu202Dao.getPeriodTypeInDepartment(departmentCode,schoolYearCodeList,batchCodeList,yearCodeList);
         }
 
+        BigDataPeriodTypePO bigDataPeriodTypePO = new BigDataPeriodTypePO();
+        List<BigDataPeriodTypePO> newPeriodTypeList = utils.castEntity(periodTypeList, BigDataPeriodTypePO.class, bigDataPeriodTypePO);
+        return newPeriodTypeList;
+    }
+
+    //获取课时类型数据
+    private List<BigDataPeriodTypePO> getBigDataPeriodType() {
+        List<Object[]> periodTypeList;
+        periodTypeList = edu202Dao.getPeriodTypeInDepartment();
         BigDataPeriodTypePO bigDataPeriodTypePO = new BigDataPeriodTypePO();
         List<BigDataPeriodTypePO> newPeriodTypeList = utils.castEntity(periodTypeList, BigDataPeriodTypePO.class, bigDataPeriodTypePO);
         return newPeriodTypeList;
