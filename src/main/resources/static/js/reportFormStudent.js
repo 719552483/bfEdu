@@ -95,11 +95,10 @@ function stuffReportTable(backjsonData){
 		onPageChange: function(number, size) {
 			var currentPage=$('#reportFormStudentTable').bootstrapTable('getData',{'useCurrentPage':true});
 			for (var i = 0; i < currentPage.length; i++) {
-				if(currentPage[i].gradeBatch==='小计'){
+				if(currentPage[i].gradeBatch==='小计' || currentPage[i].gradeBatch==='合计'){
 					mergeCountCells('reportFormStudentTable',i,'gradeBatch',3,1);
 				}
 			}
-
 			var rowsObject=new Object();
 			rowsObject.rows=currentPage;
 			mergeRowCells(rowsObject, "gradeBatch", $("#reportFormStudentTable"),tableInfo);
@@ -111,7 +110,7 @@ function stuffReportTable(backjsonData){
 	toolTipUp(".myTooltip");
 	var currentPage=$('#reportFormStudentTable').bootstrapTable('getData',{'useCurrentPage':true});
 	for (var i = 0; i < currentPage.length; i++) {
-		if(currentPage[i].gradeBatch==='小计'){
+		if(currentPage[i].gradeBatch==='小计' || currentPage[i].gradeBatch==='合计'){
 			mergeCountCells('reportFormStudentTable',i,'gradeBatch',3,1);
 		}
 	}
@@ -250,7 +249,7 @@ function mergeRowCells(data, fieldName, target,tableInfo) {
 	// console.log(numArr);
 	for (let x = 0; x < numArr.length; x++) {
 		var index= numArr[x]['index'];
-		if(data.rows[index].gradeBatch!=='小计'){
+		if(data.rows[index].gradeBatch!=='小计' && data.rows[index].gradeBatch!=='合计'){
 			$(target).bootstrapTable('mergeCells', { index: index, field: fieldName, colspan: 1, rowspan: numArr[x]['number']});
 		}
 	}
