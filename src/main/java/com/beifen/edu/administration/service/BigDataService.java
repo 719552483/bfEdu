@@ -511,32 +511,18 @@ public class BigDataService {
         map6.put("name","学院扩招总体学生就业率");
         //毕业人数
         int biyeCount = edu001Dao.findAllStudentByNjPcTOBY();
-        if(biyeCount != 0){
-            String jyxx = edu0011Dao.findAllJYCount();
-            double v = Double.parseDouble(jyxx)/biyeCount;
-            NumberFormat nf = NumberFormat.getPercentInstance();
-            nf.setMinimumFractionDigits(2);//设置保留小数位
-            String usedPercent = nf.format(v);
-            map6.put("data",usedPercent);
-        } else {
-            map6.put("data","0.00%");
-        }
+        map6.put("allCount",biyeCount);
+        String jyxx = edu0011Dao.findAllJYCount();
+        map6.put("jyCount",Integer.parseInt(jyxx));
         echar6.add(map6);
         for (int i = 0;i<edu300List.size();i++){
             Edu300 edu300 = edu300List.get(i);
             map6 = new HashMap();
             map6.put("name",edu300.getNjmc()+"级"+edu300.getBatchName());
             biyeCount = Integer.parseInt(edu001Dao.findAllStudentByNjPcTOBY(edu300.getNjbm(),edu300.getBatch()));
-            if(biyeCount != 0){
-                String jyxx = edu0011Dao.findAllJYCount(edu300.getNjbm(),edu300.getBatch());
-                double v = Double.parseDouble(jyxx)/biyeCount;
-                NumberFormat nf = NumberFormat.getPercentInstance();
-                nf.setMinimumFractionDigits(2);//设置保留小数位
-                String usedPercent = nf.format(v);
-                map6.put("data",usedPercent);
-            } else {
-                map6.put("data","0.00%");
-            }
+            map6.put("allCount",biyeCount);
+            jyxx = edu0011Dao.findAllJYCount(edu300.getNjbm(),edu300.getBatch());
+            map6.put("jyCount",Integer.parseInt(jyxx));
             echar6.add(map6);
         }
         returnMap.put("echar6",echar6);
