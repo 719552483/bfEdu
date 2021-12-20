@@ -162,6 +162,9 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select count(0) from edu001 e left join edu300 ee on e.edu300_id = ee.edu300_id where e.nj = ?1 and ee.batch = ?2 and zt_code = '004'",nativeQuery = true)
 	String findAllStudentByNjPcTOBY(String nj,String batch);
 
+	@Query(value = "select count(0) from edu001 e where zt_code = '004'",nativeQuery = true)
+	Integer findAllStudentByNjPcTOBY();
+
 	@Query(value = "SELECT\n" +
 			"count( * ) \n" +
 			"FROM\n" +

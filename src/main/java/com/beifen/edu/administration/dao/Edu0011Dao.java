@@ -48,4 +48,10 @@ public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificati
 
     @Query(value = "select count(0) from edu0011 where nj = ?1 and jyxsbm is not null", nativeQuery = true)
     int findNjjyrs(String nj);
+
+    @Query(value = "select count(*) from edu0011 e LEFT JOIN edu001 ee on e.edu001_id = ee.edu001_id where ee.zt_code = '004' and jyxs is not null", nativeQuery = true)
+    String findAllJYCount();
+
+    @Query(value = "select count(*) from edu0011 e LEFT JOIN edu001 ee on e.edu001_id = ee.edu001_id LEFT JOIN edu300 eee on ee.edu300_id = eee.edu300_id where ee.zt_code = '004' and jyxs is not null and ee.nj = ?1 and eee.batch = ?2", nativeQuery = true)
+    String findAllJYCount(String nj,String batch);
 }

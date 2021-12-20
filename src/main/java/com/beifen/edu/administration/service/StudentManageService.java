@@ -1601,9 +1601,9 @@ public class StudentManageService {
                 String lxF = edu001Dao.queryStudentCount(edu300Ids,"F",edu000List.get(j).getEjdm());
                 map.put("woman"+(j+1),lxF);
             }
-            String xtxm = edu001Dao.queryStudentCode(edu300IdsAll,"M");
+            String xtxm = edu001Dao.queryStudentCode(edu300Ids,"M");
             map.put("xtxm",xtxm);
-            String xtxf = edu001Dao.queryStudentCode(edu300IdsAll,"F");
+            String xtxf = edu001Dao.queryStudentCode(edu300Ids,"F");
             map.put("xtxf",xtxf);
 
             String lxM = edu001Dao.queryStudentCount(edu300Ids,"M");

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,6 +38,8 @@ public class BigDataService {
     private Edu202Dao edu202Dao;
     @Autowired
     private Edu001Dao edu001Dao;
+    @Autowired
+    private Edu0011Dao edu0011Dao;
     @Autowired
     private Edu104Dao edu104Dao;
     @Autowired
@@ -422,7 +425,8 @@ public class BigDataService {
         List<Map> titleList = new ArrayList<>();
         Map<String,Object> mapTitle = new HashMap<>();
         mapTitle.put("name","辽宁职业学院扩招学生总人数");
-        mapTitle.put("allStudent",edu001Dao.findAllStudent());
+        Long allStudentCount = edu001Dao.findAllStudent();
+        mapTitle.put("allStudent",allStudentCount);
         mapTitle.put("manStudent",edu001Dao.findAllStudentByXb("M"));
         mapTitle.put("womanStudent",edu001Dao.findAllStudentByXb("F"));
         titleList.add(mapTitle);
@@ -499,6 +503,43 @@ public class BigDataService {
             echar5.add(map5);
         }
         returnMap.put("echar5",echar5);
+        //--------------------------------------------
+        // 图6：学生就业信息
+        //--------------------------------------------
+        List<Map> echar6 = new ArrayList<>();
+        Map map6 = new HashMap();
+        map6.put("name","学院扩招总体学生就业率");
+        //毕业人数
+        int biyeCount = edu001Dao.findAllStudentByNjPcTOBY();
+        if(biyeCount != 0){
+            String jyxx = edu0011Dao.findAllJYCount();
+            double v = Double.parseDouble(jyxx)/biyeCount;
+            NumberFormat nf = NumberFormat.getPercentInstance();
+            nf.setMinimumFractionDigits(2);//设置保留小数位
+            String usedPercent = nf.format(v);
+            map6.put("data",usedPercent);
+        } else {
+            map6.put("data","0.00%");
+        }
+        echar6.add(map6);
+        for (int i = 0;i<edu300List.size();i++){
+            Edu300 edu300 = edu300List.get(i);
+            map6 = new HashMap();
+            map6.put("name",edu300.getNjmc()+"级"+edu300.getBatchName());
+            biyeCount = Integer.parseInt(edu001Dao.findAllStudentByNjPcTOBY(edu300.getNjbm(),edu300.getBatch()));
+            if(biyeCount != 0){
+                String jyxx = edu0011Dao.findAllJYCount(edu300.getNjbm(),edu300.getBatch());
+                double v = Double.parseDouble(jyxx)/biyeCount;
+                NumberFormat nf = NumberFormat.getPercentInstance();
+                nf.setMinimumFractionDigits(2);//设置保留小数位
+                String usedPercent = nf.format(v);
+                map6.put("data",usedPercent);
+            } else {
+                map6.put("data","0.00%");
+            }
+            echar6.add(map6);
+        }
+        returnMap.put("echar6",echar6);
         //--------------------------------------------
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
