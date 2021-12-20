@@ -506,6 +506,7 @@ public class BigDataService {
         //--------------------------------------------
         // 图6：学生就业信息
         //--------------------------------------------
+        Map returnMap6 = new HashMap();
         List<Map> echar6 = new ArrayList<>();
         Map map6 = new HashMap();
         map6.put("name","学院扩招总体学生就业率");
@@ -514,7 +515,7 @@ public class BigDataService {
         map6.put("allCount",biyeCount);
         String jyxx = edu0011Dao.findAllJYCount();
         map6.put("jyCount",Integer.parseInt(jyxx));
-        echar6.add(map6);
+        returnMap6.put("all",map6);
         for (int i = 0;i<edu300List.size();i++){
             Edu300 edu300 = edu300List.get(i);
             map6 = new HashMap();
@@ -525,7 +526,8 @@ public class BigDataService {
             map6.put("jyCount",Integer.parseInt(jyxx));
             echar6.add(map6);
         }
-        returnMap.put("echar6",echar6);
+        returnMap6.put("other",echar6);
+        returnMap.put("echar6",returnMap6);
         //--------------------------------------------
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;
