@@ -1635,6 +1635,29 @@ public class StudentManageService {
         map.put("all",all);
         mapList.add(map);
 
+
+        map = new HashMap();
+        map.put("gradeBatch","合计");
+        //各个类型人数
+        for(int j =0;j<edu000List.size();j++){
+            lxM = edu001Dao.queryStudentCount("M",edu000List.get(j).getEjdm());
+            map.put("man"+(j+1),lxM);
+            lxF = edu001Dao.queryStudentCount("F",edu000List.get(j).getEjdm());
+            map.put("woman"+(j+1),lxF);
+        }
+        xtxm = edu001Dao.queryStudentCode("M");
+        xtxf = edu001Dao.queryStudentCode("F");
+        map.put("xtxm",xtxm);
+        map.put("xtxf",xtxf);
+        lxM = edu001Dao.queryStudentCount("M"); //合计男
+        lxF = edu001Dao.queryStudentCount("F"); //合计女
+        map.put("hjM",lxM);
+        map.put("hjF",lxF);
+        all = edu001Dao.queryStudentCount();
+        map.put("all",all);
+        mapList.add(map);
+
+
         //columns
         Object[] objects = new Object[3];
         List l = new ArrayList();

@@ -127,14 +127,26 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2 and sylxbm = ?3",nativeQuery = true)
 	String queryStudentCount(List<Long> edu300ids,String xb,String sylx);
 
+	@Query(value = "select count(*) from edu001 e where  xb = ?1 and sylxbm = ?2",nativeQuery = true)
+	String queryStudentCount(String xb,String sylx);
+
 	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2",nativeQuery = true)
 	String queryStudentCount(List<Long> edu300ids,String xb);
+
+	@Query(value = "select count(*) from edu001 e where xb = ?1",nativeQuery = true)
+	String queryStudentCount(String xb);
 
 	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1",nativeQuery = true)
 	String queryStudentCount(List<Long> edu300ids);
 
+	@Query(value = "select count(*) from edu001 e",nativeQuery = true)
+	String queryStudentCount();
+
 	@Query(value = "select count(*) from edu001 e where EDU300_ID in ?1 and xb = ?2 and (zt_code = '002' or zt_code = '003')",nativeQuery = true)
 	String queryStudentCode(List<Long> edu300ids,String xb);
+
+	@Query(value = "select count(*) from edu001 e where xb = ?1 and (zt_code = '002' or zt_code = '003')",nativeQuery = true)
+	String queryStudentCode(String xb);
 
 	//查询可毕业学生
 	@Query(value = " select * from edu001 e where edu300_id in ?1 and ZT_CODE = '001' and (select count(*) from edu005 where STUDENT_CODE = e.xh and (IS_PASSED = 'F' or IS_PASSED is null)) = 0",nativeQuery = true)
