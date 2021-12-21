@@ -205,10 +205,11 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"where eee.sszt = 'pass') GROUP BY xbmc,xbbm",nativeQuery = true)
 	List<Object[]> getPeriodTypeInDepartment();
 
-	@Query(value = "select case when sum(zxs) is null then 0 else sum(zxs) end  zxs from edu300 e \n" +
-			"LEFT JOIN edu204 ee on e.edu300_id = ee.edu300_id\n" +
-			"left join edu201 eee on ee.edu201_id = eee.edu201_id\n" +
-			"where eee.sszt = 'pass' and e.xbbm = ?1 and eee.xnid = ?2",nativeQuery = true)
+	@Query(value = "select case when sum(zxs) is null then 0 else sum(zxs) end  zxs from (\n" +
+			"select DISTINCT eee.edu201_id,zxs from edu300 e \n" +
+			"\t\t\tLEFT JOIN edu204 ee on e.edu300_id = ee.edu300_id\n" +
+			"\t\t\tleft join edu201 eee on ee.edu201_id = eee.edu201_id\n" +
+			"\t\t\twhere eee.sszt = 'pass' and e.xbbm = ?1 and eee.xnid = ?2)",nativeQuery = true)
 	Integer getPeriodTypeInDepartmentNew(String xbbm,String xnid);
 
 	//根据二级学院查询各教学点在校人数
