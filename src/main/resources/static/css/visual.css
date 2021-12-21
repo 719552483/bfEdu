@@ -112,6 +112,8 @@ html, body, form{overflow-y:auto;height:100%;}
 .visual_con .visual_conTop .visual_conTop_box>div .conTop_smil a.null{visibility:hidden;}
 
 .visual_con .visual_conBot{height:calc(100% - 45px);/* background:url(../images/ksh41.png) no-repeat;background-size:100% 100%; */position:relative;}
+.Screen2 .visual_con .visual_conBot{height:calc(100% - 300px)}
+
 .visual_con .visual_conBot>img{position:absolute;width:25px;height:25px;}
 .visual_con .visual_conBot .visual_conBot_l{position:absolute;left:0;top:0;}
 .visual_con .visual_conBot .visual_conBot_2{position:absolute;right:0;top:0;}

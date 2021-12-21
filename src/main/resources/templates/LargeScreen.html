@@ -122,7 +122,7 @@
 
                 <div class="visual_box">
                     <div class="visual_title">
-                        <span>教师类型分布</span>
+                        <span>学生毕业率</span>
                         <img src="images/ksh33.png"/>
                     </div>
                     <div class="swiper-container visual_swiperRight2 visual_chart">
@@ -134,7 +134,7 @@
 
                 <div class="visual_box">
                     <div class="visual_title">
-                        <span>课时类型分布</span>
+                        <span>授课学时统计</span>
                         <img src="images/ksh33.png"/>
                     </div>
                     <div class="swiper-container visual_swiperRight3 visual_chart">
@@ -152,11 +152,11 @@
                     </div>
                 </div>
 
-                <div class="visual_conBot">
-                    <img class="visual_conBot_l" src="images/ksh42.png"/>
-                    <img class="visual_conBot_2" src="images/ksh43.png"/>
-                    <img class="visual_conBot_3" src="images/ksh44.png"/>
-                    <img class="visual_conBot_4" src="images/ksh45.png"/>
+                <div class="visual_conBot" style="margin:15px 45px 0 45px;">
+<!--                    <img class="visual_conBot_l" src="images/ksh42.png"/>-->
+<!--                    <img class="visual_conBot_2" src="images/ksh43.png"/>-->
+<!--                    <img class="visual_conBot_3" src="images/ksh44.png"/>-->
+<!--                    <img class="visual_conBot_4" src="images/ksh45.png"/>-->
                     <div class="visual_chart_text"></div>
                     <div class="visual_chart chartDom1 centerMap" id="main8"></div>
 <!--                    <div class="smallBingtu noneStart">-->
@@ -180,6 +180,53 @@
                         </video>
                     </div>
                 </div>
+
+                <div class="visual_conBottom">
+                    <div class="visual_conBot_bot">
+                        <div class="bottomTableTitle">55555555</div>
+                        <table class="table table-bordered" id="table-case">
+                            <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>城市</th>
+                                <th>邮编</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="background: blue">Tanmay</td>
+                                <td style="background: blue">Bangalore</td>
+                                <td style="background: blue">560001</td>
+                            </tr>
+                            <tr>
+                                <td style="background: #bd0a01">Sachin</td>
+                                <td style="background: #bd0a01">Mumbai</td>
+                                <td style="background: #bd0a01">400003</td>
+                            </tr>
+                            <tr>
+                                <td style="background: lime">Uma</td>
+                                <td style="background: lime">Pune</td>
+                                <td style="background: lime">411027</td>
+                            </tr>
+                            <tr>
+                                <td style="background: lightslategrey">xushicheng</td>
+                                <td style="background: lightslategrey">BUNP</td>
+                                <td style="background: lightslategrey">123456</td>
+                            </tr>
+                            <tr>
+                                <td style="background: yellow">xussegeng</td>
+                                <td style="background: yellow">BdfP</td>
+                                <td style="background: yellow">885856</td>
+                            </tr>
+                            <tr>
+                                <td style="background: palegreen">adfeng</td>
+                                <td style="background: palegreen">upNP</td>
+                                <td style="background: palegreen">485556</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <div class="visual_right rightHideenArea">
@@ -194,20 +241,34 @@
                             <div class="swiper-slide chartDom1" id="main31"></div>
                         </div>
                     </div>
-                    <div class="swiper-container visual_swiper1_1 visual_chart">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide chartDom1" id="main3_2"></div>
-                            <div class="swiper-slide chartDom1" id="main31_2"></div>
-                        </div>
-                    </div>
+<!--                    <div class="swiper-container visual_swiper1_1 visual_chart">-->
+<!--                        <div class="swiper-wrapper">-->
+<!--                            <div class="swiper-slide chartDom1" id="main3_2"></div>-->
+<!--                            <div class="swiper-slide chartDom1" id="main31_2"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
 
-                <div class="visual_box">
+                <div class="visual_box jobCountArea visualSfzsfl">
                     <div class="visual_title">
-                        <span>任务书进度统计</span>
+                        <span>就业情况统计</span>
                         <img src="images/ksh33.png"/>
                     </div>
-                    <div class="swiper-container visual_swiperRightCourseCount visual_chart">
+
+                    <div class="visual_table">
+                        <table>
+                            <tbody><tr>
+                                <td class="visual_right_box_title"></td>
+                            </tr>
+                            <tr>
+                                <td class="visual_right_box_num"><cite></cite>%</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="swiper-container visual_swiperRightCourseCount visual_chart" style="opacity: 1">
                         <div class="swiper-wrapper visualSssf_right courseCountAppendArea"></div>
                     </div>
                     <div class="visual_chart noneStart chartDom1" id="singleCourseCount"></div>
@@ -215,20 +276,22 @@
 
                 <div class="visual_box">
                     <div class="visual_title">
-                        <span>学员人数统计</span>
+                        <span>教学点人数分布</span>
                         <img src="images/ksh33.png"/>
                     </div>
-                    <span class="noneStart returnMark">1</span>
-                    <div class="swiper-container visual_swiper2 visual_chart">
-                        <div class="swiper-wrapper localStudentInfoArea"></div>
-                    </div>
+                    <div class="swiper-slide chartDom1" id="main6"></div>
 
-                    <div class="swiper-container SearchlocalStudentInfoAreaSwiper visual_chart noneStart">
-                        <div class="swiper-wrapper SearchlocalStudentInfoArea"></div>
-                    </div>
+<!--                    <span class="noneStart returnMark">1</span>-->
+<!--                    <div class="swiper-container visual_swiper2 visual_chart">-->
+<!--                        <div class="swiper-wrapper localStudentInfoArea"></div>-->
+<!--                    </div>-->
 
-                    <div class="swiper-container visual_swiper2_2 visual_chart noneStart">
-                    </div>
+<!--                    <div class="swiper-container SearchlocalStudentInfoAreaSwiper visual_chart noneStart">-->
+<!--                        <div class="swiper-wrapper SearchlocalStudentInfoArea"></div>-->
+<!--                    </div>-->
+
+<!--                    <div class="swiper-container visual_swiper2_2 visual_chart noneStart">-->
+<!--                    </div>-->
                 </div>
             </div>
 

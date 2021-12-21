@@ -533,27 +533,24 @@ public class BigDataService {
         //--------------------------------------------
 //        List<Object[]> periodTypeList = edu202Dao.getPeriodTypeInDepartment();
         //获取所有授课学院
-        List<Map> list7 = new ArrayList<>();
+        Map map7 = new HashMap();
+
+
         List<Edu104> edu104List = edu104Dao.queryAllSkbm();
         List<Edu400> edu400List = edu400Dao.findAllXn();
-        for(Edu104 edu104:edu104List){
-            Map map7 = new HashMap();
-            map7.put("name",edu104.getXbmc());
-            List list77 = new ArrayList();
-            int all = 0;
-            for(Edu400 edu400:edu400List){
-                Map map77 = new HashMap();
-                map77.put("name",edu400.getXnmc());
+        map7.put("xyList",edu104List.stream().map(Edu104::getXbmc).distinct().collect(Collectors.toList()));
+        map7.put("xnmc",edu400List.stream().map(Edu400::getXnmc).distinct().collect(Collectors.toList()));
+        List<List> objects = new ArrayList<>();
+        for(Edu400 edu400:edu400List){
+            List list7 = new ArrayList();
+            for(Edu104 edu104:edu104List){
                 Integer i = edu202Dao.getPeriodTypeInDepartmentNew(edu104.getEdu104_ID()+"",edu400.getEdu400_ID()+"");
-                map77.put("data",i);
-                list77.add(map77);
-                all += i;
+                list7.add(i);
             }
-            map7.put("data",list77);
-            map7.put("all",all);
-            list7.add(map7);
+            objects.add(list7);
         }
-        returnMap.put("echar7",list7);
+        map7.put("data",objects);
+        returnMap.put("echar7",map7);
         //--------------------------------------------
         // 图8：授课门数与教师数量信息
         //--------------------------------------------

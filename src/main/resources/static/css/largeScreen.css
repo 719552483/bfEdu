@@ -577,6 +577,41 @@ border-bottom: 1px #ff000000 solid!important;
     color:white;
 }
 
+.visual_right_box_title{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.visual_right_box_num{
+    /*color: #00deff;*/
+    color: white;
+}
+
+.visual_right_box_num cite{
+    font-family: 'tapeworm';
+    font-size: 18px;
+    font-weight: bold;
+    padding-right: 3px;
+}
+
+.visual_conBottom{
+    height:235px;
+    /*border:1px red solid;*/
+    margin-top: 20px;
+    background: linear-gradient(#0095d6, #0095d6) left top,
+    linear-gradient(#0095d6, #0095d6) left top,
+    linear-gradient(#0095d6, #0095d6) right top,
+    linear-gradient(#0095d6, #0095d6) right top,
+    linear-gradient(#0095d6, #0095d6) left bottom,
+    linear-gradient(#0095d6, #0095d6) left bottom,
+    linear-gradient(#0095d6, #0095d6) right bottom,
+    linear-gradient(#0095d6, #0095d6) right bottom;
+    background-repeat: no-repeat;
+    background-size: 4px 10px, 20px 4px;
+}
+
+
+
 
 
 /*.visualSssf_right_box{*/
