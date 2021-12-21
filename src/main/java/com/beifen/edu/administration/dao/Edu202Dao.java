@@ -176,7 +176,7 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"order by t.EDU104_ID ",nativeQuery = true)
 	List<Object[]> getPeriodTypeInDepartment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList,List<Long> yearCodeList);
 
-	@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name,to_char(sum(t.zxs)) zxs,to_char(sum(t.llxs)) llxs,to_char(sum(t.sjxs)) sjxs,to_char(sum(t.jzxs)) jzxs,to_char(sum(t.fsxs)) fsxs\n" +
+	/*@Query(value = "select to_char(t.EDU104_ID) edu104_id, to_char(t.XBMC) department_name,to_char(sum(t.zxs)) zxs,to_char(sum(t.llxs)) llxs,to_char(sum(t.sjxs)) sjxs,to_char(sum(t.jzxs)) jzxs,to_char(sum(t.fsxs)) fsxs\n" +
 			"from (select distinct n.EDU202_ID,m.EDU104_ID, m.XBMC,p.zxs,p.LLXS,p.SJXS,p.JZXS,p.FSXS\n" +
 			"from (select distinct b.EDU104_ID, b.XBMC\n" +
 			"from edu107 a,\n" +
@@ -196,7 +196,20 @@ public interface Edu202Dao extends JpaRepository<Edu202, Long>, JpaSpecification
 			"group by m.EDU104_ID, m.XBMC,n.EDU202_ID,p.zxs,p.LLXS,p.SJXS,p.JZXS,p.FSXS) t\n" +
 			"group by t.EDU104_ID, t.XBMC\n" +
 			"order by t.EDU104_ID",nativeQuery = true)
+	List<Object[]> getPeriodTypeInDepartment();*/
+
+	@Query(value = "select xbmc,xbbm,sum(zxs) zxs from (\n" +
+			"select e.xbmc,e.xbbm,eee.zxs from edu300 e \n" +
+			"LEFT JOIN edu204 ee on e.edu300_id = ee.edu300_id\n" +
+			"left join edu201 eee on ee.edu201_id = eee.edu201_id\n" +
+			"where eee.sszt = 'pass') GROUP BY xbmc,xbbm",nativeQuery = true)
 	List<Object[]> getPeriodTypeInDepartment();
+
+	@Query(value = "select case when sum(zxs) is null then 0 else sum(zxs) end  zxs from edu300 e \n" +
+			"LEFT JOIN edu204 ee on e.edu300_id = ee.edu300_id\n" +
+			"left join edu201 eee on ee.edu201_id = eee.edu201_id\n" +
+			"where eee.sszt = 'pass' and e.xbbm = ?1 and eee.xnid = ?2",nativeQuery = true)
+	Integer getPeriodTypeInDepartmentNew(String xbbm,String xnid);
 
 	//根据二级学院查询各教学点在校人数
 	@Query(value = "select t.local_code edu501_id,t.local_name local_name,to_char(sum(t.zxrs)) student_count from Edu300 t where t.xbbm = ?1 and t.njbm in ?2 and t.batch in ?3 group by t.local_code, t.local_name",nativeQuery = true)

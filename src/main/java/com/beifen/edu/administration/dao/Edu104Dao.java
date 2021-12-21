@@ -67,4 +67,8 @@ public interface Edu104Dao extends JpaRepository<Edu104, Long>, JpaSpecification
 			"              and a.batch in ?3" +
 			"            order by b.EDU104_ID",nativeQuery = true)
 	List<Edu104> getEdu104InPlanInDepartment(String departmentCode,List<Long> schoolYearCodeList,List<String> batchCodeList);
+
+	//查询所有授课部门
+	@Query(value = "select * from edu104 where edu104_id in (select distinct b.EDU104_ID from edu107 a,edu104 b where a.EDU104 = b.EDU104_ID)", nativeQuery = true)
+	List<Edu104> queryAllSkbm();
 }

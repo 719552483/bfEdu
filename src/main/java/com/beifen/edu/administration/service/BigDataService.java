@@ -531,17 +531,29 @@ public class BigDataService {
         //--------------------------------------------
         // 图7：学时信息
         //--------------------------------------------
-        //获取课时类型数据
-        List<BigDataPeriodTypePO> periodTypeData= getBigDataPeriodType();
-        //按顺序整理课时格式
-        List<EchartDataPO> periodTypeEcharts = packagePeriodType(periodTypeData);
-        //按顺序获取二级学院名称
-        List<String> departmentNames = periodTypeData.stream().map(BigDataPeriodTypePO::getDepartmentName).collect(Collectors.toList());
-        //组装课时类型Echart信息
-        Map<String,Object> newPeriodTypeData = new HashMap<>();
-        newPeriodTypeData.put("departmentNames",departmentNames);
-        newPeriodTypeData.put("periodTypeEcharts",periodTypeEcharts);
-        returnMap.put("echar7",newPeriodTypeData);
+//        List<Object[]> periodTypeList = edu202Dao.getPeriodTypeInDepartment();
+        //获取所有授课学院
+        List<Map> list7 = new ArrayList<>();
+        List<Edu104> edu104List = edu104Dao.queryAllSkbm();
+        List<Edu400> edu400List = edu400Dao.findAllXn();
+        for(Edu104 edu104:edu104List){
+            Map map7 = new HashMap();
+            map7.put("name",edu104.getXbmc());
+            List list77 = new ArrayList();
+            int all = 0;
+            for(Edu400 edu400:edu400List){
+                Map map77 = new HashMap();
+                map77.put("name",edu400.getXnmc());
+                Integer i = edu202Dao.getPeriodTypeInDepartmentNew(edu104.getEdu104_ID()+"",edu400.getEdu400_ID()+"");
+                map77.put("data",i);
+                list77.add(map77);
+                all += i;
+            }
+            map7.put("data",list77);
+            map7.put("all",all);
+            list7.add(map7);
+        }
+        returnMap.put("echar7",list7);
         //--------------------------------------------
 
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
