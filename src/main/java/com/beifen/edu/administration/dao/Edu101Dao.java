@@ -107,8 +107,15 @@ public interface Edu101Dao extends JpaRepository<Edu101, Long>, JpaSpecification
 	Integer queryAllClassTeachersByXB(String xbbm);
 
 	//查询所有上课老师
+	@Query(value = "select count(DISTINCT edu101_id) from edu203 e",nativeQuery = true)
+	Integer queryAllClassTeachersDP();
+
+	//查询所有上课老师
 	@Query(value = "select count(0) from edu101 where edu101_id in(select DISTINCT edu101_id from edu205 where edu201_id in(select DISTINCT edu201_id from edu204 where edu300_id in (select edu300_id from edu300 where xbbm = ?1))) and jzglxbm = ?2",nativeQuery = true)
 	Integer queryAllClassTeachersByXB(String xbbm,String jzglxbm);
+
+	@Query(value = "select count(0) from edu101 where edu101_id in(select DISTINCT edu101_id from edu203 e) and jzglxbm = ?1",nativeQuery = true)
+	Integer queryAllClassTeachersByXB2(String jzglxbm);
 
 
 }

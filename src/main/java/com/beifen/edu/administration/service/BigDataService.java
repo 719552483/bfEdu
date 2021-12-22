@@ -555,6 +555,7 @@ public class BigDataService {
         // 图8：授课门数与教师数量信息
         //--------------------------------------------
         List<Map> list8 = new ArrayList<>();
+        Map reMap8 = new HashMap();
         for(Edu104 edu104:edu104List){
             Map map8 = new HashMap();
             map8.put("name",edu104.getXbmc());
@@ -566,7 +567,17 @@ public class BigDataService {
             map8.put("skms",edu201Dao.findskmsByXbbm(edu104.getEdu104_ID()+""));
             list8.add(map8);
         }
-        returnMap.put("echar8",list8);
+        reMap8.put("datail",list8);
+        Map map8 = new HashMap();
+
+        map8.put("name","全体数据");
+        map8.put("allTeacherCount",edu101Dao.queryAllClassTeachersDP());
+        map8.put("zrjs",edu101Dao.queryAllClassTeachersByXB2("001"));
+        map8.put("jzjs",edu101Dao.queryAllClassTeachersByXB2("003"));
+        map8.put("wpjs",edu101Dao.queryAllClassTeachersByXB2("004"));
+        map8.put("skms",edu201Dao.findskmsByXbbm());
+        reMap8.put("all",map8);
+        returnMap.put("echar8",reMap8);
         //--------------------------------------------
         resultVO = ResultVO.setSuccess("查询成功",returnMap);
         return resultVO;

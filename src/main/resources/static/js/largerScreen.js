@@ -869,9 +869,9 @@ function stuffclassHourTypeCount(chartInfo,isSingle) {
 	};
 
 	if(screen<=1366){
-		groupNum=4;
+		groupNum=3;
 	}else{
-		groupNum=5;
+		groupNum=4;
 	}
 
 	//动态的学院分组
@@ -2833,7 +2833,8 @@ function loadChart(searchObject){
 				//年级批次学年选择
 				// stuffChoosenArea(backjson.data);
 
-				stuffBottomTable();
+				//渲染底部table
+				stuffBottomTable(backjson.data.echar8);
 
 				$('#load').hide();
 			}
@@ -2883,7 +2884,77 @@ function loadChart(searchObject){
 	// });
 }
 
-function stuffBottomTable(){
+//渲染底部table
+function stuffBottomTable(tableInfo){
+	$('#bottomTableTable').bootstrapTable('destroy').bootstrapTable({
+		data:tableInfo.datail,
+		pagination: false,
+		pageNumber: 1,
+		showToggle: false,
+		showFooter: false,
+		search: false,
+		editable: false,
+		striped: false,
+		toolbar: '#toolbar',
+		showColumns: false,
+		onPostBody: function() {
+			// changetableStyleByScreen(tableInfo);
+		},
+		columns: [
+			{
+				field: 'name',
+				title: '二级学院名称',
+				align: 'center',
+				formatter: normalMatter
+			},{
+				field: 'allTeacherCount',
+				title: '教师总数',
+				align: 'center',
+				formatter: peopleNumMatter
+			},{
+				field: 'jzjs',
+				title: '兼职教师',
+				align: 'center',
+				formatter: peopleNumMatter
+			},{
+				field: 'zrjs',
+				title: '专任教师',
+				align: 'center',
+				formatter: peopleNumMatter
+			},{
+				field: 'wpjs',
+				title: '外聘教师',
+				align: 'center',
+				formatter: peopleNumMatter
+			},{
+				field: 'skms',
+				title: '授课门数',
+				align: 'center',
+				formatter: classCountMatter
+			}
+		]
+	});
+	function normalMatter(value, row, index) {
+		return [ '<div class="changeLeft'+index+'"><img class="tableImgLeft" src="images/ulist.png"/><span>'+value+'</span></div>' ]
+			.join('');
+	}
+
+	function peopleNumMatter(value, row, index) {
+		return [ '<div class="changeLeft'+index+'"><img class="tableImgLeft" src="images/ulist.png"/><span class="visual_conBottom_table_txt">'+value+'</span>人</div>' ]
+			.join('');
+	}
+
+	function classCountMatter(value, row, index) {
+		return [ '<div class="changeRight'+index+'"><img class="tableImgRight" src="images/ulist.png"/><span class="visual_conBottom_table_txt">'+value+'</span>门</div>' ]
+			.join('');
+	}
+
+	$('#all1').html(tableInfo.all.allTeacherCount);
+	$('#all2').html(tableInfo.all.jzjs);
+	$('#all3').html(tableInfo.all.zrjs);
+	$('#all4').html(tableInfo.all.wpjs);
+	$('#all5').html(tableInfo.all.skms);
+
 	var text=$("tbody:first");//定义第一个tr内容
 	var clear;//定义需要清除动画的部分
 	text.hover(function(){
@@ -2896,7 +2967,7 @@ function stuffBottomTable(){
 				field.css("marginTop",0).appendTo(text);//将该行的margin值置零,然后插入到最后
 				text.css("marginTop",0);
 			})
-		},1000)//滚动间隔时间
+		},1500)//滚动间隔时间
 	}).trigger("mouseleave");//自动滚动
 }
 

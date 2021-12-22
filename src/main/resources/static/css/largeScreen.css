@@ -610,6 +610,50 @@ border-bottom: 1px #ff000000 solid!important;
     background-size: 4px 10px, 20px 4px;
 }
 
+.bottomTableTitle{
+    font-size: 20px;
+    font-weight: bold;
+    color: #3bdbf3;
+    text-align: center;
+    letter-spacing: 5px;
+}
+
+.bottomTablefooter{
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffffffe8;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.visual_conBottom .tableArea{
+    height: 170px;
+    overflow:hidden;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.visual_conBottom .tableArea .bootstrap-table .table > thead > tr > th {
+    border-bottom: 1px solid #ddd;
+}
+
+.visual_conBottom .tableArea .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+    line-height: 20px;
+}
+
+.visual_conBottom_table_txt{
+    font-family: 'tapeworm';
+    font-size: 15px;
+    padding-right: 3px;
+}
+
+.visual_conBottom_table_footer_txt{
+    font-family: 'tapeworm';
+    font-size: 13px;
+    padding-right: 3px;
+    padding-left: 3px;
+    color: #00deff;
+}
 
 
 
@@ -653,12 +697,7 @@ border-bottom: 1px #ff000000 solid!important;
 
 
 
-/*.total .totalNum{*/
-/*    color: #00deff;*/
-/*    font-family: 'tapeworm';*/
-/*    text-align: center;*/
-/*    font-size: 35px;*/
-/*}*/
+
 
 /*.totalNum cite{*/
 /*    font-size: 15px;*/
