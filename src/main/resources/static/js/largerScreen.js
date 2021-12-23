@@ -746,7 +746,8 @@ function stuffTeacherTypeCount(teacherTypeData,isSingle){
 								// fontFamily:'tapeworm'
 							},
 							formatter: function (params) {
-								var count=parseInt(teacherTypeData[params.dataIndex].data[1])/parseInt(teacherTypeData[params.dataIndex].data[0])*100;
+								var a=i*groupNum;
+								var count=parseInt(teacherTypeData[a+params.dataIndex].data[1])/parseInt(teacherTypeData[a+params.dataIndex].data[0])*100;
 								return params.value+'人\n\n'+count.toFixed(2)+'%';
 							}
 						}
@@ -773,7 +774,8 @@ function stuffTeacherTypeCount(teacherTypeData,isSingle){
 								// fontFamily:'tapeworm'
 							},
 							formatter: function (params) {
-								var count=parseInt(teacherTypeData[params.dataIndex].data[2])/parseInt(teacherTypeData[params.dataIndex].data[0])*100;
+								var a=i*groupNum;
+								var count=parseInt(teacherTypeData[a+params.dataIndex].data[2])/parseInt(teacherTypeData[a+params.dataIndex].data[0])*100;
 								return params.value+'人\n\n'+count.toFixed(2)+'%';
 							}
 						}
