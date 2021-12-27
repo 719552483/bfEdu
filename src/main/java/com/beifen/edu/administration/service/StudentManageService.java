@@ -2453,53 +2453,54 @@ public class StudentManageService {
                 List<String> edu300List = edu300Dao.findAllZy(edu105.getEdu105_ID()+"");
                 for(int i = 1;i<=edu300List.size();i++){
                     Edu106 edu106 = edu106Dao.query106BYID(edu300List.get(i-1));
-                    utils.appendCell(sheet, index+i+1,"", (index+i)+"", -1, 0, false);
-                    utils.appendCell(sheet, index+i+1, "", edu105.getNjmc(), -1, 1, false);
-                    utils.appendCell(sheet, index+i+1, "", edu106.getZymc(), -1, 2, false);
+                    utils.appendCell(sheet, index+2,"", (index+1)+"", -1, 0, false);
+                    utils.appendCell(sheet, index+2, "", edu105.getNjmc(), -1, 1, false);
+                    utils.appendCell(sheet, index+2, "", edu106.getZymc(), -1, 2, false);
                     //人数
                     String peopleNum = edu300Dao.findPeopleNum0(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
-                    utils.appendCell(sheet, index+i+1, "", peopleNum, -1, 3, false);
+                    utils.appendCell(sheet, index+2, "", peopleNum, -1, 3, false);
                     Integer passNum = Integer.parseInt(peopleNum);
                     //1-4科不及格
                     for(int j = 1;j<5;j++){
                         String noPassPeopleNum = edu005Dao.findNoPassPeopleNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",j+"",xnid);
                         passNum = passNum-Integer.parseInt(noPassPeopleNum);
                         if("0".equals(noPassPeopleNum)){
-                            utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 4+j, false);
+                            utils.appendCell(sheet, index+2, "", "0人/0.00%", -1, 4+j, false);
                         }else{
                             double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
                             NumberFormat nf = NumberFormat.getPercentInstance();
                             nf.setMinimumFractionDigits(2);//设置保留小数位
                             String usedPercent = nf.format(v);
-                            utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 4+j, false);
+                            utils.appendCell(sheet, index+2, "", noPassPeopleNum+"人/"+usedPercent, -1, 4+j, false);
                         }
                     }
                     //5科+不及格
                     String noPassPeopleNum = edu005Dao.findNoPassPeopleNum2(edu300List.get(i-1),edu105.getEdu105_ID()+"","5",xnid);
                     passNum = passNum-Integer.parseInt(noPassPeopleNum);
                     if("0".equals(noPassPeopleNum)){
-                        utils.appendCell(sheet, index+i+1, "", "0人/0.00%", -1, 9, false);
+                        utils.appendCell(sheet, index+2, "", "0人/0.00%", -1, 9, false);
                     }else{
                         double v = Double.parseDouble(noPassPeopleNum) / Double.parseDouble(peopleNum);
                         NumberFormat nf = NumberFormat.getPercentInstance();
                         nf.setMinimumFractionDigits(2);//设置保留小数位
                         String usedPercent = nf.format(v);
-                        utils.appendCell(sheet, index+i+1, "", noPassPeopleNum+"人/"+usedPercent, -1, 9, false);
+                        utils.appendCell(sheet, index+2, "", noPassPeopleNum+"人/"+usedPercent, -1, 9, false);
                     }
                     //及格率
                     String gradeListNum = edu005Dao.findGradeListNum(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
                     if("0".equals(gradeListNum)){
-                        utils.appendCell(sheet, index+i+1, "", "该专业暂无课程或未录成绩", -1, 4, false);
+                        utils.appendCell(sheet, index+2, "", "该专业暂无课程或未录成绩", -1, 4, false);
                     }else{
                         double v = Double.parseDouble(passNum.toString()) / Double.parseDouble(peopleNum);
 //                        String passs = edu005Dao.findGradeListNumP(edu300List.get(i-1),edu105.getEdu105_ID()+"",xnid);
                         NumberFormat nf = NumberFormat.getPercentInstance();
                         nf.setMinimumFractionDigits(2);//设置保留小数位
                         String usedPercent = nf.format(v);
-                        utils.appendCell(sheet, index+i+1, "", usedPercent, -1, 4, false);
+                        utils.appendCell(sheet, index+2, "", usedPercent, -1, 4, false);
                     }
+                    index++;
                 }
-                index = edu300List.size();
+
             }
             sheet.setColumnWidth(0, 4*256);
             sheet.setColumnWidth(1, 5*256);
