@@ -759,6 +759,7 @@ function exportGrade(){
 	$("#export_crouse").val("");
 	$("#export_classes").attr("choosendClassId","");
 	$("#export_crouse").attr("choosendCrouseIds","");
+	stuffManiaSelectWithDeafult("#export_DataType", '2');
 
 	var reObject = new Object();
 	reObject.normalSelectIds = "#export_grade";
@@ -1319,6 +1320,7 @@ function confirmExportGrade(){
 	var crouses=$("#export_crouse").attr("choosendCrouseIds");
 	var trem=getNormalSelectValue("export_grade");
 	var type=getNormalSelectValue("export_Type");
+	var exportDataType=getNormalSelectValue("exportDataType");
 	if(classes===""){
 		toastr.warning("请选择班级");
 		return;
@@ -1342,6 +1344,7 @@ function confirmExportGrade(){
 	sendObject.classes=classes;
 	sendObject.crouses=crouses;
 	sendObject.trem=trem;
+	sendObject.exportDataType=exportDataType;
 
 	var url =type==='1'?"/exportGradeAll":'/exportGrade';
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
@@ -1478,6 +1481,7 @@ function exportNoPassGrade(){
 	$("#exportNoPassGrade_crouseName").attr("choosendCrouseIds",'');
 	$("#exportNoPassGradeModal").find(".searchArea").show();
 	$("#exportNoPassGradeModal").find(".exportNoPassGradeArea").hide();
+	stuffManiaSelectWithDeafult("#exportNoPassGrade_DataType",'2');
 
 	var reObject = new Object();
 	reObject.normalSelectIds = "#exportNoPassGrade_grade";
@@ -1498,6 +1502,7 @@ function exportNoPassGrade(){
 function confirmExportNoPassGrade(){
 	var crouseName=$("#exportNoPassGrade_crouseName").attr("choosendCrouseIds");
 	var trem=getNormalSelectValue("exportNoPassGrade_grade");
+	var dataType=getNormalSelectValue("exportNoPassGrade_DataType");
 	if(trem===""){
 		toastr.warning("请选择学年");
 		return;
@@ -1511,6 +1516,8 @@ function confirmExportNoPassGrade(){
 	var sendObject=new Object();
 	sendObject.crouse=crouseName;
 	sendObject.trem=trem;
+	sendObject.dataType=dataType;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
@@ -1547,6 +1554,7 @@ function confirmExportNoPassGrade(){
 function exportNoPassGradeLook(){
 	var crouseName=$("#exportNoPassGrade_crouseName").val();
 	var trem=getNormalSelectValue("exportNoPassGrade_grade");
+	var dataType=getNormalSelectValue("exportNoPassGrade_DataType");
 	if(trem===""){
 		toastr.warning("请选择学年");
 		return;
@@ -1560,6 +1568,8 @@ function exportNoPassGradeLook(){
 	var sendObject=new Object();
 	sendObject.crouse=crouseName;
 	sendObject.trem=trem;
+	sendObject.dataType=dataType;
+
 	$.ajax({
 		method : 'get',
 		cache : false,
