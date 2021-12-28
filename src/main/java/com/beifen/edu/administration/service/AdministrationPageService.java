@@ -4421,11 +4421,16 @@ public class AdministrationPageService {
 					String className = contentRow.getCell(1).toString();
 					String courseName = contentRow.getCell(2).toString();
 					String studentCode = contentRow.getCell(4).toString();
-					Edu005 edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
-					if(edu005 == null){
+					List<Edu005> edu005s = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
+					if(edu005s.size() == 0){
 						resultVO = ResultVO.setFailed("第"+rowIndex+"行您不是该课程的任课教课或未查到该学生信息");
 						return resultVO;
+					}else if(edu005s.size() > 1){
+						Edu005 edu005 = edu005s.get(0);
+						resultVO = ResultVO.setFailed("第"+rowIndex+"行"+edu005.getClassName()+"排课信息重复");
+						return resultVO;
 					}else{
+						Edu005 edu005 = edu005s.get(0);
 						Edu404 edu404 = edu404Dao.findbyxnid2(edu005.getXnid());
 						if (edu404 == null){
 							resultVO = ResultVO.setFailed("补考录入时间未开启!");
@@ -4500,8 +4505,8 @@ public class AdministrationPageService {
 				XSSFCell gradeCell = contentRow.getCell(5);
 				xnid = edu005Dao.findOneBySearchInfo(xn,className,courseName,studentCode).getXnid();
 				if (gradeCell != null) {
-					Edu005 edu005;
-					edu005 = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
+					List<Edu005> edu005s = edu005Dao.findOneBySearchInfo2(xn,className,courseName,studentCode,userKey);
+					Edu005 edu005 = edu005s.get(0);
 					if (edu005 != null) {
 						xnid = edu005.getXnid();
 						if(gradeCell != null){

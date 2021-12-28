@@ -38,7 +38,7 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
 
     //根据条件检索成绩2
     @Query(value = "select * from edu005 t where t.xn = ?1 and t.class_name = ?2 and t.course_name = ?3 and t.student_code = ?4 and EDU201_ID in (select distinct e.Edu201_ID from edu205 e where e.Edu101_ID = ?5)",nativeQuery = true)
-    Edu005 findOneBySearchInfo2(String xn, String className, String courseName, String studentCode,String teacherId);
+    List<Edu005> findOneBySearchInfo2(String xn, String className, String courseName, String studentCode,String teacherId);
 
     //更新确认标识
     @Transactional
