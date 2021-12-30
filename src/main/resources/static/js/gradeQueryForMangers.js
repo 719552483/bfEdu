@@ -1320,7 +1320,7 @@ function confirmExportGrade(){
 	var crouses=$("#export_crouse").attr("choosendCrouseIds");
 	var trem=getNormalSelectValue("export_grade");
 	var type=getNormalSelectValue("export_Type");
-	var exportDataType=getNormalSelectValue("exportDataType");
+	var exportDataType=getNormalSelectValue("export_DataType");
 	if(classes===""){
 		toastr.warning("请选择班级");
 		return;

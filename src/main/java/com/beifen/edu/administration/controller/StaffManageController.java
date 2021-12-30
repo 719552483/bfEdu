@@ -946,8 +946,14 @@ public class StaffManageController {
         String classes = jsonObject.getString("classes");
         String crouses = jsonObject.getString("crouses");
         String trem = jsonObject.getString("trem");
+        String exportDataType = jsonObject.getString("exportDataType");
         List<String> list = Arrays.asList(crouses.split(","));
-        List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        List<Edu005> edu005List;
+        if("2".equals(exportDataType)){
+            edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        }else{
+            edu005List = administrationPageService.getExportGradeAll(classes,trem,list);
+        }
         if(edu005List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
         }else{
@@ -989,7 +995,14 @@ public class StaffManageController {
         String crouses = jsonObject.getString("crouses");
         String trem = jsonObject.getString("trem");
         List<String> list = Arrays.asList(crouses.split(","));
-        List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        String exportDataType = jsonObject.getString("exportDataType");
+        List<Edu005> edu005List;
+        if("2".equals(exportDataType)){
+            edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        }else{
+            edu005List = administrationPageService.getExportGradeAll(classes,trem,list);
+        }
+
         if(edu005List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
         }else{
@@ -1029,8 +1042,14 @@ public class StaffManageController {
         String classes = jsonObject.getString("classes");
         String crouses = jsonObject.getString("crouses");
         String trem = jsonObject.getString("trem");
+        String exportDataType = jsonObject.getString("exportDataType");
         List<String> list = Arrays.asList(crouses.split(","));
-        List<Edu005> edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        List<Edu005> edu005List;
+        if("2".equals(exportDataType)){
+            edu005List = administrationPageService.getExportGrade(classes,trem,list);
+        }else{
+            edu005List = administrationPageService.getExportGradeAll(classes,trem,list);
+        }
         if(edu005List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到数据，请重新输入");
         }else{
@@ -1055,7 +1074,15 @@ public class StaffManageController {
         String crouse = jsonObject.getString("crouse");
         String trem = jsonObject.getString("trem");
 
-        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        String dataType = jsonObject.getString("dataType");
+        List<Edu0051> edu0051List;
+        if("2".equals(dataType)){
+            edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        }else{
+            edu0051List = administrationPageService.exportMakeUpGradeAll(trem,crouse);
+        }
+
+//        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
         if(edu0051List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
         }else{
@@ -1080,7 +1107,14 @@ public class StaffManageController {
         String crouse = jsonObject.getString("crouse");
         String trem = jsonObject.getString("trem");
 
-        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        String dataType = jsonObject.getString("dataType");
+        List<Edu0051> edu0051List;
+        if("2".equals(dataType)){
+            edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        }else{
+            edu0051List = administrationPageService.exportMakeUpGradeAll(trem,crouse);
+        }
+//        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
         if(edu0051List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
         }else{
@@ -1191,7 +1225,14 @@ public class StaffManageController {
         String crouse = jsonObject.getString("crouse");
         String trem = jsonObject.getString("trem");
 
-        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        String dataType = jsonObject.getString("dataType");
+        List<Edu0051> edu0051List;
+        if("2".equals(dataType)){
+            edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
+        }else{
+            edu0051List = administrationPageService.exportMakeUpGradeAll(trem,crouse);
+        }
+//        List<Edu0051> edu0051List = administrationPageService.exportMakeUpGrade(trem,crouse);
         if(edu0051List.size() == 0) {
             result = ResultVO.setFailed("当前条件未找到可以导出的成绩，请重新输入");
         }else{

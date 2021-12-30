@@ -4018,10 +4018,23 @@ public class AdministrationPageService {
 		return edu005List;
 	}
 
+	public List<Edu005> getExportGradeAll(String classes,String trem,List<String> list) {
+		//根据条件筛选成绩表
+		List<Edu005> edu005List = edu005Dao.getExportGradeAll(classes,trem,list);
+		return edu005List;
+	}
+
 	//导出不及格成绩excel
 	public List<Edu0051> exportMakeUpGrade(String trem,String crouses) {
 		//根据条件筛选成绩表
 		List<Edu0051> edu0051List = edu0051Dao.exportMakeUpGrade(trem,crouses);
+		return edu0051List;
+	}
+
+	//导出不及格成绩excel
+	public List<Edu0051> exportMakeUpGradeAll(String trem,String crouses) {
+		//根据条件筛选成绩表
+		List<Edu0051> edu0051List = edu0051Dao.exportMakeUpGradeAll(trem,crouses);
 		return edu0051List;
 	}
 
@@ -4220,7 +4233,7 @@ public class AdministrationPageService {
 		XSSFRow firstRow = sheet.createRow(0);// 第一行
 		XSSFCell cells[] = new XSSFCell[1];
 		// 所有标题数组
-		String[] titles = new String[] {"学年","行政班名称","课程名称","学生姓名", "学号","录入时间","成绩"};
+		String[] titles = new String[] {"学年","行政班名称","课程名称","学生姓名", "学号","录入时间","成绩","补考次数"};
 
 		// 循环设置标题
 		for (int i = 0; i < titles.length; i++) {
