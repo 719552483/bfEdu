@@ -168,6 +168,6 @@ public interface Edu300Dao extends JpaRepository<Edu300, Long>, JpaSpecification
 	@Query(value = "select * FROM(SELECT a.*,row_number ( ) over ( partition BY njbm,njmc,batch,batch_name ORDER BY njbm,njmc,batch,batch_name ) su FROM edu300 a) e where e.su = 1 order by njmc,batch",nativeQuery = true)
 	List<Edu300> findAllXSLX();
 
-	@Query(value = "select case when sum(e.zxrs) is null then 0 else sum(e.zxrs) end from edu300 e where njbm = ?1 and batch = ?2 and zybm = ?3", nativeQuery = true)
+	@Query(value = "select count(*) from edu300 e LEFT JOIN edu001 ee on e.EDU300_ID = ee.edu300_id where e.njbm = ?1 and e.batch = ?2 and e.zybm = ?3 and ee.zt_code != '003' and ee.zt_code !='002'", nativeQuery = true)
 	int findStudentCount(String njbm,String batch,String edu106);
 }

@@ -79,6 +79,9 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	@Query(value = "select e.* from Edu001 e where e.edu300_ID in ?1 order by e.xzbname",nativeQuery = true)
 	List<Edu001> getStudentInEdu300(List<String> edu300IdList);
 
+	//查询行政班所有学生
+	@Query(value = "select count(0) from Edu001 e where e.edu300_ID = ?1 and zt_code != '003' and zt_code != '002'",nativeQuery = true)
+	String getStudentInEdu300by(String edu300Id);
 
 	//根据用户二级学院权限查询学生
 	@Query(value = "select e.* from edu001 e where e.szxb in ?1",nativeQuery = true)
@@ -93,7 +96,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	Integer getStudentByAge(String s, String s1,List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//根据年龄查找学生人数
-	@Query(value = "select count(e.Edu001_ID) from edu001 e where  e.nl between ?1 and ?2 ",nativeQuery = true)
+	@Query(value = "select count(e.Edu001_ID) from edu001 e where  e.nl between ?1 and ?2 and zt_code != '003' and zt_code !='002'",nativeQuery = true)
 	Integer getStudentByAge(String s, String s1);
 
 	//根据二级学院查找各年龄段学生人数
@@ -105,7 +108,7 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	List<Object[]> getStudentByJob(List<Long> schoolYearCodeList,List<String> batchCodeList);
 
 	//根据生源类型查询学生人数
-	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t group by t.sylx",nativeQuery = true)
+	@Query(value = "select t.sylx name,to_char(count(t.edu001_ID)) value from Edu001 t where zt_code != '003' and zt_code !='002' group by t.sylx",nativeQuery = true)
 	List<Object[]> getStudentByJob();
 
 	//根据二级学院查询各生源类型学生人数
@@ -115,6 +118,9 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	//查询在校学生
 	@Query(value = "select count(1) from edu001 e",nativeQuery = true)
     Long findAllStudent();
+
+	@Query(value = "select count(1) from edu001 e where zt_code != '003' and zt_code !='002'",nativeQuery = true)
+	Long findAllStudent1();
 
 	//查询身份证号是否存在
 	@Query(value = "select * from edu001 e where e.sfzh = ?1 and e.Edu001_ID <> ?2 ",nativeQuery = true)
@@ -157,18 +163,18 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 	List<Edu001> findGraduationStudents(String xb,String nj,String zy);
 
 	//根据性别查询总人数
-	@Query(value = "select count(1) from edu001 e where xb = ?1",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e where xb = ?1 and zt_code != '003' and zt_code !='002'",nativeQuery = true)
 	Long findAllStudentByXb(String xb);
 
 	//根据年级查询总数
-	@Query(value = "select count(1) from edu001 e where nj = ?1",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e where nj = ?1 and zt_code != '003' and zt_code !='002'",nativeQuery = true)
 	Long findAllStudentByNj(String nj);
 
 	//根据年级性别查询总数
-	@Query(value = "select count(1) from edu001 e where nj = ?1 and xb = ?2",nativeQuery = true)
+	@Query(value = "select count(1) from edu001 e where nj = ?1 and xb = ?2 and zt_code != '003' and zt_code !='002'",nativeQuery = true)
 	Long findAllStudentByNj(String nj,String xb);
 
-	@Query(value = "select count(0) from edu001 e left join edu300 ee on e.edu300_id = ee.edu300_id where e.nj = ?1 and ee.batch = ?2",nativeQuery = true)
+	@Query(value = "select count(0) from edu001 e left join edu300 ee on e.edu300_id = ee.edu300_id where e.nj = ?1 and ee.batch = ?2 and zt_code != '003' and zt_code !='002'",nativeQuery = true)
 	String findAllStudentByNjPc(String nj,String batch);
 
 	@Query(value = "select count(0) from edu001 e left join edu300 ee on e.edu300_id = ee.edu300_id where e.nj = ?1 and ee.batch = ?2 and zt_code = '004'",nativeQuery = true)
@@ -203,6 +209,6 @@ public interface Edu001Dao extends JpaRepository<Edu001, Long>, JpaSpecification
 			"e.nj = ?1 \n" +
 			"AND ee.batch = ?2 \n" +
 			"AND a.noPass <= 5\n" +
-			"and e.zt_code != '004'",nativeQuery = true)
+			"and e.zt_code not in  ('004','002','003')",nativeQuery = true)
 	String findYJBYStudent(String nj,String batch);
 }

@@ -425,7 +425,7 @@ public class BigDataService {
         List<Map> titleList = new ArrayList<>();
         Map<String,Object> mapTitle = new HashMap<>();
         mapTitle.put("name","辽宁职业学院扩招学生总人数");
-        Long allStudentCount = edu001Dao.findAllStudent();
+        Long allStudentCount = edu001Dao.findAllStudent1();
         mapTitle.put("allStudent",allStudentCount);
         mapTitle.put("manStudent",edu001Dao.findAllStudentByXb("M"));
         mapTitle.put("womanStudent",edu001Dao.findAllStudentByXb("F"));
@@ -911,7 +911,7 @@ public class BigDataService {
         Long teacherCount = edu101Dao.findAllteacher();
         returnMap.put("teacherCount",teacherCount);
         //学生数量
-        Long studentCount = edu001Dao.findAllStudent();
+        Long studentCount = edu001Dao.findAllStudent1();
         returnMap.put("studentCount",studentCount);
         //教学点数量
         Long localCount = edu500Dao.findAllLocal();

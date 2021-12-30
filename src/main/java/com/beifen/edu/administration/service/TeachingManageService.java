@@ -3137,8 +3137,10 @@ public class TeachingManageService {
             } catch (InvocationTargetException ex) {
                 ex.printStackTrace();
             }
-            classGraduationPO.setOwn(e.getZxrs()+"");
-            String pass = edu005Dao.searchGraduationRate(e.getXzbmc(),num);
+            classGraduationPO.setOwn(edu001Dao.getStudentInEdu300by(e.getEdu300_ID()+""));
+            int pass1 = edu005Dao.searchGraduationRate(e.getXzbmc(),num);
+            int pass2 = edu005Dao.searchGraduationRate2(e.getXzbmc());
+            String pass = (pass1+pass2)+"";
             classGraduationPO.setPass(pass);
             if(Integer.parseInt(pass) != 0){
                 double v = Double.parseDouble(pass) / e.getZxrs();

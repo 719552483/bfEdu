@@ -394,8 +394,32 @@ public interface Edu005Dao extends JpaRepository<Edu005, Long>, JpaSpecification
     @Query(value = "select to_char(count(0)) from edu005 t where edu201_id in ?1 and IS_CONFIRM = 'T' and IS_PASSED = 'T' and course_name = ?2",nativeQuery = true)
     String countPassByEdu201AndXN2(List<String> edu201ids,String courseName);
 
-    @Query(value = "select count(0) from (select count(0) num  from edu005 where CLASS_NAME = ?1 and (IS_PASSED = 'F' or IS_PASSED is null) GROUP BY STUDENT_CODE) where num <= ?2",nativeQuery = true)
-    String searchGraduationRate(String class_name,String num);
+    @Query(value = "select count(0) from (select count(0) num  from edu005 e\n" +
+            "LEFT JOIN edu001 ee on e.edu001_id = ee.edu001_id\n" +
+            "where ee.zt_code != '003' and ee.zt_code != '002' and ee.xzbname = ?1 and IS_PASSED = 'F' GROUP BY e.STUDENT_CODE\n" +
+            ") where num <= ?2",nativeQuery = true)
+    int searchGraduationRate(String class_name,String num);
+
+    @Query(value = "SELECT\n" +
+            "count(*) \n" +
+            "FROM\n" +
+            "( SELECT e.STUDENT_CODE FROM edu005 e LEFT JOIN edu001 ee on e.edu001_id = ee.edu001_id WHERE ee.zt_code != '003' and ee.zt_code != '002' and ee.xzbname = ?1 GROUP BY e.STUDENT_CODE ) \n" +
+            "WHERE\n" +
+            "STUDENT_CODE NOT IN (\n" +
+            "SELECT\n" +
+            "STUDENT_CODE \n" +
+            "FROM\n" +
+            "edu005 e\n" +
+            "LEFT JOIN edu001 ee ON e.edu001_id = ee.edu001_id \n" +
+            "WHERE\n" +
+            "ee.zt_code != '003' \n" +
+            "AND ee.zt_code != '002' \n" +
+            "AND ee.xzbname = ?1\n" +
+            "AND ( IS_PASSED = 'F' ) \n" +
+            "GROUP BY\n" +
+            "e.STUDENT_CODE \n" +
+            ")",nativeQuery = true)
+    int searchGraduationRate2(String class_name);
 
     @Query(value = "select * from edu005 where course_name = ?1 and class_name in ?2 and xnid = ?3 order by student_code",nativeQuery = true)
     List<Edu005> exportGradeByClassIdAndcourseName(String courseName,List<String> className,String xnid);
