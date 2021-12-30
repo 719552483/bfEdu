@@ -6,7 +6,7 @@ $(function() {
 	EJDMElementInfo=queryEJDMElementInfo();
 	stuffEJDElement(EJDMElementInfo);
 	getMajorTrainingSelectInfo();
-	btnControl();
+	btnControl(false);
 	binBind();
 	getStudentInfo();
 	$("#addStudentzy").change(function() {
@@ -58,6 +58,22 @@ $(function() {
 		});
 	});
 });
+
+//学生页面的按钮权限控制按钮
+function btnControl(isTableUse) {
+	var currentJsmc=$(parent.frames["topFrame"].document).find(".changeRCurrentRole").find("a:eq(0)")[0].innerText;
+
+	if(currentJsmc==="系统管理员"){
+		return;
+	}
+	$('.modifyBtn,.deleteBtn,.insertBtn').hide();
+
+	if(isTableUse&&currentJsmc==="系统管理员"){
+		return;
+	}
+	$('#studentBaseInfoTable td:last-child').css('width','110px');
+	$('#studentBaseInfoTable td:last-child').css('min-width','110px');
+}
 
 //获取所有学生
 function getStudentInfo() {
@@ -182,7 +198,7 @@ function stuffStudentBaseInfoTable() {
 				changeTableNoRsTip();
 				changeColumnsStyle( ".studentBaseInfoTableArea", "学生信息","serverPage");
 				toolTipUp(".myTooltip");
-				btnControl();
+				btnControl(true);
 
 				//勾选已选数据
 				for (var i = 0; i < choosendStudent.length; i++) {
