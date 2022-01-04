@@ -28,25 +28,25 @@ public interface Edu0011Dao extends JpaRepository<Edu0011, Long>, JpaSpecificati
     @Query(value = "select e.* from edu0011 e where e.xh =?1", nativeQuery = true)
     Edu0011 query001ByXh2(String xh);
 
-    @Query(value = "select count(0) from edu0011 where szxb = ?1 and nj = ?2", nativeQuery = true)
+    @Query(value = "select count(0) from edu001 where szxb = ?1 and nj = ?2 and zt_code !='002' and zt_code != '003'", nativeQuery = true)
     int findXbrs(String szxb,String nj);
 
-    @Query(value = "select count(0) from edu0011 where szxb = ?1 and nj = ?2 and jyxsbm is not null", nativeQuery = true)
+    @Query(value = "select count(0) from edu0011 e left join edu001 ee on e.edu001_id = ee.edu001_id where ee.szxb = ?1 and ee.nj = ?2 and e.jyxsbm is not null and ee.zt_code !='002' and ee.zt_code != '003'", nativeQuery = true)
     int findXbjyrs(String szxb,String nj);
 
-    @Query(value = "select count(0) from edu0011 where zybm = ?1 and nj = ?2", nativeQuery = true)
+    @Query(value = "select count(0) from edu001  where zybm = ?1 and nj = ?2 and zt_code !='002' and zt_code != '003'", nativeQuery = true)
     int findZyrs(String zybm,String nj);
 
-    @Query(value = "select count(0) from edu0011 where zybm = ?1 and nj = ?2 and jyxsbm is not null", nativeQuery = true)
+    @Query(value = "select count(0) from edu0011 e left join edu001 ee on e.edu001_id = ee.edu001_id where ee.zybm = ?1 and ee.nj = ?2 and jyxsbm is not null and ee.zt_code !='002' and ee.zt_code != '003'", nativeQuery = true)
     int findZyjyrs(String zybm,String nj);
 
-    @Query(value = "select count(0) from edu0011 where zybm = ?1 and jyxsbm =?2 and nj = ?3", nativeQuery = true)
+    @Query(value = "select count(0) from edu0011 e left join edu001 ee on e.edu001_id = ee.edu001_id  where ee.zybm = ?1 and jyxsbm =?2 and ee.nj = ?3 and ee.zt_code !='002' and ee.zt_code != '003'", nativeQuery = true)
     int findJyxsrs(String zybm,String jyxsbm,String nj);
 
-    @Query(value = "select count(0) from edu0011 where nj = ?1", nativeQuery = true)
+    @Query(value = "select count(0) from edu001 where nj = ?1 and zt_code !='002' and zt_code != '003'", nativeQuery = true)
     int findNjrs(String nj);
 
-    @Query(value = "select count(0) from edu0011 where nj = ?1 and jyxsbm is not null", nativeQuery = true)
+    @Query(value = "select count(0) from edu0011 e left join edu001 ee on e.edu001_id = ee.edu001_id  where ee.nj = ?1 and jyxsbm is not null and ee.zt_code !='002' and ee.zt_code != '003'", nativeQuery = true)
     int findNjjyrs(String nj);
 
     @Query(value = "select count(*) from edu0011 e LEFT JOIN edu001 ee on e.edu001_id = ee.edu001_id where ee.zt_code = '004' and jyxs is not null", nativeQuery = true)
