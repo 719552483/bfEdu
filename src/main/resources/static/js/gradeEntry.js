@@ -2268,7 +2268,7 @@ function getMakeUpGradeOverviewDateLimit(xnId){
 				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(0)').show();
 				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(1)').hide();
 				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.xnmc').html(backjson.data.xnmc);
-				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.count').html(backjson.data.count);
+				// $('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.count').html(backjson.data.count);
 				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('.endDateRange').html(backjson.data.endDateRange);
 			} else {
 				$('#tab2').find('.makeUpGradeOverview').find('.formtext').find('b:eq(0)').hide();
