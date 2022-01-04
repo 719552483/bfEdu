@@ -3861,13 +3861,14 @@ function stuffAllbksjLimitTable(allMUxz){
 				sortable: true,
 				formatter: paramsMatter
 			},
+			// {
+			// 	field: 'count',
+			// 	title: '补考次数',
+			// 	align: 'left',
+			// 	sortable: true,
+			// 	formatter: countMatter
+			// },
 			{
-				field: 'count',
-				title: '补考次数',
-				align: 'left',
-				sortable: true,
-				formatter: countMatter
-			},{
 				field: 'startDateRange',
 				title: '开始时间',
 				align: 'left',
@@ -3900,7 +3901,8 @@ function stuffAllbksjLimitTable(allMUxz){
 		return [
 			'<ul class="toolbar tabletoolbar">' +
 			'<li class="modifyBtn" id="closeLimit"><span><img src="images/t03.png" style="width:24px"></span>关闭限制</li>' +
-			'<li class="deleteBtn" id="startNextLimit"><span><img src="img/right.png" style="width:24px"></span>开启下一次限制</li>' +
+			// '<li class="deleteBtn" id="startNextLimit"><span><img src="img/right.png" style="width:24px"></span>开启下一次限制</li>' +
+			'<li class="deleteBtn" id="startNextLimit"><span><img src="img/right.png" style="width:24px"></span>开启限制</li>' +
 			'</ul>'
 		]
 			.join('');
@@ -4022,8 +4024,12 @@ function confirmAddBksjLimit(){
 
 //关闭补考限制
 function closeLimit(row){
-	if((row.status==1||row.status==='1')&&(row.count==5||row.count==='5')){
-		toastr.warning('第'+row.count+'次补考录入时间限制已关闭');
+	// if((row.status==1||row.status==='1')&&(row.count==5||row.count==='5')){
+	// 	toastr.warning('第'+row.count+'次补考录入时间限制已关闭');
+	// 	return;
+	// }
+	if(row.status==1){
+		toastr.warning('补考录入时间限制已关闭');
 		return;
 	}
 
@@ -4077,18 +4083,24 @@ function sendCloseLimitInfo(row){
 
 //开启下一次限制
 function startNextLimit(row){
-	if(row.status==0||row.status==='0'){
-		toastr.warning('请先关闭上一次补考成绩录入时间限制');
-		return;
-	}
+	// if(row.status==0||row.status==='0'){
+	// 	toastr.warning('请先关闭上一次补考成绩录入时间限制');
+	// 	return;
+	// }
+	//
+	// if(row.count==5||row.count==='5'){
+	// 	toastr.warning('一个学年最多操作5次补考成绩录入时间限制');
+	// 	return;
+	// }
 
-	if(row.count==5||row.count==='5'){
-		toastr.warning('一个学年最多操作5次补考成绩录入时间限制');
+	if(row.status==0||row.status==='0'){
+		toastr.warning('补考录入时间限制已开启');
 		return;
 	}
 
 	$.showModal("#remindModal",true);
-	$(".remindType").html(row.xnmc+"的第"+(parseInt(row.count)+1)+"次补考成绩录入时间限制");
+	// $(".remindType").html(row.xnmc+"的第"+(parseInt(row.count)+1)+"次补考成绩录入时间限制");
+	$(".remindType").html(row.xnmc+"的补考成绩录入时间限制");
 	$(".remindActionType").html("开启");
 	//确认新增关系按钮
 	$('.confirmRemind').unbind('click');
