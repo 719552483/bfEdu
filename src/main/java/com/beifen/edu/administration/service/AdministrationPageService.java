@@ -1268,73 +1268,73 @@ public class AdministrationPageService {
 		addLog(userId,actionKey,bussinsneType,edu404.getEdu404_ID()+"",edu404.getXnmc());
 		//结束时补全所有没有录入补考成绩的学生
 //		String exam = Integer.parseInt(edu404.getCount());
-		List<Edu005> edu005List = edu005Dao.endNewMUTime(edu404.getCount(),edu404.getXnid());
-		Date currentTime = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		String dateString = formatter.format(currentTime);
-		for(Edu005 edu005:edu005List){
-			edu005.setExam_num(Integer.parseInt(edu404.getCount()));
-			edu005Dao.save(edu005);
-			//如果缺少成绩，则补录之前缺失的成绩(录入第五次补考成绩)
-			List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(edu005.getEdu005_ID()+"");//
-			if(edu0051List == null){
-				Edu0051 edu0051 = new Edu0051();
-				edu0051.setEdu005_ID(edu005.getEdu005_ID());
-				edu0051.setEdu001_ID(edu005.getEdu001_ID());
-				edu0051.setEdu201_ID(edu005.getEdu201_ID());
-				edu0051.setEdu300_ID(edu005.getEdu300_ID());
-				edu0051.setEdu101_ID(edu005.getEdu101_ID());
-				edu0051.setCourseName(edu005.getCourseName());
-				edu0051.setClassName(edu005.getClassName());
-				edu0051.setStudentName(edu005.getStudentName());
-				edu0051.setStudentCode(edu005.getStudentCode());
-				edu0051.setGradeEnter(edu005.getGradeEnter());
-				edu0051.setEntryDate(dateString);
-				edu0051.setGrade("-1");
-				edu0051.setXnid(edu005.getXnid());
-				edu0051.setXn(edu005.getXn());
-				edu0051.setExam_num(0);
-				edu0051Dao.save(edu0051);
-				edu0051List = edu0051Dao.getHistoryGrade(edu005.getEdu005_ID()+"");
-			}
-			int examNum = edu0051List.get(edu0051List.size()-1).getExam_num();//0
-			for(int ii =1 ;ii<(edu005.getExam_num()-examNum);ii++){
-				Edu0051 edu0051 = new Edu0051();
-				edu0051.setEdu005_ID(edu005.getEdu005_ID());
-				edu0051.setEdu001_ID(edu005.getEdu001_ID());
-				edu0051.setEdu201_ID(edu005.getEdu201_ID());
-				edu0051.setEdu300_ID(edu005.getEdu300_ID());
-				edu0051.setEdu101_ID(edu005.getEdu101_ID());
-				edu0051.setCourseName(edu005.getCourseName());
-				edu0051.setClassName(edu005.getClassName());
-				edu0051.setStudentName(edu005.getStudentName());
-				edu0051.setStudentCode(edu005.getStudentCode());
-				edu0051.setGradeEnter(edu005.getGradeEnter());
-				edu0051.setEntryDate(dateString);
-				edu0051.setGrade("-1");
-				edu0051.setXnid(edu005.getXnid());
-				edu0051.setXn(edu005.getXn());
-				edu0051.setExam_num(examNum+ii);
-				edu0051Dao.save(edu0051);
-			}
-			Edu0051 edu0051 = new Edu0051();
-			edu0051.setEdu005_ID(edu005.getEdu005_ID());
-			edu0051.setEdu001_ID(edu005.getEdu001_ID());
-			edu0051.setEdu201_ID(edu005.getEdu201_ID());
-			edu0051.setEdu300_ID(edu005.getEdu300_ID());
-			edu0051.setEdu101_ID(edu005.getEdu101_ID());
-			edu0051.setCourseName(edu005.getCourseName());
-			edu0051.setClassName(edu005.getClassName());
-			edu0051.setStudentName(edu005.getStudentName());
-			edu0051.setStudentCode(edu005.getStudentCode());
-			edu0051.setGradeEnter(edu005.getGradeEnter());
-			edu0051.setEntryDate(dateString);
-			edu0051.setGrade(edu005.getGrade());
-			edu0051.setXnid(edu005.getXnid());
-			edu0051.setXn(edu005.getXn());
-			edu0051.setExam_num(edu005.getExam_num());
-			edu0051Dao.save(edu0051);
-		}
+//		List<Edu005> edu005List = edu005Dao.endNewMUTime(edu404.getCount(),edu404.getXnid());
+//		Date currentTime = new Date();
+//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//		String dateString = formatter.format(currentTime);
+//		for(Edu005 edu005:edu005List){
+//			edu005.setExam_num(Integer.parseInt(edu404.getCount()));
+//			edu005Dao.save(edu005);
+//			//如果缺少成绩，则补录之前缺失的成绩(录入第五次补考成绩)
+//			List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(edu005.getEdu005_ID()+"");//
+//			if(edu0051List == null){
+//				Edu0051 edu0051 = new Edu0051();
+//				edu0051.setEdu005_ID(edu005.getEdu005_ID());
+//				edu0051.setEdu001_ID(edu005.getEdu001_ID());
+//				edu0051.setEdu201_ID(edu005.getEdu201_ID());
+//				edu0051.setEdu300_ID(edu005.getEdu300_ID());
+//				edu0051.setEdu101_ID(edu005.getEdu101_ID());
+//				edu0051.setCourseName(edu005.getCourseName());
+//				edu0051.setClassName(edu005.getClassName());
+//				edu0051.setStudentName(edu005.getStudentName());
+//				edu0051.setStudentCode(edu005.getStudentCode());
+//				edu0051.setGradeEnter(edu005.getGradeEnter());
+//				edu0051.setEntryDate(dateString);
+//				edu0051.setGrade("-1");
+//				edu0051.setXnid(edu005.getXnid());
+//				edu0051.setXn(edu005.getXn());
+//				edu0051.setExam_num(0);
+//				edu0051Dao.save(edu0051);
+//				edu0051List = edu0051Dao.getHistoryGrade(edu005.getEdu005_ID()+"");
+//			}
+//			int examNum = edu0051List.get(edu0051List.size()-1).getExam_num();//0
+//			for(int ii =1 ;ii<(edu005.getExam_num()-examNum);ii++){
+//				Edu0051 edu0051 = new Edu0051();
+//				edu0051.setEdu005_ID(edu005.getEdu005_ID());
+//				edu0051.setEdu001_ID(edu005.getEdu001_ID());
+//				edu0051.setEdu201_ID(edu005.getEdu201_ID());
+//				edu0051.setEdu300_ID(edu005.getEdu300_ID());
+//				edu0051.setEdu101_ID(edu005.getEdu101_ID());
+//				edu0051.setCourseName(edu005.getCourseName());
+//				edu0051.setClassName(edu005.getClassName());
+//				edu0051.setStudentName(edu005.getStudentName());
+//				edu0051.setStudentCode(edu005.getStudentCode());
+//				edu0051.setGradeEnter(edu005.getGradeEnter());
+//				edu0051.setEntryDate(dateString);
+//				edu0051.setGrade("-1");
+//				edu0051.setXnid(edu005.getXnid());
+//				edu0051.setXn(edu005.getXn());
+//				edu0051.setExam_num(examNum+ii);
+//				edu0051Dao.save(edu0051);
+//			}
+//			Edu0051 edu0051 = new Edu0051();
+//			edu0051.setEdu005_ID(edu005.getEdu005_ID());
+//			edu0051.setEdu001_ID(edu005.getEdu001_ID());
+//			edu0051.setEdu201_ID(edu005.getEdu201_ID());
+//			edu0051.setEdu300_ID(edu005.getEdu300_ID());
+//			edu0051.setEdu101_ID(edu005.getEdu101_ID());
+//			edu0051.setCourseName(edu005.getCourseName());
+//			edu0051.setClassName(edu005.getClassName());
+//			edu0051.setStudentName(edu005.getStudentName());
+//			edu0051.setStudentCode(edu005.getStudentCode());
+//			edu0051.setGradeEnter(edu005.getGradeEnter());
+//			edu0051.setEntryDate(dateString);
+//			edu0051.setGrade(edu005.getGrade());
+//			edu0051.setXnid(edu005.getXnid());
+//			edu0051.setXn(edu005.getXn());
+//			edu0051.setExam_num(edu005.getExam_num());
+//			edu0051Dao.save(edu0051);
+//		}
 		resultVO = ResultVO.setSuccess("操作成功",edu404);
 		return resultVO;
 	}
@@ -1366,11 +1366,11 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setFailed("请先结束上一次补考限制");
 			return resultVO;
 		}
-		int count = Integer.parseInt(edu404Old.getCount())+1;
-		if(count>5){
-			resultVO = ResultVO.setFailed("已完成所有五次补考的录入，不可再次开启！");
-			return resultVO;
-		}
+//		int count = Integer.parseInt(edu404Old.getCount())+1;
+//		if(count>5){
+//			resultVO = ResultVO.setFailed("已完成所有五次补考的录入，不可再次开启！");
+//			return resultVO;
+//		}
 		if(edu404.getStartDateRange() == null || "".equals(edu404.getStartDateRange())){
 			resultVO = ResultVO.setFailed("请设置开始时间");
 			return resultVO;
@@ -1379,7 +1379,7 @@ public class AdministrationPageService {
 			resultVO = ResultVO.setFailed("请设置结束时间");
 			return resultVO;
 		}
-		edu404Old.setCount(count+"");
+//		edu404Old.setCount(count+"");
 		edu404Old.setStatus("0");
 		edu404Old.setStartDateRange(edu404.getStartDateRange());
 		edu404Old.setEndDateRange(edu404.getEndDateRange());
