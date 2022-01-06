@@ -435,6 +435,7 @@ function confirmChoose(info) {
 			} else {
 				$.showModal('#remindModal3',true);
 				$.hideModal('#ChooseModal',false);
+				$('.remindModal3Txt').html(backjson.msg);
 
 				//确认
 				$('.confirmRemind3').unbind('click');
