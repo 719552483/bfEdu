@@ -431,7 +431,7 @@ function confirmChoose(info) {
 		success: function (backjson) {
 			hideloding();
 			if (backjson.code===200) {
-				changeScheduleNewCheck(info);
+				changeScheduleNew(info);
 			} else {
 				$.showModal('#remindModal3',true);
 				$.hideModal('#ChooseModal',false);
@@ -439,7 +439,7 @@ function confirmChoose(info) {
 				//确认
 				$('.confirmRemind3').unbind('click');
 				$('.confirmRemind3').bind('click', function(e) {
-					changeScheduleNewCheck(info);
+					changeScheduleNew(info);
 					e.stopPropagation();
 				});
 
@@ -456,7 +456,7 @@ function confirmChoose(info) {
 }
 
 //确认操作
-function changeScheduleNewCheck(info){
+function changeScheduleNew(info){
 	$.ajax({
 		method: 'get',
 		cache: false,
