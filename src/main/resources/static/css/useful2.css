@@ -1674,7 +1674,7 @@ background: rgba(36, 138, 187, 0.77);
 }
 
 .timeOutCanle,
-.specialCanle,.specialCanle1 {
+.specialCanle,.specialCanle1,.remindModal3specialCanle {
 	background: url(../images/btnbg2.png) repeat-x;
 	color: rgba(0, 0, 0, 0.7490196078431373);
 	font-weight: normal;

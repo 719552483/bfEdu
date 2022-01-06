@@ -406,8 +406,57 @@ function getChangeInfo(eve){
 	return returnObject;
 }
 
-//确认操作
+//调课二次确认
 function confirmChoose(info) {
+	$.ajax({
+		method: 'get',
+		cache: false,
+		url: "/changeScheduleNewCheck",
+		data:{
+			"changInfo":JSON.stringify(info.changInfo),
+			"oldchangInfo":JSON.stringify(info.oldchangInfo),
+			"type":info.type,
+			"userId":$(parent.frames["topFrame"].document).find(".userName")[0].attributes[0].nodeValue
+		},
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			requestErrorbeforeSend();
+		},
+		error: function (textStatus) {
+			requestError();
+		},
+		complete: function (xhr, status) {
+			getScheduleClassesInfo();
+		},
+		success: function (backjson) {
+			hideloding();
+			if (backjson.code===200) {
+				changeScheduleNewCheck(info);
+			} else {
+				$.showModal('#remindModal3',true);
+				$.hideModal('#ChooseModal',false);
+
+				//确认
+				$('.confirmRemind3').unbind('click');
+				$('.confirmRemind3').bind('click', function(e) {
+					changeScheduleNewCheck(info);
+					e.stopPropagation();
+				});
+
+				//取消
+				$('.remindModal3specialCanle').unbind('click');
+				$('.remindModal3specialCanle').bind('click', function(e) {
+					$.showModal('#ChooseModal',true);
+					$.hideModal('#remindModal3',false);
+					e.stopPropagation();
+				});
+			}
+		}
+	});
+}
+
+//确认操作
+function changeScheduleNewCheck(info){
 	$.ajax({
 		method: 'get',
 		cache: false,
@@ -432,7 +481,7 @@ function confirmChoose(info) {
 			hideloding();
 			if (backjson.code===200) {
 				toastr.success(backjson.msg);
-				$.hideModal("#ChooseModal");
+				$.hideModal();
 			} else {
 				toastr.warning(backjson.msg);
 			}
