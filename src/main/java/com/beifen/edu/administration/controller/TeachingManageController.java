@@ -364,10 +364,34 @@ public class TeachingManageController {
                                    @RequestParam("userId") String user_id
     ) {
         Edu203 edu203 = JSON.parseObject(changInfo, Edu203.class);
-        Edu203 edu203old = JSON.parseObject(oldchangInfo, Edu203.class);
+        Edu203 edu203old = JSON.parseObject(oldchangInfo, Edu203.class); 
         ResultVO result = teachingManageService.changeSchedule(edu203,edu203old,type,user_id);
         return result;
     }
+
+    /**
+     * 教师调课-校验
+     * @param changInfo
+     * @return
+     */
+    @RequestMapping("/changeScheduleNewCheck")
+    @ResponseBody
+    public ResultVO changeScheduleNewCheck (@RequestParam("changInfo") String changInfo,//修改后对象信息
+                                       @RequestParam("oldchangInfo") String oldchangInfo,//原对象信息 需要有Edu202_id和Edu101_id
+                                       @RequestParam("type") String type,//操作类型：（1.调一周的课程，2.调一天的课程，3.调某一节课程）
+                                       @RequestParam("userId") String user_id
+    ) {
+        ResultVO result;
+        if("3".equals(type)){
+            Edu203 edu203 = JSON.parseObject(changInfo, Edu203.class);
+            Edu203 edu203old = JSON.parseObject(oldchangInfo, Edu203.class);
+            result = teachingManageService.changeScheduleCheck(edu203,edu203old,type,user_id);
+        }else{
+            result = ResultVO.setSuccess("可以调课");
+        }
+        return result;
+    }
+
 
     /**
      * 教师调课-只调教师

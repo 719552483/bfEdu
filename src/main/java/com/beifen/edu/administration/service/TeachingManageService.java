@@ -971,6 +971,29 @@ public class TeachingManageService {
         return resultVO;
     }
 
+    //教师调课
+    public ResultVO changeScheduleCheck(Edu203 edu203,Edu203 edu203old,String type,String user_id) {
+        ResultVO resultVO;
+        Specification<Edu203> specification2 = new Specification<Edu203>() {
+            public Predicate toPredicate(Root<Edu203> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(cb.equal(root.<String>get("edu101_id"), edu203old.getEdu101_id()));
+                predicates.add(cb.equal(root.<String>get("edu202_ID"), edu203old.getEdu202_ID()));
+                predicates.add(cb.equal(root.<String>get("week"), edu203.getWeek()));
+                predicates.add(cb.equal(root.<String>get("xqid"), edu203.getXqid()));
+                predicates.add(cb.equal(root.<String>get("kjid"), edu203.getKjid()));
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<Edu203> list2 = edu203Dao.findAll(specification2);
+        if(list2.size() != 0){
+            resultVO = ResultVO.setFailed("调课新位置已有课程,是否继续调整？");
+            resultVO.setCode(204);
+        }else{
+            resultVO = ResultVO.setSuccess("可以调课");
+        }
+        return resultVO;
+    }
 
     //教师调课
     public ResultVO changeSchedule(Edu203 edu203,Edu203 edu203old,String type,String user_id) {
@@ -2752,7 +2775,7 @@ public class TeachingManageService {
             return resultVO;
         }
         for (Edu107 e : edu107List) {
-            njList.add(e.getBatchName());
+            njList.add(e.getBatchName()+"-"+e.getPyjhmc());
             String countAll;
             String countPass;
             if(professionalRequestPO.getCourseName() != null && !"".equals(professionalRequestPO.getCourseName())){
