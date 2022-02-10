@@ -27,6 +27,11 @@ public interface Edu0051Dao extends JpaRepository<Edu0051, Long>, JpaSpecificati
     @Query(value = "select * from EDU0051 where edu005_id = ?1 ORDER BY exam_num desc", nativeQuery = true)
     List<Edu0051> getHistoryGrade3(String Edu005_Id);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from edu0051 where Edu005_id = ?1 and exam_num = ?2", nativeQuery = true)
+    void deleteHistoryGrade(String Edu005_Id,String num);
+
     //查询补考成绩
     @Transactional
     @Modifying(clearAutomatically = true)
