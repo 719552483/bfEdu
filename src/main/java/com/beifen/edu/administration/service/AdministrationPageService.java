@@ -4057,13 +4057,38 @@ public class AdministrationPageService {
 	//查询补考成绩
 	public ResultVO getHistoryGrade(String Edu005_Id){
 		ResultVO resultVO;
-		List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(Edu005_Id);
-		if(edu0051List.size() == 0){
-			resultVO = ResultVO.setFailed("暂无数据");
-			return resultVO;
-		}
 		List<Edu0051> edu0051List2 = new ArrayList<>();
-		if(edu0051List.get(0).getExam_num()!= 0){
+
+		Edu005 edu005 = edu005Dao.findOne(Long.parseLong(Edu005_Id));
+		List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade2(Edu005_Id);
+		//正考成绩
+		if(edu0051List.size() == 0){
+			Edu0051 edu0051 = new Edu0051();
+			edu0051.setCourseName(edu0051List.get(0).getCourseName());
+			edu0051.setGrade("暂无数据");
+			edu0051.setEntryDate("暂无数据");
+			edu0051.setExam_num(0);
+			edu0051.setGradeEnter("暂无数据");
+			edu0051List2.add(edu0051);
+		}else{
+			edu0051List2.add(edu0051List.get(0));
+		}
+		//补考成绩
+		if(edu005.getExam_num() != null){
+			List<Edu0051> edu0051List3 = edu0051Dao.getHistoryGrade3(Edu005_Id);
+			if(edu0051List3.size() != 0 && !"0".equals(edu0051List3.get(0).getExam_num())){
+				edu0051List2.add(edu0051List3.get(0));
+			}
+			else{
+				Edu0051 edu0051 = new Edu0051();
+				edu0051.setCourseName(edu0051List.get(0).getCourseName());
+				edu0051.setGrade("暂无数据");
+				edu0051.setEntryDate("暂无数据");
+				edu0051.setExam_num(0);
+				edu0051.setGradeEnter("暂无数据");
+				edu0051List2.add(edu0051);
+			}
+		}else{
 			Edu0051 edu0051 = new Edu0051();
 			edu0051.setCourseName(edu0051List.get(0).getCourseName());
 			edu0051.setGrade("暂无数据");
@@ -4072,9 +4097,28 @@ public class AdministrationPageService {
 			edu0051.setGradeEnter("暂无数据");
 			edu0051List2.add(edu0051);
 		}
-		edu0051List2.addAll(edu0051List);
 		resultVO = ResultVO.setSuccess("查找成功",edu0051List2);
 		return resultVO;
+
+
+//		List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(Edu005_Id);
+//		if(edu0051List.size() == 0){
+//			resultVO = ResultVO.setFailed("暂无数据");
+//			return resultVO;
+//		}
+//		List<Edu0051> edu0051List2 = new ArrayList<>();
+//		if(edu0051List.get(0).getExam_num()!= 0){
+//			Edu0051 edu0051 = new Edu0051();
+//			edu0051.setCourseName(edu0051List.get(0).getCourseName());
+//			edu0051.setGrade("暂无数据");
+//			edu0051.setEntryDate("暂无数据");
+//			edu0051.setExam_num(0);
+//			edu0051.setGradeEnter("暂无数据");
+//			edu0051List2.add(edu0051);
+//		}
+//		edu0051List2.addAll(edu0051List);
+//		resultVO = ResultVO.setSuccess("查找成功",edu0051List2);
+
 	}
 
 	//溯源数据
@@ -4189,22 +4233,25 @@ public class AdministrationPageService {
 							utils.appendCell(sheet,i,"",edu005List.get(i*size+j).getGrade(),-1,j+2,false);
 						}else{
 							String muGrade = "(";
-							List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(edu005List.get(i*size+j).getEdu005_ID()+"");
-							for (int ii = 0;ii<edu0051List.size();ii++){
-								if(ii == 0){
-									if(ii == edu0051List.size()-1){
-										muGrade = muGrade+"正考成绩："+edu0051List.get(ii).getGrade()+"分";
-									}else{
-										muGrade = muGrade+"正考成绩："+edu0051List.get(ii).getGrade()+"分,";
-									}
-								}else{
-									if(ii == edu0051List.size()-1){
-										muGrade = muGrade+"第"+edu0051List.get(ii).getExam_num()+"次补考成级："+edu0051List.get(ii).getGrade()+"分";
-									}else{
-										muGrade = muGrade+"第"+edu0051List.get(ii).getExam_num()+"次补考成级："+edu0051List.get(ii).getGrade()+"分,";
-									}
-								}
-							}
+							List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade2(edu005List.get(i*size+j).getEdu005_ID()+"");
+							muGrade = muGrade+"正考成绩："+edu0051List.get(0).getGrade()+"分,";
+							muGrade = muGrade+"补考成绩："+edu005List.get(i*size+j).getGrade()+"分";
+//							List<Edu0051> edu0051List = edu0051Dao.getHistoryGrade(edu005List.get(i*size+j).getEdu005_ID()+"");
+//							for (int ii = 0;ii<edu0051List.size();ii++){
+//								if(ii == 0){
+//									if(ii == edu0051List.size()-1){
+//										muGrade = muGrade+"正考成绩："+edu0051List.get(ii).getGrade()+"分";
+//									}else{
+//										muGrade = muGrade+"正考成绩："+edu0051List.get(ii).getGrade()+"分,";
+//									}
+//								}else{
+//									if(ii == edu0051List.size()-1){
+//										muGrade = muGrade+"第"+edu0051List.get(ii).getExam_num()+"次补考成级："+edu0051List.get(ii).getGrade()+"分";
+//									}else{
+//										muGrade = muGrade+"第"+edu0051List.get(ii).getExam_num()+"次补考成级："+edu0051List.get(ii).getGrade()+"分,";
+//									}
+//								}
+//							}
 							muGrade = muGrade+")";
 							utils.appendCell(sheet,i,"",muGrade,-1,j+2,false);
 						}
