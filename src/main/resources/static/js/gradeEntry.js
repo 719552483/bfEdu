@@ -3270,7 +3270,7 @@ function comfirmMakeUpGradeEntry(lastTableChoosend){
 	}
 	$.showModal("#remindModal",true);
 	$(".remindType").html("本次"+isModify+"人的补考成绩");
-	$(".remindActionType").html("录入提交(仅一次提交机会!)");
+	$(".remindActionType").html("录入提交");//(仅一次提交机会!)
 	$('.confirmRemind').unbind('click');
 	$('.confirmRemind').bind('click', function(e) {
 		sendMakeUpGradeEntry(lastTableChoosend,thisTableChoosend);
@@ -3318,14 +3318,15 @@ function sendMakeUpGradeEntry(lastTableChoosend,thisTableChoosend){
 			hideloding();
 			if (backjson.code===200) {
 				$.hideModal();
-				for (var i = 0; i < thisTableChoosend.length; i++) {
-					if(thisTableChoosend[i].exam_num==null||thisTableChoosend[i].exam_num===''||typeof thisTableChoosend[i].exam_num==='undefined'){
-						thisTableChoosend[i].exam_num=1;
-					}else{
-						thisTableChoosend[i].exam_num=thisTableChoosend[i].exam_num+1;
-					}
-					$("#makeUpgGradeEntryTable").bootstrapTable("updateByUniqueId", {id: thisTableChoosend[i].edu005_ID, row: thisTableChoosend[i]});
-				}
+				// for (var i = 0; i < thisTableChoosend.length; i++) {
+				// 	if(thisTableChoosend[i].exam_num==null||thisTableChoosend[i].exam_num===''||typeof thisTableChoosend[i].exam_num==='undefined'){
+				// 		thisTableChoosend[i].exam_num=1;
+				// 	}else{
+				// 		thisTableChoosend[i].exam_num=thisTableChoosend[i].exam_num+1;
+				// 	}
+				// 	$("#makeUpgGradeEntryTable").bootstrapTable("updateByUniqueId", {id: thisTableChoosend[i].edu005_ID, row: thisTableChoosend[i]});
+				// }
+				toastr.success(backjson.msg);
 			}  else {
 				toastr.warning(backjson.msg);
 			}
