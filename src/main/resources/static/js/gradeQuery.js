@@ -136,7 +136,7 @@ function stuffStudentGradeTable(tableInfo) {
 				formatter: isResitMatter
 			},{
 				field: 'exam_num',
-				title: '补考次数(双击详情)',
+				title: '成绩详情(双击查看)',
 				align: 'left',
 				sortable: true,
 				formatter: examNnumMatter
@@ -291,12 +291,12 @@ function stuffStudentGradeTable(tableInfo) {
 	function examNnumMatter(value, row, index) {
 		if (value===""||value==null||typeof value==="undefined") {
 			return [
-				'<div class="myTooltip normalTxt" title="暂未补考">暂未补考</div>'
+				'<div class="myTooltip normalTxt" title="暂无补考成绩">暂无补考成绩</div>'
 			]
 				.join('');
 		} else {
 			return [
-				'<div class="myTooltip normalTxt" title="'+value+'次">'+value+'次</div>'
+				'<div class="myTooltip" title="查看成绩详情" style="color: #6a8aa7">查看成绩详情</div>'
 			]
 				.join('');
 		}
@@ -351,13 +351,13 @@ function reExamInfo(row){
 					return;
 				}
 				$.showModal("#reExamInfoModal",false);
-				$("#reExamInfoModal").find(".moadalTitle").html(row.studentName+"-"+row.courseName+"补考记录");
+				$("#reExamInfoModal").find(".moadalTitle").html(row.studentName+"-"+row.courseName+"成绩详情");
 				$(".historyInfo").empty();
 				var historyTxt="";
 				for (var i = 0; i < backjson.data.length; i++) {
 					var currentHistory= backjson.data[i];
 					var reExamText="";
-					i<=0?reExamText="正常考试":reExamText="第"+i+"次补考";
+					i<=0?reExamText="正考成绩":reExamText="补考成绩";
 					historyTxt+='<div class="historyArea"><p class="Historystep">'+reExamText+'</p><div>' +
 						'<span><cite>课程名称：</cite><b>'+nullMatter(currentHistory.courseName)+'</b></span>'+
 						'<span><cite>补考成绩：</cite><b>'+nullMatter(currentHistory.grade)+'</b></span>'+

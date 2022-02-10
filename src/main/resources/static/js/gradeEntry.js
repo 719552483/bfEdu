@@ -861,14 +861,15 @@ function stuffStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				width:'10',
 				formatter: isResitMatter
-			},{
-				field: 'exam_num',
-				title: '补考次数',
-				align: 'left',
-				sortable: true,
-				visible: true,
-				formatter: examNnumMatter
-			} ,
+			},
+			// {
+			// 	field: 'exam_num',
+			// 	title: '补考次数',
+			// 	align: 'left',
+			// 	sortable: true,
+			// 	visible: true,
+			// 	formatter: examNnumMatter
+			// } ,
 			{
 				field: 'isConfirm',
 				title: '成绩确认',
@@ -1197,10 +1198,15 @@ function wantGradeEntry(row,index){
 		return;
 	}
 
-	if(row.exam_num!=null&&row.exam_num>=5){
-		toastr.warning("最多补考五次");
+	if(row.isConfirm==='T'){
+		toastr.warning("该成绩已确认,不可操作");
 		return;
 	}
+
+	// if(row.exam_num!=null&&row.exam_num>=5){
+	// 	toastr.warning("最多补考五次");
+	// 	return;
+	// }
 
 	var showGradeInput=$('#tab1').find(".gradeInput");
 	var showNum=0;
@@ -1404,7 +1410,7 @@ function reExamInfo(row,index){
 					}
 
 					var reExamText="";
-					i<=0?reExamText="正常考试":reExamText="第"+i+"次补考";
+					i<=0?reExamText="正考成绩":reExamText="补考成绩";
 					historyTxt+='<div class="historyArea" edu0051_ID="'+currentHistory.edu0051_ID+'" grade="'+currentHistory.grade+'"><p class="Historystep">'+reExamText+'</p><div>' +
 						'<span><cite>课程名称：</cite><b>'+nullMatter(currentHistory.courseName)+'</b></span>'+
 						'<span><cite>补考成绩：</cite><b class="historyGradeB">'+gradeMatter(currentHistory.grade)+'</b>'+gradeInputTxt+'</span>'+
@@ -2697,14 +2703,15 @@ function stuffMakeStudentBaseInfoTable(tableInfo) {
 				sortable: true,
 				width:'10',
 				formatter: isResitMatter
-			},{
-				field: 'exam_num',
-				title: '补考次数',
-				align: 'left',
-				sortable: true,
-				visible: true,
-				formatter: examNnumMatter
-			} ,
+			},
+			// {
+			// 	field: 'exam_num',
+			// 	title: '补考次数',
+			// 	align: 'left',
+			// 	sortable: true,
+			// 	visible: true,
+			// 	formatter: examNnumMatter
+			// } ,
 			{
 				field: 'isConfirm',
 				title: '成绩确认',
