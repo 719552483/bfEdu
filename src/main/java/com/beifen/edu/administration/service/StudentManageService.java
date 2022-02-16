@@ -1737,6 +1737,8 @@ public class StudentManageService {
                     map.put("hjF",lxF);
                     String all = edu001Dao.queryStudentCount(edu300IdsAll);
                     map.put("all",all);
+                    int sj = Integer.parseInt(all)-Integer.parseInt(xtxm)-Integer.parseInt(xtxf);
+                    map.put("sjzd",sj+"");
                     mapList.add(map);
                     edu300IdsAll.clear();
                     map = new HashMap();
@@ -1764,6 +1766,8 @@ public class StudentManageService {
             map.put("hjF",lxF);
             String all = edu001Dao.queryStudentCount(edu300Ids);
             map.put("all",all);
+            int sj = Integer.parseInt(all)-Integer.parseInt(xtxm)-Integer.parseInt(xtxf);
+            map.put("sjzd",sj+"");
             mapList.add(map);
         }
         Map map = new HashMap();
@@ -1785,6 +1789,8 @@ public class StudentManageService {
         map.put("hjF",lxF);
         String all = edu001Dao.queryStudentCount(edu300IdsAll);
         map.put("all",all);
+        int sj = Integer.parseInt(all)-Integer.parseInt(xtxm)-Integer.parseInt(xtxf);
+        map.put("sjzd",sj+"");
         mapList.add(map);
 
         //columns
@@ -1793,7 +1799,7 @@ public class StudentManageService {
         //标题
         map = new HashMap();
         map.put("title",edu300List.get(0).getXbmc()+"扩招汇总表");
-        map.put("colspan",edu000List.size()*2+8);
+        map.put("colspan",edu000List.size()*2+9);
         l.add(map);
         objects[0] = l;
         //第二行
@@ -1827,6 +1833,10 @@ public class StudentManageService {
         l.add(studentPO2);
         studentPO = new StudentPO("all","总计","middle","center",1,2,"peopleNumMatter");
         l.add(studentPO);
+
+        studentPO = new StudentPO("sjzd","实际在读","middle","center",1,2,"peopleNumMatter");
+        l.add(studentPO);
+
         objects[1] = l;
         objects[2] = l2;
         Map re = new HashMap();
@@ -2025,11 +2035,16 @@ public class StudentManageService {
         cells[1] = firstRow2.createCell(edu000List.size()*2+8);
         cells[1].setCellValue("总计");
         sheet.addMergedRegion(new CellRangeAddress(1, 2, edu000List.size()*2+8, edu000List.size()*2+8));
+
+        cells[1] = firstRow2.createCell(edu000List.size()*2+9);
+        cells[1].setCellValue("实际在读人数");
+        sheet.addMergedRegion(new CellRangeAddress(1, 2, edu000List.size()*2+9, edu000List.size()*2+9));
+
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 0, 0));//序号
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 1, 1));//年级批次
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 2, 2));//分院
         sheet.addMergedRegion(new CellRangeAddress(0, 2, 3, 3));//专业
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, edu000List.size()*2+8));//辽宁职业学院高职扩招学生汇总表
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, edu000List.size()*2+9));//辽宁职业学院高职扩招学生汇总表
 
         //上面都是标题 呕~
 //        List<Edu300> edu300List = edu300Dao.findAllGroupByZybm();
@@ -2057,6 +2072,8 @@ public class StudentManageService {
             utils.appendCell(sheet,i,"",lxF,-1,7+edu000List.size()*2,false);
             String all = edu001Dao.queryStudentCount(edu300Ids);
             utils.appendCell(sheet,i,"",all,-1,8+edu000List.size()*2,false);
+            int sj = Integer.parseInt(all)-Integer.parseInt(xtxm)-Integer.parseInt(xtxf);
+            utils.appendCell(sheet,i,"",sj+"",-1,9+edu000List.size()*2,false);
         }
 
         sheet.setColumnWidth(0, 5*256);
