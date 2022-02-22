@@ -1830,6 +1830,7 @@ function confrimkExportGradeSingleStudent(singleStudentSearchInfo){
 	var form = $("<form></form>").attr("action", url).attr("method", "post");
 	form.append($("<input></input>").attr("type", "hidden").attr("name", "SearchCriteria").attr("value",JSON.stringify(singleStudentSearchInfo)));
 	form.appendTo('body').submit().remove();
+	toastr.info('文件下载中,请稍后...');
 }
 
 //tab2页面按钮事件绑定
