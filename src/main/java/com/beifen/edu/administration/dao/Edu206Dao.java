@@ -34,4 +34,7 @@ public interface Edu206Dao extends JpaRepository<Edu206, Long>, JpaSpecification
 
     @Query(value = "select * from edu206 where xnid is not null and EDU108_ID in (select EDU108_ID from edu108 where EDU107_ID = ?1) and kcmc not in (select kcmc from edu201 where edu201_id in (select edu201_id from edu204 where EDU300_ID = ?2))", nativeQuery = true)
     List<Edu206> notPuted(String edu107Id,String edu300id);
+
+    @Query(value = "select * from edu206 where EDU108_ID = ?1", nativeQuery = true)
+    List<Edu206> findEdu206IdsByedu108id(String edu108id);
 }

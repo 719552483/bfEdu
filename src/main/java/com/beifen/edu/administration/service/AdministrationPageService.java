@@ -3334,6 +3334,12 @@ public class AdministrationPageService {
 		return resultVO;
 	}
 
+	//退回开课计划
+	public Edu107 findEdu107(String edu107_id) {
+		return edu107DAO.findOne(Long.parseLong(edu107_id));
+	}
+
+
 	//生成专业下所有课程开课计划
 	public ResultVO generatAllClassAllCourse(String edu107_id) {
 		ResultVO resultVO;
@@ -3385,6 +3391,23 @@ public class AdministrationPageService {
 		if(edu108List.size() == 0) {
 			resultVO = ResultVO.setFailed("暂未查到专业课程",edu108List);
 		}else {
+			for (int i = 0; i < edu108List.size(); i++) {
+				if("F".equals(edu108List.get(i).getSfsckkjh())){
+					edu108List.get(i).setXn("暂未生成开课计划");
+				}else{
+					List<Edu201> edu201s = edu201DAO.findEdu201IdsByedu108id(edu108List.get(i).getEdu108_ID()+"");
+					if(edu201s.size()>0){
+						edu108List.get(i).setXn(edu201s.get(0).getXn());
+					}else{
+						List<Edu206> edu206s = edu206Dao.findEdu206IdsByedu108id(edu108List.get(i).getEdu108_ID()+"");
+						if(edu206s.get(0).getXn() == null || "".equals(edu206s.get(0).getXn())){
+							edu108List.get(i).setXn("暂未发布教学任务书");
+						}else{
+							edu108List.get(i).setXn(edu206s.get(0).getXn());
+						}
+					}
+				}
+			}
 			resultVO = ResultVO.setSuccess("共查询到"+edu108List.size()+"条专业课程",edu108List);
 		}
 		return resultVO;
@@ -4354,6 +4377,62 @@ public class AdministrationPageService {
 		sheet.setColumnHidden((short)6, true);
 		return workbook;
 	}
+
+
+	//导出培养计划详情
+	public XSSFWorkbook exportCoursePlan(Edu107 edu107) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet(edu107.getPyjhmc()+"详情");
+
+		XSSFRow firstRow = sheet.createRow(0);// 第一行
+		XSSFCell cells[] = new XSSFCell[1];
+		// 所有标题数组
+		String[] titles = new String[] {"课程名称","总学时","周学时","总周数", "学分","课程类型","课程性质","学年"};
+
+		// 循环设置标题
+		for (int i = 0; i < titles.length; i++) {
+			cells[0] = firstRow.createCell(i);
+			cells[0].setCellValue(titles[i]);
+		}
+		List<Edu108> edu108List = queryCulturePlanCouses(edu107.getEdu107_ID());
+
+
+		for (int i = 0; i < edu108List.size(); i++) {
+			utils.appendCell(sheet,i,"",edu108List.get(i).getKcmc(),-1,0,false);
+			utils.appendCell(sheet,i,"",edu108List.get(i).getZxs()+"",-1,1,false);
+			utils.appendCell(sheet,i,"",edu108List.get(i).getZxs()+"",-1,2,false);
+			utils.appendCell(sheet,i,"",edu108List.get(i).getZzs()+"",-1,3,false);
+			utils.appendCell(sheet,i,"",edu108List.get(i).getXf()+"",-1,4,false);
+			utils.appendCell(sheet,i,"",edu108List.get(i).getKclx()+"",-1,5,false);
+			utils.appendCell(sheet,i,"",edu108List.get(i).getKcxz()+"",-1,6,false);
+			if("F".equals(edu108List.get(i).getSfsckkjh())){
+				utils.appendCell(sheet,i,"","暂未生成开课计划",-1,7,false);
+			}else{
+				List<Edu201> edu201s = edu201DAO.findEdu201IdsByedu108id(edu108List.get(i).getEdu108_ID()+"");
+				if(edu201s.size()>0){
+					utils.appendCell(sheet,i,"",edu201s.get(0).getXn(),-1,7,false);
+				}else{
+					List<Edu206> edu206s = edu206Dao.findEdu206IdsByedu108id(edu108List.get(i).getEdu108_ID()+"");
+					if(edu206s.get(0).getXn() == null || "".equals(edu206s.get(0).getXn())){
+						utils.appendCell(sheet,i,"","暂未发布教学任务书",-1,7,false);
+					}else{
+						utils.appendCell(sheet,i,"",edu206s.get(0).getXn(),-1,7,false);
+					}
+				}
+			}
+		}
+		sheet.setColumnWidth(0, 20*256);
+		sheet.setColumnWidth(1, 10*256);
+		sheet.setColumnWidth(2, 10*256);
+		sheet.setColumnWidth(3, 10*256);
+		sheet.setColumnWidth(4, 10*256);
+		sheet.setColumnWidth(5, 25*256);
+		sheet.setColumnWidth(6, 25*256);
+		sheet.setColumnWidth(7, 30*256);
+		return workbook;
+	}
+
+
 
 	//校验导入成绩文件
 	public ResultVO checkGradeFile(MultipartFile file) {

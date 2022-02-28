@@ -1620,6 +1620,33 @@ public class AdministrationController {
 	}
 
 	/**
+	 * 导出培养计划详情
+	 */
+//	@RequestMapping("/exportCoursePlan")
+//	@ResponseBody
+//	public ResultVO exportCoursePlan(HttpServletRequest request,HttpServletResponse response,@RequestParam("edu107Id") String edu107Id) {
+//		ResultVO result;
+//		Edu107 edu107 = administrationPageService.findEdu107(edu107Id);
+//		boolean isIE=utils.isIE(request.getHeader("User-Agent").toLowerCase());
+//		String fileName;
+//		if(isIE){
+//			fileName="exportCoursePlan";
+//		}else{
+//			fileName="\""+edu107.getPyjhmc()+"\"详情";
+//		}
+//		XSSFWorkbook workbook = administrationPageService.exportCoursePlan(edu107);
+//		try {
+//			utils.loadModal(response,fileName, workbook);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		result = ResultVO.setSuccess("下载成功");
+//		return result;
+//	}
+
+	/**
 	 * 确认生成开课计划
 	 */
 	@RequestMapping("/generatCoursePlan")
