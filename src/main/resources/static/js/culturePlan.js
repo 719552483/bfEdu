@@ -937,11 +937,16 @@ function stuffMajorTrainingTable(tableInfo) {
 			align : 'left',
 			formatter : paramsMatter
 		}, {
+			field : 'xn',
+			title : '学年',
+			align : 'left',
+			formatter : xnParamsMatter
+		},  {
 			field : 'kclx',
 			title : '课程类型',
 			align : 'left',
 			formatter : paramsMatter
-		}, {
+		},{
 			field : 'kcxz',
 			title : '课程性质',
 			align : 'left',
@@ -980,6 +985,16 @@ function stuffMajorTrainingTable(tableInfo) {
 				.join('');
 		}else{
 			return [ '<div class="myTooltip greenTxt" title="已生成"><i class="iconfont icon-yixuanze greenTxt"></i></div>' ]
+				.join('');
+		}
+	}
+
+	function xnParamsMatter(value, row, index) {
+		if(value === '暂未生成开课计划' || value==='暂未发布教学任务书'){
+			return [ '<div class="myTooltip normalTxt" title="'+value+'">'+value+'</div>' ]
+				.join('');
+		}else{
+			return [ '<div class="myTooltip" title="'+value+'">'+value+'</div>' ]
 				.join('');
 		}
 	}
