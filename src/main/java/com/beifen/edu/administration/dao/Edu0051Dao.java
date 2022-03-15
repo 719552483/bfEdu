@@ -35,13 +35,13 @@ public interface Edu0051Dao extends JpaRepository<Edu0051, Long>, JpaSpecificati
     //查询补考成绩
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "select e.* from EDU0051 e LEFT JOIN edu001 ee on e.STUDENT_CODE = ee.xh where xnid = ?1 and course_name = ?2 and ee.ZT_CODE != '003' and ee.ZT_CODE != '002' ORDER BY CLASS_NAME,STUDENT_NAME,exam_num", nativeQuery = true)
+    @Query(value = "select e.* from EDU0051 e LEFT JOIN edu001 ee on e.STUDENT_CODE = ee.xh LEFT JOIN edu005 eee on e.EDU005_ID = eee.EDU005_ID where e.xnid = ?1 and e.course_name = ?2 and ee.ZT_CODE != '003' and ee.ZT_CODE != '002' and (eee.IS_MX is null or eee.IS_MX != '01') ORDER BY e.CLASS_NAME,e.STUDENT_NAME,e.exam_num", nativeQuery = true)
     List<Edu0051> exportMakeUpGrade(String trem,String crouses);
 
     //查询补考成绩
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "select e.* from EDU0051 e where xnid = ?1 and course_name = ?2 ORDER BY CLASS_NAME,STUDENT_NAME,exam_num", nativeQuery = true)
+    @Query(value = "select e.* from EDU0051 e LEFT JOIN edu005 ee on e.EDU005_ID = ee.EDU005_ID where e.xnid = ?1 and e.course_name = ?2 and (ee.IS_MX is null or ee.IS_MX != '01')  ORDER BY e.CLASS_NAME,e.STUDENT_NAME,e.exam_num", nativeQuery = true)
     List<Edu0051> exportMakeUpGradeAll(String trem,String crouses);
 
     //取消成绩确认删除
