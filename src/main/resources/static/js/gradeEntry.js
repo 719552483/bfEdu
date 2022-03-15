@@ -2748,7 +2748,10 @@ function stuffMakeStudentBaseInfoTable(tableInfo) {
 		if(isPass&&row.actionRulue==='T'){
 			return [
 				'<ul class="toolbar tabletoolbar">' +
+				'<li id="makeUpwantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
 				'<li id="makeUpreExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+				'<li id="makeUpcomfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+				'<li id="makeUpcancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
 				'</ul>'
 			]
 				.join('');
@@ -2776,7 +2779,10 @@ function stuffMakeStudentBaseInfoTable(tableInfo) {
 				}else{
 					return [
 						'<ul class="toolbar tabletoolbar">' +
+						'<li id="makeUpwantGradeEntry" class="insertBtn wantGradeEntry'+index+'"><span><img src="images/t01.png" style="width:24px"></span>录入</li>' +
 						'<li id="makeUpreExamInfo" class="queryBtn reExamInfo'+index+'"><span><img src="images/i06.png" style="width:24px"></span>补考记录</li>' +
+						'<li id="makeUpcomfirmGradeEntry" class="noneStart comfirmGradeEntry'+index+'"><span><img src="img/right.png" style="width:24px"></span>确认</li>' +
+						'<li id="makeUpcancelGradeEntry" class="noneStart cancelGradeEntry'+index+'"><span><img src="images/t03.png"></span>取消</li>' +
 						'</ul>'
 					]
 						.join('');
@@ -2995,10 +3001,10 @@ function stuffMakeStudentBaseInfoTable(tableInfo) {
 //预备录入补考成绩
 function makeUpwantGradeEntry(row,index){
 	var thisInfo=$("#makeUpgGradeEntryTable").bootstrapTable('getRowByUniqueId',row.edu005_ID);
-	if((thisInfo.grade==='T'||parseFloat(thisInfo.grade)>=60)&&row.actionRulue==='T'){
-		toastr.warning("成绩已及格");
-		return;
-	}
+	// if((thisInfo.grade==='T'||parseFloat(thisInfo.grade)>=60)&&row.actionRulue==='T'){
+	// 	toastr.warning("成绩已及格");
+	// 	return;
+	// }
 
 	if(!(thisInfo.isMx==='0'||thisInfo.isMx===''||typeof thisInfo.isMx==='undefined'||thisInfo.isMx==null)){
 		toastr.warning("请先修改该学生免修状态");
